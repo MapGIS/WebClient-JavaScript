@@ -1,7 +1,7 @@
 {
-  "name": "webclient-showcase",
+  "name": "webclient-javascript",
   "version": "1.0.0",
-  "description": "中的数码的前端显示引擎的展示网页",
+  "description": "中地数码的前端显示引擎的展示网页",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -13,16 +13,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ParnDeedlit/WebClient-Docs.git"
+    "url": "git+https://github.com/MapGIS/WebClient-JavaScript"
   },
   "keywords": [
     "leaflet",
-    "iclent"
+    "mapboxgl",
+    "cesium",
+    "openlayers/ol",
+    "echarts",
+    "d3",
+    "mapv"
   ],
-  "author": "panzhuoran parndeedlit",
+  "author": "中地数码",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ParnDeedlit/WebClient-Docs/issues"
+    "url": "https://github.com/MapGIS/WebClient-JavaScript/issues"
   },
-  "homepage": "https://github.com/ParnDeedlit/WebClient-Docs#readme"
+  "homepage": "http://client.snanyun.com:8899/ui/index.html"
 }
