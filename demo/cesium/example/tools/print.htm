@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script src="../../libs/zondyclient/include-cesium-local.js"></script>
+ 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #sceneViewer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='sceneViewer'></div>
+  <div id="popupContain"></div>
+  <script>
+    //m3d 图层同样在这里解析
+    var webGlobe = new Cesium.WebSceneControl('sceneViewer', {
+      terrainExaggeration: 1
+    });
+    var viewer = webGlobe.viewer;
+    var scene = webGlobe.scene;
+    webGlobe.outputImage();
+    
+  </script>
+
+</body>
+
+</html>

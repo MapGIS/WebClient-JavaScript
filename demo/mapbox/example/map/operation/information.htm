@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>地图域当前信息</title>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #map {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="button1" value="当前分辨率" onclick="getCurResolution()">
+        <input type="button" class="ButtonLib" id="button2" value="当前地图范围" onclick="getCurBound()" />
+        <input type="button" class="ButtonLib" id="button3" value="当前视口范围" onclick="getMapDivInfo()" />
+    </div>
+    <div id="map" title="地图显示" style="padding: 5px">
+    </div>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //实例化要加载的source来源对象
+        var osm = {
+            //来源类型为栅格瓦片
+            "type": "raster",
+            'tiles': [
+                //来源请求地址
+                "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            //栅格瓦片的分辨率
+            'tileSize': 256
+        };
+        //实例化Map对象加载地图
+        var map = new mapboxgl.Map({
+            //地图容器div的id
+            container: 'map', // container id
+            //设置地图样式信息
+            style: {
+                //设置版本号，一定要设置
+                "version": 8,
+                //添加来源
+                "sources": {
+                    "osm": osm
+                },
+                //设置加载并显示来源的图层信息
+                "layers": [
+                     {
+                         //图层id，要保证唯一性
+                         "id": "OSMLayer",
+                         //图层类型
+                         "type": "raster",
+                         //连接图层来源
+                         "source": "osm",
+                         //图层最小缩放级数
+                         "minzoom": 0,
+                         //图层最大缩放级数
+                         "maxzoom": 15
+                     }
+                ],
+            },
+            //地图中心点
+            center: [114, 32],
+            //地图当前缩放级数
+            zoom: 9
+        });
+
+        function getCurResolution() {
+           
+            var XResolution = Math.abs(map.getBounds().toArray()[1][0] - map.getBounds().toArray()[0][0]) /map.getCanvas().clientWidth;
+            var YResolution = Math.abs(map.getBounds().toArray()[1][1] - map.getBounds().toArray()[0][1]) / map.getCanvas().clientHeight;
+            //map.getSource("osm").curResolution; //map.getLayer("OSMLayer").getCurResolution;
+            //获取最大地图分辨率
+            var Resolution = Math.max(XResolution, YResolution);
+            //弹框显示
+            alert("当前分辨率:" + Resolution);
+        }
+
+        function getCurBound() {
+           //获取地图范围
+            var ex = map.getBounds().toArray();
+            //弹框显示
+            alert("当前范围为：" + ex);
+        }
+
+        function getMapDivInfo() {
+           //获取地图容器的高度和宽度
+            var w = map.getCanvas().clientWidth;
+            var h = map.getCanvas().clientHeight;
+            //弹框显示
+            alert("当前div高：" + h + " 宽：" + w);
+        }
+    </script>
+</body>
+</html>

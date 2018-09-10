@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>投影矩形</title>
+    <script include="json" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+         //使用严格模式
+         "use strict";
+         /**投影矩形
+         */
+         function projectRectangle() {
+             //需要投影转换的矩形
+             var rectangle = new Zondy.Object.Rectangle(2119075.5815982167, -8944857.387927618, -1350086.1660772718, 3477202.6583427647);
+             //对矩形范围坐标点进行投影转换
+             var ProjectRang = new Zondy.Service.ProjectRang({
+                 //数据源名称,默认值为"MapGISLocal"
+                 gdbsvrName: "MapGISLocal",
+                 //数据库名称
+                 gdbName: "OpenLayerVecterMap",
+                 //源投影参考系ID
+                 srefID: 10,
+                 //目的投影参考系ID
+                 desfID: 601,
+                 //服务器地址
+                 ip: "develop.smaryun.com",
+                 //服务器端口
+                 port: "6163"
+             });
+             //执行矩形投影转换功能服务，并返回结果信息，projSuccess为回调函数
+             ProjectRang.execute(rectangle, projSuccess);
+         }
+
+        /**投影转换成功回调函数
+        *  @param {json对象} data 获取结果对象
+        */
+        function projSuccess(data) {
+            if (data != null && data.result && data.result.succeed) {
+                //将JSON对象转换成JSON字符串
+                var formatData = JSON.stringify(data.result.DesDots);
+                //将结果显示在指定的div上
+                Process(formatData, 1, "resultShow");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="ToolLib">
+       <input type="button"  class="ButtonLib" value="投影矩形" onclick='projectRectangle()' /><br />
+       <div id="introduction">
+         <font style=" float: left; text-align: left">说明：该矩形投影示例是给定坐标进行投影。投影前矩形的坐标为：（2119075.5815982167, -8944857.387927618, -1350086.1660772718, 3477202.6583427647），投影后的坐标如下</font><br />
+       </div>
+    </div>
+    <div id="resultShow">
+    </div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="d3" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <title>D3 Histogram直方图</title>
+    <style>
+    </style>
+
+    <script type="text/javascript">
+        var config = {
+            x: '分组字段', //横轴统计字段 
+            y: 'mpArea' //纵轴统计字段
+        };
+
+        $(document).ready(function () {
+            getData();
+        });
+
+        function getData() {
+            $.get("../../data/d3/histogram.json", function (data) {
+                updateData(config, data.features);
+            })
+        }
+
+        function updateData(config, data) {
+            if (!data && !config) return;
+            var dataset = []
+            //定义数据 
+            $.each(data, function (index, d) {
+                dataset.push({
+                    x: d.properties[config.x],
+                    y: d.properties[config.y],
+                });
+            });
+            updateView(dataset);
+        }
+
+        //draw&update  
+        function updateView(dataset) {
+            var marge = {
+                top: 60,
+                bottom: 60,
+                left: 60,
+                right: 60
+            }
+            var svg = d3.select("#histogram-svg"); //得到SVG画布
+            var width = svg.attr("width"); //得到画布的宽
+            var height = svg.attr("height"); //得到画布的长
+
+            var g = svg.append("g")
+                .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
+
+            //x作为自变量(横轴)  
+            var xAxisData = dataset.map(function (d) {
+                return d.x;
+            });
+            //y作为因变量(纵轴)  
+            var yAxisData = dataset.map(function (d) {
+                return d.y;
+            });
+
+            var xScaleText = d3.scaleBand() //由于是直方图，因此选择scaleBand
+                .domain(xAxisData) //针对数据的横坐标
+                .rangeRound([0, width - marge.left - marge.right]); //设置宽度
+            var xScale = d3.scaleBand() //由于是直方图，因此选择scaleBand
+                .domain(d3.range(xAxisData.length)) //针对数据进行统计
+                .rangeRound([0, width - marge.left - marge.right]);
+            var xAxis = d3.axisBottom(xScaleText).tickFormat((d) => d.substring(0, 4)); //数据截断
+            var bandWidth = xScale.bandwidth();
+
+            var yScale = d3.scaleLinear()
+                .domain([
+                    d3.min(yAxisData, function (d) {
+                        return d;
+                    }),
+                    d3.max(yAxisData, function (d) {
+                        return d;
+                    })
+                ])
+                .range([height - marge.top - marge.bottom, 0]);
+            var yAxis = d3.axisLeft(yScale);
+
+            g.append("g")
+                .attr("transform", "translate(" + 0 + "," + (height - marge.top - marge.bottom) + ")")
+                .call(xAxis);
+
+            g.append("g")
+                .attr("transform", "translate(0,0)")
+                .call(yAxis);
+
+            //绘制前的数据获取截断
+            var gs = g.selectAll(".rect")
+                .data(yAxisData)
+                .enter()
+                .append("g");
+
+            //绘制矩形
+            var rectPadding = xScale.step()/4; //矩形之间的间隙占整体的约1/4左右
+            console.log("step:" + rectPadding);
+            gs.append("rect")
+                .style("x", function (d, i) {
+                    return xScale(i) + rectPadding / 2;
+                })
+                .style("y", function (d) {
+                    return yScale(d);
+                })
+                .style("width", function () {
+                    return xScale.step() - rectPadding;
+                })
+                .style("height", function (d) {
+                    return height - marge.top - marge.bottom - yScale(d);
+                })
+                .style("fill", "blue")
+                .on("mouseover", function () {
+                    var rect = d3.select(this)
+                        .transition()
+                        .duration(500)
+                        .style("fill", "yellow");
+                })
+                .on("mouseout", function () {
+                    var rect = d3.select(this)
+                        .transition()
+                        .delay(500)
+                        .duration(500)
+                        .style("fill", "blue");
+                });
+        }
+    </script>
+</head>
+
+<body>
+    <svg width="960" height="600" id="histogram-svg"></svg>
+</body>
+
+</html>

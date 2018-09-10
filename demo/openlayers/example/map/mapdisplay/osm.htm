@@ -1,0 +1,78 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>显示OpenStreet</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map;
+        var LayerArr;
+        //地图初始化函数
+        function init() {
+            //地图范围
+            var extent = [-20037508.3427892, -20037508.3427892, 20037508.3427892, 20037508.3427892];
+            //中心点
+            var center = [0, 0];
+            //瓦片大小
+            var tileSize = 256;
+            //最大级数
+            var maxZoom = 16;
+            //瓦片参数原点
+            var origin = [-180, -90];
+            //初始化图层
+            var layer1 = new Zondy.Map.OpenStreetLayer({
+                layerType: Zondy.Enum.Map.OpenStreetLayerType.OSM
+            });
+            var layer2 = new Zondy.Map.OpenStreetLayer({
+                layerType: Zondy.Enum.Map.OpenStreetLayerType.LandScape
+            });
+            var layer3 = new Zondy.Map.OpenStreetLayer({
+                layerType: Zondy.Enum.Map.OpenStreetLayerType.CYCLE
+            });
+            LayerArr = [layer1, layer2, layer3];
+
+            map = new ol.Map({
+                //加入图层
+                layers: [layer1],
+                //目标DIV
+                target: 'map',
+                view: new ol.View({
+                    center: center,
+                    maxZoom: maxZoom,
+                    minZoom: 0,
+                    zoom: 0
+                })
+            });
+
+        }
+        //图层切换函数
+        function changeLayer() {
+            var Layers = map.getLayers().getArray();
+            for (var i = 0; i < Layers.length; i++) {
+                //移除图层
+                map.removeLayer(Layers[i]);
+            }
+            var index = $("#LayerSelect").val() - 1;
+            //添加图层
+            map.addLayer(LayerArr[index]);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="map" style="width: 100%; height: 90%; position: absolute;">
+        <div id="mouse-position" class="custom-mouse-position" style="position: absolute; z-index:1003;height:35px;right:10px;bottom:10px;width:200px"></div>
+        <div id="btn" style="position:absolute;height:35px;bottom:10px;left:10px;width: 1020px;z-index:1003">
+            切换图层：
+            <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
+                <option value="1">OSM</option>
+                <option value="2">LandScape</option>
+                <option value="3">CYCLE</option>
+            </select>
+        </div>
+    </div>
+</body>
+
+</html>

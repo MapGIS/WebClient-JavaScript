@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>获取参考系列表</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        "use strict";
+
+        /**获取参考系列表
+        */
+        function getProjectList() {
+            //数据源目录服务类
+            var CatalogServer = new Zondy.Catalog.GDBInfo({
+                //数据源名称
+                serverName: 'mapgislocal',
+                //IGServer所在地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口
+                port: "6163",
+                //设置数据源的用户名	
+                User: null,
+                //设置数据源的用户密码
+                Password: null,
+                //设置数据库名称
+                gdbName: '示例数据'
+            });
+            //执行获取参考系列表方法
+            CatalogServer.getProjectList(getDataSuccess);
+        }
+
+        /**获取参考系列表成功回调
+        *  @param {json对象} data 获取结果对象
+        */
+        function getDataSuccess(data) {
+            //判断是否有返回数据，是否成功
+            if (data != null && data.result && data.result.succeed) {
+                if (data.result.value.length == 0) {
+                    alert("没有获取到参考系列表！");
+                    //清空结果显示面板
+                   document.getElementById('resultShow').innerHTML = "";
+                    return;
+                }
+                else {
+                    //将一个JSON转换成一个包含JSON文本的字符串
+                    var formatData = JSON.stringify(data.result);
+                    //显示json字符串导到指定的div中
+                    Process(formatData, 1, "resultShow");
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="获取参考系列表" onclick="getProjectList()" />
+        <br>
+        <div id="introduction">
+            <font style=" float: left; text-align: left">说明：本示例为GDB的空间参考系服务接口示例，默认使用平台示例数据库示例数据.hdf，操作前请先确认此数据库已经附加。</font><br />
+            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，否则无法获取信息</font>
+        </div>
+    </div>
+    <div id="resultShow">
+    </div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>矢量地图文档查询服务(多线查询)</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="json" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //开始线查询
+        function queryByPline() {
+            startPressBar();
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何信息
+            queryStruct.IncludeGeometry = true;
+            //创建两条用于查询的多线数组
+            var pointObj = new Array();
+            pointObj[0] = new Zondy.Object.Point2D(116.4375, 41.53125);
+            pointObj[1] = new Zondy.Object.Point2D(114.6875, 39.08125);
+            pointObj[2] = new Zondy.Object.Point2D(118.1875, 39.34375);
+            var polyLine = new Zondy.Object.PolyLine(pointObj);
+            var pointObj2 = new Array();
+            pointObj2[0] = new Zondy.Object.Point2D(105.5875, 48.70625);
+            pointObj2[1] = new Zondy.Object.Point2D(106.1125, 46.86875);
+            pointObj2[2] = new Zondy.Object.Point2D(108.3875, 48.44375);
+            var polyLine2 = new Zondy.Object.PolyLine(pointObj2);
+            //实例化查询参数对象	
+            var queryParam = new Zondy.Service.MultiGeoQueryParameter({
+                //设置查询几何对象
+                geometry: [polyLine, polyLine2],
+                //设置查询类型
+                geometryType: "line",
+                //设置返回结果类型
+                resultFormat: "json",
+                //设置查询结构
+                struct: queryStruct
+            });
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.MultiGeoQuery(queryParam, "WorldJWVector", 1, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess, queryError);
+        }
+
+        //查询失败回调
+        function queryError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        //查询成功回调
+        function querySuccess(data) {
+            stopPressBar(); //停止进度条
+            var formatData = JSON.stringify(data.result);
+            Process(formatData, 1, "reslutTable");
+        }
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+<body>
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px;font-weight:bold" >
+        <img src="../../img/common/39-1.gif" alt='' /><br /><br />
+        <span>正在查询，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" id="Button1" class="ButtonLib" value="多线查询" onclick="queryByPline()" />
+    </div>
+    <div id="resultShow" class="easyui-tabs" style="width: 100%; height: 750px">
+        <div id="resultT" title="结果显示" style="padding: 10px">
+            <div id="reslutTable">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

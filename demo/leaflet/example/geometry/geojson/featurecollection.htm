@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FeatureCollection</title>
+    <script includes="leaflet" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script include="jquery,geohash,geojson,moment" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="heater,elasticsearch" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        #map {
+            height: 600px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([34.25, 108.95], 12);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+            'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                attribution: '<a href="#">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox.streets'
+            }).addTo(map);
+
+        var FeaCollection = {
+            "type": "FeatureCollection",
+            "features": []
+        }
+
+        $.ajax({
+            url: "../../data/elasticsearch/geohash.json",
+            type: "GET",
+            datatype: "json",
+            async: false,
+            success: function (result) {
+                getData(result);
+                updateView();
+            },
+            error: function () {
+                alert = ("请求数据失败");
+            }
+        });
+
+        function getData(data) {
+            for (var i = 0; i < data.aggregations.mapExtent.geohash.buckets.length; i++) {
+                var item = data.aggregations.mapExtent.geohash.buckets[i];
+                var coordinate = decodeGeoHashToPolygon(item.key);
+                var GeoPolygon = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": coordinate
+                    },
+                    "properties": {
+                        "count": item.doc_count
+                    }
+                };
+                FeaCollection.features.push(GeoPolygon);
+            }
+        }
+
+        function updateView() {
+            L.geoJson(FeaCollection).addTo(map);
+        }
+
+        //根据图元属性设置不同的样式
+        function styleByField(feature) {
+            if (feature.properties.count > 2) {
+                return {
+                    "color": "#ff0000",
+                    "weight": 5
+                }
+            }
+        }
+        L.geoJSON(FeaCollection, {
+            style: styleByField
+        }).addTo(map);
+    </script>
+</body>
+
+</html>

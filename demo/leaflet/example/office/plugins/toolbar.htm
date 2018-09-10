@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Toolbar</title>
+    <script include="Draw,Toolbar" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        #map{height:600px}
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    var map = L.map('map').setView([30.594183452544694,114.28939819335936], 12),
+        drawnItems = new L.FeatureGroup().addTo(map),
+        editActions = [
+            L.Toolbar2.EditAction.Popup.Edit,
+            L.Toolbar2.EditAction.Popup.Delete,
+            L.Toolbar2.Action.extendOptions({
+                toolbarIcon: {
+                    className: 'leaflet-color-picker',
+                    html: '<span class="fa fa-eyedropper"></span>'
+                },
+                subToolbar: new L.Toolbar2({ actions: [
+                    L.ColorPicker.extendOptions({ color: '#db1d0f' }),
+                    L.ColorPicker.extendOptions({ color: '#025100' }),
+                    L.ColorPicker.extendOptions({ color: '#ffff00' }),
+                    L.ColorPicker.extendOptions({ color: '#0000ff' })
+                ]})
+            })
+        ];
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(map);
+
+    new L.Control.Draw({
+        position: 'topleft',
+    }).addTo(map);
+
+    map.on('draw:created', function(evt) {
+        var	type = evt.layerType,
+            layer = evt.layer;
+
+        drawnItems.addLayer(layer);
+        layer.on('click', function(event) {
+            new L.Toolbar2.EditToolbar.Popup(event.latlng, {
+                actions: editActions
+            }).addTo(map, layer);
+        });
+    });
+</script>
+</body>
+</html>

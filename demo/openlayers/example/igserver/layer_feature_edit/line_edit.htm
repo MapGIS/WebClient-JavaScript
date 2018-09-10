@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>向矢量图层中添加线要素</title>
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map, vectorLayer;
+        var serverArr = [
+            {
+                ip: "192.168.22.48",
+                gdbpLayerArray: [
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/dapeng',
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/edit_point',
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/edit_line',
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/edit_region'
+                ],
+                center: [114.48970539557598, 22.563149652172044],
+                zoom: 12,
+                layerIndex:2
+            },
+            {
+                ip: ip,
+                gdbpLayerArray: [],
+                center: [110, 40],
+                zoom: 5,
+                layerIndex:3
+            }
+        ]
+        var config = serverArr[0];
+        var ip = config.ip;
+        var center = config.center;
+        var zoom = config.zoom;
+        var gdbpLayerArray = config.gdbpLayerArray;
+        var layerIndex = config.layerIndex;
+        //地图初始化函数
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: center,
+                    zoom: zoom,
+                    projection: "EPSG:4326"
+                })
+            });
+            //初始化矢量图层对象
+            vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer",gdbpLayerArray, {
+                ip: "localhost",
+                port: "6163"
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(vectorLayer);
+            initFeatureIds();
+        }
+
+        //随机函数生成点
+        function createPoint() {
+            var curMapBound = map.getView().calculateExtent(map.getSize());
+            var w = curMapBound[2] - curMapBound[0];
+            var h = curMapBound[3] - curMapBound[1];
+            var x = Math.random() * w + curMapBound[0];
+            var y = Math.random() * h + curMapBound[1];
+            return new Zondy.Object.Point2D(x, y);
+        }
+
+        //执行添加线要素功能
+        function addLine() {
+            //构成线要素的点
+            var pointObj = new Array();
+            pointObj[0] = createPoint();
+            pointObj[1] = createPoint();
+            //构成折线的弧段
+            var gArc = new Zondy.Object.Arc(pointObj);
+            //构成线的折线
+            var gAnyLine = new Zondy.Object.AnyLine([gArc]);
+            //设置线要素的几何信息
+            var gline = new Zondy.Object.GLine(gAnyLine);
+            //设置要素的几何信息
+            var fGeom = new Zondy.Object.FeatureGeometry({ LinGeom: [gline] });
+            //随机输出1~8之间的整数,作为新添加的要素的颜色号
+            var lineColor = Math.floor(Math.random() * 8 + 1);
+            //设置添加线要素的图形参数信息
+            var clineInfo = new Zondy.Object.CLineInfo({ "Color": lineColor, "LinStyleID": 0, "LinStyleID2": 1, "LinWidth": 0.800000011920929, "Xscale": 10, "Yscale": 10 }); //设置线要素的图形参数信息
+            //设置要素的图形参数信息
+            var graphicInfo = new Zondy.Object.WebGraphicsInfo({ InfoType:2, LinInfo: clineInfo });
+
+            //设置添加线要素的属性信息
+            var attValue = ['长江'];
+
+            //创建一个线要素
+            var newFeature = new Zondy.Object.Feature({ fGeom: fGeom, GraphicInfo: graphicInfo, AttValue: attValue });
+            //设置要素为线要素
+            newFeature.setFType(2);
+
+            //创建一个要素数据集
+            var featureSet = new Zondy.Object.FeatureSet();
+            var fldNumber = 1; //属性个数
+            var fldName = ["CName"];
+            var fldType = ["string"];
+            //创建属性结构设置对象
+            var cAttStruct = new Zondy.Object.CAttStruct({ FldName: fldName, FldNumber: fldNumber, FldType: fldType });
+            //设置要素数据集的树形结构
+            featureSet.AttStruct = cAttStruct;
+            //将添加的线要素添加到属性数据集中
+            featureSet.addFeature(newFeature);
+
+            //创建一个图层编辑对象
+            var editLayerFeature = new Zondy.Service.EditLayerFeature(gdbpLayerArray[layerIndex], { ip: "localhost", port: "6163" });
+            editLayerFeature.add(featureSet, onLineAddSuccess);
+        }
+
+        //添加线要素回调函数
+        function onLineAddSuccess(data) {
+            if (data.result.succeed) {
+                console.log("添加线要素成功！");
+                vectorLayer.refresh();
+                initFeatureIds();
+            } else {
+                console.log("添加线要素失败！");
+            }
+        }
+
+        //执行线要素更新功能
+        function updateLine() {
+            //获取当前选择的要素编号
+            var featureIds = $("#featureID").find("option:selected").text();
+            if (featureIds == "请选择要素") {
+                alert("请先选择要素，再进行更新!");
+                return;
+            }
+
+            if (featureObj != null) {
+                //如果没有获取到子图符号，则直接返回
+                if (symbolColor == null) {
+                    alert("没有获取到待修改元素的子图颜色！");
+                    return;
+                }
+                //如果颜色号+7后过大，超出色表最大值，则置0，否则返回“颜色号+7”
+                var symColor = (symbolColor + 7) < 1502 ? (symbolColor + 7) : 0;
+
+                //设置添加线要素的图形参数信息
+                var clineInfo = new Zondy.Object.CLineInfo({ "Color": symColor, "LinStyleID": 2, "LinStyleID2": 1, "LinWidth": 0.800000011920929, "Xscale": 10, "Yscale": 10 });
+                //设置要素的图形参数信息
+                var graphicInfo = new Zondy.Object.WebGraphicsInfo({ InfoType: 2, LinInfo: clineInfo });
+
+                //设置添加线要素的属性信息
+                var attValue = [0, 46.191, 'Huanghe', '', 33, 0, '黄河'];
+
+                //创建一个线要素
+                var newFeature = new Zondy.Object.Feature({ fGeom: featureObj, GraphicInfo: graphicInfo, AttValue: attValue });
+                //设置要素为线要素
+                newFeature.setFType(2);
+                newFeature.setFID(featureIds);
+
+                //创建一个要素数据集
+                var featureSet = new Zondy.Object.FeatureSet();
+                var fldNumber = 7;
+                var fldName = ["ID", "长度", "NAME", "SYSTEM", "FID1", "LayerID", "CName"];
+                var fldType = ["long", "double", "string", "string", "long", "long", "string"];
+                //创建属性结构设置对象
+                var cAttStruct = new Zondy.Object.CAttStruct({ FldName: fldName, FldNumber: fldNumber, FldType: fldType });
+                //设置要素数据集的树形结构
+                featureSet.AttStruct = cAttStruct;
+                //将添加的线要素添加到属性数据集中
+                featureSet.addFeature(newFeature);
+
+                //创建一个地图编辑对象
+                var editLayerFeature = new Zondy.Service.EditLayerFeature(gdbpLayerArray[layerIndex], { ip: ip, port: "6163" });
+                editLayerFeature.update(featureSet, onLineUpdateSuccess);
+            }
+        }
+
+        //修改线要素回调函数
+        function onLineUpdateSuccess(data) {
+            if (data.result.succeed) {
+                console.log("修改线要素成功！");
+                //map.baseLayer.redraw(true);
+                vectorLayer.refresh();
+            } else {
+                console.log("修改线要素失败！");
+            }
+        }
+
+        //执行删除线要素功能
+        function deleteLine() {
+            //获取当前选择的要素编号
+            var featureIds = $("#featureID").find("option:selected").text();
+            if (featureIds == "请选择要素") {
+                console.log("请先选择要素，再进行删除!");
+                return;
+            }
+            //执行删除要素操作
+            var deleteService = new Zondy.Service.EditLayerFeature(gdbpLayerArray[layerIndex], { ip: ip, port: "6163" });
+            deleteService.deletes(featureIds, onLineDeleteSuccess);
+        }
+
+        //删除线要素回调函数
+        function onLineDeleteSuccess(data) {
+            if (data.result.succeed) {
+                console.log("删除线要素成功！");
+                vectorLayer.refresh();
+                //获取Select最大索引值，从0开始
+                var maxIndex = $("#featureID option:last").index();
+                $("#featureID option").remove();
+                //查询地图，更新要素列表
+                initFeatureIds(maxIndex);
+            } else {
+                console.log("删除线要素失败！");
+            }
+        }
+
+        /*===========================以下代码为便于用户操作而添加，用于自动获取数据库中已存在的要素编号===========================*/
+        var featureSelect;
+        //查询地图，获取活动图层所有要素列表
+        function initFeatureIds(maxIndex) {
+            featureSelect = $("#featureID");
+            $("<option value='请选择要素'>请选择要素</option>").appendTo(featureSelect);
+
+            if (maxIndex != null && maxIndex == 1) {
+                return;
+            }
+
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = true;
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter(gdbpLayerArray[layerIndex], {
+                resultFormat: "json",
+                struct: queryStruct
+            });
+            //设置查询要素数目
+            queryParam.recordNumber = 1000;
+            //设置属性条件
+            //queryParam.where = "name='中国'";
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: ip,
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess);
+        }
+        //要素的外包矩形中心缓存数组
+        var pntArr = new Array();
+        //要素的子图符号缓存数组
+        var symbolArr = new Array();
+        //要素缓存数组
+        var objArr = new Array();
+        //查询成功回调
+        function querySuccess(a) {
+            if (a.SFEleArray != null) {
+                if (a.SFEleArray.length == 0) {
+                    alert("查询结果为空");
+                }
+                else {
+                    for (var i = 0; i < a.SFEleArray.length; i++) {
+                        var obj = a.SFEleArray[i];
+                        $("<option value='" + i + "'>" + obj.FID + "</option>").appendTo(featureSelect);
+
+                        //获取不同编号对应元素的外包络矩形及中心，用于跳转
+                        var featureBound = obj.bound;
+                        var x = 0, y = 0;
+                        //计算外包矩形的中心点
+                        x = featureBound.xmax != featureBound.xmin ? ((featureBound.xmax - featureBound.xmin) / 2 + featureBound.xmin) : featureBound.xmax;
+                        y = featureBound.ymax != featureBound.ymin ? ((featureBound.ymax - featureBound.ymin) / 2 + featureBound.ymin) : featureBound.ymax;
+                        pntArr.push([x, y]);
+
+                        //获取子图颜色
+                        var webGraphic = obj.GraphicInfo;
+                        if (webGraphic != null) {
+                            if (webGraphic.LinInfo != null && webGraphic.LinInfo.Color != null) {
+                                symbolArr.push(webGraphic.LinInfo.Color);
+                            }
+                        }
+
+                        //获取要素的几何信息
+                        objArr.push(obj.fGeom);
+                    }
+                } //if else(a.SFEleArray.length == 0)
+            }
+        }
+
+        //选中某一个要素编号后触发的事件，用于进行要素定位，地图跳转
+        function onSelect() {
+            var index = $("#featureID").val();
+            if (index == "请选择要素") {
+                return;
+            }
+            //获取所选编号要素对应的要素几何信息
+            featureObj = objArr[index];
+            //获取所选编号要素对应的子图颜色
+            symbolColor = symbolArr[index];
+            //每修改一次子图颜色，更新一下子图颜色的缓存数组
+            //这里出于执行效率问题，不采用更新一次要素就重新查询子图符号信息的做法，而是直接变更缓存数组的值
+            symbolArr[index] = (symbolColor + 7) < 1502 ? (symbolColor + 7) : 0;
+            //获取所选要素编号对应的要素外包矩形中心，并进行地图跳转
+            var view = new ol.View({
+                center: pntArr[index],
+                zoom:zoom,
+                projection:"EPSG:4326"
+            });
+            map.setView(view);
+//            map.panTo(pntArr[index]);
+        }
+    </script>
+</head>
+<body onload="init()">
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="添加线要素" onclick="addLine()" />
+    请选择要素ID：<select id="featureID" onchange="onSelect()"></select>
+    <input type="button" class="ButtonLib" value="更新线要素" onclick="updateLine()" />
+    <input type="button" class="ButtonLib" value="删除线要素" onclick="deleteLine()" />
+</div>
+<div id="mapCon">
+</div>
+</body>
+</html>
+

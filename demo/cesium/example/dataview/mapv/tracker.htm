@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="mapv,proj4" src="../../libs/zondyclient/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = new Cesium.Viewer('map');
+
+    initMap();
+    initMapv();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    function initMapv() {
+      $.get('../../data/mapv/wuhan-car', function(rs) {
+      var data = [];
+      var timeData = [];
+      rs = rs.split("\n");
+      var maxLength = 0;
+      for (var i = 0; i < rs.length; i++) {
+        var item = rs[i].split(',');
+        var coordinates = [];
+        if (item.length > maxLength) {
+          maxLength = item.length;
+        }
+        for (j = 0; j < item.length; j += 2) {
+          if (item.length === 1) {
+            continue;
+          }
+          coordinates.push(proj4('EPSG:3857', 'EPSG:4326', [item[j], item[j + 1]]));
+          timeData.push({
+            geometry: {
+              type: 'Point',
+              coordinates: proj4('EPSG:3857', 'EPSG:4326', [item[j], item[j + 1]])
+            },
+            count: 1,
+            time: j
+          });
+        }
+        data.push({
+          geometry: {
+            type: 'LineString',
+            coordinates: coordinates
+          }
+        });
+
+      }
+
+      var dataSet1 = new mapv.DataSet(data);
+
+      var options = {
+        strokeStyle: 'rgba(53,57,255,0.5)',
+        coordType: 'bd09mc',
+        // globalCompositeOperation: 'lighter',
+        shadowColor: 'rgba(53,57,255,0.2)',
+        shadowBlur: 3,
+        lineWidth: 3.0,
+        draw: 'simple'
+      };
+
+      new CesiumZondy.Overlayer.MapvLayer(map, dataSet1, options);
+
+
+      var dataSet2 = new mapv.DataSet(timeData);
+
+      var options = {
+        fillStyle: 'rgba(255, 250, 250, 0.2)',
+        coordType: 'bd09mc',
+        globalCompositeOperation: "lighter",
+        size: 1.5,
+        animation: {
+          stepsRange: {
+            start: 0,
+            end: 100
+          },
+          trails: 3,
+          duration: 5,
+        },
+        draw: 'simple'
+      };
+
+      new CesiumZondy.Overlayer.MapvLayer(map, dataSet2, options);
+    });
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,216 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>加载图层控件（自定义）</title>
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        body, html, div, ul, li, iframe, p, img {
+            border: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            font-family: "微软雅黑";
+        }
+
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        /* 图层控件层样式设置 */
+        .layerControl {
+            position: absolute;
+            bottom: 5px;
+            min-width: 200px;
+            max-height: 200px;
+            right: 0px;
+            top: 5px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+            color: #ffffff;
+            background-color: #4c4e5a;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+            .layerControl .title {
+                font-weight: bold;
+                font-size: 15px;
+                margin: 10px;
+            }
+
+        .layerTree li {
+            list-style: none;
+            margin: 5px 10px;
+        }
+        /* 鼠标位置控件层样式设置 */
+        #mouse-position {
+            float: left;
+            position: absolute;
+            bottom: 5px;
+            width: 330px;
+            height: 20px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapCon">
+        <div id="mouse-position"></div>
+        <div id="layerControl" class="layerControl">
+            <div class="title"><label>图层列表</label></div>
+            <ul id="layerTree" class="layerTree"></ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //map中的图层数组
+        var layer = new Array();
+        //图层名称数组
+        var layerName = new Array();
+        //图层可见属性数组
+        var layerVisibility = new Array();
+
+        /**
+        * 加载图层列表数据
+        * @param {ol.Map} map 地图对象
+        * @param {string} id 图层列表容器ID
+        */
+        function loadLayersControl(map, id) {
+            //图层目录容器
+            var treeContent = document.getElementById(id); 
+            //获取地图中所有图层
+            var layers = map.getLayers();
+            for (var i = 0; i < layers.getLength() ; i++) {
+                //获取每个图层的名称、是否可见属性
+                layer[i] = layers.item(i);
+                layerName[i] = layer[i].get('name');
+                layerVisibility[i] = layer[i].getVisible();
+
+                //新增li元素，用来承载图层项
+                var elementLi = document.createElement('li');
+                // 添加子节点
+                treeContent.appendChild(elementLi); 
+                //创建复选框元素
+                var elementInput = document.createElement('input');
+                elementInput.type = "checkbox";
+                elementInput.name = "layers";
+                elementLi.appendChild(elementInput);
+                //创建label元素
+                var elementLable = document.createElement('label');
+                elementLable.className = "layer";
+                //设置图层名称
+                setInnerText(elementLable, layerName[i]);
+                elementLi.appendChild(elementLable);
+
+                //设置图层默认显示状态
+                if (layerVisibility[i]) {
+                    elementInput.checked = true;
+                }
+                //为checkbox添加变更事件
+                addChangeEvent(elementInput, layer[i]);  
+            }
+        }
+        /**
+        * 为checkbox元素绑定变更事件
+        * @param {input} element checkbox元素
+        * @param {ol.layer.Layer} layer 图层对象
+        */
+        function addChangeEvent(element, layer) {
+            element.onclick = function () {
+                if (element.checked) {
+                    //显示图层
+                    layer.setVisible(true);
+                }
+                else {
+                    //不显示图层
+                    layer.setVisible(false); 
+                }
+            };
+        }
+        /**
+        * 动态设置元素文本内容（兼容）
+        */
+        function setInnerText(element, text) {
+            if (typeof element.textContent == "string") {
+                element.textContent = text;
+            } else {
+                element.innerText = text;
+            }
+        }
+        var key = 'Q57tupj2UBsQNQdju4xL~xBceblfTd6icjljunbuaCw~AhwA-whmGMsfIpVhslZyknWhFYq-GvWJZqBnqV8Zq1uRlI5YM_qr7_hxvdgnU7nH';
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon', 
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据
+                new ol.layer.Tile({
+                    source: new ol.source.OSM(),
+                    name: '世界地图(OSM瓦片)'
+                }),
+                new ol.layer.Tile({
+                    source: new ol.source.BingMaps({ key: key, imagerySet: 'Road' }),
+                    name: "Bing Road"
+                }),
+                new ol.layer.Tile({
+                    source: new ol.source.BingMaps({ key: key, imagerySet: 'Aerial' }),
+                    name: "Bing Aerial"
+                }),
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        //url: '../../demos_ol3/data/geojson/countries.geojson',
+                        url: '../../data/geojson/countries.geojson',
+                        format: new ol.format.GeoJSON()
+                    }),
+                    name: '国界(Json格式矢量图)'
+                }),
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        url: '../../data/kml/2012_Earthquakes_Mag5.kml',
+                        format: new ol.format.KML({
+                            extractStyles: false
+                        })
+                    }),
+                    name: '点(KML格式矢量图)'
+                })
+
+                //new ol.layer.Vector({
+                //    source: new ol.source.Cluster({
+                //        distance: 40,
+                //        source: new ol.source.Vector({
+                //            url: '../../data/kml/2012_Earthquakes_Mag5.kml',
+                //            format: new ol.format.KML({
+                //                extractStyles: false
+                //            })
+                //        }),
+                //        name: '点(KML格式矢量图)'
+                //    })
+                //})
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 2
+            }),
+            controls: ol.control.defaults().extend([
+                new ol.control.MousePosition(
+                    {
+                        target: document.getElementById('mouse-position')
+                    }
+                )
+            ])
+        });
+        //加载图层列表数据
+        loadLayersControl(map, "layerTree");
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>矢量瓦片-行业符号</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="vectortile" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,Promise"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            background-color: #f8f4f0;
+        }
+    </style>
+</head>
+
+<body>
+    <!--地图显示-->
+    <div id="map"></div>
+    <script type="text/javascript">
+        var map;
+
+        init();
+
+        //地图初始化函数
+        function init() {
+            //初始化地图容器
+            var apiKey = 'envrA8yBF8nG1py1Q6qI ';
+
+            var tilegrid = ol.tilegrid.createXYZ({
+                tileSize: 256,
+                maxZoom: 15
+            });
+
+            var gaodeMapLayer = new Zondy.Map.GaoDeLayer();
+
+            var layer = new ol.layer.VectorTile({
+                declutter: true,
+                source: new ol.source.VectorTile({
+                    attributions: '© <a href="https://openmaptiles.org/">OpenMapTiles</a> ' +
+                        '© <a href="http://www.openstreetmap.org/copyright">' +
+                        'OpenStreetMap contributors</a>',
+                    format: new ol.format.MVT(),
+                    tileGrid: tilegrid,
+                    tilePixelRatio: 8,
+                    url: 'http://192.168.10.185:6163/igs/rest/mrms/tile/石峰区/{z}/{y}/{x}?type=cpbf'
+                })
+            });
+
+            var view = new ol.View({
+                center: ol.proj.transform([113.143, 27.940], 'EPSG:4326', 'EPSG:3857'),
+                zoom: 11
+                //,
+                /*                 resolution: 2445,
+                                maxResolution: 78271.51696402048 */
+            });
+
+            var map = new ol.Map({
+                //添加图层
+                layers: [gaodeMapLayer],
+                target: 'map',
+                view: view
+            });
+
+            fetch('http://192.168.10.185:6163/igs/rest/mrms/vtiles/styles/石峰区.json').then(function (response) {
+                response.json().then(function (glStyle) {
+                    olms.applyStyle(layer, glStyle, '石峰区').then(function () {
+                        map.addLayer(layer);
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

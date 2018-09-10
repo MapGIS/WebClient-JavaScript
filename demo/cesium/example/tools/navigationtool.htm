@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-cesium-local.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #sceneViewer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='sceneViewer'></div>
+    <script>
+        var webGlobe = new Cesium.WebSceneControl('sceneViewer', {
+            terrainExaggeration: 1
+        });
+        var viewer = webGlobe.viewer;
+        var scene = webGlobe.scene;
+        //显示导航控件（罗盘、比例尺、场景导航）
+        webGlobe.createNavigationTool({
+            enableCompass: true,
+            enableZoomControls: true,
+            enableDistanceLegend: true
+        });
+    </script>
+
+</body>
+
+</html>

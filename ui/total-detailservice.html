@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中地数码 MapGIS WebClient</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--   <link rel="stylesheet" type="text/css" href="../libs/material-kit/css/materialicon.css" />
+  <link rel="stylesheet" href="../libs/material-kit/css/font-awesome.min.css"> -->
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="../libs/google/material.css"/>
+    <!-- CSS Files -->
+    <link href="../libs/material-kit/css/material-kit.css?v=2.0.3" rel="stylesheet" />
+    <link href="../css/zondy/ui.css" rel="stylesheet" />
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="body-header">
+    </nav>
+    <div class="page-header page-header-warning" data-parallax="true">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="title text-all">七类在线服务</h2>
+                    <h4 class="text-all">IGServer, 客户端可视化, 客户端空间分析, 矢量瓦片,实时数据分析,矢量大数据分析.跨平台,无插件,开发便捷.</h4>
+                    <br>
+<!--                     <div class="row">
+                        <div class="col-md-3">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#datastore">
+                                        <img class="img img-raised" src="../img/card/datastore.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="category text-info">BSD-3-Clause License</h6>
+                                    <h4 class="card-title">
+                                        <a href="#datastore"></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#dataanalysis">
+                                        <img class="img img-raised" src="../img/card/dataanalysis.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="category text-success">
+                                        MIT License
+                                    </h6>
+                                    <h4 class="card-title">
+                                        <a href="#dataanalysis"></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#dataview">
+                                        <img class="img img-raised" src="../img/card/dataview.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="category text-danger">
+                                        <i class="material-icons">trending_up</i> ISC License
+                                    </h6>
+                                    <h4 class="card-title">
+                                        <a href="#dataview"></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#igserver">
+                                        <img class="img img-raised" src="../img/card/igserver.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="category text-warning">
+                                        <i class="material-icons">trending_up</i> Apache License 2.0
+                                    </h6>
+                                    <h4 class="card-title">
+                                        <a href="#igserver"></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main main-raised col-10 ml-auto mr-auto">
+        <div class="row">
+            <div class="wrapper main-body-card-top" id="body-framework">
+                <div class="col-md-12">
+                    <div class="card text-center">
+                        <div class="card-header card-header-warning">
+                            <div class="nav-tabs-navigation">
+                                <div class="nav-tabs-wrapper">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#tab-igserver" data-toggle="tab" role="tab" aria-controls="tab-igserver" aria-selected="true">
+                                                <i class="material-icons">apps</i>IGServer
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tab-view" data-toggle="tab" role="tab" aria-controls="tab-view" aria-selected="false">
+                                                <i class="material-icons">apps</i>客户端可视化
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tab-analysis" data-toggle="tab" role="tab" aria-controls="tab-analysis" aria-selected="false">
+                                                <i class="material-icons">apps</i>客户端空间分析</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tab-document" data-toggle="tab" role="tab" aria-controls="tab-document" aria-selected="false">
+                                                <i class="material-icons">apps</i>客户端专题图</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tab-vectortile" data-toggle="tab" role="tab" aria-controls="tab-vectortile" aria-selected="false">
+                                                <i class="material-icons">apps</i>矢量瓦片</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tab-els" data-toggle="tab" role="tab" aria-controls="tab-els" aria-selected="false">
+                                                <i class="material-icons">apps</i>实时数据分析</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#tab-spark" data-toggle="tab" role="tab" aria-controls="tab-spark" aria-selected="false">
+                                                <i class="material-icons">apps</i>矢量大数据分析</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-3" id="tablecss">
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="tab-igserver" role="tabpanel">
+                                    <table class="table table-bordered table-striped table-light ml-auto mr-auto">
+                                        <tr>
+                                            <td class="bg-info" rowspan="2" style="vertical-align:middle">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="bg-light" colspan="5" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">底图服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">目录服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">要素服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">工作流服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">几何空间分析服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">地图服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">专题图服务</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="tab-view" role="tabpanel">
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <td class="table-primary bg-info" rowspan="2" style="vertical-align:middle;width:20%">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">聚类图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">热力图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">密度图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">原生支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-dark text-white" style="width:15%">D3</td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <strong>该功能是对接的D3,目前只支持leaflet,mapbox后续继续维护</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">点CSS样式</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">属性CSS样式</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">图层CSS样式</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">蜂窝密度图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">统计专题图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">边界专题图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">动态专题图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">交互操作</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-dark text-white" style="width:15%">Echarts</td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <strong>该功能是对接的Baidu的EChart,目前只支持leaflet,mapbox后续继续维护</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">微博签到</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">渐进绘制</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">线动画</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">点动画</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-dark text-white" style="width:15%">Echart Gl</td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <strong>该功能是对接的Baidu的EChartGl,只支持WebGl的MapBox，其他引擎无对接计划</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">先轨迹图-出租车轨迹</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">点统计图-微博签到</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">三维柱状图-上海房价</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">三维线轨迹-飞机航线</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">三维建筑-彩色玻璃材质</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-dark text-white" style="width:15%">MapV</td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <strong>该功能是对接的Baidu的MapV,只支持2维地图，3维地图Cesium引擎无对接计划</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">点动态动画</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">线动态动画</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">汇聚动画</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">迁移轨迹</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">交通轨迹</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">单值、多值、热力统计线</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">蜂窝、网格、热力统计图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="tab-analysis" role="tabpanel">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table-primary bg-info" rowspan="2" style="vertical-align:middle;width:20%">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">插值分析</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">缓冲区分析</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">Tin分析</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">泰森多边形分析</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">中心点提取</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                                <div class="tab-pane" id="tab-document" role="tabpanel">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table-primary bg-info" rowspan="2" style="vertical-align:middle;width:20%">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">统计专题图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">边界专题图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">动态专题图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">交互操作</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">无计划</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">单值、多值、热力统计线</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">蜂窝、网格、热力统计图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-info">插件支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                                <div class="tab-pane" id="tab-vectortile" role="tabpanel">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table-primary bg-info" rowspan="2" style="vertical-align:middle;width:20%">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">Mapbox MVT 矢量瓦片</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持4326/3857</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-warning">只支持3857</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持4326/3857</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">Geojson VectorTile</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，后续支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，后续支持</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                                <div class="tab-pane" id="tab-els" role="tabpanel">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table-primary bg-info" rowspan="2" style="vertical-align:middle;width:20%">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">地理围栏</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">时空查询功能</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">时空聚合统计功能</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">时空聚合查询功能（GeoHash聚合）</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                                <div class="tab-pane" id="tab-spark" role="tabpanel">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td class="table-primary bg-info" rowspan="2" style="vertical-align:middle;width:20%">
+                                                <b>详细功能</b>
+                                            </td>
+                                            <td class="table-light" colspan="6" style="text-align:center">
+                                                <b>四大地图渲染引擎</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="table-dark">Leaflet</td>
+                                            <td class="table-dark">Mapbox GL<span class="badge badge-danger">只支持EPSG:3857</span></td>
+                                            <td class="table-dark">Openlayers3/Openlayers4</td>
+                                            <td class="table-dark">Cesium</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">密度图</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-light" style="width:15%">时空立方体</td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-danger">不支持，无该功能</span>
+                                            </td>
+                                            <td class="bg-light" style="width:15%">
+                                                <span class="badge badge-success">支持</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ./wrapper -->
+    <footer class="footer footer-default" id="body-footer"></footer>
+    <!--   Core JS Files   -->
+    <script src="../libs/material-kit/js/core/jquery.min.js" type="text/javascript"></script>
+    <script src="../libs/material-kit/js/core/popper.min.js" type="text/javascript"></script>
+    <script src="../libs/material-kit/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+    <script src="../libs/material-kit/js/plugins/moment.min.js"></script>
+    <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+    <script src="../libs/material-kit/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+    <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+    <script src="../libs/material-kit/js/plugins/nouislider.min.js" type="text/javascript"></script>
+    <!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
+    <script src="../libs/material-kit/js/material-kit.js?v=2.0.3" type="text/javascript"></script>
+    <script>
+        $("#body-header").load("../ui/header.html");
+        $("#body-footer").load("../ui/footer.html");
+    </script>
+</body>
+
+</html>

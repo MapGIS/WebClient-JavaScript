@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>地图文档点要素添加</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script include="transform" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+	<script>
+		// 使用严格模式
+		"use strict";
+		// 定义地图容器全局变量
+		var map;
+		// 定义地图文档全局变量
+		var mapDocLayer;
+		// 定义地图文档guid
+		var guid;
+		/**显示地图
+		*/
+		function init() {
+			//随机生成一个guid
+			guid = Math.floor(Math.random() * 10000000).toString();
+			// 创建地图容器
+			map = new mapboxgl.Map({
+				// 地图显示的div容器
+				container: 'mapCon',
+				// 设置地图不连续显示
+				renderWorldCopies: false
+			});
+
+			// 创建地图文档图层,WorldWebMKTEdit为IGServer上发布的地图文档服务名称
+			mapDocLayer = new Zondy.Map.MapDocLayer("WorldWebMKTEdit",{
+				// IGServer所在ip地址
+				ip: 'develop.smaryun.com',
+				// IGServer请求端口号
+				port: '6163',
+				// 添加guid
+				guid: guid
+			});
+			// 将地图文档图层添加到地图
+			mapDocLayer.addToMap(map);
+		}
+
+		/**两个数值之间产生一个随机数，范围： Min ≤ num ≤ Max
+		*  @param {number} Min 最小数值
+		*  @param {number} Max 最大数值
+		*/
+		function RandomNumBoth(Min, Max){
+			Min = Min ? Min : -20037508.3427;
+			Max = Max ? Max : 20037508.3428;
+			var Range = Max - Min;
+			var Rand = Math.random();
+			//四舍五入
+			var num = Min + Math.round(Rand * Range);
+			return num;
+		}
+		
+		/**添加点要素
+		*/
+		function addPoint() {
+			//显示进度条
+			startPressBar();
+			// 获取X轴随机坐标
+			var x = RandomNumBoth();
+			// 获取Y轴随机坐标
+			var y = RandomNumBoth();
+			//创建一个点形状，描述点形状的几何信息
+			var gpoint = new Zondy.Object.GPoint(x,y);
+			//设置当前点要素的几何信息
+			var fGeom = new Zondy.Object.FeatureGeometry({ PntGeom: [gpoint] });
+			//随机输出1~8之间的整数,作为新添加的要素的颜色号
+			var pntColor = Math.floor(Math.random() * 8 + 1);
+			//描述点要素的符号参数信息
+			var pointInfo = new Zondy.Object.CPointInfo({ Angle: 0, Color: pntColor, Space: 0, SymHeight: 2560000, SymID: 98, SymWidth: 2560000});
+			//设置当前点要素的图形参数信息
+			var webGraphicInfo = new Zondy.Object.WebGraphicsInfo({ InfoType: 1, PntInfo: pointInfo });
+			//设置添加点要素的属性信息				
+			var attValue = ['中国', '中国', 1.0];
+			//创建一个要素
+			var feature = new Zondy.Object.Feature({ fGeom: fGeom, GraphicInfo: webGraphicInfo, AttValue: attValue });
+			//设置要素为点要素
+			feature.setFType(1);
+			//创建一个要素数据集
+			var featureSet = new Zondy.Object.FeatureSet();
+			// 清除要素数据集
+			featureSet.clear();
+			//设置属性结构
+			var cAttStruct = new Zondy.Object.CAttStruct({ FldName: ["Cname", "CNTRY_NAME", "POPULATION"], FldNumber: 3, FldType: ["string", "string", "double"] });
+			featureSet.AttStruct = cAttStruct;
+			//添加要素到要素数据集
+			featureSet.addFeature(feature);
+			// 创建文档要素编辑服务
+			var editService = new Zondy.Service.EditDocFeature("WorldWebMKTEdit", 10,
+				{ ip: "develop.smaryun.com", port: "6163" });
+			//执行添加点要素功能,OnSuccess为添加成功的回调函数
+			editService.add(featureSet, OnSuccess);
+		}
+
+		/**添加点要素回调函数
+		*@param {object} rlt 获取结果对象
+		*/
+		function OnSuccess(rlt) {
+			//停止进度条
+			stopPressBar();
+			var result = rlt;
+			if (result) {
+				alert("添加点要素成功！");
+				//刷新图层前要进行此设置。加载之前的缓存文档,保证地图能正常显示
+				mapDocLayer.options.keepCache = false;
+				//刷新图层，实时显示地图
+				mapDocLayer.refreshMap(guid);
+				//设置为读取缓存，以加快显示效率
+				mapDocLayer.options.keepCache = true;
+			} 
+			else {
+				alert("添加点要素失败！");
+			}
+		}
+
+		/**开始进度条动画
+		*/
+		function startPressBar() {
+			document.getElementById('preview').style.display = "";
+		}
+
+		/**停止进度条动画
+		*/
+		function stopPressBar() {
+			document.getElementById('preview').style.display = "none";
+		}
+	</script>
+</head>
+<body onload="init()">
+	<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+		<img src="../../img/common/39-1.gif" alt='' /><br />
+		<br />
+		<span>正在添加，请稍候</span>
+	</div>
+	<div class="ToolLib">
+		<input type="button" class="ButtonLib" value="地图文档点要素添加" style="" onclick="addPoint()" />
+	</div>
+	<div id="mapCon" style="position: absolute; width: 100%; height: 95%;"></div>
+</body>
+</html>

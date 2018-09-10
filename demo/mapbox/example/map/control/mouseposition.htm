@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Get coordinates of the mouse pointer</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <style type='text/css'>
+    #info {
+      display: block;
+      position: relative;
+      margin: 0px auto;
+      width: 50%;
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      font-size: 12px;
+      text-align: center;
+      color: #222;
+      background: #fff;
+    }
+  </style>
+  <div id='map'></div>
+  <pre id='info'></pre>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: {
+        "version": 8,
+        "sources": {
+          "tianditu": {
+            "type": "raster",
+            'tiles': [
+              "http://t5.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "tianditu-img",
+          "type": "raster",
+          "source": "tianditu",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 9,
+      pitch: 45,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+
+    map.on('mousemove', function(e) {
+      document.getElementById('info').innerHTML =
+        // e.point is the x, y coordinates of the mousemove event relative
+        // to the top-left corner of the map
+        JSON.stringify(e.point) + '<br />' +
+        // e.lngLat is the longitude, latitude geographical position of the event
+        JSON.stringify(e.lngLat);
+    });
+  </script>
+
+</body>
+
+</html>

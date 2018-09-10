@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>MapBoxGL全屏显示控件</title>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script>
+        //使用严格模式
+        "use strict";
+        function init(){
+            if(!checkFullscreenSupport()){
+                alert("浏览器不支持全屏功能，建议使用谷歌浏览器（chrome）！！！");
+            }
+            //实例化要加载的source来源对象
+            var osm = {
+                //来源类型为栅格瓦片
+                "type": "raster",
+                'tiles': [
+                    //来源请求地址
+                    "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                ],
+                //栅格瓦片的分辨率
+                'tileSize': 256
+            };
+            //实例化Map对象加载地图
+            var map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map', 
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    "version": 8,
+                    //添加来源
+                    "sources": {
+                        "osm": osm
+                    },
+                    //设置加载并显示来源的图层信息
+                    "layers": [
+                         {
+                             //图层id，要保证唯一性
+                             "id": "OSMLayer",
+                             //图层类型
+                             "type": "raster",
+                             //连接图层来源
+                             "source": "osm",
+                             //图层最小缩放级数
+                             "minzoom": 0,
+                             //图层最大缩放级数
+                             "maxzoom": 15
+                         }
+                    ],
+                },
+                //地图中心点
+                center: [114, 32],
+                //地图当前缩放级数
+                zoom: 9
+            });
+            //添加全屏控件，控件的位置包括'top-left', 'top-right','bottom-left','bottom-right'四种，默认为'top-right'
+            map.addControl(new mapboxgl.FullscreenControl(),"top-right");
+        }
+
+        /**检查浏览器是否支持全屏
+        */
+        function checkFullscreenSupport() {
+            return !!(
+                window.document.fullscreenEnabled ||
+                window.document.mozFullScreenEnabled ||
+                window.document.msFullscreenEnabled ||
+                window.document.webkitFullscreenEnabled
+            );
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id='map'></div>
+</body>
+</html>

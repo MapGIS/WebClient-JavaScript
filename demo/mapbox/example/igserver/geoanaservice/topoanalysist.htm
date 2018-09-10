@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>拓扑分析</title>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+         //使用严格模式
+         "use strict";
+          //定义地图文档图层和地图
+         var vectorLayer, map;
+         /**初始化加载地图和拓扑图形
+         */
+         function init() {
+             //构造地图容器
+             map = new mapboxgl.Map({
+                 //地图容器div的ID
+                 container: 'mapbox_map',
+                 //设置样式，s
+                 style: {
+                     "version": 8,
+                     "sources": {
+                         "osm-tiles": {
+                             "type": "raster",
+                             'tiles': ["http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+                             'tileSize': 256
+                         }
+                     },
+                     "layers": [{
+                         "id": "simple-tiles",
+                         "type": "raster",
+                         "source": "osm-tiles",
+                         "minzoom": 0,
+                         "maxzoom": 16
+                     }]
+                 },
+                 //显示中心
+                 center: [114, 30],
+                 //最小显示等级
+                 minZoom: 0,
+                 //最大显示等级
+                 maxZoom: 16,
+                 //当前显示等级
+                 zoom: 7,
+                 //水平旋转角度
+                 bearingnumber: 0,
+                 //垂直倾斜角度
+                 pitch: 0,
+                 //支持倾斜交互操作
+                 pitchWithRotate: true,
+                 //支持旋转交互操作
+                 dragRotate: true
+             });
+             //添加导航控件，设置显示位置。位置包括：'top-left'，'top-right'，'bottom-left'，'bottom-right'
+             map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+             /**地图加载完成事件
+             *  @param {string}   type 事件类型（地图加载完成）
+             *  @param {function} listener 事件触发后的响应函数
+             */
+             map.on('load', function () {
+                 //添加图形
+                 addGeometry();
+             });
+         }
+
+         /**添加图形至地图中显示
+         */
+         function addGeometry() {
+             //用geojson创建一个矩形
+             var geometryRectangle = {
+                 "type": "FeatureCollection",
+                 "features": [{
+                     "type": "Feature",
+                     "geometry": {
+                         "type": "Polygon",
+                         "coordinates": [[[114.301586, 30.533613], [114.301586, 30.396517], [114.544453, 30.396517], [114.444453, 30.533613]]]
+                     }
+                 }]
+             };
+             //将矩形添加到一个图层中，在地图中显示
+             map.addLayer({
+                 //此id可随意设置，但是要唯一
+                 "id": "Rectangle",
+                 //指定类型为fill（填充区域）
+                 "type": "fill",
+                 //设置数据来源
+                 "source": {
+                     "type": "geojson",
+                     "data": geometryRectangle
+                 },
+                 //设置绘制参数
+                 "paint": {
+                     //设置填充颜色
+                     "fill-color": '#ffcc33',
+                     //设置透明度
+                     "fill-opacity": 0.9
+                 }
+             });
+
+             //用geojson创建一条线
+             var geometryLine = {
+                 "type": "Feature",
+                 "geometry": {
+                     "type": "LineString",
+                     "coordinates": [[114.40, 30.60], [114.45, 30.20]]
+                 }
+             };
+             //将线添加到一个图层中，在地图中显示
+             map.addLayer({
+                 //此id可随意设置，但是要唯一
+                 "id": "Line",
+                 //指定类型为线
+                 "type": "line",
+                 //设置数据来源
+                 "source": {
+                     "type": "geojson",
+                     "data": geometryLine
+                 },
+                 //设置线型
+                 "layout": {
+                     //线条末端样式
+                     'line-cap': 'round',
+                     //线条相交处样式  
+                     'line-join': 'round'
+                 },
+                 //设置绘制参数
+                 "paint": {
+                     //设置线颜色
+                     "line-color": "red",
+                     //设置线宽度，像素单位
+                     "line-width": 4
+                 }
+             });
+         }
+
+         /**执行拓扑分析
+         */
+         function TopAnalysis() {
+             //创建线几何对象
+             var lineObj = new Zondy.Object.GLine(
+                new Zondy.Object.AnyLine([new Zondy.Object.Arc
+                    ([
+                        new Zondy.Object.Point2D(114.40, 30.60),
+                        new Zondy.Object.Point2D(114.45, 30.20)
+                    ])
+                ])
+            );
+             //创建区几何对象
+             var regionObj = new Zondy.Object.GRegion([
+                    new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                            new Zondy.Object.Point2D(114.301586, 30.533613),
+                            new Zondy.Object.Point2D(114.301586, 30.396517),
+                            new Zondy.Object.Point2D(114.544453, 30.396517),
+                            new Zondy.Object.Point2D(114.444453, 30.533613),
+                            new Zondy.Object.Point2D(114.401586, 30.533613)
+                        ])
+                        ])
+                ]);
+             //初始化TopAnalysis类
+             var topService = new Zondy.Service.TopAnalysis({
+                 //IP地址
+                 ip: "develop.smaryun.com",
+                 //端口号
+                 port: "6163"
+             });
+             //调用setLine方法，设置线类型
+             topService.setLine(lineObj);
+             //调用setRelativeObj方法，设置拓扑分析参照物
+             topService.setRelativeObj(regionObj);
+             //设置拓扑分析半径
+             topService.nearDis = "0.05";
+             //执行拓扑分析，成功执行后返回执行结果，AnalysisSuccess为回调函数
+             topService.execute(AnalysisSuccess);
+         }
+
+         /**拓扑分析成功回调函数
+         *  @param {json对象} data 获取结果对象
+         */
+         function AnalysisSuccess(data) {
+             //显示结果
+             document.getElementById("topResult").value = data;
+         }
+    </script>
+</head>
+<body onload="init();">
+<div class="ToolLib">
+     <input type="button" id="topAnalysisBtn" class="ButtonLib" value="拓扑分析" onclick="TopAnalysis()" />
+        分析结果：<input id="topResult" type="text" disabled="disabled" />
+    </div>
+    <div id="mapbox_map" style="width: 100%; height:95%;position: absolute;">
+    </div>
+</body>
+</html>

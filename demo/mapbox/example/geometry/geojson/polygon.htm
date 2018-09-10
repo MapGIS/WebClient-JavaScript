@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 635px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "dark-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 11,
+      pitch: 45,
+      center: [114.2893, 30.5941]
+    });
+    var GeoPolygon = {
+      "type": "Feature",
+      "properties": {
+        name: "面"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [//外面的顺时针区开始
+            [
+              114.32510375976562,
+              30.63968439181164
+            ],
+            [
+              114.22931671142578,
+              30.608958829007946
+            ],
+            [
+              114.22348022460937,
+              30.601275914486066
+            ],
+            [
+              114.22931671142578,
+              30.580588116155223
+            ],
+            [
+              114.27120208740234,
+              30.557530797259172
+            ],
+            [
+              114.334716796875,
+              30.531806554215013
+            ],
+            [
+              114.37179565429687,
+              30.586203812332297
+            ],
+            [
+              114.35291290283201,
+              30.617822973083012
+            ],
+            [
+              114.32510375976562,
+              30.63968439181164
+            ]
+          ],//外面的顺时针区结束
+          [ //里面的逆时针区带洞开始
+            [
+              114.3233871459961,
+              30.57438091562706
+            ],
+            [
+              114.33368682861328,
+              30.57851909346139
+            ],
+            [
+              114.34587478637695,
+              30.586647142912706
+            ],
+            [
+              114.33162689208984,
+              30.596695425524466
+            ],
+            [
+              114.31617736816406,
+              30.57955361032709
+            ],
+            [
+              114.3233871459961,
+              30.57438091562706
+            ]
+          ]//里面的逆时针区带洞结束
+        ]
+      }
+    };
+
+    map.on('load', function() {
+      initMap();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字geojsonPolygon
+      map.addSource('geojsonPolygon', {
+        "type": "geojson",
+        "data": GeoPolygon
+      });
+      map.addLayer({
+        "id": "fillid",
+        "type": "fill",
+        "source": "geojsonPolygon", //必须和上面的geojsonPolygon一致
+        "layout": {
+          "visibility": "visible" //是否可见  visible / none
+        },
+        "paint": {
+          "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+          "fill-color": "#FFFF00", //颜色
+          "fill-opacity": 0.8, //透明度
+          "fill-outline-color": "#FFFFFF", //边线颜色，没错,确实没有边线宽度这个选项
+          //"fill-pattern":"picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+          //"fill-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

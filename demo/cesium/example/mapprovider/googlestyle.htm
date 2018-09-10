@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script src="../../libs/zondyclient/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var basemapProvider = new Cesium.UrlTemplateImageryProvider({
+      url: 'http://maps.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i428131600!3m14!2szh-CN!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy5lOmd8cC5jOiNmZjFkMmM0ZCxzLmU6bC50LmZ8cC5jOiNmZjhlYzNiOSxzLmU6bC50LnN8cC5jOiNmZjFhMzY0NixzLnQ6MTd8cy5lOmcuc3xwLmM6I2ZmNGI2ODc4LHMudDoyMXxzLmU6bC50LmZ8cC5jOiNmZjY0Nzc5ZSxzLnQ6MTh8cy5lOmcuc3xwLmM6I2ZmNGI2ODc4LHMudDo4MXxzLmU6Zy5zfHAuYzojZmYzMzRlODcscy50OjgyfHMuZTpnfHAuYzojZmYwMjNlNTgscy50OjJ8cy5lOmd8cC5jOiNmZjI4M2Q2YSxzLnQ6MnxzLmU6bC50LmZ8cC5jOiNmZjZmOWJhNSxzLnQ6MnxzLmU6bC50LnN8cC5jOiNmZjFkMmM0ZCxzLnQ6NDB8cy5lOmcuZnxwLmM6I2ZmMDIzZTU4LHMudDo0MHxzLmU6bC50LmZ8cC5jOiNmZjNDNzY4MCxzLnQ6M3xzLmU6Z3xwLmM6I2ZmMzA0YTdkLHMudDozfHMuZTpsLnQuZnxwLmM6I2ZmOThhNWJlLHMudDozfHMuZTpsLnQuc3xwLmM6I2ZmMWQyYzRkLHMudDo0OXxzLmU6Z3xwLmM6I2ZmMmM2Njc1LHMudDo0OXxzLmU6Zy5zfHAuYzojZmYyNTU3NjMscy50OjQ5fHMuZTpsLnQuZnxwLmM6I2ZmYjBkNWNlLHMudDo0OXxzLmU6bC50LnN8cC5jOiNmZjAyM2U1OCxzLnQ6NHxzLmU6bC50LmZ8cC5jOiNmZjk4YTViZSxzLnQ6NHxzLmU6bC50LnN8cC5jOiNmZjFkMmM0ZCxzLnQ6NjV8cy5lOmcuZnxwLmM6I2ZmMjgzZDZhLHMudDo2NnxzLmU6Z3xwLmM6I2ZmM2E0NzYyLHMudDo2fHMuZTpnfHAuYzojZmYwZTE2MjYscy50OjZ8cy5lOmwudC5mfHAuYzojZmY0ZTZkNzA!4e0&token=127310s',
+      credit: 'Google Vt Style.'
+    });
+    
+    // Cesium.InfoBoxViewModel.defaultSanitizer = function(rawHtml) {
+    //     return rawHtml;
+    // };
+
+    var viewer = new Cesium.Viewer("map", {
+      timeline: true,
+      animation: false,
+      baseLayerPicker: true, // Only showing one layer in this demo
+      //useDefaultRenderLoop : false,
+      //homeButton:false,
+      fullscreenButton: true,
+      // geocoder: true,
+      // selectionIndicator: true,
+      // infoBox: true,
+      sceneModePicker: true,
+      navigationHelpButton: true,
+      imageryProvider: basemapProvider,
+      navigationInstructionsInitiallyVisible: true
+    });
+  </script>
+
+</body>
+
+</html>

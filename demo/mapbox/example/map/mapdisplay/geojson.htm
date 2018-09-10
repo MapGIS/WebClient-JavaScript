@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>加载GeoJSON数据</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <style type='text/css'>
+        /* 菜单控件层样式设置 */
+        #menu_ {
+            background: #fff;
+            position: absolute;
+            z-index: 1;
+            top: 10px;
+            right: 10px;
+            border-radius: 3px;
+            width: 120px;
+            border: 1px solid rgba(0,0,0,0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+            #menu_ a {
+                font-size: 13px;
+                color: #404040;
+                display: block;
+                margin: 0;
+                padding: 0;
+                padding: 10px;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(0,0,0,0.25);
+                text-align: center;
+            }
+                #menu_ a:last-child {
+                    border: none;
+                }
+                #menu_ a:hover {
+                    background-color: #f8f8f8;
+                    color: #404040;
+                }
+                #menu_ a.active {
+                    background-color: #3887be;
+                    color: #ffffff;
+                }
+                    #menu_ a.active:hover {
+                        background: #3074a4;
+                    }
+    </style>
+</head>
+<body>
+    <nav id="menu_"></nav>
+    <div id="map"></div>
+    <script>
+        //使用严格模式
+        "use strict";
+        //mapbox服务数据的访问令牌，若使用mapbox提供的样式必须要设置令牌
+        mapboxgl.accessToken = 'pk.eyJ1Ijoid29ya2luZ2RvZyIsImEiOiJjamQyZmszenczMHRoMzRuczVzaGthbGhnIn0.HTkYTE-R82N3azqscSyHkA';
+        //实例化要加载的source来源对象
+        var osm = {
+            //来源为栅格瓦片
+            "type": "raster",
+            'tiles': [
+                //来源请求地址
+                "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            //栅格瓦片的分辨率
+            'tileSize': 256
+        };
+        //实例化Map对象加载地图
+        var map = new mapboxgl.Map({
+            //地图容器div的id
+            container: 'map', // container id
+            //设置地图样式信息
+            style: {
+                //设置版本号，一定要设置
+                "version": 8,
+                //添加来源
+                "sources": {
+                    "osm": osm
+                },
+                //设置加载并显示来源的图层信息
+                "layers": [
+                     {
+                         //图层id，要保证唯一性
+                         "id": "OSMLayer",
+                         //图层类型
+                         "type": "raster",
+                         //连接图层来源
+                         "source": "osm",
+                         //图层最小缩放级数
+                         "minzoom": 0,
+                         //图层最大缩放级数
+                         "maxzoom": 22
+                     }
+                ],
+            },
+            //地图中心点
+            center: [114.4, 30.5],
+            //地图当前缩放级数
+            zoom: 10
+        });
+        //注册地图加载事件
+        map.on('load', function () {
+            //添加点图层
+            map.addLayer({
+                //图层ID，图层的唯一标识
+                'id': 'geopoints',
+                //图层类型为符号，表示注记
+                'type': 'circle',
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "FeatureCollection",
+                        "features": [{
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [114.4, 30.5]
+                            },
+                            "properties": {
+                                "name": "洪山区",
+                            }
+                        }, {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [114.25, 30.57]
+                            },
+                            "properties": {
+                                "name": "武昌区",
+                            }
+                        }]
+                    }
+                },
+                "paint": {
+                    //半径
+                    "circle-radius": 8,
+                    //颜色
+                    "circle-color": "#FF0000",
+                    //透明度
+                    "circle-opacity": 0.8,
+                    //轮廓线宽度
+                    "circle-stroke-width": 2,
+                    //轮廓线颜色
+                    "circle-stroke-color": "#0000FF",
+                    //轮廓线透明度
+                    "circle-stroke-opacity": 0.7 
+                }
+            });
+            //添加线图层
+            map.addLayer({
+                "id": "geoline",
+                "type": "line",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "LineString",
+                        "properties": {
+                            "name": "线"
+                        },
+                        "coordinates": [
+                          [
+                            114.34776306152344,
+                            30.623436511269382
+                          ],
+                          [
+                            114.32510375976562,
+                            30.63909360759635
+                          ],
+                          [
+                            114.30673599243164,
+                            30.634958017061198
+                          ],
+                          [
+                            114.29180145263672,
+                            30.629640569460406
+                          ],
+                          [
+                            114.28339004516601,
+                            30.627424880048103
+                          ],
+                          [
+                            114.26467895507812,
+                            30.620777507443577
+                          ],
+                          [
+                            114.24613952636719,
+                            30.616050209185243
+                          ],
+                          [
+                            114.23566818237304,
+                            30.61073172273802
+                          ]
+                        ]
+                    }
+                },
+                "layout": {
+                    //线头的样式，butt尖头，round圆头，square平头
+                    "line-cap": "square",
+                    //折线的连接样式，bevel平拐，round圆拐，miter棱拐
+                    "line-join": "round",
+                    //是否可见 'visible'可见，'none'不可见
+                    "visibility": "visible", 
+                },
+                "paint": {
+                    //线宽
+                    "line-width": 10,
+                    //颜色
+                    "line-color": "#8E2323",
+                    //透明度
+                    "line-opacity": 0.8,
+                    //线的沟宽，如果设置大于0那么一条线会变成2条线，中间有条沟
+                    "line-gap-width": 0,  
+                    //尽量少用，如果这个值相对大的话在拐角处很容易变形变胖
+                    "line-offset": 0,
+                    //实线、虚线的组合，可以表示铁路线等
+                    "line-dasharray": [5, 2],
+                    //模糊度，和宽度配合使用，该值要小于线宽度
+                    "line-blur": 2
+                }
+            });
+            map.addLayer({
+                "id": "geopolygon",
+                "type": "fill",
+                "source": {
+                    "type": "geojson",
+                    "data": {
+                        "type": "Feature",
+                        "properties": {
+                            "name": "面"
+                        },
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                              [//外面的顺时针区开始
+                                [
+                                  114.32510375976562,
+                                  30.63968439181164
+                                ],
+                                [
+                                  114.22931671142578,
+                                  30.608958829007946
+                                ],
+                                [
+                                  114.22348022460937,
+                                  30.601275914486066
+                                ],
+                                [
+                                  114.22931671142578,
+                                  30.580588116155223
+                                ],
+                                [
+                                  114.27120208740234,
+                                  30.557530797259172
+                                ],
+                                [
+                                  114.334716796875,
+                                  30.531806554215013
+                                ],
+                                [
+                                  114.37179565429687,
+                                  30.586203812332297
+                                ],
+                                [
+                                  114.35291290283201,
+                                  30.617822973083012
+                                ],
+                                [
+                                  114.32510375976562,
+                                  30.63968439181164
+                                ]
+                              ],//外面的顺时针区结束
+                              [ //里面的逆时针区带洞开始
+                                [
+                                  114.3233871459961,
+                                  30.57438091562706
+                                ],
+                                [
+                                  114.33368682861328,
+                                  30.57851909346139
+                                ],
+                                [
+                                  114.34587478637695,
+                                  30.586647142912706
+                                ],
+                                [
+                                  114.33162689208984,
+                                  30.596695425524466
+                                ],
+                                [
+                                  114.31617736816406,
+                                  30.57955361032709
+                                ],
+                                [
+                                  114.3233871459961,
+                                  30.57438091562706
+                                ]
+                              ]//里面的逆时针区带洞结束
+                            ]
+                        }
+                    }
+                },
+                "layout": {
+                    //是否可见  visible / none
+                    "visibility": "visible" 
+                },
+                "paint": {
+                    //抗锯齿，true表示针对边界缝隙进行填充
+                    "fill-antialias": true,
+                    //颜色
+                    "fill-color": "#00FFFF",
+                    //透明度
+                    "fill-opacity": 0.8,
+                    //边线颜色
+                    "fill-outline-color": "#FF0000"
+                }
+            });
+        });
+        //图层ID列表
+        var toggleableLayerIds = ['geopoints', 'geoline', 'geopolygon'];
+
+        for (var i = 0; i < toggleableLayerIds.length; i++) {
+            var id = toggleableLayerIds[i];
+            //创建标签
+            var link = document.createElement('a');
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = id;
+            //创建点击事件
+            link.onclick = function (e) {
+                var clickedLayer = this.textContent;
+                //取消事件的默认动作
+                e.preventDefault();
+                //停止事件的传播
+                e.stopPropagation();
+                //获得图层的可见属性信息
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+                if (visibility === 'visible') {
+                    //设置图层不可见
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    //设置图层不可见
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                }
+            };
+
+            var layers = document.getElementById('menu_');
+            layers.appendChild(link);
+        }
+
+    </script>
+</body>
+</html>

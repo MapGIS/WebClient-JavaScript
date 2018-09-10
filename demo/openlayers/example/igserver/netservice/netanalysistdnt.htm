@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>网络分析(点上网标)</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //地图文档目录服务对象
+        var mapDocService;
+        //路径分析服务类
+        var netAnalyParam;
+        //网络类url串
+        var netClsUrl;
+        var map, vectorMapdoc;
+        //绘制的网标要素
+        var flagFeature;
+        //绘制网标控件
+        var drawFlagCtrl;
+        //网标绘制临时图层
+        var flagLayer_Temp;
+        //网标绘制临时资源
+        var flagSource_Temp;
+        //网标绘制图层
+        var flagSource;
+        //网标绘制资源
+        var flagLayer;
+
+        function init() {
+            var extent = [114.42204, 38, 114.57798, 38.092545];
+            var projection = new ol.proj.Projection({
+                units: ol.proj.Units.DEGREES,
+                extent: extent,
+                code: "EPSG:4326"
+            });
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [114.5000, 38.0359],
+                    zoom: 2,
+                    projection: projection
+                }),
+                controls: [new ol.control.MousePosition()]
+            });
+
+            //初始化地图文档图层对象
+            vectorMapdoc = new Zondy.Map.MapDocTileLayer("MapGIS IGS VectorMapdocLayer", "daolujiaotong", {
+                //矢量地图文档地图服务器ip
+                ip: "develop.smaryun.com",
+                //矢量地图文档地图服务端口
+                port: "6163"
+            });
+
+            //将矢量地图文档加载到地图中
+            map.addLayer(vectorMapdoc);
+            //创建一个资源用来承载绘制的临时点
+            flagSource_Temp = new ol.source.Vector({
+                wrapX: false
+            });
+            //创建绘图层并添加到地图容器中
+            flagLayer_Temp = new ol.layer.Vector({
+                source: flagSource_Temp,
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#ffcc33',
+                        width: 2
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#ffcc33'
+                        })
+                    })
+                })
+            });
+            //该资源用来承载纠正到网点上的点要素
+            flagSource = new ol.source.Vector({
+                warpX: false
+            });
+            flagLayer = new ol.layer.Vector({
+                source: flagSource
+            });
+
+            map.addLayer(flagLayer_Temp);
+            map.addLayer(flagLayer);
+            //创建绘制控件并添加在地图容器中，指定控件的回调函数featureAdded
+            drawFlagCtrl = new ol.interaction.Draw({
+                source: flagSource_Temp,
+                type: 'Point',
+                geometryFunction: flagAdded
+            });
+            map.addInteraction(drawFlagCtrl);
+            drawFlagCtrl.setActive(false);
+            initNetAnalysis();
+        };
+
+        function initNetAnalysis() {
+            //初始化网络类信息
+            initNetCls();
+        }
+        /*初始化网络类信息*/
+        function initNetCls() {
+            mapDocService = new Zondy.Catalog.MapDoc({
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            mapDocService.docName = "daolujiaotong";
+            mapDocService.mapIndex = 0;
+            mapDocService.layerID = 0;
+            mapDocService.getLayerInfo(getLayerInfoSuccess, true);
+        }
+        /*获取地图文档中图层信息成功后的回调函数*/
+        function getLayerInfoSuccess(data) {
+            if (data.result) {
+                netAnalyParam = new Zondy.Service.NetAnalysisExtent({
+                    ip: "develop.smaryun.com",
+                    port: "6163",
+                    netClsUrl: data.result.URL
+                });
+                netClsUrl = data.result.URL;
+            }
+        }
+        /*网标绘制的回调函数*/
+        function flagAdded(coordinates, geometry) {
+            if (!geometry) {
+                geometry = new ol.geom.Point(null);
+            }
+            var start = coordinates[0];
+            var end = coordinates[1];
+            geometry.setCoordinates([start, end]);
+            flagFeature = new ol.Feature({
+                geometry: new ol.geom.Point([coordinates[0], coordinates[1]])
+            });
+            var dotVal = coordinates[0] + "," + coordinates[1];
+            netAnalyParam.elementType = 1;
+            netAnalyParam.nearDis = 0.5;
+            netAnalyParam.addNetFlag(dotVal, addFlagSuccess, addFlagError, null);
+            return geometry;
+        }
+        /*绘制网标成功后的回调*/
+        function addFlagSuccess(data) {
+            if (data && data.result.value[0].elemID != null) {
+                flagFeature.setGeometry(new ol.geom.Point([data.result.value[0].posDot.X, data.result.value[0].posDot.Y]));
+                flagFeature.setStyle(new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        stroke: new ol.style.Stroke({
+                            width: 2,
+                            color: "blue"
+                        }),
+                        fill: new ol.style.Fill({
+                            color: "rgba(255,0,0,0.8)"
+                        })
+                    })
+                }));
+                flagSource_Temp.clear(false);
+                flagSource.addFeature(flagFeature);
+                flagSource.refresh();
+            }
+        }
+        /*绘制网标失败后的回调*/
+        function addFlagError() {
+            //添加失败
+            alert("添加失败");
+        }
+
+        function drawNetFlag() {
+            drawFlagCtrl.setActive(true);
+        }
+
+        function stopNetFlag() {
+            drawFlagCtrl.setActive(false);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <input type="button" id="pntFlg" class="ButtonLib" value="点上网标" onclick="drawNetFlag()" />
+        <input type="button" id="stopFlg" class="ButtonLib" value="停止网标" onclick="stopNetFlag()" />
+    </div>
+    <!--地图显示-->
+    <div id="mapCon">
+    </div>
+</body>
+
+</html>

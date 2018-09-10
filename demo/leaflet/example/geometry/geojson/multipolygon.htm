@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>MultiPolygon</title>
+    <script includes="leaflet" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        #map{height:600px}
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    var map = L.map('map').setView([30.594183452544694,114.28939819335936], 11);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(map);
+
+    var MultiPolygon = {
+        "type": "Feature",
+        "properties": {
+            name:"多面"
+        },
+        "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": [
+                [   //外圈绘制开始，按顺逆方向绘制均可
+                    [
+                        [
+                            114.19120788574219,
+                            30.695792432740344
+                        ],
+                        [
+                            114.01473999023438,
+                            30.52382178287774
+                        ],
+                        [
+                            114.2749786376953,
+                            30.51613212366921
+                        ],
+                        [
+                            114.19120788574219,
+                            30.695792432740344
+                        ]
+                    ]
+                ], //外圈绘制结束
+                 [ //内圈绘制开始，无论顺逆方向绘制均会有洞区出现
+                    [
+                        [
+                            114.14382934570312,
+                            30.617232055390453
+                        ],
+                        [
+                            114.16923522949219,
+                            30.549843806500373
+                        ],
+                        [
+                            114.21180725097655,
+                            30.618413887168824
+                        ],
+                        [
+                            114.14382934570312,
+                            30.617232055390453
+                        ]
+                    ]
+                ]  //内圈绘制结束
+            ]
+        }
+    };
+    L.geoJSON(MultiPolygon).addTo(map);
+</script>
+</body>
+</html>

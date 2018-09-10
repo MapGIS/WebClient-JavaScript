@@ -1,0 +1,91 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>四色专题图</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var SvrCfg = {
+            //服务ip
+            ip: "develop.smaryun.com",
+            //服务端口
+            port: "6163",
+            //地图文档名称，注意：必须是已经在IGServer上发布过的地图文档
+            mapdocName: "ChinaLBT",
+            //地图的显示中心
+            mapCenter: { x: 0, y: 1080 },
+            //地图的显示级别
+            dispLevel: 2
+        };
+
+        var map, docLayer, clientFourClrTheme;
+        function init() {
+            var extent = [-791.061875083204, 57.3837232056461, 880.915414688161, 1685.59575472245];
+            var projection = new ol.proj.Projection({ units: ol.proj.Units.DEGREES, extent: extent, code: "EPSG:4326" });
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [SvrCfg.mapCenter.x, SvrCfg.mapCenter.y],
+                    zoom: SvrCfg.dispLevel,
+                    projection: projection
+                })
+            });
+            //初始化地图文档图层对象
+            docLayer = new Zondy.Map.Doc("MapGIS IGS MapDocLayer", SvrCfg.mapdocName, {
+                ip: SvrCfg.ip,
+                port: SvrCfg.port
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(docLayer);
+            //layer = new ol.layer.Vector({ source: new ol.source.Vector({ wrapX: false }) });
+            // map.addLayer(layer);
+        }
+
+        function ClientDraw() {
+            RemoveTheme();
+            var layerURL = "gdbp://MapGisLocal/示例数据/ds/兰伯特(全国)_400万/sfcls/省级行政区";
+            if (clientFourClrTheme == null) {
+                clientFourClrTheme = new Zondy.ClientTheme(map, layerURL, { rows: 2, cols: 2, layerExtend: [-791.061875083204, 57.3837232056461, 880.915414688161, 1685.59575472245], layerFilter: "", ip: SvrCfg.ip, port: SvrCfg.port });
+            }
+
+            //初始化四色配置信息
+            var fourClrInfo = ["#ff0000", "#ffff00", "#00ff00", "#0000ff"];
+            clientFourClrTheme.ClientThemeInfos = new Zondy.ClientFourClrInfos(fourClrInfo);
+
+            clientFourClrTheme.LayerRender();
+        };
+        //更新专题图
+        function UpdateTheme() {
+            if (clientFourClrTheme != null) {
+                //修改四色配置信息
+                var fourClrInfo = ["#FF00FF", "#3300FF", "#99FF66", "#FF9900"];
+                clientFourClrTheme.ClientThemeInfos = new Zondy.ClientFourClrInfos(fourClrInfo);
+                clientFourClrTheme.UpdateLayerRender();
+            } else {
+                alert("没有专题图信息，请先生成专题图！");
+            }
+        };
+        //删除专题图
+        function RemoveTheme() {
+            if (clientFourClrTheme != null) {
+                clientFourClrTheme.RemoveThemeLayer();
+                clientFourClrTheme = null;
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="绘制专题" onclick="ClientDraw()" />
+        <input type="button" class="ButtonLib" id="updateThemeBtn" value="更新专题" onclick="UpdateTheme()" />
+        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="移除专题" onclick="RemoveTheme()" />
+    </div>
+    <div id="mapCon" style="height: 95%;">
+    </div>
+</body>
+</html>

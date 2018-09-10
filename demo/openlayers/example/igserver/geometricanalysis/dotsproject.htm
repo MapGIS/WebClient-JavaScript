@@ -1,0 +1,104 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>点投影转换</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="json" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        /*============================================点投影转换===================================================*/
+        //执行点投影转换
+        function projectTransByDot() {
+            $("#resultShow").tabs("select", 1);
+            //需要投影转换的点数组
+            var dots = new Array(1);
+            dots[0] = new Zondy.Object.Point2D(4819.949688726125, 67647.39383493776);
+            //设置源投影参数
+            var srcProjParam = new Zondy.Service.CProjectParam({
+                // 度分秒,即±DDDMMSS.SSSS格式
+                ProjAngleUnit: 5,
+                // 投影平面直角坐标系
+                ProjType: 3,
+                // 高斯-克吕格(横切椭圆柱等角)投影
+                ProjTypeID: 5,
+                // 厘米
+                ProjUnit: 12,
+                // 投影带号
+                ProjZoneNO: 20,
+                // 投影类型为3度分带
+                ProjZoneType: 1,
+                // 北京/克拉索夫斯基(1940年)椭球
+                SphereID: 2,
+                // 水平比例尺
+                ProjRate: 5000,
+                // 中央子午线经度
+                ProjLon: 1170000
+            });
+
+            //设置目的投影参数
+            var desProjParam = new Zondy.Service.CProjectParam({
+                // 角度单位为度
+                ProjAngleUnit: 4,
+                // 地理坐标系
+                ProjType: 1,
+                // 地理坐标系
+                ProjTypeID: 0,
+                // 毫米
+                ProjUnit: 1,
+                // 投影带号
+                ProjZoneNO: 20,
+                // 投影类型为6度分带
+                ProjZoneType: 0,
+                // 北京/克拉索夫斯基(1940年)椭球
+                SphereID: 1,
+                // 水平比例尺
+                ProjRate: 1,
+                // 中央子午线经度
+                ProjLon: 1170000
+            });
+
+            //初始化投影转换服务
+            var projectDotsService = new Zondy.Service.ProjectDots(
+            //设置需要投影转换的点数组
+                dots,
+            //设置源投影参数
+                srcProjParam,
+            //设置目的投影参数
+                desProjParam,
+            //设置Options参数,包括服务器地址、端口号、返回结果格式
+                {
+                    ip: "develop.smaryun.com",
+                    port: "6163",
+                    resultFormat: "json"
+                }
+            );
+            //调用execute方法，执行点投影转换功能服务，并返回结果信息，onSuccess为回调函数
+            projectDotsService.execute(projSuccess);
+        }
+        //投影转换成功后的回调
+        function projSuccess(data) {
+            //显示结果
+            var formatData = JSON.stringify(data.result);
+            Process(formatData, 1, "reslutTable");
+        }
+    </script>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="点投影转换" onclick="projectTransByDot()" />
+    </div>
+    <div id="resultShow" class="easyui-tabs" style="width: 100%; height: 600px">
+        <div id="introduction" title="说明" style="padding: 10px">
+            <br />
+            说明：<br />
+            该点投影示例是给定坐标进行投影。投影前点的坐标为：（4819.949688726125, 67647.39383493776），投影后的坐标见“结果显示”选项卡界面。<br />
+        </div>
+        <div id="resultT" title="结果显示" style="padding: 10px">
+            <div id="reslutTable">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

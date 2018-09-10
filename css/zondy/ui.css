@@ -1,0 +1,283 @@
+html {
+    font-family: Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, WenQuanYi Micro Hei, Microsoft Yahei, sans-serif;
+}
+
+#body-header {
+    height: 70px;
+}
+
+.main-sidebar {
+    position: fixed;
+    z-index: 900;
+    height: 100%;
+}
+
+.sidebar {
+    height: 100% !important;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.main-body-card-top {
+    margin-top: 20px;
+}
+
+.main-card-row-first {
+    margin-top: 45px;
+    margin-left: 10px;
+    color: #3c4858;
+    font-family: MicrosoftYaHei-Bold;
+    font-size: 24px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 36px;
+    letter-spacing: 0px;
+}
+
+.main-card-row-second {
+    margin-top: 35px;
+    margin-left: 10px;
+    color: #666666;
+    font-family: MicrosoftYaHei;
+    font-size: 18px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 30px;
+    letter-spacing: 0px;
+}
+
+.main-card-row-third {
+    margin-top: 24px;
+    margin-left: 10px;
+    color: #999999;
+}
+
+.main-card-row-first-dark {
+    margin-top: 45px;
+    margin-left: 10px;
+    color: #ffffff;
+    font-family: MicrosoftYaHei-Bold;
+    font-size: 24px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 36px;
+    letter-spacing: 0px;
+}
+
+.main-card-row-second-dark {
+    margin-top: 35px;
+    margin-left: 10px;
+    color: #d0d0d0;
+    font-family: MicrosoftYaHei;
+    font-size: 18px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 30px;
+    letter-spacing: 0px;
+}
+
+.main-card-row-third-dark {
+    margin-top: 24px;
+    margin-left: 10px;
+    color: #b6b6b6;
+}
+
+/*
+ * text-config
+ */
+.text-all {
+    font-family: 'Microsoft YaHei';
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*
+ * menu-config
+ */
+.menu-text {
+    font-family: 'Microsoft YaHei';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 13px;
+}
+
+.menu-text-lg {
+    font-family: 'Microsoft YaHei';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 15px;
+}
+
+.menu-text-sg {
+    font-family: 'Microsoft YaHei';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+}
+
+.menu-navi {
+    font-family: 'Microsoft YaHei';
+    /*     font-weight: normal;
+    font-style: normal;   */
+    /* font-size: 24px; */
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    /*     line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+ */
+}
+
+.menu-webclient {
+    background: url('../../img/menu/navimenu/logo.svg') no-repeat 0px 0px;
+}
+
+.menu-totail {
+    background: url('../../img/menu/navimenu/Totial.png') no-repeat 0px 2px;
+}
+
+.menu-leaflet {
+    background: url('../../img/menu/navimenu/Leaflet.png') no-repeat 0px 2px;
+}
+
+.menu-openlayers {
+    background: url('../../img/menu/navimenu/OpenLayers.png') no-repeat 0px 2px;
+}
+
+.menu-mapbox {
+    background: url('../../img/menu/navimenu/Mapbox.png') no-repeat 0px 2px;
+}
+
+.menu-cesium {
+    background: url('../../img/menu/navimenu/Cesium.png') no-repeat 0px 2px;
+}
+
+.main-panner-top {
+    margin-top: 40px;
+}
+
+.main-panner {
+    margin-left: 40px;
+}
+
+.paper-card {
+    color: #fff;
+    background: #9c27b0 url('../../img/card/GepSpark-Bg.png') no-repeat fixed top;
+    border-color: #701c7e;
+}
+
+.section-dark {
+    color: #fff;
+    background: radial-gradient(ellipse at center, #362a53 0, #2d2443 100%);
+    border-color: #2d2443;
+    padding: 50px 0;
+    background-size: cover;
+}
+
+.section-green {
+    color: #fff;
+    background: radial-gradient(ellipse at center, #29725c 0, #05ca5e 100%);
+    border-color: #33c474;
+    padding: 50px 0;
+    background-size: cover;
+}
+
+.page-header-warning {
+    background: linear-gradient(60deg, #ffa726, #f57c00);
+    height: 300px;
+}
+
+.page-header-dark {
+    background: radial-gradient(ellipse at center, #362a53 0, #2d2443 100%);
+}
+
+.carousel-caption-center {
+    position: absolute;
+    top: 35%;
+    left: 25%;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.card-columns {
+    margin-bottom: 0.75rem;
+}
+
+@media (min-width: 576px) {
+    .card-columns {
+        -webkit-column-count: 4;
+        column-count: 4;
+        -webkit-column-gap: 1.25rem;
+        column-gap: 1.25rem;
+    }
+
+    .card-columns .card {
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+.divider-primary {
+    border-radius: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    /*     background: linear-gradient(60deg, #ef5350, #e53935);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4); */
+    background: linear-gradient(60deg, #ec407a, #d81b60);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
+    /* background: linear-gradient(60deg, #ab47bc, #8e24aa); 
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);*/
+    /*     background: linear-gradient(60deg, #010002, #bdbdbd);
+    box-shadow: 0 4px 20px 0px rgba(49, 4, 43, 0.14), 0 7px 10px -5px rgba(15, 2, 9, 0.705); */
+}
+
+.content-top-fix {
+    padding: 30px 0px;
+    margin-top: 40px;
+}
+
+.main-panel>.content-top-fix {
+    margin-top: -5px;
+}
+
+
+
+  /* li.nav-item.active{
+    background: linear-gradient(60deg, #ec407a, #d81b60); 
+    box-shadow: 0;
+}   */
+
+.sidebar[data-color="rose"] li.active > a {
+    background-color: linear-gradient(60deg, #ec407a, #d81b60); 
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4); }
+
+
+
+
+/* 分别设置二级目录与三级目录的纵向间距以及字段间距 */
+.nav-item-second{
+    margin-top: -15px;   
+}
+  .seconde-sidebar-text {
+    padding-left: 55px;
+}  
+
+.third-sidebar-text {
+    padding-left: 60px;
+}  
+
+ .nav-item-third {
+  margin-top: -15px;
+  margin-bottom: auto;
+} 
+
+

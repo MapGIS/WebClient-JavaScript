@@ -1,0 +1,222 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>矢量图层查询服务(固定圆查询)</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        .mouse-position-wrapper {
+            width: 300px;
+            height: 29px;
+            color: black;
+            position: absolute;
+            left: 20px;
+            bottom: 10px;
+            z-index: 999;
+        }
+    </style>
+    <script type="text/javascript">
+        var map, vectorLayer, drawLayer;
+        //地图初始化函数
+        function init() {
+            $('#resultShow').tabs('select', 1);
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'MapCon',
+                view: new ol.View({
+                    center: [105, 35],
+                    zoom: 3,
+                    projection: 'EPSG:4326'
+                }),
+                controls: [new ol.control.MousePosition({
+                    className: 'custom-mouse-position',
+                    target: document.getElementById('mouse-position')
+                })]
+            });
+            //初始化矢量图层对象
+            vectorLayer = new Zondy.Map.Layer("MapGIS IGS VectorLayer", [
+                "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区"
+            ], {
+                ip: "develop.smaryun.com",
+                port: "6163",
+                isBaseLayer: true
+            });
+
+            //将地图文档图层加载到地图中
+            map.addLayer(vectorLayer);
+            $('#resultShow').tabs('select', 0);
+        }
+
+        function queryVectorLayerByCircle() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            $('#resultShow').tabs('select', 1);
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //创建一个用于查询的圆
+            var pointObj = new Zondy.Object.Point2D(116.4375, 41.53125);
+            var geomObj = new Zondy.Object.Circle(pointObj, 20);
+            //指定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                EnableDisplayCondition: false,
+                MustInside: false,
+                CompareRectOnly: false,
+                Intersect: true
+            });
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter(
+                "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区", {
+                    geometry: geomObj,
+                    resultFormat: "json",
+                    rule: rule,
+                    struct: queryStruct
+                });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 20;
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess, queryError);
+        }
+
+        //查询失败回调
+        function queryError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        //查询成功回调
+        function querySuccess(result) {
+            stopPressBar();
+            var Circle1 = new ol.Feature({
+                geometry: new ol.geom.Circle([116.4375, 41.53125], 20)
+            });
+
+            Circle1.setStyle(new ol.style.Style({
+                //填充色
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.5)'
+                }),
+                //边线颜色
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 6
+                }),
+                //形状
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+
+            //实例化一个矢量图层Vector作为绘制层
+            var source = new ol.source.Vector({
+                features: [Circle1]
+            });
+            //创建一个图层
+            var vector = new ol.layer.Vector({
+                source: source
+            });
+            //将绘制层添加到地图容器中
+            map.addLayer(vector);
+            //            //停止进度条
+            //            stopPressBar();
+            var format = new Zondy.Format.PolygonJSON();
+            var features = format.read(result);
+
+            drawSource = new ol.source.Vector({
+                wrapX: false
+            });
+            drawSource.addFeatures(features);
+            drawLayer = new ol.layer.Vector({
+                source: drawSource,
+                style: new ol.style.Style({
+                    //填充色
+                    fill: new ol.style.Fill({
+                        color: 'rgba(23, 75, 25, 0.5)'
+                    }),
+                    //边线颜色
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(23, 75, 25, 1)',
+                        width: 1
+                    })
+                })
+            });
+
+            map.addLayer(drawLayer);
+            map.setView(new ol.View({
+                center: [105, 35],
+                zoom: 3,
+                projection: 'EPSG:4326'
+            }));
+
+        }
+
+        //清除客户端查询结果信息
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            if (map.getLayers().array_.length > 1) {
+                for (var i = map.getLayers().array_.length - 1; i > 0; i--) {
+                    map.removeLayer(map.getLayers().array_[i]);
+                }
+            } else
+                return;
+        }
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="mouse-position" class="mouse-position-wrapper">
+        <div class="custom-mouse-position"></div>
+    </div>
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' />
+        <br />
+        <br />
+        <span>正在查询，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="圆查询" onclick="queryVectorLayerByCircle()" />
+    </div>
+    <div id="resultShow" class="easyui-tabs" style="width: 100%; height: 750px">
+        <div id="introduction" title="说明" style="padding: 10px">
+            注意：
+            <br /> 上述为矢量图层查询的接口示例，默认查询示例数据库（OpenLayerVecterMap.hdf）下“世界地图经纬度”中的简单要素类“世界政区”，操作前请先确认此数据库已经附加。矢量图层圆查询使用(116.4375,
+            41.53125)这个点为圆心，以20为半径的圆进行操作。其中【圆查询】功能的结果显示在“地图显示”选项卡中。
+            <br />
+        </div>
+        <div id="MapCon" title="地图显示" style="padding: 10px">
+        </div>
+    </div>
+</body>
+
+</html>

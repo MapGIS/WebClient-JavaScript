@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 700px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    var styleItem;
+    var map;
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    $.get("http://182.61.52.190:8822/vectortile/style/wuhan", function(styleEntity) {
+      styleItem = JSON.parse(styleEntity);
+      map = new mapboxgl.Map({
+        container: 'mapid',
+        style: styleItem,
+        zoom: 10,
+        pitch: 45,
+        center: [114.39960479736327, 30.495722001885323]
+      });
+    });
+  </script>
+</body>
+
+</html>

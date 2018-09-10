@@ -1,0 +1,369 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>网络分析（老版本接口）</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-esayui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var vectors;
+        var map, vectorLayer;
+        //存放线路
+        var lineFeature;
+        //地图初始化函数
+        function init() {
+            var extent = [114.42204, 38, 114.57798, 38.092545];
+            var projection = new ol.proj.Projection({
+                units: ol.proj.Units.DEGREES,
+                extent: extent,
+                code: "EPSG:4326"
+            });
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [114.5000, 38.0359],
+                    zoom: 2,
+                    projection: projection
+                }),
+                controls: [new ol.control.MousePosition()]
+            });
+
+            //初始化矢量图层对象
+            vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", [
+                "gdbp://MapGisLocal/sample/ds/网络分析/ncls/道路交通网"
+            ], {
+                //矢量图层地图服务器ip
+                ip: "develop.smaryun.com",
+                //矢量图层地图服务端口
+                port: "6163"
+            });
+            //将矢量图层加载到地图中
+            map.addLayer(vectorLayer);
+        };
+
+        //执行路径分析
+        function pathAnalysis() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            var netAnalyParam = new Zondy.Service.NetAnalysis({
+                //矢量图层地图服务器ip
+                ip: "develop.smaryun.com",
+                //矢量图层地图服务端口
+                port: "6163",
+                //设置网络类URL
+                netClsUrl: "gdbp://MapGisLocal/sample/ds/网络分析/ncls/道路交通网",
+                //指定感兴趣路径点坐标序列
+                flagPosStr: "114.44,38.06,114.56,38.03",
+                //分析类型：用户自定义
+                analyTp: 'UserMode',
+                //设置网络类某些属性字段为权值字段
+                weight: ",Weight1,Weight1",
+                //网络类型：1/2:节点网标/线网标
+                elementType: 2,
+                //设置网标搜索半径
+                nearDis: 0.01,
+                //设置障碍点的坐标序列
+                barrierPosStr: "",
+                outFormat: 'JSON'
+            });
+            netAnalyParam.execute(AnalysisSuccess, "POST", null, null, AnalysisError);
+        }
+
+        //分析失败回调
+        function AnalysisError(e) {
+            //停止进度条
+            stopPressBar();
+            alert("路径分析失败，请检查参数！");
+        }
+
+        //分析成功后的回调
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
+            if (data == null || data.result == null) {
+                alert("路径分析失败，请检查参数！");
+            } else {
+                //轨迹坐标点
+                var dot;
+                //轨迹坐标数组
+                var pathArr = new Array();
+                //结果描述信息
+                var resDiv;
+                //两点之间的距离
+                var dis = 0;
+                if (data.result.results[0].Value == null) {
+                    return;
+                }
+                //返回的分析结果数据
+                var result = data.result.results[0].Value;
+                var resultObj = $.parseJSON(result);
+                if (resultObj == null || resultObj.Paths == null) {
+                    return;
+                }
+                //解析轨迹边坐标序列
+                var pathObj = resultObj.Paths[0];
+                var edgeNum = pathObj.Edges.length;
+                //添加经过纠偏的起点
+                if (resultObj.inputDots == null) {
+                    return;
+                }
+                if (resultObj.inputDots[0].pDot == null || resultObj.inputDots[1] == null || resultObj.inputDots[1].pDot ==
+                    null) {
+                    return;
+                }
+                //路径分析的真实起点，即经过纠偏之后，线上网标或者点上网标点
+                //dot = new OpenLayers.Geometry.Point(resultObj.inputDots[0].pDot.x, resultObj.inputDots[0].pDot.y);
+                dot = [resultObj.inputDots[0].pDot.x, resultObj.inputDots[0].pDot.y];
+                //结果描述信息
+                if (dot[0] == 114.49 && dot[1] == 38.05) {
+                    resDiv =
+                        '从<font color="#FF0000"><b>起点</b></font>(114.49,38.05 )<font color="#FF0000"><b>出发,</b></font>';
+                    //添加起点到缓存数组
+                    pathArr.push(dot);
+                } else {
+                    pathArr.push(dot);
+                    resDiv = '从<font color="#0000FF"><b>当前位置</b></font>出发，';
+
+                }
+                //没有路径线信息时，用户直接步行到达指定地点
+                if (edgeNum == 0) {
+                    //纠偏起点与纠偏终点的距离
+                    if (resultObj.inputDots[1].pDot.x != resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot.y !=
+                        resultObj.inputDots[0].pDot.y) {
+                        dis += getDistance(resultObj.inputDots[0].pDot, resultObj.inputDots[1].pDot);
+
+                        dot = [resultObj.inputDots[1].pDot.x, resultObj.inputDots[1].pDot.y];
+                        pathArr.push(dot);
+                    }
+                    //纠偏终点与输入终点的距离
+                    if (resultObj.inputDots[1].pDot.x != 114.50 || resultObj.inputDots[1].pDot.y != 38.05) {
+                        dot = [114.50, 38.05];
+                        pathArr.push(dot);
+                    }
+                    resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米到达终点';
+                } else if (edgeNum == 1) {
+                    //将路径线信息存储进缓存数组
+                    if (dot[0] != pathObj.Edges[0].Dots[0].x || dot[1] != pathObj.Edges[0].Dots[0].y) {
+                        dot = [pathObj.Edges[0].Dots[0].x, pathObj.Edges[0].Dots[0].y];
+                        pathArr.push(dot);
+                    }
+                    var dotLen = pathObj.Edges[0].Dots.length;
+                    for (var m = 1; m < dotLen; m++) {
+                        dot = [pathObj.Edges[0].Dots[m].x, pathObj.Edges[0].Dots[m].y];
+                        pathArr.push(dot);
+                    } //for(j)
+
+                    //有路径线信息时，对路线信息进行解析
+                    if (pathObj.Edges[0].FieldValus[13] != "") {
+                        resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米，';
+                        resDiv += '到达' + pathObj.Edges[0].FieldValus[13] + '(' + pathObj.Edges[0].Dots[0].x + ',' +
+                            pathObj.Edges[0].Dots[0].y + '），<br/>经' + pathObj.Edges[0].FieldValus[13];
+                    } else {
+                        //纠偏起点与纠偏终点的距离
+                        if (resultObj.inputDots[1].pDot.x != resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot
+                            .y != resultObj.inputDots[0].pDot.y) {
+                            dis += getDistance(resultObj.inputDots[0].pDot, resultObj.inputDots[1].pDot);
+                        }
+                        //纠偏终点与输入终点的距离
+                        if (resultObj.inputDots[1].pDot.x != 114.50 || resultObj.inputDots[1].pDot.y != 38.05) {}
+                        resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米，';
+                    }
+                    resDiv += '到达终点';
+                } //else if (edgeNum == 1)
+                else { //(edgeNum > 1)
+                    //有路径线信息时，对路线信息进行解析
+                    if (dis != 0) {
+                        resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米，';
+                    }
+                    for (var i = 0; i < edgeNum - 1; i++) {
+                        var edge = pathObj.Edges[i];
+                        var edge1 = pathObj.Edges[i + 1];
+
+                        if (i == 0) {
+                            var dots = [edge.Dots[0].x, edge.Dots[0].y];
+                            if (edge.FieldValus[13] != "")
+                                resDiv += '到达' + edge.FieldValus[13] + '(' + dots[0] + ',' + dots[1] + '），<br/>经' +
+                                edge.FieldValus[13];
+
+                        } //i=0
+                        if (i != edgeNum - 2) {
+                            if (edge.FieldValus[13] != edge1.FieldValus[13] && edge1.FieldValus[13] != "") {
+                                var dots1 = [edge1.Dots[0].x, edge1.Dots[0].y];
+                                if (edge.FieldValus[13] != "")
+                                    resDiv += '到达' + edge1.FieldValus[13] + '(' + dots1[0] + ',' + dots1[1] + ')，<br/>' +
+                                    '经' + edge1.FieldValus[13];
+                            } //if (edge.FieldValus[13] != edge1.FieldValus[13] && edge1.FieldValus[13] != "")
+
+                        } //i!=edgeNum-2
+                        else { //i=edgeNum-2
+                            var edgeLen = edge1.Dots.length;
+                            var dots4 = [edge1.Dots[edgeLen - 1].x, edge1.Dots[edgeLen - 1].y];
+                            //终点解析
+                            if (dots4[0] == 114.50 && dots4[1] == 38.05) {
+                                resDiv += '<font color="#0000FF"><b>到达终点</b></font>(114.50,38.05)';
+                            } else {
+                                var dis1 = 0;
+                                //计算路径线最后一个点与纠偏终点之间的距离
+                                if (dots4[0] != resultObj.inputDots[1].pDot.x || dots4[1] != resultObj.inputDots[1].pDot
+                                    .y) {
+                                    console.log(resultObj.inputDots[1].pDot.x);
+                                    dis1 = getDistance(dots4, resultObj.inputDots[1].pDot);
+
+                                }
+                                //计算纠偏终点与输入终点之间的距离
+                                if (resultObj.inputDots[1].pDot.x != 114.49 || resultObj.inputDots[1].pDot.y != 38.05) {
+
+                                }
+                                if (edge.FieldValus[13] != edge1.FieldValus[13] && edge1.FieldValus[13] != "" && dis1 !=
+                                    0) {
+                                    resDiv += '到达' + edge1.FieldValus[13] + '(' + dots4[0] + ',' + dots4[1] +
+                                        ')，最后步行<font color="#FF0000">' + dis1 + '</font>米到达终点(114.50,38.05)';
+                                } else {
+                                    resDiv += '到达终点(114.50,38.05)';
+                                }
+                            } //if (dots4.x == 114.50 && dots4.y == 38.05)else
+                        } // else i=edgeNum-2
+
+                        //将路径线信息存储进缓存数组
+
+                        var dotCount = pathObj.Edges[i].Dots.length;
+                        for (var k = 0; k < dotCount; k++) {
+                            if (k == 0 && i == 0) {
+                                if (dot[0] != pathObj.Edges[0].Dots[0].x || dot[1] != pathObj.Edges[0].Dots[0].y) {
+                                    dot = [pathObj.Edges[0].Dots[0].x, pathObj.Edges[0].Dots[0].y];
+                                    pathArr.push(dot);
+                                }
+                            }
+                            dot = [pathObj.Edges[i].Dots[k].x, pathObj.Edges[i].Dots[k].y];
+                            pathArr.push(dot);
+                        } //for(j)
+
+                    } //for(i<edgeNum-1)
+                    //添加最后一条路径信息
+                    var dotCoun = pathObj.Edges[edgeNum - 1].Dots.length;
+                    for (var n = 0; n < dotCoun; n++) {
+                        dot = [pathObj.Edges[edgeNum - 1].Dots[n].x, pathObj.Edges[edgeNum - 1].Dots[n].y];
+                        pathArr.push(dot);
+                    } //for(j)
+
+                } //else(edgeNum>1)
+
+                //添加经过纠偏的终点
+                if (resultObj.inputDots[1].pDot.x != dot.x || resultObj.inputDots[1].pDot.y != dot.y) {
+                    dot = [resultObj.inputDots[1].pDot.x, resultObj.inputDots[1].pDot.y];
+                    pathArr.push(dot);
+                }
+
+
+                //绘制路径
+                $("#resultInfo").append(resDiv);
+                drawPath(pathArr);
+            }
+        }
+
+        //根据两点坐标求实地距离计算，适用于经纬度
+        function getDistance(dot1, dot2) {
+            var radLat1 = parseFloat((dot1[0]) * (Math.PI) / 180.0);
+            var radLat2 = parseFloat((dot2.x) * (Math.PI) / 180.0);
+            var a = radLat1 - radLat2;
+            var b = (dot1[1]) * Math.PI / 180.0 - (dot2.y) * Math.PI / 180.0;
+            var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math
+                .pow(Math.sin(b / 2), 2)));
+            s = s * 6371229;
+            s = Math.round(s * 10000) / 10000;
+            return s;
+        }
+
+        function drawPath(pathArr) {
+            var pointArr = [];
+            //循环创建一个存放坐标的数组
+            for (var i = 0; i < pathArr.length; i++) {
+                pointArr[i] = pathArr[i];
+            }
+            var features = new ol.Feature({
+                geometry: new ol.geom.LineString(pointArr)
+            });
+
+            var source = new ol.source.Vector({
+                features: [features],
+                warpX: false
+            });
+
+            var vectors = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: "rgba(255,30,30,0.5)"
+                    }),
+                    stroke: new ol.style.Stroke({
+                        width: 5,
+                        color: "rgba(255,30,30,0.8)"
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: "rgba(255,30,30,0.5)"
+                        })
+                    })
+                })
+            });
+
+            map.addLayer(vectors);
+        }
+
+        //清除客户端分析结果信息
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            $("#resultInfo").empty();
+            if (map.getLayers().array_.length > 1) {
+                for (var i = map.getLayers().array_.length - 1; i > 0; i--) {
+                    map.removeLayer(map.getLayers().array_[i]);
+                }
+            } else
+                return;
+        }
+
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' />
+        <br />
+        <br />
+        <span>正在进行网络分析，请稍候</span>
+    </div>
+    <div class="easyui-layout" id="easylayout" style="width: 100%; height: 600px;">
+        <div data-options="region:'center'" style="width: 75%;">
+            <div id="mapCon" style="height: 95%;">
+            </div>
+        </div>
+        <div data-options="region:'east',title:'矢量图层显示样式',split:true" style="width: 25%;">
+            <div id="toolspanel">
+                <input type="button" class="ButtonLib" value="网络分析" onclick="pathAnalysis()" style="margin: 5px auto;
+                display: block; padding: 6px 12px" />
+                <div id="resultInfo" class="lineStyle" style="color: #1ab394; font-size: 12px; margin: 5px;">
+                    分析结果：
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

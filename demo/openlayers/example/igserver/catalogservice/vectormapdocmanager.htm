@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>矢量地图文档目录服务</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="json" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //以本地GIS服务器发布的地图文档为例，用户可设置其目标对象
+        //GIS服务器地址
+        var ip = "develop.smaryun.com";
+        //GIS服务器REST服务端口号
+        var port = "6163";
+        //用户名
+        var user = "";
+        //用户密码
+        var password = "";
+        //数据源名称
+        var srvName = "MapGISLocal";
+        //数据库名称
+        var GDBName = "OpenLayerVecterMap";
+        //地图文档名称
+        var mapDocName = "WorldJWVector";
+
+        //实例化地图对象并加载已发布的MapGIS地图文档(针对地图文档的添加与删除图层操作，是基于地图文档的缓存文件实现的)
+        var map, vectorMapdoc;
+
+        function init() {
+            //注意：在这里需要先将easyui-tabs的需要承载地图容器的面板选中，地图容器才能完成地图的渲染。
+            $("#resultShow").tabs("select", 2);
+            map = new ol.Map({
+                target: 'mapCon',
+                view: new ol.View({
+                    center: [0, 0],
+                    zoom: 3,
+                    projection: 'EPSG:4326'
+                })
+            });
+            //创建一个图层
+            vectorMapdoc = new Zondy.Map.MapDocTileLayer("MapGIS IGS VectorMapdocLayer", mapDocName, {
+                //矢量地图文档地图服务器ip
+                ip: ip,
+                //矢量地图文档地图服务端口
+                port: port
+            });
+            //添加图层到地图容器中
+            map.addLayer(vectorMapdoc);
+            $("#resultShow").tabs("select", 0);
+        }
+
+        /* ===矢量地图文档目录服务（获取发布的矢量地图文档列表）=== */
+        //获取地图文档列表
+        function getVectorMapdocList() {
+            //显示结果窗口
+            $('#resultShow').tabs('select', 1);
+            //实例化Zondy.Service.Catalog.MapDoc类
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port
+            });
+            //调用getMapDocList方法，获取服务器地图文档列表，在回调函数中处理结果
+            docCatalog.getMapDocList(getListSuccess);
+        }
+
+        /* ===矢量地图文档目录服务（获取指定矢量地图文档信息）=== */
+
+        //获取地图文档信息
+        function getVectorMapdocInfo() {
+            $('#resultShow').tabs('select', 1);
+            //实例化Zondy.Service.Catalog.MapDoc类，设置操作的地图文档为“WorldJWVector”
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                //或获取的地图文档的名称
+                docName: mapDocName,
+                //是否返回由DWS所返回的原始格式信息
+                returnFullStyle: true,
+            });
+            //调用getMapDocInfo函数，获取地图文档相关信息，在回调函数中处理结果
+            docCatalog.getMapDocInfo(getListSuccess);
+        }
+
+        /* ===矢量地图文档目录服务（获取指定地图信息）=== */
+
+        //获取指定地图信息
+        function getMapInfo() {
+            $('#resultShow').tabs('select', 1);
+            //实例化Zondy.Service.Catalog.MapDoc类，设置操作的地图文档为用户指定的地图文档,地图为索引值为0的地图
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                //设置地图文档的名称
+                docName: mapDocName,
+                //设置地图的索引号
+                mapIndex: 0,
+                //是否返回由DWS所返回的原始格式信息
+                returnFullStyle: true
+            });
+            //调用getMapInfo函数，获取地图相关信息，在回调函数中处理结果
+            docCatalog.getMapInfo(getListSuccess, true, true);
+        }
+
+        /* ===矢量地图文档目录服务（获取地图中所有图层信息）=== */
+
+        //获取地图中所有图层信息
+        function getLayersInfo() {
+            $('#resultShow').tabs('select', 1);
+            //实例化Zondy.Service.Catalog.MapDoc类，设置操作的地图文档为用户指定的地图文档,地图为索引值为0的地图
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                //设置地图文档的名称
+                docName: mapDocName,
+                //设置地图的索引号
+                mapIndex: 0
+            });
+            //调用getLayersInfo函数，获取地图文档中所有图层相关信息，在回调函数中处理结果
+            docCatalog.getLayersInfo(getListSuccess);
+        }
+
+        /* ===矢量地图文档目录管理（获取指定地图图层信息）=== */
+
+        //获取指定地图图层信息
+        function getLayerInfo() {
+            $('#resultShow').tabs('select', 1);
+            //实例化Zondy.Service.Catalog.MapDoc类，设置操作的地图文档为用户指定的地图文档,地图为索引值为0的地图，图层为索引值为1的图层
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                //设置地图文档名称
+                docName: mapDocName,
+                //设置地图的索引号
+                mapIndex: 0,
+                //设置图层的索引号
+                layerID: 1
+            });
+            //调用getLayerInfo函数，获取地图图层相关信息，在回调函数中处理结果
+            docCatalog.getLayerInfo(getListSuccess);
+        }
+
+        //获取服务器地图文档列表成功后的回调函数
+        function getListSuccess(data) {
+            if (data.result.succeed) {
+                if (data.result == null) {
+                    alert("没有获取到矢量地图文档！");
+                    $("#reslutTable").empty(); //清空结果显示面板
+                    return;
+                } else {
+                    //将一个JSON转换成一个包含JSON文本的字符串
+                    formatData = JSON.stringify(data.result);
+                    //将结果显示在指定的div
+                    Process(formatData, 1, "reslutTable");
+                }
+            } else {
+                alert("获取到矢量地图文档失败！");
+                $("#reslutTable").empty(); //清空结果显示面板
+                return;
+            }
+
+        }
+
+        /* ========矢量地图文档目录服务（添加图层）======= */
+        //向矢量地图文档中添加图层(操作的是地图文档缓存文件)
+        function addLayer() {
+            $('#resultShow').tabs('select', 2);
+            //实例化layerinfoArr数组，用于存储图层信息
+            var layerInfoArr = new Array(1);
+            //实例化MapDoc类，设置操作的地图文档 ,指定地图为索引值为0的地图
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                docName: mapDocName,
+                mapIndex: 0
+            });
+            var layerinfo = {
+                Index: -1, //图层的索引号，默认为-1表示从文档末尾附加
+                LayerName: "NewAddLayer", //图层名称
+                GDBP: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区" //图层的GDBP值
+            };
+            vectorMapdoc.refresh(); //刷新地图
+            //调用addLayer方法，执行添加图层的操作，回调函数处理结果
+            //docCatalog.addLayer([layerinfo], addLayerSuccess);
+        }
+        //添加图层成功后的回调
+        function addLayerSuccess(data) {
+            $("#reslutTable").empty(); //清空结果显示面板
+            if (data.result.succeed) {
+                alert("添加成功！");
+                map.refresh(); //刷新地图
+            } else {
+                alert("添加失败！");
+            }
+        }
+
+        /* =======矢量地图文档目录服务（删除图层）======== */
+        //从矢量地图文档中删除指定图层(操作的是地图文档缓存文件)
+        function deleteLayer() {
+            $('#resultShow').tabs('select', 2);
+            //实例化Zondy.Service.Catalog.MapDoc类，设置操作的地图文档,地图为索引值为0的地图，图层为索引值为3的图层
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                docName: mapDocName,
+                mapIndex: 0,
+                layerID: 2
+            });
+            //调用deleteLayer方法，执行删除图层的操作，回调函数处理结果
+            docCatalog.deleteLayer(deleteLayerSuccess);
+        }
+        //删除图层成功后的回调
+        function deleteLayerSuccess(data) {
+            $("#reslutTable").empty(); //清空结果显示面板
+            if (data.result.succeed) {
+                alert("删除图层成功！");
+                map.refresh(); //刷新地图
+            } else {
+                alert("删除图层失败！");
+            }
+        }
+
+        /* ======矢量地图文档目录服务（更改图层顺序）====== */
+
+        //更改图层顺序
+        function changeLayerIndex() {
+            $('#resultShow').tabs('select', 2);
+            //实例化newIndexArray数组，数组的长度需与要修改图层顺序的地图中图层的个数相同
+            var newIndexArray = new Array(9);
+            //newIndexArray数组中依次存储新的图层索引号
+            newIndexArray[0] = 8; //旧0号图层，新的图层索引号为8
+            newIndexArray[1] = 7; //旧1号图层，新的图层索引号为7
+            newIndexArray[2] = 6; //旧2号图层，新的图层索引号为6
+            newIndexArray[3] = 5; //旧3号图层，新的图层索引号为5
+            newIndexArray[4] = 4; //旧4号图层，新的图层索引号为4
+            newIndexArray[5] = 3; //旧5号图层，新的图层索引号为3
+            newIndexArray[6] = 2; //旧6号图层，新的图层索引号为2
+            newIndexArray[7] = 1; //旧7号图层，新的图层索引号为1
+            newIndexArray[8] = 0; //旧7号图层，新的图层索引号为0
+            //实例化Zondy.Service.Catalog.MapDoc类，设置操作的地图文档为world,地图为索引值为0的地图
+            var docCatalog = new Zondy.Catalog.MapDoc({
+                ip: ip,
+                port: port,
+                docName: mapDocName,
+                mapIndex: 0
+            });
+            //调用changeIndex方法，执行更改图层顺序操作，回调函数处理结果
+            docCatalog.changeIndex(newIndexArray, changeIndexSuccess);
+        }
+        //更改图层顺序成功后的回调
+        function changeIndexSuccess(data) {
+            //清空结果显示面板
+            $("#reslutTable").empty();
+            if (data.result.succeed) {
+                alert("修改图层顺序成功！");
+                //刷新地图
+                vectorMapdoc.refresh();
+            } else {
+                alert("修改图层顺序失败！");
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="获取地图文档列表" onclick="getVectorMapdocList()" />
+        <input type="button" class="ButtonLib" value="获取指定地图文档的相关信息" onclick="getVectorMapdocInfo()" />
+        <input type="button" class="ButtonLib" value="获取地图文档中指定地图的相关信息" onclick="getMapInfo()" />
+        <input type="button" class="ButtonLib" value="获取指定地图下所有图层的图层信息" onclick="getLayersInfo()" />
+        <input type="button" class="ButtonLib" value="获取指定地图下指定图层的相关信息" onclick="getLayerInfo()" />
+        <input type="button" class="ButtonLib" value="添加图层" onclick="addLayer()" />
+        <input type="button" class="ButtonLib" value="删除图层" onclick="deleteLayer()" />
+        <input type="button" class="ButtonLib" value="更改图层顺序" onclick="changeLayerIndex()" />
+        <br />
+    </div>
+    <div id="resultShow" class="easyui-tabs" style="width: 100%; height: 500px">
+        <div id="introduction" title="说明" style="padding: 10px">
+            说明：
+            <br /> 上述为地图文档目录服务接口示例，默认操作示例数据库（OpenLayerVecterMap.hdf）的地图文档，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布。图层的增、删与更改顺序操作，均操作地图文档的缓存文件，每次操作前可先刷新页面。其中【获取地图文档列表】、【获取指定地图文档的相关信息】、【获取地图文档中指定地图的相关信息】、【获取指定地图下的所有图层的图层信息】、【获取指定地图下指定图层的相关信息】功能的结果显示在“结果显示”选项卡中，【添加图层】、【删除图层】、【更改图层顺序】结果可以在“地图显示”选项卡中看到。
+            <br />
+        </div>
+        <div id="resultT" title="结果显示">
+            <div id="reslutTable">
+            </div>
+        </div>
+        <div id="MapDisplay" title="地图显示" style="padding: 10px">
+            <div id="mapCon" style="width:100%; height: 90%;position:absolute">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #map {
+      width: 100%;
+      height: 700px;
+    }
+
+    .checkbox {
+      margin: 5px 15px;
+    }
+
+    #marker {
+      background-image: url('../../img/mapboxgl/icon/mapbox-icon.png');
+      background-size: cover;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ToolLib">
+    <input type="button" class="ButtonLib" id="type" value="添加图片标注" onclick="Addmarker()" />&nbsp;&nbsp;
+    <label style="font-weight: bold;">点击按钮，之后在图上点击添加图片标注。</label>
+  </div>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "streets-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 2,
+      pitch: 45,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+    map.on('load', function() {
+
+    });
+
+    //为地图容器添加单击事件监听
+    function Addmarker() {
+      map.on('click', function(mapMouseEvent) {
+        //鼠标单击点坐标
+        var latlon = mapMouseEvent.lngLat;
+        //添加一个新的标注（矢量要素）
+        addVectorLabel(latlon);
+      });
+    }
+
+    /**
+     * 添加一个新的标注（矢量要素）
+     * @param {mapbox.mapMouseEvent.latlon}  经纬度坐标点
+     */
+    function addVectorLabel(latlon) {
+      // create the popup
+      var popup = new mapboxgl.Popup()
+        .setText('设置点击事件的文本信息');
+
+      // 创建一个DOM element
+      var el = document.createElement('div');
+      el.id = 'marker';//将该div与marker的样式绑定
+
+      new mapboxgl.Marker(el)
+        .setLngLat(latlon)
+        .setPopup(popup)
+        .addTo(map);
+    }
+  </script>
+</body>
+
+</html>

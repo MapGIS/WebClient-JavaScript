@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Echarts Grid</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="echarts" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script src="../../../../../data/echarts/griddata.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([40, 116], 9);
+        var layer;
+
+        var COLORS = ["#070093", "#1c3fbf", "#1482e5", "#70b4eb", "#b4e0f3", "#ffffff"];
+        var lngExtent = [39.5, 40.6];
+        var latExtent = [115.9, 116.8];
+        var cellCount = [50, 50];
+        var cellSizeCoord = [
+            (lngExtent[1] - lngExtent[0]) / cellCount[0],
+            (latExtent[1] - latExtent[0]) / cellCount[1]
+        ];
+        var gapSize = 0;
+
+        initMap();
+        updateView();
+
+        function renderItemFunc(params, api) {
+            var context = params.context;
+            var lngIndex = api.value(0);
+            var latIndex = api.value(1);
+            var coordLeftTop = [+(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6), +(lngExtent[0] + latIndex *
+                cellSizeCoord[1]).toFixed(6)];
+            var pointLeftTop = getCoord(params, api, lngIndex, latIndex);
+            var pointRightBottom = getCoord(params, api, lngIndex + 1, latIndex + 1);
+
+            return {
+                type: 'rect',
+                shape: {
+                    x: pointLeftTop[0],
+                    y: pointLeftTop[1],
+                    width: pointRightBottom[0] - pointLeftTop[0],
+                    height: pointRightBottom[1] - pointLeftTop[1]
+                },
+                style: api.style({
+                    stroke: 'rgba(0,0,0,0.1)'
+                }),
+                styleEmphasis: api.styleEmphasis()
+            };
+        }
+
+        function getCoord(params, api, lngIndex, latIndex) {
+            var coords = params.context.coords || (params.context.coords = []);
+            var key = lngIndex + '-' + latIndex;
+
+            // bmap returns point in integer, which makes cell width unstable.
+            // So we have to use right bottom point.
+            return coords[key] || (coords[key] = api.coord([+(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6), +
+                (lngExtent[0] + latIndex * cellSizeCoord[1]).toFixed(6)
+            ]));
+        }
+
+        function initMap() {
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+                'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                    attribution: '<a href="#">AMikealson</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light'
+                }).addTo(map);
+        }
+
+        function updateView() {
+            var option = {
+                tooltip: {},
+                visualMap: {
+                    type: 'piecewise',
+                    inverse: true,
+                    top: 10,
+                    right: 10,
+                    pieces: [{
+                        value: 0,
+                        color: COLORS[0]
+                    }, {
+                        value: 1,
+                        color: COLORS[1]
+                    }, {
+                        value: 2,
+                        color: COLORS[2]
+                    }, {
+                        value: 3,
+                        color: COLORS[3]
+                    }, {
+                        value: 4,
+                        color: COLORS[4]
+                    }, {
+                        value: 5,
+                        color: COLORS[5]
+                    }],
+                    borderColor: '#ccc',
+                    borderWidth: 1,
+                    backgroundColor: '#eee',
+                    dimension: 2,
+                    inRange: {
+                        color: COLORS,
+                        opacity: 0.8
+                    }
+                },
+                leaflet: {
+                    roam: true
+                },
+                series: [{
+                    type: 'custom',
+                    coordinateSystem: 'leaflet',
+                    data: griddata,
+                    renderItem: renderItemFunc,
+                    animation: false,
+                    itemStyle: {
+                        emphasis: {
+                            color: 'yellow'
+                        }
+                    },
+                    encode: {
+                        tooltip: 2
+                    }
+                }]
+            };
+
+            layer = L.zondy.EchartsLayer(map, option).addTo(map);
+        }
+    </script>
+
+</body>
+
+</html>

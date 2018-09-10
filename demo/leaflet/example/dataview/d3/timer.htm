@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-Timer</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="d3,geojson" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([37.8, -96], 3); //这里的2级别很重要如果级别太大则无法生成对应的蜂窝格
+        var county;
+
+        initMap();
+
+        updateView();
+
+        function initMap() {
+            mapboxTile = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+                'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                    attribution: '<a href="#">MapBox&MapGIS</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light'
+                }).addTo(map);
+        }
+
+        function updateView() {
+            //创建对数
+
+            Promise.all([
+                d3.json('../../data/d3/us-mbostock.json'),
+                d3.dsv("\t", "../../data/d3/coastal-counties.tsv")
+            ]).then(function ([us, coastals]) {
+                var counties = topojson.feature(us, us.objects.counties),//获取美国各个县的元素集合
+                    neighbors = topojson.neighbors(us.objects.counties.geometries),//获取美国各个县拓扑相邻的元素集合,记得是上面的集合的下标
+                    coastals = d3.set(coastals.map(function (d) {     //海岸线上的县只是上面的子集，即美国沿海的那一圈
+                        return d.id;
+                    })),
+                    nexts = [],
+                    nexts2 = [],
+                    distance = 0;
+
+                //将县的数据添加到nexts中，并且初始化海岸线长度为无限大
+                counties.features.forEach(function (county, i) {
+                    if (coastals.has(county.id)) nexts.push(county);
+                    county.distance = Infinity;
+                    county.neighbors = neighbors[i].map(function (current) {
+                        return counties.features[current];//将之前的下标换成实际的坐标位置
+                    });
+                });
+                //从外圈向内圈不断的递归，距离也不断的++1，因此考虑到拓扑相邻，外圈的拓扑相邻只可能是内圈，因此这里是不断的向中心收缩
+                while (nexts.length) {
+                    nexts.forEach(function (county) {
+                        if (county.distance > distance) {
+                            county.distance = distance;
+                            county.neighbors.forEach(function (neighbor) {
+                                nexts2.push(neighbor);//nexts2是next的邻接内圈
+                            });
+                        }
+                    });
+                    nexts = nexts2, nexts2 = [], ++distance;  //不断的向内递归，然后距离++
+                }
+
+                var countriesOverlay = L.zondy.d3SvgOverlay(function (svg, proj) {
+                    county = svg.attr("class", "counties")
+                        .selectAll("path")
+                        .data(d3.nest()
+                            .key(function (d) {
+                                return d.distance;//按照distance进行分组
+                            })
+                            .entries(counties.features)  //表示要分组的原始数据
+                            .map(function (e) {   //映射成geojson的格式
+                                return {
+                                    type: "FeatureCollection",
+                                    features: e.values,//s
+                                    distance: +e.key
+                                };
+                            }))
+                        .enter().append("path")
+                        .attr("d", proj.pathFromGeojson);//geojson转屏幕坐标
+                }, {
+                    zoomDraw: false //缩放时，继续动画
+                });
+
+                countriesOverlay.addTo(map);
+                
+                //定时器，不同的时间播放不同的颜色,这里距离是定值，但是时间是增加的，
+                //因此某一时刻的内圈的颜色和前一时刻的外圈颜色是相似的，实现波浪的效果
+                d3.timer(function (elapsed) {
+                    county.style("fill", function (d) {
+                        return d3.hsl(d.distance * 10 - elapsed / 10, 1, .5);
+                    });
+                });
+            });
+
+
+        }
+    </script>
+
+</body>
+
+</html>

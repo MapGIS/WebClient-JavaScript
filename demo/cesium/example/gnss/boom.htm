@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-cesium-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var viewer = new Cesium.Viewer('map');
+
+        var entityFire = Cesium.CzmlDataSource.load('../../../../data/czml/boom.czml');
+        var entityPromise = viewer.dataSources.add(entityFire).then(function () {
+            viewer.clock.currentTime = Cesium.JulianDate.fromIso8601('2018-04-27T00:50:45Z');
+            viewer.flyTo(entityPromise);
+            viewer.trackedEntity = rocketEntity;
+        });
+        var rocketEntity;
+        var boomParticleSystem;
+
+        /*
+         * ----------------------------火焰爆炸效果开始--------------------------------------
+         * 相信我，下面的逻辑你自己去理解的话特别费解，一定要基于整个场景来理解，注释再多，也是废话，
+         * 不懂就直接联系基础平台、创新中心的潘卓然，或者是三维部门的韩彦生都可以
+         */
+        var viewModel = {
+            rate: 5.0,
+            gravity: 0.0,
+            minimumLife: 1.0,
+            maximumLife: 1.0,
+            minimumSpeed: 1.0,
+            maximumSpeed: 4.0,
+            startScale: 1.0,
+            endScale: 5.0,
+            particleSize: 25.0,
+            transX: 1.0,
+            transY: 1.0,
+            transZ: 1.0,
+            heading: 0.0,
+            pitch: 0.0,
+            roll: 0.0,
+            fly: false,
+            spin: true,
+            show: true
+        };
+        var entityPosition = new Cesium.Cartesian3();
+        var entityOrientation = new Cesium.Quaternion();
+        var rotationMatrix = new Cesium.Matrix3();
+        var modelMatrix = new Cesium.Matrix4();
+        var gravityScratch = new Cesium.Cartesian3();
+
+        function applyGravity(p, dt) {
+            // We need to compute a local up vector for each particle in geocentric space.
+            var position = p.position;
+
+            Cesium.Cartesian3.normalize(position, gravityScratch);
+            Cesium.Cartesian3.multiplyByScalar(gravityScratch, viewModel.gravity * dt, gravityScratch);
+
+            p.velocity = Cesium.Cartesian3.add(p.velocity, gravityScratch, p.velocity);
+        }
+
+        function computeModelMatrix(entity, time) {
+            var position = Cesium.Property.getValueOrUndefined(entity.position, time, entityPosition);
+            if (!Cesium.defined(position)) {
+                return undefined;
+            }
+            var orientation = Cesium.Property.getValueOrUndefined(entity.orientation, time, entityOrientation);
+            if (!Cesium.defined(orientation)) {
+                modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position, undefined, modelMatrix);
+            } else {
+                modelMatrix = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromQuaternion(orientation,
+                    rotationMatrix), position, modelMatrix);
+            }
+            return modelMatrix;
+        }
+
+        function computeEmitterModelMatrix() {
+            hpr = Cesium.HeadingPitchRoll.fromDegrees(viewModel.heading, viewModel.pitch, viewModel.roll, hpr);
+
+            trs.translation = Cesium.Cartesian3.fromElements(viewModel.transX, viewModel.transY, viewModel.transZ,
+                translation);
+            trs.rotation = Cesium.Quaternion.fromHeadingPitchRoll(hpr, rotation);
+
+            return Cesium.Matrix4.fromTranslationRotationScale(trs, emitterModelMatrix);
+        }
+
+        function createBoom() {
+            var boomModel = new Cesium.ParticleSystem({
+                image: '../data/model/AGI/rocket/fire.png',
+
+                startColor: Cesium.Color.RED.withAlpha(0.9),
+                endColor: Cesium.Color.YELLOW.withAlpha(0.9),
+
+                startScale: viewModel.startScale,
+                endScale: viewModel.endScale,
+
+                minimumLife: viewModel.minimumLife,
+                maximumLife: viewModel.maximumLife,
+
+                minimumSpeed: viewModel.minimumSpeed,
+                maximumSpeed: viewModel.maximumSpeed,
+
+                minimumWidth: viewModel.particleSize,
+                minimumHeight: viewModel.particleSize,
+
+                maximumWidth: viewModel.particleSize,
+                maximumHeight: viewModel.particleSize,
+
+                // Particles per second.
+                rate: viewModel.rate,
+
+                bursts: [
+                    // these burst will occasionally sync to create a multicolored effect
+                    new Cesium.ParticleBurst({
+                        time: 5.0,
+                        minimum: 10,
+                        maximum: 100
+                    }),
+                    new Cesium.ParticleBurst({
+                        time: 10.0,
+                        minimum: 50,
+                        maximum: 100
+                    }),
+                    new Cesium.ParticleBurst({
+                        time: 15.0,
+                        minimum: 200,
+                        maximum: 300
+                    })
+                ],
+
+                lifeTime: 160.0,
+
+                emitter: new Cesium.CircleEmitter(2.0),
+
+                emitterModelMatrix: computeEmitterModelMatrix(),
+
+                forces: [applyGravity]
+            });
+
+            boomModel = viewer.scene.primitives.add(boomModel);
+
+            return boomModel;
+        }
+
+        var emitterModelMatrix = new Cesium.Matrix4();
+        var translation = new Cesium.Cartesian3();
+        var rotation = new Cesium.Quaternion();
+        var hpr = new Cesium.HeadingPitchRoll();
+        var trs = new Cesium.TranslationRotationScale();
+
+        /*
+         * ----------------------------火焰爆炸效果结束--------------------------------------
+         */
+
+        var df2000FireSystems = [];
+        /*
+         * ----------------------------飞行尾焰效果开始--------------------------------------
+         * 你没有看错，这个比上面的还要难以理解，直接复制代码吧 Orz...
+         * 这个的好处是直接复制代码可以使用类似工厂方法来创建粒子对象
+         * 不懂就直接联系基础平台、创新中心的潘卓然，或者是三维部门的韩彦生都可以
+         */
+        var particlesOffset = new Cesium.Cartesian3(0, 0, 0);
+        var particleCanvas;
+
+        function getImage() {
+            if (!Cesium.defined(particleCanvas)) {
+                particleCanvas = document.createElement('canvas');
+                particleCanvas.width = 20;
+                particleCanvas.height = 20;
+                var context2D = particleCanvas.getContext('2d');
+                context2D.beginPath();
+                context2D.arc(8, 8, 8, 0, Cesium.Math.TWO_PI, true);
+                context2D.closePath();
+                context2D.fillStyle = 'rgb(255, 255, 255)';
+                context2D.fill();
+            }
+            return particleCanvas;
+        }
+
+        // creating particles model matrix
+        var translationOffset = Cesium.Matrix4.fromTranslation(particlesOffset, new Cesium.Matrix4());
+
+        // creating the particle systems
+        var cometOptions = {
+            numberOfSystems: 100.0,
+            iterationOffset: 0.003,
+            cartographicStep: 0.0000001,
+            baseRadius: 0.0005,
+
+            colorOptions: [{
+                red: 0.6,
+                green: 0.6,
+                blue: 0.6,
+                alpha: 1.0
+            }, {
+                red: 0.6,
+                green: 0.6,
+                blue: 0.9,
+                alpha: 0.9
+            }, {
+                red: 0.5,
+                green: 0.5,
+                blue: 0.7,
+                alpha: 0.5
+            }]
+        };
+        var scratchCartesian3 = new Cesium.Cartesian3();
+        var scratchCartographic = new Cesium.Cartographic();
+        var forceFunction = function (options, iteration) {
+            return function (particle, dt) {
+                dt = Cesium.Math.clamp(dt, 0.0, 0.05);
+
+                scratchCartesian3 = Cesium.Cartesian3.normalize(particle.position, new Cesium.Cartesian3());
+                scratchCartesian3 = Cesium.Cartesian3.multiplyByScalar(scratchCartesian3, -40.0 * dt,
+                    scratchCartesian3);
+
+                scratchCartesian3 = Cesium.Cartesian3.add(particle.position, scratchCartesian3,
+                    scratchCartesian3);
+
+                scratchCartographic = Cesium.Cartographic.fromCartesian(scratchCartesian3, Cesium.Ellipsoid.WGS84,
+                    scratchCartographic);
+
+                var angle = Cesium.Math.PI * 2.0 * iteration / options.numberOfSystems;
+                iteration += options.iterationOffset;
+                scratchCartographic.longitude += Math.cos(angle) * options.cartographicStep * 30.0 * dt;
+                scratchCartographic.latitude += Math.sin(angle) * options.cartographicStep * 30.0 * dt;
+
+                particle.position = Cesium.Cartographic.toCartesian(scratchCartographic);
+            };
+        };
+
+        var matrix4Scratch = new Cesium.Matrix4();
+        var scratchAngleForOffset = 0.0;
+        var scratchOffset = new Cesium.Cartesian3();
+        var imageSize = new Cesium.Cartesian2(15.0, 15.0);
+
+        function createParticleSystems(options, systemsArray) {
+            var length = options.numberOfSystems;
+            for (var i = 0; i < length; ++i) {
+                scratchAngleForOffset = Math.PI * 2.0 * i / options.numberOfSystems;
+                scratchOffset.x += options.baseRadius * Math.cos(scratchAngleForOffset);
+                scratchOffset.y += options.baseRadius * Math.sin(scratchAngleForOffset);
+
+                var emitterModelMatrix = Cesium.Matrix4.fromTranslation(scratchOffset, matrix4Scratch);
+                var color = Cesium.Color.fromRandom(options.colorOptions[i % options.colorOptions.length]);
+                var force = forceFunction(options, i);
+
+                var item = viewer.scene.primitives.add(new Cesium.ParticleSystem({
+                    image: getImage(),
+                    startColor: color,
+                    endColor: color.withAlpha(0.0),
+                    particleLife: 3.5,
+                    speed: 0.00005,
+                    imageSize: imageSize,
+                    emissionRate: 30.0,
+                    emitter: new Cesium.CircleEmitter(0.1),
+                    lifetime: 0.1,
+                    updateCallback: force,
+                    emitterModelMatrix: emitterModelMatrix
+                }));
+                systemsArray.push(item);
+            }
+        }
+        /*
+         * ----------------------------飞行尾焰效果结束--------------------------------------
+         */
+
+        initBoom();
+        initEntity();
+        flyToView();
+
+        function initEntity() {
+            entityFire.then(function (result) {
+                for (var index = 0; index < result.entities.values.length; index++) {
+                    var value = result.entities.values[index];
+                    if (value.id == "Missile/DF-2000") {
+                        rocketEntity = value;
+                        break;
+                    }
+                }
+            });
+        }
+
+        function initBoom() {
+            boomParticleSystem = createBoom();
+            createParticleSystems(cometOptions, df2000FireSystems);
+            bindSceneEvent();
+        }
+
+        function bindSceneEvent() {
+            viewer.scene.postUpdate.addEventListener(function (scene, time) {
+                if (time.dayNumber >= 2458235 && time.secondsOfDay > 46511 && time.secondsOfDay < 46811) {
+                    boomParticleSystem.show = true;
+                } else {
+                    boomParticleSystem.show = false;
+                }
+                if (rocketEntity) {
+                    boomParticleSystem.modelMatrix = computeModelMatrix(rocketEntity, time);
+                    boomParticleSystem.emitterModelMatrix = computeEmitterModelMatrix();
+                }
+
+                if (time.dayNumber >= 2458235 && time.secondsOfDay > 46275 && time.secondsOfDay < 46511) {
+                    df2000FireSystems.forEach(function (particle, index, array) {
+                        particle.show = true;
+                    });
+                    if (rocketEntity) {
+                        df2000FireSystems.forEach(function (particle, index, array) {
+                            particle.modelMatrix = computeModelMatrix(rocketEntity, time);
+                            particle.emitterModelMatrix = computeEmitterModelMatrix();
+                        });
+                    }
+                } else {
+                    df2000FireSystems.forEach(function (particle, index, array) {
+                        particle.show = false;
+                    });
+                }
+
+                if (viewModel.spin) {
+                    viewModel.heading += 1.0;
+                    viewModel.pitch += 1.0;
+                    viewModel.roll += 1.0;
+                }
+            });
+        }
+
+        function flyToView() {
+            //viewer.flyTo(entityPromise);
+            viewer.trackedEntity = rocketEntity;
+            viewer.clock.currentTime = Cesium.JulianDate.fromIso8601('2018-04-27T00:50:45Z');
+        }
+    </script>
+
+</body>
+
+</html>

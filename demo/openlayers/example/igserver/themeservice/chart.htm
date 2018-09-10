@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>统计专题图</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map, docLayer;
+        //专题图服务类
+        var oper, themesInfoArr;
+        //地图初始化函数
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [0, 0],
+                    zoom: 2,
+                    projection: "EPSG:4326"
+                })
+            });
+            //初始化地图文档图层对象
+            docLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "WorldJWVector", {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(docLayer);
+
+            //初始化专题图服务类
+            oper = new Zondy.Service.ThemeOper();
+            oper.ip = "develop.smaryun.com";
+            oper.port = "6163";
+            oper.guid = docLayer.options.source.guid;
+        }
+
+        //创建专题图
+        function addTheme() {
+            //如果已有专题图信息，先清除
+            if (themesInfoArr)
+                oper.removeThemesInfo("WorldJWVector", "1/0", onAddTheme);
+            else {
+                //生成专题图
+                createTheme();
+            }
+        }
+        //清除之前的专题图后，生成新的专题图
+        function onAddTheme(flg) {
+            createTheme();
+        }
+
+        //创建专题图
+        function createTheme() {
+            //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
+            themesInfoArr = [];
+            themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo();
+            //设置图层名层
+            themesInfoArr[0].LayerName = "世界政区";
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            themesInfoArr[0].ThemeArr = [];
+            //实例化CChartTheme类
+            themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CChartTheme();
+            //专题图名称
+            themesInfoArr[0].ThemeArr[0].Name = "统计专题图";
+            themesInfoArr[0].ThemeArr[0].ChartType = Zondy.Object.Theme.CChartType.Bar3D;
+            //ChartThemeInfoArr设置
+            //设置指定专题图的专题信息，专题图可以有多个专题信息
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr = [];
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0] = new Zondy.Object.Theme.CChartThemeInfo();
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].Expression = "面积";
+            //必须要填写,否则会出错dcserver会挂掉
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].Caption = "面积";
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].IsVisible = true;
+            //实例化CRegInfo类
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.Angle = 0;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.EndClr = 0;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.FillClr = 81;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.FillMode = 0;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.FullPatFlg = true;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.PatClr = 3;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.PatHeight = 5;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.PatWidth = 5;
+            themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.OutPenW = 1;
+            //RepresentInfo设置
+            themesInfoArr[0].ThemeArr[0].RepresentInfo = new Zondy.Object.Theme.CChartThemeRepresentInfo();
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.AnnInfoLabel = new Zondy.Object.Theme.CAnnInfo();
+            //标注(参数值)覆盖方式：覆盖
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.AnnInfoLabel.Ovprnt = true;
+            //小数位数
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.DigitLabel = 7;
+            //是否显示参数值
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.IsDrawLabel = true;
+            //参数值类型：真实值
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.FormatLabel = Zondy.Object.Theme.CChartLabelFormat.Value;
+            //直方图,折线图，点图属性设置
+            //最大高度
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.MaxLength = 120;
+            //厚度
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.ThickPersent = 10;
+            //直方图中的宽度或折线图中的横向间隔
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.Width = 2;
+            //点图半径或折线图中的点半径
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.PlotRadius = 1;
+            //饼图属性设置
+            //最小半径
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.MinRadius = 2;
+            //角度
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.PieTiltedAngle = 30;
+            //固定大小
+            themesInfoArr[0].ThemeArr[0].RepresentInfo.PieSizeFixFlag = 1;
+
+            //给指定地图文档指定图层添加专题图
+            oper.addThemesInfo("WorldJWVector", "1", themesInfoArr, onChartTheme);
+        }
+
+        //更新专题图
+        function updateTheme() {
+            oper.getThemesInfo("WorldJWVector", "1/0", function (themesInfoArr) {
+                if (themesInfoArr.length > 0 && themesInfoArr[0].ThemeArr != null) {
+                    var i;
+                    for (i = 0; i < themesInfoArr[0].ThemeArr.length; i++) {
+                        if (themesInfoArr[0].ThemeArr[i].Type == "CChartTheme") {
+                            themesInfoArr[0].ThemeArr[i].ChartType = Zondy.Object.Theme.CChartType.Pie;
+                            oper.updateThemesInfo("WorldJWVector", "1/0", themesInfoArr, onChartTheme);
+                            break;
+                        }
+                    }
+                    if (i == themesInfoArr[0].ThemeArr.length)
+                        alert("没有该专题信息");
+                } else
+                    alert("没有该专题信息");
+            });
+        }
+
+        //删除专题图
+        function deleteTheme() {
+            if (themesInfoArr) {
+                oper.removeThemesInfo("WorldJWVector", "1/0", onChartTheme);
+                themesInfoArr = null;
+            } else {
+                alert("已清除或者没有该专题图信息！");
+            }
+        }
+
+        //调用专题图成服务功后的回调
+        function onChartTheme(flg) {
+            if (flg) {
+                //刷新地图，即重新加载生成专题图后的地图文档
+                docLayer.refresh();
+            } else {
+                return false;
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="创建专题图" onclick="addTheme()" />
+        <input type="button" class="ButtonLib" id="updateThemeBtn" value="更新专题图" onclick="updateTheme()" />
+        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    </div>
+    <div id="mapCon">
+    </div>
+</body>
+
+</html>

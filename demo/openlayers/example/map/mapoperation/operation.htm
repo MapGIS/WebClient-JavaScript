@@ -1,0 +1,124 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>地图基本操作功能</title>
+    
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <!--导入本页面外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--  引入第三方插件库 -->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+        }
+
+        #menu {
+            float: left;
+            position: absolute;
+            bottom: 10px;
+            z-index: 2000;
+        }
+
+        .tooltip-inner {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="zoom-out" value="单击缩小" />
+        <input type="button" class="ButtonLib" id="zoom-in" value="单击放大" />
+        <input type="button" class="ButtonLib" id="panto" value="平移到【中国】" />
+        <input type="button" class="ButtonLib" id="restore" value="复位" />
+    </div>
+    <div id="mapCon" title="地图显示" style="padding: 5px">
+    </div>
+
+    <script type="text/javascript">
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon',
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据（OSM）
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 2,
+                //最小级别
+                minZoom: 1,
+                //最大级别
+                maxZoom: 12
+                //设置旋转角度
+                //rotation: Math.PI / 6
+            })
+        });
+
+        //地图视图的初始参数
+        var view = map.getView();
+        var zoom = view.getZoom();
+        var center = view.getCenter();
+        var rotation = view.getRotation();
+
+        //单击缩小按钮功能
+        document.getElementById('zoom-out').onclick = function () {
+            //获取地图视图
+            var view = map.getView();
+            //获得当前缩放级数
+            var zoom = view.getZoom();
+            //地图缩小一级
+            view.setZoom(zoom - 1);
+        };
+        //单击放大按钮功能
+        document.getElementById('zoom-in').onclick = function () {
+            //获取地图视图
+            var view = map.getView();
+            //获得当前缩放级数
+            var zoom = view.getZoom();
+            view.setZoom(zoom + 1);
+            //地图放大一级   
+        };
+        view.setZoom(zoom + 1);
+        //平移功能（移到到武汉市）
+        document.getElementById('panto').onclick = function () {
+            //获取地图视图
+            var view = map.getView();
+            var wh = ol.proj.fromLonLat([105, 35]);
+            //平移地图
+            view.setCenter(wh);
+            view.setZoom(5);
+        };
+        //复位功能（复位到初始状态）
+        document.getElementById('restore').onclick = function () {
+            //初始中心点
+            view.setCenter(center);
+            //初始旋转角度
+            view.setRotation(rotation);
+            //初始缩放级数
+            view.setZoom(zoom); 
+        };
+
+        //为内置的缩放控件与旋转控件添加tooltip提示信息
+        $('.ol-zoom-in, .ol-zoom-out').tooltip({
+            //tooltip在右侧显示
+            placement: 'right' 
+        });
+        //tooltip在左侧显示
+        $('.ol-rotate-reset, .ol-attribution button[title]').tooltip({
+            placement: 'left' 
+        });
+    </script>
+
+</body>
+</html>

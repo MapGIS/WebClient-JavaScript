@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中地数码 MapGIS WebClient</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--   <link rel="stylesheet" type="text/css" href="../libs/material-kit/css/materialicon.css" />
+  <link rel="stylesheet" href="../libs/material-kit/css/font-awesome.min.css"> -->
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="../libs/google/material.css"/>
+    <!-- CSS Files -->
+    <link href="../libs/material-kit/css/material-kit.css?v=2.0.3" rel="stylesheet" />
+    <link href="../css/zondy/ui.css" rel="stylesheet" />
+</head>
+
+<body class="landing-page sidebar-collapse">
+    <nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="body-header">
+    </nav>
+    <div class="page-header page-filter" data-parallax="true" style="background-color: #2abe5b">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="title text-all">使用方式</h1>
+                    <h3 class="text-all">使用方式主要分为三种: 本地离线使用，局域网使用，在线互联网使用.</h3>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#local">
+                                        <img class="img img-raised" src="../img/card/dataanalysis.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title text-success">
+                                        <a href="#local"> 本地离线使用</a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#inner">
+                                        <img class="img img-raised" src="../img/card/dataanalysis.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="category text-rose">
+                                        局域网使用
+                                    </h4>
+                                    <h4 class="card-title">
+                                        <a href="#inner"></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card card-blog">
+                                <div class="card-header card-header-image">
+                                    <a href="#internet">
+                                        <img class="img img-raised" src="../img/card/dataanalysis.png">
+                                    </a>
+                                    <div class="colored-shadow" style="background-image: url(&quot;../img/card/mainservice.jpg&quot;); opacity: 1;"></div>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="category text-info">
+                                        互联网使用
+                                    </h4>
+                                    <h4 class="card-title">
+                                        <a href="#internet"></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main main-raised">
+        <div class="section section-text" id="core">
+            <div class="team main-panner-top">
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto">
+                        <h3 class="font-weight-bold">核心用法</h3>
+                        <div class="blockquote undefined">
+                            <small>这里是引入基本的三方库如jquery，bootstrap等</small>
+                            <p>
+                                “除了常规的引入include-lib-local.js脚本外，通过
+                                <big class="text-rose">设置属性include="jquery,bootstrap"</big>的方式自动寻找引入对应的第三方脚本jquery,bootstrap”.
+                            </p>
+                            <br>
+                            <small>这里是引入常见的地图脚本leaflet以及对应的geojson,turf,elasticsearch插件</small>
+                            <p>
+                                “除了常规的引入include-leaflet-local.js脚本外，通过
+                                <big class="text-rose">设置属性include="geojson,turf"</big>的方式自动寻找引入对应的第三方脚本leaflet,geojson,turf”.
+                            </p>
+                            <br>
+                            <p>
+                                “include="geojson,turf"的里面的插件没有先后顺序，内部维护了其先后顺序”.
+                            </p>
+                            <small>include-*.js中include="xxx"具体的名字类型geojson,turf,elasticsearc等可以在include-*.js内部的代码中查看</small>
+                            <br>
+                            <img class="card-img-top mx-auto d-block" alt="Raised Image" src="../img/mapgis/use/use-example.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section section-text section-green" id="local">
+            <div class="team main-panner-top">
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto">
+                        <p>
+                            <h3 class="font-weight-bold">本地离线使用 include-xxx-local.js</h3>
+                            <br> 离线版本的核心原理就是根据include=""中的名字，在
+                            <big class="text-dark">当前cdn文件夹下</big>寻找对应的js的脚本并按照规定的顺序引入到浏览器中
+                        </p>
+                        <div class="blockquote undefined">
+                            <p>
+                                “请把webclient安装包安装完成后的cdn的文件夹与include-*.js在同一目录下，然后只需正常的引入对应的include-*.js即可”.
+                            </p>
+                            <p>
+                                “include-*.js 通过include="xxx"的方式自动寻找引入对应的第三方脚本”.
+                            </p>
+                            <img class="card-img-top mx-auto d-block" alt="Raised Image" src="../img/mapgis/use/use-example.png">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <img class="card-img-top mx-auto d-block col-md-4" alt="Raised Image" src="../img/mapgis/use/local-use.png">
+                </div>
+            </div>
+        </div>
+        <div class="section section-cards" id="inner">
+            <div class="team main-panner-top">
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto">
+                        <p>
+                            <h3 class="font-weight-bold">互联网在线使用 include-xxx-online.js</h3>
+                            <br> 在线版本的核心原理就是根据include=""中的名字，在
+                            <big class="text-rose">互联网众多cdn网址下</big>寻找对应的js的脚本并按照规定的顺序引入到浏览器中
+                        </p>
+                        <div class="blockquote undefined">
+                            <p>
+                                “只需正常的引入对应的include-xxx-online.js即可”.
+                            </p>
+                            <p>
+                                “include-*.js 通过include="xxx"的方式自动寻找引入对应的第三方脚本”.
+                            </p>
+                            <img class="card-img-top mx-auto d-block" alt="Raised Image" src="../img/mapgis/use/online-use.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section section-green" id="internet">
+            <div class="team main-panner-top">
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto">
+                        <p>
+                            <h3 class="font-weight-bold">局域网离线使用 include-xxx-online.js</h3>
+                            <br> 局域网离线版本的核心原理就是根据include=""中的名字，在
+                            <big class="text-dark">对应设置的ip/socket的机器上</big>寻找对应的js的脚本并按照规定的顺序引入到浏览器中
+                        </p>
+                        <div class="row">
+                            <img class="card-img-top col-md-8" alt="Raised Image" src="../img/mapgis/use/outline-use.png">
+                        </div>
+                        <br>
+                        <div class="blockquote undefined">
+                            <p>
+                                “请在某一台机器上设置对应的cdn后台服务器”.
+                                <big class="text-dark">假定该机器的ip是192.168.10.185</big>
+                            </p>
+                            <p>
+                                1. 进入对应目录.
+                            </p>
+                            <img class="card-img-top d-block col-md-8" alt="Raised Image" src="../img/mapgis/use/node-1.png">
+                            <p>
+                                2. 安装对应的依赖,这一步需要联网.
+                            </p>
+                            <img class="card-img-top d-block col-md-8" alt="Raised Image" src="../img/mapgis/use/node-2.png">
+                            <p>
+                                3. 开始执行,这一步不需要联网.
+                            </p>
+                            <img class="card-img-top d-block col-md-8" alt="Raised Image" src="../img/mapgis/use/node-3.png">
+                            <p>
+                                4. 结束。对应的机器ip是192.168.10.185，端口号是8800
+                            </p>
+                            <p>
+                                5. 其他机器引入对应的脚本，需要和上面的机器同一网段.
+                                <big class="text-dark">请注意多出来的属性ip以及socket</big>
+                            </p>
+                            <img class="card-img-top d-block col-md-12" alt="Raised Image" src="../img/mapgis/use/inner-use.png">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ./wrapper -->
+    <footer class="footer footer-default" id="body-footer"></footer>
+    <!--   Core JS Files   -->
+    <script src="../libs/material-kit/js/core/jquery.min.js" type="text/javascript"></script>
+    <script src="../libs/material-kit/js/core/popper.min.js" type="text/javascript"></script>
+    <script src="../libs/material-kit/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+    <script src="../libs/material-kit/js/plugins/moment.min.js"></script>
+    <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+    <script src="../libs/material-kit/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+    <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+    <script src="../libs/material-kit/js/plugins/nouislider.min.js" type="text/javascript"></script>
+    <!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
+    <script src="../libs/material-kit/js/material-kit.js?v=2.0.3" type="text/javascript"></script>
+    <script>
+        $("#body-header").load("../ui/header.html");
+        $("#body-footer").load("../ui/footer.html");
+    </script>
+</body>
+
+</html>

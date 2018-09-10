@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>图形样式编辑</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script>
+        "use strict";
+        //地图容器
+        var map;
+        //绘制图层
+        var drawnItems = new L.FeatureGroup();
+
+        /**显示地图
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [0, -60],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 10,
+                //当前显示等级
+                zoom: 3,
+                //限制显示地理范围
+                //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+            //矢量图层
+            var layer1 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}', {
+                attribution: 'Tianditu矢量',
+                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            });
+            //矢量注记图层
+            var layer2 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
+                attribution: 'Tianditu注记',
+                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            });
+            var LayerG = L.layerGroup([layer1, layer2]);
+            //添加图层组
+            LayerG.addTo(map);
+            //线坐标数组
+            var latlngs = [[10, -60], [20, -45]];
+            //添加线
+            var polyline = L.polyline(latlngs, {
+                //线颜色
+                color: 'red'
+            }).addTo(drawnItems);
+            //创建一个多边形
+            var latlngs = [[0, -90], [10, -90], [10, -70], [0, -70], [0, -90]];
+            //将创建的多边形加载进图层
+            var polygon = L.polygon(latlngs, {
+                //多边形颜色
+                color: 'red'
+            }).addTo(drawnItems);
+            //添加绘制图层
+            map.addLayer(drawnItems);
+            //样式设计
+            var options = {
+                //是否显示边界
+                stroke: true,
+                //颜色
+                color: 'green',
+                //线宽
+                weight: 3,
+                //透明度
+                opacity: 1,
+                //绘制结束时使用的线形状
+                lineCap: 'arrow',
+                //在绘制图形的各个拐角使用的线形状
+                lineJoin: 'arrow',
+            };
+            //修改样式
+            drawnItems.getLayers()[0].setStyle(options);
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width:100%;height:95%">
+
+    </div>
+</body>
+</html>

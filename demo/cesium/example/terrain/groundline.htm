@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>贴地线</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-cesium-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var webGlobe = new Cesium.WebSceneControl('map', {
+            terrainExaggeration: 1
+        });
+        var viewer = webGlobe.viewer;
+        var scene = webGlobe.scene;
+
+        var type = 'lyrs=s@130'; //type 地图类型 矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’
+        var googLayer = webGlobe.appendGoogleMap(type);
+
+        //url 可从IGserver发布的瓦片信息中获取
+        var url = 'http://192.168.10.14:6163/igs/rest/g3d/dem';
+        var sceneIndex = 0;
+        var layerRenderIndex = 0;
+        var terrainLayer = webGlobe.appendMapGISTerrain(url, sceneIndex, layerRenderIndex); //, '/Handler.ashx'
+
+        $.get("../../data/json/tacker.json", function(data) {
+		for(var i = 0; i < data.features.length; i++) {
+			var feature = data.features[i];
+			var points = feature.geometry.coordinates;
+			webGlobe.appendLineOnTerrain("text123", convertPoints(points), 100, 7);
+		}
+
+	});
+
+        function convertPoints(points) {
+            var positions = [];
+            for (var i = 0; i < points.length; i++) {
+                positions.push(points[i][0]);
+                positions.push(points[i][1]);
+                //positions.push(0);
+            }
+            return positions;
+        }
+
+    </script>
+
+</body>
+
+</html>

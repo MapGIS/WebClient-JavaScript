@@ -1,0 +1,215 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>要素单圈缓冲分析</title>
+    <script include="transform" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //整个js文件都是严格模式下执行的
+        "use strict";
+        // 定义地图容器全局变量
+        var map;
+        // 定义矢量图层全局变量
+        var vectorLayer;
+        //缓存结果图层的基地址 
+        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
+        // 缓冲区图层id
+        var layerId = [];
+        // 定义矢量图层guid
+        var guid;
+        /** 地图初始化函数
+        */
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            // 创建地图容器
+            map = new mapboxgl.Map({
+                // 地图显示的div容器
+                container: 'mapCon',
+                // 设置地图不连续显示
+                renderWorldCopies: false,
+                // 设置地图最大显示范围
+                maxBounds: [[-180,-90], [180,90]]
+            });
+            // 创建矢量图层
+            vectorLayer = new Zondy.Map.MapVectorLayer("gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",{
+                // IGServer所在ip地址
+                ip: 'develop.smaryun.com',
+                // IGServer请求端口号
+                port: '6163',
+                //添加guid
+                guid: guid
+            });
+            // 将矢量图层添加到地图
+            vectorLayer.addToMap(map);
+        }
+
+        /** 执行单圈缓冲区分析
+        */
+        function singleBuffAnalysis() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            //初始化Zondy.Object.FeatureGeometry对象
+            var regGeo = new Zondy.Object.FeatureGeometry();
+            //设置区要素的空间几何信息
+            var gReg = new Zondy.Object.GRegion([
+                        new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                        new Zondy.Object.Point2D(lonLat2Mercator(0.46, 30.1).x, lonLat2Mercator(0.46, 30.1).y),
+                        new Zondy.Object.Point2D(lonLat2Mercator(11.48, 6.22).x, lonLat2Mercator(11.48, 6.22).y),
+                        new Zondy.Object.Point2D(lonLat2Mercator(36.73, 7.6).x, lonLat2Mercator(36.73, 7.6).y),
+                        new Zondy.Object.Point2D(lonLat2Mercator(58.77, 25.51).x, lonLat2Mercator(58.77, 25.51).y),
+                        new Zondy.Object.Point2D(lonLat2Mercator(41.33, 49.39).x, lonLat2Mercator(41.33, 49.39).y) ]) ])]);
+            // 设置区要素的几何信息
+            regGeo.setRegGeom([gReg]);
+            //设置属性结构
+            var regAttStr = new Zondy.Object.CAttStruct({
+                // 属性字段名称
+                FldName: ["ID", "面积", "周长", "LayerID"],
+                // 属性字段个数
+                FldNumber: 4,
+                // 属性字段类型
+                FldType: ["FldLong", "FldDouble", "FldDouble", "FldLong"]
+            });
+            //实例化CAttDataRow类
+            var values = [0, 62.566714, 50.803211, 0];
+            var valuesRow = new Zondy.Object.CAttDataRow(values, 1);
+            //实例化FeatureBuffBySingleRing类，设置要素缓冲分析必要参数，输出分析结果到缓冲分析结果图层
+            var featureBufBySR = new Zondy.Service.FeatureBuffBySingleRing({
+                //IGServer所在ip地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口号
+                port: "6163",
+                //设置要素缓冲分析左半径
+                leftRad: 500000,
+                //设置要素缓冲分析右半径    
+                rightRad: 500000
+            });
+            /*设置缓冲分析参数*/
+            //设置几何信息
+            featureBufBySR.sfGeometryXML = JSON.stringify([regGeo]);
+            //设置属性结构
+            featureBufBySR.attStrctXML = JSON.stringify(regAttStr);
+            //设置属性值
+            featureBufBySR.attRowsXML = JSON.stringify([valuesRow]);
+            //设置追踪半径
+            featureBufBySR.traceRadius = 0.0001;
+            //设置缓冲结果的名称以及存放地址
+            var resultname = "singleBuffAnalysisResultLayer" + getCurentTime();
+            featureBufBySR.resultName = resultBaseUrl + resultname;
+            //调用Zondy.Service.AnalysisBase基类的execute方法执行要素缓冲分析，AnalysisSuccess为回调函数。
+            featureBufBySR.execute(AnalysisSuccess, "get");
+        }
+
+        /** 分析失败回调
+        */
+        function AnalysisError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        /**回调函数，处理显示结果信息
+        *  @param {object} data 获取结果对象
+        */
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
+            if (!data.result.succeed) {
+                alert("要素单圈缓冲分析失败，请检查参数！");
+            }
+            else {
+                if (data.result.results.length != 0 && data.result.results != null) {
+                    // 结果图层的URL
+                    var resultLayerUrl = data.result.results[0].Value;
+                    //将结果图层添加到地图视图中显示
+                    var resultLayer = new Zondy.Map.MapVectorLayer(encodeURIComponent(resultLayerUrl), {
+                        //IGServer所在ip地址
+                        ip: "develop.smaryun.com",
+                        //IGServer请求端口号
+                        port: "6163",
+                        //图层guid
+                        guid: (new Date()).getTime().toString()
+                    });
+                    resultLayer.addToMap(map);
+                    layerId.push(resultLayer.layerID);
+                }
+            }
+        }
+
+        /** 清除客户端分析结果信息
+        */
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            //清除缓冲区的图层
+            if (!!layerId && layerId.length > 0) {
+                for (var i = layerId.length - 1; i >= 0; i--) {
+                    map.removeLayer(layerId[i]);
+                    layerId.pop();
+                }
+            }
+        }
+
+        /** 当前日期加时间(如:2009-06-12-120000)
+        */
+        function getCurentTime() {
+            var now = new Date();
+            //获取当前年份
+            var year = now.getFullYear();
+            //获取当前月份     
+            var month = now.getMonth() + 1;
+            //获取当前日期   
+            var day = now.getDate();
+            //获取当前时刻
+            var hh = now.getHours();
+            //获取当前分钟
+            var mm = now.getMinutes();
+            //获取当前秒钟
+            var ss = now.getSeconds();
+            //将当前的日期拼串
+            var clock = year + "-";
+            if (month < 10)
+                clock += "0";
+            clock += month + "-";
+            if (day < 10)
+                clock += "0";
+            clock += day + "-";
+            if (hh < 10)
+                clock += "0";
+            clock += hh;
+            if (mm < 10) clock += '0';
+            clock += mm;
+            if (ss < 10) clock += '0';
+            clock += ss;
+            return (clock);
+        }
+        
+        /** 停止进度条
+        */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+       
+        /** 开始进度条动画
+        */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在缓冲区分析，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="单圈缓冲区分析" onclick="singleBuffAnalysis()" />
+        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
+    </div>
+    <div id="mapCon" style="width: 100%; height: 700px;">
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>leaflet的迁移图显示</title>
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="migrate" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <style>
+    #mapid {
+      height: 800px
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    var mymap = L.map('mapid').setView([34.25, 108.95], 10);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+      'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">MapBox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets'
+      }).addTo(mymap);
+
+    var routeLines = [],
+      paths = [];
+    var colors = ["#ff3a31", "#ff7e2b", "#ffc726", "#e9ff20", "#99ff1b", "#45ff15", "#10ff33", "#0aff84", "#05ffd9", "#00ccff"];
+
+    $.getJSON('../../data/dataview/animate-marker.json', function(data) {
+      for (var i = 0; i < data.features.length; i++) {
+        var point_iter = data.features[i].geometry.coordinates;
+        var last = point_iter.length - 1;
+        var migrateLine = {
+          "from": [point_iter[0][1], point_iter[0][0]], //本例中经纬度是反过来的[lon, lat]
+          "to": [point_iter[last][1], point_iter[last][0]], //leaflet标准是[lat, lon]
+          "labels": ["起点", "终点"],
+          "color": colors[i % colors.length]
+        };
+        routeLines.push(migrateLine);
+      }
+
+      var migrationLayer = new L.migrationLayer({
+        map: mymap,
+        data: routeLines,
+        pulseRadius: 20,     //光晕半径
+        pulseBorderWidth: 3, //光晕波浪宽度
+        arcWidth: 1,         //路径弧段宽度
+        arcLabel: true,      //是否显示注记
+        arcLabelFont: '10px sans-serif',
+      });
+      migrationLayer.addTo(mymap);
+
+    });
+  </script>
+</body>
+
+</html>

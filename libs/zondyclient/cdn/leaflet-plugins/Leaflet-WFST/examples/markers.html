@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css"/>
+  <link rel="stylesheet" type="text/css" href="lib/leaflet.toolbar.css"/>
+  <link rel="stylesheet" type="text/css" href="lib/leaflet.label.css"/>
+  <link rel="stylesheet" type="text/css" href="lib/MarkerCluster.css"/>
+  <link rel="stylesheet" type="text/css" href="lib/MarkerCluster.Default.css"/>
+  <link rel="stylesheet" type="text/css" href="lib/L.Control.Sidebar.css"/>
+
+  <title>WFS-T Markers Test</title>
+  <style>
+    html, body, #map {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #sidebar input[type="text"] {
+      margin-top: 4px;
+    }
+
+    #sidebar input[type="button"] {
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="sidebar">
+  <h1 id="title">Point of interests properties</h1>
+
+  <input id="idTextbox" type="text" size="35" name="id" readonly="readonly"/>
+  <label id="idLabel" name="id">ID</label><br>
+
+  <input id="osmidTextbox" type="text" size="35" name="osmid" readonly="readonly"/>
+  <label id="osmidLabel" name="osmid">OSM ID</label><br>
+
+  <input id="manmadeTextbox" type="text" size="35" name="manmade"/>
+  <label id="manmadeLabel" name="manmade">Man made</label><br>
+
+  <input id="nameTextbox" type="text" size="35" name="name"/>
+  <label id="nameLabel" name="name">Name</label><br>
+
+  <input id="amenityTextbox" type="text" size="35" name="amenity"/>
+  <label id="amenityLabel" name="amenity">Amenity</label><br>
+
+  <input id="leisureTextbox" type="text" size="35" name="leisure"/>
+  <label id="leisureLabel" name="leisure">Leisure</label><br>
+
+  <input id="officeTextbox" type="text" size="35" name="office"/>
+  <label id="officeLabel" name="office">Office</label><br>
+
+  <input id="shopTextbox" type="text" size="35" name="shop"/>
+  <label id="shopLabel" name="shop">Shop</label><br>
+
+  <input id="sportTextbox" type="text" size="35" name="sport"/>
+  <label id="sportLabel" name="sport">Sport</label><br>
+
+  <input id="tourismTextbox" type="text" size="35" name="tourism"/>
+  <label id="tourismLabel" name="tourism">Tourism</label><br>
+
+  <input id="applyButton" type="button" value="Apply" disabled/>
+</div>
+
+<script src="lib/spin.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+<script src="lib/leaflet.toolbar.js"></script>
+<script src="lib/leaflet.label.js"></script>
+<script src="lib/leaflet.markercluster.js"></script>
+<script src="editableMarkercluster/leaflet.markercluster.editablemarker.js"></script>
+<script src="lib/L.Control.Sidebar.js"></script>
+<script src="../dist/leaflet-wfst.src.js"></script>
+<script>
+  var spinnerOptions = {
+    lines: 15, // The number of lines to draw.
+    length: 20, // The length of each line.
+    width: 15, // The line thickness.
+    radius: 50, // The radius of the inner circle.
+    corners: 1, // Corner roundness (0..1).
+    rotate: 0, // The rotation offset.
+    direction: 1, // 1: clockwise, -1: counterclockwise.
+    color: '#000', // #rgb or #rrggbb or array of colors.
+    speed: 1, // Rounds per second.
+    trail: 50, // Afterglow percentage.
+    shadow: false, // Whether to render a shadow.
+    hwaccel: false, // Whether to use hardware acceleration.
+    className: 'spinner', // The CSS class to assign to the spinner.
+    zIndex: 2e9, // The z-index (defaults to 2000000000).
+    top: '50%', // Top position relative to parent.
+    left: '50%' // Left position relative to parent.
+  };
+
+  var map = L.map('map').setView([0, 0], 2);
+
+  var disableMapInteractions = function () {
+    map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
+    if (map.tap) {
+      map.tap.disable();
+    }
+  };
+
+  var enableMapInteractions = function () {
+    map.dragging.enable();
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.enable();
+    map.boxZoom.enable();
+    map.keyboard.enable();
+    if (map.tap) {
+      map.tap.enable();
+    }
+  };
+
+  disableMapInteractions();
+  var spinnerContainer = document.getElementsByTagName('body')[0];
+  var spinner = new Spinner(spinnerOptions).spin(spinnerContainer);
+
+  var sidebar = L.control.sidebar('sidebar', {
+    position: 'right'
+  });
+  map.addControl(sidebar);
+
+
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var markers = new L.MarkerClusterGroup({
+    showCoverageOnHover: false
+  }).addTo(map);
+
+  var editModeMarkerIcon = new L.Icon({
+    iconUrl: 'editableMarkercluster/images/marker-icon-red.png',
+    iconRetinaUrl: 'editableMarkercluster/images/marker-icon-red-2x.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 40],
+    popupAnchor: [1, -34],
+    shadowUrl: 'editableMarkercluster/images/marker-shadow.png',
+    shadowRetinaUrl: 'editableMarkercluster/images/marker-shadow.png',
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 40]
+  });
+
+  var createEditableMarker = function (latlng, options) {
+    var marker = new L.MarkerClusterGroup.EditableMarker(latlng || map.getCenter(), L.extend({
+      clusterGroup: markers,
+      editModeIcon: editModeMarkerIcon,
+      toolbarEditIconClass: 'fa fa-lg fa-pencil-square-o',
+      toolbarDeleteIconClass: 'fa fa-lg fa-trash-o',
+      toolbarCloseIconClass: 'fa fa-lg fa-close',
+      showLabelOnEdit: true,
+      getLabelContent: function () {
+        var latlng = marker.getLatLng();
+        var content = 'Drag marker and click edit button again.<br>' +
+          '<b>Latitude:</b> ' + latlng.lat.toFixed(6) + '<br>' +
+          '<b>Longitude:</b> ' + latlng.lng.toFixed(6);
+
+        return content;
+      },
+      hideToolbarAfterEdit: false
+    }, options || {}));
+
+    return marker;
+  };
+
+  var loadFinished = false;
+  var isFirstLoad = true;
+
+  var wfst = new L.WFST({
+    url: 'http://geoserver.ics.perm.ru/geoserver/ows',
+    typeNS: 'ics',
+    typeName: 'perm_points_of_interest',
+    crs: L.CRS.EPSG4326,
+    geometryField: 'ogr_geometry',
+    maxFeatures:5,
+    pointToLayer: function (featureData, latlng) {
+      return createEditableMarker(latlng);
+    }
+  });
+
+  var showSidebar = function (marker) {
+    sidebar._marker = marker;
+
+    if (sidebar._marker.feature) {
+      document.getElementById('idTextbox').value = sidebar._marker.feature.id || '';
+
+      if (sidebar._marker.feature.properties) {
+        document.getElementById('osmidTextbox').value = sidebar._marker.getProperty('osm_id') || '';
+        document.getElementById('manmadeTextbox').value = sidebar._marker.getProperty('man_made') || '';
+        document.getElementById('nameTextbox').value = sidebar._marker.getProperty('name') || '';
+        document.getElementById('amenityTextbox').value = sidebar._marker.getProperty('amenity') || '';
+        document.getElementById('leisureTextbox').value = sidebar._marker.getProperty('leisure') || '';
+        document.getElementById('officeTextbox').value = sidebar._marker.getProperty('office') || '';
+        document.getElementById('shopTextbox').value = sidebar._marker.getProperty('shop') || '';
+        document.getElementById('sportTextbox').value = sidebar._marker.getProperty('sport') || '';
+        document.getElementById('tourismTextbox').value = sidebar._marker.getProperty('tourism') || '';
+      }
+
+      sidebar._onApplyBtnClick = function () {
+        if (!sidebar._marker) {
+          return;
+        }
+
+        sidebar._marker.setProperties(sidebar._marker.feature.properties || {});
+
+        var propertiesChanged = false;
+
+        var applyPropertyValue = function (property, value) {
+          if ((property || value) && property != value) {
+            property = value;
+            propertiesChanged = true;
+          }
+        };
+
+        sidebar._marker.setProperties({
+          osm_id:  document.getElementById('osmidTextbox').value || null,
+          man_made:  document.getElementById('manmadeTextbox').value || null,
+          name:  document.getElementById('nameTextbox').value || null,
+          amenity:  document.getElementById('amenityTextbox').value || null,
+          leisure:  document.getElementById('leisureTextbox').value || null,
+          office:  document.getElementById('officeTextbox').value || null,
+          shop:  document.getElementById('shopTextbox').value || null,
+          sport:  document.getElementById('sportTextbox').value || null,
+          tourism:  document.getElementById('tourismTextbox').value || null
+        })
+
+        if (propertiesChanged) {
+          sidebar._marker.fire('marker:edited');
+        }
+      };
+
+      var applyBtn = document.getElementById('applyButton');
+      L.DomEvent.on(applyBtn, 'click', sidebar._onApplyBtnClick);
+    }
+
+    sidebar.show();
+  };
+
+  var hideSidebar = function () {
+    if (sidebar._marker && sidebar._marker._popupToolbar && sidebar._marker._popupToolbar._removeToolbar) {
+      sidebar._marker._popupToolbar._removeToolbar();
+    }
+
+    var applyBtn = document.getElementById('applyButton');
+
+    if (sidebar._onApplyBtnClick) {
+      L.DomEvent.off(applyBtn, 'click', sidebar._onApplyBtnClick);
+    }
+
+    sidebar._marker = undefined;
+    sidebar._onApplyBtnClick = undefined;
+    sidebar.hide();
+  };
+
+  L.DomEvent.on(sidebar.getCloseButton(), 'click', function () {
+    hideSidebar();
+  });
+
+  var addWfstMarker = function (marker) {
+    marker.on('marker:edited', function () {
+      wfst.editLayer(marker);
+    });
+
+    marker.on('marker:deleted', function () {
+      wfst.removeLayer(marker);
+    });
+
+    marker.on('popuptoolbar:shown', function () {
+      showSidebar(marker);
+    });
+
+    marker.on('popuptoolbar:closed', function () {
+      hideSidebar();
+    });
+
+    if (!markers.hasLayer(marker)) {
+      markers.addLayer(marker);
+    }
+
+    if (!wfst.hasLayer(marker)) {
+      wfst.addLayer(marker);
+    }
+  };
+
+  wfst.on('load', function (e) {
+    spinner.stop();
+    enableMapInteractions();
+
+    markers.clearLayers();
+
+    e.target.eachLayer(function (layer) {
+      addWfstMarker(layer);
+    });
+
+    if (isFirstLoad) {
+      map.fitBounds(markers);
+      isFirstLoad = false;
+    }
+
+    loadFinished = true;
+  });
+
+  wfst.on('save:success', function (data) {
+    spinner.stop();
+  });
+
+  wfst.on('save:error', function (data) {
+    spinner.stop();
+
+    alert('WFS-T save error occured. Take a look to console.');
+    console.error('WFS-T save error');
+    console.error(data);
+  });
+
+  new L.Toolbar.Control({
+    position: 'topleft',
+    actions: [
+      L.ToolbarAction.extend({
+        options: {
+          toolbarIcon: {
+            className: 'fa fa-lg fa-map-marker'
+          }
+        },
+        addHooks: function () {
+          if (!loadFinished) {
+            return;
+          }
+
+          var newMarker = createEditableMarker(map.getCenter(), {
+            dontShowToolbarOnFirstClick: true
+          });
+          newMarker.setIcon(newMarker.options.editModeIcon);
+
+          getLabelContent = function () {
+            var latlng = newMarker.getLatLng();
+            var content = 'Click to finish adding.<br>' +
+              '<b>Latitude:</b> ' + latlng.lat.toFixed(6) + '<br>' +
+              '<b>Longitude:</b> ' + latlng.lng.toFixed(6);
+
+            return content;
+          }
+
+          var startAdding = function (e) {
+            newMarker.setLatLng(e.latlng);
+            map.addLayer(newMarker);
+
+            newMarker.bindLabel(getLabelContent(), {
+              noHide: true,
+              direction: 'auto',
+              pane: map.getPanes.popupPane
+            });
+            newMarker.showLabel();
+          };
+
+          var processAdding = function (e) {
+            if (map.hasLayer(newMarker)) {
+              newMarker.setLatLng(e.latlng);
+            }
+            ;
+
+            if (newMarker.label) {
+              newMarker.updateLabelContent(getLabelContent());
+            }
+          };
+
+          var finishAdding = function (e) {
+            map.off('mousemove', startAdding);
+            map.off('mousemove', processAdding);
+            map.off('click', finishAdding);
+            newMarker.off('click', finishAdding);
+
+            if (map.hasLayer(newMarker)) {
+              map.removeLayer(newMarker);
+            }
+
+            if (newMarker.label) {
+              newMarker.hideLabel();
+              newMarker.unbindLabel();
+            }
+
+            newMarker.setIcon(newMarker.options.normalModeIcon);
+
+            addWfstMarker(newMarker);
+          };
+
+          map.once('mousemove', startAdding);
+          map.on('mousemove', processAdding);
+
+          map.once('click', finishAdding);
+          newMarker.once('click', finishAdding)
+        }
+      }),
+      L.ToolbarAction.extend({
+        options: {
+          toolbarIcon: {
+            className: 'fa fa-lg fa-save'
+          }
+        },
+        addHooks: function () {
+          if (!loadFinished) {
+            return;
+          }
+
+          loadFinished = false;
+          disableMapInteractions();
+          spinner.spin(spinnerContainer);
+
+          wfst.save();
+        }
+      })
+    ]
+  }).addTo(map);
+</script>
+</body>
+</html>

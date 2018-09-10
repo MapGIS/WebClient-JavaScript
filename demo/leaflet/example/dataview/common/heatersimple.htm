@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>热力图显示</title>
+    <!--必要的脚本引用-->
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script include="heater" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        //定义热力图图层
+        var heatLayer;
+        //地图初始化函数
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [40, 116.3],
+                //最小显示等级
+                minZoom: 12,
+                //最大显示等级
+                maxZoom: 16,
+                //当前显示等级
+                zoom: 12
+            });
+
+            //加载瓦片图层数据（OSM）
+            var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                //图层显示设置
+                noWrap: true
+            }).addTo(map);
+
+            //加载热力图图层
+            heatLayer = L.heatLayer([
+                [40, 116.3]
+            ], {
+                //设置最小透明度
+                minOpacity: 0.8,
+                //设置热力图半径
+                radius: 15,
+                //设置模糊尺寸
+                blur: 15
+            }).addTo(map);
+
+        }
+
+        //调整热力图半径
+        function setRadius() {
+            //获取热力半径范围标签元素
+            var radius = document.getElementById('radius');
+            //取当前半径的值
+            var radiusValue = parseInt(radius.value, 10);
+            //调整热力图半径
+            heatLayer.setOptions({
+                minOpacity: 0.8,
+                radius: radiusValue
+            })
+        }
+
+        //调整热力图模糊尺寸
+        function setBlur() {
+            //获取模糊尺寸范围标签元素
+            var blur = document.getElementById('blur');
+            //取当前模糊尺寸的值
+            var blurValue = parseInt(blur.value, 10);
+            //调整热力图模糊尺寸
+            heatLayer.setOptions({
+                minOpacity: 0.8,
+                blur: blurValue
+            })
+        }
+    </script>
+</head>
+
+<body onload="init()">
+
+    <div class="ToolLib">
+        <div>
+            <label class="lb">热点半径（radius size）：</label>
+            <input type="range" id="radius" min="1" max="60" step="1" value="15" onchange="setRadius()"
+            />
+        </div>
+        <div>
+            <label class="lb">模糊尺寸（blur size）：</label>
+            <input type="range" id="blur" min="1" max="60" step="1" value="15" onchange="setBlur()"
+            />
+        </div>
+
+    </div>
+    <div id="leaf_map" style="height:600px; width:100%">
+    </div>
+</body>
+
+</html>

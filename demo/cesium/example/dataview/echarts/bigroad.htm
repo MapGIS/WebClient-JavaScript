@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="echarts" src="../../libs/zondyclient/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var cartodb = new Cesium.UrlTemplateImageryProvider({
+      url: 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+      credit: 'Map tiles by CartoDB, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+    });
+
+    var night = new Cesium.UrlTemplateImageryProvider({
+      url: 'https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i428132093!3m14!2szh-CN!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy5lOmd8cC5jOiNmZjIxMjEyMSxzLmU6bC5pfHAudjpvZmYscy5lOmwudC5mfHAuYzojZmY3NTc1NzUscy5lOmwudC5zfHAuYzojZmYyMTIxMjEscy50OjF8cy5lOmd8cC5jOiNmZjc1NzU3NSxzLnQ6MTd8cy5lOmwudC5mfHAuYzojZmY5ZTllOWUscy50OjIxfHAudjpvZmYscy50OjIxfHMuZTpsfHAudjpvZmYscy50OjE5fHMuZTpsLnQuZnxwLmM6I2ZmYmRiZGJkLHMudDoyfHMuZTpsLnR8cC52Om9mZixzLnQ6MnxzLmU6bC50LmZ8cC5jOiNmZjc1NzU3NSxzLnQ6NDB8cy5lOmd8cC5jOiNmZjE4MTgxOCxzLnQ6NDB8cy5lOmwudC5mfHAuYzojZmY2MTYxNjEscy50OjQwfHMuZTpsLnQuc3xwLmM6I2ZmMWIxYjFiLHMudDozfHAudjpvZmYscy50OjN8cy5lOmcuZnxwLmM6I2ZmMmMyYzJjLHMudDozfHMuZTpsLnQuZnxwLmM6I2ZmOGE4YThhLHMudDo1MHxzLmU6Z3xwLmM6I2ZmMzczNzM3LHMudDo0OXxzLmU6Z3xwLmM6I2ZmM2MzYzNjLHMudDo3ODV8cy5lOmd8cC5jOiNmZjRlNGU0ZSxzLnQ6NTF8cy5lOmx8cC52Om9mZixzLnQ6NTF8cy5lOmwudC5mfHAuYzojZmY2MTYxNjEscy50OjR8cy5lOmwudC5mfHAuYzojZmY3NTc1NzUscy50OjZ8cy5lOmd8cC5jOiNmZjAwMDAwMCxzLnQ6NnxzLmU6bC50LmZ8cC5jOiNmZjNkM2QzZA!4e0&token=28453',
+      assetId: 3812
+    });
+
+    var google = new Cesium.UrlTemplateImageryProvider({
+      url: 'https://khms3.google.com/kh/v=803?x={x}&y={y}&z={z}'
+    });
+
+    //http://maps.google.cn/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i428132188!3m14!2szh-CN!3sCN!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy5lOmwudC5mfHAuYzojZmZmZmZmZmYscy5lOmwudC5zfHAuYzojZmYwMDAwMDB8cC5sOjEzLHMudDoxfHMuZTpnLmZ8cC5jOiNmZjAwMDAwMCxzLnQ6MXxzLmU6Zy5zfHAuYzojZmYxNDRiNTN8cC5sOjE0fHAudzoxLjQscy50OjV8cC5jOiNmZjA4MzA0YixzLnQ6MnxzLmU6Z3xwLmM6I2ZmMGM0MTUyfHAubDo1LHMudDo0OXxzLmU6Zy5mfHAuYzojZmYwMDAwMDAscy50OjQ5fHMuZTpnLnN8cC5jOiNmZjBiNDM0ZnxwLmw6MjUscy50OjUwfHMuZTpnLmZ8cC5jOiNmZjAwMDAwMCxzLnQ6NTB8cy5lOmcuc3xwLmM6I2ZmMGIzZDUxfHAubDoxNixzLnQ6NTF8cy5lOmd8cC5jOiNmZjAwMDAwMCxzLnQ6NHxwLmM6I2ZmMTQ2NDc0LHMudDo2fHAuYzojZmYwMjEwMTk!4e0&token=31935
+    
+    var map = new Cesium.Viewer('map', {
+      timeline: false,
+      homeButton: false,
+      baseLayerPicker: false,
+      animation: false,
+      fullscreenButton: false,
+      geocoder: false,
+      selectionIndicator: false,
+      infoBox: false,
+      sceneModePicker: false,
+      navigationHelpButton: false,
+
+      imageryProvider: night
+    });
+
+    initMap();
+    initEcharts();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    initEcharts();
+
+    var CHUNK_COUNT = 28;
+    var dataCount = 0;
+    var layer;
+
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      var dataURL = `../../data/echarts/road/road_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Float32Array(this.response);
+
+        var addedDataCount = 0;
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: rawData
+        });
+
+        dataCount += addedDataCount;
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+    function initEcharts() {
+      var option = {
+        title: {
+          text: '全国道路（百万级）',
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        progressive: 50000,
+        cesium: {
+          roam: true
+        },
+        series: [{
+          type: 'lines',
+
+          coordinateSystem: 'cesium',
+
+          blendMode: 'lighter',
+
+          dimensions: ['value'],
+
+          data: new Float64Array(),
+          polyline: true,
+          large: true,
+
+          lineStyle: {
+            color: 'orange',
+            width: 1.0,
+            opacity: 0.9
+          }
+        }]
+      }
+
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+
+      fetchData(0);
+    }
+  </script>
+
+</body>
+
+</html>

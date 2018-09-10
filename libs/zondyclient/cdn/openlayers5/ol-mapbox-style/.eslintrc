@@ -1,0 +1,10 @@
+{
+  "extends": "openlayers",
+  "globals": {
+    Promise: false
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": module
+  }
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Leaflet.VectorGrid Points Example</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+
+</head>
+<body style='margin:0'>
+
+	<div id="map" style="width: 100vw; height: 100vh"></div>
+
+	<script type="text/javascript"  src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+	<script type="text/javascript"  src="https://unpkg.com/leaflet.vectorgrid@1.2.0"></script>
+	<!-- <script type="text/javascript" src="../dist/Leaflet.VectorGrid.bundled.js"></script> -->
+	<script>
+
+		var map = L.map('map');
+
+// 		var cartodbAttribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+//
+// 		var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+// 			attribution: cartodbAttribution,
+// 			opacity: 0.5
+// 		}).addTo(map);
+
+// 		var mapboxUrl = 'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoiaXZhbnNhbmNoZXoiLCJhIjoiY2l6ZTJmd3FnMDA0dzMzbzFtaW10cXh2MSJ9.VsWCS9-EAX4_4W1K-nXnsA';
+//		var mapboxAttribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>'
+		var openmaptilesUrl = "https://free-{s}.tilehosting.com/data/v3/{z}/{x}/{y}.pbf.pict?key={key}";
+		var openmaptilesAttribution = '<a href="https://openmaptiles.org/">&copy; OpenMapTiles</a>, <a href="http://www.openstreetmap.org/copyright">&copy; OpenStreetMap</a> contributors';
+		var openmaptilesKey = 'UmmATPUongHdDmIicgs7';
+
+
+		var vectorTileOptions = {
+			rendererFactory: L.canvas.tile,
+			attribution: openmaptilesAttribution,
+			key: openmaptilesKey,
+			subdomains: '0123',	// 01234 for openmaptiles, abcd for mapbox
+			maxNativeZoom: 14,
+			vectorTileLayerStyles: {
+				'poi': function(properties, zoom) {
+					return {
+						weight: 2,
+						color: 'red',
+						opacity: 1,
+						fillColor: 'yellow',
+						fill: true,
+						radius: 6,
+						fillOpacity: 0.7
+					}
+				},
+
+				'housenumber': function(properties, zoom) {
+					return {
+						weight: 2,
+						color: 'purple',
+						opacity: 1,
+						fillColor: 'green',
+						fill: true,
+						radius: 4,
+						fillOpacity: 0.3
+					}
+				},
+
+				park: [],
+				place: [],
+				water: [],
+				waterway: [],
+				boundary: [],
+				country_label: [],
+				marine_label: [],
+				state_label: [],
+				place_label: [],
+				waterway_label: [],
+				water_name: [],
+				landcover: [],
+				landuse: [],
+				landuse_overlay: [],
+				road: [],
+				transportation: [],
+				waterway: [],
+				aeroway: [],
+				tunnel: [],
+				bridge: [],
+				barrier_line: [],
+				building: [],
+				road_label: [],
+				road_name: [],
+				transportation_name: [],
+				housenum_label: [],
+				mountain_peak: [],
+			},
+			interactive: true,	// Make sure that this VectorGrid fires mouse/pointer events
+			getFeatureId: function(f) {
+				return f.properties.osm_id;
+			}
+		};
+
+		L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+		var highlight;
+		var clearHighlight = function() {
+			if (highlight) {
+				pbfLayer.resetFeatureStyle(highlight);
+			}
+			highlight = null;
+		};
+		var pbfLayer = L.vectorGrid.protobuf(openmaptilesUrl, vectorTileOptions)
+			.on('click', function(e) {	// The .on method attaches an event handler
+				L.popup()
+					.setContent(e.layer.properties.name || e.layer.properties.type)
+// 					.setContent(JSON.stringify(e.layer))
+					.setLatLng(e.latlng)
+					.openOn(map);
+
+				clearHighlight();
+				highlight = e.layer.properties.osm_id;
+				pbfLayer.setFeatureStyle(highlight, {
+					weight: 2,
+					color: 'red',
+					opacity: 1,
+					fillColor: 'red',
+					fill: true,
+					radius: 6,
+					fillOpacity: 1
+				})
+
+				L.DomEvent.stop(e);
+			})
+			.addTo(map);
+
+		map.on('click', clearHighlight);
+
+		map.setView([40.9994639, -74.163208], 14);
+	</script>
+</body>
+</html>

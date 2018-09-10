@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script  include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script  src="../../libs/zondyclient/include-cesium-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var viewer = new Cesium.Viewer('map');
+
+        initMap();
+        initPickEvent();
+
+        function initMap() {
+            /*
+             * 懒人加载模式，这适用于小数据，快速展示，后面的问题多多，最好使用下面的新的模式
+             */
+            var blueBox = viewer.entities.add({
+                name: 'Blue box',
+                position: Cesium.Cartesian3.fromDegrees(-114.0, 40.0, 300000.0),
+                box: {
+                    dimensions: new Cesium.Cartesian3(400000.0, 300000.0, 500000.0),
+                    material: Cesium.Color.BLUE
+                }
+            });
+
+            var redBox = viewer.entities.add({
+                name: 'Red box with black outline',
+                position: Cesium.Cartesian3.fromDegrees(-107.0, 40.0, 300000.0),
+                box: {
+                    dimensions: new Cesium.Cartesian3(400000.0, 300000.0, 500000.0),
+                    material: Cesium.Color.RED.withAlpha(0.5),
+                    outline: true,
+                    outlineColor: Cesium.Color.BLACK
+                }
+            });
+
+            var outlineOnly = viewer.entities.add({
+                name: 'Yellow box outline',
+                position: Cesium.Cartesian3.fromDegrees(-100.0, 40.0, 300000.0),
+                box: {
+                    dimensions: new Cesium.Cartesian3(400000.0, 300000.0, 500000.0),
+                    fill: false,
+                    outline: true,
+                    outlineColor: Cesium.Color.YELLOW
+                }
+            });
+
+            /*
+             * 新加载模式-几何图元，这适用于复杂的定制化场景，核心由三部分组成，几何实例与模型矩阵以及样式
+             */
+            var instance1 = new Cesium.GeometryInstance({
+                geometry: new Cesium.BoxGeometry({
+                    vertexFormat: Cesium.VertexFormat.POSITION_ONLY,
+                    maximum: new Cesium.Cartesian3(150000.0, 150000.0, 150000.0), //x y z最大值，决定不同可视域下几何大小
+                    minimum: new Cesium.Cartesian3(-150000.0, -150000.0, -150000.0) //x y z最小值，决定不同可视域下几何大小
+                }),
+                attributes: {
+                    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.BLUE)
+                },
+                modelMatrix: Cesium.Matrix4.multiplyByTranslation(Cesium.Transforms.eastNorthUpToFixedFrame(
+                        Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883)), //几何的空间位置
+                    new Cesium.Cartesian3(0.0, 0.0, 300000.0), //几何的x,y,z空间偏移
+                    new Cesium.Matrix4()), //这个可以选择默认
+                id: "instance1"
+            });
+
+            //从数组构建box
+            var aabb = Cesium.AxisAlignedBoundingBox.fromPoints(Cesium.Cartesian3.fromDegreesArray([-72.0, 40.0, -70.0,
+                35.0, -75.0, 30.0, -70.0, 30.0, -68.0, 40.0
+            ]));
+            var instance2 = new Cesium.GeometryInstance({
+                geometry: Cesium.BoxGeometry.fromAxisAlignedBoundingBox(aabb),
+                attributes: {
+                    color: new Cesium.ColorGeometryInstanceAttribute(1.0, 1.0, 1.0, 1)
+                },
+                id: "instance2"
+            });
+
+            viewer.scene.primitives.add(new Cesium.Primitive({
+                geometryInstances: [instance1, instance2],
+                appearance: new Cesium.PerInstanceColorAppearance() //EllipsoidSurfaceAppearance/PerInstanceColorAppearance请区分使用场景
+            }));
+
+            viewer.zoomTo(viewer.entities);
+        }
+
+        function initPickEvent() {
+            var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+            handler.setInputAction(function (movement) {
+                var pick = viewer.scene.pick(movement.position);
+                if (Cesium.defined(pick) && (pick.id === 'instance1')) {
+                    console.log('Mouse clicked instance2.');
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+        }
+    </script>
+
+</body>
+
+</html>

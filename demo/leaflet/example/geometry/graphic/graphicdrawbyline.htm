@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>坐标添加线</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        /**显示地图
+        */
+        function init() {
+            //地图容器
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [0, -90],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 10,
+                //当前显示等级
+                zoom: 2,
+                //限制显示地理范围
+                //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+           //矢量图层
+           var layer1 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}', {
+                attribution: 'Tianditu矢量',
+                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            });
+            //矢量注记图层
+            var layer2 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
+                attribution: 'Tianditu注记',
+                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            });
+            var LayerG = L.layerGroup([layer1, layer2]);
+            //添加图层组
+            LayerG.addTo(map);
+
+            //线坐标数组
+            var latlngs = [[0, -120], [45, 120]];
+            //绘制线
+            var polyline = L.polyline(latlngs, { color: 'red' }).addTo(map);
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width:100%;height:95%"></div>
+</body>
+</html>

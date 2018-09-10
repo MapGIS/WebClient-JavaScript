@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Cluster-Option</title>
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="cluster" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <style>
+    #map {
+      height: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map').setView([34.25, 108.95], 10);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+      'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">MapBox</a>',
+        maxZoom: 12,
+        id: 'mapbox.streets'
+      }).addTo(map);
+
+    var markers = L.markerClusterGroup({
+      //disableClusteringAtZoom: 13, //在多少级后忽略聚类效果,直接显示全部的点,这个最好别放开
+      spiderfyOnMaxZoom: true, //这个属性和地图的maxZoom有关当缩放到maxZoom的级别时,如果仍然有聚在一起的点,则蜘蛛网展开
+      showCoverageOnHover: true, //鼠标以上时显示范围区域
+      zoomToBoundsOnClick: true, //点击聚类图标是打开聚类效果
+      removeOutsideVisibleBounds: true,
+      animate: true, //聚类时是否启用动画,十分消耗性能
+      animateAddingMarkers: false,//添加标注时,是否启用动画
+      maxClusterRadius: 80, //默认 80.
+      iconCreateFunction: function(cluster) {//自定义图标样式
+		      return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+	    },
+      singleMarkerMode:true,
+      spiderfyDistanceMultiplier:3
+    });
+
+    $.getJSON('../../data/dataview/cluster-data.json', function(data) {
+      updataView(data.agg);
+    });
+
+    function updataView(data) {
+      for (var i = 0; i < data.length; i++) {
+        var point = data[i];
+        var count = point.count;
+        var marker = L.marker(L.latLng(point.lat, point.lon), {
+          title: count
+        });
+        //marker.bindPopup(count); 由于下面有了绑定点击时间,因此这里就不能绑定了
+        markers.addLayer(marker);
+      }
+      markers.on('click', function(a) { ////marker.bindPopup(count);这两个是冲突的
+        console.log('click ' + a.layer);
+      });
+      markers.on('clusterclick', function(a) {
+        console.log('clusterclick ' + a.layer);
+      });
+      map.addLayer(markers);
+    }
+  </script>
+</body>
+
+</html>

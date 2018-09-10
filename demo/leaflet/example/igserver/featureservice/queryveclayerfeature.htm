@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>矢量图层要素查询</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+         //使用严格模式
+         "use strict";
+         //定义地图文档图层和地图
+         var vectorLayer, map;
+         //查询矩形
+         var geomObj;
+         //查询结果点集
+         var finaldots = new Array();
+         /**初始化地图显示
+         */
+         function init() {
+             //地图容器
+             map = L.map('leaf_map', {
+                 //地图渲染在canvas上
+                 preferCanvas: true,
+                 //不添加属性说明控件
+                 attributionControl: false,
+                 //添加缩放控件
+                 zoomControl: true,
+                 //投影坐标系
+                 crs: L.CRS.EPSG4326,
+                 //中心点
+                 center: [10, 30],
+                 //最大级数
+                 maxZoom: 10,
+                 //最小级数
+                 minZoom: 0,
+                 //显示级数
+                 zoom: 1
+             });
+             //创建矢量图层       
+             vectorLayer = new Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区"], {
+                 //投影坐标系
+                 crs: L.CRS.EPSG4326,
+                 //IP地址
+                 ip: "develop.smaryun.com",
+                 //端口号
+                 port: "6163",
+                 //图层显示设置
+                 noWrap: true,
+                 //添加guid，确保图层从IGS中加载，不读取缓存文件
+                 guid: (new Date()).getTime().toString()
+             }).addTo(map);
+             //设置矩形范围
+             var bounds = [[35, 93], [56, 111]];
+             //将矩形几何添加到地图进行显示（非必需，仅仅为了在地图上高亮显示图形）
+             L.rectangle(bounds, {
+                 //颜色
+                 color: "#ff7800",
+                 //宽度
+                 weight: 1 
+             }).addTo(map);
+         }
+
+         /**执行矢量图层要素查询
+         */
+         function vecFeatureQuery() {
+             //显示进度条
+             startPressBar();
+             //创建查询结构对象
+             var queryStruct = new Zondy.Service.QueryFeatureStruct();
+             //是否包含几何图形信息
+             queryStruct.IncludeGeometry = true;
+             //创建一个用于查询的矩形
+             var geomObj = new Zondy.Object.Rectangle(93, 35, 111, 56);
+             //指定查询规则
+             var rule = new Zondy.Service.QueryFeatureRule({
+                 //是否将要素的可见性计算在内
+                 EnableDisplayCondition: false,
+                 //是否完全包含
+                 MustInside: false,
+                 //是否仅比较要素的外包矩形
+                 CompareRectOnly: false,
+                 //是否相交
+                 Intersect: true
+             });
+             //实例化查询参数对象
+             var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区", {
+                 //几何对象
+                 geometry: geomObj,
+                 //结果格式
+                 resultFormat: "json",
+                 //查询结构
+                 struct: queryStruct,
+                 //查询规则
+                 rule: rule
+             });
+             //设置查询分页号
+             queryParam.pageIndex = 0;
+             //设置查询要素数目
+             queryParam.recordNumber = 20;
+             //实例化地图文档查询服务对象
+             var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                 //IP地址
+                 ip: "develop.smaryun.com",
+                 //端口号
+                 port: "6163"
+             });
+             //执行查询操作，querySuccess为成功回调，queryError为失败回调
+             queryService.query(querySuccess, queryError);
+         }
+
+         /**查询成功回调函数
+         *  @param {json对象} result 获取结果对象
+         */
+         function querySuccess(result) {
+             //停止进度条
+             stopPressBar();
+             //获取查询到的结果数组,ploygonArr的个数即为查询到的结果数
+             var ploygonArr = result.SFEleArray;
+             for (var i = 0; i < ploygonArr.length; i++) {
+                 //获取要素几何数组
+                 var Rings = ploygonArr[i].fGeom.RegGeom[0].Rings;
+                 //针对复合要素，要循环获取每一个几何
+                 for (var j = 0; j < Rings.length; j++) {
+                     //取出构成多边形的数组
+                     var dots = Rings[j].Arcs[0].Dots;
+                     for (var k = 0; k < dots.length; k++) {
+                         //注意，leaflet是用纬经度来表示位置
+                         finaldots.push([dots[k].y, dots[k].x]);
+                     }
+                     //绘制多边形
+                     var disp = L.polygon(finaldots, { color: 'red', weight: 1 }).addTo(map);
+                     //清空结果点集，以绘制下一个图形对象
+                     finaldots = null;
+                     finaldots = [];
+                 }
+             }
+         }
+
+         /**查询失败回调函数
+         */
+         function queryError() {
+             //停止进度条
+             stopPressBar();
+             alert("查询失败！");
+         }
+
+         /**开始进度条动画
+         */
+         function startPressBar() {
+             document.getElementById('preview').style.display = "";
+         }
+
+         /**停止进度条动画
+         */
+         function stopPressBar() {
+             document.getElementById('preview').style.display = "none";
+         }  
+    </script>
+</head>
+<body onload="init();">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在查询，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="矢量图层要素查询" onclick="vecFeatureQuery()" />
+    </div>
+    <div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
+    </div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script  include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script  src="../../libs/zondyclient/include-cesium-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var viewer = new Cesium.Viewer('map');
+
+        initMap();
+
+        function initMap() {
+            /*
+            * 懒人加载模式，这适用于小数据，快速展示，后面的问题多多，最好使用下面的新的模式
+            */
+            var redLine = viewer.entities.add({
+                name: 'Red dashed line',
+                polyline: {
+                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([-75, 38, 250000, -125, 38, 250000]),
+                    width: 5,
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.RED
+                    })
+                }
+            });
+
+            var blueLine = viewer.entities.add({
+                name: 'Wide blue dashed line with a gap color',
+                polyline: {
+                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([-75, 40, 250000, -125, 40, 250000]),
+                    width: 30,
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.BLUE,
+                        gapColor: Cesium.Color.YELLOW
+                    })
+                }
+            });
+
+            var orangeLine = viewer.entities.add({
+                name: 'Orange dashed line with a short dash length',
+                polyline: {
+                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([-75, 42, 250000, -125, 42, 250000]),
+                    width: 5,
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.ORANGE,
+                        dashLength: 8.0
+                    })
+                }
+            });
+
+            var cyanLine = viewer.entities.add({
+                name: 'Cyan dashed line with a dash pattern.',
+                polyline: {
+                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([-75, 44, 250000, -125, 44, 250000]),
+                    width: 10,
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.CYAN,
+                        dashPattern: parseInt("110000001111", 2)
+                    })
+                }
+            });
+
+            var yellowLine = viewer.entities.add({
+                name: 'Yellow dashed line with a dash pattern.',
+                polyline: {
+                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([-75, 46, 250000, -125, 46, 250000]),
+                    width: 10,
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.YELLOW,
+                        dashPattern: parseInt("1010101010101010", 2)
+                    })
+                }
+            });
+
+            viewer.zoomTo(viewer.entities);
+
+            /*
+             * 新加载模式-几何图元，这适用于复杂的定制化场景，核心由三部分组成，几何实例与模型矩阵以及样式
+             */
+            var polylinedashinstance = new Cesium.GeometryInstance({
+                geometry: new Cesium.PolylineGeometry({
+                    positions: Cesium.Cartesian3.fromDegreesArrayHeights([-75, 55, 500000, -125, 55,
+                        500000
+                    ]),
+                    width: 10
+                }),
+                vertexFormat: Cesium.PolylineMaterialAppearance.VERTEX_FORMAT,
+                id: "polylinedashinstance"
+            });
+
+            viewer.scene.primitives.add(new Cesium.Primitive({
+                geometryInstances: [polylinedashinstance],
+                appearance: new Cesium.PolylineMaterialAppearance({
+                    material: Cesium.Material.fromType('PolylineDash', {
+                        color:  Cesium.Color.WHITE,
+                        gapColor: Cesium.Color.YELLOW,
+                        dashLength: 100,
+                        dashPattern: parseInt("10101010", 2)
+                    })
+                }) //PolylineColorAppearance/PolylineMaterialAppearance请区分使用场景
+            }));
+        }
+
+        function initPickEvent() {
+            var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+            handler.setInputAction(function (movement) {
+                var pick = viewer.scene.pick(movement.position);
+                if (Cesium.defined(pick) && (pick.id === 'polylinedashinstance')) {
+                    console.log('Mouse clicked instance.');
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        }
+    </script>
+
+</body>
+
+</html>

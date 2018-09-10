@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>投影转换服务</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        /*==========================================底图显示===================================================*/
+        var map, vectorLayer;
+        var ip = "";
+        var projmap;
+        //缓存结果图层的基地址
+        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
+        var resultLayer;
+        //地图初始化函数
+        function init() {
+            $.getJSON("../../demo/openlayers/config/igserver.json", function (data) {
+                ip = data.ip;
+                //初始化地图容器
+                map = new ol.Map({
+                    target: "orgMap",
+                    view: new ol.View({
+                        center: [0, 0],
+                        zoom: 1,
+                        projection: "EPSG:4326"
+                    }),
+                    controls: [new ol.control.MousePosition()]
+                });
+                //初始化地图文档图层对象
+                vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", [
+                    "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区"
+                ], {
+                        ip: ip,
+                        port: "6163"
+                    });
+                //将地图文档图层加载到地图中
+                map.addLayer(vectorLayer);
+            })
+
+        }
+        /*==========================================投影转换服务===================================================*/
+        //根据空间参照系信息对图层进行投影转换
+        function projectByParam() {
+            //清除之前的结果图层
+            clearRlt();
+            //显示进度条
+            startPressBar();
+            //结果名称，加当前时间为后缀放置数据库中重名
+            var resultname = resultBaseUrl + "projectByParamResultLayer" + getCurentTime();
+            //初始化图层投影转换服务类Zondy.Service.ProjectByLayer类
+            var projByLayer = new Zondy.Service.ProjectByLayer({
+                //设置服务ip
+                ip: ip,
+                //设置端口号
+                port: "6163",
+                //投影类型，0地理坐标系，1UTM，2兰伯特等角圆锥投影坐标系
+                projTypeID: 23,
+                //椭球体类型，2为西安80  
+                sphereType: 2,
+                //弧度单位，1为毫米，2为米，3为秒，4为度，6为英尺，7为分，8为弧度 
+                projAngleUnit: 5,
+                //坐标系类型，0为自定义坐标系、1地理坐标系，3投影平面直角坐标系
+                projType: 0,
+                //投影分带类型
+                projZoneType: 0,
+                //投影带号
+                projZoneNO: 0,
+                //中央子午线经度
+                projLon: 0,
+                //投影原点纬度
+                projLat: 0,
+                //第一标准维度 
+                projLat1: 0,
+                //第二标准维度
+                projLat2: 0,
+                //水平单位，1为毫米，2为米，3为秒，4为度，6为英尺，7为分，8为弧度，详细请参见EnumProjAngleUnit
+                projUnit: 2,
+                //水平比例尺
+                projRate: 1,
+                x: 0,
+                y: 0,
+                resultName: "rel"
+            });
+            //需转换的要素类地址，继承于ProjectBase类属性
+            projByLayer.clsName = "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区";
+            //结果要素类地址，继承ProjectBase类属性
+            projByLayer.desClsName = resultname;
+            //调用基类的execute方法，执行投影变换， projectLayerSuccess为结果回调函数，服务器请求方式为POST
+            projByLayer.execute(projectLayerSuccess, 'post', false, 'json', AnalysisError);
+        }
+
+        //分析失败回调
+        function AnalysisError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+        //执行成功后的回调
+        function projectLayerSuccess(data) {
+            var extent = [-8286082551.21191, -21796173539.3129, 3135372524.11803, 16766566719.1409];
+            var projection = new ol.proj.Projection({
+                units: ol.proj.Units.METERS,
+                extent: extent,
+                code: "EPSG:3857"
+            });
+            //停止进度条
+            stopPressBar();
+            if (!data.result.results) {
+                alert("投影失败，请检查参数！");
+            } else {
+                if (data.result.results.length != 0) {
+                    projmap = new ol.Map({
+                        target: "prjMap",
+                        extent: extent,
+                        view: new ol.View({
+                            center: [-1667986.9061902612, 2058969.5213033866],
+                            zoom: 10,
+                            projection: projection
+                        }),
+                        controls: [new ol.control.MousePosition()]
+                    });
+
+
+                    var resultLayerUrl = data.result.results[0].Value;
+                    //将结果图层添加到地图视图中显示
+                    resultLayer = new Zondy.Map.GdbpLayer("MapGIS IGS ProjectTransResultLayer",
+                        [resultBaseUrl + resultLayerUrl],
+                        {
+                            ip: ip,
+                            port: "6163",
+                            projection: projection
+                        }
+                    );
+                    projmap.addLayer(resultLayer);
+                }
+            }
+        }
+
+        //清除之前的结果
+        function clearRlt() {
+            if (projmap != null) {
+                //销毁Control、销毁层、移除视口Div、注销监听事件
+                projmap.destroy();
+            } else
+                return;
+        }
+        /*========================================获取当前时间（如：2015-09-09-120000）===================================================*/
+        //当前日期加时间(如:2009-06-12-120000)
+        function getCurentTime() {
+            var now = new Date();
+            //获取当前年份
+            var year = now.getFullYear();
+            //获取当前月份     
+            var month = now.getMonth() + 1;
+            //获取当前日期   
+            var day = now.getDate();
+            //获取当前时刻
+            var hh = now.getHours();
+            //获取当前分钟
+            var mm = now.getMinutes();
+            //获取当前秒钟
+            var ss = now.getSeconds();
+            //将当前的日期拼串
+            var clock = year + "-";
+            if (month < 10)
+                clock += "0";
+            clock += month + "-";
+            if (day < 10)
+                clock += "0";
+            clock += day + "-";
+            if (hh < 10)
+                clock += "0";
+            clock += hh;
+            if (mm < 10) clock += '0';
+            clock += mm;
+            if (ss < 10) clock += '0';
+            clock += ss;
+            return (clock);
+        }
+
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            //停止进度条
+            document.getElementById("preview").style.display = "none";
+        }
+
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById("preview").style.display = "";
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' />
+        <br />
+        <br />
+        <span>正在进行投影转换，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <!--根据空间参照系信息投影-->
+        <input type="button" id="Button1" class="ButtonLib" value="根据空间参照系信息投影" onclick="projectByParam()" />
+    </div>
+    <div id="allmap">
+        <div id="orgMap">
+        </div>
+        <div id="prjMap">
+        </div>
+    </div>
+</body>
+
+</html>

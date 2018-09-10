@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>大数据演示</title>
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="elasticsearch,echarts,geojson,shapefile,language" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var myChart = echarts.init(document.getElementById('mapid'), null, {
+      devicePixelRatio: 1
+    });
+    myChart.showLoading();
+
+    $.getJSON('../../data/echartsgl/newyork/buildings.json', function (buildingsGeoJSON) {
+
+      var builds = buildingsGeoJSON.map(function (feature) {
+        return {
+          "type": "Feature",
+          "properties": {
+            "name": Math.random().toString(),
+            "height": feature.height || 100
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [feature.polygon]
+          }
+
+        }
+
+      })
+
+      echarts.registerMap('buildings', {
+        "features": builds
+      });
+
+      var regionsData = builds.map(function (feature) {
+        return {
+          name: feature.properties.name,
+          value: Math.random() * 1,
+          height: feature.properties.height,
+          itemStyle: {
+            color: 'white',
+            borderColor: 'white'
+          }
+        };
+      });
+
+
+      $.getJSON('../../data/echartsgl/newyork/lines.json', function (linesData) {
+        myChart.hideLoading();
+        var data = linesData.features;
+
+        var hStep = 300 / (data.length - 1);
+        var taxiRoutes = [];
+        var i = 0;
+        for (var x in data) {
+          var lnglats = data[x].geometry.coordinates
+          taxiRoutes.push({
+            coords: lnglats,
+            lineStyle: {
+              color: echarts.color.modifyHSL('#5A94DF', Math.round(hStep * x))
+
+            },
+            value: Math.random() * 200
+          })
+        }
+
+        myChart.setOption({
+          mapbox: {
+            center: [-74.01164278497646, 40.70769573605318],
+            zoom: 14,
+            pitch: 50,
+            bearing: -10,
+            altitudeScale: 2,
+            style: 'mapbox://styles/mapbox/dark-v9',
+            postEffect: {
+              enable: true,
+              screenSpaceAmbientOcclusion: {
+                enable: true,
+                intensity: 1.2,
+                radius: 6,
+                quality: 'high'
+              },
+              screenSpaceReflection: {
+                enable: true
+              }
+            },
+            light: {
+              main: {
+                intensity: 1,
+                shadow: true,
+                shadowQuality: 'high'
+              },
+              ambient: {
+                intensity: 0.
+              },
+              ambientCubemap: {
+                texture: '../../data/echartsgl/capeton/data.hdr',
+                exposure: 1,
+                diffuseIntensity: 0.5,
+                specularIntensity: 2
+              }
+            }
+          },
+          series: [
+            /* {
+                          type: 'map3D',
+                          map: 'buildings',
+                          coordinateSystem: 'mapbox',
+
+                          itemStyle: {
+                            color: '#444'
+                          },
+
+                          shading: 'realistic',
+                          silent: true,
+                          instancing: true,
+
+                          data: regionsData,
+                          realisticMaterial: {
+                            metalness: 1,
+                            roughness: 0.2,
+                          }
+                        }, */
+            {
+              type: 'map3D',
+              map: 'buildings',
+
+              coordinateSystem: 'mapbox',
+              shading: 'realistic',
+              silent: true,
+
+              instancing: true,
+              data: regionsData,
+
+              realisticMaterial: {
+                metalness: 1,
+                roughness: 0.2,
+              }
+            },
+            {
+              type: 'lines3D',
+              coordinateSystem: 'mapbox',
+              effect: {
+                show: true,
+                constantSpeed: 1,
+                trailWidth: 3,
+                trailLength: 1,
+                trailOpacity: 1,
+                spotIntensity: 10
+              },
+
+              blendMode: 'lighter',
+
+              polyline: true,
+
+              data: taxiRoutes
+            }
+          ]
+        });
+
+
+      });
+
+      var mapbox = myChart.getModel().getComponent('mapbox3D').getMapbox();
+      mapbox.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+
+    });
+
+    window.addEventListener('resize', function () {
+      myChart.resize();
+    });
+  </script>
+</body>
+
+</html>

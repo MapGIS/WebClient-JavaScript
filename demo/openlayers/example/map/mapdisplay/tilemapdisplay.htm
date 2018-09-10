@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>显示瓦片地图</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map = null;
+        var TileLayer = null;
+        //地图初始化函数
+        function init() {
+            //瓦片的显示名称
+            var name = "MapGIS IGS TileLayer";
+            //瓦片地图的名称
+            var TileName = "WorldJWTile";
+            TileLayer = new Zondy.Map.TileLayer(name, TileName, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            map = new ol.Map({
+                //目标DIV
+                target: 'mapCon',
+                //将图层添加到地图容器
+                layers: [TileLayer],
+                view: new ol.View({
+                    projection: 'EPSG:4326',
+                    center: [7.06, -7.51],
+                    //最大显示级数
+                    maxZoom: 5,
+                    //最小显示级数
+                    minZoom: 1,
+                    //当前显示级数
+                    zoom: 3
+                })
+            });
+
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon" style="width: 100%; height: 95%; position: absolute">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>地图定位功能</title>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #map {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="ToolLib">
+        <span class="style1">
+            <label>
+                <strong>X坐标:</strong>
+            </label>
+        </span>
+        <input id="Xposition" type="text" value="114" />
+        &nbsp; &nbsp;
+        <span class="style2">
+            <label>
+                <strong>Y坐标:</strong>
+            </label>
+        </span>
+        <input id="Yposition" type="text" value="30" />
+        <input type="button" class="ButtonLib" id="panto" value="平移" />
+        <input type="button" class="ButtonLib" id="restore" value="复位" />
+    </div>
+    <div id='map'>
+        <div id="mouse-position">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //实例化要加载的source来源对象
+        var osm = {
+            //来源类型为栅格瓦片
+            "type": "raster",
+            'tiles': [
+                //来源请求地址
+                "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            //栅格瓦片的分辨率
+            'tileSize': 256
+        };
+        //实例化Map对象加载地图
+        var map = new mapboxgl.Map({
+            //地图容器div的id
+            container: 'map', // container id
+            //设置地图样式信息
+            style: {
+                //设置版本号，一定要设置
+                "version": 8,
+                //添加来源
+                "sources": {
+                    "osm": osm
+                },
+                //设置加载并显示来源的图层信息
+                "layers": [
+                     {
+                         //图层id，要保证唯一性
+                         "id": "OSMLayer",
+                         //图层类型
+                         "type": "raster",
+                         //连接图层来源
+                         "source": "osm",
+                         //图层最小缩放级数
+                         "minzoom": 0,
+                         //图层最大缩放级数
+                         "maxzoom": 15
+                     }
+                ],
+            },
+            //地图中心点
+            center: [114, 32],
+            //地图当前缩放级数
+            zoom: 9
+        });
+        //注册鼠标移动事件
+        map.on('mousemove', function (e) {
+            document.getElementById('mouse-position').innerHTML =
+                //获取鼠标所在位置的屏幕坐标
+               "屏幕坐标:" + JSON.stringify(e.point) + '<br/>' +
+               //获取鼠标所在位置的逻辑坐标（经纬度）
+               "逻辑坐标:" + JSON.stringify(e.lngLat);
+        });
+        //获取地图当前缩放级别
+        var zoom = map.getZoom();
+        //获取地图中心点
+        var center = map.getCenter();
+        //获取地图俯仰角（倾斜）
+        var pitch = map.getPitch();
+        //获取地图方位角
+        var bear = map.getBearing();
+        /**平移功能*/
+        document.getElementById('panto').onclick = function () {
+            var X = $("#Xposition").val();
+            var Y = $("#Yposition").val();
+            if (X != "" && Y != "") {
+                if (!isNaN(X) && !isNaN(Y)) {
+                    //字符串转数字
+                    var pntX = parseInt(X);
+                    var pntY = parseInt(Y);
+                    //平移地图
+                    map.setZoom(6);//必须先放大再平移
+                    map.setCenter([pntX, pntY]);
+                  
+                } else {
+                    alert('请输入数字！');
+                    return;
+                }
+            } else {
+                alert('请输入内容！');
+                return;
+            }
+        }
+        //复位功能（复位到初始状态）
+        document.getElementById('restore').onclick = function () {
+            //初始缩放级数
+            map.setZoom(zoom);
+            //初始中心点
+            map.setCenter(center);
+            //设置地图方位角
+            map.setBearing(bear);
+            //设置地图俯仰角（倾斜）
+            map.setPitch(pitch);
+
+        };
+    </script>
+</body>
+</html>
+

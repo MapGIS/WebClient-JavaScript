@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-Timer</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="geojson" src="../../../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        path {
+            fill: #000;
+            fill-opacity: .2;
+            stroke: #fff;
+            stroke-width: 1.5px;
+        }
+
+        path:hover {
+            fill: brown;
+            fill-opacity: .7;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'map',
+            controls: ol.control.defaults({
+                /** @type {olx.control.AttributionOptions} */
+                attributionOptions: ({
+                    collapsible: true
+                })
+            }),
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据
+                new ol.layer.Tile({
+                    //图层数据源
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: ol.proj.transform([106.563777, 29.578285], 'EPSG:4326', 'EPSG:3857'),
+                //地图初始显示级别
+                zoom: 5
+            })
+        });
+
+        var features;
+
+        initMap();
+
+        updateView();
+
+        function initMap() {
+
+        }
+
+        function updateView() {
+            //创建对数
+
+            d3.json('../../../../data/d3/china-city.json', function (error, china) {
+                features = topojson.feature(china, china.objects.city);
+                console.log(JSON.stringify(features));
+                var canvasFunction = function (extent, resolution, pixelRatio,
+                    size, projection) {
+                    var canvasWidth = size[0];
+                    var canvasHeight = size[1];
+                    console.log("size:" + JSON.stringify(size));
+
+                    var canvas = d3.select(document.createElement('canvas'));
+                    canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+
+                    var context = canvas.node().getContext('2d');
+
+                    var d3Projection = d3.geo.mercator().scale(6.3).translate([0, 0]);
+                    var d3Path = d3.geo.path().projection(d3Projection);
+
+                    var pixelBounds = d3Path.bounds(features);
+                    console.log("bounds:" + JSON.stringify(pixelBounds));
+
+                    var pixelBoundsWidth = pixelBounds[1][0] - pixelBounds[0][0];
+                    var pixelBoundsHeight = pixelBounds[1][1] - pixelBounds[0][1];
+
+                    var geoBounds = d3.geo.bounds(features);
+                    var geoBoundsLeftBottom = ol.proj.transform(
+                        geoBounds[0], 'EPSG:4326', projection);
+                    var geoBoundsRightTop = ol.proj.transform(
+                        geoBounds[1], 'EPSG:4326', projection);
+                    var geoBoundsWidth = geoBoundsRightTop[0] - geoBoundsLeftBottom[0];
+                    if (geoBoundsWidth < 0) {
+                        geoBoundsWidth += ol.extent.getWidth(projection.getExtent());
+                    }
+                    var geoBoundsHeight = geoBoundsRightTop[1] - geoBoundsLeftBottom[1];
+
+                    var widthResolution = geoBoundsWidth / pixelBoundsWidth;
+                    var heightResolution = geoBoundsHeight / pixelBoundsHeight;
+                    var r = Math.max(widthResolution, heightResolution);
+                    var scale = r / (resolution / pixelRatio);
+
+                    var center = ol.proj.transform(ol.extent.getCenter(extent),
+                        projection, 'EPSG:4326');
+                    console.log(scale, center)
+
+                    d3Projection.scale(scale).center(center)
+                        .translate([canvasWidth / 2, canvasHeight / 2]);
+                    d3Path = d3Path.projection(d3Projection).context(context);
+                    d3Path(features);
+                    context.stroke();
+
+                    return canvas[0][0];
+                };
+
+                var layer = new ol.layer.Image({
+                    source: new ol.source.ImageCanvas({
+                        canvasFunction: canvasFunction,
+                        projection: 'EPSG:3857'
+                    })
+                });
+                map.addLayer(layer);
+            });
+
+            /* d3.geoPath().projection(
+                    d3.geoTransform({ 
+                        point: this.projection._projectPoint 
+                    })
+                ); */
+
+            //定时器，不同的时间播放不同的颜色,这里距离是定值，但是时间是增加的，
+            //因此某一时刻的内圈的颜色和前一时刻的外圈颜色是相似的，实现波浪的效果
+            /*                 d3.timer(function (elapsed) {
+                                city.style("fill", function (d) {
+                                    return d3.hsl(d.distance * 10 - elapsed / 10, 1, .5);
+                                });
+                            }); */
+
+        }
+    </script>
+
+</body>
+
+</html>

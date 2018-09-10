@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>IconGlyph</title>
+    <script include="IconGlyph" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <link href="https://cdn.materialdesignicons.com/1.3.41/css/materialdesignicons.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.rawgit.com/mapshakers/mapkeyicons/master/dist/MapkeyIcons.css" type="text/css">
+    <style>
+        #map{height:600px}
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    var map = L.map('map').setView([30.518762, 114.488902], 11);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">MapGIS</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+    }).addTo(map);
+
+    //不同的图标字体和纯字形需要引入不同的CSS
+    var marker = L.marker([30.520938231971368,114.39308166503906], {
+        icon: L.icon.glyph({
+            prefix: 'mdi',      //字形的CSS类，前缀为每个字形名称
+            glyph: 'school'     //字形名称
+        })
+    }).addTo(map);
+    var marker1 = L.marker([30.591228106847325,114.29386138916016], {
+        icon: L.icon.glyph({
+            prefix: '',
+            glyph: 'WH',
+            glyphColor:'#1FCC20',   //字形颜色，值可以是任何具有CSS颜色定义的字符串
+            glyphSize:'12px'        //字形大小
+        })
+    }).addTo(map);
+</script>
+</body>
+</html>

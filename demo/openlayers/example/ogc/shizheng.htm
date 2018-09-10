@@ -1,0 +1,75 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>市政图</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="json" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map, wmtsLayer, baseUrlTile;
+        //地图初始化函数
+        function init() {
+            //初始化地图容器
+            map = new OpenLayers.Map("mapCon", {
+                //不使用默认地图配置
+                isAutoConfig: false,
+                //设置地图最大范围
+                maxExtent: [-180, -90, 180, 90],
+                layers: [
+                    new Zondy.Map.TianDiTuLayer("天地图影像", {
+                        //TianDitu类型
+                        layerType: Zondy.Enum.TiandituType.IMG,
+                        //是否作为基础图层显示
+                        isBaseLayer: true,
+                        //是否可见
+                        visibility: true
+                    })],
+                controls: [
+                    //缩放导航控件
+                        new OpenLayers.Control.Zoom(),
+                    //图层切换控件
+                        new OpenLayers.Control.LayerSwitcher(),
+                    //地图浏览控件
+                        new OpenLayers.Control.Navigation(),
+                    //鼠标位置控件
+                        new OpenLayers.Control.MousePosition()
+                ]
+            });
+
+            /*======创建WMTS图层对象并加载到地图中======*/
+            //WMTS服务访问基地址
+            baseUrlTile = "http://192.168.84.4:9080/PGIS_S_TileMapServer/Maps/funing";
+            //初始化WMTS图层对象
+            wmtsLayer = new OpenLayers.Layer.WMTS({
+                //图层名称
+                name: "MapGIS10 PGIS OGCWMTSLayer",
+                //WMTS服务基地址
+                url: baseUrlTile,
+                //WMTS服务图层
+                layer: "dengzhou",
+                //瓦片模型呈现标识，设置为投影坐标系
+                matrixSet: "EPSG:4326",
+                //样式
+                style: "default",
+                //瓦片图片格式
+                format: "image/png",
+                //图层透明度
+                opacity: 0.7,
+                //是否为基础图层
+                isBaseLayer: true
+            });
+            //添加WMTS图层
+            map.addLayers([wmtsLayer]);
+            //设置地图的初始化显示中心和级别
+            map.setCenter(new OpenLayers.LonLat(119.80419, 33.77265), 11);
+        }
+    </script>
+</head>
+<body onload="init();">
+    <!--地图显示-->
+    <div id="mapCon" style="height: 95%;">
+    </div>
+</body>
+</html>

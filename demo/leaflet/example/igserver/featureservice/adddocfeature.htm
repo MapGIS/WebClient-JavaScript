@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>地图文档要素添加</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        //地图文档guid
+        var guid;
+        /**初始化地图显示,加载地图文档图层
+         */
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            //地图容器
+            map = L.map('leaf_map', {
+                //地图渲染在canvas上
+                preferCanvas: true,
+                //不添加属性说明控件
+                attributionControl: false,
+                //添加缩放控件
+                zoomControl: true,
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //中心点
+                center: [0, 0],
+                //最大级数
+                maxZoom: 10,
+                //最小级数
+                minZoom: 0,
+                //显示级数
+                zoom: 1
+            });
+            //创建地图文档图层
+            mapDocLayer = new Zondy.Map.MapDocLayer("WorldJWEdit", {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true,
+                //添加guid
+                guid: guid
+            }).addTo(map);
+        }
+
+        /**添加点要素
+         */
+        function addPoint() {
+            //显示进度条
+            startPressBar();
+            //创建一个点形状，描述点形状的几何信息
+            var gpoint = new Zondy.Object.GPoint(100, 200);
+            //设置当前点要素的几何信息
+            var fGeom = new Zondy.Object.FeatureGeometry({
+                PntGeom: [gpoint]
+            });
+            //随机输出1~8之间的整数,作为新添加的要素的颜色号
+            var pntColor = Math.floor(Math.random() * 8 + 1);
+            //描述点要素的符号参数信息
+            var pointInfo = new Zondy.Object.CPointInfo({
+                Angle: 0,
+                Color: pntColor,
+                Space: 0,
+                SymHeight: 12,
+                SymID: 98,
+                SymWidth: 12
+            });
+            //设置当前点要素的图形参数信息
+            var webGraphicInfo = new Zondy.Object.WebGraphicsInfo({
+                InfoType: 1,
+                PntInfo: pointInfo
+            });
+            //设置添加点要素的属性信息        
+            var attValue = ['中国', '中国', 1.0];
+            //创建一个要素
+            var feature = new Zondy.Object.Feature({
+                fGeom: fGeom,
+                GraphicInfo: webGraphicInfo,
+                AttValue: attValue
+            });
+            //设置要素为点要素
+            feature.setFType(1);
+            //创建一个要素数据集
+            var featureSet = new Zondy.Object.FeatureSet();
+            featureSet.clear();
+            //设置属性结构
+            var cAttStruct = new Zondy.Object.CAttStruct({
+                FldName: ["Cname", "CNTRY_NAME", "POPULATION"],
+                FldNumber: 3,
+                FldType: ["string", "string", "double"]
+            });
+            featureSet.AttStruct = cAttStruct;
+            //添加要素到要素数据集
+            featureSet.addFeature(feature);
+            //创建一个编辑服务类
+            var editService = new Zondy.Service.EditDocFeature("WorldJWEdit", 11, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //执行添加点要素功能,OnSuccess为回调函数
+            editService.add(featureSet, OnSuccess);
+        }
+
+        /**添加点要素回调函数
+         *  @param {json对象} rlt 获取结果对象
+         */
+        function OnSuccess(rlt) {
+            //停止进度条
+            stopPressBar();
+            var result = rlt;
+            if (result) {
+                //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
+                mapDocLayer.options.keepCache = false;
+                //刷新图层，实时显示专题图
+                mapDocLayer.redraw();
+                //设置为读取缓存，以加快显示效率
+                mapDocLayer.options.keepCache = true;
+                alert("添加点要素成功！");
+            } else {
+                alert("添加点要素失败！");
+            }
+        }
+
+        /**开始进度条动画
+         */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /**停止进度条动画
+         */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/leaflet/39-1.gif" alt='' />
+        <br />
+        <br />
+        <span>正在添加，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="地图文档要素添加" style="" onclick="addPoint()" />
+    </div>
+    <div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
+    </div>
+</body>
+
+</html>

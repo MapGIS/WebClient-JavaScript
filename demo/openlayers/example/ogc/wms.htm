@@ -1,0 +1,161 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>加载WMS服务地图</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="json" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        body, html, div, ul, li, iframe, p, img {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+
+        #menu {
+            text-align: center;
+            width: 100%;
+            height: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+        }
+
+        .checkbox {
+            margin: 0px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <label class="checkbox">
+            <input type="radio" name="maps" value="img" />image WMS
+        </label>
+        <label class="checkbox">
+            <input type="radio" name="maps" value="tile" />tiled WMS
+        </label>
+        <label class="checkbox">
+            <input type="radio" name="maps" value="tilegrid" />tile grid 512x256 WMS
+        </label>
+    </div>
+    <div id="mapCon">
+    </div>
+    <script type="text/javascript">
+        var wmsLayer = null; //WMS地图图层
+        //实例化Map对象加载地图,默认底图加载MapQuest地图
+        var map = new ol.Map({
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM({ layer: 'sat' })
+                })
+            ],
+            target: 'mapCon',
+            view: new ol.View({
+                center: [-10997148, 4569099],
+                zoom: 3
+            })
+        });
+        //实现叠加WMS地图图层的单选框功能
+        //所有单选按钮都不选中
+        $("input[type='radio'][name='maps']").attr("checked", false);
+        //选中第一个
+        $("input[type='radio'][name='maps']").get(0).checked = true;
+        //默认加载选中地图
+        loadWMSMap($("input[name='maps']:checked").val());
+        //循环绑定事件
+        $("input[name='maps']").each(function () {
+            this.onclick = function () {
+                if (this.checked) {
+                    var checkedVal = $("input[name='maps']:checked").val();
+                    //根据当前类型加载WMS地图
+                    loadWMSMap(checkedVal);
+                }
+            }
+        });
+
+        /**
+        * 根据选择的类型加载WMS地图数据
+        * @param {string} type 类型参数
+        */
+        function loadWMSMap(type) {
+            if (wmsLayer != null) {
+                //移除WMS地图服务图层
+                map.removeLayer(wmsLayer);
+                wmsLayer = null;
+            }
+            //使用image图层加载
+            if (type == "img") {
+                //实例化WMS图层对象（ol.layer.Image，ol.source.ImageWMS）
+                wmsLayer = new ol.layer.Image({
+                    //数据范围
+                    extent: [-13884991, 2870341, -7455066, 6338219],
+                    source: new ol.source.ImageWMS({
+                        //WMS服务基地址
+                        url: 'http://demo.boundlessgeo.com/geoserver/wms',
+                        //图层参数
+                        params: { 'LAYERS': 'topp:states' },
+                        //服务类型
+                        serverType: 'geoserver'
+                    })
+                });
+            }
+                //使用tile图层加载
+            else if (type == "tile") {
+                //实例化WMS图层对象（ol.layer.Tile，ol.source.TileWMS）
+                wmsLayer = new ol.layer.Tile({
+                    source: new ol.source.TileWMS({
+                        //WMS服务地址
+                        url: 'http://demo.boundlessgeo.com/geoserver/ne/wms',
+                        //图层等参数
+                        params: { 'LAYERS': 'ne:ne_10m_admin_0_countries', 'TILED': true },
+                        //服务类型
+                        serverType: 'geoserver'
+                    })
+                });
+            }
+                //使用自定义tileGrid的tile图层加载(tile grid 512x256)
+            else if (type == "tilegrid") {
+                //通过范围计算得到分辨率数组对象resolutions
+                var projExtent = ol.proj.get('EPSG:3857').getExtent();
+                var startResolution = ol.extent.getWidth(projExtent) / 256;
+                var resolutions = new Array(22);
+                for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+                    resolutions[i] = startResolution / Math.pow(2, i);
+                }
+                //实例化ol.tilegrid.TileGrid对象
+                var tileGrid = new ol.tilegrid.TileGrid({
+                    //数据范围
+                    extent: [-13884991, 2870341, -7455066, 6338219],
+                    //分辨率数组
+                    resolutions: resolutions,
+                    //瓦片大小
+                    tileSize: [512, 256]
+                });
+                //使用ol.layer.Tile实例化WMS图层对象，设置ol.source.TileWMS的tileGrid参数
+                wmsLayer = new ol.layer.Tile({
+                    source: new ol.source.TileWMS({
+                        //WMS服务地址
+                        url: 'http://demo.boundlessgeo.com/geoserver/wms',
+                        //图层等参数
+                        params: { 'LAYERS': 'topp:states', 'TILED': true },
+                        //服务类型
+                        serverType: 'geoserver',
+                        //瓦片网格对象参数（瓦片大小为512x256）
+                        tileGrid: tileGrid
+                    })
+                });
+            }
+            //添加WMS地图图层
+            map.addLayer(wmsLayer);
+        }
+    </script>
+</body>
+</html>

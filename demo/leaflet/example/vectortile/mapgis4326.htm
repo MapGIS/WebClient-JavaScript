@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>MapGIS矢量瓦片-4326</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="vectortile" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = L.map('map', {
+      crs: L.CRS.EPSG4326, 
+    }).setView([30.50, 114.35], 10);
+
+    var vectorTileStyling;
+    var mapgisUrl;
+    var mapgisOptions;
+
+    initMap();
+    initStyle();
+    updateView();
+
+    function initMap() {
+      //地形
+      var layer1 = new Zondy.Map.TDTLayer({
+        //图层类型
+        layerType: 'vec',
+        //最小显示等级  
+        minZoom: 0,
+        //最大显示等级
+        maxZoom: 15,
+        //设置地图不连续显示
+        noWrap: true
+      });
+      var layer2 = new Zondy.Map.TDTLayer({
+        //图层类型
+        layerType: 'cva',
+        //最小显示等级
+        minZoom: 0,
+        //最大显示等级
+        maxZoom: 15,
+        //设置地图不连续显示
+        noWrap: true
+      });
+      //图层组
+      var LayerG = L.layerGroup([layer1]);
+      //var LayerG = L.layerGroup([layer1, layer2]);
+      //添加图层组
+      LayerG.addTo(map);
+    }
+
+
+    function initStyle() {
+      vectorTileStyling = {
+        武汉市: {
+          weight: 1,
+          fillColor: '#eeeeee',
+          fillOpacity: 0.5,
+          fill: true
+        },
+        武汉市行政区: {
+          weight: 1,
+          fillColor: '#888888',
+          fillOpacity: 0.5,
+          fill: true
+        },
+        绿地: {
+          weight: 1,
+          fillColor: '#00FF00',
+          fillOpacity: 1,
+          fill: true
+        },
+        水域: {
+          weight: 1,
+          fillColor: '#0000FF',
+          fillOpacity: 1,
+          fill: true
+        },
+        铁路: {
+          weight: 4,
+          color: '#FFFFFF',
+          dashArray: '0, 6',
+          fillOpacity: 1
+        }
+      }
+    }
+
+
+    function updateView() {
+      mapgisUrl =
+        "http://client.snanyun.com:8899/data/vectortile/EPSG4326武汉/{z}/{x}/{y}.pbf";
+      mapgisOptions = {
+        rendererFactory: L.canvas.tile,//L.svg.tile  L.canvas.tile
+        attribution: '<a href="https://www.smaryun.com">&copy; Zondy</a>, <a href="https://www.smaryun.com/copyright">&copy; MapGIS</a>数据提供',
+        vectorTileLayerStyles: vectorTileStyling,
+        maxZoom: 14
+      };
+      L.vectorGrid.protobuf(mapgisUrl, mapgisOptions).addTo(map);
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,191 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图层叠加分析</title>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //整个js文件都是严格模式下执行的
+        "use strict";
+        // 定义地图容器全局变量
+        var map;
+        // 定义矢量图层全局变量
+        var vectorLayer;
+        //缓存结果图层的基地址 
+        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
+        // 缓冲区图层id
+        var layerId = [];
+        // 定义矢量图层guid
+        var guid;
+        /** 地图初始化函数
+        */
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            // 创建地图容器
+            map = new mapboxgl.Map({
+                // 地图显示的div容器
+                container: 'mapCon',
+                // 设置地图不连续显示
+                renderWorldCopies: false,
+                // 设置地图最大显示范围
+                maxBounds: [[-180,-90], [180,90]]
+            });
+            // 创建矢量图层
+            vectorLayer = new Zondy.Map.MapVectorLayer("gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",{
+                // IGServer所在ip地址
+                ip: 'develop.smaryun.com',
+                // IGServer请求端口号
+                port: '6163',
+                //添加guid
+                guid: guid
+            });
+            // 将矢量图层添加到地图
+            vectorLayer.addToMap(map);
+        }
+
+        /** 执行图层叠加分析
+        */
+        function OverlayByLayerAnalysis() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            //结果图层的名称
+            var resultname = resultBaseUrl + "overLayByLayerAnalysisResultLayer" + getCurentTime();
+            //实例化OverlayByLayer类
+            var overlayParam = new Zondy.Service.OverlayByLayer({
+                //IGServer所在ip地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口号
+                port: "6163",
+                //设置被叠加图层URL
+                srcInfo1: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界河流.wl_1",
+                //设置叠加图层URL
+                srcInfo2: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",
+                //设置结果URL  			
+                desInfo: resultname,
+                //设置结果图层的图形参数信息  	
+                infoOptType: 2,
+                //求交	
+                overType: 1,
+                //允许重算面积	    
+                isReCalculate: true,
+                //容差半径		
+                radius: 0.05
+            });
+            //调用基类的execute方法，执行叠加分析， onSuccess为结果回调函数
+            overlayParam.execute(AnalysisSuccess, "post", false, "json", AnalysisError);
+        }
+
+        /** 分析失败回调
+        */
+        function AnalysisError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        /** 分析成功后的回调
+        *  @param {object} data 获取结果对象
+        */
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
+            if (!data.result.succeed) {
+                alert("图层叠加分析，请检查参数！");
+            }
+            else {
+                if (data.result.results.length != 0) {
+                    //结果图层的名称
+                    var resultLayerUrl = data.result.results[0].Value;
+                    //将结果图层添加到地图视图中显示
+                    var resultLayer = new Zondy.Map.MapVectorLayer(encodeURIComponent(resultBaseUrl + resultLayerUrl), {
+                        //IGServer所在ip地址
+                        ip: "develop.smaryun.com",
+                        //IGServer请求端口号
+                        port: "6163",
+                        //图层guid
+                        guid: (new Date()).getTime().toString()
+                    });
+                    resultLayer.addToMap(map);
+                    layerId.push(resultLayer.layerID);
+                }
+            }
+        }
+
+        /** 清除客户端分析结果信息
+        */
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            //清除缓冲区的图层
+            if (!!layerId && layerId.length > 0) {
+                for (var i = layerId.length - 1; i >= 0; i--) {
+                    map.removeLayer(layerId[i]);
+                    layerId.pop();
+                }
+            }
+        }
+
+        /** 当前日期加时间(如:2009-06-12-120000)
+        */
+        function getCurentTime() {
+            var now = new Date();
+            //获取当前年份
+            var year = now.getFullYear();
+            //获取当前月份     
+            var month = now.getMonth() + 1;
+            //获取当前日期   
+            var day = now.getDate();
+            //获取当前时刻
+            var hh = now.getHours();
+            //获取当前分钟
+            var mm = now.getMinutes();
+            //获取当前秒钟
+            var ss = now.getSeconds();
+            //将当前的日期拼串
+            var clock = year + "-";
+            if (month < 10)
+                clock += "0";
+            clock += month + "-";
+            if (day < 10)
+                clock += "0";
+            clock += day + "-";
+            if (hh < 10)
+                clock += "0";
+            clock += hh;
+            if (mm < 10) clock += '0';
+            clock += mm;
+            if (ss < 10) clock += '0';
+            clock += ss;
+            return (clock);
+        }
+
+        /** 停止进度条
+        */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+
+        /** 开始进度条动画
+        */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在执行叠加分析，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="图层叠加分析" onclick="OverlayByLayerAnalysis()" />
+        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
+    </div>
+    <div id="mapCon" style="width: 100%; height: 90%; position: absolute">
+    </div>
+</body>
+</html>

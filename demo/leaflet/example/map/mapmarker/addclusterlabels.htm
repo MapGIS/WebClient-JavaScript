@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>聚合标注</title>
+    <script include="cluster" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        /**显示地图
+        */
+        function init() {
+            //地图容器
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326,
+                //显示中心
+                center: [0, -90],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 10,
+                //当前显示等级
+                zoom: 3,
+                //不显示放大缩小按钮
+                zoomControl: false,
+            });
+            //显示OSM地图
+            var layer = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 15,
+                //设置地图不连续显示
+                noWrap: true
+            }).addTo(map);
+
+            //聚合标注图层
+            var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+
+            /**添加标注
+            */
+            function populate() {
+                for (var i = 0; i < 100; i++) {
+                    //生成随表标注
+                    var m = L.marker(getRandomLatLng(map));
+                    //天机标注
+                    markers.addLayer(m);
+                }
+                return false;
+            }
+
+            /**将聚合的标注连线
+            */
+            function populateRandomVector() {
+                for (var i = 0, latlngs = [], len = 20; i < len; i++) {
+                    //创建线要素坐标数组
+                    latlngs.push(getRandomLatLng(map));
+                }
+                //创建线
+                var path = new L.Polyline(latlngs);
+                //添加线
+                map.addLayer(path);
+            }
+
+            /**将聚合的标注连线
+            */
+            function getRandomLatLng(map) {
+                //获取地图范围
+                var bounds = map.getBounds(),
+                    //获取左下角坐标
+                    southWest = bounds.getSouthWest(),
+                    //获取右下角坐标
+                    northEast = bounds.getNorthEast(),
+                    //获取地图范围的长
+                    lngSpan = northEast.lng - southWest.lng,
+                    //获取地图范围的宽
+                    latSpan = northEast.lat - southWest.lat;
+
+                return L.latLng(
+                    //返回任意地图范围内的x坐标
+                    southWest.lat + latSpan * Math.random(),
+                    //返回任意地图范围内的y坐标
+                    southWest.lng + lngSpan * Math.random());
+            }
+
+
+            var polygon;
+            /**鼠标移动到聚合标注上，将点绘制成多边形
+            *  @param {json对象} a 鼠标移动事件参数
+            */
+            markers.on('clustermouseover', function (a) {
+                if (polygon) {
+                    //移除绘制的多边形
+                    map.removeLayer(polygon);
+                }
+                //获取点集
+                polygon = L.polygon(a.layer.getConvexHull());
+                //添加多边形
+                map.addLayer(polygon);
+            });
+
+            /**鼠标移出取消绘制多边形
+            *  @param {json对象} a 鼠标移动事件参数
+            */
+            markers.on('clustermouseout', function (a) {
+                if (polygon) {
+                    //移除多边形
+                    map.removeLayer(polygon);
+                    polygon = null;
+                }
+            });
+
+            /**Map放大缩小事件
+            */
+            map.on('zoomend', function () {
+                if (polygon) {
+                    //移除多边形
+                    map.removeLayer(polygon);
+                    polygon = null;
+                }
+            });
+
+            //添加随机标注
+            populate();
+            //添加标注
+            map.addLayer(markers);
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width:100%;height:95%"></div>
+</body>
+</html>

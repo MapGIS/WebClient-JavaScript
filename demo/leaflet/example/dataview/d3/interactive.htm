@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-csv,dsv</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="d3,geojson" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+
+        .land {
+            fill: #ddd;
+        }
+
+        .state-borders {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 0.5;
+        }
+
+        .airport-dots {
+            fill: rgb(0, 102, 255);            
+            stroke-width: 0.1;
+            stroke: #fff;
+        }
+
+        .airport-arc {
+            fill: none;
+        }
+
+        .airport:hover .airport-arc {
+            stroke: rgb(238, 56, 162);
+            stroke-width: 0.25;
+        }
+
+        .d3-overlay .airport-cell {
+            fill: none;
+            stroke: #000;
+            stroke-width: 0.5;
+            stroke-opacity: 0.1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([37.8, -96], 3); //这里的3级别很重要如果级别太大则无法生成对应的蜂窝格
+
+        initMap();
+        updateView();
+
+        function initMap() {
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+                'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                    attribution: '<a href="#">MapBox&MapGIS</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light'
+                }).addTo(map);
+        }
+
+        function updateView() {
+            var radius = d3.scaleSqrt().domain([0, 100]).range([0, 14]);
+            var voronoi = d3.voronoi().extent([  //泰森多边形的范围
+                [-1, -1],
+                [1600 + 1, 1000 + 1]
+            ]);
+
+            Promise.all([
+                d3.json('../../data/d3/us-mbostock.json'),
+                d3.dsv(",", "../../data/d3/airport.csv", typeAirport),  //格式化飞机场数据
+                d3.dsv(",", "../../data/d3/flights-airport.csv", typeFlight) //格式化航线数据
+            ]).then(function ([us, airports, flights]) {
+                var airportByIata = d3.map(airports, function (d) {
+                    return d.iata;
+                });
+
+                flights.forEach(function (flight) { //遍历航线，让所有的战场都有自己的起点-终点航线数组
+                    var source = airportByIata.get(flight.origin),
+                        target = airportByIata.get(flight.destination);
+                    source.arcs.coordinates.push([source, target]);//该航线的起点机场航线
+                    target.arcs.coordinates.push([target, source]);//该航线的终点机场航线
+                });
+
+                airports = airports.filter(function (d) {
+                    return d.arcs.coordinates.length;
+                });
+                
+                var countriesOverlay = L.zondy.d3SvgOverlay(function (svg, proj) {
+                    //美国省级行政区
+                    svg.append("path")
+                        .datum(topojson.feature(us, us.objects.land))
+                        .attr("class", "land")
+                        .attr("d", proj.pathFromGeojson);
+                    svg.append("path")
+                        .datum(topojson.mesh(us, us.objects.states, function (a, b) {
+                            return a !== b;
+                        }))
+                        .attr("class", "state-borders")
+                        .attr("d", proj.pathFromGeojson);
+                        
+                    //飞机站的蓝色点
+                    svg.append("path")
+                        .datum({
+                            type: "MultiPoint",
+                            coordinates: airports
+                        })
+                        .attr("class", "airport-dots") //绑定蓝色的点
+                        .attr("d", proj.pathFromGeojson);//地理坐标换算屏幕坐标，固定语法
+
+                    //飞机站的鼠标事件
+                    var airport = svg.selectAll(".airport")
+                        .data(airports)
+                        .enter().append("g")
+                        .attr("class", "airport")
+                        .attr("d", proj.pathFromGeojson);//地理坐标换算屏幕坐标，固定语法
+                    airport.append("title")
+                        .text(function (d) {
+                            return d.iata + "\n" + d.arcs.coordinates.length + " flights";
+                        });
+                        
+                    //飞机站的航线显示
+                    var arcs = [];
+                    d3.map(airports, function (d) {
+                        arcs.push(d.arcs);
+                    });
+                    
+                    var airportArc = svg.selectAll(".airport")
+                        .data(arcs);
+                    airportArc.append("path")
+                        .attr("class", "airport-arc")
+                        .attr("d", proj.pathFromGeojson);
+
+                    //鼠标与航线联动，这段代码必须在上面的实现后才生效
+                    airport.append("path")
+                        .data(voronoi.polygons(airports.map(function (d) {
+                            var latlng = [+d[1], +d[0]];    //leaflet的格式[lat, lng]
+                            var point = proj.latLngToLayerPoint(latlng);//经纬度反算屏幕坐标
+                            d[0] = point.x;//格式转换，遍历泰森多边形的每个point.x
+                            d[1] = point.y;//格式转换，遍历泰森多边形的每个point.y
+                            return d;
+                        })))
+                        .attr("class", "airport-cell")
+                        .attr("d", function (d) {
+                            //M922.8022111014442,550.3602853141332L923.7001081393574,551.6805442732244Z
+                            //下面的代码生成上面的结果，起始就是将太僧多边形的坐标组合成坐标串
+                            return d ? "M" + d.join("L") + "Z" : null;
+                        });
+                }, {
+                    zoomDraw: false //缩放时，继续动画
+                });
+                countriesOverlay.addTo(map);
+            });
+
+        }
+
+
+        function typeAirport(d) {
+            d[0] = +d.longitude;
+            d[1] = +d.latitude;
+            d.arcs = {
+                type: "MultiLineString",
+                coordinates: []
+            };
+            return d;
+        }
+
+        function typeFlight(d) {
+            d.count = +d.count;
+            return d;
+        }
+    </script>
+
+</body>
+
+</html>

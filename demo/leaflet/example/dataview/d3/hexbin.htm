@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-csv,dsv</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="d3" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([37.8, -96], 3);//这里的3级别很重要如果级别太大则无法生成对应的蜂窝格
+
+        initMap();
+
+        updateView();
+
+        function initMap() {
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+                'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                    attribution: '<a href="#">MapBox&MapGIS</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light'
+                }).addTo(map);
+        }
+
+        function updateView() {
+            var container = map.getContainer();
+            var citiesOverlay = L.zondy.d3SvgOverlay(function (sel, proj) {
+                var hexbins;
+                var hexbin = d3.hexbin().radius(3); //这里才是蜂窝聚类半径--关键点1！！！！
+
+                //解析时间
+                var parseDate = d3.timeParse("%x");
+                //决定蜂窝格的显示半径大小
+                var radius = d3.scaleSqrt().domain([0, 50]).range([0, 6]);
+                //根据时间的大小插值对应的颜色
+                var color = d3.scaleTime()
+                    .domain([new Date(1962, 0, 1), new Date(2006, 0, 1)])
+                    .range(["#081d58", "#41b6c4"])//[d3.rgb(254,173,91), d3.rgb(65,0,64)]
+                    .interpolate(d3.interpolateLab);
+
+                d3.dsv("\t", "../../data/d3/walmart.tsv", function (d) {
+                    //这三行代码一般不需要改变，下面的代码是计算坐标换算的，不要更改
+                    var latLng = [+d[1], +d[0]]; //唯一要修改的就是根据数据格式传入对应的经纬度，不一定是d[0],有可能是d.lat之类的
+                    var xy = proj.latLngToLayerPoint(latLng);//地理坐标换算屏幕坐标--关键点2！！！！
+                    d[0] = xy.x, d[1] = xy.y; //将真正的屏幕坐标传回d3
+
+                    d.date = parseDate(d.date);
+                    return d;
+                }).then(function (data) {
+                    //按照之前关键点1设置的radius(3)进行聚类，数据组从3000点->1000聚类点左右
+                    hexbins = hexbin(data).sort(function (a, b) {
+                        return b.length - a.length;
+                    });
+                    var citiesUpd = sel.selectAll('path').data(hexbins);
+                    citiesUpd.enter()
+                        .append('path') //d3固定语法，path绘制方式
+                        .attr('d', function (d) { //根据属性设置半径
+                            return hexbin.hexagon(/* radius(d.length) */);
+                        })
+                        .attr("transform", function (d) { //这里一般无需改动，计算蜂窝的中心点
+                            return "translate(" + d.x + "," + d.y + ")";
+                        })
+                        .attr("fill", function (d) {
+                            return color(d3.median(d, function (d) {
+                                return +d.date;
+                            }));
+                        })
+                        .attr('stroke', 'white').attr('stroke-width', 0.1);
+                });
+            });
+            citiesOverlay.addTo(map);
+            /* citiesOverlay.remove(); */
+        }
+    </script>
+
+</body>
+
+</html>

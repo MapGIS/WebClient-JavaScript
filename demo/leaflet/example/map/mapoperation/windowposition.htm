@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>视窗逻辑坐标</title>
+    <script include="mouseposition" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [40, 60],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 12,
+                //当前显示等级
+                zoom: 3
+            });
+            //加载瓦片图层数据（OSM）
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { noWrap: true }).addTo(map);
+            //加载鼠标位置控件
+            var mousePositionControl = L.control.mousePosition().addTo(map);
+        }
+  </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height: 80%;position: absolute">
+     </div>
+</body>
+</html>

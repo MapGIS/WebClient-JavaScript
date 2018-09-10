@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>图层探查</title>
+    <script include="china,magnifying" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //地图渲染在canvas上
+                preferCanvas: true,
+                //参考坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [40, 116.3],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 16,
+                //当前显示等级
+                zoom: 12
+            });
+            //添加天地图影像图层
+            var imageLayer = L.tileLayer.chinaProvider('TianDiTu.Satellite.Map', {
+                maxZoom: 16,
+                minZoom: 0
+            }).addTo(map);
+            //创建天地图矢量图层
+            var vectorLayer = L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {
+                maxZoom: 16,
+                minZoom: 0
+            });
+            //添加放大镜
+            var magnifyingGlass = L.magnifyingGlass({
+                //设置放大镜中显示的图层
+                layers: [vectorLayer],
+                //探查半径
+                radius:100,
+                //设置放大镜中图层级数和主图层的级数差（0表示同级）
+                zoomOffset:0
+            }).addTo(map);
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height: 100%;position: absolute">
+    </div>
+</body>
+</html>

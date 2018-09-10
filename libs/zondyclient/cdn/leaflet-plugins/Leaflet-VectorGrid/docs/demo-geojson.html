@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Leaflet.GridLayer.Vector.Slicer demo</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+
+</head>
+<body style='margin:0'>
+
+	<div id="map" style="width: 100vw; height: 100vh"></div>
+	
+	<script type="text/javascript"  src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+	<script type="text/javascript"  src="https://unpkg.com/leaflet.vectorgrid@1.2.0"></script>
+	<!-- <script type="text/javascript" src="../dist/Leaflet.VectorGrid.bundled.js"></script> -->
+	<script type="text/javascript" src="./eu-countries.js"></script>
+	<script>
+
+		var map = L.map('map');
+
+		var cartodbAttribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+
+		var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+			attribution: cartodbAttribution,
+			opacity: 1
+		}).addTo(map);
+
+		var highlight;
+		var clearHighlight = function() {
+			if (highlight) {
+				vectorGrid.resetFeatureStyle(highlight);
+			}
+			highlight = null;
+		};
+		var vectorGrid = L.vectorGrid.slicer( euCountries, {
+			rendererFactory: L.svg.tile,
+			vectorTileLayerStyles: {
+				sliced: function(properties, zoom) {
+					var p = properties.mapcolor7 % 5;
+					return {
+						fillColor: p === 0 ? '#800026' :
+								p === 1 ? '#E31A1C' :
+								p === 2 ? '#FEB24C' :
+								p === 3 ? '#B2FE4C' : '#FFEDA0',
+						fillOpacity: 0.5,
+	 					//fillOpacity: 1,
+						stroke: true,
+						fill: true,
+						color: 'black',
+ 							//opacity: 0.2,
+						weight: 0,
+					}
+				}
+			},
+			interactive: true,
+			getFeatureId: function(f) {
+				return f.properties.wb_a3;
+			}
+		})
+		.on('mouseover', function(e) {
+			var properties = e.layer.properties;
+			L.popup()
+				.setContent(properties.name || properties.type)
+				.setLatLng(e.latlng)
+				.openOn(map);
+
+			clearHighlight();
+			highlight = properties.wb_a3;
+
+			var p = properties.mapcolor7 % 5;
+			var style = {
+				fillColor: p === 0 ? '#800026' :
+						p === 1 ? '#E31A1C' :
+						p === 2 ? '#FEB24C' :
+						p === 3 ? '#B2FE4C' : '#FFEDA0',
+				fillOpacity: 0.5,
+				fillOpacity: 1,
+				stroke: true,
+				fill: true,
+				color: 'red',
+				opacity: 1,
+				weight: 2,
+			};
+
+			vectorGrid.setFeatureStyle(properties.wb_a3, style);
+		})
+		.addTo(map);
+
+		map.on('click', clearHighlight);
+
+		map.setView({ lat: 47.040182144806664, lng: 9.667968750000002 }, 5);
+
+	</script>
+</body>
+</html>

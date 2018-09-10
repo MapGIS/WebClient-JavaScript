@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>MultiPoint</title>
+    <script includes="leaflet" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        #map{height:600px}
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    var map = L.map('map').setView([30.594183452544694,114.28939819335936], 12);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets'
+    }).addTo(map);
+
+    var MultiPoint = {
+        "type": "Feature",
+        "properties": {
+            name:"多点"
+        },
+        "geometry": {
+            "type": "MultiPoint",
+            "coordinates": [
+                [
+                    114.29351806640625,
+                    30.602457940999596
+                ],[
+                    114.21146392822264,
+                    30.56580841410847
+                ],[
+                    114.30896759033203,
+                    30.529145036680408
+                ]
+            ]
+        }
+    };
+    L.geoJSON(MultiPoint).addTo(map);
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>图层叠加显示</title>
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        body,
+        html,
+        div,
+        ul,
+        li,
+        iframe,
+        p,
+        img {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+
+        #container {
+            float: left;
+            position: absolute;
+            width: 250px;
+            height: 280px;
+            left: 50px;
+            background-color: #4c4e5a;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2000;
+            /*支持IE */
+            filter: alpha(opacity=50);
+            /*支持FF */
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+        #layertree {
+            float: left;
+            position: absolute;
+            width: 250px;
+            height: 280px;
+            padding: 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            color: #ffffff;
+            left: 50px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+        }
+
+        #layertree ul {}
+
+        #layertree ul li {
+            /*list-style:none;*/
+            margin: 10px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapCon">
+        <div id="container"></div>
+        <div id="layertree">
+            <ul>
+                <li>
+                    <span>OSM地图图层</span>
+                    <fieldset id="layer0">
+                        <label class="checkbox" for="visible0">
+                            <input id="visible0" class="visible" type="checkbox" />是否可见
+                        </label>
+                        <br />
+                        <label>透明度</label>
+                        <input class="opacity" type="range" min="0" max="1" step="0.01" />
+                        <br />
+                        <label>色彩</label>
+                        <input class="hue" type="range" min="-3.141592653589793" max="3.141592653589793" step="0.01" />
+                        <br />
+                        <label>饱和度</label>
+                        <input class="saturation" type="range" min="0" max="5" step="0.01" />
+                        <br />
+                        <label>对比度</label>
+                        <input class="contrast" type="range" min="0" max="2" step="0.01" />
+                        <br />
+                        <label>亮度</label>
+                        <input class="brightness" type="range" min="-1" max="1" step="0.01" />
+                    </fieldset>
+                </li>
+                <li>
+                    <span>GeoJSON格式矢量图层</span>
+                    <fieldset id="layer1">
+                        <label class="checkbox" for="visible1">
+                            <input id="visible1" class="visible" type="checkbox" />是否可见
+                        </label>
+                        <br />
+                        <label>透明度</label>
+                        <input class="opacity" type="range" min="0" max="1" step="0.01" />
+                        <br />
+                        <label>色彩</label>
+                        <input class="hue" type="range" min="-3.141592653589793" max="3.141592653589793" step="0.01" />
+                        <br />
+                        <label>饱和度</label>
+                        <input class="saturation" type="range" min="0" max="5" step="0.01" />
+                        <br />
+                        <label>对比度</label>
+                        <input class="contrast" type="range" min="0" max="2" step="0.01" />
+                        <br />
+                        <label>亮度</label>
+                        <input class="brightness" type="range" min="-1" max="1" step="0.01" />
+                    </fieldset>
+                </li>
+                <li>
+                    <span>ArcGIS MapServer瓦片数据</span>
+                    <fieldset id="layer2">
+                        <label class="checkbox" for="visible2">
+                            <input id="visible2" class="visible" type="checkbox" />是否可见
+                        </label>
+                        <br />
+                        <label>透明度</label>
+                        <input class="opacity" type="range" min="0" max="1" step="0.01" />
+                        <br />
+                        <label>色彩</label>
+                        <input class="hue" type="range" min="-3.141592653589793" max="3.141592653589793" step="0.01" />
+                        <br />
+                        <label>饱和度</label>
+                        <input class="saturation" type="range" min="0" max="5" step="0.01" />
+                        <br />
+                        <label>对比度</label>
+                        <input class="contrast" type="range" min="0" max="2" step="0.01" />
+                        <br />
+                        <label>亮度</label>
+                        <input class="brightness" type="range" min="-1" max="1" step="0.01" />
+                    </fieldset>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon',
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [-10997148, 4569099],
+                //地图初始显示级别
+                zoom: 3
+            })
+        });
+        //加载矢量数据图层（geojson）
+        var vectorSource = new ol.source.Vector({
+            url: "../../data/geojson/countries.geojson",
+            format: new ol.format.GeoJSON()
+        });
+        var vectorLayer = new ol.layer.Vector({
+            //矢量数据源
+            source: vectorSource
+        });
+        map.addLayer(vectorLayer);
+        //加载ArcGIS瓦片数据图层
+        var arcGISSource = new ol.source.TileArcGISRest({
+            url: 'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/' +
+                'Specialty/ESRI_StateCityHighway_USA/MapServer'
+        });
+        var arcGISLayers = new ol.layer.Tile({
+            source: arcGISSource,
+            extent: [-13884991, 2870341, -7455066, 6338219]
+        });
+        map.addLayer(arcGISLayers);
+
+        //绑定图层显示样式控件
+        function bindInputs(layerid, layer) {
+            //是否可见控件
+            var visibilityInput = $(layerid + ' input.visible');
+            //绑定change事件
+            visibilityInput.on('change', function () {
+                //设置图层的可见性
+                layer.setVisible(this.checked);
+            });
+            //更新可见控件状态
+            visibilityInput.prop('checked', layer.getVisible());
+            //遍历其他显示样式属性，依次绑定change事件
+            $.each(['opacity', 'hue', 'saturation', 'contrast', 'brightness'],
+                function (i, v) {
+                    var input = $(layerid + ' input.' + v);
+                    input.on('input change', function () {
+                        //根据当前控件值设置对应的图层显示属性值
+                        layer.set(v, parseFloat(this.value));
+                    });
+                    //更新当前显示属性控件状态（值）
+                    input.val(String(layer.get(v)));
+                }
+            );
+        }
+
+        map.getLayers().forEach(function (layer, i) {
+            //调用绑定图层显示样式控件的处理函数
+            bindInputs('#layer' + i, layer);
+        });
+        //设置样式面板
+        $('#layertree li > span').click(function () {
+            //切换图层样式面板的可见状态(显示与隐藏)
+            // $(this).siblings('fieldset').toggle();
+            $('#layertree li > span').siblings('fieldset').hide();
+            $(this).next().show();
+        }).siblings('fieldset').hide(); //默认隐藏各图层显示样式面板
+        $("fieldset:eq(0)").show();
+    </script>
+</body>
+
+</html>

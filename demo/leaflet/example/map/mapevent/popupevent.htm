@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Popup事件</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+         //使用严格模式
+         "use strict";
+         //定义地图
+         var map;
+         /**初始化地图显示
+         */
+         function init() {
+             //地图容器
+             map = L.map('leaf_map', {
+                 //参考坐标系
+                 crs: L.CRS.EPSG3857,
+                 //显示中心
+                 center: [40, 116.3],
+                 //最小显示等级
+                 minZoom: 0,
+                 //最大显示等级
+                 maxZoom: 16,
+                 //当前显示等级
+                 zoom: 12
+             });
+             //加载瓦片图层数据（OSM）
+             var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                 //只显示一个图层,不平铺显示
+                 noWrap: true
+             }).addTo(map);
+             //添加标注，设置弹框提示
+             L.marker([40.003, 116.32]).addTo(map).bindPopup("<b>这里是清华大学</b>");
+
+             /**Popup弹出事件
+             *  @param {string} type 事件类型（popup弹出）
+             *  @param {function} fn 事件触发后的响应函数
+             */
+             map.on('popupopen', function (e) {
+                 //弹框提示
+                 alert("Popup弹出！");
+             });
+
+             /**Popup关闭事件
+             *  @param {string} type 事件类型（popup关闭）
+             *  @param {function} fn 事件触发后的响应函数
+             */
+             map.on('popupclose', function (e) {
+                 //弹框提示
+                 alert("Popup关闭！");
+             });
+         }
+  </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height: 95%;">
+    </div>
+</body>
+</html>

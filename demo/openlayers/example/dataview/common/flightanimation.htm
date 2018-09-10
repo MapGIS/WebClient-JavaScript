@@ -1,0 +1,127 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>航线动画</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="arc" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+</head>
+<body>
+    <div id="mapCon" style="width: 100%; height: 95%; position: absolute;">
+    </div>
+    <script type="text/javascript">
+        var map = new ol.Map({
+            layers: [
+              new ol.layer.Tile({
+                  source: new ol.source.Stamen({
+                      layer: 'toner'
+                  })
+              })
+            ],
+            target: 'mapCon',
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 2
+            })
+        });
+
+        var style = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#EAE911',
+                width: 2
+            })
+        });
+
+        var flightsSource;
+        var addLater = function (feature, timeout) {
+            window.setTimeout(function () {
+                feature.set('start', new Date().getTime());
+                flightsSource.addFeature(feature);
+            }, timeout);
+        };
+
+        var pointsPerMs = 0.1;
+        var animateFlights = function (event) {
+            var vectorContext = event.vectorContext;
+            var frameState = event.frameState;
+            vectorContext.setStyle(style);
+
+            var features = flightsSource.getFeatures();
+            for (var i = 0; i < features.length; i++) {
+                var feature = features[i];
+                if (!feature.get('finished')) {
+
+                    var coords = feature.getGeometry().getCoordinates();
+                    var elapsedTime = frameState.time - feature.get('start');
+                    var elapsedPoints = elapsedTime * pointsPerMs;
+
+                    if (elapsedPoints >= coords.length) {
+                        feature.set('finished', true);
+                    }
+
+                    var maxIndex = Math.min(elapsedPoints, coords.length);
+                    var currentLine = new ol.geom.LineString(coords.slice(0, maxIndex));
+
+                    //根据要素来描绘出线条
+                    vectorContext.drawGeometry(currentLine);
+                }
+            }
+            //继续动画效果
+            map.render();
+        };
+
+        flightsSource = new ol.source.Vector({
+            wrapX: false,
+            attributions: 'Flight data by ' +
+                  '<a href="http://openflights.org/data.html">OpenFlights</a>,',
+            loader: function () {
+                var url = '../../data/dataview/flights.json';
+                fetch(url).then(function (response) {
+                    return response.json();
+                }).then(function (json) {
+                    var flightsData = json.flights;
+                    for (var i = 0; i < flightsData.length; i++) {
+                        var flight = flightsData[i];
+                        var from = flight[0];
+                        var to = flight[1];
+
+                        //创建一个两个地点之间的弧段
+                        var arcGenerator = new arc.GreatCircle(
+                            { x: from[1], y: from[0] },
+                            { x: to[1], y: to[0] });
+
+                        var arcLine = arcGenerator.Arc(100, { offset: 10 });
+                        if (arcLine.geometries.length === 1) {
+                            var line = new ol.geom.LineString(arcLine.geometries[0].coords);
+                            line.transform(ol.proj.get('EPSG:4326'), ol.proj.get('EPSG:3857'));
+
+                            var feature = new ol.Feature({
+                                geometry: line,
+                                finished: false
+                            });
+                            //添加动画的特性与延迟所有功能并不在同一时间开始
+                            addLater(feature, i * 50);
+                        }
+                    }
+                    map.on('postcompose', animateFlights);
+                });
+            }
+        });
+
+        var flightsLayer = new ol.layer.Vector({
+            source: flightsSource,
+            style: function (feature) {
+                //如果动画仍然是活跃的特性,不渲染图层样式的特性
+                if (feature.get('finished')) {
+                    return style;
+                } else {
+                    return null;
+                }
+            }
+        });
+        map.addLayer(flightsLayer);
+    </script>
+</body>
+</html>

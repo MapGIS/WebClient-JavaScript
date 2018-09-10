@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>瓦片目录服务</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="json" src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        /*以本地GIS服务器发布的瓦片为例，用户可设置其目标对象*/
+        //GIS服务器地址
+        var ip = "develop.smaryun.com";
+        //GIS服务器REST服务端口号
+        var port = "6163";
+        //瓦片服务名称
+        var tileMapName = "WorldMKTTile";
+        //实例化瓦片目录服务对象
+        var TileCat = new Zondy.Catalog.TileLayer({
+            //设置服务器IP
+            ip: ip,
+            //设置端口号
+            port: port
+        });
+
+        /* ====瓦片目录服务（获取瓦片服务列表）==== */
+        function getTileList() {
+            //显示结果tab页
+            $('#resultShow').tabs('select', 1);
+            //调用getMapDocList方法，获取服务器已发布瓦片的瓦片服务列表，回调函数处理结果
+            TileCat.getTileList(getListSuccess);
+        }
+
+        function getListSuccess(data) {
+            if (data.result.succeed) {
+                if (data.result.HDFNames.length == 0) {
+                    alert("没有获取到瓦片服务列表！");
+                    $("#reslutTable").empty(); //清空结果显示面板
+                    return;
+                } else {
+                    //显示瓦片列表
+                    formatData = JSON.stringify(data.result.HDFNames);
+                    Process(formatData, 1, "reslutTable");
+                }
+            } else {
+                alert("获取瓦片服务列表失败！");
+                $("#reslutTable").empty(); //清空结果显示面板
+                return;
+            }
+
+        }
+        /* ====瓦片目录服务（获取瓦片详细信息）==== */
+        function getTileInfo() {
+            //显示结果tab页
+            $("#resultShow").tabs("select", 1);
+            TileCat.tileName = tileMapName;
+            //调用getTileInfo方法，获取服务器已发布瓦片中某一个瓦片服务的详细信息，回调函数处理结果
+            TileCat.getTileInfo(getTileInfoSuccess);
+        }
+
+        function getTileInfoSuccess(data) {
+            if (data.result.succeed) {
+                if (data.result.TileInfo2 == null) {
+                    alert("瓦片服务信息为空！");
+                    $("#reslutTable").empty(); //清空结果显示面板
+                    return;
+                } else {
+                    //显示瓦片列表
+                    formatData = JSON.stringify(data.result.TileInfo2);
+                    Process(formatData, 1, "reslutTable");
+                }
+            } else {
+                alert("获取瓦片服务信息失败！");
+                $("#reslutTable").empty(); //清空结果显示面板
+                return;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="获取瓦片列表" onclick="getTileList()" />
+        <input type="button" class="ButtonLib" value="获取瓦片详细信息" onclick="getTileInfo()" />
+        <br />
+    </div>
+    <div id="resultShow" class="easyui-tabs" style="width: 100%; height: 600px">
+        <div id="introduction" title="说明" style="padding: 10px">
+            注意：
+            <br />
+            <br /> 上述瓦片目录服务接口示例，默认使用示例瓦片数据（WORLDMKT.TDF），操作前请先确认此瓦片已经在IGS上发布为瓦片服务（WorldMKTTile）。
+            <br />
+        </div>
+        <div id="resultT" title="结果显示" style="padding: 10px">
+            <div id="reslutTable">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

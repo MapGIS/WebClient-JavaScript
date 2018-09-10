@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>获取瓦片图片URL</title>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        /**获取瓦片图片URL
+        */
+        function GetImage() {
+            //创建获取瓦片图片信息服务
+            var MapImageService = new Zondy.Service.GetMapImageService({
+                //指定类型为瓦片
+                mapType: Zondy.Enum.Map.MapType.Tile,
+                //发布的瓦片名称
+                mapName: 'WorldJWTile',
+                //设置级数
+                level: 0,
+                //行号
+                row: 0,
+                //列号
+                col: 0,
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163"
+            });
+            //获取瓦片图片url路径
+            var tileUrl = MapImageService.GetImage();
+            //将JSON对象转换成JSON字符串
+            var formatData = JSON.stringify(tileUrl);
+            //显示url结果，并设置链接供用户查看
+            document.getElementById("show").innerHTML = tileUrl;
+            document.getElementById("show").href = tileUrl;
+        }
+    </script>
+</head>
+<body>
+    <div class="ToolLib" >
+    <input type="button"  class="ButtonLib" value="获取瓦片图片URL" onclick='GetImage()' />
+  </div>
+  <div id="reslutShow" style=" padding: 5px; margin-top: 10px;" >
+     <font style=" float: left; text-align: left">瓦片图片的URL为：</font><br />
+     <a id="show" target="blank"></a>
+  </div>
+</body>
+</html>

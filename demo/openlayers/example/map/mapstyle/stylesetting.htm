@@ -1,0 +1,215 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>矢量图层显示样式</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map = null;
+        var vectorLayer = null;
+        var SvrCfg = {
+            vectUrl1: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/符号化显示/sfcls/世界政区_1",
+            vectUrl2: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/符号化显示/sfcls/完整的国界线.wl_1",
+            vectUrl3: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/符号化显示/sfcls/主要城市_1",
+            vectUrl4: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/符号化显示/acls/洲洋注记_1_1",
+            ip: "develop.smaryun.com",
+            port: "6163"
+        };
+
+        function init() {
+            //注意：在这里需要先将easyui-tabs的需要承载地图容器的面板选中，地图容器才能完成地图的渲染。
+            $("#resultShow").tabs("select", 1);
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [114, 30],
+                    zoom: 4,
+                    projection: 'EPSG:4326'
+                })
+            });
+            //创建一个图层
+            vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", [SvrCfg.vectUrl1, SvrCfg.vectUrl2, SvrCfg.vectUrl3, SvrCfg.vectUrl4], {
+                ip: SvrCfg.ip,
+                port: SvrCfg.port,
+                isBaseLayer: true
+            });
+            //添加图层
+            map.addLayer(vectorLayer);
+            $("#resultShow").tabs("select", 0);
+        }
+        //提交图层样式回调函数
+        function LayerSubmit() {
+            $("#resultShow").tabs("select", 1);
+            var layerSymbleShow = "";
+            if ($("#LayerSymbleShow").is(":checked"))
+                layerSymbleShow = "true";
+            else
+                layerSymbleShow = "false";
+
+            var layerAnnSizeFixed = "";
+            if ($("#LayerAnnSizeFixed").is(":checked"))
+                layerAnnSizeFixed = "true";
+            else
+                layerAnnSizeFixed = "false";
+
+
+            var layerLinSizeFixed = "";
+            if ($("#LayerLinSizeFixed").is(":checked"))
+                layerLinSizeFixed = "true";
+            else
+                layerLinSizeFixed = "false";
+
+            var layerPntSizeFixed = "";
+            if ($("#LayerPntSizeFixed").is(":checked"))
+                layerPntSizeFixed = "true";
+            else
+                layerPntSizeFixed = "false";
+
+
+            var layerShowCoordPnt = "";
+            if ($("#LayerShowCoordPnt").is(":checked"))
+                layerShowCoordPnt = "true";
+            else
+                layerShowCoordPnt = "false";
+
+            var layerShowElemRect = "";
+            if ($("#LayerShowElemRect").is(":checked"))
+                layerShowElemRect = "true";
+            else
+                layerShowElemRect = "false";
+
+            var layerDriverQuality = $("#LayerDriverQuality option:selected").val();
+
+            var layerDispStyle1 = SetCDisplayStyle(layerAnnSizeFixed, layerDriverQuality, layerLinSizeFixed, layerPntSizeFixed, layerShowCoordPnt, layerShowElemRect, layerSymbleShow, 0);
+            var layerDispStyle2 = SetCDisplayStyle(layerAnnSizeFixed, layerDriverQuality, layerLinSizeFixed, layerPntSizeFixed, layerShowCoordPnt, layerShowElemRect, layerSymbleShow, 1);
+            var layerDispStyle3 = SetCDisplayStyle(layerAnnSizeFixed, layerDriverQuality, layerLinSizeFixed, layerPntSizeFixed, layerShowCoordPnt, layerShowElemRect, layerSymbleShow, 2);
+            var layerDispStyle4 = SetCDisplayStyle(layerAnnSizeFixed, layerDriverQuality, layerLinSizeFixed, layerPntSizeFixed, layerShowCoordPnt, layerShowElemRect, layerSymbleShow, 3);
+            vectorLayer.style = [layerDispStyle1, layerDispStyle2, layerDispStyle3, layerDispStyle4];
+            vectorLayer.refresh();
+        }
+
+        //设置提交图层样式
+        function SetCDisplayStyle(layerAnnSizeFixed, layerDriverQuality, layerLinSizeFixed, layerPntSizeFixed, layerShowCoordPnt, layerShowElemRect, layerSymbleShow, Index) {
+            return new Zondy.Object.CDisplayStyleExtend({
+                //注记符号大小固定
+                AnnSizeFixed: layerAnnSizeFixed,
+                //图像质量
+                DriverQuality: layerDriverQuality,
+                //线状符号大小固定
+                LinSizeFixed: layerLinSizeFixed,
+                //点状符号大小固定
+                PntSizeFixed: layerPntSizeFixed,
+                //显示坐标点
+                ShowCoordPnt: layerShowCoordPnt,
+                //显示元素的外包矩形
+                ShowElemRect: layerShowElemRect,
+                //是否进行还原显示
+                SymbleShow: layerSymbleShow,
+                //图层索引
+                Index: Index
+            });
+        }
+
+        //清除图层样式回调函数
+        function LayerClear() {
+            $("#LayerSymbleShow").attr("checked", false);
+            $("#LayerAnnSizeFixed").attr("checked", false);
+            $("#LayerLinPenWidFixed").attr("checked", false);
+            $("#LayerLinSizeFixed").attr("checked", false);
+            $("#LayerPntPenWidFixed").attr("checked", false);
+            $("#LayerPntSizeFixed").attr("checked", false);
+            $("#LayerRegPenWidFixed").attr("checked", false);
+            $("#LayerRegSizeFixed").attr("checked", false);
+            $("#LayerShowCoordPnt").attr("checked", false);
+            $("#LayerShowElemRect").attr("checked", false);
+            $("#Index").val(0);
+            $("#LayerDriverQuality").val(2);
+            var docDispStyle = new Zondy.Object.CDisplayStyleExtend();
+            vectorLayer.style = [docDispStyle];
+            vectorLayer.refresh();
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div class="easyui-layout" style="width: 100%; height: 600px; ">
+        <div data-options="region:'center'">
+            <!--地图显示-->
+            <div id="resultShow" class="easyui-tabs" data-options="fit:true">
+                <div id="introduction" title="说明" style="padding: 10px">
+                    <span id="tipsJSYA">操作提示：通过勾选设置地图的显示样式，单击提交样式，完成地图样式的修改，清除样式将复原地图显示！</span><br />
+                    <span>
+                        <b>注：</b><br />
+                        （1）“线状符号大小固定”需与“是否进行还原显示”一起使用才能看到效果；勾选“是否进行还原显示”，不勾选“线状符号大小固定”，则地图放大到一定级别，可以看到线符号明显变粗；勾选“线状符号大小固定”，则线符号不变粗。点符号同理。<br />
+                        （2）请将地图放大到一定级别，以便看到点符号、线符号随地图缩放后的效果。
+                    </span>
+                </div>
+                <div id="mapCon" title="结果显示" style="width: 100%; height: 95%;">
+                </div>
+            </div>
+        </div>
+        <div data-options="region:'east',title:'矢量图层显示样式',split:true" style="width: 15%;">
+            <div id="toolspanel">
+                <div class="itembox">
+                    <table>
+                        <tr>
+                            <td>
+                                <input id="LayerSymbleShow" type="checkbox" value="LayerSymbleShow" />是否进行还原显示
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="LayerPntSizeFixed" type="checkbox" value="LayerPntSizeFixed" />点状符号大小固定
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="LayerLinSizeFixed" type="checkbox" value="LayerLinSizeFixed" />线状符号大小固定
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="LayerAnnSizeFixed" type="checkbox" value="LayerAnnSizeFixed" />注记符号大小固定
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="LayerShowCoordPnt" type="checkbox" value="LayerShowCoordPnt" />显示坐标点
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="LayerShowElemRect" type="checkbox" value="LayerShowElemRect" />显示元素的外包矩形
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>图像质量：</span>
+                                <select id="LayerDriverQuality" style="width:90px">
+                                    <option value="1">1（低）</option>
+                                    <option value="2" selected="selected">2（中）</option>
+                                    <option value="3">3（高））</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <button id="Button2MAS" class="functionButton" onclick="LayerSubmit()">
+                                提交图层样式
+                            </button>
+                            <button id="Button5MAS" class="functionButton" onclick="LayerClear()">
+                                清空图层样式
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

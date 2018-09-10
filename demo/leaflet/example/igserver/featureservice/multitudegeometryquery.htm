@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>多几何要素查询（多区查询）</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        /**多几何要素查询
+        */
+        function mulGeoFeatureQuery() {
+            //显示进度条
+            startPressBar();
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何信息
+            queryStruct.IncludeGeometry = true;
+            //创建两个用于查询的矩形数组
+            var pointObj = new Array();
+            pointObj[0] = new Zondy.Object.Point2D(116.4375, 41.53125);
+            pointObj[1] = new Zondy.Object.Point2D(114.6875, 39.08125);
+            pointObj[2] = new Zondy.Object.Point2D(118.1875, 39.34375);
+            pointObj[3] = new Zondy.Object.Point2D(116.4375, 41.53125);
+            var geomObj1 = new Zondy.Object.Polygon(pointObj);
+            var pointObj2 = new Array();
+            pointObj2[0] = new Zondy.Object.Point2D(105.5875, 48.70625);
+            pointObj2[1] = new Zondy.Object.Point2D(106.1125, 46.86875);
+            pointObj2[2] = new Zondy.Object.Point2D(108.3875, 48.44375);
+            pointObj2[3] = new Zondy.Object.Point2D(105.5875, 48.70625);
+            var geomObj2 = new Zondy.Object.Polygon(pointObj2);
+            //实例化查询参数对象 
+            var queryParam = new Zondy.Service.MultiGeoQueryParameter({
+                //设置查询几何对象
+                geometry: [geomObj1, geomObj2],
+                //设置查询几何类型
+                geometryType: "polygon",
+                //设置结果返回类型
+                resultFormat: "json",
+                //设置查询结构对象
+                struct: queryStruct
+            });
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.MultiGeoQuery(queryParam, "WorldJWVector", 1, {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为成功回调，queryError为失败回调
+            queryService.query(querySuccess, queryError);
+        }
+
+        /**查询成功回调函数
+        *  @param {json对象} result 获取结果对象
+        */
+        function querySuccess(result) {
+            //停止进度条
+            stopPressBar();
+            //将JSON对象转换成JSON字符串
+            var formatData = JSON.stringify(result.result.ItemArray);
+            //将结果显示在指定的div上
+            Process(formatData, 1, "resultShow");
+        }
+
+        /**查询失败回调函数
+        */
+        function queryError() {
+            //停止进度条
+            stopPressBar();
+            alert("查询失败！");
+        }
+
+        /**开始进度条动画
+        */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /**停止进度条动画
+        */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }  
+    </script>
+</head>
+<body>
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/leaflet/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在查询，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button"  class="ButtonLib" value="多几何要素查询" onclick="mulGeoFeatureQuery()" /><br />
+    </div>
+    <div id="resultShow" >
+    </div>
+</body>
+</html>

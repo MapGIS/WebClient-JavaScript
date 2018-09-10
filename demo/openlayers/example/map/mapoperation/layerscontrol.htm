@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>图层级数显示控制</title>
+    
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <!--导入本页面外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="ToolLib">
+        <label for="idx1">
+            <input type="number" id="idx1" />
+            Square layer Z-index
+        </label>
+        <label for="idx2">
+            <input type="number" id="idx2" />
+            Triangle layer Z-index
+        </label>
+    </div>
+    <div id="mapCon" class="map" style="width: 100%; height: 90%; position: absolute;">
+    </div>
+    <script type="text/javascript" language="javascript">
+        //设置边界样式
+        var stroke = new ol.style.Stroke({ color: 'black', width: 1 });
+        var styles = {
+            //设置square样式
+            'square': new ol.style.Style({
+                image: new ol.style.RegularShape({
+                    fill: new ol.style.Fill({ color: 'blue' }),
+                    stroke: stroke,
+                    points: 4,
+                    radius: 80,
+                    angle: Math.PI / 4
+                })
+            }),
+            //设置triangle样式
+            'triangle': new ol.style.Style({
+                image: new ol.style.RegularShape({
+                    fill: new ol.style.Fill({ color: 'red' }),
+                    stroke: stroke,
+                    points: 3,
+                    radius: 80,
+                    rotation: Math.PI / 4,
+                    angle: 0,
+                    rotateWithView: true
+                })
+            }),
+            //设置star样式
+            'star': new ol.style.Style({
+                image: new ol.style.RegularShape({
+                    fill: new ol.style.Fill({ color: 'green' }),
+                    stroke: stroke,
+                    points: 5,
+                    radius: 80,
+                    radius2: 4,
+                    angle: 0
+
+                })
+            })
+        };
+
+
+        function createLayer(coordinates, style, zIndex) {
+            var feature = new ol.Feature(new ol.geom.Point(coordinates));
+            feature.setStyle(style);
+
+            var source = new ol.source.Vector({
+                features: [feature]
+            });
+
+            var vectorLayer = new ol.layer.Vector({
+                source: source
+            });
+            //vectorLayer.setZIndex(zIndex);
+
+            return vectorLayer;
+        }
+        //创建图层
+        var layer0 = createLayer([40, 40], styles['star'], 0);
+        var layer1 = createLayer([0, 0], styles['square'], 1);
+        var layer2 = createLayer([0, 40], styles['triangle'], 0);
+
+        var layers = [];
+        layers.push(layer1);
+        layers.push(layer2);
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器中加载的图层
+            layers: layers,
+            //地图容器div的ID
+            target: 'mapCon',
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 18
+            })
+        });
+        //设置图层呈现在地图其他图层之上
+        layer0.setMap(map);
+
+
+        function bindInputs(id, layer) {
+            var idxInput = document.getElementById('idx' + id);
+            idxInput.onchange = function () {
+                //设置图层显示级数
+                layer.setZIndex(parseInt(this.value, 10) || 0);
+            };
+            //input标签图层显示级数
+            idxInput.value = String(layer.getZIndex());
+        }
+
+        bindInputs(1, layer1);
+        bindInputs(2, layer2);
+    </script>
+</body>
+</html>

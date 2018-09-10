@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "light-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 10,
+      pitch: 45,
+      center: [114.289398, 30.59418345]
+    });
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": [{
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.24270629882811,30.622550184776674]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [114.34810638427734,30.634958017061198],
+              [114.2856216430664,30.554869984737515],
+              [114.246826171875,30.4954261715298]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.33815002441406,30.502230042106245],
+                [114.34398651123045,30.485071542395932],
+                [114.3728256225586,30.472348632640834],
+                [114.38278198242188,30.49010107130931],
+                [114.35256958007811,30.50518809826035],
+                [114.33815002441406,30.502230042106245]
+              ]
+            ]
+          }
+        }
+      ]
+    };
+
+    map.on('load', function() {
+      initMap();
+      loadData();
+    });
+
+    function initMap(){
+      //请特别重视这个图层名字geojsonBuffer
+      map.addSource('geojsonBuffer', {
+        "type": "geojson",
+        "data": geojson  //一开始的数据是空的,后面请求到了再更新
+      });
+
+      map.addLayer({
+        "id": "buffer-polygon",
+        "type": "fill",
+        "source": "geojsonBuffer",
+        'layout': {},
+        'paint': {
+          'fill-color': '#088',
+          'fill-opacity': 0.5,
+          'fill-outline-color': '#FFF'
+        }
+      });
+    }
+
+    function loadData() {
+      convertDataToGeoJson();
+      updateView();
+    }
+
+    function convertDataToGeoJson() {
+
+      geojson = turf.buffer(geojson, 1.5, {
+        units: 'miles'
+      });
+    }
+
+    function updateView() {
+      //注意geojsonBuffer是之前添加的source的名字
+      map.getSource('geojsonBuffer').setData(geojson);
+    }
+  </script>
+
+</body>
+
+</html>

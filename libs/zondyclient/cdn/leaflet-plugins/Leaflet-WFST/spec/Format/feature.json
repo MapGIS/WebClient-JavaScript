@@ -1,0 +1,28 @@
+{
+  "type": "Feature",
+  "id": "roads.1",
+  "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    ]
+  },
+  "geometry_name": "the_geom",
+  "properties": {
+    "cat": 5,
+    "label": "unimproved road"
+  }
+}

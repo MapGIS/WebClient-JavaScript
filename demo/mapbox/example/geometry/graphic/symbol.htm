@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 635px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "light-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }],
+        //特别注意，这里是用的mapbox官方的，中地内部的请参考中地glyphs
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        //特别注意，这里是用的mapbox官方的，中地内部的请参考中地sprite
+        "sprite": "mapbox://sprites/mapbox/streets-v8"
+      },
+      zoom: 15,
+      pitch: 45,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+    var GeoPoints = {
+      "type": "FeatureCollection",
+      "features": [{
+          "type": "Feature",
+          "properties": {
+            "name": "东正门"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.4028878211975, 30.46921388143542]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "北副门"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.39707279205322, 30.46948204993967]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "南副门"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.40066695213318, 30.465246750753185]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "中地数码科技园"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.40021634101868, 30.46763259696496]
+          }
+        }
+      ]
+    };
+
+    map.on('load', function() {
+      initMap();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字symbolLayer
+      map.addSource('symbolLayer', {
+        "type": "geojson",
+        "data": GeoPoints
+      });
+      //当你看到下面的注释时，肯定要骂人，但是实际上常用的参数就几个
+      map.addLayer({
+        "id": "zondy",
+        "type": "symbol",
+        "source": "symbolLayer", //必须和上面的symbolLayer一致
+        "filter": ["==", "name", "中地数码科技园"], //关键点：name对应geojson中的属性字段
+        "layout": {
+          "symbol-placement": "point", //"point"表示基于单个点的注记, "line"表示平铺在线上的注记
+          "symbol-spacing": 200, //单位像素,便是每个注记的占用空间，只有symbol-placement=line才生效
+          "symbol-avoid-edges": false, //避免在边界情况的，注记碰撞压盖，一般不设置
+
+          "icon-allow-overlap": false, //true表示在图层有压盖关系时，仅仅是当前图标保持可见
+          "icon-ignore-placement": false, //说句实话，这个属性我测了好久真心不知道怎么生效，如果你找到了请提交bug通知我
+          "icon-optional": true, // true表示和其他注记冲突的时候,如果文字没被压盖，显示文字，隐藏图标
+          "icon-rotation-alignment": "viewport", //map表示随地图旋转角度旋转，viewport表示随当前视角/数据形态（线的方向）一致
+          "icon-size": 1.4, //表示图片的缩放比例
+          "icon-text-fit": "none", //"none", "width", "height", "both"让图片适应文字的宽高
+          "icon-text-fit-padding": [0, 0, 0, 0], // 在适应文字大小的基础上添加对应的内部padding距离
+          "icon-image": "college-15", //与line-pattern,fill-pattern一样是对应样式库中的图片的名字
+          "icon-rotate": 0, //图片旋转角度
+          "icon-padding": 2, //图片正常的内部padding间距
+          "icon-keep-upright": false, //true表示在地图旋转方向变化是保持图片的上下翻转，就是防止拼接的时候上下颠倒
+          "icon-offset": [0, 0], //[x,y]图片的偏移
+          "icon-anchor": "center", //"center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"图片的对齐方向
+          "icon-pitch-alignment": "auto", //"map", "viewport"对齐方向，这个用于道路的注记，表示是延道路方向显示还是生硬的添加注记
+
+          "text-pitch-alignment": "auto", //"map", "viewport"对齐方向，这个用于道路的注记，表示是延道路方向显示还是生硬的添加注记
+          "text-rotation-alignment": "auto", //map表示随地图旋转角度旋转，viewport表示随当前视角/数据形态（线的方向）一致
+          "text-field": "{name}",//固定语法，请不要忘记{}号
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"], //这个请特别注意，涉及版权mapgis的字体只有少数，最好使用mapbox的自带的字体库
+          "text-size": 20, //字体大小，默认16
+          "text-max-width": 10, //字体最大宽度，默认10 ems
+          "text-line-height": 1.2, //字体高度,默认 1.2 ems
+          "text-letter-spacing": 0,//文字字母间距，基本没用
+          "text-justify": "center", //文字对齐方式,"left", "center", "right"
+          "text-anchor": "center", //文字对齐方向，"center", "left", "right", "top", "bottom", "top-left", "top-right", "bottom-left", "bottom-right"
+          "text-max-angle": 45, //针对拐角处，相邻字符的最大角度差
+          "text-rotate": 0, //文字旋转方向，单位degrees
+          "text-padding": 0, //文字的padding内间距，单位像素
+          "text-keep-upright": false, //true表示在地图旋转方向变化是保持文字的上下翻转，就是防止文字拼接的时候上下颠倒
+          "text-transform": "none", //"none", "uppercase", "lowercase",显示文字的时候是全大写、全小写，保持不变
+          "text-offset": [4.5,0], ////[x,y]文字的偏移
+          "text-allow-overlap": false, // true表示和其他注记有压盖关系时，当前文字保持可见
+          "text-ignore-placement": false, //说句实话，这个属性我测了好久真心不知道怎么生效，如果你找到了请提交bug通知我
+          "text-optional": true, // true表示和其他注记冲突的时候,如果图标没被压盖，显示图标，隐藏文字
+          "visibility": "visible", //visible/none
+        },
+        "paint": {
+          "icon-opacity": 1.0, //图标透明度
+          "icon-color": "#202", //图标颜色
+          "icon-halo-color": "#888", //图标光晕颜色
+          "icon-halo-width": 2, //图标光晕宽度
+          "icon-halo-blur": 1, //图标光晕模糊度
+          "icon-translate": [0, 0], //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+
+          "text-opacity": 1.0, // 文字透明度
+          "text-color": "#fff", //文字颜色
+          "text-halo-color": "#000", //文字光晕颜色
+          "text-halo-width": 2, //文字光晕宽度
+          "text-halo-blur": 1, //文字光晕模糊度
+          "text-translate": [0, 0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+        }
+      });
+
+      //这才是最常用的属性,是不是豁然开朗的感觉^_^!
+      map.addLayer({
+        "id": "men",
+        "type": "symbol",
+        "source": "symbolLayer", //必须和上面的symbolLayer一致
+        "filter": ["in", "name", "东正门","南副门","北副门"], //关键点：name对应geojson中的属性字段
+        "layout": {
+          "symbol-placement": "point", //"point"表示基于单个点的注记, "line"表示平铺在线上的注记
+
+          "icon-rotation-alignment": "map", //map表示随地图旋转角度旋转，viewport表示随当前视角/数据形态（线的方向）一致
+          "icon-size": 1.0, //表示图片的缩放比例
+          "icon-image": "ferry-15", //与line-pattern,fill-pattern一样是对应样式库中的图片的名字
+          "icon-offset": [0, 0], //[x,y]图片的偏移
+
+          "text-field": "{name}",//固定语法，请不要忘记{}号
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"], //这个请特别注意，涉及版权mapgis的字体只有少数，最好使用mapbox的自带的字体库
+          "text-size": 15, //字体大小，默认16
+          "text-offset": [2.5,0], ////[x,y]文字的偏移
+        },
+        "paint": {
+          "icon-opacity": 1.0, //图标透明度
+          "icon-color": "#888", //图标颜色
+          "icon-halo-color": "#fff", //图标光晕颜色
+          "icon-halo-width": 2, //图标光晕宽度
+          "icon-halo-blur": 1, //图标光晕模糊度
+
+          "text-opacity": 1.0, // 文字透明度
+          "text-color": "#202", //文字颜色
+          "text-halo-color": "#fff", //文字光晕颜色
+          "text-halo-width": 2, //文字光晕宽度
+          "text-halo-blur": 1, //文字光晕模糊度
+        }
+      });
+
+    }
+  </script>
+</body>
+
+</html>

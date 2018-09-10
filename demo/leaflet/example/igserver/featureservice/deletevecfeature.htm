@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>矢量图层要素删除</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图和矢量图层
+        var map, vectorLayer;
+        //select标签中选择的要素id
+        var featureSelect;
+        //要素位置
+        var pntArr = new Array();
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //地图渲染在canvas上
+                preferCanvas: true,
+                //不添加属性说明控件
+                attributionControl: false,
+                //添加缩放控件
+                zoomControl: true,
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //中心点
+                center: [0, 0],
+                //最大级数
+                maxZoom: 10,
+                //最小级数
+                minZoom: 0,
+                //显示级数
+                zoom: 1
+            });
+            //创建矢量图层       
+            vectorLayer = new Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/主要城市", "gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer"], {
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true,
+                //添加guid，确保图层从IGS中加载，不读取缓存文件
+                guid: (new Date()).getTime().toString()
+            }).addTo(map);
+            //查询地图，获取活动图层所有要素列表
+            initFeatureIds();
+        }
+
+        /**执行点删除功能
+        */
+        function deletePoint() {
+            //获取当前选择的要素编号
+            var featureIds = $("#featureID").find("option:selected").text();
+            if (featureIds == "请选择要素") {
+                alert("请先选择要素，再进行删除!");
+                return;
+            }
+            //显示进度条
+            startPressBar();
+            //执行删除要素操作
+            var deleteService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", { ip: "develop.smaryun.com", port: "6163" });
+            //删除所选要素，featureIds为要素id，DeleteSuccess为回调函数
+            deleteService.deletes(featureIds, DeleteSuccess);
+        }
+
+        /**删除点要素回调函数
+        *  @param {json对象} rlt 获取结果对象
+        */
+        function DeleteSuccess(rlt) {
+            //停止进度条
+            stopPressBar();
+            var result = rlt;
+            if (result) {
+                alert("删除点要素成功！");
+                //刷新图层
+                vectorLayer.redraw();
+                //获取Select最大索引值，从0开始
+                var maxIndex = $("#featureID option:last").index();
+                $("#featureID option").remove();
+                //查询地图，更新要素列表
+                initFeatureIds(maxIndex);
+            } else {
+                alert("删除点要素失败！");
+            }
+        }
+
+        /**查询地图，获取活动图层中所有要素列表
+        *  @param {int类型} maxIndex Select标签最大索引值
+        */
+        function initFeatureIds(maxIndex) {
+            //获取所选要素
+            featureSelect = $("#featureID");
+            $("<option value='请选择要素'>请选择要素</option>").appendTo(featureSelect);
+            if (maxIndex != null && maxIndex == 1) {
+                return;
+            }
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //实例化查询参数对象	
+            var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", {
+                resultFormat: "json",
+                struct: queryStruct
+            });
+            //设置查询要素数目
+            queryParam.recordNumber = 1000;
+            //设置属性条件
+            //queryParam.where = "name='中国'";
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess);
+        }
+
+        /**查询成功回调函数
+        *  @param {json对象} a 获取结果对象
+        */
+        function querySuccess(a) {
+            if (a.SFEleArray != null) {
+                if (a.SFEleArray.length == 0) {
+                    alert("查询结果为空");
+                }
+                else {
+                    for (var i = 0; i < a.SFEleArray.length; i++) {
+                        var obj = a.SFEleArray[i];
+                        $("<option value='" + i + "'>" + obj.FID + "</option>").appendTo(featureSelect);
+                        //获取不同编号对应元素的外包络矩形及中心，用于跳转
+                        var featureBound = obj.bound;
+                        var x = 0, y = 0;
+                        //计算外包矩形的中心点
+                        x = featureBound.xmax != featureBound.xmin ? ((featureBound.xmax - featureBound.xmin) / 2 + featureBound.xmin) : featureBound.xmax;
+                        y = featureBound.ymax != featureBound.ymin ? ((featureBound.ymax - featureBound.ymin) / 2 + featureBound.ymin) : featureBound.ymax;
+                        pntArr.push([x, y]);
+                    }
+                }  
+            }
+            else {
+                alert("当前地图未查到要素，请先运行对应的要素添加示例！");
+            }
+        }
+
+        /**选中某一个要素编号后触发的事件，用于进行要素定位，地图跳转
+        */
+        function onSelect() {
+            //获取所选要素id
+            var index = $("#featureID").val();
+            if (index == "请选择要素") {
+                return;
+            }
+            //获取该要素坐标
+            var pnt = pntArr[index];
+            //注意leaflet是用纬经度来表示位置
+            var coordinate = [pnt[1], pnt[0]];
+            //将视图跳转到所选点要素的位置，并设置显示级数
+            map.setView(coordinate, 3);
+        }
+
+        /**开始进度条动画
+        */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /**停止进度条动画
+        */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }     
+    </script>
+</head>
+<body onload="init()">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/leaflet/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在删除，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        请输入要删除的要素ID：<select id="featureID" onchange="onSelect()"></select>
+        <input type="button" class="ButtonLib" value="删除点要素" onclick="deletePoint()" />
+    </div>
+     <div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
+    </div>
+</body>
+</html>

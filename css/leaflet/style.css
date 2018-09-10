@@ -1,0 +1,420 @@
+﻿body {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    overflow:hidden;
+    display:block;
+    height:600px;
+}
+
+/*正文头部样式*/
+div#Header {
+    height: 15px;
+    z-index: 2000;
+}
+
+#title {
+    font-size: 22px;
+    font-family: Times New Roman;
+    color: rgb(10,36,106); /*rgb(10,36,106)*/
+    font-weight: bold;
+    display: block;
+}
+
+#shortdesc {
+    font-family: Microsoft YaHei;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0px 0px 0px 20px;
+    color: #333;
+    position: absolute;
+    top: 35px;
+}
+
+/*表格中地图样式*/
+#map, .olMap {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+}
+
+#mapCon {
+    width: 100%;
+    height: 90%;
+    position: absolute;
+}
+
+#toolbar {
+    position: absolute;
+    height: 200px;
+    width: 50px;
+    right: 4px;
+    bottom: 100px;
+    z-index: 1000;
+}
+
+    #toolbar ul {
+        width: 100%;
+        margin: 5px 5px 5px 0;
+        padding: 0;
+        margin: 0;
+        height: 50px;
+        list-style: none;
+    }
+
+        #toolbar ul li {
+            margin: 5px 5px 5px 5px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+.operator {
+    width: 50px;
+    height: 50px;
+    background-image: url("../Libs/images/operator.png");
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.opZoomIn {
+    background-position: 0px -50px;
+}
+
+.opZoomOut {
+    background-position: -50px -50px;
+}
+
+.opPan {
+    background-position: -150px -50px;
+}
+
+.opRestore {
+    background-position: -100px -50px;
+}
+
+.featureBtn {
+    position: absolute;
+    height: 150px;
+    top: 30px;
+    width: 100px;
+    z-index: 1003;
+    right: 30px;
+    border: medium double #F0A4F5;
+    background: #EEEFF5 none repeat scroll 0% 0%;
+    opacity: 1;
+    padding: 5px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.functionButton {
+    width: 86px;
+    height: 40px;
+    border: 0px none;
+    margin: 5px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    background: #CED2EF none repeat scroll 0% 0%;
+    box-shadow: 0px 0px 5px #888;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.pntQueryBtn {
+    background-image: url(../images/win8/pntQuery.png);
+}
+
+.linQueryBtn {
+    background-image: url(../images/win8/linQuery.png);
+}
+
+.rectQueryBtn {
+    background-image: url(../images/win8/rectQuery.png);
+}
+
+.cirQueryBtn {
+    background-image: url(../images/win8/cirQuery.png);
+}
+
+.polyQueryBtn {
+    background-image: url(../images/win8/polyQuery.png);
+}
+
+.attQueryBtn {
+    background-image: url(../images/win8/attQuery.png);
+}
+
+.addbutton {
+    background-image: url(../images/win8/addpnt.png);
+}
+
+.updatebutton {
+    background-image: url(../images/win8/uppnt.png);
+}
+
+.deletebutton {
+    background-image: url(../images/win8/depnt.png);
+}
+
+.stopbutton {
+    background-image: url(../images/win8/stopnedit.png);
+}
+
+.functionButtonLib {
+    background: #A5ACE7 none repeat scroll 0% 0%;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    box-shadow: 0px 0px 5px #888;
+    margin: 13px;
+    padding: 1px;
+}
+
+.functionButton {
+    width: 65px;
+    height: 65px;
+    border: 0px none;
+    margin: 5px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    background-color: White;
+}
+
+.FeatureText {
+    box-shadow: 0px 0px 5px #888;
+    width: 55px;
+}
+
+.layerItem {
+    width: 100px;
+    height: 25px;
+    box-shadow: 0px 0px 5px #888;
+}
+
+.featrueBtn {
+    position: absolute;
+    top: 76%;
+    z-index: 1003;
+    left: 8%;
+    border: medium double #F0A4F5;
+    background: #EEEFF5 none repeat scroll 0% 0%;
+    opacity: 0.9;
+    padding: 5px;
+}
+
+
+.CheckRadio {
+    float: left;
+    margin-left: 10px;
+    margin-top: 2px;
+}
+
+.CheckBox_text {
+    display: block;
+    float: left;
+    margin-left: 5px;
+}
+
+.checkBoxList {
+    margin: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    width: 430px;
+}
+
+
+.resInfoText {
+    height: 350px;
+    width: 270px;
+}
+
+.resultDrawDiv {
+    box-shadow: 0px 0px 5px #888;
+    height: 40px;
+    padding: 5px;
+}
+
+.imagelabel {
+    background: url(../images/bizinfo/labsleft.png) left top no-repeat;
+    height: 30px;
+    width: 50px;
+    display: inline-block;
+    display: -moz-inline-stack;
+    padding-left: 1px;
+    vertical-align: middle;
+    font-size: 12px;
+    white-space: nowrap;
+    position: absolute;
+    left: -33px;
+    top: -27px;
+}
+
+.imagelabelRight {
+    background: url(../images/bizinfo/labsright.png) right top no-repeat;
+    float: left;
+    height: 30px;
+    display: inline-block;
+    display: -moz-inline-stack;
+    padding-left: 1px;
+    vertical-align: middle;
+    font-size: 12px;
+    white-space: nowrap;
+    position: absolute;
+    left: 4px;
+    top: -27px;
+}
+
+.imagelabel .spanid {
+    background: url(../images/bizinfo/labsright.png) right top no-repeat;
+    height: 20px;
+    line-height: 20px;
+    padding-right: 8px;
+    padding-top: 0px;
+    cursor: pointer;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.imagelabelRight .spanid {
+    height: 20px;
+    line-height: 20px;
+    padding-right: 8px;
+    padding-top: 0px;
+    cursor: pointer;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: -20px;
+}
+
+    .imagelabelRight .spanid .spana {
+        white-space: nowrap;
+        color: white;
+        font-weight: bold;
+    }
+
+.markerTransparent {
+    position: relative;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    left: 14px;
+}
+
+.ButtonLib {
+    color: #0075C7;
+    display: inline-block;
+    padding: 3px 5px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-color: #0075C7;
+    border-radius: 3px;
+    background-image: none;
+    background-color: transparent;
+}
+
+    .ButtonLib:hover {
+        color: white;
+        background-color: #0075C7;
+    }
+
+.ToolLib {
+    border-radius: 3px;
+    overflow:hidden;
+    width:100%;
+    height: auto;
+    box-shadow: 0 0 2px 1px #949292;
+    text-align: center;
+    z-index: 2001;
+    border-color: #66ccff;
+    border-bottom: 1px solid #949292;
+    margin-bottom: 2px;
+}
+/*结果显示面板*/
+#resultShow {
+    /*position:relative;*/
+    overflow: auto;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #F00;
+    padding: 10px;
+    font-family: 微软雅黑;
+    color: #008000;
+    /*overflow-y: scroll; 
+    overflow-x: scroll;*/
+    width:98%;
+    height:100%;
+}
+
+
+#introduction {
+    height:auto;
+    overflow:auto;
+    font-size: 10pt;
+    margin: 1px 1px 1px 1px;
+    padding: 1px;
+    font-family: 微软雅黑;
+    color: #008000;
+    float:left;
+}
+/*Fushioncharts统计图*/
+#divPieChart2 {
+    margin: 100px auto;
+    text-align: center;
+}
+
+/*图层投影转换*/
+#allmap {
+    width: 100%;
+    height: 95%;
+    position: absolute;
+}
+
+#orgMap {
+    width: 48%;
+    height: 95%;
+    float: left;
+    position: relative;
+    border: 1px solid black;
+}
+
+#prjMap {
+    width: 48%;
+    height: 95%;
+    float: right;
+    margin-left: 5px;
+    position: relative;
+    border: 1px solid black;
+}
+/*缓冲条样式*/
+#preview {
+    position: absolute;
+    background: rgba(3,3,3,0.1);
+    color: #fff;
+    float: left;
+    width: 100%;
+    height: 100%;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    z-index: 20000;
+}

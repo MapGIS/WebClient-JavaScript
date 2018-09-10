@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>地图定位</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [0, 0],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 8,
+                //当前显示等级
+                zoom: 4
+            });
+            //加载瓦片图层数据（OSM）
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { noWrap: true }).addTo(map);
+        }
+
+         /**平移地图
+         */
+         function mapMove() {
+             //获取文本框中输入的X坐标和Y坐标
+             var X = document.getElementById("Xposition").value;
+             var Y = document.getElementById("Yposition").value;
+             //判断坐标值是否输入
+             if (X != "" && Y != "") {
+                 if (!isNaN(X) && !isNaN(Y)) {
+                     //字符串转数字
+                     var pntX = parseInt(X);
+                     var pntY = parseInt(Y);
+                 } else {
+                     alert('请输入数字！');
+                     return;
+                 }
+             } else {
+                 alert('请输入内容！');
+                 return;
+             }
+             //注意leaflet是用纬经度来表示位置
+             var coordinate = [pntY, pntX];
+             //平移视图位置，并设置显示级数
+             map.setView(coordinate, map.getZoom());
+         }
+
+         /**复位地图
+         */
+         function restore() {
+             //将地图恢复至初始位置状态
+             map.setView([0, 0], 4);
+         }
+  </script>
+</head>
+<body onload="init()">
+<div class="ToolLib">
+        <span class="style1">
+            <label>
+                <strong>X坐标:</strong>
+            </label>
+        </span>
+        <input id="Xposition" type="text" value="114" />
+        &nbsp; &nbsp;
+        <span class="style2">
+            <label>
+                <strong>Y坐标:</strong>
+            </label>
+        </span>
+        <input id="Yposition" type="text" value="30" />
+        <input type="button" class="ButtonLib" id="moveto" value="平移" onclick="mapMove()" />
+        <input type="button" class="ButtonLib" id="restore" value="复位" onclick="restore()" />
+    </div>
+     <div id="leaf_map" style="width: 100%; height: 95%;position: absolute">
+    </div>
+</body>
+</html>

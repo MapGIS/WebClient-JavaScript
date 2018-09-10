@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>解析Geojson</title>
+  <script include="geohash,geojson" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <script include="jquery,moment" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <style>
+    #mapid {
+      height: 635px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "dark-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 11,
+      pitch: 45,
+      center: [114.2893, 30.5941]
+    });
+    //这个例子可能效果，界面上显示不出来，请看对应的接口说明
+    $.ajax({
+      url:"http://192.168.176.13:6163/igs/rest/mrfs/layer/query?f=geojson&structs=%7B%22IncludeAttribute%22%3Atrue%2C%22IncludeGeometry%22%3Atrue%2C%22IncludeWebGraphic%22%3Afalse%7D&page=0&pageCount=1000&rule=%7B%22CompareRectOnly%22%3Afalse%2C%22EnableDisplayCondition%22%3Afalse%2C%22MustInside%22%3Afalse%2C%22Intersect%22%3Atrue%7D&isAsc=false&cursorType=&fields=&coordPrecision=2&guid=__readonly_user__&gdbp=gdbp%3A%2F%2FMapGisLocal%2F%25E4%25BA%25BA%25E5%258F%25A3GDP%2Fsfcls%2F%25E5%258E%25BF%25E7%25BA%25A7%25E4%25BA%25BA%25E5%258F%25A3GDP2014&_=1520849276510",
+      type: "GET",
+      datatype: "json",
+      async: true,
+      success: function(data) {
+        getData(data);
+      },
+      error: function() {
+        alert = ("请求数据失败");
+      }
+    });
+
+    function getData(data) {
+      //实际上这个数据转成的geojson特别的大，因此需要进行化简抽稀，
+      //如果数据量过大，请联系基础平台/创新中心的潘卓然 协同解决
+      var geojson = JSON.parse(data); //使用$.parseJSON()可得到相同结果
+    }
+  </script>
+</body>
+
+</html>

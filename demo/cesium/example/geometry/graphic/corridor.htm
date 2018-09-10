@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script  include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script  src="../../libs/zondyclient/include-cesium-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var viewer = new Cesium.Viewer('map');
+
+        initMap();
+        initPickEvent();
+
+        function initMap() {
+            /*
+             * 懒人加载模式，这适用于小数据，快速展示，后面的问题多多，最好使用下面的新的模式
+             */
+            var redCorridor = viewer.entities.add({
+                name: 'Red corridor on surface with rounded corners',
+                corridor: {
+                    positions: Cesium.Cartesian3.fromDegreesArray([-100.0, 40.0, -105.0, 40.0, -105.0, 35.0]),
+                    width: 200000.0,
+                    material: Cesium.Color.RED.withAlpha(0.5)
+                }
+            });
+
+            var greenCorridor = viewer.entities.add({
+                name: 'Green corridor at height with mitered corners and outline',
+                corridor: {
+                    positions: Cesium.Cartesian3.fromDegreesArray([-90.0, 40.0, -95.0, 40.0, -95.0, 35.0]),
+                    height: 100000.0,
+                    width: 200000.0,
+                    cornerType: Cesium.CornerType.MITERED,
+                    material: Cesium.Color.GREEN,
+                    outline: true // height required for outlines to display
+                }
+            });
+
+            var blueCorridor = viewer.entities.add({
+                name: 'Blue extruded corridor with beveled corners and outline',
+                corridor: {
+                    positions: Cesium.Cartesian3.fromDegreesArray([-80.0, 40.0, -85.0, 40.0, -85.0, 35.0]),
+                    height: 200000.0,
+                    extrudedHeight: 100000.0,
+                    width: 200000.0,
+                    cornerType: Cesium.CornerType.BEVELED,
+                    material: Cesium.Color.BLUE.withAlpha(0.5),
+                    outline: true, // height or extrudedHeight must be set for outlines to display
+                    outlineColor: Cesium.Color.WHITE
+                }
+            });
+
+            viewer.zoomTo(viewer.entities);
+
+            /*
+             * 新加载模式-几何图元，这适用于复杂的定制化场景，核心由三部分组成，几何实例与模型矩阵以及样式
+             */
+            var corridorinstance = new Cesium.GeometryInstance({
+                geometry: new Cesium.CorridorGeometry({
+                    vertexFormat: Cesium.VertexFormat.POSITION_ONLY,
+                    positions: Cesium.Cartesian3.fromDegreesArray([-72.0, 40.0, -70.0, 35.0, -60, 35.0]),
+                    width: 100000
+                }),
+                attributes: {
+                    color: new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 1.0)
+                },
+                id: "corridorinstance"
+            });
+
+            viewer.scene.primitives.add(new Cesium.Primitive({
+                geometryInstances: [corridorinstance],
+                appearance: new Cesium.PerInstanceColorAppearance() //EllipsoidSurfaceAppearance/PerInstanceColorAppearance请区分使用场景
+            }));
+
+
+        }
+
+        function initPickEvent() {
+            var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+            handler.setInputAction(function (movement) {
+                var pick = viewer.scene.pick(movement.position);
+                if (Cesium.defined(pick) && (pick.id === 'corridorinstance')) {
+                    console.log('Mouse clicked instance.');
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        }
+    </script>
+
+</body>
+
+</html>

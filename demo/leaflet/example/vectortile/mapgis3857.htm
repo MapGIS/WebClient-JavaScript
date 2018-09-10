@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>MapGIS矢量瓦片</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="vectortile" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = L.map('map', {
+      //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+      crs: L.CRS.EPSG3857, //这里换成EPSG4326对数据精度要求不高应该也能替代
+      //显示中心
+      center: [45, -90],
+      //最小显示等级
+      minZoom: 0,
+      //最大显示等级
+      maxZoom: 15,
+      //当前显示等级
+      zoom: 2,
+
+    }).setView([30.50, 114.35], 10);
+
+    var vectorTileStyling;
+    var mapgisUrl;
+    var mapgisOptions;
+
+    initMap();
+    initStyle();
+    updateView();
+
+    function initMap() {
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+          attribution: '<a href="#">AMikealson</a>',
+          maxZoom: 18,
+          id: 'mapbox.dark' //mapbox.light mapbox.streets 
+        }).addTo(map);
+    }
+
+    function initStyle() {
+      vectorTileStyling = {
+        武汉市: {
+          weight: 1,
+          fillColor: '#eeeeee',
+          fillOpacity: 0.5,
+          fill: true
+        },
+        武汉市行政区: {
+          weight: 1,
+          fillColor: '#888888',
+          fillOpacity: 0.5,
+          fill: true
+        },
+        绿地: {
+          weight: 1,
+          fillColor: '#00FF00',
+          fillOpacity: 1,
+          fill: true
+        },
+        水域: {
+          weight: 1,
+          fillColor: '#0000FF',
+          fillOpacity: 1,
+          fill: true
+        },
+        铁路: {
+          weight: 4,
+          color: '#FFFFFF',
+          dashArray: '0, 6',
+          fillOpacity: 1
+        }
+      }
+    }
+
+    function updateView() {
+      mapgisUrl =
+        "http://client.snanyun.com:8899/data/vectortile/EPSG3857武汉/{z}/{x}/{y}.pbf";
+      //mapgisUrl = "http://localhost:6163/igs/rest/mrms/tile/武汉/{z}/{y}/{x}?type=cpbf";
+      mapgisOptions = {
+        rendererFactory: L.canvas.tile, //L.svg.tile  L.canvas.tile
+        attribution: '<a href="https://www.smaryun.com">&copy; Zondy</a>, <a href="https://www.smaryun.com/copyright">&copy; MapGIS</a>数据提供',
+        vectorTileLayerStyles: vectorTileStyling,
+        maxZoom: 14
+      };
+      L.vectorGrid.protobuf(mapgisUrl, mapgisOptions).addTo(map);
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>leaflet显示</title>
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="cluster" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <script src="../../../../data/leaflet/realworld.50000.1.js"></script>
+  <script src="../../../../data/leaflet/realworld.50000.2.js"></script>
+  <style>
+    #map {
+      height: 800px;
+    }
+    .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+    }
+
+    .legend {
+      line-height: 18px;
+      color: #555;
+    }
+
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="info legend" onclick="zoomToFitBound()">
+    <h4>点击这里缩放到随机点</h4></div>
+  <div id="progress">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map').setView([-37.79, 179.27], 4);
+    var progress = document.getElementById('progress');
+    var progressBar = document.getElementById('progress-bar');
+
+    var markers = L.markerClusterGroup({ chunkedLoading: true, chunkProgress: updateProgressBar });
+    var markerList = [];
+
+    initView();
+    loadData();
+
+    function updateProgressBar(processed, total, elapsed, layersArray) {
+      if (elapsed > 1000) {
+        // if it takes more than a second to load, display the progress bar:
+        progress.style.display = 'block';
+        progressBar.style.width = Math.round(processed / total * 100) + '%';
+      }
+
+      if (processed === total) {
+        // all markers processed - hide the progress bar:
+        progress.style.display = 'none';
+      }
+    }
+
+    var markers = L.markerClusterGroup({
+      chunkedLoading: true,
+      chunkProgress: updateProgressBar
+    });
+
+    //console.log('end clustering: ' + window.performance.now());
+
+    function initView() {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '<a href="#">OSM</a>',
+          maxZoom: 16
+        }).addTo(map);
+    };
+
+    function loadData() {
+      //console.log('start creating markers: ' + window.performance.now());
+      for (var i = 0; i < addressPoints.length; i++) {
+        var a = addressPoints[i];
+        var title = a[2];
+        var marker = L.marker(L.latLng(a[0], a[1]), {
+          title: title
+        });
+        marker.bindPopup(title);
+        markerList.push(marker);
+      }
+      for (var i = 0; i < addressPoints2.length; i++) {
+        var a = addressPoints2[i];
+        var title = a[2];
+        var marker = L.marker(L.latLng(a[0], a[1]), {
+          title: title
+        });
+        marker.bindPopup(title);
+        markerList.push(marker);
+      }
+      //console.log('start clustering: ' + window.performance.now());
+
+      markers.addLayers(markerList);
+      map.addLayer(markers);
+    }
+
+
+    function zoomToFitBound() {
+      //由于上面添加是通过分批添加的,因此每个marker就没有了对应的组,因此下面的代码就无法使用
+      //如果是markers.addLayer(markerList);,就可以使用了
+      // var m = markerList[Math.floor(Math.random() * markerList.length)];
+      // markers.zoomToShowLayer(m, function() {
+      //   m.openPopup();
+      // });
+    }
+  </script>
+</body>
+</html>

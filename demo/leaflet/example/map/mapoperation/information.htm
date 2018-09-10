@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>地图域当前信息</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //显示中心
+                center: [36, 110],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 12,
+                //当前显示等级
+                zoom: 4
+            });
+            //加载瓦片图层数据（OSM）
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { noWrap: true }).addTo(map);
+        }
+
+        /**获取当前地图中心点
+        */
+        function getCurCenter() {
+            //获取地图中心
+            var center = map.getCenter();
+            //弹框显示中心点位置
+            alert("当前视图中心为：" + center);
+        }
+
+        /**获取当前显示级数
+        */
+        function getCurZoom() {
+            //获取显示级数
+            var zoom = map.getZoom();
+            //弹框显示级数大小
+            alert("当前显示级数为：" + zoom + "级");
+        }
+
+        /**获取当前地图逻辑范围
+        */
+        function getCurBound() {
+            //获取地图视图的经纬度边界
+            var ex = map.getBounds();
+            var ymin= ex._southWest.lat;
+            var xmin= ex._southWest.lng;
+            var ymax= ex._northEast.lat;
+            var xmax = ex._northEast.lng;
+            //得到经纬度范围
+            var str = "纬度：" + ymin + "至" + ymax + "；经度：" + xmin + "至" + xmax;
+            //弹框显示地图范围
+            alert("当前地图范围：" + str);
+        }
+
+        /**获取当前视窗范围
+        */
+        function getMapDivInfo() {
+            //获取当前地图容器div的大小
+            var mapSize = map.getSize();
+            //弹框显示视窗范围
+            alert("当前div高：" + mapSize.y + "，宽：" + mapSize.x);
+        }
+  </script>
+</head>
+<body onload="init()">
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib"  value="当前中心" onclick="getCurCenter()">
+        <input type="button" class="ButtonLib"  value="当前级数" onclick="getCurZoom()">
+        <input type="button" class="ButtonLib"  value="当前地图范围" onclick="getCurBound()" />
+        <input type="button" class="ButtonLib"  value="当前视口范围" onclick="getMapDivInfo()" />
+    </div>
+     <div id="leaf_map" style="width: 100%; height: 95%;position: absolute">
+    </div>
+</body>
+</html>

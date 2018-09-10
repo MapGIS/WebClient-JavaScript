@@ -1,0 +1,150 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>地图定位功能</title>
+    <!--  引入第三方插件库 -->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <!--导入本页面外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+        }
+
+        /* 鼠标位置控件层样式设置 */
+
+        #mouse-position {
+            float: right;
+            position: absolute;
+            bottom: 5px;
+            width: 200px;
+            height: 20px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2000;
+        }
+
+        /* 鼠标位置信息自定义样式设置 */
+
+        .custom-mouse-position {
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            font-family: "微软雅黑";
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ToolLib">
+        <span class="style1">
+            <label>
+                <strong>X坐标:</strong>
+            </label>
+        </span>
+        <input id="Xposition" type="text" value="114" /> &nbsp; &nbsp;
+        <span class="style2">
+            <label>
+                <strong>Y坐标:</strong>
+            </label>
+        </span>
+        <input id="Yposition" type="text" value="30" />
+        <input type="button" class="ButtonLib" id="panto" value="平移" />
+        <input type="button" class="ButtonLib" id="restore" value="复位" />
+    </div>
+    <div id="mapCon" title="地图显示" style="padding: 5px">
+    </div>
+    <div id="mouse-position">
+    </div>
+
+    <script type="text/javascript">
+        //实例化鼠标位置控件
+        var mousePositionControl = new ol.control.MousePosition({
+            //坐标格式
+            coordinateFormat: ol.coordinate.createStringXY(4),
+            //地图投影坐标系（若未设置则输出为默认投影坐标系下的坐标）
+            projection: 'EPSG:4326',
+            //坐标信息显示样式，默认是'ol-mouse-position'
+            className: 'custom-mouse-position',
+            //显示鼠标位置信息的目标容器
+            target: document.getElementById('mouse-position'),
+            //未定义坐标的标记
+            undefinedHTML: '&nbsp;'
+        });
+
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon',
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据
+                new ol.layer.Tile({
+                    //图层对应数据源，此为加载OpenStreetMap在线瓦片服务数据
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 2
+            }),
+            //加载控件到地图容器中
+            controls: ol.control.defaults({
+                //地图中默认控件
+                //                attributionOptions: /** @type {ol.control.Attribution} */({
+                //                    collapsible: true //地图数据源信息控件是否可展开,默认为true
+                //                })
+
+            }).extend([mousePositionControl]) //加载鼠标位置控件
+        });
+
+        //地图视图的初始参数
+        var view = map.getView();
+        var zoom = view.getZoom();
+        var center = view.getCenter();
+        //var rotation = view.getRotation();
+
+        //平移功能
+        document.getElementById('panto').onclick = function () {
+            var X = $("#Xposition").val();
+            var Y = $("#Yposition").val();
+            if (X != "" && Y != "") {
+                if (!isNaN(X) && !isNaN(Y)) {
+                    //字符串转数字
+                    var pntX = parseInt(X);
+                    var pntY = parseInt(Y);
+                } else {
+                    alert('请输入数字！');
+                    return;
+                }
+            } else {
+                alert('请输入内容！');
+                return;
+            }
+            //获取地图视图
+            var view = map.getView();
+            var py = ol.proj.fromLonLat([pntX, pntY]);
+            //平移地图
+            view.setCenter(py);
+            view.setZoom(6);
+        }
+        //复位功能（复位到初始状态）
+        document.getElementById('restore').onclick = function () {
+            //初始中心点
+            view.setCenter(center);
+            //初始旋转角度
+            // view.setRotation(rotation);
+            //初始缩放级数
+            view.setZoom(zoom);
+        };
+    </script>
+</body>
+
+</html>

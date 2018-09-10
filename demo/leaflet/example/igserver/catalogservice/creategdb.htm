@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>创建地理数据库</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        "use strict";
+
+        //获取mapgislocal下数据库
+        var dataBase;
+        /**创建地理数据库
+        */
+        function CreateGDB() {
+            //数据源目录服务类
+            var CatalogServer = new Zondy.Catalog.GDBInfo({
+                //数据源名称
+                serverName: 'mapgislocal',
+                //IGServer所在地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口
+                port: "6163",
+                //设置数据源的用户名	
+                User: null,
+                //设置数据源的用户密码
+                Password: null,
+                //设置数据库名称
+                gdbName: 'NewCreateGDB'
+            });
+            //执行创建地理数据库方法
+            CatalogServer.CreateGDB('C:/MapGIS 10/Sample/NewCreateGDB.hdf', getDataSuccess, AddDataError);
+        }
+
+        /**删除地理数据库
+        */
+        function DeleteGDB() {
+            //数据源目录服务类
+            var CatalogServer = new Zondy.Catalog.GDBInfo({
+                //数据源名称
+                serverName: 'mapgislocal',
+                //IGServer所在地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口
+                port: "6163",
+                //设置数据源的用户名	
+                User: null,
+                //设置数据源的用户密码
+                Password: null,
+                //设置数据库名称
+                gdbName: 'NewCreateGDB'
+            });
+            //执行删除地理数据库方法
+            CatalogServer.DeleteGDB(DeleteDataSuccess, DeleteDataError);
+        }
+
+        /**执行创建地理数据库成功回调
+        *  @param {json对象} data 获取结果对象
+        */
+        function getDataSuccess(data) {
+            //判断是否有返回数据，是否成功
+            if (data != null && data.result && data.result.succeed) {
+                if (data.result.succeed) {
+                    //判断数据库是否已经创建
+                    var Getresult = "";
+                    //获取创建的数据库名称
+                    var dataName = data.object.events.listeners.processCompleted[0].obj.gdbName;
+                    //遍历已创建的数据库
+                    for (var queryDataName = 0; queryDataName < dataBase.value.length; queryDataName++) {
+                        //判断当前创建的数据库与已存在的数据库是否有重名的
+                        if (dataName == dataBase.value[queryDataName]) {
+                            Getresult = dataName;
+                        }
+                    }
+                    if (Getresult != "") {
+                        alert(Getresult+"数据库已存在！请删除后在创建");
+                        //操作成功后获取GDB列表确认
+                        getGDBList();
+                    }
+                    else {
+                        alert("创建数据库成功！");
+                        //操作成功后获取GDB列表确认
+                        getGDBList();
+                    }
+                }
+                else {
+                    alert("操作失败！");
+                }
+            }
+        };
+
+        /**执行删除地理数据库成功回调
+        *  @param {json对象} data 获取结果对象
+        */
+        function DeleteDataSuccess(data) {
+            //判断是否有返回数据，是否成功
+            if (data != null && data.result && data.result.succeed) {
+                if (data.result.succeed) {
+                    alert("删除数据库成功！");
+                    //操作成功后获取GDB列表确认
+                    getGDBList();
+                }
+                else {
+                    alert("操作失败！");
+                }
+            }
+        };
+
+        /**创建地理数据库成功回调
+      */
+        function AddDataError() {
+            alert("创建失败，请检查是否已存在");
+            //操作成功后获取GDB列表确认
+            getGDBList();
+        }
+
+        /**删除地理数据库成功回调
+      */
+        function DeleteDataError() {
+            alert("删除失败，请检查是否已创建");
+            //操作成功后获取GDB列表确认
+            getGDBList();
+        }
+
+        /**获取指定数据源下数据库列表
+        */
+        function getGDBList() {
+            //数据源目录服务类
+            var CatalogServer = new Zondy.Catalog.GDBInfo({
+                //数据源名称
+                serverName: 'mapgislocal',
+                //IGServer所在地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口
+                port: "6163",
+                //设置数据源的用户名	
+                User: null,
+                //设置数据源的用户密码
+                Password: null
+            });
+            //执行获取数据源下数据库列表方法
+            CatalogServer.getGDBList(getGDBListSuccess);
+        }
+
+        /**获取指定数据源下数据库列表成功回调
+        *  @param {json对象} data 获取结果对象
+        */
+        function getGDBListSuccess(data) {
+            //判断是否有返回数据，是否成功
+            if (data != null && data.result && data.result.succeed) {
+                if (data.result.value.length == 0) {
+                    alert("没有获取到数据库列表！");
+                    //清空结果显示面板
+                    document.getElementById('resultShow').innerHTML = "";
+                    return;
+                }
+                else {
+                    //获取数据库参数
+                    dataBase = data.result;
+                    //将一个JSON转换成一个包含JSON文本的字符串
+                    var formatData = JSON.stringify(data.result);
+                    //显示json字符串导到指定的div中
+                    Process(formatData, 1, "resultShow");
+                }
+            }
+        };
+    </script>
+</head>
+<body onload="getGDBList()">
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="创建地理数据库" onclick="CreateGDB()" />
+        <input type="button" class="ButtonLib" value="删除地理数据库" onclick="DeleteGDB()" />
+        <br>
+        <div id="introduction">
+            <font style=" float: left; text-align: left">说明：在IGServer所在地址C:/MapGIS 10/Sample/路径下创建NewCreateGDB.hdf数据库，请先创建后删除</font><br />
+            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，否则无法实现功能</font>
+        </div>
+    </div>
+    <div id="resultShow">
+    </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>MultiPolygon</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = new Cesium.Viewer('map');
+
+    var MultiPolygon = {
+        "type": "Feature",
+        "properties": {
+            name:"多面"
+        },
+        "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": [
+                [   //外圈绘制开始，按顺逆方向绘制均可
+                    [
+                        [
+                            114.19120788574219,
+                            30.695792432740344
+                        ],
+                        [
+                            114.01473999023438,
+                            30.52382178287774
+                        ],
+                        [
+                            114.2749786376953,
+                            30.51613212366921
+                        ],
+                        [
+                            114.19120788574219,
+                            30.695792432740344
+                        ]
+                    ]
+                ], //外圈绘制结束
+                 [ //内圈绘制开始，无论顺逆方向绘制均会有洞区出现
+                    [
+                        [
+                            114.14382934570312,
+                            30.617232055390453
+                        ],
+                        [
+                            114.16923522949219,
+                            30.549843806500373
+                        ],
+                        [
+                            114.21180725097655,
+                            30.618413887168824
+                        ],
+                        [
+                            114.14382934570312,
+                            30.617232055390453
+                        ]
+                    ]
+                ]  //内圈绘制结束
+            ]
+        }
+    };
+
+    initMap();
+    updateView();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114.20, 30.5, 50000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+    }
+
+    function updateView() {
+      var jsondatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(MultiPolygon, {
+        stroke: Cesium.Color.BLUE,
+        fill: Cesium.Color.BLUE,
+        strokeWidth: 5
+      }));
+
+      map.flyTo(jsondatasource);
+    }
+  </script>
+
+</body>
+
+</html>

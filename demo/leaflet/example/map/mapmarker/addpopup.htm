@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Popup弹出框</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        /**显示地图
+         */
+        function init() {
+            //地图容器
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326,
+                //显示中心
+                center: [45, -180],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 10,
+                //当前显示等级
+                zoom: 3,
+                //不显示放大缩小按钮
+                zoomControl: false,
+                //限制显示地理范围
+                maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+            //显示天地图地图
+            //矢量图层
+            var layer1 = L.tileLayer('http://t0.tianditu.com/DataServer?T=vec_c&x={x}&y={y}&l={z}', {
+                tileSize: 256,
+                layer: 'vec',
+                minZoom: 1,
+                maxZoom: 15,
+                noWrap: true
+            });
+            //矢量注记图层
+            var layer2 = L.tileLayer('http://t0.tianditu.com/DataServer?T=cva_c&x={x}&y={y}&l={z}', {
+                tileSize: 256,
+                layer: 'cva',
+                minZoom: 1,
+                maxZoom: 15,
+                noWrap: true
+            });
+            //图层组
+            var LayerG = L.layerGroup([layer1, layer2]);
+
+            LayerG.addTo(map);
+
+            //标记显示样式
+            var icon = L.icon({
+                iconUrl: "../../img/leaflet/label/blueIcon.png",
+                iconSize: [50, 50]
+            })
+            //添加标记
+            var Marker = L.marker([45, -90], {
+                //添加图标
+                icon: icon,
+                //是否允许鼠标拖动
+                draggable: true,
+                //添加悬浮名称
+                title: "标注"
+            }).addTo(map);
+            //鼠标点击显示Popup
+            Marker.on('click', function (e) {
+                //添加Popup气泡
+                var popup = L.popup().setLatLng([e.latlng.lat, e.latlng.lng]).setContent(
+                    '<p>Hello world!<br />This is a nice popup.</p>').openOn(map);
+            });
+
+            //显示Popup
+            var popup = L.popup().setLatLng([45, -90]).setContent('<p>Hello world!<br />This is a nice popup.</p>').openOn(
+                map);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="leaf_map" style="width:100%;height:95%"></div>
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>地图文档要素查询</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script include="json" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+	<style>
+		body {
+			height: 700px;
+		}
+	</style>
+	<script>
+		// 使用严格模式
+		"use strict";
+		// 定义地图容器全局变量
+		var map;
+		// 定义地图文档全局变量
+		var mapDocLayer;
+		 //查询矩形
+		 var geomObj;
+		 //查询结果点集
+		 var finaldots = new Array();
+		//地图文档guid
+		var guid;
+		/**显示地图
+		*/
+		function init() {
+			//随机生成一个guid
+			guid = Math.floor(Math.random() * 10000000).toString();
+			// 创建地图容器
+			map = new mapboxgl.Map({
+				// 地图显示的div容器
+				container: 'mapCon',
+				// 设置地图不连续显示
+				renderWorldCopies: false
+			});
+			// 创建地图文档图层,WorldWebMKTEdit为IGServer上发布的地图文档服务名称
+			mapDocLayer = new Zondy.Map.MapDocLayer("WorldWebMKTEdit",{
+				// IGServer所在ip地址
+				ip: 'develop.smaryun.com',
+				// IGServer请求端口号
+				port: '6163',
+				//添加guid
+				guid: guid
+			});
+			// 将地图文档图层添加到地图
+			mapDocLayer.addToMap(map);
+			/**地图加载完成事件
+			*  @param {string}   type 事件类型（地图加载完成）
+			*  @param {function} listener 事件触发后的响应函数
+			*/
+			map.on('load', function(e){
+				addPolygon(map);
+			})
+		}
+
+		/**添加多边形至地图中显示
+		*  @param {object} map 地图对象
+		*  @param {object} options - 其他对象
+		*  @param {string} options.fillColor - 多边形填充颜色
+		*  @param {number} options.fillOpacity - 多边形填充透明度
+		*  @param {string} options.fillOutlineColor - 多边形填充边框颜色
+		*  @param {Array} options.coordinates - 多边形组成的数组
+		*/
+		function addPolygon(map, options) {
+			var id = "Polygon" + Math.floor(Math.random() * 10000000).toString();
+			options = options || {};
+			options.fillColor = options.fillColor ? options.fillColor : '#ffcc33';
+			options.fillOpacity = options.fillOpacity ? options.fillOpacity : 0.5;
+			options.fillOutlineColor = options.fillOutlineColor ? options.fillOutlineColor : '#FF0000';
+			options.coordinates = options.coordinates ? options.coordinates : [[93, 35], [111, 35], [111, 56], [93, 56]];
+			//用geojson创建一个多边形
+			var geometryPolygon = {
+				"type": "FeatureCollection",
+				"features": [{
+					"type": "Feature",
+					"geometry": {
+						"type": "Polygon",
+						"coordinates": [options.coordinates]
+					}
+				}]
+			};
+			//将多边形添加到一个图层中，在地图中显示
+			map.addLayer({
+				//此id可随意设置，但是要唯一
+				"id": id,
+				//指定类型为fill（填充区域）
+				"type": "fill",
+				//设置数据来源
+				"source": {
+					"type": "geojson",
+					"data": geometryPolygon
+				},
+				//设置绘制参数
+				"paint": {
+					//设置填充颜色
+					"fill-color": options.fillColor,
+					//设置透明度
+					"fill-opacity": options.fillOpacity,
+					"fill-outline-color": options.fillOutlineColor
+				}
+			});
+		}
+
+		/**执行文档要素查询
+		*/
+		function mapFeatureQuery() {
+			//显示进度条
+			startPressBar();
+			//创建查询结构对象
+			var queryStruct = new Zondy.Service.QueryFeatureStruct();
+			//是否包含几何图形信息
+			queryStruct.IncludeGeometry = true;
+			//是否包含属性信息
+			queryStruct.IncludeAttribute = true;
+			//是否包含图形显示参数
+			queryStruct.IncludeWebGraphic = false;
+			//创建一个用于查询的矩形
+			var geomObj = new Zondy.Object.Rectangle(93, 35, 111, 56); 
+			//制定查询规则
+			var rule = new Zondy.Service.QueryFeatureRule({
+				//是否将要素的可见性计算在内
+				EnableDisplayCondition: false,
+				//是否完全包含
+				MustInside: false,
+				//是否仅比较要素的外包矩形
+				CompareRectOnly: false,
+				//是否相交
+				Intersect: true
+			});
+			//实例化查询参数对象
+			var queryParam = new Zondy.Service.QueryParameter({
+				//几何对象
+				geometry: geomObj,
+				//结果格式
+				resultFormat: "json",
+				//查询结构
+				struct: queryStruct,
+				//查询规则
+				rule: rule
+			});
+			//设置查询分页号
+			queryParam.pageIndex = 0;
+			//设置查询要素数目
+			queryParam.recordNumber = 20;
+			//实例化地图文档查询服务对象
+			var queryService = new Zondy.Service.QueryDocFeature(queryParam, "WorldJWVector", 1, {
+				//IP地址
+				ip: "develop.smaryun.com",
+				//端口号
+				port: "6163"
+			});
+			//执行查询操作，querySuccess为成功回调，queryError为失败回调
+			queryService.query(querySuccess, queryError);
+		}
+
+		/**查询成功回调函数
+		*  @param {object} result 获取结果对象
+		*/
+		function querySuccess(result) {
+			//停止进度条
+			stopPressBar();
+			//获取查询到的结果数组,ploygonArr的个数即为查询到的结果数
+			var ploygonArr = result.SFEleArray;
+			for (var i = 0; i < ploygonArr.length; i++) {
+				//获取要素几何数组
+				var Rings = ploygonArr[i].fGeom.RegGeom[0].Rings;
+				//针对复合要素，要循环获取每一个几何
+				for (var j = 0; j < Rings.length; j++) {
+					//取出构成多边形的数组
+					var dots = Rings[j].Arcs[0].Dots;
+					for (var k = 0; k < dots.length; k++) {
+						//组织面的坐标数组
+						finaldots.push([dots[k].x, dots[k].y]);
+					}
+					// 绘制多边形
+					addPolygon(map, {
+						fillColor: '#FF0000',
+						fillOpacity: 0.2,
+						fillOutlineColor: '#FF0000',
+						coordinates: finaldots
+					});
+					// 清空结果点集，以绘制下一个图形对象
+					finaldots = null;
+					finaldots = [];
+				}
+			}
+		}
+
+		/**查询失败回调函数
+		*/
+		function queryError() {
+			//停止进度条
+			stopPressBar();
+			alert("查询失败！");
+		}
+
+		/**开始进度条动画
+		*/
+		function startPressBar() {
+			document.getElementById('preview').style.display = "";
+		}
+
+		/**停止进度条动画
+		*/
+		function stopPressBar() {
+			document.getElementById('preview').style.display = "none";
+		}
+	</script>
+</head>
+<body onload="init()">
+	<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+		<img src="../../img/common/39-1.gif" alt='' /><br />
+		<br />
+		<span>正在查询，请稍候</span>
+	</div>
+	  <div class="ToolLib">
+		<input type="button" class="ButtonLib" id="createThemeBtn" value="地图文档要素查询" onclick="mapFeatureQuery()" />
+	  </div>
+	<div id="mapCon" style="position: absolute; width: 100%; height: 95%;"></div>
+</body>
+</html>

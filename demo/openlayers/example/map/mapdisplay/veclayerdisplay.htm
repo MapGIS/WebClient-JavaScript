@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>矢量图层显示</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map = null;
+        var VecLayer = null;
+
+        function init() {
+            //地图范围
+            var extent = [-180, -90, 180, 90];
+            //投影坐标系
+            var projection = new ol.proj.Projection({
+                units: ol.proj.Units.DEGREES,
+                extent: extent
+            });
+            //中心点
+            var center = [0, 0];
+            //图层显示名称
+            var name = "MapGIS IGS VecLayer";
+            //要显示的图层的gdbps地址
+            var gdbps = ["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区",
+                "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流"
+            ];
+            //创建一个图层
+            VecLayer = new Zondy.Map.GdbpLayer(name, gdbps, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //创建一个地图容器
+            map = new ol.Map({
+                //目标DIV
+                target: 'mapCon',
+                //添加图层到地图容器中
+                layers: [VecLayer],
+                view: new ol.View({
+                    center: center,
+                    projection: projection,
+                    zoom: 2
+                })
+            });
+        };
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon" style="width: 100%; height: 95%; position: absolute;">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ArcGIS地图</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #menu {
+            text-align: center;
+            width: 100%;
+            height: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        var map;
+        var LayerArr;
+
+        function init() {
+
+            var extent = [-20037508.3427892, -20037508.3427892, 20037508.3427892, 20037508.3427892];
+            var center = [0, 0];
+
+            //瓦片大小
+            var tileSize = 256;
+            //最大级数
+            var maxZoom = 16;
+            //最大分辨率，新瓦片必须设置，旧瓦片无需设置
+            var maxResolution = null;
+
+            //添加鼠标位置控件
+            var mousePositionControl = new ol.control.MousePosition({
+                coordinateFormat: ol.coordinate.createStringXY(2),
+                className: 'custom-mouse-position',
+                target: document.getElementById('mouse-position'),
+                undefinedHTML: '&nbsp;'
+            });
+            //初始化图层对象
+            var layer1 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.WorldImagery,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer2 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.WorldPhysical,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer3 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.WorldShadedRelief,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer4 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.WorldStreet,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer5 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.WorldTerrainBase,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer6 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.WorldTopoMap,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer7 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.NatGeoWorldMap,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer8 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.OceanBasemap,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            var layer9 = new Zondy.Map.ArcGISLayer({
+                layerType: Zondy.Enum.Map.ArcGISLayerType.USATopoMaps,
+                tileSize: tileSize,
+                tileExtent: extent
+            });
+            LayerArr = [layer1, layer2, layer3, layer4, layer5, layer6, layer7, layer8, layer9];
+
+            map = new ol.Map({
+                //添加图层
+                layers: [layer1],
+                //目标DIV
+                target: 'mapCon',
+                view: new ol.View({
+                    center: center,
+                    maxZoom: maxZoom,
+                    minZoom: 0,
+                    zoom: 2
+                }),
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: false
+                    })
+                }).extend([mousePositionControl])
+            });
+
+        }
+        //图层切换函数
+        function changeLayer() {
+            var Layers = map.getLayers().getArray();
+            for (var i = 0; i < Layers.length; i++) {
+                //移除图层
+                map.removeLayer(Layers[i]);
+            }
+            var index = $("#LayerSelect").val() - 1;
+            //添加图层
+            map.addLayer(LayerArr[index]);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="menu">
+        <label style="font-weight: bold;">切换图层：</label>
+        <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
+            <option value="1">WorldImagery</option>
+            <option value="2">WorldPhysical</option>
+            <option value="3">WorldShadedRelief</option>
+            <option value="4">WorldStreet</option>
+            <option value="5">WorldTerrainBase</option>
+            <option value="6">WorldTopoMap</option>
+            <option value="7">NatGeoWorldMap</option>
+            <option value="8">OceanBasemap</option>
+            <option value="9">USATopoMaps</option>
+        </select>
+    </div>
+    <div id="mapCon" style="width: 100%; height: 90%; position: absolute;">
+    </div>
+</body>
+
+</html>

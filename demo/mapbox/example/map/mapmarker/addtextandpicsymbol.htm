@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 700px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ToolLib">
+    <input type="button" class="ButtonLib" id="type" value="添加文字标注" onclick="AddSymbol()" />&nbsp;&nbsp;
+    <label style="font-weight: bold;">
+            点击按钮，之后在图上点击添加文字标注。
+        </label>
+  </div>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "dark-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }],
+        //特别注意，这里是用的mapbox官方的，中地内部的请参考中地glyphs
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        //特别注意，这里是用的mapbox官方的，中地内部的请参考中地sprite
+        "sprite": "mapbox://sprites/mapbox/streets-v8"
+      },
+      zoom: 15,
+      pitch: 45,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+    var GeoPoints = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "properties": {
+          "name": "中地数码科技园"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [114.40021634101868, 30.46763259696496]
+        }
+      }]
+    };
+
+    map.on('load', function() {
+      initMap();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字symbolLayer
+      map.addSource('symbolLayer', {
+        "type": "geojson",
+        "data": GeoPoints
+      });
+      map.addLayer({
+        "id": "men",
+        "type": "symbol", //固定语法
+        "source": "symbolLayer", //必须和上面的symbolLayer一致
+        "layout": {
+          "symbol-placement": "point", //"point"表示基于单个点的注记, "line"表示平铺在线上的注记
+
+          "icon-rotation-alignment": "map", //map表示随地图旋转角度旋转，viewport表示随当前视角/数据形态（线的方向）一致
+          "icon-size": 1.2, //表示图片的缩放比例
+          "icon-image": "college-15", //与line-pattern,fill-pattern一样是对应样式库中的图片的名字
+          "icon-offset": [0, 0], //[x,y]图片的偏移
+
+          "text-field": "{name}", //固定语法，请不要忘记{}号
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"], //这个请特别注意，涉及版权mapgis的字体只有少数，最好使用mapbox的自带的字体库
+          "text-size": 15, //字体大小，默认16
+          "text-offset": [2.5, 0], ////[x,y]文字的偏移
+        },
+        "paint": {
+          "icon-opacity": 1.0, //图标透明度
+          "icon-color": "#888", //图标颜色
+          "icon-halo-color": "#fff", //图标光晕颜色
+          "icon-halo-width": 2, //图标光晕宽度
+          "icon-halo-blur": 1, //图标光晕模糊度
+
+          "text-opacity": 1.0, // 文字透明度
+          "text-color": "#202", //文字颜色
+          "text-halo-color": "#fff", //文字光晕颜色
+          "text-halo-width": 2, //文字光晕宽度
+          "text-halo-blur": 1, //文字光晕模糊度
+        }
+      });
+    }
+
+    function AddSymbol() {
+      map.on('click', function(mapMouseEvent) {
+        //鼠标单击点坐标
+        var latlon = mapMouseEvent.lngLat;
+        //添加一个新的标注（矢量要素）
+        var symbol = { //一定要是最标准的geojson格式
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": latlon.toArray()
+          },
+          "properties": {
+            "name": "新增点",
+          }
+        };
+        GeoPoints.features.push(symbol);
+        map.getSource('symbolLayer').setData(GeoPoints); //名字symbolLayer与上面的source一致
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "light-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 8,
+      center: [114.289398, 30.59418345]
+    });
+
+    var geojson = {
+      "type": "FeatureCollection",
+      "features": []
+    };
+
+    map.on('load', function() {
+      initMap();
+      loadData();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字geojsonVoronoi
+      map.addSource('geojsonVoronoi', {
+        "type": "geojson",
+        "data": geojson //一开始的数据是空的,后面请求到了再更新
+      });
+
+      map.addLayer({
+        "id": "buffer-polygon",
+        "type": "fill",
+        "source": "geojsonVoronoi",//必须和上面的geojsonVoronoi一致
+        'layout': {},
+        'paint': {
+          'fill-color': '#000',
+          'fill-opacity': 0.5,
+          'fill-outline-color': '#FFF'
+        }
+      });
+    }
+
+    function loadData() {
+      $.getJSON('../../data/analysis/point.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView();
+      });
+    }
+
+    function convertDataToGeoJson(origindata) {
+      geojson = turf.voronoi(origindata, {
+        bbox: [113.67, 30.00, 115.20, 31.41]
+      });
+    }
+
+    function updateView() {
+      //注意centerPoint是之前添加的source的名字
+      map.getSource('geojsonVoronoi').setData(geojson);
+    }
+  </script>
+
+</body>
+
+</html>

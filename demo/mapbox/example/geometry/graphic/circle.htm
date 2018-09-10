@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 635px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "light-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }],
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf"//特别注意，这里是用的mapbox官方的，中地内部的请参考中地glyphs
+      },
+      zoom: 11,
+      pitch: 45,
+      center: [114.39960479736327, 30.495722001885323]
+    });
+
+    var GeoPoints = {
+      "type": "FeatureCollection",
+      "features": [{
+          "type": "Feature",
+          "properties": {
+            "name": "中国地质大学（武汉）"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              114.39333915710448,
+              30.523341197001688
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "中地数码科技有限公司"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              114.40078496932983,
+              30.467817543842873
+            ]
+          }
+        }
+      ]
+    };
+
+    map.on('load', function() {
+      initMap();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字circleLayer
+      map.addSource('circleLayer', {
+        "type": "geojson",
+        "data": GeoPoints
+      });
+      map.addLayer({
+        "id": "circle_cug",
+        "type": "circle",
+        "source": "circleLayer", //必须和上面的circleLayer一致
+        "filter": ["==", "name", "中国地质大学（武汉）"], //关键点：name对应geojson中的属性字段
+        "layout": {
+          "visibility": "visible",//visible/none 
+        },
+        "paint": {
+          "circle-radius": 15, //半径
+          "circle-color": "#202", //颜色
+          "circle-opacity": 0.8, //透明度
+          "circle-stroke-width": 5, //轮廓线宽度
+          "circle-stroke-color": "#0000FF", //轮廓线颜色
+          "circle-stroke-opacity": 0.7 //轮廓线透明度
+          //"circle-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+        }
+      });
+
+      map.addLayer({
+        "id": "symbol_cug",
+        "type": "symbol",
+        "source": "circleLayer", //必须和上面的circleLayer一致
+        "filter": ["==", "name", "中国地质大学（武汉）"], //关键点：name对应geojson中的属性字段
+        "layout":{
+          "text-field": "{name}",//这里一定要用{}将属性字段名包括进来！！！！！
+          "text-size": 15,
+          "text-offset": [7, 0] //为了照顾上面的图标，需要将文本右移
+        },
+        "paint": {
+          "text-opacity": 0.9,  //文本透明度
+          "text-color": "#202",   //文本颜色
+          "text-halo-color":"#FFF" , //文本光晕颜色
+          "text-halo-width": 2, //文本光晕宽度
+          "text-halo-blur": 1, //文本光晕模糊度
+        }
+      });
+
+      map.addLayer({
+        "id": "symbol_zondy",
+        "type": "symbol",
+        "source": "circleLayer", //必须和上面的circleLayer一致
+        "filter": ["==", "name", "中地数码科技有限公司"], //关键点：name对应geojson中的属性字段
+        "layout":{
+          "text-field": "{name}",//这里一定要用{}将属性字段名包括进来！！！！！
+          "text-size": 20,
+        },
+        "paint": {
+          // "icon-color": "#FF0000", //图标颜色
+          // "icon-opacity": 0.8, //图标透明度
+          // "icon-halo-width": 5, //图标光晕宽度
+          // "icon-halo-color": "#0000FF", //图标光晕颜色
+          // "icon-halo-blur": 0.7, //图标光晕模糊度
+          //"icon-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+          "text-opacity": 0.9,  //文本透明度
+          "text-color": "#202",   //文本颜色
+          "text-halo-color":"#FFF" , //文本光晕颜色
+          "text-halo-width": 2, //文本光晕宽度
+          "text-halo-blur": 1, //文本光晕模糊度
+          "text-translate": [0,0],//表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

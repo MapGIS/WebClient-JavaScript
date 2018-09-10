@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Google</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        /**显示地图
+        */
+        function init() {
+            "use strict";
+            //地图容器
+
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [0, 0],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 5,
+                //当前显示等级
+                zoom: 2,
+            });
+            //瓦片地址格式
+            var layer0 = L.tileLayer('http://mt2.google.cn/vt/lyrs=m@167000000&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}', {
+                //设置地图不连续显示
+                noWrap: true
+            });
+            //地形图
+            var layer1 = L.tileLayer('http://mt0.google.cn/vt/lyrs=t&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}', {
+                //设置地图不连续显示
+                noWrap: true
+            });
+            //影像+注记
+            var layer2 = L.tileLayer('http://mt1.google.cn/vt/lyrs=y&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}', {
+                //设置地图不连续显示
+                noWrap: true
+            });
+            //矢量+注记
+            var layer3 = L.tileLayer('http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}', {
+                //设置地图不连续显示
+                noWrap: true
+            }).addTo(map);
+            //影像图
+            var layer4 = L.tileLayer('http://mt3.google.cn/vt/lyrs=s&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}', {
+                //设置地图不连续显示
+                noWrap: true
+            });
+            //基础图层
+            var vec = {
+                "矢量+注记": layer3,
+            }
+            //图层列表
+            var img = {
+                "地形图":layer1,
+                "影像图层": layer4,
+                "影像+注记": layer2
+            }
+            //图层控制显示地图
+            L.control.layers(vec, img).addTo(map);
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height:700px;">
+    </div>
+</body>
+</html>

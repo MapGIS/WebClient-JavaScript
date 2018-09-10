@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+
+  <script>
+    var map = L.map('map').setView([45.48565, -122.801742], 10);
+    var geojson, poly1, poly2;
+    initMap();
+    loadData();
+    interSect();
+    updateView();
+
+    function initMap() {
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+          attribution: '<a href="#">AMikealson</a>',
+          maxZoom: 18,
+          id: 'mapbox.streets'
+        }).addTo(map);
+    }
+
+    function loadData() {
+      poly1 = turf.polygon([
+        [
+          [-122.801742, 45.48565],
+          [-122.801742, 45.60491],
+          [-122.584762, 45.60491],
+          [-122.584762, 45.48565],
+          [-122.801742, 45.48565]
+        ]
+      ]);
+
+      poly2 = turf.polygon([
+        [
+          [-122.520217, 45.535693],
+          [-122.64038, 45.553967],
+          [-122.720031, 45.526554],
+          [-122.669906, 45.507309],
+          [-122.723464, 45.446643],
+          [-122.532577, 45.408574],
+          [-122.487258, 45.477466],
+          [-122.520217, 45.535693]
+        ]
+      ]);
+    }
+
+    function interSect() {
+      geojson = turf.intersect(poly1, poly2);
+
+    }
+
+    function updateView() {
+
+      L.geoJson(poly1, {
+        style: {
+          "color": "#ff0000",
+          "weight": 2
+        }
+      }).addTo(map);
+      L.geoJson(poly2, {
+        style: {
+          "color": "#ff0000",
+          "weight": 2
+        }
+      }).addTo(map);
+      L.geoJson(geojson, {
+        style: {
+          "color": "#0000ff",
+          "weight": 2
+        }
+      }).addTo(map);
+
+    }
+  </script>
+
+</body>
+
+</html>

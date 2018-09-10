@@ -1,0 +1,97 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>显示谷歌地图</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #menu {
+            text-align: center;
+            width: 100%;
+            height: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        var map;
+        var LayerArr;
+        //地图初始化函数
+        function init() {
+            //地图中心点
+            var center = [0, 0];
+            //最大级数
+            var maxZoom = 16;
+            //初始化地图图层
+            var layer1 = new Zondy.Map.GoogleLayer({
+                layerType: Zondy.Enum.Map.GoogleLayerType.VEC_IGS,
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            var layer2 = new Zondy.Map.GoogleLayer({
+                layerType: Zondy.Enum.Map.GoogleLayerType.RASTER_IGS,
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            var layer3 = new Zondy.Map.GoogleLayer({
+                layerType: Zondy.Enum.Map.GoogleLayerType.TERRAIN_IGS,
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            var layer4 = new Zondy.Map.GoogleLayer({
+                layerType: Zondy.Enum.Map.GoogleLayerType.ROAD_IGS,
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            LayerArr = [layer1, layer2, layer3, layer4];
+
+            map = new ol.Map({
+                //添加图层
+                layers: [layer1, layer4],
+                //目标DIV
+                target: 'mapCon',
+                view: new ol.View({
+                    center: center,
+                    maxZoom: maxZoom,
+                    minZoom: 0,
+                    zoom: 4
+                })
+            });
+
+        }
+
+        //图层切换函数
+        function changeLayer() {
+            var Layers = map.getLayers().getArray();
+            var layerL = Layers.length;
+            for (var i = 0; i < layerL; i++) {
+                //移除图层
+                map.removeLayer(Layers[0]);
+            }
+            var index = $("#LayerSelect").val() - 1;
+            //添加图层
+            map.addLayer(LayerArr[index]);
+            map.addLayer(LayerArr[3]);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="menu">
+        <label style="font-weight: bold;">切换图层：</label>
+        <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
+            <option value="1">VEC</option>
+            <option value="2">RASTER</option>
+            <option value="3">TERRAIN </option>
+            <option value="4">ROAD</option>
+        </select>
+    </div>
+    <div id="mapCon" style="width: 100%; height: 90%; position: absolute;">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>地图单击事件</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <style type='text/css'>
+        #map {
+            position: absolute;
+            top: 30px;
+            bottom: 0;
+            width: 100%;
+            height: 90%;
+        }
+    </style>
+    <script>
+        //使用严格模式
+        "use strict";
+        var map;
+        var currentEvent;
+        /**地图初始化函数*/
+        function init() {
+            //实例化要加载的source来源对象
+            var osm = {
+                //来源类型为栅格瓦片
+                "type": "raster",
+                'tiles': [
+                    //来源请求地址
+                    "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                ],
+                //栅格瓦片的分辨率
+                'tileSize': 256
+            };
+            //实例化Map对象加载地图
+            map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map',
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    "version": 8,
+                    //添加来源
+                    "sources": {
+                        "osm": osm
+                    },
+                    //设置加载并显示来源的图层信息
+                    "layers": [
+                         {
+                             //图层id，要保证唯一性
+                             "id": "OSMLayer",
+                             //图层类型
+                             "type": "raster",
+                             //连接图层来源
+                             "source": "osm",
+                             //图层最小缩放级数
+                             "minzoom": 0,
+                             //图层最大缩放级数
+                             "maxzoom": 15
+                         }
+                    ],
+                },
+                //地图中心点
+                center: [114, 32],
+                //地图当前缩放级数
+                zoom: 9
+            });
+            //注册左键单击事件
+            map.on('click', function (e) {
+                currentEvent = 'click';
+                alert("单击事件，位置坐标：" + JSON.stringify(e.lngLat));
+            });
+         
+        }
+        /**事件切换函数*/
+        function changeEvent() {
+            var event = $("#EventSelect").val();
+            //注册事件
+            map.on(event, function (e) {
+                currentEvent = event;
+                alert($("#EventSelect").find("option:selected").text() + "事件，位置坐标：" + JSON.stringify(e.lngLat));
+            });
+        }
+    </script>
+
+</head>
+<body onload="init()">
+    <div id="menu">
+        <label style="font-weight: bold;">切换事件：</label>
+        <select name="changeEvent" id="EventSelect" onchange="changeEvent()">
+            <option value="click">单击</option>
+            <!--<option value="dblclick">双击</option>-->
+            <option value="contextmenu">鼠标右键</option>
+        </select>
+    </div>
+    <div id='map'>
+    </div>
+</body>
+</html>

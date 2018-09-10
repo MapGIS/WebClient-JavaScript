@@ -1,0 +1,218 @@
+
+
+/**
+*ScaleBar
+**/
+.ZondyControlScaleBar {
+    bottom: 10px;
+    left: 10px;
+    font-family: sans-serif;
+    color: #000;
+}
+
+.ZondyControlScaleBarBar {
+    height: 1px;
+    top: 14px;
+    background: #333;
+}
+
+.ZondyControlScaleBarBarAlt {
+    height: 1px;
+    top: 14px;
+    background: #333;
+}
+
+.ZondyControlScaleBarMarkerMajor {
+    height: 7px;
+    width: 2px;
+    top: 11px;
+    background: #333;
+}
+
+.ZondyControlScaleBarMarkerMinor {
+    height: 5px;
+    width: 2px;
+    top: 12px;
+    background: #333;
+}
+
+.ZondyControlScaleBarNumbersBox {
+    width: 40px;
+    height: 13px;
+    top: 21px;
+    font-size: 0.7em;
+}
+
+.ZondyControlScaleBarLabelBox {
+    top: -2px;
+    height: 15px;
+
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    font-size: 0.7em;
+    font-variant: small-caps;
+}
+
+.ZondyControlScaleBarLabelBoxSingleLine {
+    height: 15px;
+    width: 35px;
+    top: 5px;
+    left: 10px;
+    font-size: 0.7em;
+    font-variant: small-caps;
+}
+
+/**
+ * Magnifier
+ */
+.ZondyControlMagnifier
+{
+    border: 1px solid blue;
+    background-color:transparent;
+    
+}
+
+.ZondyControlMagnifier .ZondyControlMagnifierMapDiv
+{
+    border: 1px solid black;
+    border-radius: 40px;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    overflow:hidden;
+}
+
+.ZondyControlMagnifier .ZondyMagnifierFactorDisplay {
+    bottom: 3px;
+    right: 3px;
+    font-size: smaller;
+    background-color: #F7F8F9;
+    padding: 2px;
+    border: 1px solid black;
+}
+
+.ZondyControlMagnifier .ZondyControlMagnifierImgDiv
+{
+    border: 0px solid blue;
+     border-radius: 80px;
+    -webkit-border-radius: 80px;
+    -moz-border-radius: 80px;
+}
+
+/**
+ * OverviewMap
+ */
+ .ZondyControlOverviewMapContainer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-left:1px solid #226DDD;
+    border-top:1px solid #226DDD;
+    padding: 7px 0px 0px 7px;
+    background-color: #E2ECFA;
+}
+
+.ZondyControlOverviewMapElement {
+    border:1px solid #226DDD;
+    background-color: #E2ECFA;
+}
+
+.ZondyControlOverviewMapMinimizeButton {
+    right: 0;
+    bottom: 0px;
+    cursor: pointer;
+}    
+
+.ZondyControlOverviewMapMaximizeButton {
+    right: 0;
+    bottom: 0px;
+    cursor: pointer;
+}
+
+.ZondyControlOverviewMapExtentRectangle {
+    overflow: hidden;
+    background-image: url("img/blank.gif");
+    cursor: move;
+    border: 2px solid;
+    border-color:#007ACC;
+}
+.ZondyControlOverviewMapRectReplacement {
+    overflow: hidden;
+    cursor: move;
+    background-image: url("img/overview_replacement.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    border:2px solid;
+    border-color:#226DDD;
+}
+/**
+ * Measure
+ */
+.ZondyMarkerTextDiv{
+     line-height:20px;
+}
+
+/**
+ * Layer switcher
+ */
+.ZondyControlLayerSwitcher {
+    position:absolute;
+    font-family: Ó×Ô²,Î¢ÈíÑÅºÚ,Times New Roman,sans-serif;
+    font-weight: bold;
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    font-size: 12px;
+    background-color: transparent;
+    top: 3px;
+    right: 3px;
+    overflow:hidden;
+}
+
+
+.ZondyControlLayerSwitcher .layersDiv
+{
+    top:28px;
+    left:0px;
+    position:absolute;
+    border:0px solid blue;
+    background-color: transparent;
+    overflow:auto;
+    /**
+    *ÐÞ¸Ä¹ö¶¯Ìõ(IE)
+    **/
+    SCROLLBAR-FACE-COLOR:#0997F7;
+    SCROLLBAR-HIGHLIGHT-COLOR:#FFFAFA;
+    SCROLLBAR-SHADOW-COLOR:#999;
+    SCROLLBAR-ARROW-COLOR:#FFFAFA;
+    SCROLLBAR-BASE-COLOR:#00CCFF;
+    SCROLLBAR-DARK-SHADOW-COLOR:#eee;
+
+    
+}
+
+.ZondyControlLayerSwitcher .layersDiv .baseLbl,
+.ZondyControlLayerSwitcher .layersDiv .dataLbl {
+    margin-top: 8px;
+    margin-left: 7px;
+    margin-bottom: 3px;
+    
+}
+
+.ZondyControlLayerSwitcher .layersDiv .baseLayersDiv,
+.ZondyControlLayerSwitcher .layersDiv .dataLayersDiv {
+    padding-left: 10px;
+}
+
+.ZondyControlLayerSwitcher .layerBtnDiv 
+{
+    top:5px;
+    left:3px;
+    position:absolute;
+}
+.ZondyControlLayerSwitcher .layerBtnSpan 
+{
+    top:5px;
+    right:3px;
+    cursor: pointer;
+    position:absolute;
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>文档要素查询(json)</title>
+    <script include="json" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+	<style>
+		body {
+			height: 700px;
+		}
+	</style>
+	<style>
+		body {
+			height: 700px;
+		}
+	</style>
+	<script type="text/javascript">
+		//使用严格模式
+		"use strict";
+		/**文档要素查询
+		*/
+		function mapGeojsonQuery() {
+			//显示进度条
+			startPressBar();
+			//创建查询结构对象
+			var queryStruct = new Zondy.Service.QueryFeatureStruct();
+			//是否包含几何图形信息
+			queryStruct.IncludeGeometry = true;
+			//是否包含属性信息
+			queryStruct.IncludeAttribute = true;
+			//是否包含图形显示参数
+			queryStruct.IncludeWebGraphic = false;
+			//创建一个用于查询的矩形
+			var geomObj = new Zondy.Object.Rectangle(93, 35, 111, 56);
+			//实例化查询参数对象
+			var queryParam = new Zondy.Service.QueryParameter({
+				//查询几何对象
+				geometry: geomObj,
+				//结果格式
+				resultFormat: "json",
+				//查询结构
+				struct: queryStruct
+			});
+			//设置查询分页号
+			queryParam.pageIndex = 0;
+			//设置查询要素数目
+			queryParam.recordNumber = 20;
+			//实例化地图文档查询服务对象
+			var queryService = new Zondy.Service.QueryDocFeature(queryParam, "WorldJWVector", 1, {
+				//IP地址
+				ip: "develop.smaryun.com",
+				//端口号
+				port: "6163"
+			});
+			//执行查询操作，querySuccess为成功回调，queryError为失败回调
+			queryService.query(querySuccess, queryError);
+		}
+
+		/**查询成功回调函数
+		*  @param {object} result 获取结果对象
+		*/
+		function querySuccess(result) {
+			//停止进度条
+			stopPressBar();
+			//将JSON对象转换成JSON字符串
+			var formatData = JSON.stringify(result);
+			//将结果显示在指定的div上
+			Process(formatData, 1, "resultShow");
+		}
+
+		/**查询失败回调函数
+		*/
+		function queryError() {
+			//停止进度条
+			stopPressBar();
+			alert("查询失败！");
+		}
+
+		/**开始进度条动画
+		*/
+		function startPressBar() {
+			document.getElementById('preview').style.display = "";
+		}
+
+		/**停止进度条动画
+		*/
+		function stopPressBar() {
+			document.getElementById('preview').style.display = "none";
+		}  
+	</script>
+</head>
+<body>
+	<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+		<img src="../../img/common/39-1.gif" alt='' /><br />
+		<br />
+		<span>正在查询，请稍候</span>
+	</div>
+	<div class="ToolLib">
+	 <input type="button"  class="ButtonLib" value="文档要素查询(geojson)" onclick="mapGeojsonQuery()" /><br />
+	  <div id="introduction">
+			<font style=" float: left; text-align: left">该示例为矢量地图文档固定矩形查询（返回Json）接口示例</font><br />
+			<font color="red" style="font-weight: bold; float: left; text-align: left">注意：默认查询示例数据库（OpenLayerVecterMap.hdf）下“世界地图经纬度”中的简单要素类“世界政区”，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布</font>
+		</div>
+	</div>
+	<div id="resultShow">
+	</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = new Cesium.Viewer('map');
+
+    var GeoLine = {
+        "type": "LineString",
+        "properties":{
+            "name": "线",
+            "info":"Z"
+        },
+        "coordinates":  [
+            [
+                114.16305541992188,
+                30.636730434653305
+            ],
+            [
+                114.2852783203125,
+                30.63909360759635
+            ],
+            [
+                114.15138244628906,
+                30.532102273884586
+            ],
+            [
+                114.28321838378906,
+                30.536833666166597
+            ]
+        ]
+    };
+
+    initMap();
+    updateView();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114.20, 30.5, 50000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+    }
+
+    function updateView() {
+      var jsondatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(GeoLine, {
+        stroke: Cesium.Color.BLUE,
+        fill: Cesium.Color.BLUE,
+        strokeWidth: 5
+      }));
+
+      map.flyTo(jsondatasource);
+    }
+  </script>
+
+</body>
+
+</html>

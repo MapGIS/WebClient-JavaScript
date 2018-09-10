@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>加载自定义导航条</title>
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon{
+            width:100%;
+            height:95%;
+            position:absolute;
+        }
+            /* 缩放滑块控件ZoomSlider的样式，放置到缩放按钮之间实现导航条功能*/
+            #mapCon .ol-zoom .ol-zoom-out {
+                margin-top: 204px;
+            }
+            #mapCon .ol-zoomslider {
+                background-color: transparent;
+                top: 2.3em;
+            }
+            #mapCon .ol-touch .ol-zoom .ol-zoom-out {
+                margin-top: 212px;
+            }
+            #mapCon .ol-touch .ol-zoomslider {
+                top: 2.75em;
+            }
+            #mapCon .ol-zoom-in .ol.has-tooltip:hover[role=tooltip],
+            #mapCon .ol-zoom-in .ol-has-tooltip:focus[role=tooltip] {
+                top: 3px;
+            }
+            #mapCon .ol-zoom-out .ol-has-tooltip:hover[role=tooltip],
+            #mapCon .ol-zoon-out .ol-has-out-tooltip:focus[role=tooltip] {
+                top: 232px;
+            }
+            #mapCon .ol-zoom-extent {
+                top: 280px;
+            }
+    </style>
+</head>
+<body>
+    <div id="mapCon" > 
+    </div>
+    <script type="text/javascript">
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon', 
+            //地图容器中加载的图层
+            layers: [
+            //加载瓦片图层数据
+                new ol.layer.Tile({
+                    //图层数据源
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 2  
+            })
+        });
+        //实例化ZoomSlider控件并加载到地图容器中
+        var zoomslider = new ol.control.ZoomSlider(); 
+        map.addControl(zoomslider);
+        //实例化zoomToExtent控件并加载到地图容器中
+        var zoomToExtent = new ol.control.ZoomToExtent({
+            extent: [
+            813079.7791264898, 5929220.284081122,
+            848966.9639063801, 5936863.986909639
+            ]
+        });
+        map.addControl(zoomToExtent);
+
+    </script>
+</body>
+</html>
+

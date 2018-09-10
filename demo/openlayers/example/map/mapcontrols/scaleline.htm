@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>加载比例尺控件</title>
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapCon" > 
+    </div>
+    <script type="text/javascript">
+        //实例化比例尺控件（ScaleLine）
+        var scaleLineControl = new ol.control.ScaleLine({
+            //设置比例尺单位，degrees、imperial、us、nautical、metric（度量单位）
+            units: "metric" 
+        });
+
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon', 
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据
+                new ol.layer.Tile({
+                    //图层对应数据源，此为加载OpenStreetMap在线瓦片服务数据
+                    source: new ol.source.OSM() 
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 2 
+            }),
+            //加载控件到地图容器中
+            //加载比例尺控件
+            controls: ol.control.defaults().extend([scaleLineControl])
+        });
+    </script>
+</body>
+</html>

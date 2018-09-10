@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>绘制任意图形</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #menu {
+            text-align: center;
+            width: 100%;
+            height: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <label style="font-weight: bold;">
+            几何图形类型： &nbsp;
+        </label>
+        <select id="type">
+            <option value="None">无</option>
+            <option value="LineString" selected="selected">线</option>
+            <option value="Polygon">区</option>
+            <option value="Circle">圆</option>
+        </select>&nbsp;&nbsp;&nbsp;
+        <label style="font-weight: bold;">
+            按住鼠标画图，松开鼠标后完成绘制
+        </label>
+    </div>
+    <div id="mapCon" style="width: 100%; height: 90%; position: absolute;">
+    </div>
+    <script type="text/javascript">
+        var raster = new ol.layer.Tile({
+            source: new ol.source.OSM()
+        });
+
+        var source = new ol.source.Vector({ wrapX: false });
+
+        var vector = new ol.layer.Vector({
+            source: source
+        });
+
+        var map = new ol.Map({
+            layers: [raster, vector],
+            target: 'mapCon',
+            view: new ol.View({
+                center: [-11000000, 4600000],
+                zoom: 4
+            })
+        });
+
+        var typeSelect = document.getElementById('type');
+        //实例化交互绘制类对象并添加到地图容器中
+        var draw;
+        function addInteraction() {
+            var value = typeSelect.value;
+            if (value !== 'None') {
+                draw = new ol.interaction.Draw({
+                    source: source,
+                    /** @type {ol.geom.GeometryType}几何图形类型 */
+                    type: (typeSelect.value),
+                    freehand: true
+                });
+                map.addInteraction(draw);
+            }
+        }
+
+
+        /**
+        * 用户更改绘制类型触发的事件.
+        * @param {Event} e 更改事件
+        */
+        typeSelect.onchange = function () {
+            map.removeInteraction(draw);
+            addInteraction();
+        };
+
+        addInteraction();
+    </script>
+</body>
+</html>

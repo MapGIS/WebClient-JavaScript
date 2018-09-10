@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>地图域当前信息</title>
+    
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <!--导入本页面外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="button1" value="当前分辨率" onclick="getCurResolution()">
+        <input type="button" class="ButtonLib" id="button2" value="当前地图范围" onclick="getCurBound()" />
+        <input type="button" class="ButtonLib" id="button3" value="当前视口范围" onclick="getMapDivInfo()" />
+    </div>
+    <div id="mapCon" title="地图显示" style="padding: 5px">
+    </div>
+
+    <script type="text/javascript">
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon',
+            controls: ol.control.defaults({
+                attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                    collapsible: false
+                })
+            }).extend([
+                new ol.control.ZoomToExtent({
+                    extent: [
+                         12471596, 3765402,
+                         12487113, 3778052
+                    ]
+                })
+            ]),
+            //地图容器中加载的图层
+            layers: [
+                //加载瓦片图层数据
+                new ol.layer.Tile({
+                    //图层数据源
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [0, 0],
+                //地图初始显示级别
+                zoom: 3 
+            })
+        });
+
+        function getCurResolution() {
+            var view = map.getView();
+            //获取最大分辨率
+            var curResolution = view.getResolution();
+            //弹框显示
+            alert("当前分辨率:" + curResolution);
+        }
+
+        function getCurBound() {
+            var viewextent = map.getView();
+            //获取地图范围
+            var ex = viewextent.calculateExtent(map.getSize());
+            var str = ex[0] + "," + ex[1] + "," + ex[2] + "," + ex[3];
+            //弹框显示
+            alert("当前范围为：" + str);
+        }
+
+        function getMapDivInfo() {
+            //获取当前地图容器div的大小
+            var viewSize = null;
+            viewSize = map.getSize();
+            //弹框显示
+            alert("当前div高：" + viewSize[1] + " 宽：" + viewSize[0]);
+        }
+    </script>
+</body>
+</html>

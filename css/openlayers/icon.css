@@ -1,0 +1,11 @@
+.icon-point {
+    background: url('point.png') no-repeat;
+}
+
+.icon-line {
+    background: url('line.png') no-repeat;
+}
+
+.icon-polygon {
+    background: url('polygon.png') no-repeat;
+}

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>绘制几何图形</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #menu {
+            text-align: center;
+            width: 100%;
+            height: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <label style="font-weight: bold;">
+            几何图形类型：&nbsp;
+        </label>
+        <select id="type">
+            <option value="None">无</option>
+            <option value="Point" selected="selected">点</option>
+            <option value="LineString">线</option>
+            <option value="Polygon">多边形</option>
+            <option value="Circle">圆</option>
+            <option value="Square">正方形</option>
+            <option value="Box">长方形</option>
+        </select>
+    </div>
+    <div id="mapCon" style="width: 100%; height: 90%; position: absolute;">
+    </div>
+    <script type="text/javascript">
+        //绘制类型对象
+        var typeSelect = document.getElementById('type');
+        //绘制对象
+        var draw;
+
+        //实例化Map对象加载地图,默认底图加载MapQuest地图
+        var map = new ol.Map({
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM({ layer: 'sat' })
+                })
+            ],
+            //地图容器div的ID
+            target: 'mapCon',
+            view: new ol.View({
+                //地图初始中心点
+                center: [12000000, 4000000],
+                minZoom: 2,
+                zoom: 3
+            })
+        });
+
+        //实例化一个矢量图层Vector作为绘制层
+        var source = new ol.source.Vector({ wrapX: false });
+        var vector = new ol.layer.Vector({
+            source: source,
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 2
+                }),
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            })
+        });
+        //将绘制层添加到地图容器中
+        map.addLayer(vector);
+
+        //根据绘制类型进行交互绘制图形处理
+        function addInteraction() {
+            //绘制类型
+            var value = typeSelect.value;
+            if (value !== 'None') {
+                if (source == null) {
+                    source = new ol.source.Vector({ wrapX: false });
+                    //添加绘制层数据源
+                    vector.setSource(source);
+                }
+                var geometryFunction, maxPoints;
+                if (value === 'Square') {
+                    value = 'Circle';
+                    //正方形图形（圆）
+                    geometryFunction = ol.interaction.Draw.createRegularPolygon(4);
+
+                } else if (value === 'Box') {
+                    value = 'LineString';
+                    maxPoints = 2;
+                    geometryFunction = function (coordinates, geometry) {
+                        if (!geometry) {
+                            //多边形
+                            geometry = new ol.geom.Polygon(null);
+                        }
+                        var start = coordinates[0];
+                        var end = coordinates[1];
+                        geometry.setCoordinates([
+                            [start, [start[0], end[1]], end, [end[0], start[1]], start]
+                        ]);
+                        return geometry;
+                    };
+                  }
+                //实例化交互绘制类对象并添加到地图容器中
+                draw = new ol.interaction.Draw({
+                    //绘制层数据源
+                    source: source,
+                    /** @type {ol.geom.GeometryType}几何图形类型 */
+                    type: value,
+                    //几何信息变更时调用函数
+                    geometryFunction: geometryFunction,
+                    //最大点数
+                    maxPoints: maxPoints
+                });
+                map.addInteraction(draw);
+            }
+            else {
+                source = null;
+                //清空绘制图形
+                vector.setSource(source);
+            }
+        }
+
+        /**
+        * 用户更改绘制类型触发的事件.
+        * @param {Event} e 更改事件
+        */
+        typeSelect.onchange = function (e) {
+            //移除绘制图形
+            map.removeInteraction(draw);
+            //添加交互绘制功能控件
+            addInteraction();
+        };
+        //添加交互绘制功能控件
+        addInteraction();
+    </script>
+</body>
+</html>

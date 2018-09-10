@@ -1,0 +1,122 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>热点图</title>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        body, html, div, ul, li, iframe, p, img {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #mapCon {
+            width: 100%;
+            top: 60px;
+            bottom: 0px;
+            position: absolute;
+        }
+
+        #menu {
+            height: 50px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+
+        #div1 {
+            text-align: right;
+            float: left;
+            display: inline;
+            width: 35%;
+            height: 100%;
+            padding-top: 16px;
+        }
+
+        #div2 {
+            text-align: left;
+            float: left;
+            display: inline;
+            width: 65%;
+            height: 100%;
+        }
+
+        .lb {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <div id="div1">
+            设置热点图的参数：
+        </div>
+        <div id="div2">
+            <div>
+                <label class="lb">热点半径（radius size）：</label><input type="range" id="radius" min="1" max="50" step="1" value="10" />
+            </div>
+            <div>
+                <label class="lb">模糊尺寸（blur size）：</label><input type="range" id="blur" min="1" max="50" step="1" value="15" />
+            </div>
+        </div>
+    </div>
+    <div id="mapCon">
+    </div>
+    <script type="text/javascript">
+        var blur = document.getElementById('blur');
+        var radius = document.getElementById('radius');
+        //创建一个Heatmap图层
+        var vector = new ol.layer.Heatmap({
+            //矢量数据源（读取本地的KML数据）
+            source: new ol.source.Vector({
+                url: '../../data/dataview/2012_Earthquakes_Mag5.kml',
+                format: new ol.format.KML({
+                    extractStyles: false
+                })
+            }),
+            //热点半径
+            radius: parseInt(radius.value, 10),
+            //模糊尺寸
+            blur: parseInt(blur.value, 10)
+        });
+        //为矢量数据源添加addfeature事件监听
+        vector.getSource().on('addfeature', function (event) {
+            // 示例数据2012_Earthquakes_Mag5.kml，可从其地标名称提取地震信息
+            //要素的名称属性
+            var name = event.feature.get('name');
+            //得到要素的地震震级属性（magnitude）
+            var magnitude = parseFloat(name.substr(2));
+            //设置要素的weight属性
+            event.feature.set('weight', magnitude - 5);
+        });
+        //创建一个瓦片图层作为底图
+        var raster = new ol.layer.Tile({
+            source: new ol.source.Stamen({
+                layer: 'toner'
+            })
+        });
+        //实例化Map对象加载地图（底图+热点图）
+        var map = new ol.Map({
+            layers: [raster, vector],
+            target: 'mapCon',
+            view: new ol.View({
+                center: [0, 0],
+                minZoom: 2,
+                zoom: 2
+            })
+        });
+
+        //分别为另个参数设置控件（input）添加事件监听，动态设置热点图的参数
+        radius.addEventListener('input', function () {
+            //设置热点图层的热点半径
+            vector.setRadius(parseInt(radius.value, 10));
+        });
+        blur.addEventListener('input', function () {
+            //设置热点图层的模糊尺寸
+            vector.setBlur(parseInt(blur.value, 10));
+        });
+    </script>
+</body>
+</html>

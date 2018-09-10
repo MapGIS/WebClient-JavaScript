@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>绘制其他要素</title>
+    <script include="arrow" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        //地图容器声明
+        var map;
+        //绘制图层
+        var drawnItems = new L.FeatureGroup();
+
+        /**显示地图
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [0, -60],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 10,
+                //当前显示等级
+                zoom: 3,
+                //限制显示地理范围
+                //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+            //矢量图层
+            var layer1 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}', {
+                attribution: 'Tianditu矢量',
+                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            });
+            //矢量注记图层
+            var layer2 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
+                attribution: 'Tianditu注记',
+                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            });
+            var LayerG = L.layerGroup([layer1, layer2]);
+            //添加图层组
+            LayerG.addTo(map);
+            //添加绘制图层
+            map.addLayer(drawnItems);
+            //绘制线
+            var arrow = L.polyline([[15, -65], [20, -45]], {
+                //颜色
+                color: 'red'
+            }).addTo(drawnItems);
+            //添加箭头
+            var arrowHead = L.polylineDecorator(arrow, {
+                //添加模式
+                patterns: [{
+                    //模式符号的偏移位置
+                    offset: '100%',
+                    //模式符号的重复间隔
+                    repeat: 0,
+                    //符号实例
+                    symbol: L.Symbol.arrowHead({
+                        //符号大小
+                        pixelSize: 15,
+                        //符号样式
+                        pathOptions: {
+                            //是否显示边线
+                            stroke: true
+                        }
+                    })
+                }]
+            }).addTo(drawnItems);
+            //绘制连线矩形
+            var polygon = L.polygon([[0, -90], [10, -90], [10, -70], [0, -70], [0, -90], [20, -90], [30, -90], [30, -70], [20, -70], [20, -90]], {
+                //线颜色
+                color: "#ff7800",
+                //线宽
+                weight: 1
+            }).addTo(map);
+            var pd = L.polylineDecorator(polygon, {
+                //添加模式
+                patterns: [{
+                    //模式符号的偏移位置
+                    offset: 0,
+                    //模式符号的重复间隔
+                    repeat: 10,
+                    //符号实例
+                    symbol: L.Symbol.dash({
+                        //符号大小
+                        pixelSize: 0
+                    })
+                }]
+            }).addTo(drawnItems);
+            //绘制虚线矩形
+            var pathPattern = L.polylineDecorator([[0, -60], [10, -60], [10, -40], [0, -40], [0, -60]], {
+                //添加模式
+                patterns: [{
+                    //模式符号的偏移位置
+                    offset: 12,
+                    //模式符号的重复间隔
+                    repeat: 25,
+                    //符号实例
+                    symbol: L.Symbol.dash({
+                        //符号大小
+                        pixelSize: 10,
+                        //符号样式
+                        pathOptions: {
+                            //颜色
+                            color: '#f00',
+                            //线宽
+                            weight: 2
+                        }
+                    })
+                },
+                    {
+                        //模式符号的偏移位置
+                        offset: 0,
+                        //模式符号的重复间隔
+                        repeat: 25,
+                        //符号实例
+                        symbol: L.Symbol.dash({
+                            //符号大小
+                            pixelSize: 0
+                        })
+                    }
+                ]
+            }).addTo(drawnItems);
+            //添加线
+            var markerLine = L.polyline([[-10, -70], [0, -55], [-20, -45], [0, -75]], {}).addTo(map);
+            //在线上添加标注
+            var markerPatterns = L.polylineDecorator(markerLine, {
+                //添加模式
+                patterns: [{
+                    //模式符号的偏移位置
+                    offset: '5%',
+                    //模式符号的重复间隔
+                    repeat: '10%',
+                    //符号实例
+                    symbol: L.Symbol.marker()
+                }]
+            }).addTo(drawnItems);
+            //矩形框上添加图片
+            var pathPattern = L.polylineDecorator([[-20, -90], [-10, -90], [0, -80], [-10, -70], [-20, -70], [-20, -90]], {
+                //添加模式
+                patterns: [
+                    {
+                        //模式符号的偏移位置
+                        offset: 0,
+                        //模式符号的重复间隔
+                        repeat: 10,
+                        //符号实例
+                        symbol: L.Symbol.dash({
+                            //符号大小
+                            pixelSize: 5,
+                            //符号样式
+                            pathOptions: {
+                                //颜色
+                                color: '#000',
+                                //线宽
+                                weight: 1,
+                                //透明度
+                                opacity: 0.2
+                            }
+                        })
+                    },
+                    {
+                        //模式符号的偏移位置
+                        offset: '0%',
+                        //模式符号的重复间隔
+                        repeat: '20%',
+                        //符号实例
+                        symbol: L.Symbol.marker({
+                            //是否允许旋转
+                            rotate: true,
+                            //标记显示样式
+                            markerOptions: {
+                                //图标
+                                icon: L.icon({
+                                    //图标地址
+                                    iconUrl: '../../img/leaflet/arrow/icon_plane.png',
+                                    //图标位置
+                                    iconAnchor: [16, 16]
+                                })
+                            }
+                        })
+                    }
+                ]
+            }).addTo(drawnItems);
+            //线要素点集
+            var multiCoords1 = [
+            [[-27.5468, -70.7910], [-28.8068, -70.1318], [-29.1242, -69.6699], [-29.4966, -67.2958], [-11.4266, -68.8564], [-11.7542, -68.1093]],
+            [[-28.0193, -72.8125], [-26.3165, -72.8564], [-24.9336, -71.0107], [-24.5278, -69.5820], [-24.8714, -67.7353], [-25.8287, -65.1855], [-28.1953, -65.1416]],
+            [[-25.9205, -70.4394], [-26.7699, -70.9228], [-27.6061, -68.5488], [-27.7540, -67.3837]]
+            ];
+            var plArray = [];
+            for (var i = 0; i < multiCoords1.length; i++) {
+                //添加线
+                plArray.push(L.polyline(multiCoords1[i]).addTo(drawnItems));
+            }
+            //添加线上显示样式
+            L.polylineDecorator(multiCoords1, {
+                //添加模式
+                patterns: [
+                    {
+                        //模式符号的偏移位置
+                        offset: 25,
+                        //模式符号的重复间隔
+                        repeat: 50,
+                        //符号实例
+                        symbol: L.Symbol.arrowHead({
+                            //符号大小
+                            pixelSize: 15,
+                            //符号样式
+                            pathOptions: {
+                                //填充色透明度
+                                fillOpacity: 1,
+                                //线宽
+                                weight: 0
+                            }
+                        })
+                    }
+                ]
+            }).addTo(drawnItems);
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width:100%;height:95%"></div>
+</body>
+</html>

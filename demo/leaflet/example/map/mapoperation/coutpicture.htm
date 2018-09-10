@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>导出成图片</title>
+    <script include="export" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        //定义出图控件
+        var printer;
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [40, 116.3],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 16,
+                //当前显示等级
+                zoom: 12
+            });
+            //加载瓦片图层数据（OSM）
+            var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                //只显示一个图层,不平铺显示
+                noWrap: true
+            }).addTo(map);
+            //添加标注，设置弹框提示
+            L.marker([40.003, 116.32]).addTo(map)
+		.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
+            //执行弹框操作
+            var popup = L.popup();
+
+            //调用插件库中的出图控件
+            printer = L.easyPrint({
+                //设置要打印的图层
+                tileLayer: tiles,
+                //出图模式，包括：按当前显示出图、按A4横版出图、按A4竖版出图
+                sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
+                //图片名称
+                filename: 'myMap',
+                //如果输出为本地图片，需设置为true
+                exportOnly: true,
+                //出图时是否隐藏控件（比如缩放控件、出图控件等）
+                hideControlContainer: true
+            }).addTo(map);
+        }
+
+        /**通过代码输出地图
+        */
+        function outToPNG() {
+            //按当前显示，将地图输出为图片
+            printer.printMap('CurrentSize', 'myMap')
+        }
+  </script>
+</head>
+<body onload="init()">
+   <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="export-png" value="下载 PNG" onclick="outToPNG()"/>
+    </div>
+     <div id="leaf_map" style="width: 100%; height: 95%;position: absolute">
+    </div>
+</body>
+</html>

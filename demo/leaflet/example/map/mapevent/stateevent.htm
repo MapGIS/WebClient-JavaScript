@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>地图状态事件</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        /**初始化地图显示
+        */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [40, 116.3],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 16,
+                //当前显示等级
+                zoom: 12
+            });
+            //加载瓦片图层数据（OSM）
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { noWrap: true }).addTo(map);
+
+            /**地图移动结束事件
+            *  @param {string} type 事件类型（地图移动结束）
+            *  @param {function} fn 事件触发后的响应函数
+            */
+            map.on('moveend', function (e) {
+                //弹框提示
+                alert("地图移动结束！" );
+            })
+
+            /**地图级数改变事件.该事件触发时也会触发地图移动结束事件
+            *  @param {string} type 事件类型（地图级数改变）
+            *  @param {function} fn 事件触发后的响应函数
+            */
+            map.on('zoom', function (e) {
+                //弹框提示
+                alert("地图级数改变！");
+            })
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height: 95%;">
+    </div>
+</body>
+</html>

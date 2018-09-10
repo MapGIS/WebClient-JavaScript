@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>map panes</title>
+    <script include="leaflet" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        #map{height:600px;}
+    </style>
+    <script src="../../../../data/leaflet/eu_countries.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    var map = L.map('map');
+    map.createPane('labels');
+    map.getPane('labels').style.zIndex = 650;
+    map.getPane('labels').style.pointerEvents = 'none';
+
+    var cartodbAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+    var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+        attribution: cartodbAttribution
+    }).addTo(map);
+
+    var positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+        attribution: cartodbAttribution,
+        pane: 'labels'
+    }).addTo(map);
+
+    geojson = L.geoJson(euCountries).addTo(map);
+
+    geojson.eachLayer(function (layer) {
+        layer.bindPopup(layer.feature.properties.name);
+    });
+    map.setView({ lat: 60.040182144806664, lng: 175.667968750000002 }, 2);
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 635px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "light-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }],
+        //特别注意，这里是用的mapbox官方的，中地内部的请参考中地glyphs
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        //特别注意，这里是用的mapbox官方的，中地内部的请参考中地sprite
+        "sprite": "mapbox://sprites/mapbox/streets-v8"
+      },
+      zoom: 14,
+      pitch: 45,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+    var GeoPolygons = {
+      "type": "FeatureCollection",
+      "features": [{
+          "type": "Feature",
+          "properties": {
+            "name": "副楼1"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.398295879364, 30.46672635218658],
+                [114.3991756439209, 30.46672635218658],
+                [114.3991756439209, 30.467244207378176],
+                [114.398295879364, 30.467244207378176],
+                [114.398295879364, 30.46672635218658]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "副楼2"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.39840316772461, 30.465912574179665],
+                [114.39919710159302, 30.465912574179665],
+                [114.39919710159302, 30.46639344382371],
+                [114.39840316772461, 30.46639344382371],
+                [114.39840316772461, 30.465912574179665]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "主楼"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.39793109893797, 30.46852033877593],
+                [114.39796328544617, 30.46755861811546],
+                [114.39929366111755, 30.4675863601906],
+                [114.39939022064209, 30.465588910582497],
+                [114.4001841545105, 30.46560740567415],
+                [114.40006613731383, 30.467706575758285],
+                [114.39999103546143, 30.46823367303407],
+                [114.40098881721497, 30.468289156791897],
+                [114.40091371536253, 30.46898270109769],
+                [114.39789891242981, 30.468807003674],
+                [114.39793109893797, 30.46852033877593]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "会议室"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.40005540847778, 30.46815507098972],
+                [114.40011709928513, 30.467646467992992],
+                [114.40014123916626, 30.46742221946438],
+                [114.4004014134407, 30.46743609052238],
+                [114.40066426992416, 30.46752625235114],
+                [114.40081715583801, 30.467681145554398],
+                [114.40092980861664, 30.467886898831548],
+                [114.40095126628876, 30.46820824296784],
+                [114.40005540847778, 30.46815507098972]
+              ]
+            ]
+          }
+        }, {
+          "type": "Feature",
+          "properties": {
+            "name": "边界区"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.39653635025024, 30.46945430840451],
+                [114.39637541770935, 30.464414465069698],
+                [114.40151453018188, 30.465366969208556],
+                [114.40260887145996, 30.46664312520253],
+                [114.40298438072205, 30.469740970553463],
+                [114.39653635025024, 30.46945430840451]
+              ]
+            ]
+          }
+        }
+      ]
+    };
+
+    map.on('load', function() {
+      initMap();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字fillLayer
+      map.addSource('fillLayer', {
+        "type": "geojson",
+        "data": GeoPolygons
+      });
+      map.addLayer({
+        "id": "main", //id不同重复，否则只绘制一次
+        "type": "fill",
+        "source": "fillLayer", //必须和上面的fillLayer一致
+        "filter": ["==", "name", "主楼"], //关键点：name对应geojson中的属性字段
+        "paint": {
+          "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+          "fill-pattern": "si-main-3", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+        }
+      });
+      map.addLayer({
+        "id": "fulou1", //id不同重复，否则只绘制一次
+        "type": "fill",
+        "source": "fillLayer", //必须和上面的fillLayer一致
+        "filter": ["==", "name", "副楼1"], //关键点：name对应geojson中的属性字段
+        "paint": {
+          "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+          "fill-color": "#00695c", //颜色
+          "fill-opacity": 0.9, //透明度
+          "fill-outline-color": "#FFFF00", //边线颜色，没错,确实没有边线宽度这个选项
+          //"fill-pattern":"picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+          //"fill-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+        }
+      });
+      map.addLayer({
+        "id": "fulou2",//id不同重复，否则只绘制一次
+        "type": "fill",
+        "source": "fillLayer", //必须和上面的fillLayer一致
+        "filter": ["==", "name", "副楼2"], //关键点：name对应geojson中的属性字段
+        "paint": {
+          "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+          "fill-color": "#009688", //颜色
+          "fill-opacity": 0.9, //透明度
+          "fill-outline-color": "#FF0000", //边线颜色，没错,确实没有边线宽度这个选项
+        }
+      });
+      map.addLayer({
+        "id": "huiyishi",//id不同重复，否则只绘制一次
+        "type": "fill",
+        "source": "fillLayer", //必须和上面的fillLayer一致
+        "filter": ["==", "name", "会议室"], //关键点：name对应geojson中的属性字段
+        "paint": {
+          "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+          "fill-color": "#004d40", //颜色
+          "fill-opacity": 0.9, //透明度
+          "fill-outline-color": "#000000", //边线颜色，没错,确实没有边线宽度这个选项
+        }
+      });
+      map.addLayer({
+        "id": "bounding",//id不同重复，否则只绘制一次
+        "type": "line",  //相信你的眼睛，这里的的确确是line，区可以复用线的样式
+        "source": "fillLayer", //必须和上面的fillLayer一致
+        "filter": ["==", "name", "边界区"], //关键点：name对应geojson中的属性字段
+        "paint": {
+          "line-width": 4, //宽度
+          "line-color": "#e51c23", //颜色
+          "line-opacity": 1.0, //透明度
+          "line-gap-width": 2, //线的沟宽，如果有一条线会变成2条线，中间有条沟
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

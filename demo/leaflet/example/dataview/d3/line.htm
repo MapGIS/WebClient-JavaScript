@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-geojson</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="d3" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([30, 114], 5); //这里的5级别很重要如果级别太大则无法生成对应的蜂窝格
+        var mapboxTile;
+
+        initMap();
+
+        updateView();
+
+        function initMap() {
+            mapboxTile = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+                'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                    attribution: '<a href="#">MapBox&MapGIS</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light'
+                }).addTo(map);
+        }
+
+        function updateView() {
+            var lines = [];
+            var linesOverlay = L.zondy.d3SvgOverlay(function (sel, proj) {
+
+                var update = sel.selectAll('path').data(lines);
+                update.enter()
+                    .append('path')
+                    .attr('d', proj.pathFromGeojson)
+                    .style('stroke', function (d) {
+                        if (d.properties.mpLength > 1) {
+                            return d3.rgb(255, 0, 0);
+                        } else if (d.properties.mpLength > 0.5) {
+                            return d3.rgb("yellow");
+                        } else if (d.properties.mpLength > 0.1) {
+                            return "black";
+                        } else {
+                            return d3.hsl(Math.random() * 360, 0.9, 0.5)
+                        }
+                    })
+                    .style('stroke-width', function (d) {
+                        if (d.properties.mpLength > 1) {
+                            return 2.5;
+                        } else if (d.properties.mpLength > 0.5) {
+                            return 0.75 / proj.scale;
+                        } else if (d.properties.mpLength > 0.1) {
+                            return 0.50 / proj.scale;
+                        } else {
+                            return 1 / proj.scale;
+                        }
+                    })
+                    .style("fill", "none");;
+
+            }, {
+                zoomDraw: false //缩放时，继续播放动画或者重新绘制
+            });
+
+            L.control.layers({
+                "Raster Tiles": mapboxTile
+            }, {
+                "SVG Countries": linesOverlay
+            }).addTo(map);
+
+            d3.json("../../data/d3/line.json").then(function (data) {
+                lines = data.features;
+                linesOverlay.addTo(map)
+            });
+        }
+    </script>
+
+</body>
+
+</html>

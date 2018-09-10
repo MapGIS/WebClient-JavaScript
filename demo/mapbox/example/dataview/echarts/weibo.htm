@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>中国微博签到图</title>
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="language,echarts" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: 'mapbox://styles/mapbox/dark-v9', // 使用MapBox官方的样式
+      center: [106.563777, 29.578285],
+      zoom: 3
+    });
+    map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+    updateView();
+
+    function updateView() {
+      var grade = [
+        "强",
+        "中",
+        "弱"
+      ]
+      var layer;
+      $.get('../../data/echarts/weibo.json', function (weiboData) {
+        weiboData = weiboData.map(function (serieData, idx) {
+          var px = serieData[0] / 1000;
+          var py = serieData[1] / 1000;
+          var res = [
+            [px, py]
+          ];
+
+          for (var i = 2; i < serieData.length; i += 2) {
+            var dx = serieData[i] / 1000;
+            var dy = serieData[i + 1] / 1000;
+            var x = px + dx;
+            var y = py + dy;
+            res.push([x.toFixed(2), y.toFixed(2), 1]);
+
+            px = x;
+            py = y;
+          }
+          return res;
+        });
+
+        option = {
+          mapboxgl: {
+            roam: true
+          },
+          coordinateSystem: 'mapboxgl',
+          title: {
+            text: "中国微博签到图",
+            subtext: 'From MapGIS',
+            sublink: 'http://www.smaryun.com',
+            left: 'center',
+            top: 'top',
+            textStyle: {
+              color: '#fff'
+            }
+          },
+          tooltip: {},
+          legend: {
+            left: 'right',
+            top: 'top',
+            data: [grade[0], grade[1], grade[2]],
+            textStyle: {
+              color: '#ccc'
+            }
+          },
+          series: [{
+            name: grade[2],
+            type: 'scatter',
+            coordinateSystem: 'mapboxgl',
+            symbolSize: 1,
+            large: true,
+            itemStyle: {
+              normal: {
+                shadowBlur: 2,
+                shadowColor: 'rgba(37, 140, 249, 0.8)',
+                color: 'rgba(37, 140, 249, 0.8)'
+              }
+            },
+            data: weiboData[0]
+          }, {
+            name: grade[1],
+            type: 'scatter',
+            coordinateSystem: 'mapboxgl',
+            symbolSize: 1,
+            large: true,
+            itemStyle: {
+              normal: {
+                shadowBlur: 2,
+                shadowColor: 'rgba(14, 241, 242, 0.8)',
+                color: 'rgba(14, 241, 242, 0.8)'
+              }
+            },
+            data: weiboData[1]
+          }, {
+            name: grade[0],
+            type: 'scatter',
+            coordinateSystem: 'mapboxgl',
+            symbolSize: 1,
+            large: true,
+            itemStyle: {
+              normal: {
+                shadowBlur: 2,
+                shadowColor: 'rgba(255, 255, 255, 0.8)',
+                color: 'rgba(255, 255, 255, 0.8)'
+              }
+            },
+            data: weiboData[2]
+          }]
+        };
+        layer = new mapboxgl.zondy.EchartsLayer(map, option).addTo(map);
+      });
+    }
+  </script>
+
+
+</body>
+
+</html>

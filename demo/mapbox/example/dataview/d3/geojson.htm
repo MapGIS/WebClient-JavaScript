@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-geojson</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script  include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script  include="d3" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .china-style {
+            fill: red;
+            fill-opacity: 0.9;
+            stroke: yellow;
+            stroke-width: 4;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map;
+
+        initMap();
+
+        loadData();
+
+        function initMap() {
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: {
+                    "version": 8,
+                    "sources": {
+                        "mapbox-tiles": {
+                            "type": "raster",
+                            'tiles': [
+                                "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+                            ],
+                            'tileSize': 256
+                        }
+                    },
+                    "layers": [{
+                        "id": "dark-tiles",
+                        "type": "raster",
+                        "source": "mapbox-tiles",
+                        "minzoom": 0,
+                        "maxzoom": 22
+                    }]
+                },
+                zoom: 3,
+                pitch: 0,
+                center: [114.2893, 30.5941]
+            });            
+            container = map.getCanvasContainer();
+            //svg = d3.select(container).append("svg");
+        }
+
+        var countries = [];
+
+        function loadData() {
+            d3.json("../../data/d3/countries.geo.json").then(function (data) {
+                countries = data.features;
+                updateView();
+            });
+        }
+
+
+        var china, other; //这里很重要，一定不能声明再某个函数里面，必须是一个全局变量，否则无法刷新位置与地图联动
+
+        function updateView() {
+
+            var chinaOverlay = new mapboxgl.zondy.d3Layer(map, function (sel, proj, zoom) {
+
+                var chinadata = sel.selectAll('path')
+                    .data(countries.filter(function (d) {
+                        return d.properties.name == "China" ? true : false;
+                    }));
+                if (china == undefined) {
+                    china = chinadata.enter()
+                        .append('path') //添加绘制方式为path
+                        .classed("china-style", true) //绑定对应的样式
+                        .attr('d', proj.pathFromGeojson); //这里是固定语法，一般不变
+                } else {
+                    //只需重新绘制样式与更新位置即可，数据无需变化
+                    china.attr('d', proj.pathFromGeojson);
+                }
+
+            });
+
+            var otherOverlay = new mapboxgl.zondy.d3Layer(map, function (sel, proj, zoom) {
+
+                var otherdata = sel.selectAll('path')
+                    .data(countries.filter(function (d) {
+                        return d.properties.name != "China" ? true : false;
+                    }));
+                if (other == undefined) {
+                    other = otherdata.enter()
+                        .append('path') //添加绘制方式为path
+                        .attr('d', proj.pathFromGeojson) //这里是固定语法，一般不变
+                        .style('stroke', function (d) {
+                            return "black";
+                        })
+                        .style('stroke-width', function (d) {
+                            return 1 / proj.scale;
+                        })
+                        .style('fill', function (d) {
+                            return d3.hsl(Math.random() * 360, 0.9, 0.5);
+                        })
+                        .style('fill-opacity', '0.5');
+                } else {
+                    //只需重新绘制样式与更新位置即可，数据无需变化
+                    other.attr('d', proj.pathFromGeojson)
+                        .style('stroke', function (d) {
+                            return "black";
+                        })
+                        .style('stroke-width', function (d) {
+                            return 1;
+                        })
+                        .style('fill', function (d) {
+                            return d3.hsl(Math.random() * 360, 0.9, 0.5);
+                        })
+                        .style('fill-opacity', '0.5');
+                }
+
+            });
+
+            chinaOverlay.addTo(map);
+            otherOverlay.addTo(map);
+            //chinaOverlay.hide();
+        }
+    </script>
+
+</body>
+
+</html>

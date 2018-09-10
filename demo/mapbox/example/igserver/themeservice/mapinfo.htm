@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>获取专题图信息</title>
+    <script include="json" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //获取该guid文档的专题图信息
+        var guid = 'DB0C04B3-CA76-950B-9D7A-F4EA22A85418';
+        /**获取专题图信息
+        */
+        function getThemesInfo() {
+            //创建专题图操作对象
+            var ThemeOper = new Zondy.Service.ThemeOper(guid);
+            //IP地址
+            ThemeOper.ip = "develop.smaryun.com";
+            //端口号
+            ThemeOper.port = "6163";
+            //获取专题图信息,getThemesInfoSuccess为回调函数
+            ThemeOper.getThemesInfo('WorldTheme', '1', getThemesInfoSuccess);
+        }
+
+        /**获取专题图信息回调函数
+        *  @param {json对象} data 获取结果对象
+        */
+        function getThemesInfoSuccess(data) {
+            if (data != null) {
+                //将JSON对象转换成JSON字符串
+                var formatData = JSON.stringify(data[0].ThemeArr[0]);
+                //将结果显示在指定的div上
+                Process(formatData, 1, "resultShow");
+            }
+        }  
+    </script>
+</head>
+<body>
+  <div class="ToolLib">
+    <input type="button"  class="ButtonLib" value="获取专题图信息" onclick='getThemesInfo()' /><br />
+    <div id="introduction">
+            <font style=" float: left; text-align: left">该示例为获取指定guid文档的专题图信息,信息如下</font><br />
+        </div>
+  </div>
+    <div id="resultShow">
+    </div>
+</body>
+</html>

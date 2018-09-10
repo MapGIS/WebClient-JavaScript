@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>更新专题图信息</title>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        //专题图操作对象
+        var ThemeOper;
+        //专题图信息数组
+        var themesInfoArr;
+        //地图文档guid
+        var guid;
+
+        function init() {
+            guid = 'DB0C04B3-CA76-950B-9D7A-F4EA22A85418';
+            //地图容器
+            map = L.map('leaf_map', {
+                //地图渲染在canvas上
+                preferCanvas: true,
+                //控件设置
+                attributionControl: false,
+                zoomControl: true,
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //中心点
+                center: [10, 30],
+                //最大级数
+                maxZoom: 10,
+                //最小级数
+                minZoom: 0,
+                //显示级数
+                zoom: 0
+
+            });
+
+            //创建地图文档图层
+            mapDocLayer = new Zondy.Map.MapDocLayer("WorldJWVector", {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //图层显示设置
+                noWrap: true,
+                //文档guid
+                guid: guid
+            }).addTo(map);
+        }
+
+        //更新专题图
+        function updateThemesInfo() {
+            //随机输出1~100之间的整数,作为更新专题图的填充色
+            var themeColor1 = Math.floor(Math.random() * 100 + 1);
+            var themeColor2 = Math.floor(Math.random() * 100 + 1);
+            var themesInfoArr = [];
+            themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo();
+            //设置图层名层
+            themesInfoArr[0].LayerName = "世界政区";
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            themesInfoArr[0].ThemeArr = [];
+            //实例化CUniqueTheme类
+            themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CUniqueTheme();
+            themesInfoArr[0].ThemeArr[0].Name = "单值专题图";
+            //指定为单值的专题图
+            themesInfoArr[0].ThemeArr[0].IsBaseTheme = true;
+            themesInfoArr[0].ThemeArr[0].Visible = true;
+            themesInfoArr[0].ThemeArr[0].GeoInfoType = "Reg";
+            themesInfoArr[0].ThemeArr[0].Expression = "name";
+
+            //未分段值的图形信息设置
+            themesInfoArr[0].ThemeArr[0].DefaultInfo = new Zondy.Object.Theme.CThemeInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.Caption = "未分类";
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Ovprnt = true;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Angle = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.EndClr = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillClr = 12;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillMode = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FullPatFlg = true;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatClr = 45;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatHeight = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatWidth = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatID = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.OutPenW = 1;
+
+            //每段专题绘制信息
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr = [];
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0] = new Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].Value = "中国";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].Caption = "中国";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].RegInfo.FillClr = themeColor1;
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1] = new Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].Value = "俄罗斯";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].Caption = "俄罗斯";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].RegInfo.FillClr = themeColor2;
+
+            //给指定地图文档更新专题图
+            ThemeOper = new Zondy.Service.ThemeOper(guid);
+            //设置ip地址
+            ThemeOper.ip = "develop.smaryun.com";
+            //设置端口号
+            ThemeOper.port = "6163";
+            //更新专题图
+            ThemeOper.updateThemesInfo("WorldJWVector", "1/0", themesInfoArr, onUniqueThemeSuccess);
+
+            
+        }
+
+        //调用专题图成服务功后的回调
+        function onUniqueThemeSuccess(flg) {
+            if (flg) {
+                //刷新地图，即重新加载生成专题图后的地图文档
+                alert("更新专题图成功");
+                map.setView([10, 30], map.getZoom() + 1);
+            }
+
+        }
+
+    </script>
+</head>
+<body onload="init();">
+      <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="更新专题图" onclick="updateThemesInfo()" />
+      </div>
+    <div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
+    </div>
+</body>
+</html>

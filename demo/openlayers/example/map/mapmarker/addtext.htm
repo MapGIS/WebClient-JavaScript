@@ -1,0 +1,160 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>添加文字标注</title>
+    
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <!--  引入第三方插件库 -->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <!--导入本页面外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body, html, div, ul, li, iframe, p, img {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #mapCon {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+        }
+
+        #menu {
+            width: 100%;
+            height: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+
+        .checkbox {
+            margin: 5px 15px;
+        }
+
+        .marker {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #088;
+            border-radius: 10px;
+            background-color: #0FF;
+            opacity: 0.5;
+        }
+
+        .address {
+            text-decoration: none;
+            color: #aa3300;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: black 0.1em 0.1em 0.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="type" value="添加文字标注" onclick="Addmarker()" />&nbsp;&nbsp;
+        <label style="font-weight: bold;">
+            点击按钮，之后在图上点击添加文字标注。
+        </label>
+    </div>
+    <div id="mapCon">
+    </div>
+    <div id="label" style="display: none;">
+        <div id="marker" class="marker" title="Marker">
+            <a class="address" id="address" target="_blank" href="http://www.openlayers.org/">标注点</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var beijing = ol.proj.fromLonLat([116.28, 39.54]);
+
+        //实例化Map对象加载地图,默认底图加载OSM地图
+        var map = new ol.Map({
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            //地图容器div的ID
+            target: 'mapCon',
+            view: new ol.View({
+                //地图初始中心点
+                center: beijing,
+                minZoom: 1,
+                zoom: 2
+            })
+        });
+
+        /**
+        * 创建矢量标注样式函数,设置image为图标ol.style.Icon
+        * @param {ol.Feature} feature 要素
+        */
+        var createLabelStyle = function (feature) {
+            return new ol.style.Style({
+                text: new ol.style.Text({
+                    //位置
+                    textAlign: 'center',
+                    //基准线
+                    textBaseline: 'middle',
+                    //文字样式
+                    font: 'normal 14px 微软雅黑',
+                    //文本内容
+                    text: feature.get('name'),
+                    //文本填充样式（即文字颜色）
+                    fill: new ol.style.Fill({ color: '#aa3300' }),
+                    stroke: new ol.style.Stroke({ color: '#ffcc33', width: 2 })
+                })
+            });
+        }
+
+        //实例化Vector要素，通过矢量图层添加到地图容器中
+        var iconFeature = new ol.Feature({
+            geometry: new ol.geom.Point(beijing),
+            //名称属性
+            name: '北京市',
+            //大概人口数（万）
+            population: 2115
+        });
+        iconFeature.setStyle(createLabelStyle(iconFeature));
+        //矢量标注的数据源
+        var vectorSource = new ol.source.Vector({
+            features: [iconFeature]
+        });
+        //矢量标注图层
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+        map.addLayer(vectorLayer);
+
+        //为地图容器添加单击事件监听
+        function Addmarker() {
+            map.on('click', function (evt) {
+                //鼠标单击点坐标
+                var point = evt.coordinate;
+                //添加一个新的标注（矢量要素）
+                addVectorLabel(point);
+            });
+        }
+
+        /**
+        * 添加一个新的标注（矢量要素）
+        * @param {ol.Coordinate} coordinate 坐标点
+        */
+        function addVectorLabel(coordinate) {
+            //新建一个要素 ol.Feature
+            var newFeature = new ol.Feature({
+                //几何信息
+                geometry: new ol.geom.Point(coordinate),
+                //名称属性
+                name: '标注点'
+            });
+            //设置要素的样式
+            newFeature.setStyle(createLabelStyle(newFeature));
+            //将新要素添加到数据源中
+            vectorSource.addFeature(newFeature);
+        }
+    </script>
+</body>
+</html>

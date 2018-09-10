@@ -1,0 +1,91 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>加载ArcGIS影像数据</title>
+    <!--必要的脚本引用-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+
+        /* 鼠标位置控件层样式设置 */
+
+        #mouse-position {
+            float: left;
+            position: absolute;
+            bottom: 5px;
+            width: 200px;
+            height: 20px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2000;
+        }
+
+        /* 鼠标位置信息自定义样式设置 */
+
+        .custom-mouse-position {
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            font-family: "微软雅黑";
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapCon">
+        <div id="mouse-position">
+        </div>
+    </div>
+    <script type="text/javascript">
+        //实例化鼠标位置控件（MousePosition）
+        var mousePositionControl = new ol.control.MousePosition({
+            //坐标格式
+            coordinateFormat: ol.coordinate.createStringXY(4),
+            //地图投影坐标系（若未设置则输出为默认投影坐标系下的坐标）
+            projection: 'EPSG:4326',
+            //坐标信息显示样式，默认是'ol-mouse-position'
+            className: 'custom-mouse-position',
+            //显示鼠标位置信息的目标容器
+            target: document.getElementById('mouse-position'),
+            //未定义坐标的标记
+            undefinedHTML: '&nbsp;'
+        });
+
+        //实例化Map对象加载地图
+        var map = new ol.Map({
+            //地图容器div的ID
+            target: 'mapCon',
+            //地图容器中加载的图层
+            layers: [],
+            //地图视图设置
+            view: new ol.View({
+                //地图初始中心点
+                center: [-121.1, 47.5],
+                //地图初始显示级别
+                zoom: 2
+            }),
+            //加载控件到地图容器中
+            controls: ol.control.defaults({ //地图中默认控件
+                //                attributionOptions: /** @type {ol.control.Attribution} */({
+                //                    collapsible: true //地图数据源信息控件是否可展开,默认为true
+                //                })
+            }).extend([mousePositionControl]) //加载鼠标位置控件
+        });
+
+        arcGISLayers = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'http://server.arcgisonline.com/ArcGIS/rest/services/' +
+                    'World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+            })
+        })
+        //添加地图图层  
+        map.addLayer(arcGISLayers);
+    </script>
+</body>
+
+</html>

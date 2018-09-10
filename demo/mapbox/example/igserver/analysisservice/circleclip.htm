@@ -1,0 +1,193 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>圆裁剪分析</title>
+    <script include="transform" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        //整个js文件都是严格模式下执行的
+        "use strict";
+        // 定义地图容器全局变量
+        var map;
+        // 定义矢量图层全局变量
+        var vectorLayer;
+        //缓存结果图层的基地址 
+        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
+        // 缓冲区图层id
+        var layerId = [];
+        // 定义矢量图层guid
+        var guid;
+        /** 地图初始化函数
+         */
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            // 创建地图容器
+            map = new mapboxgl.Map({
+                // 地图显示的div容器
+                container: 'mapCon',
+                // 设置地图不连续显示
+                renderWorldCopies: false,
+                // 设置地图最大显示范围
+                maxBounds: [
+                    [-180, -90],
+                    [180, 90]
+                ]
+            });
+            // 创建矢量图层
+            vectorLayer = new Zondy.Map.MapVectorLayer(
+                "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp", {
+                    // IGServer所在ip地址
+                    ip: 'develop.smaryun.com',
+                    // IGServer请求端口号
+                    port: '6163',
+                    //添加guid
+                    guid: guid
+                });
+            // 将矢量图层添加到地图
+            vectorLayer.addToMap(map);
+        }
+
+        /** 执行圆裁剪分析
+         */
+        function clipByCircleAnalysis() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            // 设置结果图层的URL
+            var resultname = resultBaseUrl + "clipByCircleAnalysisResultLayer" + getCurentTime();
+            //实例化Zondy.Service.ClipByCircle类
+            var clipParam = new Zondy.Service.ClipByCircle({
+                //IGServer所在ip地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口号
+                port: "6163",
+                //设置圆心坐标
+                center: lonLat2Mercator(88.62, 47.09).x + "," + lonLat2Mercator(88.62, 47.09).y,
+                //设置圆半径长度    
+                radius: 6000000,
+                //设置被裁剪图层URL 	        
+                srcInfo: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",
+                //设置结果图层的UR
+                desInfo: resultname
+            });
+            //调用基类的execute方法，执行圆裁剪分析。AnalysisSuccess为结果回调函数
+            clipParam.execute(AnalysisSuccess, "post", false, "json", AnalysisError);
+        }
+
+        /** 分析失败回调
+         */
+        function AnalysisError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        /**回调函数，处理显示结果信息
+         *  @param {object} data 获取结果对象
+         */
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
+            if (!data.result.succeed || data.result.results == null) {
+                alert("圆裁剪分析失败，请检查参数！");
+            } else {
+                if (data.result.results.length != 0) {
+                    //结果图层的名称
+                    var resultLayerUrl = data.result.results[0].Value;
+                    //将结果图层添加到地图视图中显示
+                    var resultLayer = new Zondy.Map.MapVectorLayer(encodeURIComponent(resultBaseUrl + resultLayerUrl), {
+                        //IGServer所在ip地址
+                        ip: "develop.smaryun.com",
+                        //IGServer请求端口号
+                        port: "6163",
+                        //图层guid
+                        guid: (new Date()).getTime().toString()
+                    });
+                    resultLayer.addToMap(map);
+                    layerId.push(resultLayer.layerID);
+                }
+            }
+        }
+
+        /** 清除客户端分析结果信息
+         */
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            //清除缓冲区的图层
+            if (!!layerId && layerId.length > 0) {
+                for (var i = layerId.length - 1; i >= 0; i--) {
+                    map.removeLayer(layerId[i]);
+                    layerId.pop();
+                }
+            }
+        }
+
+        /** 当前日期加时间(如:2009-06-12-120000)
+         */
+        function getCurentTime() {
+            var now = new Date();
+            //获取当前年份
+            var year = now.getFullYear();
+            //获取当前月份     
+            var month = now.getMonth() + 1;
+            //获取当前日期   
+            var day = now.getDate();
+            //获取当前时刻
+            var hh = now.getHours();
+            //获取当前分钟
+            var mm = now.getMinutes();
+            //获取当前秒钟
+            var ss = now.getSeconds();
+            //将当前的日期拼串
+            var clock = year + "-";
+            if (month < 10)
+                clock += "0";
+            clock += month + "-";
+            if (day < 10)
+                clock += "0";
+            clock += day + "-";
+            if (hh < 10)
+                clock += "0";
+            clock += hh;
+            if (mm < 10) clock += '0';
+            clock += mm;
+            if (ss < 10) clock += '0';
+            clock += ss;
+            return (clock);
+        }
+
+        /** 停止进度条
+         */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+
+        /** 开始进度条动画
+         */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="../../img/common/39-1.gif" alt='' />
+        <br />
+        <br />
+        <span>正在缓冲区分析，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="圆裁剪分析" onclick="clipByCircleAnalysis()" />
+        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
+    </div>
+    <div id="mapCon" style="width: 100%; height: 700px;">
+    </div>
+</body>
+
+</html>

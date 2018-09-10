@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>MapGIS矢量瓦片-默认样式</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <style>
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = map = new mapboxgl.Map({
+            //地图容器div的id
+            container: 'map',
+            //设置地图样式信息
+            style: {
+                "version": 8,
+                //来源类型为栅格瓦片
+                "sources": {
+                    "tianditu": {
+                        "type": "raster",
+                        'tiles': [
+                            //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                            "http://t" + Math.round(Math.random() * 7) +
+                            ".tianditu.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+                            "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                        ],
+                        //栅格瓦片的分辨率
+                        'tileSize': 256
+                    }
+                },
+                "layers": [{
+                    //图层id，要保证唯一性
+                    "id": "tianditu",
+                    //图层类型
+                    "type": "raster",
+                    //连接图层来源
+                    "source": "tianditu",
+                    //图层最小缩放级数
+                    "minzoom": 0,
+                    //图层最大缩放级数
+                    "maxzoom": 22
+                }]
+            },
+            //设置当前缩放级别
+            zoom: 8,
+            //设置地图中心点
+            center: [114, 30.5]
+        });
+        //添加导航控件
+        map.addControl(new mapboxgl.NavigationControl());
+
+        //使用严格模式
+        "use strict";
+        var url = "http://192.168.10.185:6163/igs/rest/mrms/vtiles/styles/武汉.json";
+        $.ajax(url, {
+            data: {},
+            type: "get",
+            crossDomain: true,
+            success: function (data) {
+                var datajson = JSON.parse(data);
+                initMap(datajson);
+            }
+        });
+
+        function initMap(data) {
+            map.setStyle(data);
+        }
+    </script>
+</body>
+
+</html>

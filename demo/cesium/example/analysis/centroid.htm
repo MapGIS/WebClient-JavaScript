@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="../../libs/zondyclient/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = new Cesium.Viewer('map');
+    var geojson;
+
+    initMap();
+    loadData();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(116.35, 39.9, 50000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+    }
+
+    function loadData() {
+      $.getJSON('../../data/analysis/buffer-hash-4.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+    }
+
+    function convertDataToGeoJson(origindata) {
+      var columnarPoints = [];
+      var points;
+      origindata.aggregations.geohash.buckets.forEach(function(bucket) {
+        var coordinates = decodeGeoHash(bucket.key);
+        var countNumber = bucket.doc_count;
+        var point = {
+          pointKey: [
+            coordinates.longitude[2], coordinates.latitude[2]
+          ],
+          count: bucket.doc_count
+        }; //[0] min [1]max [2] 中心点
+        columnarPoints.push(point);
+      });
+      points = GeoJSON.parse(columnarPoints, {
+        'Point': 'pointKey'
+      });
+      geojson = turf.centroid(points);
+      var origindatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(points));
+      map.flyTo(origindatasource);
+    }
+
+    function updateView(data) {
+      var centerdatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(data, {
+        markerColor: Cesium.Color.YELLOW,
+        markerSize: 50
+      }));
+    }
+  </script>
+
+</body>
+
+</html>

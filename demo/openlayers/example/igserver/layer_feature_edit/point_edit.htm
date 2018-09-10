@@ -1,0 +1,321 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>向矢量图层中添加点示例</title>
+    <meta charset="UTF-8">
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script  src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var map, vectorLayer;
+        var serverArr = [
+            {
+                ip: "192.168.22.48",
+                gdbpLayerArray: [
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/dapeng',
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/edit_point',
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/edit_line',
+                    'gdbp://MapGisLocal/daPeng/ds/poi/sfcls/edit_region'
+                ],
+                center: [114.48970539557598, 22.563149652172044],
+                zoom: 12,
+                layerIndex:1
+            },
+            {
+                ip: ip,
+                gdbpLayerArray: [],
+                center: [110, 40],
+                zoom: 5,
+                layerIndex:3
+            }
+        ]
+        var config = serverArr[0];
+        var ip = config.ip;
+        var center = config.center;
+        var zoom = config.zoom;
+        var gdbpLayerArray = config.gdbpLayerArray;
+        var layerIndex = config.layerIndex;
+
+        var symbolSize = 0.01;
+        //地图初始化函数
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: center,
+                    zoom: zoom,
+                    projection: "EPSG:4326"
+                }),
+                controls: [new ol.control.MousePosition()]
+            });
+            //初始化矢量图层对象
+            vectorLayer = new Zondy.Map.GdbpLayer("gdbp layers", gdbpLayerArray, {
+                ip: ip,
+                port: "6163"
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(vectorLayer);
+            initFeatureIds();
+        }
+
+        //随机函数生成点
+        function createPoint() {
+            var curMapBound = map.getView().calculateExtent(map.getSize());
+            var w = curMapBound[2] - curMapBound[0];
+            var h = curMapBound[3] - curMapBound[1];
+            var x = Math.random() * w + curMapBound[0];
+            var y = Math.random() * h + curMapBound[1];
+            return new Zondy.Object.GPoint(x, y);
+        }
+        //执行添加点要素
+        function addPoint() {
+            //创建一个点形状，描述点形状的几何信息
+            var gpoint = createPoint();
+            //设置当前点要素的几何信息
+            var fGeom = new Zondy.Object.FeatureGeometry({ PntGeom: [gpoint] });
+            //随机输出1~8之间的整数,作为新添加的要素的颜色号
+            var pntColor = Math.floor(Math.random() * 8 + 1);
+            //描述点要素的符号参数信息
+            var pointInfo = new Zondy.Object.CPointInfo({
+                Angle: 0,
+                Color: pntColor,
+                Space: 0,
+                SymHeight: symbolSize,
+                SymID: 98,
+                SymWidth: symbolSize
+            });
+            //设置当前点要素的图形参数信息
+            var webGraphicInfo = new Zondy.Object.WebGraphicsInfo({ InfoType: 1, PntInfo: pointInfo });
+            //设置添加点要素的属性信息
+            var attValue = ['中国', '中国', 1.0];
+            //创建一个要素
+            var feature = new Zondy.Object.Feature({ fGeom: fGeom, GraphicInfo: webGraphicInfo, AttValue: attValue });
+            //设置要素为点要素
+            feature.setFType(1);
+            //创建一个要素数据集
+            var featureSet = new Zondy.Object.FeatureSet();
+            featureSet.clear();
+            //设置属性结构
+            var cAttStruct = new Zondy.Object.CAttStruct({ FldName: ["Cname", "CNTRY_NAME", "POPULATION"], FldNumber: 3, FldType: ["string", "string", "double"] });
+            featureSet.AttStruct = cAttStruct;
+            //添加要素到要素数据集
+            featureSet.addFeature(feature);
+            //创建一个编辑服务类
+            var editService = new Zondy.Service.EditLayerFeature(gdbpLayerArray[layerIndex], { ip: ip, port: "6163" });
+            editService.add(featureSet, onPointAddSuccess);
+        }
+        //添加点要素回调函数
+        function onPointAddSuccess(rlt) {
+            var result = rlt;
+            if (result) {
+                console.log("添加点要素成功！");
+                vectorLayer.refresh();
+                initFeatureIds();
+            } else {
+                console.log("添加点要素失败！");
+            }
+        }
+
+
+
+        function updatePoint() {
+            //获取当前选择的要素编号
+            var featureIds = $("#featureID").find("option:selected").text();
+            if (featureIds == "请选择要素") {
+                alert("请先选择要素，再进行更新!");
+                return;
+            }
+
+            if (pnt != null) {
+                if (pnt[0] != null && pnt[1] != null) {
+                    //创建一个点形状，描述点形状的几何信息
+                    var gpoint = new Zondy.Object.GPoint(pnt[0], pnt[1]);
+
+                    var fGeom = new Zondy.Object.FeatureGeometry({ PntGeom: [gpoint] });
+                    //如果没有获取到子图符号，则直接返回
+                    if (symbolId == null) {
+                        alert("没有获取到待修改元素的子图符号！");
+                        return;
+                    }
+                    //设置添加点要素的图形参数信息
+                    var symID = symbolId + 1;
+                    //描述点要素的符号参数信息
+                    var pointInfo = new Zondy.Object.CPointInfo({
+                        Angle: 0,
+                        Color: 1442,
+                        Space: 0,
+                        SymHeight: symbolSize,
+                        SymID: symID,
+                        SymWidth: symbolSize
+                    });
+                    //设置当前点要素的图形参数信息
+                    var webGraphicInfo = new Zondy.Object.WebGraphicsInfo({ InfoType: 1, PntInfo: pointInfo });
+                    //设置添加点要素的属性信息
+                    var attValue = ['东京', '日本', 1.0];
+
+                    //创建一个点要素
+                    var newFeature = new Zondy.Object.Feature({ fGeom: fGeom, GraphicInfo: webGraphicInfo, AttValue: attValue });
+                    //设置要素为点要素
+                    newFeature.setFType(1);
+                    newFeature.setFID(featureIds);
+
+                    //创建一个点要素数据集
+                    var featureSet = new Zondy.Object.FeatureSet();
+                    featureSet.clear();
+                    //设置属性结构
+                    var cAttStruct = new Zondy.Object.CAttStruct({ FldName: ["Cname", "CNTRY_NAME", "POPULATION"], FldNumber: 3, FldType: ["string", "string", "double"] });
+                    featureSet.AttStruct = cAttStruct;
+                    //添加要素到要素数据集
+                    featureSet.addFeature(newFeature);
+                    //创建一个编辑服务类
+                    var editService = new Zondy.Service.EditLayerFeature(gdbpLayerArray[layerIndex], { ip: ip, port: "6163" });
+                    editService.update(featureSet, onPointUpdateSuccess);
+                }
+            }
+        }
+
+        //修改点要素回调函数
+        function onPointUpdateSuccess(rlt) {
+            var result = rlt;
+            if (result) {
+                console.log("修改点要素成功！");
+                vectorLayer.refresh();
+            } else {
+                console.log("修改点要素失败！");
+            }
+        }
+
+
+        //执行点删除功能
+        function deletePoint() {
+            //获取当前选择的要素编号
+            var featureIds = $("#featureID").find("option:selected").text();
+            if (featureIds == "请选择要素") {
+                alert("请先选择要素，再进行删除!");
+                return;
+            }
+            //执行删除要素操作
+            var deleteService = new Zondy.Service.EditLayerFeature(gdbpLayerArray[layerIndex], { ip: ip, port: "6163" });
+            deleteService.deletes(featureIds, onPointDeleteSuccess);
+        }
+
+        //删除点要素回调函数
+        function onPointDeleteSuccess(data) {
+            if (data.result.succeed) {
+                console.log("删除点要素成功！");
+                vectorLayer.refresh();
+                //获取Select最大索引值，从0开始
+                var maxIndex = $("#featureID option:last").index();
+                $("#featureID option").remove();
+                //查询地图，更新要素列表
+                initFeatureIds(maxIndex);
+            } else {
+                console.log("删除点要素失败！");
+            }
+        }
+
+        /*===========================以下代码为便于用户操作而添加，用于自动获取数据库中已存在的要素编号===========================*/
+        var featureSelect;
+        //查询地图，获取活动图层所有要素列表
+        function initFeatureIds(maxIndex) {
+            featureSelect = $("#featureID");
+            $("#featureID").empty();
+            $("<option value='请选择要素'>请选择要素</option>").appendTo(featureSelect);
+
+            if (maxIndex != null && maxIndex == 1) {
+                return;
+            }
+
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = true;
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter(gdbpLayerArray[layerIndex], {
+                resultFormat: "json",
+                struct: queryStruct
+            });
+            //设置查询要素数目
+            queryParam.recordNumber = 1000;
+            //设置属性条件
+            //queryParam.where = "name='中国'";
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: ip,
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess);
+        }
+
+        var pntArr = new Array();
+        var symbolArr = new Array();
+        //查询成功回调
+        function querySuccess(a) {
+            if (a.SFEleArray != null) {
+                if (a.SFEleArray.length == 0) {
+                    alert("查询结果为空");
+                }
+                else {
+                    for (var i = 0; i < a.SFEleArray.length; i++) {
+                        var obj = a.SFEleArray[i];
+                        $("<option value='" + i + "'>" + obj.FID + "</option>").appendTo(featureSelect);
+
+                        //获取不同编号对应元素的外包络矩形及中心，用于跳转
+                        var featureBound = obj.bound;
+                        var x = 0, y = 0;
+                        //计算外包矩形的中心点
+                        x = featureBound.xmax != featureBound.xmin ? ((featureBound.xmax - featureBound.xmin) / 2 + featureBound.xmin) : featureBound.xmax;
+                        y = featureBound.ymax != featureBound.ymin ? ((featureBound.ymax - featureBound.ymin) / 2 + featureBound.ymin) : featureBound.ymax;
+                        pntArr.push([x, y]);
+
+                        //获取子图符号
+                        var webGraphic = obj.GraphicInfo;
+                        if (webGraphic != null) {
+                            if (webGraphic.PntInfo != null && webGraphic.PntInfo.SymID != null) {
+                                symbolArr.push(webGraphic.PntInfo.SymID);
+                            }
+                        }
+                    }
+                    //if else(a.SFEleArray.length == 0)
+                }
+                //if (a.SFEleArray != null)
+            }
+        }
+
+        //选中某一个要素编号后触发的事件，用于进行要素定位，地图跳转
+        function onSelect() {
+            var index = $("#featureID").val();
+            if (index == "请选择要素") {
+                return;
+            }
+            pnt = pntArr[index];
+            symbolId = symbolArr[index];
+            //每修改一次子图符号，更新一下子图符号的缓存数组
+            //这里出于执行效率问题，不采用更新一次符号库就重新查询子图符号信息的做法，而是直接变更缓存数组的值
+            symbolArr[index] = symbolId + 1;
+            var view = new ol.View({
+                center:pnt,
+                zoom:zoom,
+                projection:"EPSG:4326"
+            });
+            map.setView(view);
+        }
+    </script>
+</head>
+<body onload="init();">
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="添加点要素" onclick="addPoint()" />
+    请选择要素ID：<select id="featureID" onchange="onSelect()"></select>
+    <input type="button" class="ButtonLib" value="更新点要素" onclick="updatePoint()" />
+    <input type="button" class="ButtonLib" value="删除点要素" onclick="deletePoint()" />
+</div>
+<div id="mapCon">
+</div>
+</body>
+</html>

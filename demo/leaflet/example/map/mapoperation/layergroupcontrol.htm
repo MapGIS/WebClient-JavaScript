@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图层组控制</title>
+    <script include="china,opacity" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        //定义矢量图层和影像图层
+        var vectorLayer, imageLayer;
+        /**初始化地图显示
+         */
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系
+                crs: L.CRS.EPSG3857,
+                //显示中心
+                center: [40, 116.3],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 16,
+                //当前显示等级
+                zoom: 12
+            });
+            //添加天地图矢量图层
+            vectorLayer = L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {
+                maxZoom: 16,
+                minZoom: 0
+            }).addTo(map);
+            //添加天地图影像图层
+            imageLayer = L.tileLayer.chinaProvider('TianDiTu.Satellite.Map', {
+                maxZoom: 16,
+                minZoom: 0
+            }).addTo(map);
+            //添加透明度滑动控件
+            var opacitySlider = new L.Control.opacitySlider().addTo(map);
+            //设置要修改透明度的图层
+            opacitySlider.setOpacityLayer(imageLayer);
+            //设置初始透明度,取值0-1
+            imageLayer.setOpacity(0.5);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height: 100%;position: absolute">
+    </div>
+</body>
+
+</html>

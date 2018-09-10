@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css"/>
+  <title></title>
+  <style>
+    html, body, #map {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
+<script src="../dist/leaflet-wfst.src.js"></script>
+<script>
+  var map = L.map('map').setView([0, 0], 2);
+
+  // add an OpenStreetMap tile layer
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var boundaries = new L.WFS({
+    url: 'http://demo.opengeo.org/geoserver/ows',
+    typeNS: 'topp',
+    typeName: 'tasmania_state_boundaries',
+    crs: L.CRS.EPSG4326,
+    geometryField: 'the_geom',
+    style: {
+      color: 'blue',
+      weight: 2
+    }
+  }, new L.Format.GeoJSON({crs: L.CRS.EPSG4326}))
+    .addTo(map)
+    .once('load', function () {
+      map.fitBounds(boundaries);
+    });
+
+  var roads = new L.WFS({
+    url: 'http://demo.opengeo.org/geoserver/ows',
+    typeNS: 'topp',
+    typeName: 'tasmania_roads',
+    crs: L.CRS.EPSG4326,
+    geometryField: 'the_geom',
+    style: {
+      color: 'black',
+      weight: 1
+    }
+  }).addTo(map);
+
+  var cities = new L.WFS({
+    url: 'http://demo.opengeo.org/geoserver/ows',
+    typeNS: 'topp',
+    typeName: 'tasmania_cities',
+    crs: L.CRS.EPSG4326,
+    geometryField: 'the_geom'
+  }).addTo(map);
+
+
+</script>
+</body>
+</html>

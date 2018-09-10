@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>获取文档地图所有图层信息</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        "use strict";
+
+        /**获取文档地图所有图层信息
+        */
+        function getLayersInfo() {
+            //地图文档目录服务类
+            var CatalogServer = new Zondy.Catalog.MapDoc({
+                //地图文档名称
+                docName: 'WorldJWVector',
+                //IGServer所在地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口
+                port: "6163",
+                //是否返回由DWS所返回的原始格式信息
+                returnFullStyle: true,
+                //设置地图的索引号
+                mapIndex: 0
+            });
+            //执行获取文档地图图层信息方法
+            CatalogServer.getLayersInfo(getDataSuccess);
+        }
+
+        /**获取文档地图图层信息成功回调
+        */
+        function getDataSuccess(data) {
+            //判断是否有返回数据，是否成功
+            if (data != null && data.result && data.result.succeed) {
+                if (data.result.value.length == 0) {
+                    alert("没有获取到地图文档地图图层信息！");
+                    //清空结果显示面板
+                   document.getElementById('resultShow').innerHTML = "";
+                    return;
+                }
+                else {
+                    //将一个JSON转换成一个包含JSON文本的字符串
+                    var formatData = JSON.stringify(data.result);
+                    //显示json字符串导到指定的div中
+                    Process(formatData, 1, "resultShow");
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" value="获取文档地图所有图层信息" onclick="getLayersInfo()" />
+        <br>
+        <div id="introduction">
+            <font style=" float: left; text-align: left">说明：本示例默认操作示例数据库（OpenLayerVecterMap.hdf）的地图文档，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布</font><br />
+            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，否则无法获取信息</font>
+        </div>
+    </div>
+    <div id="resultShow">
+    </div>
+</body>
+</html>

@@ -1,0 +1,611 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>军标标绘</title>
+    <!--必要的脚本引用-->
+    <script include="jquery,jquery-easyui,colorpicker" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //地图容器
+        var map;
+        //军标绘制图层
+        var drawLayer;
+        //矢量资源
+        var source;
+        //绘制工具
+        var drawTool;
+        //修改工具
+        var modifyTool;
+        //移动工具
+        var dragTool;
+        //选择工具
+        var selectTool;
+        //拉框选择工具
+        var boxSelectTool;
+        //选中要素数组
+        var selectedFeatures;
+        //样式数组
+        var styles;
+
+        //初始化
+        function init() {
+            var bingMap = new ol.layer.Tile({
+                source: new ol.source.BingMaps({
+                    imagerySet: 'Road',
+                    key: 'Q57tupj2UBsQNQdju4xL~xBceblfTd6icjljunbuaCw~AhwA-whmGMsfIpVhslZyknWhFYq-GvWJZqBnqV8Zq1uRlI5YM_qr7_hxvdgnU7nH'
+                })
+            });
+
+            source = new ol.source.Vector({ wrapX: false });
+            drawLayer = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: $('#FillClr').val()
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: $('#LinClr').val(),
+                        lineCap: $('#LinHeadType').val(),
+                        lineJoin: $('#LinJointType').val(),
+                        lineDash: [parseInt($('#LinDash').val()), parseInt($('#LinDot').val())],
+                        width: parseInt($('#LinWidth').val())
+                    }),
+                    image: new ol.style.Circle({
+                        radius: parseInt($('#PntRadius').val()),
+                        fill: new ol.style.Fill({
+                            color: $('#FillClr').val()
+                        })
+                    })
+                })
+            });
+
+            map = new ol.Map({
+                target: 'mapCon',
+                layers: [bingMap, drawLayer],
+                view: new ol.View({
+                    center: ol.proj.transform([-93.27, 44.98], 'EPSG:4326', 'EPSG:3857'),
+                    zoom: 3
+                })
+            });
+
+            drawTool = new MilStd.tool.MilStdDrawTool(map);
+            drawTool.on(MilStd.event.MilStdDrawEvent.DRAW_END, onDrawEnd, false, this);
+        }
+
+        //绘制军标
+        function drawArrow(type) {
+            removeInteractions();
+            switch (type) {
+                case "SimpleArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.15,
+                        headWidthFactor: 0.4,
+                        neckHeightFactor: 0.75,
+                        neckWidthFactor: 0.1,
+                        tailWidthFactor: 0.1,
+                        hasSwallowTail: true,
+                        swallowTailFactor: 0.1
+                    });
+                    drawTool.activate(MilStd.EnumMilstdType.SimpleArrow, milParam, "drawSimpleArrow");
+                    break;
+                case "DoubleArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.15,
+                        headWidthFactor: 0.8,
+                        neckHeightFactor: 0.7,
+                        neckWidthFactor: 0.4
+                    });
+                    drawTool.activate(MilStd.EnumMilstdType.DoubleArrow, milParam, "drawDoubleArrow");
+                    break;
+                case "StraightArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.1,
+                        headWidthFactor: 1.3,
+                        neckHeightFactor: 1.0,
+                        neckWidthFactor: 0.7,
+                        tailWidthFactor: 0.07,
+                        hasSwallowTail: false,
+                        swallowTailFactor: 0
+                    });
+                    drawTool.activate(MilStd.EnumMilstdType.StraightArrow, milParam, "drawStraightArrow");
+                    break;
+                case "SingleLineArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.1,
+                        headWidthFactor: 1.3
+                    });
+                    drawTool.activate(MilStd.EnumMilstdType.SingleLineArrow, milParam, "drawdrawSingleLineArrow");
+                    break;
+                case "TriangleFlag":
+                case "RectFlag":
+                case "CurveFlag":
+                    drawTool.activate(type, null, "drawFlag");
+                    break;
+                    //十字箭头指北针
+                case "ArrowCross":
+                    //圆形尖角指北针
+                case "CircleClosedangle":
+                    //尖角指北针
+                case "Closedangle":
+                    //双向尖角指北针
+                case "DoubleClosedangle":
+                    //四角指北针
+                case "Fourstar":
+                    //菱形指北针
+                case "Rhombus":
+                    //同向尖角指北针
+                case "SameDirectionClosedangle":
+                    //三角指北针
+                case "Triangle":
+                    //风向标指北针
+                case "Vane":
+                    drawTool.activate(type, null, "drawCompass");
+                    break;
+                    //贝塞尔曲线成区
+                case "Bezier":
+                    //贝塞尔曲线
+                case "BezierLine":
+                    //集结区
+                case "AssemblyArea":
+                    drawTool.activate(type, null, "drawBazier");
+                    break;
+                default:
+            }
+        };
+        //绘制完成后的回调
+        function onDrawEnd(event) {
+            var drawStyle = new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: $('#FillClr').val()
+                }),
+                stroke: new ol.style.Stroke({
+                    color: $('#LinClr').val(),
+                    lineCap: $('#LinHeadType').val(),
+                    lineJoin: $('#LinJointType').val(),
+                    lineDash: [parseInt($('#LinDash').val()), parseInt($('#LinDot').val())],
+                    width: parseInt($('#LinWidth').val())
+                }),
+                image: new ol.style.Circle({
+                    radius: parseInt($('#PntRadius').val()),
+                    fill: new ol.style.Fill({
+                        color: $('#FillClr').val()
+                    })
+                })
+            });
+
+            var feature = event.feature;
+            feature.setStyle(drawStyle);
+            source.addFeature(feature);
+        }
+
+        //修改军标
+        function modifyArrow() {
+            removeInteractions();
+            modifyTool = new MilStd.ModifyTool(map);
+            modifyTool.activate();
+        };
+
+        //移动军标
+        function moveArrow() {
+            removeInteractions();
+
+            dragTool = new MilStd.DragPan(map);
+            dragTool.activate();
+        };
+
+        //移除选中的军标
+        function removeArrow() {
+            removeInteractions();
+
+            boxSelectTool = new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [0, 0, 255, 1]
+                    })
+                })
+            });
+            map.addInteraction(boxSelectTool);
+            boxSelectTool.on('boxend', function (e) {
+                selectedFeatures = new Array();
+                var extent = boxSelectTool.getGeometry().getExtent();
+                source.forEachFeatureIntersectingExtent(extent, function (feature) {
+                    selectedFeatures.push(feature);
+                });
+                if (selectedFeatures && selectedFeatures.length > 0) {
+                    for (var i = 0; i < selectedFeatures.length; i++) {
+                        source.removeFeature(selectedFeatures[i]);
+                    }
+                }
+            });
+        }
+
+        var inputObjStyleEx = null;
+        //*设置颜色选择器
+        function showcolors(ids) {
+            var o = document.getElementById(ids);
+            inputObjStyleEx = o;
+            showColorPicker(o, o, colorchangStyleEx);
+        }
+        function colorchangStyleEx(e) {
+            inputObjStyleEx.style.background = inputObjStyleEx.value;
+        }
+
+        //修改样式
+        function editGeom() {
+            removeInteractions();
+
+            selectTool = new ol.interaction.Select();
+            map.addInteraction(selectTool);
+
+            boxSelectTool = new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [0, 0, 255, 1]
+                    })
+                })
+            });
+            map.addInteraction(boxSelectTool);
+            boxSelectTool.on('boxend', function (e) {
+                selectedFeatures = new Array();
+                styles = new Array();
+                var extent = boxSelectTool.getGeometry().getExtent();
+                source.forEachFeatureIntersectingExtent(extent, function (feature) {
+                    styles.push(feature.getStyle());
+                    selectedFeatures.push(feature);
+                    var editStyle = getEditStyle();
+                    feature.setStyle(editStyle);
+                    $('#cancelEditBtn').linkbutton({ disabled: false })
+                });
+            });
+
+            selectTool.on('select', function (e) {
+                styles = new Array();
+                selectedFeatures = e.selected;
+                if (selectedFeatures && selectedFeatures.length > 0) {
+                    for (var i = 0; i < selectedFeatures.length; i++) {
+                        styles.push(selectedFeatures[i].getStyle());
+                        var editStyle = getEditStyle();
+                        selectedFeatures[i].setStyle(editStyle);
+                    }
+                }
+                $('#cancelEditBtn').linkbutton({ disabled: false })
+            });
+        }
+
+        //获取表单样式信息
+        function getEditStyle() {
+            var style = new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: $('#FillClr').val()
+                }),
+                stroke: new ol.style.Stroke({
+                    color: $('#LinClr').val(),
+                    lineCap: $('#LinHeadType').val(),
+                    lineJoin: $('#LinJointType').val(),
+                    lineDash: [parseInt($('#LinDash').val()), parseInt($('#LinDot').val())],
+                    width: parseInt($('#LinWidth').val())
+                }),
+                image: new ol.style.Circle({
+                    radius: parseInt($('#PntRadius').val()),
+                    fill: new ol.style.Fill({
+                        color: $('#FillClr').val()
+                    })
+                })
+            });
+
+            return style;
+        }
+        //撤销样式修改
+        function cancelEditGeom() {
+            if (selectedFeatures && selectedFeatures.length > 0) {
+                for (var i = 0; i < selectedFeatures.length; i++) {
+                    selectedFeatures[i].setStyle(styles[i]);
+                }
+            }
+            selectedFeatures = new Array();
+            styles = new Array();
+            $('#cancelEditBtn').linkbutton({ disabled: true });
+        }
+
+        //移除所有控件
+        function removeInteractions() {
+            $('#cancelEditBtn').linkbutton({ disabled: true });
+
+            if (drawTool) {
+                drawTool.deactivate();
+            }
+            if (modifyTool) {
+                modifyTool.deactivate();
+            }
+            if (dragTool) {
+                dragTool.deactivate();
+            }
+            if (selectTool) {
+                map.removeInteraction(selectTool);
+            }
+            if (boxSelectTool) {
+                map.removeInteraction(boxSelectTool);
+            }
+        }
+
+        //清除所有要素
+        function removeAllFeatures() {
+            removeInteractions();
+            source.clear();
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="mapCon" style="position: absolute; width: 100%; height: 95%;">
+    </div>
+    <div id="editGeomWin" class="easyui-window" data-options="title:'军标',closed:false,maximizable:false,minimizable:false,closable:false"
+         style="width: 450px; height: 516px; padding: 5px; left: 60px; top: 20px;">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'center',border:false">
+                <div class="easyui-tabs" fit="true">
+                    <div title="图形编辑" style="padding: 10px;">
+                        <div class="itembox" style="border: 1px dashed gray; padding: 5px; width: 390px;
+                            height: 340px">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p style="font-weight: bold">
+                                            箭头&nbsp;
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/custom_tail_arrow.png" title="简单箭头" style="cursor: pointer;"
+                                                 onclick="drawArrow('SimpleArrow')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/stright_arrow.png" title="直箭头" style="cursor: pointer;"
+                                                 onclick="drawArrow('StraightArrow')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/double_arrow.png" title="双箭头" style="cursor: pointer;"
+                                                 onclick="drawArrow('DoubleArrow')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/singleLine_arrow.png" title="单线箭头" style="cursor: pointer;"
+                                                 onclick="drawArrow('SingleLineArrow')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p style="font-weight: bold">
+                                            指北针&nbsp;
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/arrowcross.png" title="十字箭头指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('ArrowCross')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/CircleClosedangleCompass.png" title="圆形尖角指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('CircleClosedangle')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/closedangle.png" title="尖角指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('Closedangle')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/DoubleClosedangleCompass.png" title="双向尖角指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('DoubleClosedangle')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/fourstar.png" title="四角指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('Fourstar')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/rhombus.png" title="菱形指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('Rhombus')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/SameDirectionClosedangleCompass.png" title="同向尖角指北针"
+                                                 style="cursor: pointer;" onclick="drawArrow('SameDirectionClosedangle')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/triangle.png" title="三角指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('Triangle')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/VaneCompass.png" title="风向标指北针" style="cursor: pointer;"
+                                                 onclick="drawArrow('Vane')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p style="font-weight: bold">
+                                            旗帜&nbsp;
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/triangle_flag.png" title="三角旗" style="cursor: pointer;"
+                                                 onclick="drawArrow('TriangleFlag')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/rect_flag.png" title="矩形旗" style="cursor: pointer;"
+                                                 onclick="drawArrow('RectFlag')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/curve_flag.png" title="波浪旗" style="cursor: pointer;"
+                                                 onclick="drawArrow('CurveFlag')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p style="font-weight: bold">
+                                            集结区&nbsp;
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/arbitrary_area.png" title="任意区" style="cursor: pointer;"
+                                                 onclick="drawArrow('Bezier')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/assembly.png" title="集结区" style="cursor: pointer;"
+                                                 onclick="drawArrow('AssemblyArea')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border: 1px dotted gray; padding: 5px; width: 50px; height: 50px">
+                                            <img src="../../img/mapgis/ArrowIcon/smooth_curve.png" title="光滑曲线" style="cursor: pointer;"
+                                                 onclick="drawArrow('BezierLine')" onmouseover="this.style.width='50px';this.style.height='50px';"
+                                                 onmouseout="this.style.width='44px';this.style.height='44px';" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="text-align: right; margin-top: 5px;">
+                            <a class="easyui-linkbutton" onclick="modifyArrow()" title="单击此按钮后用鼠标左键选中图形进行修改">修改图形</a>
+                            <a class="easyui-linkbutton" onclick="moveArrow()" title="单击此按钮后用鼠标左键移动图形">移动图形</a>
+                            <a class="easyui-linkbutton" onclick="removeArrow()" title="单击此按钮后鼠标拉框选中移除图形">移除图形</a>
+                        </div>
+                    </div>
+                    <div title="样式修改" style="padding: 10px; text-align: center;">
+                        <div style="padding: 10px; background: #fff; border: 1px solid #ccc; margin-top: 20px;
+                            height: 300px">
+                            <table id="geomInfoTable" style="line-height: 40px">
+                                <tr>
+                                    <td width="40%">
+                                        <span>填充色</span>
+                                    </td>
+                                    <td width="60%">
+                                        <input type="text" id="FillClr" name="FillClr" onclick="showcolors('FillClr')" style="background-color: #C0C0C0;
+                                            margin: 5px;" alt="clrDlgLin" value="#C0C0C0" readonly=readonly />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="40%">
+                                        <span>点半径</span>
+                                    </td>
+                                    <td width="60%">
+                                        <input type="text" id="PntRadius" name="PntRadius" style="margin: 5px;" value="10" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="40%">
+                                        <span>线头类型</span>
+                                    </td>
+                                    <td width="60%">
+                                        <select id="LinHeadType" style="width: 170px; margin: 5px;">
+                                            <option value="round">圆头</option>
+                                            <option value="square">平头</option>
+                                            <option value="butt">尖头</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="40%">
+                                        <span>拐角类型</span>
+                                    </td>
+                                    <td width="60%">
+                                        <select id="LinJointType" style="width: 170px; margin: 5px;">
+                                            <option value="round">圆角</option>
+                                            <option value="bevel">平角</option>
+                                            <option value="miter">尖角</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="40%">
+                                        <span>线形</span>
+                                    </td>
+                                    <td width="60%">
+                                        <input type="text" id="LinDash" name="LinDash" value="0" style="width: 30px; margin: 5px;" />(dash)
+                                        <input type="text" id="LinDot" name="LinDot" value="0" style="width: 30px; margin: 5px;" />(space)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="40%">
+                                        <span>线颜色</span>
+                                    </td>
+                                    <td width="60%">
+                                        <input type="text" id="LinClr" name="OutClr" onclick="showcolors('LinClr')" style="background-color: #000000;
+                                            margin: 5px;" alt="clrDlgLin" value="#000000" readonly=readonly />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="40%">
+                                        <span>线宽</span>
+                                    </td>
+                                    <td width="60%">
+                                        <input type="text" id="LinWidth" name="OutPenW" style="margin: 5px;" value="2" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="text-align: right; margin: 5px;">
+                            <a class="easyui-linkbutton" iconcls="icon-ok" onclick="editGeom()">修改样式</a>
+                            <a id="cancelEditBtn" class="easyui-linkbutton" iconcls="icon-cancel" onclick="cancelEditGeom()" disabled="true">
+                                撤销上次修改
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-options="region:'south',border:false" style="text-align: right; padding: 5px 0;">
+                <a class="easyui-linkbutton" onclick="removeInteractions()">清除状态</a>
+                <a class="easyui-linkbutton" onclick="removeAllFeatures()">清空要素</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

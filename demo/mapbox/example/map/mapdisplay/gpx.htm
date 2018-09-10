@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>加载GPX数据</title>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        function init(){
+            //实例化要加载的source来源对象
+            var osm = {
+                //来源类型为栅格瓦片
+                "type": "raster",
+                'tiles': [
+                     //来源请求地址
+                   "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                ],
+                //栅格瓦片的分辨率
+                'tileSize': 256
+            };
+            var map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map',
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    "version": 8,
+                    //添加来源
+                    "sources": {
+                        "osm": osm
+                    },
+                    //设置加载并显示来源的图层信息
+                    "layers": [
+                        {
+                            //图层id，要保证唯一性
+                            "id": "OSMLayer",
+                            //图层类型
+                            "type": "raster",
+                            //图层来源
+                            "source": "osm",
+                            //图层最小缩放级数
+                            "minzoom": 0,
+                            //图层最大缩放级数
+                            "maxzoom": 22
+                        },
+                    ],
+                },
+                //地图中心点
+                center: [-71, 42.35],
+                //地图当前缩放级数
+                zoom: 10,
+                //倾斜角度，与屏幕面的夹角（0-60）度
+                pitch: 45
+            });
+            /**
+            解析gpx文件
+            */
+            $.ajax({
+                url: "https://openlayers.org/en/v3.19.1/examples/data/gpx/fells_loop.gpx",
+                type: "GET",
+                dataType: 'xml',
+                success: function (xml) {
+                    if ($(xml).find("wpt").length != 0) {
+                        var jsonArray = new Array();
+                        $(xml).find("wpt").each(function (i) {
+                            var wptjson = new Object();
+                            //获取纬度
+                            var lat = $(this).attr("lat");
+                            //获取经度
+                            var lon = $(this).attr("lon");
+                            var coordinate = [lon * 1, lat * 1];
+                            wptjson.coordinate = coordinate;
+                            jsonArray.push(wptjson);
+                        });
+                        var wptgeojson = GeoJSONParse(jsonArray);
+                        map.on('load', function () {
+                            map.addLayer({
+                                "id": "gpxpoints",
+                                "type": "circle",
+                                "source": {
+                                    "type": "geojson",
+                                    "data": wptgeojson,
+                                },
+                                "paint": {
+                                    "circle-radius": 5, 
+                                    "circle-color": "#FF0000",
+                                    "circle-opacity": 0.8, 
+                                    "circle-stroke-width": 1, 
+                                    "circle-stroke-color": "#0000FF", 
+                                    "circle-stroke-opacity": 0.7 
+                                }
+                            });
+                        });
+                    }
+                    if ($(xml).find("rte").length != 0) {
+                        var rtejson = new Object();
+                        var lines = new Array();
+                        $(xml).find("rte").find("rtept").each(function (i) {
+                            //获取纬度
+                            var lat = $(this).attr("lat");
+                            //获取经度
+                            var lon = $(this).attr("lon");
+                            var coordinate = [lon * 1, lat * 1];
+                            lines.push(coordinate);
+                        });
+                        rtejson.line = lines;
+                        jsonArray.push(rtejson);
+                        var rtegeojson = GeoJSONParse(jsonArray);
+                        map.on('load', function () {
+                            //添加线图层
+                            map.addLayer({
+                                "id": "geoline",
+                                "type": "line",
+                                "source": {
+                                    "type": "geojson",
+                                    "data": rtegeojson
+                                },
+                                "layout": {
+                                    //线头的样式，butt尖头，round圆头，square平头
+                                    "line-cap": "square",
+                                    //折线的连接样式，bevel平拐，round圆拐，miter棱拐
+                                    "line-join": "round",
+                                    //是否可见 'visible'可见，'none'不可见
+                                    "visibility": "visible",
+                                },
+                                "paint": {
+                                    //线宽
+                                    "line-width": 2,
+                                    //颜色
+                                    "line-color": "#00FFFF",
+                                    //透明度
+                                    "line-opacity": 1,
+                                }
+                            });
+                        });
+                    }
+                    if ($(xml).find("trk").length != 0) {
+                        $(xml).find("trk").find("trkpt").each(function (i) {
+                            
+                        })
+                    }
+                },
+                error: function () { alert("加载失败"); }
+            });
+        }
+
+        /**
+        解析成geojson
+        */
+        function GeoJSONParse(jsonArray) {
+            var features = new Array();
+            for (var i = 0; i < jsonArray.length; i++) {
+                var feature = new Object();
+                feature["type"] = "Feature";
+                var geometry = new Object();
+                for (var key in jsonArray[i]) {
+                    if (key == "coordinate") {
+                        geometry["type"] = "Point";
+                        geometry["coordinates"] = jsonArray[i][key];
+                        feature["geometry"] = geometry;
+                    }
+                    else if (key == "line") {
+                        geometry["type"] = "LineString";
+                        geometry["coordinates"] = jsonArray[i][key];
+                        feature["geometry"] = geometry;
+                    }
+                    else {
+                        var properties = new Object();
+                        properties[key] = jsonArray[i][key];
+                        feature.properties = properties;
+                    }
+                }
+                features.push(feature);
+            }
+            var geojson = {
+                "type": "FeatureCollection",
+                "features": features
+            };
+            return geojson;
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id='map'></div>
+</body>
+</html>

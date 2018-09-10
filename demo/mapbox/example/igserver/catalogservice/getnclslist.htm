@@ -1,0 +1,60 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>获取GDB下网络类列表</title>
+    <script include="json" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        /** 获取指定数据库下网络类信息
+        */
+        function getNclsList() {
+            //实例化VectorLayer类，设置目标数据源与GDB 
+            var s = new Zondy.Catalog.VectorLayer({
+                //设置GIS数据服务器IP
+                ip: 'develop.smaryun.com',
+                //设置GIS服务端口号
+                port: '6163',
+                //设置数据源名称
+                serverName: 'MapGISLocal',
+                //设置数据库名称
+                gdbName: 'sample'
+            });
+            //通过实例化的VectorLayer类对象调用getNclsList接口，回调中处理结果信息
+            s.getNclsList(getDataSuccess);
+        }
+
+        /**回调函数，处理显示结果信息
+        *@param(json对象)data获取结果对象
+        */
+        function getDataSuccess(data) {
+            if (data != null && data.result && data.result.succeed) {
+                //将一个JOSN对象转换成一个包含 JSON 文本的字符串。
+                var formatData = JSON.stringify(data.result.value);
+                //显示json字符串导到指定的div中
+                Process(formatData, 1, "resultShow");
+            }
+            else {
+                alert("没有获取到目标信息！");
+                //清空结果显示面板
+                document.getElementById("resultShow").innerHTML = "";
+                return;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="ToolLib">
+        <input type='button' class="ButtonLib" value='获取GDB下网络类列表' onclick='getNclsList()' />
+        <br />
+        <div id="introduction">
+            <font style=" float: left; text-align: left">说明：获取在线数据，请保持网络稳定。</font><br />
+        </div>
+    </div>
+    <div id="resultShow">
+    </div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-Border</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script include="d3,geojson" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .land {
+            background: #fcfcfa;
+            fill: #fff;
+        }
+
+        .coast-buffers {
+            fill: none;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+        }
+
+        .state-borders {
+            fill: none;
+            stroke: #ccc;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map = L.map('map').setView([37.8, -96], 3); //这里的2级别很重要如果级别太大则无法生成对应的蜂窝格
+        var mapboxTile;
+
+        initMap();
+
+        updateView();
+
+        function initMap() {
+            mapboxTile = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+                'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+                    attribution: '<a href="#">MapBox&MapGIS</a>',
+                    maxZoom: 18,
+                    id: 'mapbox.light'
+                }).addTo(map);
+        }
+
+        function updateView() {
+            //创建对数插值方式
+            var color = d3.scaleOrdinal().domain(d3.range(90, 0, -10))
+                .range(["#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494",
+                    "#081d58"
+                ]);
+
+            d3.json("../../data/d3/us-mbostock.json").then(function (us) {
+                var countriesOverlay = L.zondy.d3SvgOverlay(function (svg, proj) {
+                    var defs = svg.append("defs");
+
+                    defs.append("path")
+                        .datum(topojson.feature(us, us.objects.land))//将topojson转换成geojson
+                        .attr("id", "land")
+                        .attr('d', proj.pathFromGeojson);//geojson转换成屏幕坐标
+
+                    defs.append("clipPath")
+                        .attr("id", "clip-land")
+                        .append("use")
+                        .attr("xlink:href", "#land");
+
+                    svg.append("use")
+                        .attr("class", "land")//绑定land样式
+                        .attr("xlink:href", "#land");
+
+                    svg.append("g")
+                        .attr("class", "coast-buffers")//绑定蓝色缓冲样式
+                        .attr("clip-path", "url(#clip-land)")
+                        .selectAll("use")
+                        .data(color.domain())
+                        .enter().append("use")
+                        .style("stroke", color)
+                        .style("stroke-width", function (d) {
+                            return d + "px";
+                        })
+                        .attr("xlink:href", "#land");
+
+                    svg.append("path")
+                        .datum(topojson.mesh(us, us.objects.states, function (a, b) {
+                            return a !== b;
+                        }))
+                        .attr("class", "state-borders")//绑定灰色边界线样式
+                        .attr("d", proj.pathFromGeojson);
+                });
+
+                countriesOverlay.addTo(map)
+            });
+
+        }
+    </script>
+
+</body>
+
+</html>

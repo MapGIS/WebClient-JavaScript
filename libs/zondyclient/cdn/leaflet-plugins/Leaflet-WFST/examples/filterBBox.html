@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" />
+  <title></title>
+  <style>
+    html,
+    body,
+    #map {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
+  <script src="lib/proj4.js"></script>
+  <script src="lib/proj4leaflet.js"></script>
+  <script src="../dist/leaflet-wfst.src.js"></script>
+  <script>
+    var map = L.map('map').setView([60.372465778991284, 53.64349365234375], 9);
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var objWfst = {
+      url: 'http://geoserver.ics.perm.ru/geoserver/ows',
+      typeNS: 'ics',
+      typeName: 'perm_water_polygon',
+      crs: L.CRS.EPSG4326,
+      geometryField: 'ogr_geometry',
+      filter: new L.Filter.BBox('ogr_geometry', map.getBounds(), L.CRS.EPSG4326),
+      style: {
+        color: 'blue',
+        weight: 2
+      }
+    };
+
+    var wfst = new L.WFST(objWfst).addTo(map);
+  </script>
+</body>
+
+</html>
