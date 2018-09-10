@@ -3,7 +3,7 @@
 
 ---
 #### 提交BUG
-> 找到bug请提交[issue](https://github.com/ParnDeedlit/WebClient-Leaflet/issues)
+> 找到bug请提交[issue](https://github.com/MapGIS/WebClient-JavaScript/issues)
 
 ---
 **一共分为三步**
