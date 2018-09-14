@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../libs/material/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../libs/material/img/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        中地数码 MapGIS WebClient
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'
+    />
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="../libs/google/material.css" />
+    <!-- CSS Files -->
+    <link href="../libs/material/css/material-dashboard.css" rel="stylesheet" />
+    <link href="../css/zondy/ui.css" rel="stylesheet" />
+    <style>
+        #scrollSearchDiv {
+           width: 40px;
+           height: 40px;
+           line-height: 50px;
+           border-radius: 20px;
+           box-shadow: 0 0 10px rgba(0,0,0,0.8); 
+           display: none;
+           position: fixed;
+           right: 100px;
+           bottom: 150px;
+           text-align: center;
+           font-size: 16px;
+           background-color: #ffffff;
+           z-index: 99998;
+       }
+    div.content-top-fix>#scrollSearchDiv>a {
+           font-style: normal;
+           font-variant: normal;          
+           color:#d81b60;     
+           font-size: 26px;
+       }
+   </style>
+</head>
+
+<body class="">
+        <div class="sidebar" data-color="rose" data-background-color="black" data-image="../img/card/sidebar-1.jpg">
+            <div class="logo">
+                <a href="http://www.smaryun.com" class="simple-text logo-normal">中地数码</a>
+            </div>
+            <div class="sidebar-wrapper ps-container ps-theme-default" id="body-sidebar">
+            </div>
+        </div>
+        <div class="main-panel">
+            <!-- Navbar -->
+            <!-- <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="body-header"></nav> -->
+            <nav class="navbar navbar-expand-lg fixed-top1 " id="body-header"></nav>
+            <!-- End Navbar -->
+            <div class="content content-top-fix">
+                <div class="container-fluid">
+                    <div class="section text-center">
+                        <div class="md-card md-card-timeline md-theme-default md-card-plain">
+                            <ul class="timeline timeline-simple">
+                                <li class="timeline-inverted">
+                                    <div class="timeline-badge danger"><i class="material-icons md-theme-default">dns</i></div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading"><span class="badge badge-danger">Some title</span></div>
+                                        <div class="timeline-body">
+                                            <p>
+                                                Wifey made the best Father's Day meal ever. So thankful so happy so blessed. Thank
+                                                you for making my family
+                                                We just had fun with the “future” theme !!! It was a fun night all together ... The
+                                                always rude Kanye Show
+                                                at 2am Sold Out Famous viewing @ Figueroa and 12th in downtown.</p>
+                                        </div>
+                                        <h6>
+                                            <h6><i class="ti-time"></i>
+                                                11 hours ago via Twitter
+                                            </h6>
+                                        </h6>
+                                    </div>
+                                </li>
+                                <li class="timeline-inverted">
+                                    <div class="timeline-badge success"><i class="material-icons md-theme-default">dns</i></div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading"><span class="badge badge-success">Another Title</span></div>
+                                        <div class="timeline-body">
+                                            <p>
+                                                Thank God for the support of my wife and real friends. I also wanted to point out
+                                                that it’s the first album
+                                                to go number 1 off of streaming!!! I love you Ellen and also my number one design
+                                                rule of anything I do from
+                                                shoes to music to homes is that Kim has to like it....</p>
+                                        </div>
+                                        <!---->
+                                    </div>
+                                </li>
+                                <li class="timeline-inverted">
+                                    <div class="timeline-badge info"><i class="material-icons md-theme-default">dns</i></div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading"><span class="badge badge-info">Another Title</span></div>
+                                        <div class="timeline-body">
+                                            <div>
+                                                <p>
+                                                    Called I Miss the Old Kanye That’s all it was Kanye And I love you like Kanye
+                                                    loves Kanye Famous viewing @
+                                                    Figueroa and 12th in downtown LA 11:10PM</p>
+                                                <p>
+                                                    What if Kanye made a song about Kanye Royère doesn't make a Polar bear bed but
+                                                    the Polar bear couch is my
+                                                    favorite piece of furniture we own It wasn’t any Kanyes Set on his goals Kanye</p>
+                                                <hr>
+                                                <div class="dropdown"><button type="button" class="md-button md-button md-info md-round dropdown-toggle md-theme-default"
+                                                        data-toggle="dropdown">
+                                                        <div class="md-ripple">
+                                                            <div class="md-button-content"><i class="fa-icon md-theme-default">build</i></div>
+                                                        </div>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li><a href="#">Mike John responded to your email</a></li>
+                                                        <li><a href="#">You have 5 new tasks</a></li>
+                                                        <li><a href="#">You're now friend with Andrew</a></li>
+                                                        <li><a href="#">Another Notification</a></li>
+                                                        <li><a href="#">Another One</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!---->
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="scrollSearchDiv"><a href="#">^</a></div>
+            </div>
+        </div>
+
+        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+            <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+        </div>
+        <div class="ps-scrollbar-y-rail" style="top: 0px; right: 0px; height: 974px;">
+            <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 512px;"></div>
+        </div>
+
+    <!--   Core JS Files   -->
+    <script src="../libs/material-pro/js/core/jquery.min.js" type="text/javascript"></script>
+    <script src="../libs/material-pro/js/core/popper.min.js" type="text/javascript"></script>
+    <script src="../libs/material-pro/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+    <script src="../libs/material-pro/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+
+    <!--  Notifications Plugin    -->
+    <script src="../libs/material-pro/js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../libs/material-pro/js/material-dashboard.min.js?v=2.1.0" type="text/javascript"></script>
+
+    <script type="text/javascript" src="../libs/jquerylazyload/lazyload.min.js"></script>
+
+    <!-- 系统首页功能库 -->
+    <script type="text/javascript" src="../config/config-cesium.js?v2.0"></script>
+    <script type="text/javascript" src="../js/util-ui.js"></script>
+    <script type="text/javascript" src="../js/app.js"></script>
+    <script>
+        mapMode = MODE_CESIUM;
+        $('#body-header').load("./second-header.html");
+
+    </script>
+</body>
+
+</html>
