@@ -7,17 +7,94 @@
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
-            中地数码 MapGIS WebClient
+        中地数码 MapGIS WebClient
     </title>
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'
-    />
-    <!--   <link rel="stylesheet" type="text/css" href="../libs/material-kit/css/materialicon.css" />
-  <link rel="stylesheet" href="../libs/material-kit/css/font-awesome.min.css"> -->
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <link rel="stylesheet" type="text/css" href="../libs/material-kit/css/materialicon.css" />
+    <link rel="stylesheet" href="../libs/material-kit/css/font-awesome.min.css">
     <!--     Fonts and icons     -->
-    <link rel="stylesheet" type="text/css" href="../libs/google/material.css"/>
+    <link rel="stylesheet" type="text/css" href="../libs/google/material.css" />
     <!-- CSS Files -->
     <link href="../libs/material-kit/css/material-kit.css?v=2.0.3" rel="stylesheet" />
     <link href="../css/zondy/ui.css" rel="stylesheet" />
+    <style>
+        .section .decoration {
+            display: table-cell;
+            width: 10%;
+            position: relative;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .section .news-item {
+            display: table-row;
+            width: 100%;
+       }
+       .section .news-circle {
+            display: inline-block;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            vertical-align: middle;
+        }
+        .section .solid-circle {
+            background: #ccc;
+            border-radius: 50%;
+            width: 0.4rem;
+            height: 0.4rem;
+            overflow: hidden;
+            margin: 0.2rem;
+        }
+        .section  .news-box {
+            display: table-cell;
+            line-height: 3rem;
+            width: 80%;
+            vertical-align: middle;
+            color: #000;
+            padding-left: 15px;
+            position: relative;
+            border-radius: 2px;
+        }
+        .section.new-attributes_content {            
+            color: inherit;
+            font-size: 15px;
+            padding-top: 10px;
+            padding-right: 10px;
+            line-height: 0.3;
+        }
+        .section .news-list {
+                /* display: table;
+                table-layout: fixed;
+                width: 100%; */
+                font-size: 1.2rem;
+                line-height: 3rem;
+            }
+        p {
+                text-align:left;
+                display: block;
+                margin-block-start: 1em;
+                margin-block-end: 1em;
+                margin-inline-start: 0px;
+                margin-inline-end: 0px;
+            }
+        /* 下面的样式是设置时间轴的线条 */
+        .news-box:before {     
+            top: 0;
+            bottom: 0;
+            position: absolute;
+            content: " ";
+            width: 1px;
+            background-color:#d2d2d2;
+            left: -66px;
+            margin-left: -1.5px;
+            /* display: table-cell;
+            background-color:#d2d2d2;
+            width: 2px; 
+            position: relative;
+            vertical-align: middle;
+            text-align: center; */
+        }
+      
+    </style>
 </head>
 
 <body class="landing-page sidebar-collapse">
@@ -84,7 +161,8 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="card-header card-header-image">
-                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/Leaflet.png" alt="Card image cap">
+                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/Leaflet.png"
+                                                alt="Card image cap">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
@@ -129,7 +207,8 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="card-header card-header-image">
-                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/Cesium.png" alt="Card image cap">
+                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/Cesium.png"
+                                                alt="Card image cap">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
@@ -177,7 +256,8 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="card-header card-header-image">
-                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/OpenLayers.png" alt="Card image cap">
+                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/OpenLayers.png"
+                                                alt="Card image cap">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
@@ -222,7 +302,8 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="card-header card-header-image">
-                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/Mapbox-GL.png" alt="Card image cap">
+                                            <img class="card-img-top rounded mx-auto d-block" src="../img/card/Mapbox-GL.png"
+                                                alt="Card image cap">
                                         </div>
                                     </div>
                                     <div class="col-md-7">
@@ -268,7 +349,8 @@
         </div>
         <div class="section text-center">
             <h2 class="title text-all">云平台, 大数据, 分布式,流式传输等现代主流技术</h2>
-            <h4 class="text-center description text-all">elasticsearch, geospark, vectortile, webgl, socket-stream互联网主流技术.</h4>
+            <h4 class="text-center description text-all">elasticsearch, geospark, vectortile, webgl,
+                socket-stream互联网主流技术.</h4>
             <div class="team main-panner-top">
                 <div class="row">
                     <div class="col-md-1"></div>
@@ -358,7 +440,101 @@
                 </div>
             </div>
         </div>
-
+        <!-- style="background-image: url('../img/card/bg9.jpg')" -->
+        <div class="section text-center" >
+        <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+                <div class="panel-body">
+                        <div class="news-list">
+                            <div class="news-item">
+                                <div class="decoration">
+                                    <div class="news-circle">
+                                        <div class="solid-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="news-box">
+                                    <p class="new-attributes_content">
+                                        <a href="../examples/leaflet/editor.html#12_graphiclayer_webgl" style="color: inherit;" target="_blank">高效率点图层支持数据量由之前的30万提升至100万，性能提升至3倍以上，百万点数据1秒内完成渲染；并支持GeoJSON，TopoJSON，二维表等多种数据格式；支持修改样式；支持属性筛选、鼠标事件等交互操作</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="decoration">
+                                    <div class="news-circle">
+                                        <div class="solid-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="news-box">
+                                    <p class="new-attributes_content">
+                                        <a href="../examples/leaflet/editor.html#dataFlowService_mapv" style="color: inherit;" target="_blank">SuperMap iClient for Leaflet 数据流图层新增 MapV
+                                            引擎，绘制 Marker 的性能大幅提升，矢量点渲染数据量由1万提升至10万，栅格图片渲染数据量由3000提升至1万</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="decoration">
+                                    <div class="news-circle">
+                                        <div class="solid-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="news-box">
+                                    <p class="new-attributes_content">
+                                        <a href="../examples/leaflet/editor.html#echarts_linesDrawMillionsBeijingRoadsNetwork" style="color: inherit;" target="_blank">
+                                            对接最新 ECharts，新增增量渲染能力，支持千万级数据的可视化渲染</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="decoration">
+                                    <div class="news-circle">
+                                        <div class="solid-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="news-box">
+                                    <p class="new-attributes_content">
+                                        <a href="../examples/openlayers/editor.html#mvtvectorlayer_mbstyle_landuse" style="color: inherit;" target="_blank">
+                                            优化 OpenLayers 地图库的三方插件对于 MVT 矢量瓦片样式的支持效果，支持面填充、支持文字标签避让、
+                                            解决多面丢失、优化中文沿线标注、优化渲染性能等，
+                                            让 OpenLayers 拥有了可以媲美 MapboxGL 对 MVT 矢量瓦片的渲染效果；同时还支持除 3857 以外的其它任意标准坐标系</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="decoration">
+                                    <div class="news-circle">
+                                        <div class="solid-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="news-box">
+                                    <p class="new-attributes_content">
+                                        <a href="../examples/mapboxgl/editor.html#deckglLayer_sfcontour" style="color: inherit;" target="_blank">
+                                            集成 DECK.GL 可视化库，新增 DECK.GL、ECharts、ECharts GL 的更多特效和范例
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="decoration">
+                                    <div class="news-circle">
+                                        <div class="solid-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="news-box">
+                                    <p class="new-attributes_content">
+                                        优化 API 文档，整理文档内容、优化文档显示格式、完善接口参数及其使用描述，极大的提升文档的可读性与实用性
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+        <div class="col-md-2"></div>
+               
+        </div>
+               
+        </div>
+      
     </div>
 
     <footer class="footer footer-default" id="body-footer"></footer>
