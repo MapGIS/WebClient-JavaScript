@@ -1,7 +1,8 @@
 footer {
-    padding: 0.9375rem 0;
+    padding: 0.4rem 0;
     text-align: center;
     display: flex;
+    background-color: #2196F3;
 }
 
 .float-left {
@@ -19,29 +20,37 @@ footer ul li {
 }
 
 footer ul li a {
-
-    padding: 0.9375rem;
+    padding:1rem   0.9375rem; 
+    margin-top:10px;
     font-weight: 500;
     font-size: 12px;
     text-transform: uppercase;
     border-radius: 3px;
     position: relative;
     display: block;
+    color: #ffffff;
+    
 }
 
 footer ul li a:hover,
 footer ul li a:focus {
-    color: #9c27b0;
+    color: inherit;
 }
 
 footer .copyright {
+    margin-top:10px;
     padding: 15px 0;
+    color:#ffffff;
 }
 
 .float-right {
     float: right !important;
 }
-
+.float-right a {
+    color: #89229b;
+    text-decoration: none;
+    background-color: transparent;
+}
 footer .copyright .material-icons {
     font-size: 18px;
     position: relative;
