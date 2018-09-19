@@ -5,37 +5,23 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>中地数码 MapGIS WebClient</title>
-    <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../libs/bootstrap4/css/bootstrap.css" />
     <link rel="stylesheet" href="../libs/bootstrap4/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../libs/material-kit/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../libs/google/material.css" />
+    <!-- <link href="../libs/material-kit/css/material-kit.css?v=2.0.3" rel="stylesheet" />  -->
     <link href="../css/zondy/ui.css" rel="stylesheet" />
+    <link href="../css/zondy/bootstrap-header.css" rel="stylesheet" />
+    <link href="../css/zondy/bootstrap-footer.css" rel="stylesheet" />
     <style type="text/css">
-         .menu-text-lg {
-            font-family: 'Microsoft YaHei';
-            font-weight: normal;
-            font-style: normal;
-            font-size: 15px;
-            color:#ffffff;
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "Heiti SC", "Microsoft Yahei", sans-serif;
         }
-        .menu-text {
-            font-family: 'Microsoft YaHei';
-            font-weight: normal;
-            font-style: normal;
-            font-size: 13px;
-            color: #ffffff;
-        }
-       .menu-text-sg {
-        font-family: 'Microsoft YaHei';
-        font-weight: normal;
-        font-style: normal;
-        font-size: 20px;
-        color:#ffffff;
-       }
-        .container {
-            width: 1170px;
+
+       
+        container {
+            width: 1140px;
             margin-right: auto;
             margin-left: auto;
             padding-left: 15px;
@@ -73,21 +59,22 @@
             padding-left: 15px;
 
         }
-         /* 调整导航栏的上下距离 */
-         .icl-docs-sidenav {
+
+        /* 调整导航栏的上下距离 */
+        .icl-docs-sidenav {
             margin-top: 20px;
             margin-bottom: 20px;
-        } 
+        }
 
 
         .icl-docs-sidebar .nav>li>a:hover,
         .icl-docs-sidebar .nav>li>a:focus {
             padding-left: 19px;
-            color:#2196F3;
+            color: #2196F3;
             text-decoration: none;
             background-color: transparent;
             border-left: 1px solid #2196F3;
-        } 
+        }
 
         .icl-docs-sidebar .nav>.active>a,
         .icl-docs-sidebar .nav>.active:hover>a,
@@ -103,13 +90,12 @@
             width: 200px;
             display: block;
             padding: 4px 20px;
-            font-size: 20px;           
-            font-family: "Helvetica Neue";
+            font-size: 16px;
             font-weight: 500;
             line-height: 1.5;
             color: #999;
         }
- 
+
 
         .icl-docs-sidebar .nav .nav>li>a:hover,
         .icl-docs-sidebar .nav .nav>li>a:focus {
@@ -151,7 +137,6 @@
         .col-md-9>h2:not(:first-child) {
             margin-top: 3rem;
             margin-bottom: .5rem;
-            font-family: inherit;
             font-weight: 500;
             line-height: 1.2;
             color: inherit;
@@ -159,7 +144,7 @@
             margin-block-end: 0.83em;
             margin-inline-start: 0px;
             margin-inline-end: 0px;
-            font-size: 2rem;
+            font-size: 20px;
         }
 
         .col-md-9>h2[id],
@@ -197,21 +182,176 @@
         .col-md-9>h4[id]>div {
             pointer-events: auto;
         }
-       /* 图的设置 */
+
+        /* 图的设置 */
         .figure {
             display: inline-block;
             margin: 0 0 1rem;
-            margin-block-start: 1em;
+
             margin-block-end: 1em;
             margin-inline-start: 40px;
             margin-inline-end: 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-      .float-left>.float-li a{
-         width:100px;
-         text-decoration: none; 
-      }
+
+        .float-left>.float-li a {
+            width: 100px;
+            text-decoration: none;
+        }
+
+        .lead {
+            font-size: 16px;
+        }
 
 
+        /* .col-md-6 .user-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 30px;
+            vertical-align: middle;
+        } */
+
+        .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            margin-bottom: 10px;
+        }
+
+      
+
+        /* 滑动带样式设置 */
+        .carousel {
+            position: relative;
+        }
+
+        .carousel-inner>.item {
+            position: relative;
+            /* display: none;
+            backface-visibility: hidden;  */
+            transition: transform .6s ease-in-out;
+            perspective: 1000px;
+        }
+
+        .container-fluid {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .social-proof .tweets>div:not(:last-child) {
+            border-right: #f2f2f2 solid 1px;
+        }
+
+        .social-proof .tweets>div {
+            flex-basis: 0;
+        }
+
+        .social-proof .tweets>div {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            min-height: 85px;
+        }
+
+
+
+        .bd-example .profile-image {
+            width: 4rem;
+            height: 4rem;
+            background-size: 100%;
+            background-position: 50% 25%;
+            border-radius: 50%;
+            box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2);
+            position: absolute;
+        }
+
+        .bd-example .text-content {
+            padding-left: 7rem;
+            padding-top: 5px;
+        }
+
+        .swimlane {
+            padding: 6rem 0 6rem;
+            min-height: 30rem;
+            position: relative;
+        }
+
+        .carousel {
+            background-color: #f2f2f2;
+            padding: 1rem;
+            position: relative;
+           
+        }
+
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .social-proof .carousel-control.left.material-icons {
+            margin-left: -4rem;
+        }
+
+        .social-proof .carousel-control .material-icons {
+            margin-top: -37px;
+            color: #ccc;
+            text-shadow: initial;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+   
+
+        .carousel-control-next,
+        .carousel-control-prev {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 5%;
+            text-align: center;
+            /* opacity: .5; */
+        }
+
+        /* 左边图标设置 */
+        .bd-example .carousel-control-prev-icon {
+            margin-left: -20px;
+            background-color: #2196F3;
+            text-shadow: initial;
+        }
+
+        /* 右边图标设置 */
+        .bd-example .carousel-control-next-icon {
+            margin-right: -20px;
+            background-color: #2196F3;
+            text-shadow: initial;
+        }
+
+
+       
     </style>
 </head>
 
@@ -222,124 +362,7 @@
                 <i class="menu-navi menu-webclient">'</i>
                 <span class="menu-text-sg">中地数码-WebClient</span>
             </a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav navbar-right ml-auto">
-                    <li class="dropdown nav-item">
-                        <a href="../ui/index.html" class="nav-link">
-                            <i class="material-icons"></i>
-                            <span class="menu-text-lg">主页</span>
-                        </a>
-                    </li>
-
-                    <li class="dropdown nav-item">
-                        <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                            <i class="material-icons">view_day</i>
-                            <span class="menu-text-lg">概述</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-with-icons">
-                            <a href="./total-mainservice.html" class="dropdown-item">
-                                <i class="material-icons">apps</i> 核心服务
-                            </a>
-                            <a href="./total-detailservice.html" class="dropdown-item">
-                                <i class="material-icons">layers</i> 详细服务
-                            </a>
-
-                            <a href="./total-plugins.html" class="dropdown-item">
-                                <i class="material-icons">dns</i> 插件列表
-                            </a>
-                            <a href="./total-useage.html" class="dropdown-item">
-                                <i class="material-icons">build</i> 如何使用
-                            </a>
-                            <a href="./total-plugins-label.html" class="dropdown-item">
-                                <i class="material-icons">content_paste</i> 插件标签
-                            </a>
-                            <a href="./total-select.html" class="dropdown-item">
-                                <i class="material-icons">check</i> 四大引擎的选择
-                            </a>
-                            <a href="./total-exploreR.html" class="dropdown-item">
-                                <i class="material-icons">merge_type</i> 浏览器兼容性整合
-                            </a>
-                            <a href="./total-bug.html" class="dropdown-item">
-                                <i class="material-icons">help_outline</i> 提交bug
-                            </a>
-
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown d-none d-sm-inline-block">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="material-icons">spa</i>
-                            <span class="menu-text">Leaflet</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-with-icons">
-                            <a href="../api/leaflet/index.html" class="dropdown-item">
-                                <i class="material-icons">assignment</i> 代码Api文档
-
-                            </a>
-                            <a href="./gallery-leaflet.html" class="dropdown-item">
-                                <i class="material-icons">list</i> 示例演示网页
-
-                            </a>
-                            <a href="./help-leaflet.html" class="dropdown-item">
-                                <i class="material-icons">help_outline</i> 说明帮助文档
-
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown d-none d-sm-inline-block">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="material-icons">my_location</i>
-                            <span class="menu-text">OpenLayers</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-with-icons">
-                            <a href="../api/openlayers/index.html" class="dropdown-item">
-                                <i class="material-icons">assignment</i> 代码Api文档
-
-                            </a>
-                            <a href="./gallery-openlayers.html" class="dropdown-item">
-                                <i class="material-icons">list</i> 示例演示网页
-
-                            </a>
-
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown d-none d-sm-inline-block">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="material-icons">navigation</i>
-                            <span class="menu-text">Mapbox</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-with-icons">
-                            <a href="../api/mapboxgl/index.html" class="dropdown-item">
-                                <i class="material-icons">assignment</i> 代码Api文档
-
-                            </a>
-                            <a href="./gallery-mapbox.html" class="dropdown-item">
-                                <i class="material-icons">list</i> 示例演示网页
-
-                            </a>
-                            <a href="./help-mapbox.html" class="dropdown-item">
-                                <i class="material-icons">help_outline</i> 说明帮助文档
-
-                            </a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown d-none d-sm-inline-block">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="material-icons">terrain</i>
-                            <span class="menu-text">Cesium</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-with-icons">
-
-                            <a href="./gallery-cesium.html" class="dropdown-item">
-                                <i class="material-icons">list</i> 示例演示网页
-
-                            </a>
-                            <a href="./help-cesium.html" class="dropdown-item">
-                                <i class="material-icons">help_outline</i> 说明帮助文档
-
-                            </a>
-                        </div>
-                    </li>
-                </ul>
+            <div class="collapse navbar-collapse" id="bt-body-header">
             </div>
         </div>
     </header>
@@ -350,11 +373,13 @@
             <div id="toc" class="col-md-3" role="complementary">
                 <nav class="icl-docs-sidebar hidden-print hidden-xs hidden-sm  bd-doc">
                     <ul class="nav icl-docs-sidenav ">
-                        <li class="icl-docs-sideli "><a href="#issue">提交问题</a></li>                        
+                        <li class="icl-docs-sideli "><a href="#issue">提交问题</a></li>
                         <li class="icl-docs-sideli "><a href="#funRequire">功能需求</a></li>
-                        <li class="icl-docs-sideli "> <a href="#bugReport">Bug报告</a></li>
+                        <li class="icl-docs-sideli "> <a href="#bugReport">bug报告</a></li>
                         <li class="icl-docs-sideli "><a href="#applyLable">提供标签</a></li>
                         <li class="icl-docs-sideli "><a href="#estimate">评估难度</a></li>
+                        <li class="icl-docs-sideli "><a href="#assignees">代理人</a></li>
+                        <li class="icl-docs-sideli "><a href="#upholdPersonnel">维护人员</a></li>
                     </ul>
                     <a class="back-to-top" href="#top">
                         返回顶部
@@ -376,108 +401,187 @@
                         <a class="anchorjs-link " href="#issue" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
                     </div>
                 </h2>
-                <p class="lead">用户点击新问题后，可以选择功能需求、BUG报告两种方式进行问题的提交。
-                </p> 
-                <p class="lead">提交bug的网址为:
-                    <a href="https://github.com/MapGIS/WebClient-JavaScript/issues" target="_blank" style="color: #D44F00;">https://github.com/MapGIS/WebClient-JavaScript/issues</a>
+                <p class="lead alert  alert-success" style="white-space:pre-wrap;">用户点击新问题后，可以选择功能需求、BUG报告两种方式进行问题的提交。
+                    提交bug的网址为:<a href="https://github.com/MapGIS/WebClient-JavaScript/issues" target="_blank" style="color: #D44F00;">https://github.com/MapGIS/WebClient-JavaScript/issues</a>
                 </p>
 
                 <h2 id="funRequire">
-                    <div>
+                    <div class="font-weight-bold">
                         功能需求
                         <a class="anchorjs-link " href="#funRequire" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
                     </div>
                 </h2>
-                <p class="lead">提出问题的类型之一是功能需求，以下截图则为功能需求模板，可以根据给出的模板做相应的调整。</p>
+                <p class="lead alert  alert-info">提出问题的类型之一是功能需求，以下截图则为功能需求模板，可以根据给出的模板做相应的调整。</p>
                 <figure class="figure">
                     <a href="#"><img src="../img/bug/funRequire.png"> </a>
                 </figure>
 
                 <h2 id="bugReport">
-                    <div>
-                        bug报告
+                    <div class="font-weight-bold">
+                        问题报告
                         <a class="anchorjs-link " href="#bugReport" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
                     </div>
                 </h2>
-                <p class="lead">提出问题的类型之二是bug报告，当工程中存在bug未解决时，可以选择此模式，具体模板见下面截图。</p>
+                <p class="lead alert alert-warning">提出问题的类型之二是bug报告，当工程中存在bug未解决时，可以选择此模式，具体模板见下面截图。</p>
                 <figure class="figure">
                     <a href="#"><img src="../img/bug/bugReport.png"> </a>
                 </figure>
 
                 <h2 id="applyLable">
-                    <div>
+                    <div class="font-weight-bold">
                         问题标签
                         <a class="anchorjs-link " href="#applyLable" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
                     </div>
                 </h2>
-                <p class="lead">提出问题的类型之二是bug报告，当工程中存在bug未解决时，可以选择此模式，具体模板见下面截图。</p>
+                <p class="lead alert alert-danger">提出问题的类型之二是bug报告，当工程中存在bug未解决时，可以选择此模式，具体模板见下面截图。</p>
                 <figure class="figure">
                     <a href="#"><img src="../img/bug/applyBug.png"></a>
                 </figure>
 
                 <h2 id="estimate">
-                    <div>
+                    <div class="font-weight-bold">
                         问题难度系数
                         <a class="anchorjs-link " href="#estimate" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
                     </div>
                 </h2>
-                <p class="lead">给问题一定描述后，可以给此问题选择一个与此匹配的难度系数。</p>
+                <p class="lead alert alert-warning">给问题一定描述后，可以给此问题选择一个与此匹配的难度系数。</p>
                 <figure class="figure">
                     <a href="#"><img src="../img/bug/estimate.png"></a>
                 </figure>
-            </div>
-            <!--右侧内容end-->
-        </div>
-    </div>
 
-
-
-    <footer >
-            <div class="container" >
-                    <!-- <nav class="float-left">
-                        <ul>
-                            <li class="float-li">
-                                <a href="https://www.creative-tim.com">
-                                    联系地址
-                                </a>
-                            </li>
-                            <li class="float-li">
-                                <a href="https://presentation.creative-tim.com">
-                                    关于我们
-                                </a>
-                            </li class="float-li">
-                            <li class="float-li">
-                                <a href="https://blog.creative-tim.com">
-                                    活动消息
-                                </a>
-                            </li>
-                            <li class="float-li">
-                                <a href="https://www.creative-tim.com/license">
-                                    证书说明
-                                </a>
-                            </li>
-                        </ul>
-                    </nav> -->
-                    <a href="https://www.creative-tim.com">
-                        联系人
-                    </a>
-                    <div class="copyright float-right">
-                        &copy;
-                        2018-
-                        <i class="material-icons">favorite</i> by
-                        <a href="https://www.creative-tim.com" target="_blank">中地数码科技有限公司</a> for WebClient.
+                <h2 id="assignees">
+                    <div class="font-weight-bold">
+                        代理人
+                        <a class="anchorjs-link " href="#assignees" aria-label="Anchor" data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
                     </div>
-                </div>
-    </footer>
-    <!--尾部-->
+                </h2>
+                <p class="lead alert alert-warning">提出问题类型，给出一定描述，并将问题指定给具体负责人。</p>
+                <figure class="figure">
+                    <a href="#"><img src="../img/bug/assignees.png"></a>
+                </figure>
+
+                <h2 id="upholdPersonnel">
+                    <div class="font-weight-bold">
+                        维护人员
+                        <a class="anchorjs-link " href="#upholdPersonnel" aria-label="Anchor" data-anchorjs-icon="#"
+                            style="padding-left: 0.375em;"></a>
+                    </div>
+                </h2>
+                <p class="lead alert  alert-info">webclient-javascript工程的维护人员的相关介绍。</p>
+
+                <!-- <div class="bd-example">
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                            <div class="row">
+                                <div class="col-12 col-md-12 col-sm-12">
+                                    <div class="carousel-item">
+                                        <div class="container-fluid">
+                                            <div class="row tweets" tabindex="0" aria-label="Tweets list contains 6 tweets">
+                                                <div id="tweet-0_0" class="col-md-6">
+                                                    <a class="profile-image" href="https://twitter.com/dazfuller/status/667071666837680129"
+                                                        target="_blank" role="img" aria-labelledby="tweet-0_0-name"
+                                                        style="background-image: url('../img/card/user-panzhuoran.png')"></a>
+                                                    <div class="text-content">
+                                                        <a class="attribution" href="https://twitter.com/dazfuller/status/667071666837680129"
+                                                            target="_blank">
+                                                            <strong id="tweet-0_0-name" class="name">Darren Fuller</strong>
+                                                            <span class="handle" src="#">@dazfuller</span>
+                                                        </a>
+                                                        <div class="tweet-body">
+                                                            <a href="https://twitter.com/code" target="_blank" )="">@code</a>
+                                                            is already my goto editor of choice,
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="tweet-0_1" class="col-md-6">
+                                                    <a class="profile-image" href="https://twitter.com/ValeryMelou/status/751362342991040513"
+                                                        target="_blank" role="img" aria-labelledby="tweet-0_1-name"
+                                                        style="background-image: url('../img/card/user-panzhuoran.png')"></a>
+                                                    <div class="text-content">
+                                                        <a class="attribution" href="https://twitter.com/ValeryMelou/status/751362342991040513"
+                                                            target="_blank">
+                                                            <strong id="tweet-0_1-name" class="name">Valery Melou</strong>
+                                                            <span class="handle" src="#">@ValeryMelou</span>
+                                                        </a>
+                                                        <div class="tweet-body">
+                                                            Best editor I've ever used. Super hyper lightweight for
+                                                            what it's able to do. I love it. <a href="https://twitter.com/hashtag/HappyCoding"
+                                                                target="_blank">#HappyCoding</a> via <a href="https://twitter.com/code"
+                                                                target="_blank" )="">@code</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item active">
+                                        <div class="container-fluid">
+                                            <div class="row tweets" tabindex="0" aria-label="Tweets list contains 6 tweets">
+                                                <div id="tweet-1_0" class="col-md-6">
+                                                    <a class="profile-image" href="#" target="_blank" role="img"
+                                                        aria-labelledby="tweet-1_0-name" style="background-image: url('../img/card/user-panzhuoran.png')"></a>
+                                                    <div class="text-content">
+                                                        <a class="attribution" href="#" target="_blank">
+                                                            <strong id="tweet-1_0-name" class="name">Joe Eames</strong>
+                                                            <span class="handle" src="#">@josepheames</span>
+                                                        </a>
+                                                        <div class="tweet-body">
+                                                            It seems like <a href="https://twitter.com/code" target="_blank"
+                                                                )="">@code</a> just keeps getting better and
+                                                            better. and better. and better.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="tweet-1_1" class="col-md-6">
+                                                    <a class="profile-image" href="https://twitter.com/stefanbc/status/667084553706725377"
+                                                        target="_blank" role="img" aria-labelledby="tweet-1_1-name"
+                                                        style="background-image: url('../img/card/user-panzhuoran.png')"></a>
+                                                    <div class="text-content">
+                                                        <a class="attribution" href="https://twitter.com/stefanbc/status/667084553706725377"
+                                                            target="_blank">
+                                                            <strong id="tweet-1_1-name" class="name">Stefan Cosma</strong>
+                                                            <span class="handle" src="#">@stefanbc</span>
+                                                        </a>
+                                                        <div class="tweet-body">
+                                                            Pushed my first commit using <a href="https://twitter.com/code"
+                                                                target="_blank" )="">@code</a> in under 15s. 💯
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div> -->
+                <!--右侧内容end-->
+            </div>
+        </div>
 
 
-    <script src="../libs/material-kit/js/core/jquery.min.js" type="text/javascript"></script>
-    <script src="../libs/bootstrap4/js/bootstrap.js"></script>
-    <script>
-        // $("#body-footer").load("../ui/footer.html"); // 引入尾部
-        // $("#body-footer").load("../ui/footer.html"); // 引入尾部
-    </script>
+
+        <footer class="footer footer-default" id="bt-body-footer">
+            
+        </footer>
+        <!--尾部-->
+
+
+        <script src="../libs/material-kit/js/core/jquery.min.js" type="text/javascript"></script>
+        <script src="../libs/bootstrap4/js/bootstrap.js"></script>
+        <script>
+            $("#bt-body-header").load("../ui/bootstrap-header.html"); // 引入尾部
+            $("#bt-body-footer").load("../ui/bootstrap-footer.html"); // 引入尾部
+        </script>
 </body>
 
 </html>
