@@ -1,9 +1,9 @@
 footer {
     padding: 0.4rem 0;
     text-align: center;
-    display: flex;
+    display: block;
     background-color: #2196F3;
-}
+} 
 
 .float-left {
     float: left !important;
@@ -29,7 +29,6 @@ footer ul li a {
     position: relative;
     display: block;
     color: #ffffff;
-    
 }
 
 footer ul li a:hover,
@@ -46,11 +45,13 @@ footer .copyright {
 .float-right {
     float: right !important;
 }
+
 .float-right a {
     color: #89229b;
     text-decoration: none;
     background-color: transparent;
 }
+
 footer .copyright .material-icons {
     font-size: 18px;
     position: relative;
