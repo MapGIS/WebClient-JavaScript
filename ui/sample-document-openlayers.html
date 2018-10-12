@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中地数码 MapGIS WebClient</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../libs/bootstrap4/css/bootstrap.css" />
+    <link rel="stylesheet" href="../libs/bootstrap4/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../libs/material-kit/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../libs/google/material.css" />
+    <link rel="stylesheet" href="../css/zondy/ui.css"  />
+    <link rel="stylesheet" href="../css/zondy/bootstrap-header.css"  />
+    <link rel="stylesheet" href="../libs/example-discription/css/example-discription.css"/>
+    <style type="text/css">      
+    </style>
+</head>
+
+<body onload="load()">
+    <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="../ui/index.html">
+                <i class="menu-navi menu-webclient">'</i>
+                <span class="menu-text-sg">中地数码-WebClient</span>
+            </a>
+            <div class="collapse navbar-collapse" id="bt-body-header">
+            </div>
+        </div>
+    </header>
+
+    <div class="container icl-docs-container">
+        <div class="row">
+            <!--左侧导航-->
+            <div class="col-md-3" role="complementary">
+                <nav class="icl-docs-sidebar hidden-print hidden-xs hidden-sm  bd-doc">
+                    <ul class="nav icl-docs-sidenav ">
+                        <li><a href="#mapControl">地图控件</a></li>
+                        <ul class="nav">
+                            <li><a href="#overviewControl">鹰眼控件</a></li>
+                            <li><a href="#layerControl">图层控制控件</a></li>
+                        </ul>
+                        <li><a href="#mapStyle">地图样式</a></li>
+                        <ul class="nav">
+                            <li><a href="#mapDynaanno">地图动态注记</a></li>
+                            <li><a href="#docfilterDisplay">矢量地图文档过滤显示</a></li>
+                        </ul>
+                        <li><a href="#mapMeasure">地图测量</a></li>
+                        <ul class="nav">
+                            <li><a href="#loadMeasurement">加载测量控件</a></li>
+                            <li><a href="#measureFeature">测量功能</a></li>
+                        </ul>
+                        <li><a href="#mapBase">地图底图</a></li>
+                        <ul class="nav">
+                            <li><a href="#mapdisplayArcgislld">ArcGIS地图显示-MKT</a></li>
+                            <li><a href="#mapdisplayOgcwfs">WFS地图显示-4326</a></li>
+                        </ul>
+                        <li><a href="#loadThirdmap">加载第三方地图</a></li>
+                        <ul class="nav">
+                            <li><a href="#thirdmapKML">KML数据</a></li>
+                            <li><a href="#overlayerMaps">图层叠加</a></li>
+                        </ul>
+                        <li><a href="#geometryObject">内置几何Object</a></li>
+                        <ul class="nav">
+                            <li><a href="#getGeometryinfo">获取几何信息</a></li>
+                            <li><a href="#graphicStyle">几何图形样式设置</a></li>
+                        </ul>
+                    </ul>
+                    <a class="back-to-top" href="#top">
+                        返回顶部
+                    </a>
+                </nav>
+            </div>
+            <!--左侧导航end-->
+            <!--右侧内容显示-->
+            <div class="col-md-9" id="main-content" role="main">
+                <div class="icl-docs-header">
+                    <h1 class="page-title">MapGIS for openlayers</h1>
+                    <p class="lead">主要介绍openlayers引擎入门用法，具体接口使用说明见示例网页。</p>
+                </div>
+                <!--1 地图控件-->
+                <div class="section icl-docs-section">
+                    <h2 id="mapControl" class="section-title">地图控件</h2>
+                    <!--1.1 鹰眼控件-->
+                    <div class="section section-level-2">
+                        <h3 id="overviewControl" class="section-title">鹰眼控件</h3>
+                        <p>先自定义鹰眼样式，实例化鹰眼控件(OverviewMap)，鹰眼中加载同坐标系下不同数据源的图层，加载控件到地图容器中。</p>
+                        <div id="overview-control-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                        <div class="iframe_html">
+                            <iframe  id="myiframe1" src=""  class="lazy"></iframe>
+                        </div>
+                    </div>
+                    <!--1.2 图层控制控件-->
+                    <div class="section section-level-2">
+                        <h3 id="layerControl" class="section-title">图层控制控件</h3>
+                        <p>先初始化地图显示,底图的基础上加载影像注记与矢量图层注记。</p>
+                        <div id="layer-control-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                            <iframe id="myiframe2"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                </div>
+                <!--2 地图样式-->
+                <div class="section icl-docs-section">
+                    <h2 id="mapStyle" class="section-title">地图样式</h2>
+                    <!--2.1 地图动态注记-->
+                    <div class="section section-level-2">
+                        <h3 id="mapDynaanno" class="section-title">地图动态注记</h3>
+                        <p>先设置动态注记样式，是否显示动态注记。</p>
+                        <div id="map-dynaanno-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                            <iframe id="myiframe3"  src=""  class="lazy"></iframe>
+                        </div>
+                    </div>
+                    <!--2.2 矢量地图文档过滤显示 -->
+                    <div class="section section-level-2">
+                        <h3 id="docfilterDisplay" class="section-title">矢量地图文档过滤显示</h3>
+                        <p>创建地图容器并添加一些必要控件，在创建一个矢量图层中添加过滤条件。</p>
+                        <div id="docfilter-display-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                                <iframe id="myiframe4"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                </div>
+                <!--3 地图测量-->
+                <div class="section icl-docs-section">
+                    <h2 id="mapMeasure" class="section-title">地图测量</h2>
+                    <!--3.1 加载测量控件-->
+                    <div class="section section-level-2">
+                        <h3 id="loadMeasurement" class="section-title">加载测量控件</h3>
+                        <p>在加载底图基础上，加载测量的绘制矢量层，包括图层数据源、图层样式、填充颜色等操作。
+                            绑定事件有：绑定交互绘制工具开始绘制的事件绑定交互绘制工具结束绘制的事件。
+                            创建一个新的帮助提示框，创建一个新的测量工具提示框。
+                        </p>
+                        <div id="load-measurement-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                       <div class="iframe_html">
+                            <iframe id="myiframe5"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                    <!--3.2 测量功能-->
+                    <div class="section section-level-2">
+                        <h3 id="measureFeature" class="section-title">测量功能</h3>
+                        <p>加载底图基础上，加载加载测量的绘制矢量层。</p>
+                        <div id="maesure-feature-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                                <iframe id="myiframe6"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                </div>
+                <!--4 地图底图-->
+                <div class="section icl-docs-section">
+                    <h2 id="mapBase" class="section-title">地图底图</h2>
+                    <!--4.1 ArcGIS地图显示-MKT-->
+                    <div class="section section-level-2">
+                        <h3 id="mapdisplayArcgislld" class="section-title">ArcGIS地图显示-MKT</h3>
+                        <p>添加切换图层的菜单，以及设置各图层的样式。</p>
+                        <div id="mapdisplay-arcgislld-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                        <div class="iframe_html">
+                                <iframe id="myiframe7"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                    <!--4.2 WFS地图显示-4326-->
+                    <div class="section section-level-2">
+                        <h3 id="mapdisplayOgcwfs" class="section-title">WFS地图显示-4326</h3>
+                        <p>创建基于地图文档的WMS图层对象并加载到地图中，创建基于地图文档的WFS图层对象并加载到地图中，并创建基于矢量地图文档的WFS要素图层对象。</p>
+                        <div id="mapdisplay-ogcwfs-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                                <iframe id="myiframe8"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                </div>
+                <!--5 加载第三方地图-->
+                <div class="section icl-docs-section">
+                    <h2 id="loadThirdmap" class="section-title">加载第三方地图</h2>
+                    <!--5.1 KML数据-->
+                    <div class="section section-level-2">
+                        <h3 id="thirdmapKML" class="section-title">KML数据</h3>
+                        <p>添加矢量几何要素，接着设置的几何要素，最后将矢量几何要素显示到地图中。</p>
+                        <div id="thirdmap-kml-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                       <div class="iframe_html">
+                            <iframe id="myiframe9"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                    <!--5.2 图层叠加-->
+                    <div class="section section-level-2">
+                        <h3 id="overlayerMaps" class="section-title">图层叠加</h3>
+                        <p>主要功能先实例化Map对象加载地图，地图容器中加载的图层，加载矢量数据图层，加载ArcGIS瓦片数据图层，切换图层样式面板的可见状态。</p>
+                        <div id="overlayer-maps-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                                <iframe id="myiframe10"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                </div>
+                <!--6 内置几何Object-->
+                <div class="section icl-docs-section">
+                    <h2 id="geometryObject" class="section-title">内置几何Object</h2>
+                    <!--6.1 获取几何信息-->
+                    <div class="section section-level-2">
+                        <h3 id="getGeometryinfo" class="section-title">获取几何信息</h3>
+                        <p>实例化Map对象加载地图,默认底图加载MapQuest地图，实例化一个矢量图层Vector作为绘制层，实例化交互绘制类对象并添加到地图容器中，用户更改绘制类型触发的事件。</p>
+                        <div id="get-geometryinfo-wrapper" class="code-mirror-wrapper"></div>
+                        <p>运行效果</p>
+                         <div class="iframe_html">
+                                <iframe id="myiframe11"  src=""  class="lazy"></iframe>
+                        </div> 
+                    </div>
+                    <!--6.2 几何图形样式设置-->
+                    <div class="section section-level-2">
+                            <h3 id="graphicStyle" class="section-title">几何图形样式设置</h3>
+                            <p>添加几何图形，对其样式进行设置，比如旋转角度、偏移量、文字外框宽度等。</p>
+                            <div id="graphic-style-wrapper" class="code-mirror-wrapper"></div>
+                            <p>运行效果</p>
+                             <div class="iframe_html">
+                                    <iframe id="myiframe12"  src=""  class="lazy"></iframe>
+                            </div> 
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="../js/app.js"></script>
+    <script type="text/javascript" src="../libs/material-kit/js/core/jquery.min.js"></script> 
+    <script src="../libs/bootstrap4/js/bootstrap.js"></script>
+    <!-- markdown解释器 -->
+    <!--code.css加上之后页面滚动条消失，不知道为什么-->
+    <!-- <link type="text/css" rel="stylesheet" href="../libs/markdown/code.css" /> -->
+    <link type="text/css" rel="stylesheet" href="../libs/markdown/github-markdown.css" />
+    <link type="text/css" rel="stylesheet" href="../libs/markdown/prism.css" />
+    <script type="text/javascript" src="../libs/markdown/prism.js"></script>
+    <script type="text/javascript" src="../libs/markdown/marked.min.js"></script>
+    <!--codemirror 生成编辑器引入css、js -->
+    <link rel="stylesheet" href="../libs/codemirror/lib/codemirror.css" />
+    <script type="text/javascript" src="../libs/codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="../libs/codemirror/mode/javascript/javascript.js"></script>
+    <!--codemirror 代码折叠功能--> 
+    <link rel="stylesheet" href="../libs/codemirror/plugin/foldgutter.css" >
+    <script src="../libs/codemirror/plugin/foldcode.js"></script>
+    <script src="../libs/codemirror/plugin/foldgutter.js"></script>
+    <script src="../libs/codemirror/plugin/brace-fold.js"></script>
+    <script src="../libs/codemirror/plugin/comment-fold.js"></script>
+    <!--codemirror 括弧匹配--> 
+    <script src="../libs/codemirror/plugin/matchbrackets.js"></script>
+    <!-- 将js代码封装成js文件-->
+    <script type="text/javascript" src="../libs/example-discription/openlayers_js/example-discription.js"></script>
+    <script>
+        $("#bt-body-header").load("../ui/bootstrap-header.html"); //引入标题头
+    </script>
+</body>
+</html>

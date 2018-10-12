@@ -101,7 +101,8 @@
     <script>
         mapMode = MODE_MAPBOX;
         $('#body-header').load("./second-header.html");
-        UIBuilder.addMultiSidebar(config);
+        var flag = true;
+        UIBuilder.addMultiSidebar(config,flag);
         UIBuilder.addMultiGallery(config);
         lazyload();
         $(function() {

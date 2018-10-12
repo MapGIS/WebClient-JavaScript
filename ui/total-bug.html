@@ -65,17 +65,28 @@
             margin-bottom: 20px;
         }
 
+        .icl-docs-sidebar .nav>li>a {
+            width: 200px;
+            display: block;
+            padding: 4px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            color: #999;
+        }
+
         .icl-docs-sidebar .nav>li>a:hover,
         .icl-docs-sidebar .nav>li>a:focus {
-            /* padding-left: 19px; */
+            padding-left: 19px;
             color: #2196F3;
             text-decoration: none;
             background-color: transparent;
-            /* border-left: 1px solid #2196F3; */
-        } 
+            border-left: 1px solid #2196F3;
+        }
+
         /* 激活状态的样式 */
         .icl-docs-sidebar .nav>li>.active,
-        .icl-docs-sidebar .nav>li>.active:hover{
+        .icl-docs-sidebar .nav>li>.active:hover {
             padding-left: 19px;
             color: #2196F3;
             background-color: transparent;
@@ -93,27 +104,8 @@
             border-left: 2px solid #2196F3;
         }
 
-        .icl-docs-sidebar .nav>li>a {
-            width: 200px;
-            display: block;
-            padding: 4px 20px;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.5;
-            color: #999;
-        }
 
-        .icl-docs-sidebar .nav .nav>li>a:hover,
-        .icl-docs-sidebar .nav .nav>li>a:focus {
-            padding-left: 29px;
-        }
 
-        .icl-docs-sidebar .nav .nav>.active>a,
-        .icl-docs-sidebar .nav .nav>.active:hover>a,
-        .icl-docs-sidebar .nav .nav>.active:focus>a {
-            padding-left: 28px;
-            font-weight: 500;
-        }
 
         .col-md-3>.bd-doc {
             position: sticky;
@@ -131,8 +123,8 @@
             margin-top: -30px;
         }
 
-       .icl-docs-header .page-title {
-            font-size:36px;
+        .icl-docs-header .page-title {
+            font-size: 36px;
             /* color: #2196F3; */
             /* font-weight: 700; */
             padding-top: 50px;
@@ -154,19 +146,19 @@
         }
 
         .col-md-5 {
-           
-           flex: 0 0 41.666667%;
-           max-width: 41.666667%;
-           padding-top: 20px;
-       }
+
+            flex: 0 0 41.666667%;
+            max-width: 41.666667%;
+            padding-top: 20px;
+        }
 
 
 
         .col-md-9>h2[id],
         .col-md-9>h3[id],
-        .col-md-9>h4[id]{
+        .col-md-9>h4[id] {
             pointer-events: none;
-        }         
+        }
 
         /* 用此样式代替粗暴的padding-top的明确设置 */
         .col-md-9>h2[id]::before,
@@ -178,11 +170,11 @@
             visibility: hidden;
             content: "";
         }
-
+        /* # 设置 */
         .anchorjs-link {
             font-weight: 400;
-            color: #2196F3;
-            /* transition: color .16s linear; */
+            color: rgba(0, 123, 255, .5);
+            transition: color .16s linear;
             opacity: 0;
             -webkit-font-smoothing: antialiased;
             text-decoration: none;
@@ -201,8 +193,8 @@
         .figure {
             display: inline-block;
             /* margin: 0 0 16px; */
-            /* margin-block-start:12px; */           
-            margin-block-start:-20px;
+            /* margin-block-start:12px; */
+            margin-block-start: -20px;
             margin-block-end: 30px;
             /* margin-inline-start: 40px; */
             margin-inline-end: 40px;
@@ -214,33 +206,19 @@
             width: 100px;
             text-decoration: none;
         }
+
         .font-weight-bold {
-           font-weight: 700!important;
-           /* margin-top: 30px; */
+            font-weight: 700 !important;
+            /* margin-top: 30px; */
         }
+
         .lead {
             font-size: 16px;
             margin-top: 20px;
-            margin-bottom:40px;
-            /* color:#666; */
-             background-color: #D1ECF1; 
-            /* background-color: #eee; */
-        }
-        .card {
-            position: relative;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 1px solid rgba(0, 0, 0, .125);
-            border-radius: .25rem;
-            margin-bottom: 10px;
-        }
+            margin-bottom: 40px;
+            background-color: #D1ECF1;
 
+        }
 
         .carousel-inner>.item {
             position: relative;
@@ -271,8 +249,6 @@
             min-height: 85px;
         }
 
-
-
         .bd-example .profile-image {
             width: 5.6rem;
             height: 5.6rem;
@@ -288,15 +264,13 @@
             padding-top: 5px;
         }
 
-
-
-      /* 滑动带样式设置 */
+        /* 滑动带样式设置 */
         .carousel {
             background-color: #eee;
             padding: 1rem;
             position: relative;
             min-height: 200px;
-            margin-block-end: 5em;  
+            margin-block-end: 5em;
         }
 
         .carousel-inner {
@@ -331,19 +305,20 @@
             opacity: 0.9;
             background: transparent;
         }
-        
 
 
-        .bd-example{
-            margin-top:-20px;
+
+        .bd-example {
+            margin-top: -20px;
         }
+
         /* 左边图标 */
         .bd-example .carousel-control-prev-icon {
-            margin-left: -20px;     
-            color:#ccc;
-            text-shadow: initial;  
-             width: 20px;
-            height: 20px; 
+            margin-left: -20px;
+            color: #ccc;
+            text-shadow: initial;
+            width: 20px;
+            height: 20px;
             font-size: 30px;
             font-family: 'Glyphicons Halflings';
             font-style: normal;
@@ -361,16 +336,11 @@
             font-style: normal;
         }
 
-        /* 介绍的列表 */
-        /* .text-content {
-            margin-left: 20px;
-        } */
-
         .text-content>ul>li {
             display: block;
-            overflow:hidden;
-            white-space:nowrap;
-            text-overflow:ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -411,9 +381,9 @@
 
             <!--右侧内容区-->
             <div class="col-md-9" id="main-content" role="main">
-                 <div class="icl-docs-header"> 
+                <div class="icl-docs-header">
                     <h1 class="page-title">提交BUG说明</h1>
-                 </div> 
+                </div>
                 <h2 id="issue">
                     <div class="font-weight-bold">
                         新的问题
@@ -653,12 +623,13 @@
         var content7 = document.getElementById("upholdPersonnel");
         var disTop7 = content7.offsetTop;
         topOffsets = [disTop1, disTop2, disTop3, disTop4, disTop5, disTop6, disTop7];
-     
-          //窗口添加滚动条事件
+
+        //窗口添加滚动条事件
         window.onscroll = function (e) {
             //获取当前页面相对于浏览器顶部的偏移量        
             var pageOffset = window.pageYOffset;
             var abs = Math.abs;
+
             function disMin(a, b) {
                 return abs(a - pageOffset) > abs(b - pageOffset) ? b : a;
             }
@@ -666,12 +637,13 @@
             var index = topOffsets.indexOf(nearHash);
             //console.log($('.icl-docs-sidebar ul [href]').length);
             //此处将其他active全部屏蔽，然后只激活一个
-            var navLength = $('.icl-docs-sidebar ul [href]').length;         
-              for (var i = 0; i < navLength - 1; i++) {
-                  $('.icl-docs-sidebar ul [href]')[i].className = '';
-              }        
+            var navLength = $('.icl-docs-sidebar ul [href]').length;
+            for (var i = 0; i < navLength - 1; i++) {
+                $('.icl-docs-sidebar ul [href]')[i].className = '';
+            }
             $('.icl-docs-sidebar ul [href]')[index].className = 'active'
         }
     </script>
 </body>
+
 </html>

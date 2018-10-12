@@ -40,13 +40,14 @@ function initUrlParam() {
   isFlash = false;
   //这里是伪装实现动态路由的效果，下个版本直接上react-router，这个版本先临时用着
   var url = window.location.hash;
+ // console.log(url);
   if (url) {
     var namespace = url.replace("#", "").split('-');
     if (namespace && namespace.length == 2) {
       mapFilefolder = namespace[0];
       mapDemoName = namespace[1];
       isFlash = true;
-    }else if(namespace && namespace.length == 3) {
+    } else if (namespace && namespace.length == 3) {
       mapFilefolder = namespace[0] + "/" + namespace[1];
       mapDemoName = namespace[2];
       isFlash = true;
@@ -54,7 +55,7 @@ function initUrlParam() {
   }
 }
 
-function initPosition(){
+function initPosition() {
   var height = window.screen.height - 220;
   $('#code-wrapper').css("height", height);
   $('div.iframe-wrapper').css("height", height);
@@ -77,7 +78,7 @@ function setCore(name, catalog, filefolder) {
   var pageName = name;
   //根据当前选择的菜单项，显示源码
   var htmlUrl = "../demo/" + catalog + "/example/" + filefolder + "/" + name + ".htm"; //请求的页面
-  console.log(htmlUrl);
+  //console.log(htmlUrl);
   var htmlString = ""; //请求页面的代码（字符串形式）
   $.ajax({
     async: false,
@@ -111,7 +112,6 @@ function setCore(name, catalog, filefolder) {
   $('#interface-iframe pre code').each(function (i, block) {
     Prism.highlightElement(block);
   });
-
   run();
 }
 
@@ -193,13 +193,15 @@ function initMain() {
 
 function initEditor() {
   if (!editor) {
-    editor = CodeMirror.fromTextArea(document.getElementById("code-content"), {
-      lineWrapping: true, //是否显示scroll
-      lineNumbers: true, //是否显示number
-      styleActiveLine: true,
-      matchBrackets: true,
+    editor = CodeMirror.fromTextArea(document.getElementById("code-content"), {     
+      lineNumbers: true, // 显示代码行号
+      styleActiveLine: true, //当前行背景高亮
+      matchBrackets: true,  //括弧匹配
       mode: "htmlmixed", //样式类型
-      viewportMargin: Infinity
+      viewportMargin: Infinity, 
+      lineWrapping: true, //代码折叠    
+      foldGutter: true,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
     });
   } else {
     editor.setValue($(sCopyTarget).val());
@@ -209,7 +211,7 @@ function initEditor() {
 function initMarkdown() {
   //增加的代码，用于个性化输出table
   markedRender.table = function (header, body) {
-    return '<table class="table table-striped">' + header + body + '</table>'
+    return '<table class="table table-striped">' + header + body + '</table>';
   }
   marked.setOptions({
     renderer: markedRender,
@@ -243,9 +245,8 @@ function run() {
   }
   //获取站点地址
   var urlStr = window.location.href;
-  //var nr = urlStr.indexOf("/Index.htm");
   var nr = urlStr.indexOf("/index.htm");
-  urlStr = urlStr.slice(0, nr);
+  urlStr = urlStr.slice(0, nr); 
   //替换相对路径为绝对路径../..
   var req = /\.\.\/\.\./g;
   //iframeContent = iframeContent.replace(req, urlStr);

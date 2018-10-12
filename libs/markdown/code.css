@@ -73,6 +73,7 @@ pre {
   padding-left: 10px;
   padding-right: 10px;
   cursor: pointer;
+  margin-left: 8.5px;
 }
 
 .code-head-unselect {
@@ -82,6 +83,7 @@ pre {
   padding-left: 10px;
   padding-right: 10px;
   cursor: pointer;
+  margin-right: -8.5px;
 }
 
 .code-top {

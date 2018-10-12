@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图层选择</title>
+    <script src="../../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        /**显示地图
+        */
+        function init() {
+            //地图容器
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326,
+                //显示中心
+                center: [45, -90],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 5,
+                //当前显示等级
+                zoom: 2,
+                //限制显示地理范围
+                //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+            //矢量+注记
+            var layer = L.tileLayer('http://t0.tianditu.com/DataServer?T=ter_c&x={x}&y={y}&l={z}', { tileSize: 256, layer: 'ter', noWrap: true });
+            //矢量图层
+            var layer1 = L.tileLayer('http://t0.tianditu.com/DataServer?T=vec_c&x={x}&y={y}&l={z}', { tileSize: 256, layer: 'vec', minZoom: 1, maxZoom: 15, noWrap: true });
+            //矢量注记图层
+            var layer2 = L.tileLayer('http://t0.tianditu.com/DataServer?T=cva_c&x={x}&y={y}&l={z}', { tileSize: 256, layer: 'cva', minZoom: 1, maxZoom: 15, noWrap: true });
+            //影像图层
+            var layer3 = L.tileLayer('http://t0.tianditu.com/DataServer?T=img_c&x={x}&y={y}&l={z}', { tileSize: 256, layer: 'img', minZoom: 1, maxZoom: 15, noWrap: true });
+            //影像注记
+            var layer4 = L.tileLayer('http://t0.tianditu.com/DataServer?T=cia_c&x={x}&y={y}&l={z}', { tileSize: 256, layer: 'cia', minZoom: 1, maxZoom: 15, noWrap: true });
+            //图层组
+            var LayerG = L.layerGroup([layer1, layer2]);
+            //添加图层组
+            LayerG.addTo(map);
+            var vec = {
+                "矢量+注记": LayerG,
+            }
+            var img = {
+                "矢量图层": layer,
+                "影像图层": layer3,
+                "影像注记": layer4
+            }
+            //图层控制显示控件
+            L.control.layers(vec, img).addTo(map);
+
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width:100%;height:100%"></div>
+</body>
+</html>
