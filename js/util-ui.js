@@ -283,7 +283,7 @@
         lazyload();
       },
        
-      addMultiSidebar: function (config, sidebarId) {
+      addMultiSidebar: function (config,flag,sidebarId) {
         var sidebar = document.getElementById(sidebarId || 'body-sidebar');
         var containerUl = document.createElement('ul');
 
@@ -293,13 +293,13 @@
           //添加一级，二级，三级目录内容
         config.childs.forEach(function (node1, index, array) {
           var first = document.createElement('li');
-          var firstul = window.UIBuilder._createFirstMenuItem(node1, node1.folder ,first);
+          var firstul = window.UIBuilder._createFirstMenuItem(node1,flag,node1.folder ,first);
 
           if (node1.leaffolder === false) {  //判断是否是叶结点，若不是，则表示还有子节点
 
             node1.childs.forEach(function (node2, index, array) {
               var second = document.createElement('li');
-              var secondul = window.UIBuilder._createSecondMenuItem(node2,node1.folder + "-" + node2.folder,second);
+              var secondul = window.UIBuilder._createSecondMenuItem(node2,flag,node1.folder + "-" + node2.folder,second);
 
               node2.childs.forEach(function (node3, index, array) {
                 var thirdli = window.UIBuilder._createThirdMenuItem(node3, node1.folder + "-" + node2.folder);
@@ -326,10 +326,12 @@
        * @param node 当前节点
        * @param linkpath 当前节点对应的url的#路径，如果是一级目录:#node.name
        */
-      _createFirstMenuItem: function(node, linkpath, first) {
+      _createFirstMenuItem: function(node,flag, linkpath, first) {
         first.className = "nav-item";
         first.onclick = function(){
-          window.location.hash = linkpath;
+          if(flag){
+           window.location.hash = linkpath; 
+          }
         }
         /*
           <a class="nav-link" data-toggle="collapse" aria-expanded="false" href="#components1"">
@@ -341,7 +343,7 @@
         var className = "nav-link collapsed";
         a1.className = className;
        // a1.href = "#" + node.folder; //和下面的div.id = node.folder;对应起来
-        a1.href = "#" + linkpath + "_firstli";
+         a1.href = "#" + linkpath + "_firstli";
         a1.setAttribute("data-toggle", "collapse");
         a1.setAttribute("aria-expanded", false);
         //var iconDiv = document.createElement('div');
@@ -381,12 +383,14 @@
        * @param linkpath 当前节点对应的url的#路径，如果是二级目录：#first.name-second.name
        * @param isCollapsed 是否搜索菜单
        */
-      _createSecondMenuItem: function (node,linkpath,second) {
+      _createSecondMenuItem: function (node,flag,linkpath,second) {
         var isMenu = node.diffcult ? false : node.materialicon ? true : false;
         second.className = "nav-item nav-item-second";
 
         second.onclick = function(){
-          window.location.hash = linkpath;
+          if(flag){
+            window.location.hash=linkpath;
+          }
         }
         /*
           <a class="nav-link" data-toggle="collapse" href="#componentsA" aria-expanded="true">
@@ -400,6 +404,7 @@
         a2.className = "nav-link nav-link-second";  
        // a2.href = "#" + node.folder; //和下面的div.id = node.folder;对应起来
         a2.href = "#" + linkpath + "_secondli";
+       
         a2.setAttribute("data-toggle", "collapse");
         a2.setAttribute("aria-expanded", true);
         if (isMenu) {
@@ -429,10 +434,10 @@
           </div>
         */
         var div = document.createElement('div');
-        div.className = "collapse" //"collapse show";
+        div.className = "collapse" ;//"collapse show"
 
        // div.id = node.folder; //和上面的a.href = "#" + node.name;对应起来
-        div.id = linkpath + "_secondli";;
+        div.id = linkpath + "_secondli";
         //div.style = "";
         var secondul = document.createElement('ul');
         secondul.className = "nav";
@@ -466,14 +471,15 @@
          //消除其它点击的active
           for(var index = 0; index < befores.length; index++){
             var item = befores[index];
-            item.className = "nav-item nav-item-third"
+            item.className = "nav-item nav-item-third";
           }
-          this.className += " active"
+          this.className += " active";
         };
 
         var a = document.createElement('a');
         a.className = "nav-link";
         a.href = "#" + linkpath + "-" + node.file; //和#xxx-xxx的跳转事件一起响应
+        //console.log(a.href);
         var spanMini = document.createElement('span');
         spanMini.style.fontSize = "15px";
         spanMini.className = "sidebar-mini text-info";
@@ -537,7 +543,7 @@
         return li;
       },
               //添加右边的条形框+card名片
-      addMultiGallery: function (config, galleryId) {
+      addMultiGallery: function (config,galleryId) {
         var gallery = document.getElementById(galleryId || 'body-gallery');
 
         config.childs.forEach(function (first, index, array) {
@@ -656,7 +662,7 @@
         row.appendChild(colright);
 
         container.appendChild(hr);
-        container.appendChild(row)
+        container.appendChild(row);
 
         /*       cardHeader.appendChild(row);
               card.appendChild(cardHeader);

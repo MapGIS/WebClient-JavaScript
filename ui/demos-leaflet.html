@@ -7,15 +7,24 @@
     <link rel="icon" type="image/png" href="../libs/material/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
-            中地数码 MapGIS WebClient
+        中地数码 MapGIS WebClient
     </title>
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'
-    />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!-- Fonts and icons -->
-    <link rel="stylesheet" type="text/css" href="../libs/google/material.css"/>
+    <link rel="stylesheet" type="text/css" href="../libs/google/material.css" />
     <!-- CSS Files -->
     <link href="../libs/material/css/material-dashboard.css" rel="stylesheet" />
     <link href="../css/zondy/ui.css" rel="stylesheet" />
+    <!-- <style>
+    .dropdown-item:hover,
+     .dropdown-item:focus,
+     a:hover,
+     a:focus,
+     a:active {  
+    background-color: #f8fafa;
+    color: #111;
+  }
+    </style> -->
 </head>
 
 <body class="">
@@ -55,7 +64,7 @@
                             <div class="code-core" id="code-core">
                                 <div class="code-head">
                                     <span id="coreHeader" class="code-head-select" onclick="showCore();">源代码编辑器</span>
-                                    <span id="interfaceHeader" class="code-head-unselect" onclick="showInstruction();">接口说明</span>
+                                    <span id="interfaceHeader" class="code-head-unselect" onclick="showInstruction();">接口说明</span>                                   
                                     <a id="code-run" onclick="run();">运行</a>
                                     <a id="code-restore" onclick="reStore();">还原</a>
                                 </div>
@@ -124,10 +133,26 @@
     <script type="text/javascript" src="../js/util-ui.js"></script>
     <script type="text/javascript" src="../js/codemirror.js"></script>
     <script type="text/javascript" src="../config/config-leaflet.js?v2.0"></script>
+    <!-- codemirror 代码折叠功能-->
+    <link rel="stylesheet" href="../libs/codemirror/plugin/foldgutter.css">
+    <script src="../libs/codemirror/plugin/foldcode.js"></script>
+    <script src="../libs/codemirror/plugin/foldgutter.js"></script>
+     <script src="../libs/codemirror/plugin/brace-fold.js"></script>
+    <script src="../libs/codemirror/plugin/comment-fold.js"></script> 
+    <!--codemirror 搜索功能-->
+    <link rel="stylesheet" href="../libs/codemirror/plugin/dialog.css">
+    <script src="../libs/codemirror/plugin/search.js"></script>
+    <script src="../libs/codemirror/plugin/searchcursor.js"></script>
+    <script src="../libs/codemirror/plugin/jump-to-line.js"></script>
+    <script src="../libs/codemirror/plugin/dialog.js"></script>
+    <!--当前行背景高亮-->
+    <script src="../libs/codemirror/plugin/active-line.js"></script>
     <script>
         var mapMode = MODE_LEAFLET;
+        var flag = false;
         $('#body-header').load("./second-header.html");
-        UIBuilder.addMultiSidebar(config);
+        UIBuilder.addMultiSidebar(config,flag);
+
     </script>
 </body>
 
