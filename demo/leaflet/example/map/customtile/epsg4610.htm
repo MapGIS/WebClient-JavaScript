@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>EPSG4610: 经纬度裁图，西安80椭球</title>
+    <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        #map {
+            height: 800px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        //EPSG4610: 经纬度裁图，西安80椭球
+        map = L.map('map', {
+            crs: L.CRS.EPSG4610,
+            center: [37.09, 114.80], //注意这里要使用经纬度坐标
+            zoom: 1,
+            continuousWorld: true,
+            worldCopyJump: false,
+        });
+
+        L.tileLayer('http://192.168.10.185:6163/igs/rest/mrms/tile/EPSG_4610/{z}/{y}/{x}', {
+            attribution: '<a href="#">EPSG4610: 经纬度裁图，西安80椭球</a>',
+            maxZoom: 5,
+            minZoom: 0
+        }).addTo(map);
+
+        L.circle([37.09, 114.80], {
+            radius: 100,
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 1
+        }).addTo(map);
+    </script>
+</body>
+
+</html>

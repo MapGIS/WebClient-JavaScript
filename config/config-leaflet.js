@@ -370,12 +370,28 @@ var config = {
                     folder: "customtile",
                     leaffolder: true,
                     childs: [{
-                        name: "高斯投影-3857",
+                        name: "高斯投影-开源实现",
                         file: "gauss",
                         diffcult: "1",
                         detail: "高斯投影",
                         icon: "gauss.png",
                         update: "最后更新时间：2018-06-05",
+                        person:"基础平台/创新中心-潘卓然"
+                    },{
+                        name: "EPSG4610-中地内置",
+                        file: "epsg4610",
+                        diffcult: "1",
+                        detail: "EPSG4610: 经纬度裁图，西安80椭球 ",
+                        icon: "epsg4610.png",
+                        update: "最后更新时间：2018-10-17",
+                        person:"基础平台-龚跃健"
+                    },{
+                        name: "EPSG4610-开源实现",
+                        file: "epsg4610proj",
+                        diffcult: "1",
+                        detail: "EPSG4610: 经纬度裁图，西安80椭球 ",
+                        icon: "epsg4610proj.png",
+                        update: "最后更新时间：2018-10-17",
                         person:"基础平台/创新中心-潘卓然"
                     }]
                 }
