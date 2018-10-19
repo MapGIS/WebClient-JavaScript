@@ -320,48 +320,61 @@ var config = {
                         detail: "Google-外网3857",
                         icon: "googlemapdisplayonline.png",
                         update: "最后更新时间：2018-06-01"
-                    }, {
-                        name: "加载OGC的WMTS图层-4326-BUG",
+                    }]
+                },
+                {
+                    name: "OGC",
+                    materialicon: "map",
+                    folder: "ogc",
+                    leaffolder: true,
+                    childs: [{
+                        name: "加载OGC的WMTS图层-4326",
                         file: "ogcwmts",
                         diffcult: "1",
                         detail: "加载OGC的WMTS图层",
                         icon: "ogcwmts.png",
-                        update: "最后更新时间：2018-06-01"
+                        update: "最后更新时间：2018-06-01",
+                        person:"基础平台/创新中心-潘卓然"
                     }, {
                         name: "加载OGC的WMS图层-4326",
                         file: "ogcwms",
                         diffcult: "1",
                         detail: "加载OGC的WMS图层",
                         icon: "ogcwms.png",
-                        update: "最后更新时间：2018-06-01"
+                        update: "最后更新时间：2018-06-01",
+                        person:"基础平台/创新中心-潘卓然"
                     }, {
                         name: "WFS地图显示-4326",
                         file: "ogcwfs",
                         diffcult: "1",
                         detail: "WFS地图显示",
                         icon: "ogcwfs.png",
-                        update: "最后更新时间：2018-06-01"
+                        update: "最后更新时间：2018-06-01",
+                        person:"基础平台/创新中心-潘卓然"
                     }, {
                         name: "加载OGC的WMTS图层-3857",
                         file: "ogcwmts3857",
                         diffcult: "1",
                         detail: "加载OGC的WMTS图层-EPSG:3857",
                         icon: "ogcwmts3857.png",
-                        update: "最后更新时间：2018-06-02"
+                        update: "最后更新时间：2018-06-02",
+                        person:"基础平台/创新中心-潘卓然"
                     }, {
                         name: "加载OGC的WMS图层-3857",
                         file: "ogcwms3857",
                         diffcult: "1",
                         detail: "加载OGC的WMS图层-EPSG:3857",
                         icon: "ogcwms3857.png",
-                        update: "最后更新时间：2018-06-02"
+                        update: "最后更新时间：2018-06-02",
+                        person:"基础平台/创新中心-潘卓然"
                     }, {
                         name: "WFS地图显示-3857",
                         file: "ogcwfs3857",
                         diffcult: "2",
                         detail: "WFS地图显示-EPSG:3857",
                         icon: "ogcwfs3857.png",
-                        update: "最后更新时间：2018-06-02"
+                        update: "最后更新时间：2018-06-02",
+                        person:"基础平台/创新中心-潘卓然"
                     }]
                 },
                 {
