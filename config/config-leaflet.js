@@ -1254,6 +1254,20 @@ var config = {
             ]
         },
         {
+            name: "ArcServer",
+            materialicon: "layers",
+            folder: "arcserver",
+            leaffolder: true,
+            childs: [{
+                name: "arcserver-ogc-4326",
+                file: "arcserver_ogc_4326",
+                diffcult: "1",
+                detail: "http://www.mg.cgs.gov.cn:6080/arcgis/rest/services/",
+                icon: "arcserver_ogc_4326.png",
+                update: "最后更新时间：2018-10-19"
+            }]
+        },
+        {
             name: "客户端可视化",
             materialicon: "camera",
             folder: "dataview",
