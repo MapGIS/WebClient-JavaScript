@@ -32,7 +32,7 @@ function  tabProj(tableID,proj) {
     td1.innerHTML="EPSG:" + proj[i].id;
     var td2=document.createElement('td');    
       
-    td2.innerHTML=proj[i].type;
+    td2.innerHTML=proj[i].name;
     var td3=document.createElement('td');
    
     td3.innerHTML=proj[i].strProject;
