@@ -157,6 +157,14 @@ var config = {
                         detail: "基本的图层组控制功能,实际上是透明度空间的使用。",
                         icon: "layergroupcontrol.png",
                         update: "最后更新时间：2018-05-30"
+                    }, {
+                        name: "地图裁剪",
+                        file: "boundarycanvas",
+                        diffcult: "1",
+                        detail: "多边形裁剪地图，通过绘制多边形，只显示多边形范围内的地图部分",
+                        icon: "boundarycanvas.png",
+                        update: "最后更新时间：2018-11-2",  
+                        person:"基础平台/产品中心-龚跃健"
                     }]
                 },
                 {

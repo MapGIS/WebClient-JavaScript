@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>地图多边形裁剪</title>
+
+    <script include="boundarycanvas,draw" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0px;
+        }
+        
+         #infoPanel {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 21px;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        #info {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="infoPanel">
+        <span id="info">
+            Draw polygons or rectangles to see parts of the map
+        </span>
+    </div>
+
+    <div id="map"></div>
+
+    <script type="text/javascript">
+        var map = new L.Map('map', {
+                center: new L.LatLng(30.58791323870018, 114.3474077911377),
+                zoom: 10
+            }),
+            drawnItems = L.featureGroup().addTo(map);
+        L.control.layers({
+            "google": L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+                attribution: 'google'
+            }).addTo(map)
+        }, {
+            'drawlayer': drawnItems
+        }, {
+            position: 'topleft',
+            collapsed: false
+        }).addTo(map);
+        map.addControl(new L.Control.Draw({
+            draw: {
+                marker: false,
+                polyline: false,
+                circle: false,
+                circlemarker: false,
+                polygon: {
+                    allowIntersection: true,
+                    showArea: true
+                }
+            }
+        }));
+
+        map.on(L.Draw.Event.CREATED, function (event) {
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            L.TileLayer.boundaryCanvas(osmUrl, {
+                boundary: event.layer.toGeoJSON(),
+                attribution: "osm"
+            }).addTo(map);
+
+        });
+    </script>
+</body>
+
+</html>

@@ -237,6 +237,9 @@
       inputCSS(httpUrl + "/cdn/leaflet-plugins/leaflet-icon-pulse/src/L.Icon.Pulse.css");
       inputScript(httpUrl + "/cdn/leaflet-plugins/leaflet-icon-pulse/src/L.Icon.Pulse.js");
     }
+    if (inArray(includes, 'boundarycanvas')) {
+      inputScript(httpUrl + "/cdn/leaflet-plugins/Leaflet-BoundaryCanvas/BoundaryCanvas.js");
+    }
     if (inArray(includes, 'picture')) {
       inputScript(httpUrl + "/cdn/filesaver/dist/FileSaver.min.js");
     }

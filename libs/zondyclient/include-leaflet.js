@@ -339,6 +339,15 @@
         inputScript(httpUrl + "/cdn/leaflet-plugins/leaflet-icon-pulse/src/L.Icon.Pulse.js");
       }
     }
+
+    if (inArray(includes, 'boundarycanvas')) {
+      if (onInternetMode) {
+        inputScript(httpUrl + "/cdn/leaflet-plugins/Leaflet-BoundaryCanvas/BoundaryCanvas.js");
+      } else { 
+        inputScript(httpUrl + "/cdn/leaflet-plugins/Leaflet-BoundaryCanvas/BoundaryCanvas.js");
+      }
+    }
+
     if (inArray(includes, 'picture')) {
       inputScript(httpUrl + "/cdn/filesaver/dist/FileSaver.min.js");
     }
