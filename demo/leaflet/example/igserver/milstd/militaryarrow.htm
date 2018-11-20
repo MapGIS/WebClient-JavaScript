@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>绘制军标（箭头）</title>
+    <script include="draw,milstdbyleaflet"
+            src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        var map;
+        var layer;
+        function init() {
+            map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326,
+                //显示中心
+                center: [0, 0],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 10,
+                //当前显示等级
+                zoom: 1,
+                //不显示放大缩小按钮
+                zoomControl: false,
+                //限制显示地理范围
+                maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 0))
+            });
+
+            //显示OSM地图
+            layer = L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 15,
+                //设置地图不连续显示
+                noWrap: true
+            }).addTo(map);
+        }
+
+        var feature = null;
+        //定义绘制图标
+        function add() {
+            if (feature !== null) {
+                //清空地图
+                feature.remove();
+            }
+
+            var vertices = [[60, -40], [60, -20], [47, -30]];
+
+            var milStdType = document.getElementById("typeSelect").value;
+
+            //根据选中的军标类型（箭头）绘制图形
+            switch (milStdType) {
+                case "SimpleArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.15,
+                        headWidthFactor: 0.4,
+                        neckHeightFactor: 0.75,
+                        neckWidthFactor: 0.1,
+                        tailWidthFactor: 0.1,
+                        hasSwallowTail: true,
+                        swallowTailFactor: 0.5
+                    });
+                    break;
+                case "DoubleArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.15,
+                        headWidthFactor: 0.8,
+                        neckHeightFactor: 0.7,
+                        neckWidthFactor: 0.4
+                    });
+                    vertices = [[90, -60], [60, -60], [90, -30], [60, -30]];
+                    break;
+                case "StraightArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.1,
+                        headWidthFactor: 1.3,
+                        neckHeightFactor: 1.0,
+                        neckWidthFactor: 0.7,
+                        tailWidthFactor: 0.07,
+                        hasSwallowTail: false,
+                        swallowTailFactor: 0
+                    });
+                    break;
+                case "SingleLineArrow":
+                    var milParam = new MilStd.MilstdParams({
+                        headHeightFactor: 0.1,
+                        headWidthFactor: 1.3
+                    });
+                    break;
+            }
+            //根据选择类型，用算法绘制相应的图形
+            var parseDots = MilStd.Arrow.getArrowFromVert(vertices, milStdType, milParam);
+            //根据最新的算法坐标点绘制几何图形（SingleLineArrow画线，其余三个箭头画多边形）
+            var tempPoly = null; //图形或线
+            if (milStdType === "SingleLineArrow") {
+                tempPoly = L.polyline(parseDots);
+            } else {
+                tempPoly = L.polygon(parseDots);
+            }
+            //将绘制的多边形添加到地图中（为箭头）
+            this._PolygonLayer = new L.LayerGroup();
+            map.addLayer(this._PolygonLayer);
+            tempPoly.addTo(this._PolygonLayer);
+            feature = this._PolygonLayer;
+        }
+
+    </script>
+</head>
+<body onload="init()">
+<div id="menu">
+    <label style="font-weight: bold;">
+        要添加的箭头类型： &nbsp;
+    </label>
+    <select name="type" id="typeSelect">
+        <option value="SimpleArrow">简单箭头</option>
+        <option value="DoubleArrow">双箭头</option>
+        <option value="StraightArrow">直箭头</option>
+        <option value="SingleLineArrow">单线箭头</option>
+    </select>
+    <button onclick="add()">
+        开始添加
+    </button>
+</div>
+<div id="leaf_map" style="width: 100%; height: 95%; z-index: 1">
+</div>
+</body>
+</html>

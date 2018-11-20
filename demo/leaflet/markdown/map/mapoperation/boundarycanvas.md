@@ -17,20 +17,29 @@ L.TileLayer.BoundaryCanvas.createFromLayer(layer, {
 
 ``` 
 
->gitHub上原生插件BoundaryCanvas.js只支持标准的瓦片地图，在此基础上，`新增支持WMTS和WMS`，具体使用方法如下：
+>gitHub上原生插件BoundaryCanvas.js只支持标准的瓦片地图，在此基础上，`新增支持ogc的WMTS和WMS，以及矢量地图文档和矢量图层`，具体使用方法如下：
 
 ```javascript
 //对于wmts和wms新增ogc属性，如果传入的是wmts地图，则ogc设置如下：
 ogc={
     wmts:true//（默认为false）
-    }
+ }
 //如果传入的是wms地图，则ogc设置如下：
 ogc={
     wmts:true//（默认为false）
-    }
+ }
+//对于矢量地图文档和矢量地图图层新增vector属性，如果传入的是矢量地图文档，则vector设置如下：
+vector={
+    doc:true//（默认为false）
+ }
+//如果传入的是矢量图层，则vector设置如下：
+vector={
+    layer:true//（默认为false）
+ }
 L.TileLayer.BoundaryCanvas.createFromLayer(layer, {
                 boundary: geoJSON,//绘制的多边形范围，使用Leaflet标注的GeoJSON格式
-                ogc:ogc
+                ogc:ogc,
+                vector:vector
             }).addTo(map);
 
 ``` 

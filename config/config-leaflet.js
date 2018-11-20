@@ -1162,6 +1162,45 @@ var config = {
                     }]
                 },
                 {
+                    name: "军标绘制",
+                    materialicon: "dashboard",
+                    folder: "milstd",
+                    leaffolder: true,
+                    childs: [{
+                        name: "军标绘制(箭头)",
+                        file: "militaryarrow",
+                        diffcult: "1",
+                        detail: "绘制箭头",
+                        icon: "militaryarrow.png",
+                        update: "最后更新时间：2018-11-16",
+                        person:"基础平台/产品中心-龚跃健"
+                    }, {
+                        name: "军标绘制(指北针)",
+                        file: "militarycompass",
+                        diffcult: "1",
+                        detail: "绘制指北针",
+                        icon: "militarycompass.png",
+                        update: "最后更新时间：2018-11-16",
+                        person:"基础平台/产品中心-龚跃健"
+                    }, {
+                        name: "军标绘制(旗标)",
+                        file: "militaryflag",
+                        diffcult: "1",
+                        detail: "绘制旗标",
+                        icon: "militaryflag.png",
+                        update: "最后更新时间：2018-11-16",
+                        person:"基础平台/产品中心-龚跃健"
+                    },{
+                        name: "军标绘制",
+                        file: "militaryplotting",
+                        diffcult: "1",
+                        detail: "绘制箭头、指北针、旗标",
+                        icon: "militaryplotting.png",
+                        update: "最后更新时间：2018-11-16",
+                        person:"基础平台/产品中心-龚跃健"
+                    }]
+                },
+                {
                     name: "几何分析",
                     materialicon: "dashboard",
                     folder: "geoanaservice",
