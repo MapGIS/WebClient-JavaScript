@@ -285,7 +285,7 @@
                 addFeatrueInfo(featuerInfo);
                 if (popup.getPosition() == undefined) {
                     //设置popup的位置
-                    popup.setPosition([116.28, 39.54]);
+                    popup.setPosition(ol.proj.fromLonLat([116.28, 39.54]));
                 }
             }
         });
