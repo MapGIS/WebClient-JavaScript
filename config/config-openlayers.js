@@ -227,35 +227,40 @@ var config = {
                         diffcult: "1",
                         detail: "测试基本的图片标注",
                         icon: "addpicture.png",
-                        update: "最后更新时间：2018-07-16"
+                        person:"基础平台/创新中心-潘卓然",
+                        update: "最后更新时间：2018-11-22"
                     }, {
                         name: "文字标注",
                         file: "addtext",
                         diffcult: "1",
                         detail: "测试基本的文字标注",
                         icon: "addtext.png",
-                        update: "最后更新时间：2018-07-16"
+                        person:"基础平台/创新中心-潘卓然",
+                        update: "最后更新时间：2018-11-22"
                     }, {
                         name: "图文标注",
                         file: "addtextandpic",
                         diffcult: "1",
                         detail: "测试基本的图文标注",
                         icon: "addtextandpic.png",
-                        update: "最后更新时间：2018-07-16"
+                        person:"基础平台/创新中心-潘卓然",
+                        update: "最后更新时间：2018-11-22"
                     }, {
                         name: "Popup弹出框",
                         file: "addpopup",
                         diffcult: "1",
                         detail: "测试基本的Popup弹出框",
                         icon: "addpopup.png",
-                        update: "最后更新时间：2018-07-16"
+                        person:"基础平台/创新中心-潘卓然",
+                        update: "最后更新时间：2018-11-22"
                     }, {
                         name: "聚合标注",
                         file: "addclusterlabels",
                         diffcult: "1",
                         detail: "测试基本的聚合标注",
                         icon: "addclusterlabels.png",
-                        update: "最后更新时间：2018-07-16"
+                        person:"基础平台/创新中心-潘卓然",
+                        update: "最后更新时间：2018-11-22"
                     }]
                 },
                 {
