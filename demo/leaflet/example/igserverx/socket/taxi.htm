@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Draw</title>
+  <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+  <style>
+    #map {
+      height: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    var map = new L.Map("map", {
+      center: new L.LatLng(34.218216, 108.835846),
+      zoom: 15
+    });
+    var osm = L.tileLayer(
+      "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=" +
+      "sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw", {
+        attribution: '<a href="#">Mapbox</a>',
+        maxZoom: 18,
+        id: "mapbox.streets"
+      }
+    ).addTo(map);
+    var urlData = "ws://192.168.91.121:9382/flowdata/streamdemo";
+    var popup = L.popup({
+      offset: L.point(0, 0),
+      autoPan: true
+    });
+    var streamLayer = L.zondy.StreamLayer(map, urlData, {
+      style: function (feature) {
+        return {
+          fillColor: "#ffff00",
+          fillOpacity: 1,
+          radius: 10,
+          weight: 0
+        };
+      },
+      field: "imei" //这个属性必须传入，如果没有则使用默认字段id
+    });
+    streamLayer.on("layerupdate", function (result) {
+      var feature = result.data;
+      var content = "速度：" + feature.properties.speed + 
+        "公里/时 设备号：" + feature.properties.imei;
+      popup
+        .setLatLng(L.GeoJSON.coordsToLatLng(feature.geometry.coordinates))
+        .setContent(content);
+      if (!popup.isOpen()) {
+        popup.addTo(map);
+      }
+    });
+    streamLayer.addTo(map);
+  </script>
+</body>
+
+</html>
