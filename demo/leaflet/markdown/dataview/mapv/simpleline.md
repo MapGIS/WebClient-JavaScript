@@ -1,4 +1,15 @@
 # Mapv API
+## 常见api
+
+1. 数据操作
+   + addData(data, options)
+   + updateData(data, options)
+2. 图层操作
+   + show()
+   + hide()
+   + destroy()
+   + update()
+
 ## DataSet
 DasetSet是mapv中统一规范的数据对象，用来保存javascript数据对象。可以增删改查数据，并且可以订阅数据修改事件。
 

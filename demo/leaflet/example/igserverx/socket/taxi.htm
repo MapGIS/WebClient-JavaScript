@@ -17,7 +17,7 @@
   <script>
     var map = new L.Map("map", {
       center: new L.LatLng(34.218216, 108.835846),
-      zoom: 15
+      zoom: 13
     });
     var osm = L.tileLayer(
       "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=" +
@@ -33,11 +33,19 @@
       autoPan: true
     });
     var streamLayer = L.zondy.StreamLayer(map, urlData, {
+      pointToLayer: function (geoJsonPoint, latlng) {
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: '../img/leaflet/marker/bike.png',
+            iconAnchor: [16, 16]
+          })
+        });
+      },
       style: function (feature) {
         return {
-          fillColor: "#ffff00",
+          fillColor: "#ff0000",
           fillOpacity: 1,
-          radius: 10,
+          radius: 3,
           weight: 0
         };
       },
@@ -45,14 +53,14 @@
     });
     streamLayer.on("layerupdate", function (result) {
       var feature = result.data;
-      var content = "速度：" + feature.properties.speed + 
-        "公里/时 设备号：" + feature.properties.imei;
-      popup
-        .setLatLng(L.GeoJSON.coordsToLatLng(feature.geometry.coordinates))
-        .setContent(content);
-      if (!popup.isOpen()) {
-        popup.addTo(map);
-      }
+      var content = "速度：" + feature.properties.speed +
+        "公里/时 <br> 设备号：" + feature.properties.imei;
+      /*       popup
+              .setLatLng(L.GeoJSON.coordsToLatLng(feature.geometry.coordinates))
+              .setContent(content);
+            if (!popup.isOpen()) {
+              popup.addTo(map);
+            } */
     });
     streamLayer.addTo(map);
   </script>

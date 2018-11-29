@@ -66,7 +66,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 35);
+/******/ 	return __webpack_require__(__webpack_require__.s = 43);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,14 +116,80 @@ var Zondy = exports.Zondy = window.Zondy = window.Zondy || {};
 Zondy.Util = Zondy.Util || {};
 Zondy.Network = Zondy.Network || {};
 
+Zondy.Event = Zondy.Event || {};
+Zondy.Socket = Zondy.Socket || {};
+
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LayerEvent = exports.BroadcastEvent = exports.SubscribeEvent = exports.BroadcastPrefix = exports.SubscribePrefix = undefined;
+
+var _Base = __webpack_require__(2);
+
+var SubscribePrefix = exports.SubscribePrefix = "/subscribe";
+var BroadcastPrefix = exports.BroadcastPrefix = "/broadcast";
+
+/**
+ * SubscribeEvent WebSocket消息订阅通信事件流程
+ * @readonly
+ * @enum {String}
+ */
+var SubscribeEvent = exports.SubscribeEvent = {
+  /** 广播流打开事件 */
+  OPEN: "subscribeOpen",
+  /** 广播流消息事件 */
+  MESSAGE: "subscribeMessage",
+  /** 广播流关闭事件 */
+  CLOSE: "subscribeClose",
+  /** 广播流错误事件 */
+  ERROR: "subscribeError"
+};
+
+/**
+ * BroadcastEvent WebSocket消息广播通信事件流程
+ * @readonly
+ * @enum {String}
+ */
+var BroadcastEvent = exports.BroadcastEvent = {
+  /** 广播流打开事件 */
+  OPEN: "broadcastOpen",
+  /** 广播流消息事件 */
+  MESSAGE: "broadcastMessage",
+  /** 广播流关闭事件 */
+  CLOSE: "broadcastClose",
+  /** 广播流错误事件 */
+  ERROR: "broadcastError"
+};
+
+/**
+ * BroadcastEvent WebSocket 图层事件，用户、二次开发一般关注这个事件
+ * @readonly
+ * @enum {String}
+ */
+var LayerEvent = exports.LayerEvent = {
+  /** 图层更新事件事件 */
+  UPDATE: "layerupdate"
+};
+
+_Base.Zondy.Event.SubscribeEvent = SubscribeEvent;
+_Base.Zondy.Event.BroadcastEvent = BroadcastEvent;
+_Base.Zondy.Event.LayerEvent = BroadcastEvent;
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 module.exports = function(){try{return mapv}catch(e){return {}}}();
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -140,7 +206,7 @@ var _leaflet2 = _interopRequireDefault(_leaflet);
 
 __webpack_require__(1);
 
-var _MapvBaseLayer = __webpack_require__(8);
+var _MapvBaseLayer = __webpack_require__(12);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -504,7 +570,7 @@ var mapvLayer = exports.mapvLayer = function mapvLayer(dataSet, mapVOptions, opt
 _leaflet2.default.zondy.MapvLayer = mapvLayer;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -530,7 +596,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -545,7 +611,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _Base = __webpack_require__(2);
 
-var _FetchRequest = __webpack_require__(19);
+var _FetchRequest = __webpack_require__(22);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -597,13 +663,518 @@ var IServiceLoadData = exports.IServiceLoadData = function () {
 _Base.Zondy.ElasticSearch.IServiceLoadData = IServiceLoadData;
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GeojsonBaseLayer = undefined;
+
+var _leaflet = __webpack_require__(0);
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @class GeojsonBaseLayer
+ * @classdesc SocketLayer GeoJson渲染器。
+ * @extends {L.GeoJSON}
+ * @param {string} url - 数据流图层服务地址
+ * @param {Object} options - 其他参数，先保留。
+ *
+ * @param {Object} options.style - 默认的geojson的style。
+ * @param {Object} options.pointToLayer - geojson针对点图层的样式设置。
+ * @param {Object} options.onEachFeature - geojson针对常见几何的样式设置。
+ *
+ * @param {Object} options.field - geojson的唯一标识字段，请确保该字段的唯一性。
+ */
+var GeojsonBaseLayer = exports.GeojsonBaseLayer = _leaflet2.default.GeoJSON.extend({
+  initialize: function initialize(url, options) {
+    options = options || {};
+    if (options.style && !options.pointToLayer) {
+      options.pointToLayer = function (feature, latlng) {
+        return _leaflet2.default.circleMarker(latlng, options.style());
+      };
+    }
+
+    _leaflet2.default.Util.setOptions(this, options);
+
+    //与leaflet源代码一致，
+    //var i = this.getLayerId(t);
+    //return this._layers[i] = t
+    this._layers = {};
+
+    _leaflet2.default.stamp(this);
+
+    this.url = url;
+    this.fieldHash = {};
+  },
+
+  onMessage: function onMessage(msg) {
+    var feature = msg.feature;
+    var field = msg.feature.properties[this.options.field];
+    var layer = null;
+    if (field !== undefined && this.fieldHash[field]) {
+      layer = this.getLayer(this.fieldHash[field]);
+      this.parasFeature(layer, feature);
+    } else {
+      layer = _leaflet2.default.GeoJSON.geometryToLayer(feature, this.options);
+      layer.feature = _leaflet2.default.GeoJSON.asFeature(feature);
+      this.addLayer(layer);
+      if (field !== undefined) {
+        this.fieldHash[field] = this.getLayerId(layer);
+      }
+    }
+    if (this.options.onEachFeature) {
+      this.options.onEachFeature(feature, layer);
+    }
+  },
+
+  parasFeature: function parasFeature(layer, feature) {
+    if (feature.properties) {
+      layer.feature.properties = feature.properties;
+    }
+    var coords = [];
+    switch (feature.geometry.type) {
+      case "Point":
+        coords = _leaflet2.default.GeoJSON.coordsToLatLng(feature.geometry.coordinates);
+        layer.setLatLng(coords);
+        break;
+      case "LineString":
+        coords = _leaflet2.default.GeoJSON.coordsToLatLngs(feature.geometry.coordinates, 0);
+        layer.setLatLngs(coords);
+        break;
+      case "MultiLineString":
+      case "Polygon":
+        coords = _leaflet2.default.GeoJSON.coordsToLatLngs(feature.geometry.coordinates, 1);
+        layer.setLatLngs(coords);
+        break;
+      case "MultiPolygon":
+        coords = _leaflet2.default.GeoJSON.coordsToLatLngs(feature.geometry.coordinates, 2);
+        layer.setLatLngs(coords);
+        break;
+    }
+  }
+});
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ServiceEvent = undefined;
+
+var _leaflet = __webpack_require__(0);
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @class L.zondy.ServiceEvent
+ * @classdesc L.zondy 服务事件，该类主要是用于事件的传递
+ * @param {string} url - url地址
+ * @param {Object} options - 参数
+ * @fires L.zondy.ServiceEvent#initialize
+ * @fires L.zondy.ServiceEvent#destroy
+ */
+var ServiceEvent = exports.ServiceEvent = _leaflet2.default.Evented.extend({
+  initialize: function initialize(url, options) {
+    this.url = url;
+    _leaflet2.default.setOptions(this, options);
+    this.fire("initialize", this);
+  },
+
+  destroy: function destroy() {
+    this.fire("destroy", this);
+  }
+});
+_leaflet2.default.zondy.ServiceEvent = ServiceEvent;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cancelFn = exports.requestFn = exports.emptyImageUrl = exports.isArray = exports.lastId = exports.create = exports.endsWith = exports.extendFromArray = exports.appendUrl = exports.extend = exports.Util = undefined;
+exports.bind = bind;
+exports.stamp = stamp;
+exports.throttle = throttle;
+exports.wrapNum = wrapNum;
+exports.falseFn = falseFn;
+exports.formatNum = formatNum;
+exports.trim = trim;
+exports.splitWords = splitWords;
+exports.setOptions = setOptions;
+exports.getParamString = getParamString;
+exports.template = template;
+exports.indexOf = indexOf;
+exports.requestAnimFrame = requestAnimFrame;
+exports.cancelAnimFrame = cancelAnimFrame;
+
+var _Base = __webpack_require__(2);
+
+var Util = exports.Util = _Base.Zondy.Util = _Base.Zondy.Util || {};
+
+/**
+ * @description 复制源对象的所有属性到目标对象上，源对象上的没有定义的属性在目标对象上也不会被设置。
+ * @example
+ * 要复制Zondy.Size对象的所有属性到自定义对象上，使用方法如下:
+ *     var size = new Zondy.Size(100, 100);
+ *     var obj = {}；
+ *     Zondy.Util.extend(obj, size);
+ * @param destination - {Object} 目标对象。
+ * @param source - {Object} 源对象，其属性将被设置到目标对象上。
+ * @return {Object} 目标对象。
+ */
+var extend = exports.extend = function extend(destination, source) {
+  destination = destination || {};
+  if (source) {
+    for (var property in source) {
+      var value = source[property];
+      if (value !== undefined) {
+        destination[property] = value;
+      }
+    }
+
+    /**
+     * IE doesn't include the toString property when iterating over an object's
+     * properties with the for(property in object) syntax.  Explicitly check if
+     * the source has its own toString property.
+     */
+
+    /*
+     * FF/Windows < 2.0.0.13 reports "Illegal operation on WrappedNative
+     * prototype object" when calling hawOwnProperty if the source object
+     * is an instance of window.Event.
+     */
+
+    var sourceIsEvt = typeof window.Event === "function" && source instanceof window.Event;
+
+    if (!sourceIsEvt && source.hasOwnProperty && source.hasOwnProperty("toString")) {
+      destination.toString = source.toString;
+    }
+  }
+  return destination;
+};
+
+/**
+ * @description 给url追加参数。
+ * @param url - {string} 待追加参数的url字符串。
+ * @param paramStr - {string} 待追加的参数。
+ * @return {string} The new url
+ */
+var appendUrl = exports.appendUrl = function appendUrl(url, paramStr) {
+  var newUrl = url;
+  if (paramStr) {
+    var parts = (url + " ").split(/[?&]/);
+    newUrl += parts.pop() === " " //如果url是以?或者&结尾的直接追加参数
+    ? paramStr : parts.length ? "&" + paramStr : "?" + paramStr;
+    //如果url不是以?或者&结尾的则根据是否有参数进行符号补充
+  }
+  return newUrl;
+};
+
+/**
+ * @description 复制源对象数组的所有属性到目标对象上，源对象数组的当前对象会重写前一个对象的值
+ * @author 潘卓然ParnDeedlit 基础平台/创新中心
+ * @param dest - {Object}  目标对象
+ * @param sources -{Array} 源对象数据，每个对象都会给目的对象设置对应的属性值
+ * @private
+ */
+var extendFromArray = exports.extendFromArray = function extendFromArray(dest, sources) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = sources[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var src = _step.value;
+
+      for (var k in src) {
+        dest[k] = src[k];
+      }
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return dest;
+};
+
+/**
+ * 判断字符串是否以特定后缀字符结束
+ * @author 潘卓然ParnDeedlit 基础平台/创新中心
+ * @description
+ * @param string {String} 判断字符串
+ * @param string {String} 尾部后缀
+ * @private
+ */
+var endsWith = exports.endsWith = function endsWith(string, suffix) {
+  return string.indexOf(suffix, string.length - suffix.length) !== -1;
+};
+
+// @function create(proto: Object, properties?: Object): Object
+// Compatibility polyfill for [Object.create](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
+var create = exports.create = Object.create || function () {
+  function F() {}
+  return function (proto) {
+    F.prototype = proto;
+    return new F();
+  };
+}();
+
+// @function bind(fn: Function, …): Function
+// Returns a new function bound to the arguments passed, like [Function.prototype.bind](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+// Has a `L.bind()` shortcut.
+function bind(fn, obj) {
+  var slice = Array.prototype.slice;
+
+  if (fn.bind) {
+    return fn.bind.apply(fn, slice.call(arguments, 1));
+  }
+
+  var args = slice.call(arguments, 2);
+
+  return function () {
+    return fn.apply(obj, args.length ? args.concat(slice.call(arguments)) : arguments);
+  };
+}
+
+// @property lastId: Number
+// Last unique ID used by [`stamp()`](#util-stamp)
+var lastId = exports.lastId = 0;
+
+// @function stamp(obj: Object): Number
+// Returns the unique ID of an object, assigning it one if it doesn't have it.
+function stamp(obj) {
+  /*eslint-disable */
+  obj._leaflet_id = obj._leaflet_id || (exports.lastId = lastId += 1);
+  return obj._leaflet_id;
+  /* eslint-enable */
+}
+
+// @function throttle(fn: Function, time: Number, context: Object): Function
+// Returns a function which executes function `fn` with the given scope `context`
+// (so that the `this` keyword refers to `context` inside `fn`'s code). The function
+// `fn` will be called no more than one time per given amount of `time`. The arguments
+// received by the bound function will be any arguments passed when binding the
+// function, followed by any arguments passed when invoking the bound function.
+// Has an `L.throttle` shortcut.
+function throttle(fn, time, context) {
+  var lock, args, wrapperFn, later;
+
+  later = function later() {
+    // reset lock and call if queued
+    lock = false;
+    if (args) {
+      wrapperFn.apply(context, args);
+      args = false;
+    }
+  };
+
+  wrapperFn = function wrapperFn() {
+    if (lock) {
+      // called too soon, queue to call later
+      args = arguments;
+    } else {
+      // call and lock until later
+      fn.apply(context, arguments);
+      setTimeout(later, time);
+      lock = true;
+    }
+  };
+
+  return wrapperFn;
+}
+
+// @function wrapNum(num: Number, range: Number[], includeMax?: Boolean): Number
+// Returns the number `num` modulo `range` in such a way so it lies within
+// `range[0]` and `range[1]`. The returned value will be always smaller than
+// `range[1]` unless `includeMax` is set to `true`.
+function wrapNum(x, range, includeMax) {
+  var max = range[1],
+      min = range[0],
+      d = max - min;
+  return x === max && includeMax ? x : ((x - min) % d + d) % d + min;
+}
+
+// @function falseFn(): Function
+// Returns a function which always returns `false`.
+function falseFn() {
+  return false;
+}
+
+// @function formatNum(num: Number, digits?: Number): Number
+// Returns the number `num` rounded to `digits` decimals, or to 6 decimals by default.
+function formatNum(num, digits) {
+  var pow = Math.pow(10, digits === undefined ? 6 : digits);
+  return Math.round(num * pow) / pow;
+}
+
+// @function trim(str: String): String
+// Compatibility polyfill for [String.prototype.trim](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String/Trim)
+function trim(str) {
+  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, "");
+}
+
+// @function splitWords(str: String): String[]
+// Trims and splits the string on whitespace and returns the array of parts.
+function splitWords(str) {
+  return trim(str).split(/\s+/);
+}
+
+// @function setOptions(obj: Object, options: Object): Object
+// Merges the given properties to the `options` of the `obj` object, returning the resulting options. See `Class options`. Has an `L.setOptions` shortcut.
+function setOptions(obj, options) {
+  if (!obj.hasOwnProperty("options")) {
+    obj.options = obj.options ? create(obj.options) : {};
+  }
+  for (var i in options) {
+    obj.options[i] = options[i];
+  }
+  return obj.options;
+}
+
+// @function getParamString(obj: Object, existingUrl?: String, uppercase?: Boolean): String
+// Converts an object into a parameter URL string, e.g. `{a: "foo", b: "bar"}`
+// translates to `'?a=foo&b=bar'`. If `existingUrl` is set, the parameters will
+// be appended at the end. If `uppercase` is `true`, the parameter names will
+// be uppercased (e.g. `'?A=foo&B=bar'`)
+function getParamString(obj, existingUrl, uppercase) {
+  var params = [];
+  for (var i in obj) {
+    params.push(encodeURIComponent(uppercase ? i.toUpperCase() : i) + "=" + encodeURIComponent(obj[i]));
+  }
+  return (!existingUrl || existingUrl.indexOf("?") === -1 ? "?" : "&") + params.join("&");
+}
+
+var templateRe = /\{ *([\w_-]+) *\}/g;
+
+// @function template(str: String, data: Object): String
+// Simple templating facility, accepts a template string of the form `'Hello {a}, {b}'`
+// and a data object like `{a: 'foo', b: 'bar'}`, returns evaluated string
+// `('Hello foo, bar')`. You can also specify functions instead of strings for
+// data values — they will be evaluated passing `data` as an argument.
+function template(str, data) {
+  return str.replace(templateRe, function (str, key) {
+    var value = data[key];
+
+    if (value === undefined) {
+      throw new Error("No value provided for variable " + str);
+    } else if (typeof value === "function") {
+      value = value(data);
+    }
+    return value;
+  });
+}
+
+// @function isArray(obj): Boolean
+// Compatibility polyfill for [Array.isArray](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray)
+var isArray = exports.isArray = Array.isArray || function (obj) {
+  return Object.prototype.toString.call(obj) === "[object Array]";
+};
+
+// @function indexOf(array: Array, el: Object): Number
+// Compatibility polyfill for [Array.prototype.indexOf](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
+function indexOf(array, el) {
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === el) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+// @property emptyImageUrl: String
+// Data URI string containing a base64-encoded empty GIF image.
+// Used as a hack to free memory from unused images on WebKit-powered
+// mobile devices (by setting image `src` to this string).
+var emptyImageUrl = exports.emptyImageUrl = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+
+// inspired by http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+
+function getPrefixed(name) {
+  return window["webkit" + name] || window["moz" + name] || window["ms" + name];
+}
+
+var lastTime = 0;
+
+// fallback for IE 7-8
+function timeoutDefer(fn) {
+  var time = +new Date(),
+      timeToCall = Math.max(0, 16 - (time - lastTime));
+
+  lastTime = time + timeToCall;
+  return window.setTimeout(fn, timeToCall);
+}
+
+var requestFn = exports.requestFn = window.requestAnimationFrame || getPrefixed("RequestAnimationFrame") || timeoutDefer;
+var cancelFn = exports.cancelFn = window.cancelAnimationFrame || getPrefixed("CancelAnimationFrame") || getPrefixed("CancelRequestAnimationFrame") || function (id) {
+  window.clearTimeout(id);
+};
+
+// @function requestAnimFrame(fn: Function, context?: Object, immediate?: Boolean): Number
+// Schedules `fn` to be executed when the browser repaints. `fn` is bound to
+// `context` if given. When `immediate` is set, `fn` is called immediately if
+// the browser doesn't have native support for
+// [`window.requestAnimationFrame`](https://developer.mozilla.org/docs/Web/API/window/requestAnimationFrame),
+// otherwise it's delayed. Returns a request ID that can be used to cancel the request.
+function requestAnimFrame(fn, context, immediate) {
+  if (immediate && requestFn === timeoutDefer) {
+    fn.call(context);
+  } else {
+    return requestFn.call(window, bind(fn, context));
+  }
+}
+
+// @function cancelAnimFrame(id: Number): undefined
+// Cancels a previous `requestAnimFrame`. See also [window.cancelAnimationFrame](https://developer.mozilla.org/docs/Web/API/window/cancelAnimationFrame).
+function cancelAnimFrame(id) {
+  if (id) {
+    cancelFn.call(window, id);
+  }
+}
+
+_Base.Zondy.Util.extend = extend;
+_Base.Zondy.Util.appendUrl = appendUrl;
+_Base.Zondy.Util.endsWith = endsWith;
+_Base.Zondy.Util.extendFromArray = extendFromArray;
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = function(){try{return echarts}catch(e){return {}}}();
 
 /***/ }),
-/* 8 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -618,7 +1189,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _mapv = __webpack_require__(3);
+var _mapv = __webpack_require__(4);
 
 var _leaflet = __webpack_require__(0);
 
@@ -1006,7 +1577,7 @@ var MapvBaseLayer = exports.MapvBaseLayer = function (_BaseLayer) {
 }(BaseLayer);
 
 /***/ }),
-/* 9 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1047,7 +1618,7 @@ var QUERY_GEOHASH_POINT = exports.QUERY_GEOHASH_POINT = "0";
 var QUERY_GEOHASH_POLYGON = exports.QUERY_GEOHASH_POLYGON = "1";
 
 /***/ }),
-/* 10 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1064,15 +1635,15 @@ var _leaflet = __webpack_require__(0);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-var _mapv = __webpack_require__(3);
+var _mapv = __webpack_require__(4);
 
-var _Base = __webpack_require__(9);
+var _Base = __webpack_require__(13);
 
 __webpack_require__(1);
 
-var _MapvLayer = __webpack_require__(4);
+var _MapvLayer = __webpack_require__(5);
 
-var _IServiceLoadData = __webpack_require__(6);
+var _IServiceLoadData = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1177,88 +1748,7 @@ var geoPointService = exports.geoPointService = function geoPointService(ip, soc
 _leaflet2.default.zondy.GeoPointService = geoPointService;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.appendUrl = exports.Util = undefined;
-
-var _Base = __webpack_require__(2);
-
-var Util = exports.Util = _Base.Zondy.Util = _Base.Zondy.Util || {};
-
-/**
- * @description 复制源对象的所有属性到目标对象上，源对象上的没有定义的属性在目标对象上也不会被设置。
- * @example
- * 要复制Zondy.Size对象的所有属性到自定义对象上，使用方法如下:
- *     var size = new Zondy.Size(100, 100);
- *     var obj = {}；
- *     Zondy.Util.extend(obj, size);
- * @param destination - {Object} 目标对象。
- * @param source - {Object} 源对象，其属性将被设置到目标对象上。
- * @return {Object} 目标对象。
- */
-
-_Base.Zondy.Util.extend = function (destination, source) {
-    destination = destination || {};
-    if (source) {
-        for (var property in source) {
-            var value = source[property];
-            if (value !== undefined) {
-                destination[property] = value;
-            }
-        }
-
-        /**
-         * IE doesn't include the toString property when iterating over an object's
-         * properties with the for(property in object) syntax.  Explicitly check if
-         * the source has its own toString property.
-         */
-
-        /*
-         * FF/Windows < 2.0.0.13 reports "Illegal operation on WrappedNative
-         * prototype object" when calling hawOwnProperty if the source object
-         * is an instance of window.Event.
-         */
-
-        var sourceIsEvt = typeof window.Event === "function" && source instanceof window.Event;
-
-        if (!sourceIsEvt && source.hasOwnProperty && source.hasOwnProperty("toString")) {
-            destination.toString = source.toString;
-        }
-    }
-    return destination;
-};
-
-/**
- * @description 给url追加参数。
- * @param url - {string} 待追加参数的url字符串。
- * @param paramStr - {string} 待追加的参数。
- * @return {string} The new url
- */
-var appendUrl = function appendUrl(url, paramStr) {
-    var newUrl = url;
-    if (paramStr) {
-        var parts = (url + " ").split(/[?&]/);
-        newUrl += parts.pop() === " " ? //如果url是以?或者&结尾的直接追加参数
-        paramStr : parts.length ? "&" + paramStr : "?" + paramStr;
-        //如果url不是以?或者&结尾的则根据是否有参数进行符号补充
-    }
-    return newUrl;
-};
-
-exports.appendUrl = appendUrl;
-
-
-_Base.Zondy.Util.appendUrl = appendUrl;
-
-/***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
@@ -1381,7 +1871,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 });
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, exports) {
 
 (function(self) {
@@ -1805,7 +2295,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1995,7 +2485,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -2185,10 +2675,10 @@ process.umask = function() { return 0; };
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5), __webpack_require__(14)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(6), __webpack_require__(17)))
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -2244,7 +2734,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(15);
+__webpack_require__(18);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -2255,10 +2745,10 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(6)))
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2505,16 +2995,16 @@ Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
 
 module.exports = Promise;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(16).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(19).setImmediate))
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _promisePolyfill = __webpack_require__(17);
+var _promisePolyfill = __webpack_require__(20);
 
 var _promisePolyfill2 = _interopRequireDefault(_promisePolyfill);
 
@@ -2524,7 +3014,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 window.Promise = _promisePolyfill2.default;
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2537,17 +3027,17 @@ exports.FetchRequest = exports.DefaultTimeout = exports.CORS = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-__webpack_require__(18);
+__webpack_require__(21);
 
-__webpack_require__(13);
+__webpack_require__(16);
 
-var _fetchJsonp = __webpack_require__(12);
+var _fetchJsonp = __webpack_require__(15);
 
 var _fetchJsonp2 = _interopRequireDefault(_fetchJsonp);
 
 var _Base = __webpack_require__(2);
 
-var _Util = __webpack_require__(11);
+var _Util = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2795,7 +3285,7 @@ _Base.Zondy.Network.CORS = CORS;
 _Base.Zondy.Network.DefaultTimeout = DefaultTimeout;
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2983,7 +3473,7 @@ var QUERY_GEOHASH_POINT = exports.QUERY_GEOHASH_POINT = "0";
 var QUERY_GEOHASH_POLYGON = exports.QUERY_GEOHASH_POLYGON = "1";
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3000,15 +3490,15 @@ var _leaflet = __webpack_require__(0);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-var _mapv = __webpack_require__(3);
+var _mapv = __webpack_require__(4);
 
-var _BaseDefine = __webpack_require__(20);
+var _BaseDefine = __webpack_require__(23);
 
-var _IServiceLoadData = __webpack_require__(6);
+var _IServiceLoadData = __webpack_require__(7);
 
 __webpack_require__(1);
 
-var _MapvLayer = __webpack_require__(4);
+var _MapvLayer = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3146,7 +3636,7 @@ var geoHashService = exports.geoHashService = function geoHashService(ip, socket
 _leaflet2.default.zondy.GeoHashService = geoHashService;
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3157,15 +3647,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.GeoPointService = exports.GeoHashService = undefined;
 
-var _GeoHashService = __webpack_require__(21);
+var _GeoHashService = __webpack_require__(24);
 
-var _GeoPointService = __webpack_require__(10);
+var _GeoPointService = __webpack_require__(14);
 
 exports.GeoHashService = _GeoHashService.GeoHashService;
 exports.GeoPointService = _GeoPointService.GeoPointService;
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3175,7 +3665,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _elasticsearch = __webpack_require__(22);
+var _ServiceEvent = __webpack_require__(9);
+
+Object.defineProperty(exports, "ServiceEvent", {
+  enumerable: true,
+  get: function get() {
+    return _ServiceEvent.ServiceEvent;
+  }
+});
+
+var _elasticsearch = __webpack_require__(25);
 
 Object.keys(_elasticsearch).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -3188,7 +3687,23 @@ Object.keys(_elasticsearch).forEach(function (key) {
 });
 
 /***/ }),
-/* 24 */
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GeojsonBaseLayer = undefined;
+
+var _GeojsonBaseLayer = __webpack_require__(8);
+
+exports.GeojsonBaseLayer = _GeojsonBaseLayer.GeojsonBaseLayer;
+
+/***/ }),
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3223,7 +3738,7 @@ export const version = '1.0.0'; */
 
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3234,12 +3749,718 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MapvBaseLayer = undefined;
 
-var _MapvBaseLayer = __webpack_require__(8);
+var _MapvBaseLayer = __webpack_require__(12);
 
 exports.MapvBaseLayer = _MapvBaseLayer.MapvBaseLayer;
 
 /***/ }),
-/* 26 */
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Evented = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Util = __webpack_require__(10);
+
+var Util = _interopRequireWildcard(_Util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+ * @class Evented
+ * @aka L.Evented
+ * @inherits Class
+ *
+ * A set of methods shared between event-powered classes (like `Map` and `Marker`). Generally, Evented allow you to execute some function when something happens with an object (e.g. the user clicks on the map, causing the map to fire `'click'` event).
+ *
+ * @example
+ *
+ * ```js
+ * map.on('click', function(e) {
+ * 	alert(e.latlng);
+ * } );
+ * ```
+ *
+ * Leaflet deals with event listeners by reference, so if you want to add a listener and then remove it, define it as a function:
+ *
+ * ```js
+ * function onClick(e) { ... }
+ *
+ * map.on('click', onClick);
+ * map.off('click', onClick);
+ * ```
+ */
+
+var Evented = exports.Evented = function () {
+  function Evented() {
+    _classCallCheck(this, Evented);
+  }
+
+  _createClass(Evented, [{
+    key: "on",
+
+    /* @method on(type: String, fn: Function, context?: Object): this
+     * Adds a listener function (`fn`) to a particular event type of the object. You can optionally specify the context of the listener (object the this keyword will point to). You can also pass several space-separated types (e.g. `'click dblclick'`).
+     *
+     * @alternative
+     * @method on(eventMap: Object): this
+     * Adds a set of type/listener pairs, e.g. `{click: onClick, mousemove: onMouseMove}`
+     */
+    value: function on(types, fn, context) {
+      // types can be a map of types/handlers
+      if ((typeof types === "undefined" ? "undefined" : _typeof(types)) === "object") {
+        for (var type in types) {
+          // we don't process space-separated Evented here for performance;
+          // it's a hot path since Layer uses the on(obj) syntax
+          this._on(type, types[type], fn);
+        }
+      } else {
+        // types can be a string of space-separated words
+        types = Util.splitWords(types);
+
+        for (var i = 0, len = types.length; i < len; i++) {
+          this._on(types[i], fn, context);
+        }
+      }
+
+      return this;
+    }
+
+    /* @method off(type: String, fn?: Function, context?: Object): this
+     * Removes a previously added listener function. If no function is specified, it will remove all the listeners of that particular event from the object. Note that if you passed a custom context to `on`, you must pass the same context to `off` in order to remove the listener.
+     *
+     * @alternative
+     * @method off(eventMap: Object): this
+     * Removes a set of type/listener pairs.
+     *
+     * @alternative
+     * @method off: this
+     * Removes all listeners to all Evented on the object.
+     */
+
+  }, {
+    key: "off",
+    value: function off(types, fn, context) {
+      if (!types) {
+        // clear all listeners if called without arguments
+        delete this._Evented;
+      } else if ((typeof types === "undefined" ? "undefined" : _typeof(types)) === "object") {
+        for (var type in types) {
+          this._off(type, types[type], fn);
+        }
+      } else {
+        types = Util.splitWords(types);
+
+        for (var i = 0, len = types.length; i < len; i++) {
+          this._off(types[i], fn, context);
+        }
+      }
+
+      return this;
+    }
+
+    // attach listener (without syntactic sugar now)
+
+  }, {
+    key: "_on",
+    value: function _on(type, fn, context) {
+      this._Evented = this._Evented || {};
+
+      /* get/init listeners for type */
+      var typeListeners = this._Evented[type];
+      if (!typeListeners) {
+        typeListeners = [];
+        this._Evented[type] = typeListeners;
+      }
+
+      if (context === this) {
+        // Less memory footprint.
+        context = undefined;
+      }
+      var newListener = { fn: fn, ctx: context },
+          listeners = typeListeners;
+
+      // check if fn already there
+      for (var i = 0, len = listeners.length; i < len; i++) {
+        if (listeners[i].fn === fn && listeners[i].ctx === context) {
+          return;
+        }
+      }
+
+      listeners.push(newListener);
+    }
+  }, {
+    key: "_off",
+    value: function _off(type, fn, context) {
+      var listeners, i, len;
+
+      if (!this._Evented) {
+        return;
+      }
+
+      listeners = this._Evented[type];
+
+      if (!listeners) {
+        return;
+      }
+
+      if (!fn) {
+        // Set all removed listeners to noop so they are not called if remove happens in fire
+        for (i = 0, len = listeners.length; i < len; i++) {
+          listeners[i].fn = Util.falseFn;
+        }
+        // clear all listeners for a type if function isn't specified
+        delete this._Evented[type];
+        return;
+      }
+
+      if (context === this) {
+        context = undefined;
+      }
+
+      if (listeners) {
+        // find fn and remove it
+        for (i = 0, len = listeners.length; i < len; i++) {
+          var l = listeners[i];
+          if (l.ctx !== context) {
+            continue;
+          }
+          if (l.fn === fn) {
+            // set the removed listener to noop so that's not called if remove happens in fire
+            l.fn = Util.falseFn;
+
+            if (this._firingCount) {
+              /* copy array in case Evented are being fired */
+              this._Evented[type] = listeners = listeners.slice();
+            }
+            listeners.splice(i, 1);
+
+            return;
+          }
+        }
+      }
+    }
+
+    // @method fire(type: String, data?: Object, propagate?: Boolean): this
+    // Fires an event of the specified type. You can optionally provide an data
+    // object — the first argument of the listener function will contain its
+    // properties. The event can optionally be propagated to event parents.
+
+  }, {
+    key: "fire",
+    value: function fire(type, data, propagate) {
+      if (!this.listens(type, propagate)) {
+        return this;
+      }
+
+      var event = Util.extend({}, data, {
+        type: type,
+        target: this,
+        sourceTarget: data && data.sourceTarget || this
+      });
+
+      if (this._Evented) {
+        var listeners = this._Evented[type];
+
+        if (listeners) {
+          this._firingCount = this._firingCount + 1 || 1;
+          for (var i = 0, len = listeners.length; i < len; i++) {
+            var l = listeners[i];
+            l.fn.call(l.ctx || this, event);
+          }
+
+          this._firingCount--;
+        }
+      }
+
+      if (propagate) {
+        // propagate the event to parents (set with addEventParent)
+        this._propagateEvent(event);
+      }
+      return this;
+    }
+
+    // @method listens(type: String): Boolean
+    // Returns `true` if a particular event type has any listeners attached to it.
+
+  }, {
+    key: "listens",
+    value: function listens(type, propagate) {
+      var listeners = this._Evented && this._Evented[type];
+      if (listeners && listeners.length) {
+        return true;
+      }
+
+      if (propagate) {
+        // also check parents for listeners if event propagates
+        for (var id in this._eventParents) {
+          if (this._eventParents[id].listens(type, propagate)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    // @method once(…): this
+    // Behaves as [`on(…)`](#evented-on), except the listener will only get fired once and then removed.
+
+  }, {
+    key: "once",
+    value: function once(types, fn, context) {
+      if ((typeof types === "undefined" ? "undefined" : _typeof(types)) === "object") {
+        for (var type in types) {
+          this.once(type, types[type], fn);
+        }
+        return this;
+      }
+
+      var handler = Util.bind(function () {
+        this.off(types, fn, context).off(types, handler, context);
+      }, this);
+
+      // add a listener that's executed once and removed after that
+      return this.on(types, fn, context).on(types, handler, context);
+    }
+
+    // @method addEventParent(obj: Evented): this
+    // Adds an event parent - an `Evented` that will receive propagated Evented
+
+  }, {
+    key: "addEventParent",
+    value: function addEventParent(obj) {
+      this._eventParents = this._eventParents || {};
+      this._eventParents[Util.stamp(obj)] = obj;
+      return this;
+    }
+
+    // @method removeEventParent(obj: Evented): this
+    // Removes an event parent, so it will stop receiving propagated Evented
+
+  }, {
+    key: "removeEventParent",
+    value: function removeEventParent(obj) {
+      if (this._eventParents) {
+        delete this._eventParents[Util.stamp(obj)];
+      }
+      return this;
+    }
+  }, {
+    key: "_propagateEvent",
+    value: function _propagateEvent(e) {
+      for (var id in this._eventParents) {
+        this._eventParents[id].fire(e.type, Util.extend({
+          layer: e.target,
+          propagatedFrom: e.target
+        }, e), true);
+      }
+    }
+  }]);
+
+  return Evented;
+}();
+
+// aliases; we should ditch those eventually
+
+// @method addEventListener(…): this
+// Alias to [`on(…)`](#evented-on)
+
+
+Evented.addEventListener = Evented.on;
+
+// @method removeEventListener(…): this
+// Alias to [`off(…)`](#evented-off)
+
+// @method clearAllEventListeners(…): this
+// Alias to [`off()`](#evented-off)
+Evented.removeEventListener = Evented.clearAllEventListeners = Evented.off;
+
+// @method addOneTimeEventListener(…): this
+// Alias to [`once(…)`](#evented-once)
+Evented.addOneTimeEventListener = Evented.once;
+
+// @method fireEvent(…): this
+// Alias to [`fire(…)`](#evented-fire)
+Evented.fireEvent = Evented.fire;
+
+// @method hasEventListeners(…): Boolean
+// Alias to [`listens(…)`](#evented-listens)
+Evented.hasEventListeners = Evented.listens;
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ISocketService = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Base = __webpack_require__(2);
+
+var _Evented = __webpack_require__(30);
+
+var _SocketEvent = __webpack_require__(3);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+_Base.Zondy.Socket.ISocketService = undefined;
+
+/**
+ * Socket的基类
+ * @author 潘卓然ParnDeedlit 基础平台/创新中心
+ *
+ * @alias ISocketService
+ * @constructor
+ *
+ * @param {Object} url Socket流地址的url：
+ * @param {Number} options 其他预留参数.
+ *
+ * @example
+ * 固定url  ws://{ip}:{socket}/websocket/{servicename}
+ * 服务名 streamdemo
+ * 消息接收 ws://192.168.91.121:9382/websocket/streamdemo/subscribe
+ * 消息发送 ws://192.168.91.121:9382/websocket/streamdemo/broadcast
+ *
+ */
+
+var ISocketService = exports.ISocketService = function () {
+  function ISocketService(url, options) {
+    _classCallCheck(this, ISocketService);
+
+    this.url = url || "";
+
+    this.options = options;
+
+    this.subscribesocket = null;
+    this.subscribesocket = null;
+
+    this.evented = new _Evented.Evented();
+  }
+
+  _createClass(ISocketService, [{
+    key: "createSubscribe",
+    value: function createSubscribe() {
+      var self = this;
+      this.subscribesocket = this.connect(this.url + _SocketEvent.SubscribePrefix);
+
+      this.subscribesocket.onopen = function (event) {
+        event.eventType = _SocketEvent.SubscribeEvent.OPEN;
+        self.evented.fire(_SocketEvent.SubscribeEvent.OPEN, event);
+      };
+      this.subscribesocket.onmessage = function (event) {
+        var feature = JSON.parse(event.data);
+        event.feature = feature;
+        event.eventType = _SocketEvent.SubscribeEvent.MESSAGE;
+        self.evented.fire(_SocketEvent.SubscribeEvent.MESSAGE, event);
+      };
+      this.subscribesocket.onclose = function (event) {
+        event.eventType = _SocketEvent.SubscribeEvent.CLOSE;
+        self.evented.fire(_SocketEvent.SubscribeEvent.CLOSE, event);
+      };
+      this.subscribesocket.onerror = function (event) {
+        event.eventType = _SocketEvent.SubscribeEvent.ERROR;
+        self.evented.fire(_SocketEvent.SubscribeEvent.ERROR, event);
+      };
+    }
+  }, {
+    key: "createBroadcast",
+    value: function createBroadcast() {
+      var self = this;
+
+      this.broadcastsocket = this.connect(this.url + _SocketEvent.BroadcastPrefix);
+
+      this.broadcastsocket.onopen = function (event) {
+        event.eventType = _SocketEvent.BroadcastEvent.OPEN;
+        self.evented.fire(_SocketEvent.BroadcastEvent.OPEN, event);
+      };
+      this.broadcastsocket.onmessage = function (event) {
+        var feature = JSON.parse(event.data);
+        event.feature = feature;
+        event.eventType = _SocketEvent.BroadcastEvent.MESSAGE;
+        self.evented.fire(_SocketEvent.BroadcastEvent.MESSAGE, event);
+      };
+      this.broadcastsocket.onclose = function (event) {
+        event.eventType = _SocketEvent.BroadcastEvent.CLOSE;
+        self.evented.fire(_SocketEvent.BroadcastEvent.CLOSE, event);
+      };
+      this.broadcastsocket.onerror = function (event) {
+        event.eventType = _SocketEvent.BroadcastEvent.ERROR;
+        self.evented.fire(_SocketEvent.BroadcastEvent.ERROR, event);
+      };
+    }
+  }, {
+    key: "connect",
+    value: function connect(url) {
+      var socketFactory = "MozWebSocket" in window ? window.MozWebSocket : WebSocket;
+      return new socketFactory(url);
+    }
+  }, {
+    key: "broadcast",
+    value: function broadcast(data) {
+      if (!this.broadcastWebSocket || !this.broadcastWebSocket.isOpen) {
+        return;
+      }
+      this.broadcastsocket.send(JSON.stringify(data));
+    }
+  }, {
+    key: "closeSubscribe",
+    value: function closeSubscribe() {
+      this.subscribesocket.close();
+      this.subscribesocket = null;
+    }
+  }, {
+    key: "closeBroadcast",
+    value: function closeBroadcast() {
+      this.broadcastsocket.close();
+      this.broadcastsocket = null;
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      this.subscribesocket.close();
+      this.broadcastsocket.close();
+      this.subscribesocket = null;
+      this.broadcastsocket = null;
+    }
+  }]);
+
+  return ISocketService;
+}();
+
+_Base.Zondy.Socket.ISocketService = ISocketService;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.socketService = exports.SocketService = undefined;
+
+var _leaflet = __webpack_require__(0);
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+var _SocketEvent = __webpack_require__(3);
+
+var _ISocketService = __webpack_require__(31);
+
+var _ServiceEvent = __webpack_require__(9);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_leaflet2.default.zondy.SocketService = undefined;
+
+/**
+ * LeafeltSocket的代理类，实际上是接受websocket的事件，然后转换成leaflet的事件再进行发送
+ * @author 潘卓然ParnDeedlit 基础平台/创新中心
+ *
+ * @alias SocketService
+ * @constructor
+ *
+ * @param {Object} url Socket流地址的url：
+ * @param {Number} options 其他预留参数.
+ *
+ * @example
+ * 固定url  ws://{ip}:{socket}/websocket/{servicename}
+ * 服务名 streamdemo
+ * 消息接收 ws://192.168.91.121:9382/websocket/streamdemo/subscribe
+ * 消息发送 ws://192.168.91.121:9382/websocket/streamdemo/broadcast
+ *
+ * @exception {DeveloperError} options.styleOption 必须是正确的样式.
+ *
+ */
+var SocketService = exports.SocketService = _ServiceEvent.ServiceEvent.extend({
+  initialize: function initialize(url, options) {
+    this.url = url || "";
+
+    this.options = options || {};
+
+    this.socket = new _ISocketService.ISocketService(url, options);
+  },
+  createSubscribe: function createSubscribe() {
+    console.log("在使用流图层的时候容易出现回调堆栈溢出的问题，其核心原因是socket通信是双工通信，因此上下文环境context在不同的场景下是不一样的，以leaflet的on为例，其函数原型off(types, fn, context)第三个参数context的默认会是运行时的this而不是绑定时的this，最好在使用on监听的时候主动传入真正的上下文环境this");
+    this.socket.createSubscribe();
+    this.socket.evented.on(_SocketEvent.SubscribeEvent.OPEN, this.mapEvent, this);
+    this.socket.evented.on(_SocketEvent.SubscribeEvent.MESSAGE, this.mapEvent, this);
+    this.socket.evented.on(_SocketEvent.SubscribeEvent.CLOSE, this.mapEvent, this);
+    this.socket.evented.on(_SocketEvent.SubscribeEvent.ERROR, this.mapEvent, this);
+  },
+  createBroadcast: function createBroadcast() {
+    this.socket.createBroadcast();
+    this.socket.evented.on(_SocketEvent.BroadcastEvent.OPEN, this.mapEvent, this);
+    this.socket.evented.on(_SocketEvent.BroadcastEvent.MESSAGE, this.mapEvent, this);
+    this.socket.evented.on(_SocketEvent.BroadcastEvent.CLOSE, this.mapEvent, this);
+    this.socket.evented.on(_SocketEvent.BroadcastEvent.ERROR, this.mapEvent, this);
+  },
+  mapEvent: function mapEvent(event) {
+    this.fire(event.eventType || event.type, event);
+  },
+  broadcast: function broadcast(data) {
+    if (!this.socket) {
+      return;
+    }
+    this.socket.broadcast(data);
+  },
+  closeSubscribe: function closeSubscribe() {
+    this.socket.closeSubscribe();
+    this.socket.evented.off(_SocketEvent.SubscribeEvent.OPEN, this.mapEvent, this);
+    this.socket.evented.off(_SocketEvent.SubscribeEvent.MESSAGE, this.mapEvent, this);
+    this.socket.evented.off(_SocketEvent.SubscribeEvent.CLOSE, this.mapEvent, this);
+    this.socket.evented.off(_SocketEvent.SubscribeEvent.ERROR, this.mapEvent, this);
+  },
+  closeBroadcast: function closeBroadcast() {
+    this.socket.closeBroadcast();
+    this.socket.evented.off(_SocketEvent.BroadcastEvent.OPEN, this.mapEvent);
+    this.socket.evented.off(_SocketEvent.BroadcastEvent.MESSAGE, this.mapEvent);
+    this.socket.evented.off(_SocketEvent.BroadcastEvent.CLOSE, this.mapEvent);
+    this.socket.evented.off(_SocketEvent.BroadcastEvent.ERROR, this.mapEvent);
+  }
+});
+
+var socketService = exports.socketService = function socketService(url, options) {
+  return new SocketService(url, options);
+};
+
+_leaflet2.default.zondy.SocketService = socketService;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.streamLayer = exports.StreamLayer = undefined;
+
+var _leaflet = __webpack_require__(0);
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+__webpack_require__(1);
+
+var _SocketService = __webpack_require__(32);
+
+var _SocketEvent = __webpack_require__(3);
+
+var _GeojsonBaseLayer = __webpack_require__(8);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @class L.zondy.StreamLayer
+ * @classdesc 基于leaflet的Layer对象进行的拓展
+ * @extends {L.LayerGroup}
+ * @param {string} url - 数据流图层服务地址
+ * @param {Object} options - 设置图层参数
+ * @param {Object} [options.render='normal'] - 渲染方式。可选值为'geojson', 'mapv', 'echarts'
+ */
+var StreamLayer = exports.StreamLayer = _leaflet2.default.LayerGroup.extend({
+  initialize: function initialize(map, url, options) {
+    this.options = options || {};
+    this.map = map;
+    this.url = url;
+
+    //与leaflet源代码一致，
+    //var i = this.getLayerId(t);
+    //return this._layers[i] = t
+    this._layers = {};
+
+    _leaflet2.default.Util.setOptions(this, options);
+
+    this.socketService = new _SocketService.SocketService(this.url, this.options);
+  },
+
+  onAdd: function onAdd(map) {
+    this.bindEvent();
+
+    if (this.options.render === "mapv") {
+      //this.addLayer(new MapvRenderer(this.url, this.options));
+    } else {
+      this.addLayer(new _GeojsonBaseLayer.GeojsonBaseLayer(this.url, this.options));
+    }
+    _leaflet2.default.LayerGroup.prototype.onAdd.call(this, map);
+  },
+
+  bindEvent: function bindEvent() {
+    var _this = this;
+
+    this.socketService.createSubscribe();
+
+    this.socketService.on(_SocketEvent.SubscribeEvent.OPEN, function (e) {
+      return _this.fire(_SocketEvent.SubscribeEvent.OPEN, e);
+    });
+    this.socketService.on(_SocketEvent.SubscribeEvent.MESSAGE, function (msg) {
+      return _this.onMessage(msg);
+    });
+  },
+
+  unbindEvent: function unbindEvent() {
+    var _this2 = this;
+
+    if (!this.socketService) return;
+
+    this.socketService.on(_SocketEvent.SubscribeEvent.OPEN, function (e) {
+      return _this2.fire(_SocketEvent.SubscribeEvent.OPEN, e);
+    });
+    this.socketService.on(_SocketEvent.SubscribeEvent.MESSAGE, function (msg) {
+      return _this2.onMessage(msg);
+    });
+
+    this.socketService && this.socketService.closeSubscribe();
+  },
+
+  onRemove: function onRemove(map) {
+    this.unbindEvent();
+  },
+
+  onMessage: function onMessage(msg) {
+    var _this3 = this;
+
+    this.getLayers().map(function (layer) {
+      layer.onMessage(msg);
+      _this3.fire(_SocketEvent.LayerEvent.UPDATE, {
+        layer: layer,
+        data: msg.feature
+      });
+      return layer;
+    });
+  }
+});
+
+var streamLayer = exports.streamLayer = function streamLayer(map, url, options) {
+  return new StreamLayer(map, url, options);
+};
+
+_leaflet2.default.zondy.StreamLayer = streamLayer;
+
+/***/ }),
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3250,7 +4471,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MapCoordSys = MapCoordSys;
 
-var _echarts = __webpack_require__(7);
+var _echarts = __webpack_require__(11);
 
 var _echarts2 = _interopRequireDefault(_echarts);
 
@@ -3386,7 +4607,7 @@ MapCoordSys.create = function (ecModel, api) {
 exports.default = MapCoordSys;
 
 /***/ }),
-/* 27 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3401,13 +4622,13 @@ var _leaflet = __webpack_require__(0);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-var _echarts = __webpack_require__(7);
+var _echarts = __webpack_require__(11);
 
 var _echarts2 = _interopRequireDefault(_echarts);
 
 __webpack_require__(1);
 
-var _MapCoordSys = __webpack_require__(26);
+var _MapCoordSys = __webpack_require__(34);
 
 var _MapCoordSys2 = _interopRequireDefault(_MapCoordSys);
 
@@ -3672,7 +4893,7 @@ var echartsLayer = exports.echartsLayer = function echartsLayer(echartsParams, o
 _leaflet2.default.zondy.EchartsLayer = echartsLayer;
 
 /***/ }),
-/* 28 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3682,25 +4903,34 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _MapvLayer = __webpack_require__(4);
+var _MapvLayer = __webpack_require__(5);
 
-Object.defineProperty(exports, 'MapVLayer', {
+Object.defineProperty(exports, "MapVLayer", {
   enumerable: true,
   get: function get() {
     return _MapvLayer.MapVLayer;
   }
 });
 
-var _EchartsLayer = __webpack_require__(27);
+var _EchartsLayer = __webpack_require__(35);
 
-Object.defineProperty(exports, 'EchartsLayer', {
+Object.defineProperty(exports, "EchartsLayer", {
   enumerable: true,
   get: function get() {
     return _EchartsLayer.EchartsLayer;
   }
 });
 
-var _mapv = __webpack_require__(25);
+var _StreamLayer = __webpack_require__(33);
+
+Object.defineProperty(exports, "StreamLayer", {
+  enumerable: true,
+  get: function get() {
+    return _StreamLayer.StreamLayer;
+  }
+});
+
+var _mapv = __webpack_require__(29);
 
 Object.keys(_mapv).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -3712,7 +4942,7 @@ Object.keys(_mapv).forEach(function (key) {
   });
 });
 
-var _echart = __webpack_require__(24);
+var _echart = __webpack_require__(28);
 
 Object.keys(_echart).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -3724,8 +4954,20 @@ Object.keys(_echart).forEach(function (key) {
   });
 });
 
+var _stream = __webpack_require__(27);
+
+Object.keys(_stream).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _stream[key];
+    }
+  });
+});
+
 /***/ }),
-/* 29 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3848,7 +5090,7 @@ var baiduTileLayer = exports.baiduTileLayer = function baiduTileLayer(options) {
 _leaflet2.default.zondy.BaiduTileLayer = baiduTileLayer;
 
 /***/ }),
-/* 30 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3858,7 +5100,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaiduTileLayer = __webpack_require__(29);
+var _BaiduTileLayer = __webpack_require__(37);
 
 Object.defineProperty(exports, 'BaiduTileLayer', {
   enumerable: true,
@@ -3868,7 +5110,7 @@ Object.defineProperty(exports, 'BaiduTileLayer', {
 });
 
 /***/ }),
-/* 31 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3912,7 +5154,7 @@ var BaiduMercator = exports.BaiduMercator = {
 };
 
 /***/ }),
-/* 32 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3922,7 +5164,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Projection = __webpack_require__(31);
+var _Projection = __webpack_require__(39);
 
 Object.defineProperty(exports, 'BaiduMercator', {
   enumerable: true,
@@ -3932,7 +5174,7 @@ Object.defineProperty(exports, 'BaiduMercator', {
 });
 
 /***/ }),
-/* 33 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3999,20 +5241,21 @@ if (_leaflet2.default && _leaflet2.default.Proj) {
 		bounds: _leaflet2.default.bounds([20037508.342789244, 0], [0, 20037508.342789244])
 	});
 } else {
+	console.log("使用高斯投影的时候，请严格遵守espg的规范 http://client.snanyun.com:8899/ui/epsg.html , 请不要过分相信上面表格中的中文名字，以后面的+proj=tmerc +lat_0=0 +lon_0=135 为标准");
 	console.log('Leaflet and proj4 必须在使用之前加载！常见错误：如js引入的顺序问题leaflet>proj4>plugins!');
 }
 
 /***/ }),
-/* 34 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _CRS = __webpack_require__(33);
+var _CRS = __webpack_require__(41);
 
 /***/ }),
-/* 35 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4034,7 +5277,7 @@ Object.keys(_Base).forEach(function (key) {
   });
 });
 
-var _crs = __webpack_require__(34);
+var _crs = __webpack_require__(42);
 
 Object.keys(_crs).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -4046,7 +5289,7 @@ Object.keys(_crs).forEach(function (key) {
   });
 });
 
-var _projection = __webpack_require__(32);
+var _projection = __webpack_require__(40);
 
 Object.keys(_projection).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -4058,7 +5301,7 @@ Object.keys(_projection).forEach(function (key) {
   });
 });
 
-var _tilelayer = __webpack_require__(30);
+var _tilelayer = __webpack_require__(38);
 
 Object.keys(_tilelayer).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -4070,7 +5313,7 @@ Object.keys(_tilelayer).forEach(function (key) {
   });
 });
 
-var _overlay = __webpack_require__(28);
+var _overlay = __webpack_require__(36);
 
 Object.keys(_overlay).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -4082,7 +5325,7 @@ Object.keys(_overlay).forEach(function (key) {
   });
 });
 
-var _service = __webpack_require__(23);
+var _service = __webpack_require__(26);
 
 Object.keys(_service).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
