@@ -1496,12 +1496,19 @@ var config = {
           leaffolder: true,
           childs: [
             {
-              name: "中地-出租车跟踪",
+              name: "中地-出租车跟踪geojson",
               file: "taxi",
               diffcult: "3",
               detail: "针对igserver-x的socket进行通信",
               icon: "taxi.png",
               update: "最后更新时间：2018-11-27,如有问题请咨询创新中心"
+            }, {
+              name: "中地-出租车跟踪mapv",
+              file: "mapv",
+              diffcult: "3",
+              detail: "使用mapv时无法进行点击事件的交互，该功能用于大数据展示",
+              icon: "mapv.png",
+              update: "最后更新时间：2018-11-29,如有问题请咨询创新中心"
             }
           ]
         }
