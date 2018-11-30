@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" href="../assets/img/favicon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Profile Page - Material Kit PRO by Creative Tim</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" type="text/css" href="../libs/google/material.css" />
+	<!-- CSS Files -->
+	<link href="../libs/material-kit/css/material-kit.css?v=2.0.3" rel="stylesheet" />
+	<link href="../css/zondy/ui.css" rel="stylesheet" />
+	<script src="../js/geojson.js" type="text/javascript"></script>
+</head>
+
+<body class="profile-page sidebar-collapse">
+	<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="body-header">
+	</nav>
+
+	<div class="page-header header-filter" data-parallax="true" style="background-image: url('../img/background/city.jpg');"></div>
+
+	<div class="main main-raised">
+		<div class="profile-content">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-6 col-xs-offset-3">
+						<div class="name">
+							<h3 class="title">规定协议以及格式</h3>
+							<img src="../img/epsg/epsg.png" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+							<img src="../img/epsg/GeoJSON.png" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+							<img src="../img/epsg/GeoJSON-CSV.JPG" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+							<img src="../img/epsg/PROJ4.png" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+							<img src="../img/epsg/3d-tiles.png" alt="Circle Image" class="img-raised rounded-circle img-fluid">
+						</div>
+					</div>
+				</div>
+
+				<div class="description text-center">
+					<br>
+					<h5>采取互联网通用的交换格式，遵循对应的标准直接接入，无需其他转换操作。</h4>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 ml-auto mr-auto">
+						<div class="profile-tabs">
+							<ul class="nav nav-pills nav-pills-info nav-pills-icons justify-content-center" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" href="#geojson" role="tab" data-toggle="tab">
+										<i class="material-icons">streetview</i>
+										交互格式
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#stream" role="tab" data-toggle="tab">
+										<i class="material-icons">terrain</i>
+										流图层
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#proj" role="tab" data-toggle="tab">
+										<i class="material-icons">navigation</i>
+										投影变换
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#geos" role="tab" data-toggle="tab">
+										<i class="material-icons">layers</i>
+										地理坐标系
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-content tab-space">
+					<div class="tab-pane active work" id="geojson">
+						<h4 class="title text-center">全部采取GeoJSON的格式作为中间转换格式，考虑拓扑关系使用TopoJSON</h4>
+						<div class="col-md-10 col-md-offset-1">
+							<div class="table-responsive">
+								<table class="table table-shopping">
+									<thead>
+										<tr>
+											<th class="text-center"></th>
+											<th>类型</th>
+											<th class="th-description">格式</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/Point.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#Point">点</a>
+												<br /><small>无其他说明</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/Point_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/LineString.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#LineString">线</a>
+												<br /><small>无其他说明</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/LineString_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/Polygon.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#Polygon">区</a>
+												<br /><small>无其他说明</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/Polygon_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/Polygon_with_hole.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#Polygon-Hole">区-带洞</a>
+												<br /><small>外圈是顺时针内圈逆时针</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/Polygon_with_hole_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+
+
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiPoint.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#MultiPoint">多点</a>
+												<br /><small>无其他说明</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiPoint_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/LineString.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#MultiLineString">多线</a>
+												<br /><small>无其他说明</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiLineString_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiPolygon.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#MultiPolygon">多区</a>
+												<br /><small>无其他说明</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiPolygon_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiPolygon_with_hole.png" alt="...">
+												</div>
+											</td>
+											<td class="td-name">
+												<a href="#MultiPolygon-Hole">多区-带洞</a>
+												<br /><small>外圈是顺时针内圈逆时针</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/MultiPolygon_with_hole_Code.png" alt="...">
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<hr>
+						<h3 class="title text-center">示例</h3>
+						<a href="./gallery-leaflet.html#geometry"><span>GeoJSON示例说明</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-point"><span>Point示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-line"><span>Line示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-polygon"><span>Polygon示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-multipoint"><span>MultiPoint示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-multiline"><span>MultiLine示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-multipolygon"><span>MultiPolygon示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-featurecollection"><span>集合示例</span></a>
+					</div>
+					<div class="tab-pane work" id="stream">
+						<h4 class="title text-center">目前只支持点类型的GeoJSON格式进行流式渲染</h4>
+						<div class="col-10 mr-auto ml-auto">
+							<span class="badge badge-rose">消息接收</span><span>ws://192.168.91.121:9382/websocket/streamdemo/subscribe</span>
+						</div>
+						<div class="col-10 mr-auto ml-auto">
+							<span class="badge badge-info">消息发送</span><span>ws://192.168.91.121:9382/websocket/streamdemo/broadcast</span>
+						</div>
+						<div class="col-10 mr-auto ml-auto">
+							<span class="badge badge-warning">收发内容</span><span>下图所示中的GeoPoint</span>
+						</div>
+						<div class="col-md-10 mr-auto ml-auto">
+							<div class="table-responsive">
+								<table class="table table-shopping">
+									<thead>
+										<tr>
+											<th>保留字段名称</th>
+											<th>类型</th>
+											<th class="th-description">特别说明</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="td-name">
+												<a href="#Point">field</a>
+												<br /><small>field=imei</small>
+											</td>
+											<td class="td-name">
+												<small>作为主键，每个对应的值对应图上一个坐标点</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/props.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="td-name">
+												<a href="#Point">fielddeg</a>
+												<br /><small>fielddeg=deg</small>
+											</td>
+											<td class="td-name">
+												<small>作为方向，每个对应的值对应图上一个坐标点的旋转方向</small>
+											</td>
+											<td>
+												<div class="media-object">
+													<img src="../img/geojson/props.png" alt="...">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="td-name">
+												<a href="#Point">timeSpeed</a>
+												<br /><small>timeSpeed=200</small>
+											</td>
+											<td class="td-name">
+												<small>作为时间间隔，每个每一帧的间隔时间</small>
+											</td>
+											<td>
+
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<hr>
+						<h3 class="title text-center">示例</h3>
+						<a href="./gallery-leaflet.html#igserverx"><span>IGServer-X示例说明</span></a>
+					</div>
+					<div class="tab-pane work" id="proj">
+						<h4 class="title text-center">.</h4>
+					</div>
+					<div class="tab-pane work" id="geos">
+						<h4 class="title text-center">支持所有的EPSG的格式</h4>
+						<div class="media-object">
+							<img src="../img/epsg/3857.png" alt="...">
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer footer-default" id="body-footer"></footer>
+
+	<!--   Core JS Files   -->
+	<script src="../libs/material-kit/js/core/jquery.min.js" type="text/javascript"></script>
+	<script src="../libs/material-kit/js/core/popper.min.js" type="text/javascript"></script>
+	<script src="../libs/material-kit/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+	<script src="../libs/material-kit/js/plugins/moment.min.js"></script>
+	<!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
+	<script src="../libs/material-kit/js/material-kit.js?v=2.0.3" type="text/javascript"></script>
+	<script>
+		$("#body-header").load("../ui/header.html");
+		$("#body-footer").load("../ui/footer.html");
+	</script>
+</body>
+
+
+</html>
