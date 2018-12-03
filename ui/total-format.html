@@ -23,7 +23,15 @@
 	<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="body-header">
 	</nav>
 
-	<div class="page-header header-filter" data-parallax="true" style="background-image: url('../img/background/city.jpg');"></div>
+	<div class="page-header header-filter" data-parallax="true" style="background-color: #000000">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h2 class="title">规定协议以及格式</h2>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="main main-raised">
 		<div class="profile-content">
@@ -31,7 +39,7 @@
 				<div class="row">
 					<div class="col-xs-6 col-xs-offset-3">
 						<div class="name">
-							<h3 class="title">规定协议以及格式</h3>
+							<br>
 							<img src="../img/epsg/epsg.png" alt="Circle Image" class="img-raised rounded-circle img-fluid">
 							<img src="../img/epsg/GeoJSON.png" alt="Circle Image" class="img-raised rounded-circle img-fluid">
 							<img src="../img/epsg/GeoJSON-CSV.JPG" alt="Circle Image" class="img-raised rounded-circle img-fluid">
@@ -230,13 +238,13 @@
 						<hr>
 						<h3 class="title text-center">示例</h3>
 						<a href="./gallery-leaflet.html#geometry"><span>GeoJSON示例说明</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-point"><span>Point示例</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-line"><span>Line示例</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-polygon"><span>Polygon示例</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-multipoint"><span>MultiPoint示例</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-multiline"><span>MultiLine示例</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-multipolygon"><span>MultiPolygon示例</span></a>
-						<a href="./demos-leaflet.html#geometry-geojson-featurecollection"><span>集合示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-point" target="_blank"><span>Point示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-line" target="_blank"><span>Line示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-polygon" target="_blank"><span>Polygon示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-multipoint" target="_blank"><span>MultiPoint示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-multiline" target="_blank"><span>MultiLine示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-multipolygon" target="_blank"><span>MultiPolygon示例</span></a>
+						<a href="./demos-leaflet.html#geometry-geojson-featurecollection" target="_blank"><span>集合示例</span></a>
 					</div>
 					<div class="tab-pane work" id="stream">
 						<h4 class="title text-center">目前只支持点类型的GeoJSON格式进行流式渲染</h4>
@@ -307,10 +315,24 @@
 						</div>
 						<hr>
 						<h3 class="title text-center">示例</h3>
-						<a href="./gallery-leaflet.html#igserverx"><span>IGServer-X示例说明</span></a>
+						<a href="./demos-leaflet.html#igserverx-socket-taxi" target="_blank"><span>IGServer-X示例说明</span></a>
 					</div>
 					<div class="tab-pane work" id="proj">
-						<h4 class="title text-center">.</h4>
+						<h4 class="title text-center"><a href="./total-epsg.html" target="_blank">Proj4对照表</a></h4>
+						<h5 class="title text-center">世界上使用最广泛的投影是Web墨卡托投影，主流的地图脚本默认都是Web墨卡托投影</h5>
+						<a href="./total-epsg.html" target="_blank"><span>Proj4对照表</span></a>
+						<div class="media-object  text-center">
+							<h5 class="title text-center">官方英文原版-墨卡托投影</h5>
+							<img src="../img/epsg/3857-proj.png" alt="...">
+						</div>
+						<div class="media-object  text-center">
+							<h5 class="title text-center">官方英文原版-参数</h5>
+							<img src="../img/epsg/3857-wiki.png" alt="...">
+						</div>
+						<div class="media-object  text-center">
+							<h5 class="title text-center">官方英文原版-3857修正</h5>
+							<img src="../img/epsg/3857-issue.png" alt="...">
+						</div>
 					</div>
 					<div class="tab-pane work" id="geos">
 						<h4 class="title text-center">支持所有的EPSG的格式</h4>
