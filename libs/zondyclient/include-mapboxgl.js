@@ -59,8 +59,8 @@
     }
 
     if (!inArray(excludes, 'mapboxgl')) {
-      inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.min.css");
-      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.min.js");
+      inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.min.css");      inputCSS(httpUrl + "/cdn/mapboxgl/mapbox-gl.css");
+      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.min.js");//这里是igserver的api
     }
     if (inArray(includes, 'compare')) {
       if (onInternetMode) {
@@ -78,6 +78,13 @@
         inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-language/dist/mapbox-gl-language.js");
       }
     }
+/*     if (inArray(includes, 'minimap')) {
+      if (onInternetMode) {
+        inputScript("http://aesqe.github.io/mapboxgl-minimap/mapboxgl-control-minimap.js");
+      } else {
+        inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-minimap/mapboxgl-control-minimap.js");
+      }
+    }    */ 
     if (inArray(includes, 'picture')) {
       if (onInternetMode) {
         inputScript(httpUrl + "/cdn/filesaver/dist/FileSaver.min.js");
@@ -119,6 +126,9 @@
         inputScript(httpUrl + "/cdn/d3/d3.min.js");
         inputScript(httpUrl + "/cdn/d3/d3-hexbin.min.js");
       }
+    }
+    if (inArray(includes, 'threebox')) {
+      inputScript(httpUrl + "/cdn/mapboxgl-plugins/threebox/dist/threebox.js");
     }
     if (inArray(includes, 'elasticsearch')) {
       inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
@@ -162,8 +172,8 @@
       }
     }
     if (!inArray(excludes, 'plugin')) {
-      inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.css");
-      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.js");
+      inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.css");      
+      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.js");//这里是三方如igserver-x，datastore的api
     }
 
   }

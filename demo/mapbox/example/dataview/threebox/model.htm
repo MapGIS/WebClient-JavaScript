@@ -1,0 +1,72 @@
+<!doctype html>
+
+<head>
+    <title>Add a GLTF object</title>
+    <script include="threebox" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+
+    <style>
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map' class='map'></div>
+
+    <script>
+        //mapbox服务数据的访问令牌，若使用mapbox提供的样式必须要设置令牌
+        mapboxgl.accessToken =
+            'pk.eyJ1Ijoid29ya2luZ2RvZyIsImEiOiJjamQyZmszenczMHRoMzRuczVzaGthbGhnIn0.HTkYTE-R82N3azqscSyHkA';
+
+        var origin = [-122.4340, 37.7353, 0];
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v9',
+            center: origin,
+            zoom: 18,
+            pitch: 60,
+            heading: 41,
+            hash: true
+        });
+
+        map.on('style.load', function () {
+
+
+            map.addLayer({
+                id: 'custom_layer',
+                type: 'custom',
+                onAdd: function (map, mbxContext) {
+
+                    window.threebox = new Threebox(map, mbxContext);
+                    threebox.setupDefaultLights();
+
+                    var loader = new THREE.GLTFLoader();
+
+                    loader.load('../../data/model/threebox/34M_17.gltf', (function (gltf) {
+
+                        // rotate object so it's sitting on its base
+                        gltf.scene.rotation.x = -Math.PI * 1.5
+
+                        threebox.addAtCoordinate(gltf.scene, origin);
+
+                    }).bind(this));
+
+                },
+                render: function (gl, matrix) {
+                    threebox.update(true);
+
+                }
+            });
+        });
+    </script>
+</body>

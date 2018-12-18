@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      height: 800px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    /**
+     * 经纬度转墨卡托
+     * @param poi 经纬度
+     * @returns {{}}
+     * @private
+     */
+    function getMercator(poi) { //[114.32894, 30.585748]
+      var mercator = {};
+      var earthRad = 6378137.0;
+      // console.log("mercator-poi",poi);
+      mercator.x = poi.lng * Math.PI / 180 * earthRad;
+      var a = poi.lat * Math.PI / 180;
+      mercator.y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+      console.log("mercator",mercator);
+      return mercator; //[12727039.383734727, 3579066.6894065146]
+    }
+    /**
+     * 墨卡托转经纬度
+     * @param poi 墨卡托
+     * @returns {{}}
+     * @private
+     */
+    function getLngLat(poi) {
+      var lnglat = {};
+      lnglat.lng = poi.x / 20037508.34 * 180;
+      var mmy = poi.y / 20037508.34 * 180;
+      lnglat.lat = 180 / Math.PI * (2 * Math.atan(Math.exp(mmy * Math.PI / 180)) - Math.PI / 2);
+      return lnglat;
+    }
+
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'mapid',
+      style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "light-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      },
+      zoom: 3,
+      center: [7.5, 58]
+    });
+
+    var highlightLayer = {
+      id: 'highlight',
+      type: 'custom',
+
+      onAdd: function (map, gl) {
+        console.log(gl)
+        var vertexSource = "" +
+          "uniform mat4 u_matrix;" +
+          "attribute vec2 a_pos;" +
+          "void main() {" +
+          "    gl_Position = u_matrix * vec4(a_pos, 0.0, 1.0);" +
+          "}";
+
+        var fragmentSource = "" +
+          "void main() {" +
+          "    gl_FragColor = vec4(1.0, 0.0, 0.0, 0.5);" +
+          "}";
+
+        var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vertexSource);
+        gl.compileShader(vertexShader);
+        var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fragmentSource);
+        gl.compileShader(fragmentShader);
+
+        this.program = gl.createProgram();
+        gl.attachShader(this.program, vertexShader);
+        gl.attachShader(this.program, fragmentShader);
+        gl.linkProgram(this.program);
+
+        this.aPos = gl.getAttribLocation(this.program, "a_pos");
+
+        var helsinki = getMercator({
+          lng: 25.004,
+          lat: 60.239
+        });
+        var berlin = getMercator({
+          lng: 13.403,
+          lat: 52.562
+        });
+        var kyiv = getMercator({
+          lng: 30.498,
+          lat: 50.541
+        });
+
+        this.buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+          helsinki.x, helsinki.y,
+          berlin.x, berlin.y,
+          kyiv.x, kyiv.y,
+        ]), gl.STATIC_DRAW);
+      },
+
+      render: function (gl, matrix) {
+        gl.useProgram(this.program);
+        gl.uniformMatrix4fv(gl.getUniformLocation(this.program, "u_matrix"), false, matrix);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.enableVertexAttribArray(this.aPos);
+        gl.vertexAttribPointer(this.aPos, 2, gl.FLOAT, false, 0, 0);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 3);
+      }
+    };
+
+    map.on('load', function () {
+      map.addLayer(highlightLayer);
+    });
+  </script>
+</body>
+
+</html>
