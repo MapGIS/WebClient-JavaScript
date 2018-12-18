@@ -187,7 +187,16 @@ var config = {
               icon: "boundarycanvas.png",
               update: "最后更新时间：2018-11-2",
               person: "基础平台/产品中心-龚跃健"
-            }
+            },
+              {
+                  name: "自定义范围打印输出",
+                  file: "customprint",
+                  diffcult: "1",
+                  detail: "绘制矩形，输出矩形范围内地图，支持增加图框、标题、左右下角说明文字",
+                  icon: "customprint.png",
+                  update: "最后更新时间：2018-12-18",
+                  person: "基础平台/产品中心-龚跃健"
+              }
           ]
         },
         {
