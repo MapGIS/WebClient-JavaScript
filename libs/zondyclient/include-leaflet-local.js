@@ -265,6 +265,12 @@
         if (inArray(includes, 'picture')) {
             inputScript(httpUrl + "/cdn/filesaver/dist/FileSaver.min.js");
         }
+        if (inArray(includes, 'filesaver')) {
+            inputScript(httpUrl + "/cdn/filesaver/src/FileSaver.js");
+        }
+        if (inArray(includes, 'domtoimage')) {
+            inputScript(httpUrl + "/cdn/dom-to-image.js");
+        }
         if (inArray(includes, 'pdf')) {
             inputScript(httpUrl + "/cdn/jspdf/dist/jspdf.min.js");
         }
