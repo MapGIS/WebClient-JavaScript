@@ -304,6 +304,15 @@ var config = {
           leaffolder: true,
           childs: [
             {
+              name: "瓦片错级显示",
+              file: "customlayer",
+              diffcult: "1",
+              detail:"针对自定义的瓦片裁图方式，进行个性化配置。",
+              icon: "customlayer.png",
+              update: "最后更新时间：2018-12-27",
+              person: "基础平台/创新中心-潘卓然"
+            },
+            {
               name: "百度炫彩地图-3857",
               file: "baidumap",
               diffcult: "1",
@@ -321,7 +330,7 @@ var config = {
               update: "最后更新时间：2018-05-23"
             },
             {
-              name: "瓦片地图显示-4326-BUG",
+              name: "瓦片地图显示-4326",
               file: "tilemapdisplay",
               diffcult: "3",
               detail: "瓦片地图显示",

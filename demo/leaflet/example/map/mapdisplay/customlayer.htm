@@ -1,0 +1,56 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>瓦片错级显示</title>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        /**
+         * @description 自定义瓦片图层,这里仅作示例参考，请根据自己的错级逻辑修改
+         * @see Zondy.Map.MapTileLayer
+         */
+        var CustomTileLayer = L.TileLayer.extend({
+            /**
+             * @description 根据行列号获取瓦片地址
+             * @param coords - {Object} 行列号 x,y,z
+             * @return {string} 瓦片地址
+             */
+            getTileUrl: function (coords) {
+                var tileUrl = 'http://localhost:6163/igs/rest/mrms/tile/株洲市/{z}/{y}/{x}';
+                //如果下面需要错一级则 coords.z = coords.z +1
+                tileUrl = tileUrl.replace('{x}', coords.x.toString()).replace('{y}', coords.y.toString()).replace(
+                    '{z}', coords.z.toString());
+                return tileUrl;
+            }
+        });
+
+        //显示地图
+        function init() {
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326,
+                center: [0, 0],
+                minZoom: 1,
+                maxZoom: 5,
+                zoom: 2,
+                //限制显示地理范围
+                maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+
+            //添加自定义瓦片图层,这里我直接使用公司内部封装好的的天地图的类
+            //var layer = new CustomTileLayer().addTo(map);
+            var layer = new Zondy.Map.TDTLayer({
+                layerType: 'vec',
+                minZoom: 0,
+                maxZoom: 5
+            }).addTo(map);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height:700px;">
+    </div>
+</body>
+
+</html>
