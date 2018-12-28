@@ -191,6 +191,8 @@ var config = {
               diffcult: "3",
               detail: "地图整饰打印输出",
               icon: "customprint.png",
+              person:"基础平台/创新中心-潘卓然",
+              effect:"如果需要经纬度网格，请调用igserver服务",
               update: "最后更新时间：2018-12-27"
             }
           ]
