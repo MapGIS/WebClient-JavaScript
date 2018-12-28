@@ -120,6 +120,13 @@
     if (inArray(includes, 'draw')) {
       inputCSS(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw/dist/mapbox-gl-draw.css");
       inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw/dist/mapbox-gl-draw.js");
+      inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw-mode/rectangle/index.js");
+    }
+    if (inArray(includes, 'filesaver')) {
+      inputScript(httpUrl + "/cdn/filesaver/src/FileSaver.js");
+    }
+    if (inArray(includes, 'domtoimage')) {
+      inputScript(httpUrl + "/cdn/dom-to-image/dom-to-image.js");
     }
     if (!inArray(excludes, 'plugin')) {
       inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.css");

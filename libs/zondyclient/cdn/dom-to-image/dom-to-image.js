@@ -513,6 +513,7 @@
 
         function makeImage(uri) {
             return new Promise(function (resolve, reject) {
+                //console.log("makeImage", resolve, reject)
                 var image = new Image();
                 image.onload = function () {
                     resolve(image);

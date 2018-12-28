@@ -178,12 +178,20 @@ var config = {
               update: "最后更新时间：2018-06-13"
             },
             {
-              name: "layersearch",
+              name: "图层探查",
               file: "layersearch",
               diffcult: "3",
               detail: "",
               icon: "layersearch.png",
               update: "最后更新时间：2018-06-13"
+            },
+            {
+              name: "地图整饰",
+              file: "customprint",
+              diffcult: "3",
+              detail: "地图整饰打印输出",
+              icon: "customprint.png",
+              update: "最后更新时间：2018-12-27"
             }
           ]
         },

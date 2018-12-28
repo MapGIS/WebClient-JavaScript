@@ -1,0 +1,4 @@
+examples/*
+tests/*
+dist/*
+_site/*

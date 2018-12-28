@@ -402,7 +402,7 @@
             inputScript(httpUrl + "/cdn/filesaver/src/FileSaver.js");
         }
         if (inArray(includes, 'domtoimage')) {
-            inputScript(httpUrl + "/cdn/dom-to-image.js");
+            inputScript(httpUrl + "/cdn/dom-to-image/dom-to-image.js");
         }
 
         if (inArray(includes, 'pdf')) {

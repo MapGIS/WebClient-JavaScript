@@ -33,7 +33,7 @@
             container: 'map',
             style: 'mapbox://styles/mapbox/light-v9',
             center: origin,
-            zoom: 18,
+            zoom: 20,
             pitch: 60,
             heading: 41,
             hash: true
@@ -46,20 +46,20 @@
                 id: 'custom_layer',
                 type: 'custom',
                 onAdd: function (map, mbxContext) {
-
                     window.threebox = new Threebox(map, mbxContext);
                     threebox.setupDefaultLights();
 
                     var loader = new THREE.GLTFLoader();
 
-                    loader.load('../../data/model/threebox/34M_17.gltf', (function (gltf) {
+                    loader.load('../../data/model/cesium/GroundVehicle/GroundVehicle.glb', (
+                        function (gltf) {
 
-                        // rotate object so it's sitting on its base
-                        gltf.scene.rotation.x = -Math.PI * 1.5
+                            // rotate object so it's sitting on its base
+                            gltf.scene.rotation.x = -Math.PI * 1.5
 
-                        threebox.addAtCoordinate(gltf.scene, origin);
+                            threebox.addAtCoordinate(gltf.scene, origin);
 
-                    }).bind(this));
+                        }).bind(this));
 
                 },
                 render: function (gl, matrix) {

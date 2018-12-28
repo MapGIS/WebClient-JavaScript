@@ -166,10 +166,18 @@
       if(onInternetMode){
         inputCSS("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css");
         inputScript("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js");
+        inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw-mode/rectangle/index.js");
       }else{
         inputCSS(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw/dist/mapbox-gl-draw.css");
         inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw/dist/mapbox-gl-draw.js");
+        inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-draw-mode/rectangle/index.js");
       }
+    }
+    if (inArray(includes, 'filesaver')) {
+      inputScript(httpUrl + "/cdn/filesaver/src/FileSaver.js");
+    }
+    if (inArray(includes, 'domtoimage')) {
+      inputScript(httpUrl + "/cdn/dom-to-image/dom-to-image.js");
     }
     if (!inArray(excludes, 'plugin')) {
       inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.css");      
