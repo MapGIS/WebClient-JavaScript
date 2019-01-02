@@ -16,7 +16,7 @@
                 //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
                 crs: L.CRS.EPSG4326, //这里换成TDT_WGS84对数据精度要求不高应该也能替代
                 //显示中心
-                center: [45, -90],
+                center: [40, 100],
                 //最小显示等级
                 minZoom: 0,
                 //最大显示等级
@@ -47,26 +47,40 @@
                 //设置地图不连续显示
                 noWrap: true
             });
+//            var layer3 = new Zondy.Map.TDTLayer({
+//                //图层类型
+//                layerType: 'img',
+//                //最小显示等级
+//                minZoom: 0,
+//                //最大显示等级
+//                maxZoom: 15,
+//                //设置地图不连续显示
+//                noWrap: true
+//            });
+//            var layer4 = new Zondy.Map.TDTLayer({
+//                //图层类型
+//                layerType: 'cia',
+//                //最小显示等级
+//                minZoom: 0,
+//                //最大显示等级
+//                maxZoom: 15,
+//                //设置地图不连续显示
+//                noWrap: true
+//            });
+
             var layer3 = new Zondy.Map.TDTLayer({
-                //图层类型
-                layerType: 'img',
-                //最小显示等级
-                minZoom: 0,
-                //最大显示等级
-                maxZoom: 15,
+                url:"http://t{s}.tianditu.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}&style=default&format=tiles",
+                subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
                 //设置地图不连续显示
                 noWrap: true
-            });
+            }).addTo(map);
+
             var layer4 = new Zondy.Map.TDTLayer({
-                //图层类型
-                layerType: 'cia',
-                //最小显示等级
-                minZoom: 0,
-                //最大显示等级
-                maxZoom: 15,
+                url:"http://t{s}.tianditu.cn/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}&style=default&format=tiles",
+                subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
                 //设置地图不连续显示
                 noWrap: true
-            });
+            }).addTo(map);
             var layer = new Zondy.Map.TDTLayer({
                 //图层类型
                 layerType: 'ter',
