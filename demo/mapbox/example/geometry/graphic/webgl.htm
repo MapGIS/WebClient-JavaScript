@@ -29,7 +29,7 @@
       mercator.x = poi.lng * Math.PI / 180 * earthRad;
       var a = poi.lat * Math.PI / 180;
       mercator.y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
-      console.log("mercator",mercator);
+      console.log("mercator", mercator);
       return mercator; //[12727039.383734727, 3579066.6894065146]
     }
     /**
@@ -51,25 +51,7 @@
       'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var map = new mapboxgl.Map({
       container: 'mapid',
-      style: {
-        "version": 8,
-        "sources": {
-          "mapbox-tiles": {
-            "type": "raster",
-            'tiles': [
-              "https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
-            ],
-            'tileSize': 256
-          }
-        },
-        "layers": [{
-          "id": "light-tiles",
-          "type": "raster",
-          "source": "mapbox-tiles",
-          "minzoom": 0,
-          "maxzoom": 22
-        }]
-      },
+      style: 'mapbox://styles/mapbox/light-v9',
       zoom: 3,
       center: [7.5, 58]
     });
@@ -79,7 +61,6 @@
       type: 'custom',
 
       onAdd: function (map, gl) {
-        console.log(gl)
         var vertexSource = "" +
           "uniform mat4 u_matrix;" +
           "attribute vec2 a_pos;" +
@@ -106,15 +87,15 @@
 
         this.aPos = gl.getAttribLocation(this.program, "a_pos");
 
-        var helsinki = getMercator({
+        var helsinki = mapboxgl.MercatorCoordinate.fromLngLat({
           lng: 25.004,
           lat: 60.239
         });
-        var berlin = getMercator({
+        var berlin = mapboxgl.MercatorCoordinate.fromLngLat({
           lng: 13.403,
           lat: 52.562
         });
-        var kyiv = getMercator({
+        var kyiv = mapboxgl.MercatorCoordinate.fromLngLat({
           lng: 30.498,
           lat: 50.541
         });
@@ -141,7 +122,8 @@
     };
 
     map.on('load', function () {
-      map.addLayer(highlightLayer);
+     var gllayer = map.addLayer(highlightLayer, 'building');
+     console.log(gllayer)
     });
   </script>
 </body>

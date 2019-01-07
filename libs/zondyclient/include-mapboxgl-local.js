@@ -130,7 +130,7 @@
     }
     if (!inArray(excludes, 'plugin')) {
       inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.css");
-      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.js");//这里是三方如igserver-x，datastore的api
+      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.min.js");//这里是三方如igserver-x，datastore的api
     }
   }
 
