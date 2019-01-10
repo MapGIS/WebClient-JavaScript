@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<head>
+  <title>电力线</title>
+  <script
+    include="jquery"
+    src="../../libs/zondyclient/include-lib-local.js"
+  ></script>
+  <script
+    include=""
+    src="../../libs/zondyclient/include-mapboxgl-local.js"
+  ></script>
+  <style>
+    body,
+    html {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map" class="map"></div>
+
+  <script>
+    //mapbox服务数据的访问令牌，若使用mapbox提供的样式必须要设置令牌
+    mapboxgl.accessToken =
+      "pk.eyJ1Ijoid29ya2luZ2RvZyIsImEiOiJjamQyZmszenczMHRoMzRuczVzaGthbGhnIn0.HTkYTE-R82N3azqscSyHkA";
+
+    var origin = [4.861585, 36.067897, 1000];
+
+    var map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/light-v9",
+      center: origin,
+      zoom: 13,
+      pitch: 60,
+      heading: 41,
+      hash: true
+    });
+
+    var ElectricLine, ElectricArrow;
+    var ElectricLineInfo = [],
+      ElectricArrowInfo = [];
+    var allCount = 0;
+
+    var ElectricLineLayer = {
+      id: "electricline",
+      type: "custom",
+
+      onAdd: function(map, gl) {
+        var vertexSource =
+          "\n" + //顶点着色器
+          "uniform mat4 u_matrix;\n" + //mapbox 变换矩阵，用来传输一致不变的数据
+          "attribute vec2 a_position;\n" + // vectex 位置属性
+          "attribute float a_pointsize;\n" + // vectex 大小属性
+          "void main() {\n" +
+          "    gl_Position = u_matrix * vec4(a_position, 0.0, 1.0);\n" +
+          "    gl_PointSize = a_pointsize;\n" + //这行没卵用,什么情况?
+          "}\n";
+
+        var fragmentSource =
+          "" + //片元着色器
+          "void main() {\n" +
+          "    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
+          "}\n";
+
+        var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vertexSource);
+        gl.compileShader(vertexShader);
+        var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fragmentSource);
+        gl.compileShader(fragmentShader);
+
+        this.program = gl.createProgram();
+        gl.attachShader(this.program, vertexShader);
+        gl.attachShader(this.program, fragmentShader);
+        gl.linkProgram(this.program);
+
+        this.aPos = gl.getAttribLocation(this.program, "a_position"); //attribute是glsl变量，想顶点着色器传递数据
+        this.aSize = gl.getAttribLocation(this.program, "a_pointsize"); //attribute是glsl变量，想顶点着色器传递数据
+        this.uMatrix = gl.getUniformLocation(this.program, "u_matrix"); //uniform是glsl变量，想片元着色器传递数据
+      },
+
+      render: function(gl, matrix) {
+        var count = this.initBuffer(gl, matrix);
+        //console.log(ElectricLineInfo)
+      },
+
+      initBuffer: function(gl, matrix) {
+        gl.useProgram(this.program);
+        this.buffer = gl.createBuffer(); //创建缓冲区对象
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer); //将缓冲区对象绑定到目标
+        gl.bufferData(gl.ARRAY_BUFFER, ElectricLine, gl.STATIC_DRAW); //向缓冲区对象写入数据
+
+        gl.uniformMatrix4fv(this.uMatrix, false, matrix);
+
+        gl.vertexAttribPointer(this.aPos, 2, gl.FLOAT, false, 0, 0); //将缓冲区对象分配给aPos
+        gl.vertexAttrib1f(this.aSize, 5.0);
+        gl.enableVertexAttribArray(this.aPos); //链接aPos变量与分配给他的缓冲区对象
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        this.drawElectriLine(gl, matrix);
+      },
+
+      drawElectriLine: function(gl, matrix) {
+        this.drawElectriBaseLine(gl, matrix);
+        this.drawElectriBasePoint(gl, matrix);
+      },
+
+      drawElectriBaseLine: function(gl, matrix) {
+        ElectricLineInfo.forEach(function(line, index) {
+          gl.drawArrays(gl.LINE_STRIP, line.start, line.count);
+        });
+      },
+
+      drawElectriBasePoint: function(gl, matrix) {
+        ElectricLineInfo.forEach(function(line, index) {
+          gl.drawArrays(gl.POINTS, line.start, line.count);
+        });
+      }
+    };
+
+    var ElectricArrowLayer = {
+      id: "electricarrow",
+      type: "custom",
+
+      onAdd: function(map, gl) {
+        var vertexSource =
+          "\n" + //顶点着色器
+          "uniform mat4 u_matrix;\n" + // fragment 变换矩阵，用来传输一致不变的数据
+          "attribute vec2 a_position;\n" + // vectex 位置属性
+          "attribute float a_pointsize;\n" + // vectex 大小属性
+          "void main() {\n" +
+          "    gl_Position = u_matrix * vec4(a_position, 0.0, 1.0);\n" +
+          "    gl_PointSize = a_pointsize;\n" + //这行没卵用,什么情况?
+          "}\n";
+
+        var fragmentSource =
+          "" + //片元着色器
+          "void main() {\n" +
+          "    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n" +
+          "}\n";
+
+        var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vertexSource);
+        gl.compileShader(vertexShader);
+        var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fragmentSource);
+        gl.compileShader(fragmentShader);
+
+        this.program = gl.createProgram();
+        gl.attachShader(this.program, vertexShader);
+        gl.attachShader(this.program, fragmentShader);
+        gl.linkProgram(this.program);
+
+        this.aPos = gl.getAttribLocation(this.program, "a_position"); //attribute是glsl变量，想顶点着色器传递数据
+        this.aSize = gl.getAttribLocation(this.program, "a_pointsize"); //attribute是glsl变量，想顶点着色器传递数据
+        this.uMatrix = gl.getUniformLocation(this.program, "u_matrix"); //uniform是glsl变量，想片元着色器传递数据
+      },
+
+      render: function(gl, matrix) {
+        var count = this.initBuffer(gl, matrix);
+      },
+
+      initBuffer: function(gl, matrix) {
+        gl.useProgram(this.program);
+        this.buffer = gl.createBuffer(); //创建缓冲区对象
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer); //将缓冲区对象绑定到目标
+        gl.bufferData(gl.ARRAY_BUFFER, ElectricArrow, gl.STATIC_DRAW); //向缓冲区对象写入数据
+
+        gl.uniformMatrix4fv(this.uMatrix, false, matrix);
+
+        gl.vertexAttribPointer(this.aPos, 2, gl.FLOAT, false, 0, 0); //将缓冲区对象分配给aPos
+        gl.vertexAttrib1f(this.aSize, 2.5);
+        gl.enableVertexAttribArray(this.aPos); //链接aPos变量与分配给他的缓冲区对象
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        this.drawElectriArrow(gl, matrix);
+      },
+
+      drawElectriArrow: function(gl, matrix) {
+        this.drawElectriArrowEnd(gl, matrix);
+      },
+
+      drawElectriArrowEnd: function(gl, matrix) {
+        ElectricArrowInfo.forEach(function(arrow, index) {
+          gl.drawArrays(gl.POINTS, arrow.start, arrow.count);
+        });
+      }
+    };
+
+    function calculateArrow() {
+      var arrowIndex = 0;
+      ElectricArrow = new Float32Array(allCount * 6);
+      ElectricLineInfo.forEach(function(line, index) {
+        var end = line.start + line.count * 2;
+
+        console.log("控制点开始 ： " + line.start + " 控制点结束 ： " + end);
+
+        for (var i = line.start; i + 3 < end; i += 2) {
+          var current = { x: ElectricLine[i + 0], y: ElectricLine[i + 1] };
+          var next = { x: ElectricLine[i + 2], y: ElectricLine[i + 3] };
+
+          var startArrow = calculatePositon(current, next, 0.0000005);
+          var endArrow = calculatePositon(next, current, 0.0000005);
+
+          var start = arrowIndex;
+          ElectricArrow[arrowIndex++] = startArrow.x;
+          ElectricArrow[arrowIndex++] = startArrow.y;
+          ElectricArrow[arrowIndex++] = startArrow.x;
+          ElectricArrow[arrowIndex++] = startArrow.y;
+          ElectricArrow[arrowIndex++] = startArrow.x;
+          ElectricArrow[arrowIndex++] = startArrow.y;
+
+          ElectricArrowInfo.push({
+            start: start,
+            count: 3
+          });
+          console.log(
+            "第X条线 ： " +
+              index +
+              " 当前点序号 ： " +
+              i +
+              "起始序号： " +
+              start
+          );
+          start = arrowIndex;
+          ElectricArrow[arrowIndex++] = endArrow.x;
+          ElectricArrow[arrowIndex++] = endArrow.y;
+          ElectricArrow[arrowIndex++] = endArrow.x;
+          ElectricArrow[arrowIndex++] = endArrow.y;
+          ElectricArrow[arrowIndex++] = endArrow.x;
+          ElectricArrow[arrowIndex++] = endArrow.y;
+          ElectricArrowInfo.push({
+            start: start,
+            count: 3
+          });
+        }
+      });
+    }
+
+    function calculateDirection(p1, p2) {
+      var dx, dy, da;
+      var m_dDirection = 0;
+
+      dx = p2.x - p1.x;
+      dy = p2.y - p1.y;
+
+      if (dx == 0) {
+        if (dy > 0) m_dDirection = 0;
+        else m_dDirection = 180;
+      } else {
+        if (dx > 0) {
+          if (dy == 0) {
+            m_dDirection = 90;
+          } else {
+            if (dy > 0) {
+              da = Math.abs(dx / dy);
+              m_dDirection = (Math.atan(da) * 180) / Math.PI;
+            } else {
+              if (dy < 0) {
+                da = Math.abs(dx / dy);
+                m_dDirection = (Math.atan(da) * 180) / Math.PI;
+                m_dDirection = 180 - m_dDirection;
+              }
+            }
+          }
+        } else {
+          if (dy == 0) {
+            m_dDirection = 270;
+          } else {
+            if (dy >= 0) {
+              da = Math.abs(dx / dy);
+              m_dDirection = (Math.atan(da) * 180) / Math.PI;
+              m_dDirection = 360 - m_dDirection;
+            } else {
+              da = Math.abs(dx / dy);
+              m_dDirection = (Math.atan(da) * 180) / Math.PI;
+              m_dDirection = 180 + m_dDirection;
+            }
+          }
+        }
+      }
+      return m_dDirection;
+    }
+
+    function calculatePositon(dot1, dot2, len) {
+      var x, y;
+      var EPS = len;
+      dot1.x *= 10000;
+      dot1.y *= 10000;
+      len *= 10000;
+      var k = (dot1.x - dot2.x) / (dot1.y - dot2.y);
+      var y1, y2, y3;
+      y1 = dot1.y - Math.sqrt((len * len) / (k * k + 1));
+      y2 = dot1.y + Math.sqrt((len * len) / (k * k + 1));
+      y3 = dot1.y; 
+      y = dot1.y > dot2.y ? y1 : y2;
+      x = dot1.x - k * (y3 - y);
+      return { x: x / 10000, y: y / 10000 };
+    }
+
+    map.on("style.load", function() {
+      $.get("../../data/military/电力线.json", function(lines) {
+        lines.features.forEach(function(feature, lineIndex) {
+          var line = feature.geometry.coordinates;
+          ElectricLineInfo.push({
+            start: allCount,
+            count: line.length
+          });
+          allCount += line.length * 2;
+        });
+        ElectricLine = new Float32Array(allCount);
+        var allIndex = 0;
+        lines.features.forEach(function(feature, lineIndex) {
+          var line = feature.geometry.coordinates;
+          line.forEach(function(item, index) {
+            var mercator = mapboxgl.MercatorCoordinate.fromLngLat({
+              lng: item[0],
+              lat: item[1]
+            });
+            ElectricLine[index * 2 + 0 + allIndex] = mercator.x;
+            ElectricLine[index * 2 + 1 + allIndex] = mercator.y;
+          });
+          allIndex += 2 * line.length;
+        });
+
+        calculateArrow();
+
+        map.addLayer(ElectricLineLayer);
+        map.addLayer(ElectricArrowLayer);
+      });
+    });
+  </script>
+</body>

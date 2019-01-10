@@ -71,7 +71,7 @@ var config = {
               detail: "测试基本的全屏功能",
               icon: "fullscreen.png",
               update: "最后更新时间：2018-06-13"
-            }/* ,
+            } /* ,
             {
               name: "鹰眼控件",
               file: "minimap",
@@ -191,8 +191,8 @@ var config = {
               diffcult: "3",
               detail: "地图整饰打印输出",
               icon: "customprint.png",
-              person:"基础平台/创新中心-潘卓然",
-              effect:"如果需要经纬度网格，请调用igserver服务",
+              person: "基础平台/创新中心-潘卓然",
+              effect: "如果需要经纬度网格，请调用igserver服务",
               update: "最后更新时间：2018-12-27"
             }
           ]
@@ -438,14 +438,6 @@ var config = {
               icon: "background.png",
               update: "最后更新时间：2018-06-07"
             }
-/*             ,{
-              name: "显卡绘制-WebGL",
-              file: "webgl",
-              diffcult: "3",
-              detail: "",
-              icon: "webgl.png",
-              update: "最后更新时间：2018-12-18"
-            } */
           ]
         },
         {
@@ -532,6 +524,38 @@ var config = {
                 "接受一个标准格式的JSON字符串，并返回解析后标准的JavaScript对象，可用于geojson数据的解析。",
               icon: "jsonparse.png",
               update: "最后更新时间：2018-05-10"
+            }
+          ]
+        },
+        {
+          name: "WebGL",
+          materialicon: "bubble_chart",
+          folder: "webgl",
+          leaffolder: true,
+          childs: [
+            {
+              name: "基本绘制",
+              file: "base",
+              diffcult: "1",
+              detail: "通过webgl直接绘制的方式，基本绘制",
+              icon: "base.png",
+              update: "最后更新时间：2018-01-08"
+            },
+            {
+              name: "平移绘制",
+              file: "move",
+              diffcult: "1",
+              detail: "通过webgl直接绘制的方式，平移绘制",
+              icon: "move.png",
+              update: "最后更新时间：2018-01-08"
+            },
+            {
+              name: "旋转绘制",
+              file: "rotate",
+              diffcult: "1",
+              detail: "通过webgl直接绘制的方式，旋转绘制",
+              icon: "rotate.png",
+              update: "最后更新时间：2018-01-08"
             }
           ]
         }
@@ -1964,6 +1988,38 @@ var config = {
           detail: "针对北京公交夜景的彩色可视化",
           icon: "beijing.png",
           update: "最后更新时间：2018-06-27"
+        }
+      ]
+    },
+    {
+      name: "军标数据",
+      materialicon: "search",
+      folder: "military",
+      leaffolder: true,
+      childs: [
+        {
+          name: "mapv-方向旋转",
+          file: "direction",
+          diffcult: "2",
+          detail: "采取mapv画布处理旋转操作",
+          icon: "direction.png",
+          update: "最后更新时间：2018-12-29"
+        },
+        {
+          name: "内置-方向旋转",
+          file: "rotate",
+          diffcult: "2",
+          detail: "采取内置rotate属性，通过映射处理旋转操作",
+          icon: "rotate.png",
+          update: "最后更新时间：2018-12-29"
+        },
+        {
+          name: "电力线",
+          file: "line",
+          diffcult: "3",
+          detail: "通过webgl直接绘制的方式，显示电力线绘制",
+          icon: "line.png",
+          update: "最后更新时间：2018-01-02"
         }
       ]
     }
