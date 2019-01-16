@@ -1,4 +1,4 @@
-var config = {
+var CESIUM_CONFIG = config = {
     name: "",
     title: "MapGIS WebClinet-Cesium演示网站",
     mapmode: "cesium",
@@ -227,7 +227,7 @@ var config = {
                     name: "可视域分析",
                     file: "viewshedAn",
                     diffcult: "3",
-                    detail: "",
+                    detail: "www.smaryun.com",
                     icon: "viewshedAn.png",
                     person: "基础平台-韩彦生",
                     update: "最后更新时间：2018-07-09"

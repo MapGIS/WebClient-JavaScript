@@ -88,6 +88,9 @@
     if (inArray(includes, 'proj4')) {
       inputScript(httpUrl + "/cdn/proj4/proj4.js");
     }
+    if (inArray(includes, 'echarts')) {
+      inputScript(httpUrl + "/cdn/echarts/echarts.min.js");
+    }
     if (inArray(includes, 'checkjs')) {
       inputScript(httpUrl + "/cdn/checkjs/checkjs.js");
     }

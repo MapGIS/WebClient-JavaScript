@@ -89,7 +89,9 @@
     if (inArray(includes, 'turf')) {
       inputScript(httpUrl + "/cdn/turf/turf.min.js");
     }
-
+    if (inArray(includes, 'echarts')) {
+      inputScript("https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts-en.common.js");
+    }
     if (inArray(includes, 'proj4')) {
       inputScript(httpUrl + "/cdn/proj4/proj4.js");
     }
