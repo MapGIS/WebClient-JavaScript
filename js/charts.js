@@ -49,7 +49,8 @@ function initCube(config, divid, name) {
         return {
           name: e.name,
           value: e.diffcult,
-          path: item.name + "/" + e.name
+          path: item.name + "/" + e.name,
+          url: item.folder + "-" + e.file
         };
       });
       return { children: first, name: item.name, value: diff, path: item.name };
@@ -61,7 +62,8 @@ function initCube(config, divid, name) {
           return {
             name: e.name,
             value: e.diffcult,
-            path: item.name + "/" + child.name + "/" + e.name
+            path: item.name + "/" + child.name + "/" + e.name,
+            url: item.folder + "-" + child.folder + "-" + e.file
           };
         });
         return {
@@ -76,7 +78,9 @@ function initCube(config, divid, name) {
   });
 
   var myChart = echarts.init(document.getElementById(divid), "light");
-
+  myChart.on("click", function(params) {
+    window.open("../ui/demos-" + name + ".html#" + params.data.url);
+  });
   myChart.setOption(
     (option = {
       title: {
