@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
@@ -22,6 +23,7 @@
         //使用严格模式
         "use strict";
         var map;
+        var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
         /**地图初始化函数*/
         function init() {
             //实例化要加载的source来源对象（全球矢量图）
@@ -30,7 +32,8 @@
                 "type": "raster",
                 'tiles': [
                     //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
-                   "http://t" + Math.round(Math.random() * 7) + ".tianditu.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    + "&tk=" + tiandituKey
                 ],
                 //栅格瓦片的分辨率
                 'tileSize': 256
@@ -40,8 +43,9 @@
                 //来源类型为栅格瓦片
                 "type": "raster",
                 'tiles': [
-                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
-                "http://t" + Math.round(Math.random() * 7) + ".tianditu.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                    "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    + "&tk=" + tiandituKey
                 ],
                 //栅格瓦片的分辨率
                 'tileSize': 256
@@ -51,8 +55,9 @@
                 //来源类型为栅格瓦片
                 "type": "raster",
                 'tiles': [
-                 //来源请求地址，请求天地图提供的全球影像图WMTS服务
-                "http://t" + Math.round(Math.random() * 7) + ".tianditu.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    //来源请求地址，请求天地图提供的全球影像图WMTS服务
+                    "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    + "&tk=" + tiandituKey
                 ],
                 //栅格瓦片的分辨率
                 'tileSize': 256
@@ -62,8 +67,9 @@
                 //来源类型为栅格瓦片
                 "type": "raster",
                 'tiles': [
-                 //来源请求地址，请求天地图提供的全球影像中文注记WMTS服务
-                "http://t" + Math.round(Math.random() * 7) + ".tianditu.cn/cia_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    //来源请求地址，请求天地图提供的全球影像中文注记WMTS服务
+                    "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cia_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    + "&tk=" + tiandituKey
                 ],
                 //栅格瓦片的分辨率
                 'tileSize': 256
@@ -73,8 +79,9 @@
                 //来源类型为栅格瓦片
                 "type": "raster",
                 'tiles': [
-                //来源请求地址，请求天地图提供的全球地形渲染图WMTS服务
-                "http://t" + Math.round(Math.random() * 7) + ".tianditu.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    //来源请求地址，请求天地图提供的全球地形渲染图WMTS服务
+                    "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+                    + "&tk=" + tiandituKey
                 ],
                 //栅格瓦片的分辨率
                 'tileSize': 256
@@ -96,29 +103,29 @@
                     },
                     //设置加载并显示来源的图层信息
                     "layers": [
-                         {
-                             //图层id，要保证唯一性
-                             "id": "vecsrc",
-                             //图层类型
-                             "type": "raster",
-                             //连接图层来源
-                             "source": "vecsrc",
-                             //图层最小缩放级数
-                             "minzoom": 0,
-                             //图层最大缩放级数
-                             "maxzoom": 22
-                         },
-                         {
-                             //图层id，要保证唯一性
-                             "id": "cvasrc",
-                             //图层类型
-                             "type": "raster",
-                             //连接图层来源
-                             "source": "cvasrc",
-                             //图层最小缩放级数
-                             "minzoom": 0,
-                             //图层最大缩放级数
-                             "maxzoom": 22
+                        {
+                            //图层id，要保证唯一性
+                            "id": "vecsrc",
+                            //图层类型
+                            "type": "raster",
+                            //连接图层来源
+                            "source": "vecsrc",
+                            //图层最小缩放级数
+                            "minzoom": 0,
+                            //图层最大缩放级数
+                            "maxzoom": 22
+                        },
+                        {
+                            //图层id，要保证唯一性
+                            "id": "cvasrc",
+                            //图层类型
+                            "type": "raster",
+                            //连接图层来源
+                            "source": "cvasrc",
+                            //图层最小缩放级数
+                            "minzoom": 0,
+                            //图层最大缩放级数
+                            "maxzoom": 22
                         }
                     ]
                 }
@@ -136,37 +143,38 @@
             var src = $("#LayerSelect").val();
             //添加图层
             map.addLayer({
-                   "id": src,
-                   "type": "raster",
-                   "source": src,
-                   "minzoom": 0,
-                   "maxzoom": 22
+                "id": src,
+                "type": "raster",
+                "source": src,
+                "minzoom": 0,
+                "maxzoom": 22
             });
             if (src == "vecsrc") {
                 map.addLayer(
-                 {
-                     "id": "cvasrc",
-                     "type": "raster",
-                     //连接图层来源
-                     "source": "cvasrc",
-                     "minzoom": 0,
-                     "maxzoom": 22
-                 });
+                    {
+                        "id": "cvasrc",
+                        "type": "raster",
+                        //连接图层来源
+                        "source": "cvasrc",
+                        "minzoom": 0,
+                        "maxzoom": 22
+                    });
             }
-           else{
+            else {
                 map.addLayer(
-                     {
-                         "id": "ciasrc",
-                         "type": "raster",
-                         //连接图层来源
-                         "source": "ciasrc",
-                         "minzoom": 0,
-                         "maxzoom": 22
-                     });
-          }
+                    {
+                        "id": "ciasrc",
+                        "type": "raster",
+                        //连接图层来源
+                        "source": "ciasrc",
+                        "minzoom": 0,
+                        "maxzoom": 22
+                    });
+            }
         }
     </script>
 </head>
+
 <body onload="init()">
     <div id="menu">
         <label style="font-weight: bold;">切换图层：</label>
@@ -179,4 +187,5 @@
     <div id='map'>
     </div>
 </body>
+
 </html>
