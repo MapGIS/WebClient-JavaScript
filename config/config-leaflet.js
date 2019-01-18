@@ -1,4 +1,4 @@
-var config = {
+var LEAFLET_CONFIG = config = {
   name: "",
   title: "MapGIS WebClinet-Leaflet演示网站",
   mapmode: "leaflet",

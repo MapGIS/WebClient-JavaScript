@@ -1,4 +1,4 @@
-var config = {
+var OPENLAYERS_CONFIG = config = {
     name: "",
     title: "MapGIS WebClinet-OpenLayers3演示网站",
     mapmode: "openlayers",

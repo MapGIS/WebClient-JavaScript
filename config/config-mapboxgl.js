@@ -1,4 +1,4 @@
-var config = {
+var MAPBOXGL_CONFIG = config = {
   name: "",
   title: "MapGIS WebClinet-MapboxGL演示网站",
   mapmode: "mapbox",
@@ -2057,6 +2057,22 @@ var config = {
           detail: "通过webgl直接绘制的方式，显示电力线绘制",
           icon: "line.png",
           update: "最后更新时间：2018-01-02"
+        },
+        {
+          name: "加载地形",
+          file: "dem",
+          diffcult: "1",
+          detail: "通过dem加上内部制图优化的样式实现地形",
+          icon: "dem.png",
+          update: "最后更新时间：2018-01-12"
+        },
+        {
+          name: "实时计算速度，轨迹",
+          file: "speed",
+          diffcult: "1",
+          detail: "通过实时插值的方式实现计算速度，轨迹",
+          icon: "speed.png",
+          update: "最后更新时间：2018-01-15"
         }
       ]
     }
