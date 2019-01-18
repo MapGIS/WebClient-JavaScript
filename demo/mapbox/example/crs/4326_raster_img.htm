@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>导航栏控件</title>
+  <script exclude="mapboxgl" include="crs" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .navigation-box {
+      height: 25px;
+      width: 25px;
+      position: absolute;
+      top: 10px;
+      right: 5px;
+      background-color: rgba(255, 255, 255, 1);
+      padding: 5px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
+    var img_c_source = {
+      //来源类型为栅格瓦片
+      "type": "raster",
+      'tiles': [
+        //来源请求地址，请求天地图提供的全球影像图WMTS服务
+        "http://t3.tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles"
+        + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+        + "&tk=" + tiandituKey
+      ],
+      //栅格瓦片的分辨率
+      'tileSize': 256
+    };
+    var cia_c_source = {
+      //来源类型为栅格瓦片
+      "type": "raster",
+      'tiles': [
+        //来源请求地址，请求天地图提供的全球影像图WMTS服务
+        "http://t3.tianditu.gov.cn/cia_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles"
+        + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
+        + "&tk=" + tiandituKey
+      ],
+      //栅格瓦片的分辨率
+      'tileSize': 256
+    };
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: {
+        //设置版本号，一定要设置
+        "version": 8,
+        //添加来源
+        "sources": {
+          "天地图2000影像": img_c_source,
+          "天地图2000注记": cia_c_source,
+        },
+        //设置加载并显示来源的图层信息
+        "layers": [
+          {
+            //图层id，要保证唯一性
+            "id": "天地图2000影像",
+            //图层类型
+            "type": "raster",
+            //连接图层来源
+            "source": "天地图2000影像",
+            //图层最小缩放级数
+            "minzoom": 0,
+            //图层最大缩放级数
+            "maxzoom": 22
+          },{
+            //图层id，要保证唯一性
+            "id": "天地图2000注记",
+            //图层类型
+            "type": "raster",
+            //连接图层来源
+            "source": "天地图2000注记",
+            //图层最小缩放级数
+            "minzoom": 0,
+            //图层最大缩放级数
+            "maxzoom": 22
+          }
+        ]
+      },
+      zoom: 2,
+      pitch: 30,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+    var navigationControl = new mapboxgl.NavigationControl();
+
+    map.addControl(navigationControl, 'top-left');
+  </script>
+</body>
+
+</html>
