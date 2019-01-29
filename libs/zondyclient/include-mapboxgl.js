@@ -179,9 +179,15 @@
     if (inArray(includes, 'domtoimage')) {
       inputScript(httpUrl + "/cdn/dom-to-image/dom-to-image.js");
     }
+    if (inArray(includes, 'webgl')) {
+      inputScript(httpUrl + "/cdn/webgl/cuon-matrix.js");
+      inputScript(httpUrl + "/cdn/webgl/cuon-utils.js");
+      inputScript(httpUrl + "/cdn/webgl/webgl-debug.js");
+      inputScript(httpUrl + "/cdn/webgl/webgl-utils.js");
+    }
     if (!inArray(excludes, 'plugin')) {
       inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.css");      
-      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.js");//这里是三方如igserver-x，datastore的api
+      inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-plugins.min.js");//这里是三方如igserver-x，datastore的api
     }
 
   }
