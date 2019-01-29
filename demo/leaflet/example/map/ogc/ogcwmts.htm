@@ -30,7 +30,8 @@
             //地图容器
             var map = L.map('leaf_map', {
                 crs: m_WGS84
-            }).setView([(30.708764095603 + 30.4539323507469) / 2, (114.500706988372 + 114.125602229914) / 2], 1);
+            }).setView([(30.708764095603 + 30.4539323507469) / 2, (114.500706988372 +
+            114.125602229914) / 2], 2);
 
             //wmts服务
             var layer3 = new Zondy.Map.MapWMTSLayer({
@@ -54,8 +55,8 @@
 </head>
 
 <body onload="init()">
-    <div id="leaf_map" style="width: 100%; height:700px;">
-    </div>
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
 </body>
 
 </html>

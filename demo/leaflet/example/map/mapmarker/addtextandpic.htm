@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>图文标注</title>
     <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <style>
@@ -19,7 +19,7 @@
                 //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
                 crs: L.CRS.EPSG3857,
                 //显示中心
-                center: [45, -180],
+                center: [45, -90],
                 //最小显示等级
                 minZoom: 1,
                 //最大显示等级
@@ -34,20 +34,22 @@
 
             //显示天地图地图
             //矢量图层
-            var layer1 = L.tileLayer('http://t0.tianditu.com/DataServer?T=vec_c&x={x}&y={y}&l={z}', {
-                tileSize: 256,
-                layer: 'vec',
-                minZoom: 1,
-                maxZoom: 15,
-                noWrap: true
+            var layer1 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'vec',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             //矢量注记图层
-            var layer2 = L.tileLayer('http://t0.tianditu.com/DataServer?T=cva_c&x={x}&y={y}&l={z}', {
-                tileSize: 256,
-                layer: 'cva',
-                minZoom: 1,
-                maxZoom: 15,
-                noWrap: true
+            var layer2 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'cva',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             //图层组
             var LayerG = L.layerGroup([layer1, layer2]);
@@ -58,6 +60,16 @@
                 iconUrl: "../../img/leaflet/label/blueIcon.png",
                 iconSize: [50, 50]
             });
+            var textDiv = "<p style='width:100px;text-align:center;font-size:20px;color:red'>文字标注</p>";
+            var textIcon = new L.divIcon({
+                html: textDiv,
+                className: ''
+            });
+            var textMarker = L.marker([45, -97], {
+                icon: textIcon,
+                draggable: true,
+                renderer: L.canvas()
+            }).addTo(map);
             var Marker = L.marker([45, -90], {
                 icon: icon,
                 //是否允许鼠标拖动
@@ -69,7 +81,7 @@
 </head>
 
 <body onload="init()">
-    <div id="leaf_map" style="width:100%;height:95%"></div>
+<div id="leaf_map" style="width:100%;height:95%"></div>
 </body>
 
 </html>

@@ -4,6 +4,10 @@ An extension to [Leaflet](http://leafletjs.com/) that contains configurations fo
 
 ## Usage
 
+```bash
+npm i leaflet.chinatmsproviders
+```
+
 Leaflet-ChineseTmsProviders [providers](#providers) are refered to with a `provider.<variant>.<type>` -string. Let's say you want to add the nice `Normal.Map` base layers from `www.tianditu.com` to your map, you pass `TianDiTu.Normal.Map` to the `L.tileLayer.chinaProvider`-constructor, which will return a `L.TileLayer` instance for TianDiTu Normal Map tile layer.
 ```Javascript
 //add TianDiTu Normal Map Layer to map.
@@ -23,13 +27,17 @@ L.tileLayer.chinaProvider('TianDiTu.Normal.Annotion',{maxZoom:18,minZoom:5}).add
 
 ```
 There are more examples at the examples folder like below.
-```
-./examples/indexTianDiTu.html
-./examples/indexGaoDe.html
-./examples/indexGoogle.html
-./examples/indexGeoq.html
 
-```
+[./examples/indexTianDiTu.html](http://htoooth.github.io/Leaflet.ChineseTmsProviders/examples/indexTianDiTu.html)
+
+[./examples/indexGaoDe.html](http://htoooth.github.io/Leaflet.ChineseTmsProviders/examples/indexGaoDe.html)
+
+[./examples/indexGoogle.html](http://htoooth.github.io/Leaflet.ChineseTmsProviders/examples/indexGoogle.html)
+
+[./examples/indexGeoq.html](http://htoooth.github.io/Leaflet.ChineseTmsProviders/examples/indexGeoq.html)
+
+[./examples/indexOSM.html](http://htoooth.github.io/Leaflet.ChineseTmsProviders/examples/indexOSM.html)
+
 Above all maps use Coordinate Reference Systems (CRS), which are EPSG:3857. 
 
 <a name="providers"></a>
@@ -52,11 +60,12 @@ Current options suitable for tile layers are:
     * Google.Satellite.Map
 * Geoq
     * Geoq.Normal.Map
-    * Geoq.Normal.Color
     * Geoq.Normal.PurplishBlue
     * Geoq.Normal.Gray
     * Geoq.Normal.Warm
-    * Geoq.Normal.Cold
+    * Geoq.Normal.Hydro
+* OSM
+    * OSM.Normal.Map
 
 ## About
 

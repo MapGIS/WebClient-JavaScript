@@ -354,19 +354,11 @@ var LEAFLET_CONFIG = config = {
               update: "最后更新时间：2018-06-01"
             },
             {
-              name: "天地图-内网4326",
+              name: "天地图地图显示",
               file: "tianditudisplay",
               diffcult: "2",
               detail: "天地图",
               icon: "tianditudisplay.png",
-              update: "最后更新时间：2018-06-01"
-            },
-            {
-              name: "天地图-外网4326",
-              file: "tianditudisplayonline",
-              diffcult: "2",
-              detail: "天地图-外网4326",
-              icon: "tianditudisplayonline.png",
               update: "最后更新时间：2018-06-01"
             },
             {
@@ -419,15 +411,15 @@ var LEAFLET_CONFIG = config = {
               update: "最后更新时间：2018-06-01",
               person: "基础平台/创新中心-潘卓然"
             },
-            {
-              name: "WFS地图显示-4326",
-              file: "ogcwfs",
-              diffcult: "1",
-              detail: "WFS地图显示",
-              icon: "ogcwfs.png",
-              update: "最后更新时间：2018-06-01",
-              person: "基础平台/创新中心-潘卓然"
-            },
+            // {//暂时跨域请求不生效
+            //   name: "WFS地图显示-4326",
+            //   file: "ogcwfs",
+            //   diffcult: "1",
+            //   detail: "WFS地图显示",
+            //   icon: "ogcwfs.png",
+            //   update: "最后更新时间：2018-06-01",
+            //   person: "基础平台/创新中心-潘卓然"
+            // },
             {
               name: "加载OGC的WMTS图层-3857",
               file: "ogcwmts3857",
