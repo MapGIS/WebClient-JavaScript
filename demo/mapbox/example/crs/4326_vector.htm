@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>导航栏控件</title>
+  <script exclude="mapboxgl" include="crs" src="../../libs/zondyclient/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .navigation-box {
+        height: 25px;
+        width: 25px;
+        position: absolute;
+        top: 10px;
+        right: 5px;
+        background-color: rgba(255, 255, 255, 1);
+        padding: 5px;
+        border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: "http://localhost:6163/igs/rest/mrms/vtiles/styles/经纬度中国-id.json",
+      zoom: 2,
+      pitch: 30,
+      center: [114.39958333969115, 30.467706575758285]
+    });
+
+    var navigationControl = new mapboxgl.NavigationControl();
+
+    map.addControl(navigationControl, 'top-left');
+  </script>
+</body>
+
+</html>

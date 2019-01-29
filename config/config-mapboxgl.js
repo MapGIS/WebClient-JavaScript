@@ -4,6 +4,43 @@ var MAPBOXGL_CONFIG = config = {
   mapmode: "mapbox",
   childs: [
     {
+      name: "中国2000坐标",
+      materialicon: "map",
+      folder: "crs",
+      leaffolder: true,
+      childs: [{
+        name: "2000坐标系-栅格影像",
+        file: "4326_raster_img",
+        diffcult: "1",
+        detail: "2000坐标系-栅格影像",
+        icon: "4326_raster_img.png",
+        update: "最后更新时间：2019-01-16"
+      },
+      {
+        name: "2000坐标系-栅格矢量",
+        file: "4326_raster_vec",
+        diffcult: "1",
+        detail: "2000坐标系-栅格矢量",
+        icon: "4326_raster_vec.png",
+        update: "最后更新时间：2019-01-16"
+      },
+      {
+        name: "2000坐标系-栅格地形",
+        file: "4326_raster_ter",
+        diffcult: "1",
+        detail: "2000坐标系-栅格地形",
+        icon: "4326_raster_ter.png",
+        update: "最后更新时间：2019-01-16"
+      },{
+        name: "2000坐标系-矢量瓦片",
+        file: "4326_vector",
+        diffcult: "1",
+        detail: "2000坐标系-矢量瓦片",
+        icon: "4326_vector.png",
+        update: "最后更新时间：2019-01-16"
+      }]
+    },
+    {
       name: "地图功能",
       materialicon: "map",
       folder: "map",
