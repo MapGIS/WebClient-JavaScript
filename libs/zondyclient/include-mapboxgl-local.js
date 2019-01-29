@@ -51,6 +51,10 @@
       inputCSS(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.min.css");
       inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.min.js");//这里是igserver的apiinputScript(httpUrl + "/cdn/mapboxgl/mapbox-gl.js");
     }
+    if (inArray(includes, 'crs')) {
+      inputCSS(httpUrl + "/cdn/mapboxgl/mapbox-gl.css");
+      inputScript(httpUrl + "/cdn/mapboxgl/mapbox-gl-4326.js");
+    }
     if (inArray(includes, 'compare')) {
       inputCSS(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-compare/dist/mapbox-gl-compare.css");
       inputScript(httpUrl + "/cdn/mapboxgl-plugins/mapbox-gl-compare/dist/mapbox-gl-compare.js");
