@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>获取GDB下要素集列表</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         "use strict";
 
         /**获取GDB下要素集列表
-        */
+         */
         function getDsList() {
             //数据源目录服务类
             var CatalogServer = new Zondy.Catalog.GDBInfo({
@@ -31,20 +31,20 @@
         }
 
         /**获取GDB下要素集列表方法成功回调
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function getDataSuccess(data) {
             //判断是否有返回数据，是否成功
-            if (data != null && data.result && data.result.succeed) {
-                if (data.result.value.length == 0) {
+            if (data && data.succeed) {
+                if (data.value.length == 0) {
                     alert("没有获取到要素集列表！");
                     //清空结果显示面板
-                   document.getElementById('resultShow').innerHTML = "";
+                    document.getElementById('resultShow').innerHTML = "";
                     return;
                 }
                 else {
                     //将一个JSON转换成一个包含JSON文本的字符串
-                    var formatData = JSON.stringify(data.result);
+                    var formatData = JSON.stringify(data);
                     //显示json字符串导到指定的div中
                     Process(formatData, 1, "resultShow");
                 }
@@ -53,15 +53,15 @@
     </script>
 </head>
 <body>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="获取GDB下要素集列表" onclick="getDsList()" />
-        <br>
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：获取IGServer服务器地址mapgislocal数据源下示例数据数据库中要素数据集列表</font><br />
-            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，且mapgislocal数据源下有示例数据数据库，否则无法获取信息</font>
-        </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="获取GDB下要素集列表" onclick="getDsList()"/>
+    <br>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：获取IGServer服务器地址mapgislocal数据源下示例数据数据库中要素数据集列表</font><br/>
+        <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，且mapgislocal数据源下有示例数据数据库，否则无法获取信息</font>
     </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>

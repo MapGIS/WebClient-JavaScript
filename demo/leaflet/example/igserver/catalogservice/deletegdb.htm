@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>删除地理数据库</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         "use strict";
 
         /**删除地理数据库
-        */
+         */
         function DeleteGDB() {
             //数据源目录服务类
             var CatalogServer = new Zondy.Catalog.GDBInfo({
@@ -31,15 +31,15 @@
         }
 
         /**执行删除地理数据库方法成功回调
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function getDataSuccess(data) {
             //判断是否有返回数据，是否成功
-            if (data != null && data.result && data.result.succeed) {
-                if (data.result.succeed) {
+            if (data && data.succeed) {
+                if (data.succeed) {
                     alert("删除数据库成功！");
                     //操作成功后获取GDB列表确认
-                    getGDBList(); 
+                    getGDBList();
                 }
                 else {
                     alert("操作失败！");
@@ -48,7 +48,7 @@
         };
 
         /**获取指定数据源下数据库列表
-        */
+         */
         function getGDBList() {
             //数据源目录服务类
             var CatalogServer = new Zondy.Catalog.GDBInfo({
@@ -68,12 +68,12 @@
         }
 
         /**获取指定数据源下数据库列表成功回调
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function getGDBListSuccess(data) {
             //判断是否有返回数据，是否成功
-            if (data != null && data.result && data.result.succeed) {
-                if (data.result.value.length == 0) {
+            if (data && data.succeed) {
+                if (data.value.length === 0) {
                     alert("没有获取到数据库列表！");
                     //清空结果显示面板
                     document.getElementById('resultShow').innerHTML = "";
@@ -81,7 +81,7 @@
                 }
                 else {
                     //将一个JSON转换成一个包含JSON文本的字符串
-                    var formatData = JSON.stringify(data.result);
+                    var formatData = JSON.stringify(data);
                     //显示json字符串导到指定的div中
                     Process(formatData, 1, "resultShow");
                 }
@@ -90,15 +90,15 @@
     </script>
 </head>
 <body>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="删除地理数据库" onclick="DeleteGDB()" />
-        <br>
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：删除功能以自定义的NewCreateGDB.hdf为例，请先创建后删除。</font><br />
-            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，否则无法实现功能；删除是彻底删除数据库文件，若删除有数据的GDB则最好先进行数据库备份，避免误删除</font>
-        </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="删除地理数据库" onclick="DeleteGDB()"/>
+    <br>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：删除功能以自定义的NewCreateGDB.hdf为例，请先创建后删除。</font><br/>
+        <font color="red" style="font-weight: bold; float: left; text-align: left">注意：需要启动IGServer服务，否则无法实现功能；删除是彻底删除数据库文件，若删除有数据的GDB则最好先进行数据库备份，避免误删除</font>
     </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>

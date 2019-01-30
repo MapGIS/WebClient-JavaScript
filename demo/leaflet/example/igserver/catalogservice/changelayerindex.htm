@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>更改图层顺序</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         "use strict";
@@ -71,8 +71,8 @@
          */
         function getDataSuccess(data) {
             //判断是否有返回数据，是否成功
-            if (data != null && data.result && data.result.succeed) {
-                if (data.result.succeed) {
+            if (data && data.succeed) {
+                if (data.succeed) {
                     alert("更改完成！");
                     //刷新图层
                     layer.redraw();
@@ -85,17 +85,17 @@
 </head>
 
 <body onload="init()">
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="更改图层顺序" onclick="changeIndex()" />
-        <br>
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：本示例默认操作示例数据库（OpenLayerVecterMap.hdf）的地图文档，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布</font>
-            <br />
-            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：本示例更改的是原始地图文档（WorldJWVector）的8个图层图层顺序</font>
-        </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="更改图层顺序" onclick="changeIndex()"/>
+    <br>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：本示例默认操作示例数据库（OpenLayerVecterMap.hdf）的地图文档，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布</font>
+        <br/>
+        <font color="red" style="font-weight: bold; float: left; text-align: left">注意：本示例更改的是原始地图文档（WorldJWVector）的8个图层图层顺序</font>
     </div>
-    <div id="leaf_map" style="width: 100%; height:700px;">
-    </div>
+</div>
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
 </body>
 
 </html>

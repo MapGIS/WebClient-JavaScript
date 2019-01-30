@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>获取指定图层图例信息</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         "use strict";
@@ -33,15 +33,15 @@
          */
         function getDataSuccess(data) {
             //判断是否有返回数据，是否成功
-            if (data != null && data.result && data.result.succeed) {
-                if (data.result.value.length == 0) {
+            if (data && data.succeed) {
+                if (data.value.length === 0) {
                     alert("没有获取到地图文档图例信息！");
                     //清空结果显示面板
                     document.getElementById('resultShow').innerHTML = "";
                     return;
                 } else {
                     //将一个JSON转换成一个包含JSON文本的字符串
-                    var formatData = JSON.stringify(data.result);
+                    var formatData = JSON.stringify(data);
                     //显示json字符串导到指定的div中
                     Process(formatData, 1, "resultShow");
                 }
@@ -51,16 +51,16 @@
 </head>
 
 <body>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="获取指定图层图例信息" onclick="getLegendInfo()" />
-        <br>
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：上述为地图文档图例服务接口示例，默认使用china数据库及地图文档【china.mapx】，操作前请确认其数据库已附加且此地图文档已发布</font>
-            <br />
-        </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="获取指定图层图例信息" onclick="getLegendInfo()"/>
+    <br>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：上述为地图文档图例服务接口示例，默认使用china数据库及地图文档【china.mapx】，操作前请确认其数据库已附加且此地图文档已发布</font>
+        <br/>
     </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 
 </html>
