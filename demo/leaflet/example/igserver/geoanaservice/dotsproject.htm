@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>投影点</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         //使用严格模式
         "use strict";
         /**投影点
-        */
+         */
         function ProjectDots() {
             //构造需投影转换的点数组
             var dots = new Array(1);
@@ -58,33 +58,33 @@
             });
             //初始化投影转换服务
             var projectDotsService = new Zondy.Service.ProjectDots(
-            //设置需要投影转换的点数组
+                //设置需要投影转换的点数组
                 dots,
-            //设置源投影参数
+                //设置源投影参数
                 srcProjParam,
-            //设置目的投影参数
+                //设置目的投影参数
                 desProjParam,
-            //设置Options参数,包括服务器地址、端口号、返回结果格式
+                //设置Options参数,包括服务器地址、端口号、返回结果格式
                 {
-                //IP地址
-                ip: "develop.smaryun.com",
-                //端口号
-                port: "6163",
-                //结果格式
-                resultFormat: "json"
-            }
+                    //IP地址
+                    ip: "develop.smaryun.com",
+                    //端口号
+                    port: "6163",
+                    //结果格式
+                    resultFormat: "json"
+                }
             );
             //执行点投影转换功能服务，并返回结果信息，projSuccess为回调函数
             projectDotsService.execute(projSuccess);
         }
 
         /**投影转换成功回调函数
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function projSuccess(data) {
-            if (data != null && data.result && data.result.succeed) {
+            if (data && data.succeed) {
                 //将JSON对象转换成JSON字符串
-                var formatData = JSON.stringify(data.result.DesDots);
+                var formatData = JSON.stringify(data.DesDots);
                 //将结果显示在指定的div上
                 Process(formatData, 1, "resultShow");
             }
@@ -92,13 +92,13 @@
     </script>
 </head>
 <body>
-    <div class="ToolLib">
-       <input type="button"  class="ButtonLib" value="投影点" onclick='ProjectDots()' /><br />
-       <div id="introduction">
-         <font style=" float: left; text-align: left">说明：该点投影示例是给定坐标进行投影。投影前点的坐标为：（4819.949688726125, 67647.39383493776），投影后的坐标如下</font><br />
-       </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="投影点" onclick='ProjectDots()'/><br/>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：该点投影示例是给定坐标进行投影。投影前点的坐标为：（4819.949688726125, 67647.39383493776），投影后的坐标如下</font><br/>
     </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>
