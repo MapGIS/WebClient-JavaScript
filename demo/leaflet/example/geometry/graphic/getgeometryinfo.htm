@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>获取几何信息</title>
     <script include="draw" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <style>
@@ -13,7 +13,7 @@
         "use strict";
 
         /**显示地图
-        */
+         */
         function init() {
             //地图容器
             var map = L.map('leaf_map', {
@@ -31,14 +31,22 @@
                 //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
             });
             //矢量图层
-            var layer1 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}', {
-                attribution: 'Tianditu矢量',
-                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            var layer1 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'vec',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             //矢量注记图层
-            var layer2 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
-                attribution: 'Tianditu注记',
-                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            var layer2 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'cva',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             var LayerG = L.layerGroup([layer1, layer2]);
             //添加图层组
@@ -82,8 +90,8 @@
             map.on(L.Draw.Event.CREATED, function (e) {
                 //获取绘制图形类型
                 var type = e.layerType,
-                //获取绘制图层
-                drawlayer = e.layer;
+                    //获取绘制图层
+                    drawlayer = e.layer;
                 if (type === 'marker') {
                     //显示Popup
                     drawlayer.bindPopup('A popup!');
@@ -101,7 +109,7 @@
                         }
                     }
                 }
-                    //获取多边形几何信息
+                //获取多边形几何信息
                 else if (type == 'polygon') {
                     if (drawlayer._latlngs[0].length > 0) {
                         for (var latlngslength = 0; latlngslength < drawlayer._latlngs[0].length; latlngslength++) {
@@ -110,7 +118,7 @@
                         }
                     }
                 }
-                    //获取矩形几何信息
+                //获取矩形几何信息
                 else if (type == 'rectangle') {
                     if (drawlayer._latlngs[0].length) {
                         for (var latlngslength = 0; latlngslength < drawlayer._latlngs[0].length; latlngslength++) {
@@ -119,21 +127,21 @@
                         }
                     }
                 }
-                    //获取圆几何信息
+                //获取圆几何信息
                 else if (type == 'circle') {
                     if (drawlayer._radius > 0) {
                         //获取几何信息
                         latlngsStr += "<font>圆心坐标：" + drawlayer._latlng.lat + "," + drawlayer._latlng.lng + "</font><br>" + "<font>半径：" + drawlayer._radius + "</font>"
                     }
                 }
-                    //获取标记几何信息
+                //获取标记几何信息
                 else if (type == 'marker') {
                     if (drawlayer._latlng != "" && drawlayer._latlng != null && drawlayer._latlng != undefined) {
                         //获取几何信息
                         latlngsStr += "<font>" + drawlayer._latlng.lat + "," + drawlayer._latlng.lng + "</font><br>"
                     }
                 }
-                    //获取圆标记几何信息
+                //获取圆标记几何信息
                 else if (type == 'circlemarker') {
                     if (drawlayer._latlng != "" && drawlayer._latlng != null && drawlayer._latlng != undefined) {
                         //获取几何信息
@@ -147,14 +155,14 @@
     </script>
 </head>
 <body onload="init()">
-    <div id="leaf_map" style="width:100%;height:95%;z-index:0;"></div>
-    <div id="info" style="position: absolute; top: 0px; right: 10px; height: 200px; width: 300px; z-index: 1; border: solid 1px;background-color:white;">
-        <font>
-            图形几何信息如下：
-        </font>
-        <br>
-        <div id="result" style="height: 100px; font-family: 微软雅黑; font-size: 14px; font-weight: bold;">
-        </div>
+<div id="leaf_map" style="width:100%;height:95%;z-index:0;"></div>
+<div id="info" style="position: absolute; top: 0px; right: 10px; height: 200px; width: 300px; z-index: 1; border: solid 1px;background-color:white;">
+    <font>
+        图形几何信息如下：
+    </font>
+    <br>
+    <div id="result" style="height: 100px; font-family: 微软雅黑; font-size: 14px; font-weight: bold;">
     </div>
+</div>
 </body>
 </html>
