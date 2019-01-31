@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>网络分析（新）</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
@@ -18,7 +18,7 @@
         var netFlag;
 
         /** 地图初始化函数
-        */
+         */
         function init() {
             //地图容器
             map = L.map('leaf_map', {
@@ -47,7 +47,7 @@
         };
 
         /** 执行路径分析
-        */
+         */
         function NetAnalysis() {
             netFlag = new Array();
             var dotVal = "114.44,38.06,114.56,38.03";
@@ -68,31 +68,31 @@
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function addFlagSuccess(data) {
-            if (data == null || data.result == null || data.result.value == null) {
+            if (!data) {
                 alert("网络分析失败，请检查参数！");
                 return;
             }
-            data = data.result.value;
+            data = data.value;
             for (var i = 0; i < data.length; i++) {
                 var netFlagTmp =
-                {
-                    elemID: data[i].elemID,
-                    isFlag: true,
-                    posDot: data[i].posDot,
-                    posPerc: data[i].posPerc,
-                    type: data[i].type
-                };
+                    {
+                        elemID: data[i].elemID,
+                        isFlag: true,
+                        posDot: data[i].posDot,
+                        posPerc: data[i].posPerc,
+                        type: data[i].type
+                    };
                 netFlag.push(netFlagTmp);
             }
             if (netFlag.length < 2) {
                 return;
             }
-           
+
             /** 执行路径分析
-            */
+             */
             var netAnalyse = new Zondy.Object.NetAnalyse({
                 //设置网络类URL
                 netCls: "gdbp://MapGisLocal/sample/ds/网络分析/ncls/道路交通网",
@@ -115,19 +115,19 @@
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function AnalysisSuccess(data) {
-            if (data != null) {
+            if (data !== null) {
                 var points = new Array();
-                for (var t = 0; t < data.result.dotsss.length; t++) {
-                    for (var i = 0; i < data.result.dotsss[t].length; i++) {
-                        for (var j = 0; j < data.result.dotsss[t][i].length; j++) {
-                            points.push([data.result.dotsss[t][i][j].Y, data.result.dotsss[t][i][j].X]);
+                for (var t = 0; t < data.dotsss.length; t++) {
+                    for (var i = 0; i < data.dotsss[t].length; i++) {
+                        for (var j = 0; j < data.dotsss[t][i].length; j++) {
+                            points.push([data.dotsss[t][i][j].Y, data.dotsss[t][i][j].X]);
                         }
                     }
                 }
-                var resInfo = data.result.resInfo;
+                var resInfo = data.resInfo;
                 //绘制路径
                 $("#resultInfo").append(resInfo);
                 $("#resultInfo").css("border", "1px solid #1ab394");
@@ -136,24 +136,24 @@
         }
 
         /**绘制路径
-        *points绘制路径的点集
-        */
+         *points绘制路径的点集
+         */
         function drawPath(points) {
-            var polyline = L.polyline(points, { color: 'red' }).addTo(map);
+            var polyline = L.polyline(points, {color: 'red'}).addTo(map);
         }
     </script>
 </head>
 <body onload="init()">
-    <div id="leaf_map" style="position: absolute; width: 80%; height: 100%; left: 0px;
+<div id="leaf_map" style="position: absolute; width: 80%; height: 100%; left: 0px;
         top: 0px">
-    </div>
-    <div id="toolspanel" style="position: absolute; width: 20%; height: 100%; right: 0px;
+</div>
+<div id="toolspanel" style="position: absolute; width: 20%; height: 100%; right: 0px;
         top: 0px">
-        <input type="button" class="ButtonLib" value="网络分析" onclick="NetAnalysis()" style="margin: 5px auto;
-            display: block; padding: 6px 12px" />
-        <div id="resultInfo" class="lineStyle" style="color: #1ab394; font-size: 12px; margin: 5px;">
-            分析结果：<br />
-        </div>
+    <input type="button" class="ButtonLib" value="网络分析" onclick="NetAnalysis()" style="margin: 5px auto;
+            display: block; padding: 6px 12px"/>
+    <div id="resultInfo" class="lineStyle" style="color: #1ab394; font-size: 12px; margin: 5px;">
+        分析结果：<br/>
     </div>
+</div>
 </body>
 </html>
