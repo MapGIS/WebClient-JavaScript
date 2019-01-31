@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>添加随机专题图</title>
-    <script  src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <!--引入当前页面样式表-->
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
 
     <style>
         body {
@@ -24,7 +24,7 @@
         //地图文档guid
         var guid;
         /**初始化地图显示
-        */
+         */
         function init() {
             //随机生成一个guid
             guid = Math.floor(Math.random() * 10000000).toString();
@@ -61,7 +61,7 @@
         }
 
         /**添加专题图
-        */
+         */
         function addCRandomThemesInfo() {
             //专题图信息数组
             themesInfoArr = [];
@@ -96,6 +96,7 @@
             ThemeOper.port = "6163";
             //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
             ThemeOper.addThemesInfo("WorldJWVector", "1", themesInfoArr, onUniqueThemeSuccess);
+            map.setZoom(map.getZoom() + 1);
         }
 
         //调用专题图成服务功后的回调
@@ -114,10 +115,10 @@
     </script>
 </head>
 <body onload="init();">
-      <div class="ToolLib">
-        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加随机专题图" onclick="addCRandomThemesInfo()" />
-      </div>
-    <div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
-    </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" id="createThemeBtn" value="添加随机专题图" onclick="addCRandomThemesInfo()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
+</div>
 </body>
 </html>
