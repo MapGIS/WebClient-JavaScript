@@ -5,7 +5,7 @@
     <script include="mouseposition" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         /**显示地图
-        */
+         */
         function init() {
             "use strict";
             //地图容器
@@ -31,7 +31,7 @@
                 //IGServer请求端口号
                 port: '6163',
                 //设置地图不连续显示
-                noWrap:true
+                noWrap: true
             }).addTo(map);
             //添加鼠标位置控件
             L.control.mousePosition().addTo(map);
@@ -39,7 +39,7 @@
     </script>
 </head>
 <body onload="init()">
-    <div id="leaf_map" style="width: 100%; height:700px;">
-    </div>
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
 </body>
 </html>

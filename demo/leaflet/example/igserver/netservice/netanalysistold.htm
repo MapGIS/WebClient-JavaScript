@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>网络分析（旧）</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
@@ -14,7 +14,7 @@
         var map;
 
         /** 地图初始化函数
-        */
+         */
         function init() {
             //地图容器
             map = L.map('leaf_map', {
@@ -43,7 +43,7 @@
         };
 
         /** 执行路径分析
-        */
+         */
         function NetAnalysisOld() {
             var netAnalyParam = new Zondy.Service.NetAnalysis({
                 //设置网络类URL
@@ -71,9 +71,9 @@
         }
 
         /** 分析成功后的回调
-        */
+         */
         function netAnalysisSuccess(data) {
-            if (data == null || data.result == null) {
+            if (!data) {
                 alert("网络分析失败，请检查参数！");
             }
             else {
@@ -84,28 +84,28 @@
                 var resDiv;
                 //两点之间的距离
                 var dis = 0;
-                if (data.result.results[0].Value == null) {
+                if (data.results[0].Value === null) {
                     return;
                 }
                 //返回的分析结果数据
-                var resultObj = JSON.parse(data.result.results[0].Value);
-                if (resultObj == null || resultObj.Paths == null) {
+                var resultObj = JSON.parse(data.results[0].Value);
+                if (resultObj === null || resultObj.Paths === null) {
                     return;
                 }
                 //解析轨迹边坐标序列
                 var pathObj = resultObj.Paths[0];
                 var edgeNum = pathObj.Edges.length;
                 //添加经过纠偏的起点
-                if (resultObj.inputDots == null) {
+                if (resultObj.inputDots === null) {
                     return;
                 }
-                if (resultObj.inputDots[0].pDot == null || resultObj.inputDots[1] == null || resultObj.inputDots[1].pDot == null) {
+                if (resultObj.inputDots[0].pDot === null || resultObj.inputDots[1] === null || resultObj.inputDots[1].pDot === null) {
                     return;
                 }
                 //路径分析的真实起点，即经过纠偏之后，线上网标或者点上网标点
                 dot = [resultObj.inputDots[0].pDot.x, resultObj.inputDots[0].pDot.y];
                 //结果描述信息
-                if (dot[0] == 114.49 && dot[1] == 38.05) {
+                if (dot[0] === 114.49 && dot[1] === 38.05) {
                     resDiv = '从<font color="#FF0000"><b>起点</b></font>(114.49,38.05 )<font color="#FF0000"><b>出发,</b></font>';
                     //添加起点到缓存数组
                     pathArr.push(dot);
@@ -117,22 +117,23 @@
                 //没有路径线信息时，用户直接步行到达指定地点
                 if (edgeNum == 0) {
                     //纠偏起点与纠偏终点的距离
-                    if (resultObj.inputDots[1].pDot.x != resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot.y != resultObj.inputDots[0].pDot.y) {
+                    if (resultObj.inputDots[1].pDot.x !== resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot.y !== resultObj.inputDots[0].pDot.y) {
                         dis += getDistance(resultObj.inputDots[0].pDot, resultObj.inputDots[1].pDot);
 
                         dot = [resultObj.inputDots[1].pDot.x, resultObj.inputDots[1].pDot.y];
                         pathArr.push(dot);
                     }
                     //纠偏终点与输入终点的距离
-                    if (resultObj.inputDots[1].pDot.x != 114.50 || resultObj.inputDots[1].pDot.y != 38.05) {
+                    if (resultObj.inputDots[1].pDot.x !== 114.50 || resultObj.inputDots[1].pDot.y !== 38.05) {
                         dot = [114.50, 38.05];
                         pathArr.push(dot);
                     }
                     resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米到达终点';
                 }
-                else if (edgeNum == 1) {
+                else if (edgeNum === 1) {
                     //将路径线信息存储进缓存数组
-                    if (dot[0] != pathObj.Edges[0].Dots[0].x || dot[1] != pathObj.Edges[0].Dots[0].y) {
+                    if (dot[0] !== pathObj.Edges[0].Dots[0].x || dot[1] !==
+                        pathObj.Edges[0].Dots[0].y) {
                         dot = [pathObj.Edges[0].Dots[0].x, pathObj.Edges[0].Dots[0].y];
                         pathArr.push(dot);
                     }
@@ -142,17 +143,17 @@
                         pathArr.push(dot);
                     }
                     //有路径线信息时，对路线信息进行解析
-                    if (pathObj.Edges[0].FieldValus[13] != "") {
+                    if (pathObj.Edges[0].FieldValus[13] !== "") {
                         resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米，';
                         resDiv += '到达' + pathObj.Edges[0].FieldValus[13] + '(' + pathObj.Edges[0].Dots[0].x + ',' + pathObj.Edges[0].Dots[0].y + '），<br/>经' + pathObj.Edges[0].FieldValus[13];
                     }
                     else {
                         //纠偏起点与纠偏终点的距离
-                        if (resultObj.inputDots[1].pDot.x != resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot.y != resultObj.inputDots[0].pDot.y) {
+                        if (resultObj.inputDots[1].pDot.x !== resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot.y !== resultObj.inputDots[0].pDot.y) {
                             dis += getDistance(resultObj.inputDots[0].pDot, resultObj.inputDots[1].pDot);
                         }
                         //纠偏终点与输入终点的距离
-                        if (resultObj.inputDots[1].pDot.x != 114.50 || resultObj.inputDots[1].pDot.y != 38.05) {
+                        if (resultObj.inputDots[1].pDot.x !== 114.50 || resultObj.inputDots[1].pDot.y !== 38.05) {
                         }
                         resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米，';
                     }
@@ -160,23 +161,23 @@
                 }
                 else {
                     //有路径线信息时，对路线信息进行解析
-                    if (dis != 0) {
+                    if (dis !== 0) {
                         resDiv += '<font color="#0000FF"><b>步行</b></font><font color="#FF0000">' + dis + '</font>米，';
                     }
                     for (var i = 0; i < edgeNum - 1; i++) {
                         var edge = pathObj.Edges[i];
                         var edge1 = pathObj.Edges[i + 1];
 
-                        if (i == 0) {
+                        if (i === 0) {
                             var dots = [edge.Dots[0].x, edge.Dots[0].y];
-                            if (edge.FieldValus[13] != "")
+                            if (edge.FieldValus[13] !== "")
                                 resDiv += '到达' + edge.FieldValus[13] + '(' + dots[0] + ',' + dots[1] + '），<br/>经' + edge.FieldValus[13];
 
                         }
-                        if (i != edgeNum - 2) {
-                            if (edge.FieldValus[13] != edge1.FieldValus[13] && edge1.FieldValus[13] != "") {
+                        if (i !== edgeNum - 2) {
+                            if (edge.FieldValus[13] !== edge1.FieldValus[13] && edge1.FieldValus[13] !== "") {
                                 var dots1 = [edge1.Dots[0].x, edge1.Dots[0].y];
-                                if (edge.FieldValus[13] != "")
+                                if (edge.FieldValus[13] !== "")
                                     resDiv += '到达' + edge1.FieldValus[13] + '(' + dots1[0] + ',' + dots1[1] + ')，<br/>' + '经' + edge1.FieldValus[13];
                             }
                         }
@@ -184,20 +185,20 @@
                             var edgeLen = edge1.Dots.length;
                             var dots4 = [edge1.Dots[edgeLen - 1].x, edge1.Dots[edgeLen - 1].y];
                             //终点解析
-                            if (dots4[0] == 114.50 && dots4[1] == 38.05) {
+                            if (dots4[0] === 114.50 && dots4[1] === 38.05) {
                                 resDiv += '<font color="#0000FF"><b>到达终点</b></font>(114.50,38.05)';
                             }
                             else {
                                 var dis1 = 0;
                                 //计算路径线最后一个点与纠偏终点之间的距离
-                                if (dots4[0] != resultObj.inputDots[1].pDot.x || dots4[1] != resultObj.inputDots[1].pDot.y) {
+                                if (dots4[0] !== resultObj.inputDots[1].pDot.x || dots4[1] !== resultObj.inputDots[1].pDot.y) {
                                     console.log(resultObj.inputDots[1].pDot.x);
                                     dis1 = getDistance(dots4, resultObj.inputDots[1].pDot);
                                 }
                                 //计算纠偏终点与输入终点之间的距离
-                                if (resultObj.inputDots[1].pDot.x != 114.49 || resultObj.inputDots[1].pDot.y != 38.05) {
+                                if (resultObj.inputDots[1].pDot.x !== 114.49 || resultObj.inputDots[1].pDot.y !== 38.05) {
                                 }
-                                if (edge.FieldValus[13] != edge1.FieldValus[13] && edge1.FieldValus[13] != "" && dis1 != 0) {
+                                if (edge.FieldValus[13] !== edge1.FieldValus[13] && edge1.FieldValus[13] !== "" && dis1 !== 0) {
                                     resDiv += '到达' + edge1.FieldValus[13] + '(' + dots4[0] + ',' + dots4[1] + ')，最后步行<font color="#FF0000">' + dis1 + '</font>米到达终点(114.50,38.05)';
                                 }
                                 else {
@@ -208,8 +209,8 @@
                         //将路径线信息存储进缓存数组
                         var dotCount = pathObj.Edges[i].Dots.length;
                         for (var k = 0; k < dotCount; k++) {
-                            if (k == 0 && i == 0) {
-                                if (dot[0] != pathObj.Edges[0].Dots[0].x || dot[1] != pathObj.Edges[0].Dots[0].y) {
+                            if (k === 0 && i === 0) {
+                                if (dot[0] !== pathObj.Edges[0].Dots[0].x || dot[1] !== pathObj.Edges[0].Dots[0].y) {
                                     dot = [pathObj.Edges[0].Dots[0].x, pathObj.Edges[0].Dots[0].y];
                                     pathArr.push(dot);
                                 }
@@ -226,7 +227,8 @@
                     }
                 }
                 //添加经过纠偏的终点
-                if (resultObj.inputDots[1].pDot.x != dot.x || resultObj.inputDots[1].pDot.y != dot.y) {
+                if (resultObj.inputDots[1].pDot.x !== dot.x || resultObj.inputDots[1].pDot.y !==
+                    dot.y) {
                     dot = [resultObj.inputDots[1].pDot.x, resultObj.inputDots[1].pDot.y];
                     pathArr.push(dot);
                 }
@@ -238,8 +240,8 @@
         }
 
         /**绘制路径
-        *points绘制路径的点集
-        */
+         *points绘制路径的点集
+         */
         function drawPath(points) {
             if (points.length > 0) {
                 var PointArray = new Array();
@@ -251,7 +253,7 @@
                     PointArray.push(dot);
                 }
             }
-            var polyline = L.polyline(PointArray, { color: 'red' }).addTo(map);
+            var polyline = L.polyline(PointArray, {color: 'red'}).addTo(map);
         }
 
         //根据两点坐标求实地距离计算，适用于经纬度
@@ -268,16 +270,16 @@
     </script>
 </head>
 <body onload="init()">
-    <div id="toolspanel" style="position: absolute; width: 20%; height: 100%; right: 0px;
+<div id="toolspanel" style="position: absolute; width: 20%; height: 100%; right: 0px;
         top: 0px">
-        <input type="button" class="ButtonLib" value="网络分析" onclick="NetAnalysisOld()" style="margin: 5px auto;
-            display: block; padding: 6px 12px" />
-        <div id="resultInfo" class="lineStyle" style="color: #1ab394; font-size: 12px; margin: 5px;">
-            分析结果：<br />
-        </div>
+    <input type="button" class="ButtonLib" value="网络分析" onclick="NetAnalysisOld()" style="margin: 5px auto;
+            display: block; padding: 6px 12px"/>
+    <div id="resultInfo" class="lineStyle" style="color: #1ab394; font-size: 12px; margin: 5px;">
+        分析结果：<br/>
     </div>
-    <div id="leaf_map" style="position: absolute; width: 80%; height: 100%; left: 0px;
+</div>
+<div id="leaf_map" style="position: absolute; width: 80%; height: 100%; left: 0px;
         top: 0px">
-    </div>
+</div>
 </body>
 </html>

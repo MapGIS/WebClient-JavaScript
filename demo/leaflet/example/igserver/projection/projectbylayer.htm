@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>投影转换（图层）</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         //整个js文件都是严格模式下执行的
@@ -17,7 +17,7 @@
         var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
 
         /** 地图初始化函数
-        */
+         */
         function init() {
             //地图容器
             map = L.map('orgMap', {
@@ -42,7 +42,7 @@
         }
 
         /** 根据空间参照系信息对图层进行投影转换
-        */
+         */
         function projectByParam() {
             //清除之前的结果图层
             clearRlt();
@@ -93,23 +93,23 @@
         }
 
         /** 分析失败回调
-        */
+         */
         function AnalysisError(e) {
             //停止进度条
             stopPressBar();
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function projectLayerSuccess(data) {
             //停止进度条
             stopPressBar();
-            if (!data.result.succeed) {
+            if (!data.succeed) {
                 alert("投影失败，请检查参数！");
             }
             else {
-                if (data.result.results.length != 0) {
+                if (data.results.length !== 0) {
                     projmap = L.map('prjMap', {
                         //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
                         crs: L.CRS.EPSG3857,
@@ -119,7 +119,7 @@
                         zoom: 1
                     });
                     //定义图层地址
-                    var resultLayerUrl = data.result.results[0].Value;
+                    var resultLayerUrl = data.results[0].Value;
                     //将结果图层添加到地图视图中显示
                     var resultURL = resultBaseUrl + resultLayerUrl;
                     resultLayer = new Zondy.Map.MapVectorLayer(encodeURIComponent(resultURL), {
@@ -137,9 +137,9 @@
         }
 
         /** 清除之前的结果
-        */
+         */
         function clearRlt() {
-            if (projmap != null) {
+            if (projmap) {
                 //清除投影结果
                 projmap.remove();
             } else
@@ -147,7 +147,7 @@
         }
 
         /** 当前日期加时间(如:2009-06-12-120000)
-        */
+         */
         function getCurentTime() {
             var now = new Date();
             //获取当前年份
@@ -181,33 +181,33 @@
         }
 
         /** 停止进度条
-        */
+         */
         function stopPressBar() {
             //停止进度条
             document.getElementById("preview").style.display = "none";
         }
 
         /** 开始进度条动画
-        */
+         */
         function startPressBar() {
             document.getElementById("preview").style.display = "";
         }
     </script>
 </head>
 <body onload="init()">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="../../img/common/39-1.gif" alt='' /><br />
-        <br />
-        <span>正在进行投影转换，请稍候</span>
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="../../img/common/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在进行投影转换，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="根据空间参照系信息投影" onclick="projectByParam()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height: 700px;">
+    <div id="orgMap">
     </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="根据空间参照系信息投影" onclick="projectByParam()" />
+    <div id="prjMap">
     </div>
-    <div id="leaf_map" style="width: 100%; height: 700px;">
-        <div id="orgMap">
-        </div>
-        <div id="prjMap">
-        </div>
-    </div>
+</div>
 </body>
 </html>

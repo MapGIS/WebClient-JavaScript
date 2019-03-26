@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>类单圈缓冲分析</title>
-    <script  src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <!--当前页面的样式-->
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
 
     <script type="text/javascript">
         //整个js文件都是严格模式下执行的
@@ -19,7 +19,7 @@
         var resultLayer;
 
         /** 地图初始化函数
-        */
+         */
         function init() {
             //地图容器
             map = L.map('leaf_map', {
@@ -52,7 +52,7 @@
         }
 
         /** 执行单圈缓冲区分析
-        */
+         */
         function singleBuffAnalysis(anaType) {
             clearA();
             //显示进度条
@@ -79,7 +79,7 @@
                     //IGServer请求端口号
                     port: "6163",
                     //允许根据属性字段设置缓冲区半径
-                    isByAtt: true		
+                    isByAtt: true
                 });
                 clsBufBySR.fldName = "长度";
             }
@@ -92,19 +92,19 @@
         }
 
         /** 分析失败回调
-        */
+         */
         function AnalysisError(e) {
             //停止进度条
             stopPressBar();
         }
 
         /** 分析成功后的回调
-        */
+         */
         function AnalysisSuccess(data) {
             stopPressBar(); //停止进度条
-            if (data.result.succeed && data.result.results != null) {
-                if (data.result.results.length != 0) {
-                    var resultLayerUrl = data.result.results[0].Value;
+            if (data.succeed && data.results !== null) {
+                if (data.results.length !== 0) {
+                    var resultLayerUrl = data.results[0].Value;
                     //将结果图层添加到地图视图中显示
                     resultLayer = new Zondy.Map.MapVectorLayer([resultBaseUrl + resultLayerUrl], {
                         //IGServer所在ip地址
@@ -126,18 +126,18 @@
         }
 
         /** 清除客户端分析结果信息
-        */
+         */
         function clearA() {
             //停止进度条
             stopPressBar();
             //移除缓冲区图层
-            if (resultLayer != undefined) {
+            if (resultLayer !== undefined) {
                 resultLayer.remove();
             }
         }
 
         /** 获取当前时间（如：2015-09-09-120000）
-        */
+         */
         function getCurentTime() {
             var now = new Date();
             //获取当前年份
@@ -171,30 +171,30 @@
         }
 
         /** 停止进度条
-        */
+         */
         function stopPressBar() {
             document.getElementById('preview').style.display = "none";
         }
 
         /** 开始进度条动画
-        */
+         */
         function startPressBar() {
             document.getElementById('preview').style.display = "";
         }
     </script>
 </head>
 <body onload="init()">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="../../img/common/39-1.gif" alt='' /><br />
-        <br />
-        <span>正在缓冲区分析，请稍候</span>
-    </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="单圈缓冲区分析(不允许根据属性字段设置缓冲区半径)" onclick="singleBuffAnalysis('rad')" />
-        <input type="button" class="ButtonLib" value="单圈缓冲区分析(根据属性字段设置缓冲区半径)" onclick="singleBuffAnalysis('att')" />
-        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
-    </div>
-    <div id="leaf_map" style="width: 100%; height: 700px;">
-    </div>
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="../../img/common/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在缓冲区分析，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="单圈缓冲区分析(不允许根据属性字段设置缓冲区半径)" onclick="singleBuffAnalysis('rad')"/>
+    <input type="button" class="ButtonLib" value="单圈缓冲区分析(根据属性字段设置缓冲区半径)" onclick="singleBuffAnalysis('att')"/>
+    <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height: 700px;">
+</div>
 </body>
 </html>

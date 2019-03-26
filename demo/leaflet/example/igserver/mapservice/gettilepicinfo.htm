@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>获取瓦片图片信息</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         //使用严格模式
         "use strict";
         /**获取瓦片图片信息
-        */
+         */
         function GetMapInfo() {
             //创建获取瓦片信息服务
             var mapInfo = new Zondy.Service.GetMapInfoService({
@@ -25,12 +25,12 @@
         }
 
         /**瓦片信息回调函数
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function getDataSuccess(data) {
-            if (data != null) {
+            if (data !== null) {
                 //将JSON对象转换成JSON字符串
-                var formatData = JSON.stringify(data.result);
+                var formatData = JSON.stringify(data);
                 //将结果显示在指定的div上
                 Process(formatData, 1, "resultShow");
             }
@@ -38,10 +38,10 @@
     </script>
 </head>
 <body>
-  <div class="ToolLib" >
-    <input type="button"  class="ButtonLib" value="获取瓦片图片信息" onclick='GetMapInfo()' />
-  </div>
-  <div id="resultShow" >
-    </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="获取瓦片图片信息" onclick='GetMapInfo()'/>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>

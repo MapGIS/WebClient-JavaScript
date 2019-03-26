@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>多边形叠加分析</title>
     <!--当前页面的样式-->
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         //整个js文件都是严格模式下执行的
@@ -109,11 +109,11 @@
         function AnalysisSuccess(data) {
             //停止进度条
             stopPressBar();
-            if (!data.result.succeed || data.result.results == null) {
+            if (!data.succeed || data.results === null) {
                 alert("多边形叠加分析失败，请检查参数！");
             } else {
-                if (data.result.results.length != 0) {
-                    var resultLayerUrl = data.result.results[0].Value;
+                if (data.results.length !== 0) {
+                    var resultLayerUrl = data.results[0].Value;
                     //将结果图层添加到地图视图中显示
                     resultLayer = new Zondy.Map.MapVectorLayer(encodeURIComponent(resultBaseUrl + resultLayerUrl), {
                         //IGServer所在ip地址
@@ -137,7 +137,7 @@
             //停止进度条
             stopPressBar();
             //清除缓冲区的图层
-            if (resultLayer != undefined) {
+            if (resultLayer !== undefined) {
                 resultLayer.remove();
             }
         }
@@ -191,18 +191,18 @@
 </head>
 
 <body onload="init()">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="../../img/common/39-1.gif" alt='' />
-        <br />
-        <br />
-        <span>正在执行叠加分析，请稍候</span>
-    </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="多边形叠加分析" onclick="OverlayByPolyAnalysis()" />
-        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
-    </div>
-    <div id="leaf_map" style="width: 100%; height: 90%; position: absolute">
-    </div>
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="../../img/common/39-1.gif" alt=''/>
+    <br/>
+    <br/>
+    <span>正在执行叠加分析，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="多边形叠加分析" onclick="OverlayByPolyAnalysis()"/>
+    <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height: 90%; position: absolute">
+</div>
 </body>
 
 </html>

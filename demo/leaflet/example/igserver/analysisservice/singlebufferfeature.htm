@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>要素单圈缓冲分析</title>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
-      <!--当前页面的样式-->
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <!--当前页面的样式-->
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
 
     <script type="text/javascript">
         //整个js文件都是严格模式下执行的
@@ -17,7 +17,7 @@
         var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
 
         /** 地图初始化函数
-        */
+         */
         function init() {
             //地图容器
             map = L.map('leaf_map', {
@@ -50,7 +50,7 @@
         }
 
         /** 执行单圈缓冲区分析
-        */
+         */
         function singleBuffAnalysis() {
             clearA();
             //显示进度条
@@ -59,12 +59,12 @@
             var regGeo = new Zondy.Object.FeatureGeometry();
             //设置区要素的空间几何信息
             var gReg = new Zondy.Object.GRegion([
-                        new Zondy.Object.AnyLine([new Zondy.Object.Arc([
-                        new Zondy.Object.Point2D(0.46, 30.1),
-                        new Zondy.Object.Point2D(11.48, 6.22),
-                        new Zondy.Object.Point2D(36.73, 7.6),
-                        new Zondy.Object.Point2D(58.77, 25.51),
-                        new Zondy.Object.Point2D(41.33, 49.39) ]) ])]);
+                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                    new Zondy.Object.Point2D(0.46, 30.1),
+                    new Zondy.Object.Point2D(11.48, 6.22),
+                    new Zondy.Object.Point2D(36.73, 7.6),
+                    new Zondy.Object.Point2D(58.77, 25.51),
+                    new Zondy.Object.Point2D(41.33, 49.39)])])]);
             regGeo.setRegGeom([gReg]);
             //设置属性结构
             var regAttStr = new Zondy.Object.CAttStruct({
@@ -103,23 +103,23 @@
         }
 
         /** 分析失败回调
-        */
+         */
         function AnalysisError(e) {
             //停止进度条
             stopPressBar();
         }
 
         /** 分析成功后的回调
-        */
+         */
         function AnalysisSuccess(data) {
             //停止进度条
             stopPressBar();
-            if (!data.result.succeed) {
+            if (!data.succeed) {
                 alert("要素单圈缓冲分析失败，请检查参数！");
             }
             else {
-                if (data.result.results.length != 0 && data.result.results != null) {
-                    var resultLayerUrl = data.result.results[0].Value;
+                if (data.results.length !== 0 && data.results !== null) {
+                    var resultLayerUrl = data.results[0].Value;
                     //将结果图层添加到地图视图中显示
                     resultLayer = new Zondy.Map.MapVectorLayer(encodeURIComponent(resultLayerUrl), {
                         //IGServer所在ip地址
@@ -138,7 +138,7 @@
         }
 
         /** 清除客户端分析结果信息
-        */
+         */
         function clearA() {
             //停止进度条
             stopPressBar();
@@ -149,7 +149,7 @@
         }
 
         /** 当前日期加时间(如:2009-06-12-120000)
-        */
+         */
         function getCurentTime() {
             var now = new Date();
             //获取当前年份
@@ -181,31 +181,31 @@
             clock += ss;
             return (clock);
         }
-        
+
         /** 停止进度条
-        */
+         */
         function stopPressBar() {
             document.getElementById('preview').style.display = "none";
         }
-       
+
         /** 开始进度条动画
-        */
+         */
         function startPressBar() {
             document.getElementById('preview').style.display = "";
         }
     </script>
 </head>
 <body onload="init()">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="../../img/common/39-1.gif" alt='' /><br />
-        <br />
-        <span>正在缓冲区分析，请稍候</span>
-    </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="单圈缓冲区分析" onclick="singleBuffAnalysis()" />
-        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
-    </div>
-    <div id="leaf_map" style="width: 100%; height: 700px;">
-    </div>
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="../../img/common/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在缓冲区分析，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="单圈缓冲区分析" onclick="singleBuffAnalysis()"/>
+    <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height: 700px;">
+</div>
 </body>
 </html>

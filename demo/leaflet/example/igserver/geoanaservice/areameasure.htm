@@ -1,15 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>计算面积</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         //使用严格模式
         "use strict";
         /**计算面积
-        */
+         */
         function measureArea() {
             //显示进度条
             startPressBar();
@@ -40,44 +40,44 @@
         }
 
         /**测量回调函数
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function measureCallBack(data) {
             //停止进度条
             stopPressBar();
-            if (data != null && data.result && data.result.succeed) {
+            if (data && data.succeed) {
                 //显示结果
-                var formatData = JSON.stringify(data.result.value);
+                var formatData = JSON.stringify(data.value);
                 document.getElementById("resultShow").innerText = "面积为：" + formatData + "平方米";
             }
         }
 
         /**开始进度条动画
-        */
+         */
         function startPressBar() {
             document.getElementById('preview').style.display = "";
         }
 
         /**停止进度条动画
-        */
+         */
         function stopPressBar() {
             document.getElementById('preview').style.display = "none";
-        }  
+        }
     </script>
 </head>
 <body>
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="../../img/common/39-1.gif" alt='' /><br />
-        <br />
-        <span>正在测量，请稍候</span>
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="../../img/common/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在测量，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="面积测量" onclick='measureArea()'/><br/>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：该示例是在程序里面给定点坐标进行面积测量</font><br/>
     </div>
-   <div class="ToolLib">
-     <input type="button"  class="ButtonLib" value="面积测量" onclick='measureArea()' /><br />
-      <div id="introduction">
-         <font style=" float: left; text-align: left">说明：该示例是在程序里面给定点坐标进行面积测量</font><br />
-       </div>
-  </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>
