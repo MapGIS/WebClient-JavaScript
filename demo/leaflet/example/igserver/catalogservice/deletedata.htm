@@ -1,16 +1,16 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>删除矢量类数据</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         //整个js文件都是严格模式下执行的
         "use strict";
 
         /** 实例化VectorLayer类，设置目标数据源与GDB
-        */
+         */
         var s = new Zondy.Catalog.VectorLayer({
             //设置GIS数据服务器IP
             ip: 'develop.smaryun.com',
@@ -23,17 +23,17 @@
         });
 
         /** 在指定GDB中删除某一个图层数据
-        */
+         */
         function deleteXCls() {
             //通过实例化的VectorLayer类对象调用deleteXCls接口， 回调中处理结果信息
             s.deleteXCls("SfeatureCls", "新图层", deleteXClsSuccess, deleteXClsError)
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function deleteXClsSuccess(data) {
-            if (data.result.succeed == true) {
+            if (data.succeed === true) {
                 alert("删除图层操作成功！");
                 //结果面板显示目标GDB的所有简单要素类
                 getSfclsList();
@@ -46,7 +46,7 @@
         }
 
         /**删除失败回调函数，处理显示结果信息
-        */
+         */
         function deleteXClsError() {
             alert("删除图层操作失败，请检查改图层是否存在！");
             //结果面板显示目标GDB的所有简单要素类
@@ -54,19 +54,19 @@
         }
 
         /** 获取指定数据库/要素数据集下简单要素类信息
-        */
+         */
         function getSfclsList() {
             //通过实例化的VectorLayer类对象调用getSfclsList接口，回调中处理结果信息
             s.getSfclsList(getDataSuccess);
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function getDataSuccess(data) {
-            if (data != null && data.result && data.result.succeed) {
+            if (data && data.succeed) {
                 //将一个JOSN对象转换成一个包含 JSON 文本的字符串。
-                var formatData = JSON.stringify(data.result.value);
+                var formatData = JSON.stringify(data.value);
                 //显示json字符串导到指定的div中
                 Process(formatData, 1, "resultShow");
             }
@@ -80,15 +80,15 @@
     </script>
 </head>
 <body>
-    <div class="ToolLib">
-        <input type='button' class="ButtonLib" value='删除矢量类数据' onclick='deleteXCls()' />
-        <br />
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：上述为GDB的目录服务接口示例，默认使用平台示例数据库sample.hdf，操作前请先确认此数据库已经附加。图层的创建与删除使用自定义图层，一般先创建后删除。</font><br />
-        </div>
+<div class="ToolLib">
+    <input type='button' class="ButtonLib" value='删除矢量类数据' onclick='deleteXCls()'/>
+    <br/>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：上述为GDB的目录服务接口示例，默认使用平台示例数据库sample.hdf，操作前请先确认此数据库已经附加。图层的创建与删除使用自定义图层，一般先创建后删除。</font><br/>
     </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>
 

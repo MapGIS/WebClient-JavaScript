@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>绘制其他要素</title>
     <script include="arrow" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <style>
@@ -18,7 +18,7 @@
         var drawnItems = new L.FeatureGroup();
 
         /**显示地图
-        */
+         */
         function init() {
             //地图容器
             map = L.map('leaf_map', {
@@ -36,14 +36,22 @@
                 //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
             });
             //矢量图层
-            var layer1 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}', {
-                attribution: 'Tianditu矢量',
-                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            var layer1 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'vec',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             //矢量注记图层
-            var layer2 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
-                attribution: 'Tianditu注记',
-                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            var layer2 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'cva',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             var LayerG = L.layerGroup([layer1, layer2]);
             //添加图层组
@@ -193,9 +201,9 @@
             }).addTo(drawnItems);
             //线要素点集
             var multiCoords1 = [
-            [[-27.5468, -70.7910], [-28.8068, -70.1318], [-29.1242, -69.6699], [-29.4966, -67.2958], [-11.4266, -68.8564], [-11.7542, -68.1093]],
-            [[-28.0193, -72.8125], [-26.3165, -72.8564], [-24.9336, -71.0107], [-24.5278, -69.5820], [-24.8714, -67.7353], [-25.8287, -65.1855], [-28.1953, -65.1416]],
-            [[-25.9205, -70.4394], [-26.7699, -70.9228], [-27.6061, -68.5488], [-27.7540, -67.3837]]
+                [[-27.5468, -70.7910], [-28.8068, -70.1318], [-29.1242, -69.6699], [-29.4966, -67.2958], [-11.4266, -68.8564], [-11.7542, -68.1093]],
+                [[-28.0193, -72.8125], [-26.3165, -72.8564], [-24.9336, -71.0107], [-24.5278, -69.5820], [-24.8714, -67.7353], [-25.8287, -65.1855], [-28.1953, -65.1416]],
+                [[-25.9205, -70.4394], [-26.7699, -70.9228], [-27.6061, -68.5488], [-27.7540, -67.3837]]
             ];
             var plArray = [];
             for (var i = 0; i < multiCoords1.length; i++) {
@@ -230,6 +238,6 @@
     </script>
 </head>
 <body onload="init()">
-    <div id="leaf_map" style="width:100%;height:95%"></div>
+<div id="leaf_map" style="width:100%;height:95%"></div>
 </body>
 </html>

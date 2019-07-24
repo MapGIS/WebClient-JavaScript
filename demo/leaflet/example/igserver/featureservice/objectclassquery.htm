@@ -46,7 +46,7 @@
         */
         function querySuccess(result) {
             //将JSON对象转换成JSON字符串
-            var formatData = JSON.stringify(result.result.ObjClsArray);
+            var formatData = JSON.stringify(result.ObjClsArray);
             //将结果显示在指定的div上
             Process(formatData, 1, "resultShow");
         }

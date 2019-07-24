@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>天地图</title>
     <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
@@ -22,7 +22,7 @@
                 //最大显示等级
                 maxZoom: 5,
                 //当前显示等级
-                zoom: 0,
+                zoom: 3
                 //限制显示地理范围
                 //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
             });
@@ -34,6 +34,8 @@
                 minZoom: 0,
                 //最大显示等级
                 maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
                 //设置地图不连续显示
                 noWrap: true
             });
@@ -44,50 +46,32 @@
                 minZoom: 0,
                 //最大显示等级
                 maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
                 //设置地图不连续显示
                 noWrap: true
             });
-//            var layer3 = new Zondy.Map.TDTLayer({
-//                //图层类型
-//                layerType: 'img',
-//                //最小显示等级
-//                minZoom: 0,
-//                //最大显示等级
-//                maxZoom: 15,
-//                //设置地图不连续显示
-//                noWrap: true
-//            });
-//            var layer4 = new Zondy.Map.TDTLayer({
-//                //图层类型
-//                layerType: 'cia',
-//                //最小显示等级
-//                minZoom: 0,
-//                //最大显示等级
-//                maxZoom: 15,
-//                //设置地图不连续显示
-//                noWrap: true
-//            });
-
             var layer3 = new Zondy.Map.TDTLayer({
-                url:"http://t{s}.tianditu.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}&style=default&format=tiles",
-                subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
-                //设置地图不连续显示
-                noWrap: true
-            }).addTo(map);
-
-            var layer4 = new Zondy.Map.TDTLayer({
-                url:"http://t{s}.tianditu.cn/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}&style=default&format=tiles",
-                subdomains: ["0", "1", "2", "3", "4", "5", "6", "7"],
-                //设置地图不连续显示
-                noWrap: true
-            }).addTo(map);
-            var layer = new Zondy.Map.TDTLayer({
                 //图层类型
-                layerType: 'ter',
+                layerType: 'img',
                 //最小显示等级
                 minZoom: 0,
                 //最大显示等级
                 maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
+                //设置地图不连续显示
+                noWrap: true
+            });
+            var layer4 = new Zondy.Map.TDTLayer({
+                //图层类型
+                layerType: 'cia',
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
                 //设置地图不连续显示
                 noWrap: true
             });
@@ -96,12 +80,12 @@
             //添加图层组
             LayerG.addTo(map);
             var vec = {
-                "矢量图层": LayerG,
-            }
+                "矢量图层": LayerG
+            };
             var img = {
                 "影像图层": layer3,
                 "影像注记": layer4
-            }
+            };
             //图层控制显示控件
             L.control.layers(vec, img).addTo(map);
             //绘制圆，leaflet无绘制点功能，可用绘制圆或者标记功能代替
@@ -116,8 +100,8 @@
 </head>
 
 <body onload="init()">
-    <div id="leaf_map" style="width: 100%; height:700px;">
-    </div>
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
 </body>
 
 </html>

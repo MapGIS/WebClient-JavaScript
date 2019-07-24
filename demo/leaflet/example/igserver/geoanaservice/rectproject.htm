@@ -36,9 +36,9 @@
         *  @param {json对象} data 获取结果对象
         */
         function projSuccess(data) {
-            if (data != null && data.result && data.result.succeed) {
+            if (data && data.succeed) {
                 //将JSON对象转换成JSON字符串
-                var formatData = JSON.stringify(data.result.DesDots);
+                var formatData = JSON.stringify(data.DesDots);
                 //将结果显示在指定的div上
                 Process(formatData, 1, "resultShow");
             }

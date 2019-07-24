@@ -3,9 +3,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Leaflet Quick Start Guide</title>
-    <script include="graticule" src="../../libs/zondyclient/include-leaflet-local.js"></script>-->
+    <script include="graticule" src="../../libs/zondyclient/include-leaflet-local.js"></script>
+    -->
     <style>
-        #map{height:800px;}
+        #map {
+            height: 800px;
+        }
     </style>
 </head>
 <body>
@@ -25,33 +28,48 @@
         ]
     });
 
-    var zj = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}',{attribution:'zhuji',subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']});
+    var zj = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
+        attribution: 'zhuji',
+        subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+    });
 
     // 地图底图
-    var mapbox = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {id:'mapbox.streets', attribution:''}),
-        gaode = L.tileLayer('http://webst0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}',{attribution:'Amap',subdomains: ['1', '2', '3', '4']}),
-        google = L.tileLayer('http://mt3.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&s=Galile&x={x}&y={y}&z={z}',{attribution:'Google'}),
-        esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/{variant}/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',variant: 'World_Street_Map'}),
-        tianditu = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}',{attribution:'Tianditu',subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']});
+    var mapbox = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            id: 'mapbox.streets',
+            attribution: ''
+        }),
+        gaode = L.tileLayer('http://webst0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}', {
+            attribution: 'Amap',
+            subdomains: ['1', '2', '3', '4']
+        }),
+        google = L.tileLayer('http://mt3.google.cn/vt/lyrs=m@207000000&hl=zh-CN&gl=CN&src=app&s=Galile&x={x}&y={y}&z={z}', {attribution: 'Google'}),
+        esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/{variant}/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Esri',
+            variant: 'World_Street_Map'
+        }),
+        tianditu = L.tileLayer('http://t{s}.tianditu.gov.cn/DataServer?T=vec_w&tk=4c27d6e0e8a90715b23a989d42272fd8&X={x}&Y={y}&L={z}', {
+            attribution: 'Tianditu',
+            subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+        });
 
     // 默认打开地图
-    var map = L.map('map',{
-        center:[30.59536556558809, 114.29411888122559],
-        zoom:5,
-        layers:[mapbox, latlnggrid]
+    var map = L.map('map', {
+        center: [30.59536556558809, 114.29411888122559],
+        zoom: 5,
+        layers: [mapbox, latlnggrid]
     });
 
     // 底图 + 覆盖物图层
     var baseMaps = {
-        'mapbox(墨卡托)':mapbox,
-        '高德地图(墨卡托)':gaode,
-        '谷歌地图(墨卡托)':google,
-        '天地图(墨卡托)':tianditu,
-        'Esri(墨卡托)':esri,
+        'mapbox(墨卡托)': mapbox,
+        '高德地图(墨卡托)': gaode,
+        '谷歌地图(墨卡托)': google,
+        '天地图(墨卡托)': tianditu,
+        'Esri(墨卡托)': esri,
     };
     var overlayMaps = {
-        '经纬网':graticule,
-        '注记(墨卡托)':zj
+        '经纬网': graticule,
+        '注记(墨卡托)': zj
     };
 
     L.control.layers(baseMaps, overlayMaps).setPosition('topleft').addTo(map);

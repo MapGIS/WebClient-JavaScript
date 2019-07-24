@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>删除图层</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
         "use strict";
@@ -13,7 +13,7 @@
         var layer;
 
         /**添加地图
-        */
+         */
         function init() {
             //地图容器
             map = L.map('leaf_map', {
@@ -45,7 +45,7 @@
         }
 
         /**删除图层
-        */
+         */
         function deleteLayer() {
             //地图文档目录服务类
             var CatalogServer = new Zondy.Catalog.MapDoc({
@@ -69,12 +69,12 @@
         }
 
         /**删除图层成功回调
-        *  @param {json对象} data 获取结果对象
-        */
+         *  @param {json对象} data 获取结果对象
+         */
         function getDataSuccess(data) {
             //判断是否有返回数据，是否成功
-            if (data != null && data.result && data.result.succeed) {
-                if (data.result.succeed) {
+            if (data && data.succeed) {
+                if (data.succeed) {
                     alert("删除成功！");
                     //刷新图层
                     layer.redraw();
@@ -87,15 +87,15 @@
     </script>
 </head>
 <body onload="init()">
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="删除图层" onclick="deleteLayer()" />
-        <br>
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：本示例默认操作示例数据库（OpenLayerVecterMap.hdf）的地图文档，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布</font><br />
-            <font color="red" style="font-weight: bold; float: left; text-align: left">注意：本示例删除图层默认删除的是第1个图层</font>
-        </div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="删除图层" onclick="deleteLayer()"/>
+    <br>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：本示例默认操作示例数据库（OpenLayerVecterMap.hdf）的地图文档，操作前请先确认此数据库已经附加，地图文档（WorldJWVector）已经发布</font><br/>
+        <font color="red" style="font-weight: bold; float: left; text-align: left">注意：本示例删除图层默认删除的是第1个图层</font>
     </div>
-    <div id="leaf_map" style="width: 100%; height:700px;">
-    </div>
+</div>
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
 </body>
 </html>

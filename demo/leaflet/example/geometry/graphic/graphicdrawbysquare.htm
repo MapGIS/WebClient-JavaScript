@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>坐标添加正方形</title>
     <script src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <style>
@@ -32,14 +32,22 @@
                 //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
             });
             //矢量图层
-            var layer1 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}', {
-                attribution: 'Tianditu矢量',
-                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            var layer1 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'vec',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             //矢量注记图层
-            var layer2 = L.tileLayer('http://t{s}.tianditu.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}', {
-                attribution: 'Tianditu注记',
-                subdomains: ['0', '1', '2', '3', '4', '5', '6', '7']
+            var layer2 = new Zondy.Map.TDTLayer({
+                //图层类型，必选
+                layerType: 'cva',
+                //设置地图不连续显示，可选
+                noWrap: true,
+                //key，必选
+                token: "4c27d6e0e8a90715b23a989d42272fd8"
             });
             var LayerG = L.layerGroup([layer1, layer2]);
             //添加图层组
@@ -65,7 +73,7 @@
 </head>
 
 <body onload="init()">
-    <div id="leaf_map" style="width:100%;height:95%"></div>
+<div id="leaf_map" style="width:100%;height:95%"></div>
 </body>
 
 </html>

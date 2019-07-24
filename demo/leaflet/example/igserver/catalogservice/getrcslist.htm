@@ -1,16 +1,16 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>获取rcs下的栅格数据集</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
-       //整个js文件都是严格模式下执行的
+        //整个js文件都是严格模式下执行的
         "use strict";
 
-        /** 实例化VectorLayer类，设置目标数据源与GDB  
-        */
+        /** 实例化VectorLayer类，设置目标数据源与GDB
+         */
         var s = new Zondy.Catalog.VectorLayer({
             //设置GIS数据服务器IP
             ip: 'develop.smaryun.com',
@@ -25,40 +25,40 @@
         });
 
         /** 获取栅格目录下栅格数据集列表
-        */
+         */
         function getRdsListInRcs() {
             //通过实例化的VectorLayer类对象调用getRdsListInRcs接口，回调中处理结果信息
             s.getRdsListInRcs(getDataSuccess);
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function getDataSuccess(data) {
-            if (data != null && data.result && data.result.succeed) {
+            if (data && data.succeed) {
                 //将一个JOSN对象转换成一个包含 JSON 文本的字符串。
-                var formatData = JSON.stringify(data.result.value);
+                var formatData = JSON.stringify(data.value);
                 //显示json字符串导到指定的div中
                 Process(formatData, 1, "resultShow");
             }
             else {
                 alert("没有获取到目标信息！");
                 //清空结果显示面板
-                document.getElementById("resultShow").innerHTML = ""; 
+                document.getElementById("resultShow").innerHTML = "";
                 return;
             }
         }
     </script>
 </head>
 <body>
-    <div class="ToolLib">
-        <input type='button' class="ButtonLib" value='获取rcs下的栅格数据集' onclick='getRdsListInRcs()' />
-        <br />
-        <div id="introduction">
-            <font style=" float: left; text-align: left">说明：获取在线数据，请保持网络稳定。</font><br />
-        </div>
+<div class="ToolLib">
+    <input type='button' class="ButtonLib" value='获取rcs下的栅格数据集' onclick='getRdsListInRcs()'/>
+    <br/>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：获取在线数据，请保持网络稳定。</font><br/>
     </div>
-    <div id="resultShow">
-    </div>
+</div>
+<div id="resultShow">
+</div>
 </body>
 </html>

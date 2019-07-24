@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>等值线分析</title>
-    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
     <script include="jquery" src="../../libs/zondyclient/include-lib-local.js"></script>
     <script include="json" src="../../libs/zondyclient/include-leaflet-local.js"></script>
     <script type="text/javascript">
@@ -26,7 +26,7 @@
         var wt = null;
 
         /** 地图初始化函数
-        */
+         */
         function init() {
             //地图容器
             map = L.map('map_leaf', {
@@ -53,7 +53,7 @@
         }
 
         /** 等值线分析
-        */
+         */
         function contourAnalyseBtn() {
             //显示进度条
             startPressBar();
@@ -126,18 +126,18 @@
                 "meshingParam": mpStr,
                 "contourParam": cpStr
             };
-            var param = [{ "Key": "linSfclsURL", "Value": obj.linSfclsURL },
-            { "Key": "regSfclsURL", "Value": obj.regSfclsURL },
-             { "Key": "annoClsURL", "Value": obj.annoClsURL },
-            //离散数据网格化参数类
-             {"Key": "meshingParam", "Value": obj.meshingParam },
-            //平面等值线追踪参数类
-              {"Key": "contourParam", "Value": obj.contourParam}];
+            var param = [{"Key": "linSfclsURL", "Value": obj.linSfclsURL},
+                {"Key": "regSfclsURL", "Value": obj.regSfclsURL},
+                {"Key": "annoClsURL", "Value": obj.annoClsURL},
+                //离散数据网格化参数类
+                {"Key": "meshingParam", "Value": obj.meshingParam},
+                //平面等值线追踪参数类
+                {"Key": "contourParam", "Value": obj.contourParam}];
             ExecuteFlow("600320", param);
         }
         /** 执行分析
-        *workFlowID工作流ID,param传递的参数集
-        */
+         *workFlowID工作流ID,param传递的参数集
+         */
         function ExecuteFlow(workFlowID, param) {
             var urlStr = "http://develop.smaryun.com:6163/igs/rest/mrfws/execute/" + workFlowID + "?f=json";
             var service = new Zondy.Service.QueryServiceBase();
@@ -145,8 +145,8 @@
         }
 
         /**回调函数，处理显示结果信息
-        *@param(json对象)data获取结果对象
-        */
+         *@param(json对象)data获取结果对象
+         */
         function onContourAnalyse(data) {
             //停止进度条
             stopPressBar();
@@ -208,15 +208,15 @@
     </script>
 </head>
 <body onload="init()">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="../../img/common/39-1.gif" alt='' /><br />
-        <br />
-        <span>正在生成等值线，请稍候</span>
-    </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="执行等值线分析" onclick="contourAnalyseBtn()" />
-    </div>
-    <div id="map_leaf" style="width: 100%; height: 700px;">
-    </div>
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="../../img/common/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在生成等值线，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="执行等值线分析" onclick="contourAnalyseBtn()"/>
+</div>
+<div id="map_leaf" style="width: 100%; height: 700px;">
+</div>
 </body>
 </html>
