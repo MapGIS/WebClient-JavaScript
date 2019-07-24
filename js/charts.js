@@ -106,7 +106,6 @@ function initCube(config, divid, name) {
           ].join("");
         }
       },
-
       series: [
         {
           name: name,

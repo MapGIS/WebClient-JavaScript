@@ -31,7 +31,7 @@ var MAPBOXGL_CONFIG = config = {
         detail: "2000坐标系-栅格地形",
         icon: "4326_raster_ter.png",
         update: "最后更新时间：2019-01-16"
-      },{
+      }, {
         name: "2000坐标系-矢量瓦片",
         file: "4326_vector",
         diffcult: "1",
@@ -267,12 +267,22 @@ var MAPBOXGL_CONFIG = config = {
           leaffolder: true,
           childs: [
             {
+              name: "边界标注",
+              file: "addBox",
+              diffcult: "1",
+              detail: "测试基本的边界标注",
+              icon: "addBox.png",
+              update: "最后更新时间：2019-07-23",
+              person: "基础平台-创新中心-潘卓然"
+            },
+            {
               name: "图片标注",
               file: "addpicture",
               diffcult: "1",
               detail: "测试基本的图片标注",
               icon: "addpicture.png",
-              update: "最后更新时间：2018-06-06"
+              update: "最后更新时间：2018-06-06",
+              person: "基础平台-创新中心-潘卓然"
             },
             {
               name: "文字标注",
@@ -280,7 +290,8 @@ var MAPBOXGL_CONFIG = config = {
               diffcult: "1",
               detail: "测试基本的文字标注",
               icon: "addtext.png",
-              update: "最后更新时间：2018-06-06"
+              update: "最后更新时间：2018-06-06",
+              person: "基础平台-创新中心-潘卓然"
             },
             {
               name: "图文标注",
@@ -288,7 +299,8 @@ var MAPBOXGL_CONFIG = config = {
               diffcult: "1",
               detail: "测试基本的图文标注",
               icon: "addtextandpic.png",
-              update: "最后更新时间：2018-06-06"
+              update: "最后更新时间：2018-06-06",
+              person: "基础平台-创新中心-潘卓然"
             },
             {
               name: "图片标注-样式实现",
@@ -296,7 +308,8 @@ var MAPBOXGL_CONFIG = config = {
               diffcult: "2",
               detail: "测试基本的图片标注",
               icon: "addpicturesymbol.png",
-              update: "最后更新时间：2018-06-06"
+              update: "最后更新时间：2018-06-06",
+              person: "基础平台-创新中心-潘卓然"
             },
             {
               name: "文字标注-样式实现",
@@ -304,7 +317,8 @@ var MAPBOXGL_CONFIG = config = {
               diffcult: "2",
               detail: "测试基本的文字标注",
               icon: "addtextsymbol.png",
-              update: "最后更新时间：2018-06-06"
+              update: "最后更新时间：2018-06-06",
+              person: "基础平台-创新中心-潘卓然"
             },
             {
               name: "图文标注-样式实现",
@@ -312,7 +326,8 @@ var MAPBOXGL_CONFIG = config = {
               diffcult: "2",
               detail: "测试基本的图文标注",
               icon: "addtextandpicsymbol.png",
-              update: "最后更新时间：2018-06-06"
+              update: "最后更新时间：2018-06-06",
+              person: "基础平台-创新中心-潘卓然"
             }
           ]
         },
@@ -2073,6 +2088,14 @@ var MAPBOXGL_CONFIG = config = {
           detail: "通过实时插值的方式实现计算速度，轨迹",
           icon: "speed.png",
           update: "最后更新时间：2018-01-15"
+        },
+        {
+          name: "在线地图输出",
+          file: "print",
+          diffcult: "1",
+          detail: "地图整饰打印输出",
+          icon: "print.png",
+          update: "最后更新时间：2019-02-15"
         }
       ]
     }
