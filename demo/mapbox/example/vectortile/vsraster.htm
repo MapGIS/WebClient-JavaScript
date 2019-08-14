@@ -60,7 +60,7 @@
                     "igserver_raster": {
                         "type": "raster",
                         'tiles': [
-                            "http://192.168.10.185:6163/igs/rest/mrms/tile/株洲市Raster/{z}/{y}/{x}"
+                            "http://192.168.10.185:6163/igs/rest/mrms/tile/地类图斑/{z}/{y}/{x}"
                         ],
                         'tileSize': 256
                     }
@@ -73,13 +73,13 @@
                     "maxzoom": 15
                 }]
             },
-            zoom: 10,
+            zoom: 8,
             pitch: 45,
             center: [113, 27]
         });
         var afterMap = new mapboxgl.Map({
             container: 'after',
-            style: "http://192.168.10.185:6163/igs/rest/mrms/vtiles/styles/topology.json",
+            style: "http://192.168.10.185:6163/igs/rest/mrms/vtiles/styles/地类图斑.json",
             zoom: 10,
             pitch: 45,
             center: [113, 27]

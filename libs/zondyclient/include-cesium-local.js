@@ -51,6 +51,8 @@
       inputCSS(httpUrl + "/cdn/cesium/Widgets/widgets.css");
       inputCSS(httpUrl + "/cdn/cesium/MapGIS/Css/mapgis.css");
       inputScript(httpUrl + "/cdn/cesium/Cesium.js");
+      // inputCSS(httpUrl + "/cdn/cesium_github/Widgets/widgets.css");
+      // inputScript(httpUrl + "/cdn/cesium_github/Cesium.js");
     }
     // if (!inArray(includes, 'wmts')) {
     //    inputScript("http://" + ip + ":" + socket + "/cdn/leaflet plugins/leaflet-tilelayer-wmts.js");

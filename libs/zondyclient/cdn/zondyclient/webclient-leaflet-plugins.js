@@ -66,7 +66,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 43);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -121,75 +121,6 @@ Zondy.Socket = Zondy.Socket || {};
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.LayerEvent = exports.BroadcastEvent = exports.SubscribeEvent = exports.BroadcastPrefix = exports.SubscribePrefix = undefined;
-
-var _Base = __webpack_require__(2);
-
-var SubscribePrefix = exports.SubscribePrefix = "/subscribe";
-var BroadcastPrefix = exports.BroadcastPrefix = "/broadcast";
-
-/**
- * SubscribeEvent WebSocket消息订阅通信事件流程
- * @readonly
- * @enum {String}
- */
-var SubscribeEvent = exports.SubscribeEvent = {
-  /** 广播流打开事件 */
-  OPEN: "subscribeOpen",
-  /** 广播流消息事件 */
-  MESSAGE: "subscribeMessage",
-  /** 广播流关闭事件 */
-  CLOSE: "subscribeClose",
-  /** 广播流错误事件 */
-  ERROR: "subscribeError"
-};
-
-/**
- * BroadcastEvent WebSocket消息广播通信事件流程
- * @readonly
- * @enum {String}
- */
-var BroadcastEvent = exports.BroadcastEvent = {
-  /** 广播流打开事件 */
-  OPEN: "broadcastOpen",
-  /** 广播流消息事件 */
-  MESSAGE: "broadcastMessage",
-  /** 广播流关闭事件 */
-  CLOSE: "broadcastClose",
-  /** 广播流错误事件 */
-  ERROR: "broadcastError"
-};
-
-/**
- * BroadcastEvent WebSocket 图层事件，用户、二次开发一般关注这个事件
- * @readonly
- * @enum {String}
- */
-var LayerEvent = exports.LayerEvent = {
-  /** 图层更新事件事件 */
-  UPDATE: "layerupdate"
-};
-
-_Base.Zondy.Event.SubscribeEvent = SubscribeEvent;
-_Base.Zondy.Event.BroadcastEvent = BroadcastEvent;
-_Base.Zondy.Event.LayerEvent = BroadcastEvent;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-module.exports = function(){try{return mapv}catch(e){return {}}}();
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -570,6 +501,75 @@ var mapvLayer = exports.mapvLayer = function mapvLayer(dataSet, mapVOptions, opt
 _leaflet2.default.zondy.MapvLayer = mapvLayer;
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LayerEvent = exports.BroadcastEvent = exports.SubscribeEvent = exports.BroadcastPrefix = exports.SubscribePrefix = undefined;
+
+var _Base = __webpack_require__(2);
+
+var SubscribePrefix = exports.SubscribePrefix = "/subscribe";
+var BroadcastPrefix = exports.BroadcastPrefix = "/broadcast";
+
+/**
+ * SubscribeEvent WebSocket消息订阅通信事件流程
+ * @readonly
+ * @enum {String}
+ */
+var SubscribeEvent = exports.SubscribeEvent = {
+  /** 广播流打开事件 */
+  OPEN: "subscribeOpen",
+  /** 广播流消息事件 */
+  MESSAGE: "subscribeMessage",
+  /** 广播流关闭事件 */
+  CLOSE: "subscribeClose",
+  /** 广播流错误事件 */
+  ERROR: "subscribeError"
+};
+
+/**
+ * BroadcastEvent WebSocket消息广播通信事件流程
+ * @readonly
+ * @enum {String}
+ */
+var BroadcastEvent = exports.BroadcastEvent = {
+  /** 广播流打开事件 */
+  OPEN: "broadcastOpen",
+  /** 广播流消息事件 */
+  MESSAGE: "broadcastMessage",
+  /** 广播流关闭事件 */
+  CLOSE: "broadcastClose",
+  /** 广播流错误事件 */
+  ERROR: "broadcastError"
+};
+
+/**
+ * BroadcastEvent WebSocket 图层事件，用户、二次开发一般关注这个事件
+ * @readonly
+ * @enum {String}
+ */
+var LayerEvent = exports.LayerEvent = {
+  /** 图层更新事件事件 */
+  UPDATE: "layerupdate"
+};
+
+_Base.Zondy.Event.SubscribeEvent = SubscribeEvent;
+_Base.Zondy.Event.BroadcastEvent = BroadcastEvent;
+_Base.Zondy.Event.LayerEvent = BroadcastEvent;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = function(){try{return mapv}catch(e){return {}}}();
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
@@ -672,7 +672,7 @@ _Base.Zondy.ElasticSearch.IServiceLoadData = IServiceLoadData;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.GeojsonBaseLayer = undefined;
+exports.GeojsonStreamLayer = undefined;
 
 var _leaflet = __webpack_require__(0);
 
@@ -681,7 +681,7 @@ var _leaflet2 = _interopRequireDefault(_leaflet);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @class GeojsonBaseLayer
+ * @class GeojsonStreamLayer
  * @classdesc SocketLayer GeoJson渲染器。
  * @extends {L.GeoJSON}
  * @param {string} url - 数据流图层服务地址
@@ -693,7 +693,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * @param {Object} options.field - geojson的唯一标识字段，请确保该字段的唯一性。
  */
-var GeojsonBaseLayer = exports.GeojsonBaseLayer = _leaflet2.default.GeoJSON.extend({
+var GeojsonStreamLayer = exports.GeojsonStreamLayer = _leaflet2.default.GeoJSON.extend({
   initialize: function initialize(url, options) {
     options = options || {};
     if (options.style && !options.pointToLayer) {
@@ -1189,7 +1189,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _mapv = __webpack_require__(4);
+var _mapv = __webpack_require__(5);
 
 var _leaflet = __webpack_require__(0);
 
@@ -1635,13 +1635,13 @@ var _leaflet = __webpack_require__(0);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-var _mapv = __webpack_require__(4);
+var _mapv = __webpack_require__(5);
 
 var _Base = __webpack_require__(13);
 
 __webpack_require__(1);
 
-var _MapvLayer = __webpack_require__(5);
+var _MapvLayer = __webpack_require__(3);
 
 var _IServiceLoadData = __webpack_require__(7);
 
@@ -3490,7 +3490,7 @@ var _leaflet = __webpack_require__(0);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-var _mapv = __webpack_require__(4);
+var _mapv = __webpack_require__(5);
 
 var _BaseDefine = __webpack_require__(23);
 
@@ -3498,7 +3498,7 @@ var _IServiceLoadData = __webpack_require__(7);
 
 __webpack_require__(1);
 
-var _MapvLayer = __webpack_require__(5);
+var _MapvLayer = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3696,11 +3696,11 @@ Object.keys(_elasticsearch).forEach(function (key) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.GeojsonBaseLayer = undefined;
+exports.GeojsonStreamLayer = undefined;
 
-var _GeojsonBaseLayer = __webpack_require__(8);
+var _GeojsonStreamLayer = __webpack_require__(8);
 
-exports.GeojsonBaseLayer = _GeojsonBaseLayer.GeojsonBaseLayer;
+exports.GeojsonStreamLayer = _GeojsonStreamLayer.GeojsonStreamLayer;
 
 /***/ }),
 /* 28 */
@@ -3755,6 +3755,104 @@ exports.MapvBaseLayer = _MapvBaseLayer.MapvBaseLayer;
 
 /***/ }),
 /* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MapvStreamLayer = undefined;
+
+var _leaflet = __webpack_require__(0);
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+var _MapvLayer = __webpack_require__(3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @class MapvStreamLayer
+ * @classdesc SocketLayer MapV渲染器
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @extends {L.MapVLayer}
+ * @param {string} url - 数据流图层服务地址
+ * @param {Object} options - 其他参数，先保留。
+ *
+ * @param {Object} options.field - geojson的唯一标识字段，请确保该字段的唯一性。
+ */
+var MapvStreamLayer = exports.MapvStreamLayer = _MapvLayer.MapVLayer.extend({
+  initialize: function initialize(map, url, options) {
+    options = options || {};
+
+    _leaflet2.default.Util.setOptions(this, options);
+
+    this.mapvOption = options.mapvOption || {};
+    this.data = [];
+    this.lastDate = new Date();
+    this.url = url;
+    this.fieldHash = {};
+
+    this.fieldDeg = options.fieldDeg;
+    this.iconUrl = options.iconUrl;
+    this.timeSpeed = options.timeSpeed || 100;
+    this.createIcon();
+
+    _MapvLayer.MapVLayer.prototype.initialize.call(this, map, new window.mapv.DataSet([]), this.mapvOption, options);
+  },
+
+  onMessage: function onMessage(msg) {
+    var feature = msg.feature;
+    var field = msg.feature.properties[this.options.field];
+
+    var layer = this.parasIcon(feature);
+
+    if (field !== undefined && this.fieldHash[field]) {
+      this.data[this.fieldHash[field]] = layer;
+    } else {
+      if (field !== undefined) {
+        this.data.push(layer);
+        this.fieldHash[field] = this.data.length - 1;
+      }
+    }
+
+    this.updateLayer();
+  },
+
+  createIcon: function createIcon() {
+    var iconUrl = this.iconUrl || "http://client.snanyun.com:8899/img/leaflet/marker/bike.png";
+    this.icon = new Image();
+    this.icon.src = iconUrl;
+  },
+
+  parasIcon: function parasIcon(feature) {
+    this.mapvOption = {
+      draw: "icon"
+    };
+    var deg = feature.properties[this.fieldDeg] || 0;
+    var icon = {
+      geometry: {
+        type: "Point",
+        coordinates: feature.geometry.coordinates
+      },
+      deg: deg,
+      icon: this.icon
+    };
+    return icon;
+  },
+
+  updateLayer: function updateLayer() {
+    var currentDate = new Date();
+    if (currentDate - this.lastDate < this.timeSpeed) return;
+    this.updateData(this.data, this.mapvOption);
+    this.lastDate = currentDate;
+  }
+});
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4099,7 +4197,7 @@ Evented.fireEvent = Evented.fire;
 Evented.hasEventListeners = Evented.listens;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4114,9 +4212,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _Base = __webpack_require__(2);
 
-var _Evented = __webpack_require__(30);
+var _Evented = __webpack_require__(31);
 
-var _SocketEvent = __webpack_require__(3);
+var _SocketEvent = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4247,7 +4345,7 @@ var ISocketService = exports.ISocketService = function () {
 _Base.Zondy.Socket.ISocketService = ISocketService;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4262,9 +4360,9 @@ var _leaflet = __webpack_require__(0);
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-var _SocketEvent = __webpack_require__(3);
+var _SocketEvent = __webpack_require__(4);
 
-var _ISocketService = __webpack_require__(31);
+var _ISocketService = __webpack_require__(32);
 
 var _ServiceEvent = __webpack_require__(9);
 
@@ -4346,7 +4444,7 @@ var socketService = exports.socketService = function socketService(url, options)
 _leaflet2.default.zondy.SocketService = socketService;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4363,11 +4461,13 @@ var _leaflet2 = _interopRequireDefault(_leaflet);
 
 __webpack_require__(1);
 
-var _SocketService = __webpack_require__(32);
+var _SocketService = __webpack_require__(33);
 
-var _SocketEvent = __webpack_require__(3);
+var _SocketEvent = __webpack_require__(4);
 
-var _GeojsonBaseLayer = __webpack_require__(8);
+var _MapvStreamLayer = __webpack_require__(30);
+
+var _GeojsonStreamLayer = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4400,9 +4500,9 @@ var StreamLayer = exports.StreamLayer = _leaflet2.default.LayerGroup.extend({
     this.bindEvent();
 
     if (this.options.render === "mapv") {
-      //this.addLayer(new MapvRenderer(this.url, this.options));
+      this.addLayer(new _MapvStreamLayer.MapvStreamLayer(this.map, this.url, this.options));
     } else {
-      this.addLayer(new _GeojsonBaseLayer.GeojsonBaseLayer(this.url, this.options));
+      this.addLayer(new _GeojsonStreamLayer.GeojsonStreamLayer(this.url, this.options));
     }
     _leaflet2.default.LayerGroup.prototype.onAdd.call(this, map);
   },
@@ -4460,7 +4560,7 @@ var streamLayer = exports.streamLayer = function streamLayer(map, url, options) 
 _leaflet2.default.zondy.StreamLayer = streamLayer;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4607,7 +4707,7 @@ MapCoordSys.create = function (ecModel, api) {
 exports.default = MapCoordSys;
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4628,7 +4728,7 @@ var _echarts2 = _interopRequireDefault(_echarts);
 
 __webpack_require__(1);
 
-var _MapCoordSys = __webpack_require__(34);
+var _MapCoordSys = __webpack_require__(35);
 
 var _MapCoordSys2 = _interopRequireDefault(_MapCoordSys);
 
@@ -4893,7 +4993,7 @@ var echartsLayer = exports.echartsLayer = function echartsLayer(echartsParams, o
 _leaflet2.default.zondy.EchartsLayer = echartsLayer;
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4903,7 +5003,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _MapvLayer = __webpack_require__(5);
+var _MapvLayer = __webpack_require__(3);
 
 Object.defineProperty(exports, "MapVLayer", {
   enumerable: true,
@@ -4912,7 +5012,7 @@ Object.defineProperty(exports, "MapVLayer", {
   }
 });
 
-var _EchartsLayer = __webpack_require__(35);
+var _EchartsLayer = __webpack_require__(36);
 
 Object.defineProperty(exports, "EchartsLayer", {
   enumerable: true,
@@ -4921,7 +5021,7 @@ Object.defineProperty(exports, "EchartsLayer", {
   }
 });
 
-var _StreamLayer = __webpack_require__(33);
+var _StreamLayer = __webpack_require__(34);
 
 Object.defineProperty(exports, "StreamLayer", {
   enumerable: true,
@@ -4967,7 +5067,7 @@ Object.keys(_stream).forEach(function (key) {
 });
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5090,7 +5190,7 @@ var baiduTileLayer = exports.baiduTileLayer = function baiduTileLayer(options) {
 _leaflet2.default.zondy.BaiduTileLayer = baiduTileLayer;
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5100,7 +5200,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _BaiduTileLayer = __webpack_require__(37);
+var _BaiduTileLayer = __webpack_require__(38);
 
 Object.defineProperty(exports, 'BaiduTileLayer', {
   enumerable: true,
@@ -5110,7 +5210,7 @@ Object.defineProperty(exports, 'BaiduTileLayer', {
 });
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5154,7 +5254,7 @@ var BaiduMercator = exports.BaiduMercator = {
 };
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5164,7 +5264,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Projection = __webpack_require__(39);
+var _Projection = __webpack_require__(40);
 
 Object.defineProperty(exports, 'BaiduMercator', {
   enumerable: true,
@@ -5174,7 +5274,7 @@ Object.defineProperty(exports, 'BaiduMercator', {
 });
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5246,16 +5346,16 @@ if (_leaflet2.default && _leaflet2.default.Proj) {
 }
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _CRS = __webpack_require__(41);
+var _CRS = __webpack_require__(42);
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5277,7 +5377,7 @@ Object.keys(_Base).forEach(function (key) {
   });
 });
 
-var _crs = __webpack_require__(42);
+var _crs = __webpack_require__(43);
 
 Object.keys(_crs).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -5289,7 +5389,7 @@ Object.keys(_crs).forEach(function (key) {
   });
 });
 
-var _projection = __webpack_require__(40);
+var _projection = __webpack_require__(41);
 
 Object.keys(_projection).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -5301,7 +5401,7 @@ Object.keys(_projection).forEach(function (key) {
   });
 });
 
-var _tilelayer = __webpack_require__(38);
+var _tilelayer = __webpack_require__(39);
 
 Object.keys(_tilelayer).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -5313,7 +5413,7 @@ Object.keys(_tilelayer).forEach(function (key) {
   });
 });
 
-var _overlay = __webpack_require__(36);
+var _overlay = __webpack_require__(37);
 
 Object.keys(_overlay).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;

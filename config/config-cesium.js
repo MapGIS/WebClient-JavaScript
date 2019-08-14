@@ -683,6 +683,48 @@ var CESIUM_CONFIG = config = {
             }]
         },
         {
+            name: "矢量瓦片",
+            materialicon: "map",
+            folder: "vectortile",
+            leaffolder: true,
+            childs: [{
+                name: "明亮地图",
+                file: "light",
+                diffcult: "2",
+                detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
+                icon: "light.png",
+                update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
+            }, {
+                name: "黑暗地图",
+                file: "dark",
+                diffcult: "2",
+                detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
+                icon: "dark.png",
+                update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
+            }, {
+                name: "深蓝地图",
+                file: "blue",
+                diffcult: "2",
+                detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
+                icon: "blue.png",
+                update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
+            }, {
+                name: "街道地图",
+                file: "streets",
+                diffcult: "2",
+                detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
+                icon: "streets.png",
+                update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
+            }, {
+                name: "军测地图",
+                file: "military",
+                diffcult: "2",
+                detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
+                icon: "military.png",
+                update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
+            }]
+        },
+        {
             name: "实时数据分析Els",
             materialicon: "search",
             folder: "elasticsearch",
