@@ -50,7 +50,10 @@
 
 
 
-    new CesiumZondy.Overlayer.VectorTileLayer(viewer, "http://localhost:6163/igs/rest/mrms/vtiles/styles/shenzhen-street.json", token);
+    new CesiumZondy.Overlayer.VectorTileLayer(viewer, {
+      styleUrl: "http://localhost:6163/igs/rest/mrms/vtiles/styles/shenzhen-street.json",
+      token: token
+    });
     
   </script>
 

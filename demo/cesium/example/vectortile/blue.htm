@@ -27,10 +27,10 @@
   <div id='sceneViewer'></div>
   <div id="popupContain"></div>
   <script>
-        var west = 113.90; //117.25;    //
+    var west = 113.90; //117.25;    //
     var south = 22.43; // 38.85;       //23.12
     var east = 114.23; //117.50;       //121.31
-    var north = 22.67;  //39.00;       //23.58
+    var north = 22.67; //39.00;       //23.58
 
     var rectangle = Cesium.Rectangle.fromDegrees(west, south, east, north);
 
@@ -41,14 +41,19 @@
       terrainExaggeration: 1
     });
     var viewer = webGlobe.viewer;
-    var scene = webGlobe.scene; 
-    viewer.imageryLayers.removeAll();
+    var scene = webGlobe.scene;
+    //viewer.imageryLayers.removeAll();
     viewer.scene.skyAtmosphere.show = false;
     viewer.scene.globe.enableTransparent = true;
     viewer.scene.globe.baseColor = new Cesium.Color(1, 1, 1, 1);
 
-    new CesiumZondy.Overlayer.VectorTileLayer(viewer, "http://localhost:6163/igs/rest/mrms/vtiles/styles/shenzhen-blue.json", token);
-    
+    let layer = new CesiumZondy.Overlayer.VectorTileLayer(viewer, {
+      styleUrl: "http://localhost:6163/igs/rest/mrms/vtiles/styles/shenzhen-blue.json",
+      token: token
+    });
+    //console.log("layer", layer.provider, viewer.imageryLayers);
+    layer.remove();
+    //layer.provider.show = false;
   </script>
 
 </body>

@@ -715,13 +715,6 @@ var CESIUM_CONFIG = config = {
                 detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
                 icon: "streets.png",
                 update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
-            }, {
-                name: "军测地图",
-                file: "military",
-                diffcult: "2",
-                detail: "针对mapbox的矢量瓦片规范进行矢量渲染",
-                icon: "military.png",
-                update: "最后更新时间：2019-07-31,如有问题请咨询创新中心"
             }]
         },
         {

@@ -27,10 +27,10 @@
   <div id='sceneViewer'></div>
   <div id="popupContain"></div>
   <script>
-var west = 113.90; //117.25;    //
+    var west = 113.90; //117.25;    //
     var south = 22.43; // 38.85;       //23.12
     var east = 114.23; //117.50;       //121.31
-    var north = 22.67;  //39.00;       //23.58
+    var north = 22.67; //39.00;       //23.58
 
     var rectangle = Cesium.Rectangle.fromDegrees(west, south, east, north);
 
@@ -38,9 +38,9 @@ var west = 113.90; //117.25;    //
     Cesium.Camera.DEFAULT_VIEW_RECTANGLE = rectangle;
 
     worldTerrain = Cesium.createWorldTerrain({
-        requestWaterMask: true,
-        requestVertexNormals: true
-      });
+      requestWaterMask: true,
+      requestVertexNormals: true
+    });
 
 
     var token = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
@@ -49,7 +49,7 @@ var west = 113.90; //117.25;    //
       terrainExaggeration: 1
     });
     var viewer = webGlobe.viewer;
-    var scene = webGlobe.scene; 
+    var scene = webGlobe.scene;
     viewer.terrainProvider = Cesium.createWorldTerrain();
 
     //viewer.imageryLayers.removeAll();
@@ -57,8 +57,10 @@ var west = 113.90; //117.25;    //
     viewer.scene.globe.enableTransparent = true;
     viewer.scene.globe.baseColor = new Cesium.Color(1, 1, 1, 1);
 
-    new CesiumZondy.Overlayer.VectorTileLayer(viewer, "http://localhost:6163/igs/rest/mrms/vtiles/styles/shenzhen-dark.json", token);
-    
+    new CesiumZondy.Overlayer.VectorTileLayer(viewer, {
+      styleUrl: "http://localhost:6163/igs/rest/mrms/vtiles/styles/shenzhen-dark.json",
+      token: token
+    });
   </script>
 
 </body>
