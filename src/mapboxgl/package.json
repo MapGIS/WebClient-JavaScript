@@ -1,0 +1,17 @@
+{
+  "name": "@mapgis/webclient-mapboxgl-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/webclient-mapboxgl-plugin.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zondy",
+    "service",
+    "&",
+    "mapboxgl"
+  ],
+  "author": "zondy",
+  "license": "ISC"
+}

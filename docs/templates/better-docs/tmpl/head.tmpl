@@ -1,0 +1,30 @@
+<?js 
+  self = this
+?>
+<head>
+  <?js= betterDocs.trackingCode ?>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><?js= betterDocs.title ?> <?js= title ?></title>
+
+  <script src="../cdn/run_prettify.js"></script>
+  <script src="../cdn/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="../cdn/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="../cdn/googleapis.css" rel="stylesheet">
+  <link rel="stylesheet" href="../cdn/all.css" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="../cdn/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="../cdn/mapgis.css">
+  <link type="text/css" rel="stylesheet" href="<?js= betterDocs.css ?>">
+  <script async defer src="../cdn/buttons.js"></script>
+
+  <?js if (betterDocs.head) { ?>
+    <?js= betterDocs.head ?>
+  <?js } ?>
+</head>
+
