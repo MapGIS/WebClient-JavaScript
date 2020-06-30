@@ -1,0 +1,743 @@
+{
+  "name": "",
+  "title": "MapGIS WebClinet-MapboxGL演示网站",
+  "mapmode": "mapboxgl",
+  "childs": [
+    {
+      "name": "互联网地图",
+      "iconfont": "iconinternet",
+      "folder": "internet",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "天地图经纬度",
+          "file": "tianditu4326",
+          "diffcult": "1",
+          "detail": "加载4326的天地图",
+          "icon": "tianditu4326.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "天地图墨卡托",
+          "file": "tianditu",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "天地图.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "谷歌地图",
+          "file": "google",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "google.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "OSM",
+          "file": "osm",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "osm.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "ArcGIS",
+          "file": "arcgis",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "arcgis.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    },
+    {
+      "name": "OGC",
+      "iconfont": "iconstandard1",
+      "folder": "ogc",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "WMS",
+          "file": "wms",
+          "diffcult": "2",
+          "detail": "ogc-wms服务",
+          "icon": "wms.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "WMTS",
+          "file": "wmts",
+          "diffcult": "2",
+          "detail": "ogc-wmts服务",
+          "icon": "wmts.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "WFS",
+          "file": "wfs",
+          "diffcult": "2",
+          "detail": "ogc-wfs要素类服务",
+          "icon": "wfs.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    },
+    {
+      "name": "MapGIS IGServer",
+      "iconfont": "iconserver1",
+      "folder": "mapgis-igserver",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "地图",
+          "iconfont": "iconmap",
+          "folder": "map",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "EPSG4326",
+              "file": "epsg4326",
+              "html": "EPSG4326.htm",
+              "diffcult": "2",
+              "detail": "ogc-wms服务",
+              "icon": "epsg4326.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "EPSG3857",
+              "file": "epsg3857",
+              "html": "",
+              "diffcult": "2",
+              "detail": "ogc-wmts服务",
+              "icon": "epsg3857.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "要素",
+          "iconfont": "iconfeature",
+          "folder": "feature",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "FID查询",
+              "file": "fid-search",
+              "diffcult": "3",
+              "detail": "",
+              "icon": "fid-search.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "要素查询",
+              "file": "feature-search",
+              "html": "",
+              "diffcult": "3",
+              "detail": "",
+              "icon": "feature-search.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "要素编辑",
+              "file": "feature-edit",
+              "html": "",
+              "diffcult": "3",
+              "detail": "",
+              "icon": "feature-edit.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "量算",
+          "iconfont": "iconlength-check",
+          "folder": "calc",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "长度",
+              "file": "calc-length",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "calc-length.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "面积",
+              "file": "calc-area",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "calc-area.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "专题图",
+          "iconfont": "icontheme",
+          "folder": "theme",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "分段",
+              "file": "range-theme",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "range-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "单值",
+              "file": "unique-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "unique-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "随机",
+              "file": "random-theme",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "random-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "统一",
+              "file": "simple-theme",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "simple-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "四色",
+              "file": "fourcolor-theme",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "fourcolor-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "密度",
+              "file": "density-theme",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "density-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "统计",
+              "file": "graph-theme",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "graph-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "空间分析",
+          "iconfont": "iconsearch",
+          "folder": "analysis",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "缓冲分析",
+              "file": "buffer-analysis",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "buffer-analysis.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "叠加分析",
+              "file": "overlayer-analysis",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "overlayer-analysis.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "裁剪分析",
+              "file": "clip-analysis",
+              "html": "",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "clip-analysis.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "客户端可视化",
+      "iconfont": "iconeye",
+      "folder": "client-view",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "矢量瓦片",
+          "iconfont": "icontile_hover",
+          "folder": "vectortile",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "上传样式",
+              "file": "mapgisstyle",
+              "diffcult": "1",
+              "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
+              "icon": "mapgisstyle.png",
+              "update": "最后更新时间：2019-12-16"
+            },
+            {
+              "name": "浅色样式",
+              "file": "lightstyle",
+              "diffcult": "1",
+              "detail": "加载MapGIS-IgServer发布的矢量瓦片服务",
+              "icon": "lightstyle.png",
+              "update": "最后更新时间：2019-12-16"
+            },
+            {
+              "name": "黑暗样式",
+              "file": "darkstyle",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "darkstyle.png",
+              "update": "最后更新时间：2019-12-16"
+            },
+            {
+              "name": "加载第三方",
+              "file": "mapboxstyle",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "mapboxstyle.png",
+              "update": "最后更新时间：2019-12-16"
+            }
+          ]
+        },
+        {
+          "name": "Echarts",
+          "iconfont": "iconview-map-1",
+          "folder": "echarts",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "微博签到",
+              "file": "echartsweibo",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "echartsweibo.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "微博热力",
+              "file": "echartsheater",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "echartsheater.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "模拟迁徙",
+              "file": "echartsmigarate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "migarate.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "飞行航线",
+              "file": "echartsflight",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "echartsflight.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "空气质量",
+              "file": "echartsair",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "echartsair.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "渐进绘制",
+              "file": "echartsline",
+              "diffcult": "1",
+              "detail": "百度Echarts北京公交路线图",
+              "icon": "echartsline.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "公交路线",
+              "file": "echartslineanimate",
+              "diffcult": "1",
+              "detail": "北京公交路线-线特效",
+              "icon": "lineanimate.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "网格专题图",
+              "file": "echartsgrid",
+              "diffcult": "1",
+              "detail": "北京网格图",
+              "icon": "grid.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "纽约-140万点",
+              "file": "echartsbigpoint",
+              "diffcult": "1",
+              "detail": "纽约-140万点数据",
+              "icon": "bigpoint.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "纽约-100万线",
+              "file": "echartsbigline",
+              "diffcult": "1",
+              "detail": "纽约-100万线数据",
+              "icon": "bigline.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "中国-100万线",
+              "file": "echartsbigroad",
+              "diffcult": "1",
+              "detail": "纽约-100万线",
+              "icon": "bigroad.png",
+              "update": "最后更新时间：2018-07-11"
+            },
+            {
+              "name": "1000万GPS",
+              "file": "echartsbiggps",
+              "diffcult": "1",
+              "data": "数据来自：https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/",
+              "detail": "世界-1000万GPS点数据",
+              "icon": "biggps.png",
+              "update": "最后更新时间：2018-07-11"
+            }
+          ]
+        },
+        {
+          "name": "MapV",
+          "iconfont": "iconmap1",
+          "folder": "mapv",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "轨迹汇聚",
+              "file": "mapvpath_converge",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "path_converge.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "热力图",
+              "file": "mapvheater",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "heater.png",
+              "update": "最后更新时间：2018-07-4"
+            },
+            {
+              "name": "迁移图",
+              "file": "mapvmigrate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "migrate.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "区数据渲染",
+              "file": "mapvrender_polygon",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "render_polygon.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "点数据播放",
+              "file": "mapvpoint_animate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_animate.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "方形网格密度",
+              "file": "mapvpoint_grid",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_grid.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "蜂窝形密度",
+              "file": "mapvpoint_honeycomb",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_honeycomb.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "点重叠播放",
+              "file": "mapvpoint_mutilanimate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_mutilanimate.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "点微博数据",
+              "file": "mapvpoint_weibo",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_weibo.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "多值统计线",
+              "file": "mapvcountline",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "countline.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "单一迁移轨迹",
+              "file": "mapvsimplemigrate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "simplemigrate.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "动态轨迹",
+              "file": "mapvtracker",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "tracker.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "交通轨迹",
+              "file": "mapvtrackerline",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "trackerline.png",
+              "update": "最后更新时间：2018-05-12"
+            }
+          ]
+        },
+        {
+          "name": "Echarts Gl",
+          "iconfont": "iconview-map-1",
+          "folder": "echartsgl",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "开普敦出租车",
+              "file": "echartsglcapton",
+              "diffcult": "1",
+              "detail": "针对出租车轨迹与建筑进行动态显示",
+              "icon": "capton.png",
+              "update": "最后更新时间：2018-05-24"
+            },
+            {
+              "name": "伦敦飞机航线",
+              "file": "echartsglflight",
+              "diffcult": "1",
+              "detail": "针对Uber的数据进行的飞行航线的可视化",
+              "icon": "flight.png",
+              "update": "最后更新时间：2018-05-24"
+            },
+            {
+              "name": "上海房价图",
+              "file": "echartsglshanghai",
+              "diffcult": "1",
+              "detail": "针对上海的房价进行统计图可视化",
+              "icon": "shanghai.png",
+              "update": "最后更新时间：2018-05-24"
+            },
+            {
+              "name": "微博签到图",
+              "file": "echartsglweibo",
+              "diffcult": "1",
+              "detail": "针对全国微博数据的签到可视化",
+              "icon": "weibo.png",
+              "update": "最后更新时间：2018-05-24"
+            },
+            {
+              "name": "彩色建筑图",
+              "file": "echartsglbuildings",
+              "diffcult": "1",
+              "detail": "针对建筑模型的彩色可视化",
+              "icon": "buildings.png",
+              "update": "最后更新时间：2018-05-24"
+            },
+            {
+              "name": "纽约公交夜景",
+              "file": "echartsglnewyork",
+              "diffcult": "1",
+              "detail": "针对纽约公交夜景的彩色可视化",
+              "icon": "newyork.png",
+              "update": "最后更新时间：2018-06-21"
+            },
+            {
+              "name": "北京公交夜景",
+              "file": "echartsglbeijing",
+              "diffcult": "1",
+              "detail": "针对北京公交夜景的彩色可视化",
+              "icon": "beijing.png",
+              "update": "最后更新时间：2018-06-27"
+            },
+            {
+              "name": "世界航线",
+              "file": "echartsgllines",
+              "diffcult": "1",
+              "detail": "针对世界航线的彩色可视化",
+              "icon": "lines.png",
+              "update": "最后更新时间：2018-07-06"
+            }
+          ]
+        },
+        {
+          "name": "Deck Gl",
+          "iconfont": "iconview-map-1",
+          "folder": "deckgl",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "等高线",
+              "file": "contour",
+              "diffcult": "1",
+              "detail": "等高线的动态展示",
+              "icon": "contour.png",
+              "update": "最后更新时间：2020-05-18"
+            },
+            {
+              "name": "地震分布",
+              "file": "earthquake",
+              "diffcult": "1",
+              "detail": "地震的动态展示",
+              "icon": "earthquake.png",
+              "update": "最后更新时间：2020-05-18"
+            },
+            {
+              "name": "通勤图",
+              "file": "commuting",
+              "diffcult": "1",
+              "detail": "通勤的动态展示",
+              "icon": "commuting.png",
+              "update": "最后更新时间：2020-05-18"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "客户端空间分析",
+      "iconfont": "iconsqlserver",
+      "folder": "client-analysis",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "缓冲分析",
+          "file": "buffer",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "buffer.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "泰森多边形",
+          "file": "voronoi",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "voronoi.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "Tin三角网",
+          "file": "tin",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "tin.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "中心点",
+          "file": "centroid",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "centroid.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "插值",
+          "file": "along",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "along.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "光滑曲线",
+          "file": "bezierspline",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "bezierspline.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "求交判断",
+          "file": "intersect",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "intersect.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    },
+    {
+      "name": "ElasticSearch",
+      "iconfont": "iconsearch",
+      "folder": "elasticsearch",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "聚类分析",
+          "file": "grid-search",
+          "diffcult": "5",
+          "detail": "",
+          "icon": "grid-search.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "热力分析",
+          "file": "heat-search",
+          "diffcult": "5",
+          "detail": "",
+          "icon": "heat-search.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      left: 10px;
+      top: 30px;
+      width: 100%;
+      height: 96%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+
+    initMap();
+    initEcharts();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition('coordinate_location');
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+
+      var center = Cesium.Cartesian3.fromDegrees(-74.04327099998152, 40.86737600240287, 30000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+
+    var layer;
+
+    var CHUNK_COUNT = 19;   // 数据一共19片
+    /**
+     * 循环请求对应的网络数据，数据格式是Int32Array,并解析对应的二级制流
+     * */
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      var dataURL = `./static/data/echarts/point/data_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Float32Array(this.response);
+
+        layer.chart
+          .appendData({
+            seriesIndex: 0,
+            data: rawData
+          });
+
+        fetchData(idx + 1);
+      };
+
+      xhr.send();
+    }
+
+    function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
+      var option = {
+        title: {
+          top: '10px',
+          text: "140万纽约出租车",
+          subtext: "数据来自纽约出租车以及Uber",
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          },
+          subtextStyle: {
+            color: '#fff'
+          }
+        },
+        cesium: {
+          roam: true
+        },
+        series: [{
+          type: 'scatterGL',
+          progressive: 2000,          // 一次渲染20000点
+          coordinateSystem: 'cesium', // 设置cesium坐标系
+          symbolSize: 0.5,
+          blendMode: 'lighter',
+          large: true,
+          itemStyle: {
+            color: '#FF0000',
+          },
+          postEffect: {
+            enable: true
+          },
+          silent: true,
+          dimensions: ['lng', 'lat'],
+          data: new Float32Array()    // 关键点： 数据必须处理成Float32Array格式，否则超出浏览器内存
+        }]
+      };
+      // 声明cesium的echarts图层并将其显示到三维球上
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+
+      fetchData(0);
+    }
+  </script>
+
+</body>
+
+</html>

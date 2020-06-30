@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>1000万GPS</title>
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="language,echarts" src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: 'mapbox://styles/mapbox/dark-v9', // 使用MapBox官方的样式
+      center: [106.563777, 29.578285],
+      zoom: 1
+    });
+    map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+
+    var layer;
+
+    updateView();
+
+    var dataCount = 0;
+    var CHUNK_COUNT = 230;
+    // https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      //http://echarts.baidu.com/examples/data/asset/data/gps/gps_19.bin
+      var dataURL = `../../static/data/echarts/gps/gps_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Int32Array(this.response);
+        var data = new Float32Array(rawData.length);
+        var addedDataCount = rawData.length / 2;
+        for (var i = 0; i < rawData.length; i += 2) {
+          data[i] = rawData[i + 1] / 1e7;
+          data[i + 1] = rawData[i] / 1e7;
+        }
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: data
+        });
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+
+    function updateView() {
+      var option = {
+        //backgroundColor: '#000',
+        title: {
+          text: '10000000 GPS Points',
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        mapboxgl: {
+          roam: true
+        },
+        series: [{
+          name: '弱',
+          type: 'scatterGL',
+          progressive: 20000,
+          coordinateSystem: 'mapboxgl',
+          symbolSize: 1,
+          zoomScale: 0.002,
+          blendMode: 'lighter',
+          large: true,
+          itemStyle: {
+            color: 'rgb(20, 15, 2)'
+          },
+          postEffect: {
+            enable: true
+          },
+          silent: true,
+          dimensions: ['lng', 'lat'],
+          data: new Float32Array()
+        }]
+      };
+      layer = new mapboxgl.zondy.EchartsLayer(map, option).addTo(map);
+      fetchData(0);
+    }
+  </script>
+
+
+</body>
+
+</html>

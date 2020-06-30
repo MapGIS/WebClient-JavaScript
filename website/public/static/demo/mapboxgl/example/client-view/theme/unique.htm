@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>客户端等级符号专题图</title>
+    <script include="language" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style>
+        body {
+            height: 100%;
+        }
+
+        .legendItemHeader,
+        .legendItemValue {
+            width: 200px;
+            height: 18px;
+            font-size: 14px;
+        }
+
+        .panel-primary {
+            border-color: #337ab7;
+        }
+
+        .panel {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        }
+
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 16px;
+            color: inherit;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .panel-heading {
+            padding: 5px 15px;
+            border-bottom: 1px solid transparent;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+
+        .panel-body {
+            padding: 10px;
+            background-color: #f0ffff;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图、专题图图层
+        //定义地图文档图层和地图、专题图图层
+        var mapDocLayer, map, themeLayer;
+        var ip = 'develop.smaryun.com';
+        var port = '6163';
+        var docName = 'Hubei3857';
+        var legendView, infoView;
+        /**初始化地图显示*/
+
+        function init() {
+            //地图容器
+            //实例化要加载的source来源对象（世界矢量地图）
+            var dark = {
+                "type": "raster",
+                'tiles': [
+                    //来源请求地址，请求谷歌提供的世界矢量地图瓦片服务
+                    "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+                ],
+                //栅格瓦片的分辨率
+                'tileSize': 256
+            };
+            map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map',
+                center: [112.247175, 31.152892],
+                zoom: 6,
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    "version": 8,
+                    //添加来源
+                    "sources": {
+                        "dark": dark
+                    },
+                    //设置加载并显示来源的图层信息
+                    "layers": [{
+                        //图层id，要保证唯一性
+                        "id": "dark",
+                        //图层类型
+                        "type": "raster",
+                        //连接图层来源
+                        "source": "dark",
+                        //图层最小缩放级数
+                        "minzoom": 0,
+                        //图层最大缩放级数
+                        "maxzoom": 22
+                    }]
+                }
+            });
+
+            function appendMapDoc() {
+                if (map != null) {
+                    var docLayer = new Zondy.Map.MapDocLayer(docName, {
+                        //IP地址
+                        ip: ip,
+                        //端口号
+                        port: port,
+                        //只显示一个图层,不平铺显示
+                        noWrap: true
+                    }).addTo(map);
+                }
+            }
+            map.on('load', function () {
+                // appendMapDoc();
+            });
+        }
+        /**添加专题图
+         */
+        function createThemeBtn() {
+            startPressBar();
+            // 定义 Unique 单值专题图层
+            themeLayer = Zondy.Map.uniqueThemeLayer("ThemeLayer", {
+                map: map,
+                // 开启 hover 高亮效果
+                isHoverAble: true,
+                opacity: 0.8,
+                alwaysMapCRS: true
+            });
+
+            // 图层基础样式
+            themeLayer.style = new Zondy.Map.ThemeStyle({
+                shadowBlur: 3,
+                shadowColor: "#000000",
+                shadowOffsetX: 1,
+                shadowOffsetY: 1,
+                fillColor: "#FFFFFF"
+            });
+
+            // hover 高亮样式
+            themeLayer.highlightStyle = new Zondy.Map.ThemeStyle({
+                stroke: true,
+                strokeWidth: 2,
+                strokeColor: 'blue',
+                fillColor: "#00F5FF",
+                fillOpacity: 0.2
+            });
+
+            // 用于单值专题图的属性字段名称
+            themeLayer.themeField = "分类索引";
+            // 风格数组，设定值对应的样式
+            themeLayer.styleGroups = [{
+                    value: "0",
+                    style: {
+                        fillColor: "#FF00FF"
+                    }
+                },
+                {
+                    value: "1",
+                    style: {
+                        fillColor: "#0000FF"
+                    }
+                }, {
+                    value: "2",
+                    style: {
+                        fillColor: "#238E23"
+                    }
+                }, {
+                    value: "3",
+                    style: {
+                        fillColor: "#8E236B"
+                    }
+                }, {
+                    value: "4",
+                    style: {
+                        fillColor: "#00FF7F"
+                    }
+                }
+            ];
+
+            //专题图层 mousemove 事件
+            themeLayer.on("mousemove", highLightLayer);
+            addThemeFeatures(uniqueQuerySuccess);
+        };
+
+        function addThemeFeatures(onsuccess) {
+
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryParameter({
+                resultFormat: "json",
+                struct: queryStruct,
+                where: '1>0'
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 10000;
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryDocFeature(queryParam, docName, 0, {
+                ip: ip,
+                port: port,
+                requestType: 'POST'
+            });
+
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(onsuccess, null);
+        }
+
+        function uniqueQuerySuccess(data) {
+            if (data != null) {
+                //客户端专题图：添加数据
+                themeLayer.addFeatures(data);
+                document.getElementById("legendview").style.display = "block";
+            }
+            stopPressBar();
+        }
+
+        function highLightLayer(e) {
+            if (e.target && e.target.refDataID) {
+                document.getElementById("infoBox").style.display = "block";
+                var fid = e.target.refDataID;
+                var fea = themeLayer.getFeatureById(fid);
+                if (fea) {
+                    document.getElementById("infoContent").innerHTML = "";
+                    document.getElementById("infoContent").innerHTML += "FID: " + fea.attributes.FID + "<br/>";
+                    document.getElementById("infoContent").innerHTML += '行政区: ' +
+                        fea.attributes['省名'] + "<br/>";
+                    document.getElementById("infoContent").innerHTML += '分类索引：' +
+                        parseInt(fea.attributes['分类索引']) + "<br/>";
+                }
+            } else {
+                document.getElementById("infoContent").innerHTML = "";
+                document.getElementById("infoBox").style.display = "none";
+            }
+        }
+
+        /**删除专题图
+         */
+        function deleteTheme() {
+            if (map != null && themeLayer != null) {
+                themeLayer.removeFromMap();
+                document.getElementById("legendview").style.display = "none";
+                document.getElementById("infoBox").style.display = "none";
+
+            }
+        }
+
+        /**开始进度条动画
+         */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /**停止进度条动画
+         */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+
+<body style="width: 100%; height:100%; position:absolute;" onload="init();">
+    <div id="preview"
+        style="display: none; text-align: center; padding-top: 250px; font-weight: bold;position: absolute;background: rgba(3, 3, 3, 0.1);color: #fff;float: left; width: 100%;height: 100%;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;z-index: 20000;">
+        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在操作，请稍候</span>
+    </div>
+    <div class="ToolLib" style="position:absolute;">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
+        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    </div>
+    <div id="map" style="width:100%;height:95%;position:absolute;top:34px;background-color:#d8d4d4;">
+    </div>
+    <div id="infoBox" class="panel panel-primary infoPane"
+        style="width:272px;right: 10px;bottom: 230px;position: absolute;fontSize:14px;display: none;">
+        <div class="panel-heading">
+            <h5 class='panel-title text-center'>属性</h5>
+        </div>
+        <div id="infoContent" class="panel-body content">
+        </div>
+    </div>
+    <div id='legendview' class="panel panel-primary legend"
+        style="width: 272px;right: 10px;bottom:0px;position: absolute;display: none;">
+        <div class="panel-heading">
+            <h5 class="panel-title text-center">图例</h5>
+        </div>
+        <div class="panel-body text-center">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="legendItemHeader">分类索引</td>
+                        <td class="legendItemValue">颜色</td>
+                    </tr>
+                    <tr>
+                        <td class='legendItemHeader'>0</td>
+                        <td class='legendItemValue' style='background: #FF00FF'></td>
+                    </tr>
+                    <tr>
+                        <td class="legendItemHeader">1</td>
+                        <td class="legendItemValue" style="background: #0000FF"></td>
+                    </tr>
+                    <tr>
+                        <td class="legendItemHeader">2</td>
+                        <td class="legendItemValue" style="background: #238E23"></td>
+                    </tr>
+                    <tr>
+                        <td class="legendItemHeader">3</td>
+                        <td class="legendItemValue" style="background: #8E236B"></td>
+                    </tr>
+                    <tr>
+                        <td class="legendItemHeader">4</td>
+                        <td class="legendItemValue" style="background: #00FF7F"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

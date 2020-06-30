@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>谷歌地图显示</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <script>
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //定义图层类
+        var tdLayer;
+
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', { terrainExaggeration: 1 });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+        }
+
+        //添加天地图WMTS
+        function addImg() {
+            remove();
+            //影像:'img'、地形：'ter'、 注记：'cta':
+            tdLayer = webGlobe.appendTDTuMapByWMTS('img');
+        }
+
+        //添加天地图WMTS
+        function addter() {
+            remove();
+            //影像:'img'、地形：'ter'、 注记：'cta':
+            tdLayer = webGlobe.appendTDTuMapByWMTS('ter');
+        }
+
+        //添加天地图WMTS
+        function addcta() {
+            remove();
+            //影像:'img'、地形：'ter'、 注记：'cta':
+            tdLayer = webGlobe.appendTDTuMapByWMTS('cta');
+        }
+
+        //移除地图
+        function remove() {
+            if (tdLayer) {
+                webGlobe.removeImageryLayer(tdLayer);
+            }
+        }
+
+    </script>
+</head>
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="add" onclick="addImg()">添加影像</button>
+        <button class="ButtonLib" id="add" onclick="addter()">添加地形</button>
+        <button class="ButtonLib" id="add" onclick="addcta()">添加注记</button>
+        <button class="ButtonLib" id="remove" onclick="remove()">删除数据</button>
+    </div>
+    <div id="GlobeView">
+    </div>
+</body>
+</html>

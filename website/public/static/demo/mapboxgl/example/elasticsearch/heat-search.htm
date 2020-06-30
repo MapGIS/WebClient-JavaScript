@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>热力分析</title>
+  <script include="jquery,moment" src="./static/libs/include-lib-local.js"></script>
+  <script include="language,elasticsearch,geojson,geohash,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v9',
+      /* style: {
+        "version": 8,
+        "sources": {
+          "mapbox-tiles": {
+            "type": "raster",
+            'tiles': [
+              "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+            ],
+            'tileSize': 256
+          }
+        },
+        "layers": [{
+          "id": "dark-tiles",
+          "type": "raster",
+          "source": "mapbox-tiles",
+          "minzoom": 0,
+          "maxzoom": 22
+        }]
+      }, */
+      zoom: 10,
+      pitch: 45,
+      center: [116.35, 39.9]
+    });
+
+    map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+
+    var mapExtent, mapLevel, startTime, endTime, geojson;
+    startTime = currentTime = Date.parse(new Date("2012-11-01 08:00:00")); //1516723200000; 毫秒
+    endTime = Date.parse(new Date("2012-11-01 23:59:59")); // 1516809599000; 毫秒
+    var timeSpeed = 60000; //10分钟的速度
+    var flashSpeed = 1000; //1秒一刷新
+    var timer; //定时器
+
+    var client = new elasticsearch.Client({
+      host: 'http://192.168.96.101:9200'
+    });
+
+    var mapvLayer, layerDataSet, layerOptions = getLayerOptions();
+
+    map.on('load', function () {
+      timer = self.setInterval("clock()", flashSpeed);
+    });
+
+    function clock() {
+      loadData(currentTime, currentTime + timeSpeed);
+      currentTime = currentTime + timeSpeed;
+    };
+
+    function loadData(startTimeStamp, endTimeStamp) {
+      var bound = wrapLatLngBounds(map.getBounds());
+      var prec = recalcLevel(map.getZoom());
+      client.search({
+        index: 'sp_taxibj_200_2', //数据库名称
+        body: {
+          size: 0, //此处返回的是hits的数组大小
+          query: {
+            bool: {
+              filter: {
+                range: {
+                  'GPS_DateTime': {
+                    from: startTimeStamp, //毫秒转换成秒
+                    to: endTimeStamp //毫秒转换成秒
+                  }
+                }
+              }
+            }
+          },
+          aggregations: {
+            'mapExtent': {
+              filter: {
+                geo_bounding_box: {
+                  'geometry': {
+                    top_left: {
+                      lat: bound.getNorthWest().lat,
+                      lon: bound.getNorthWest().lng
+                    },
+                    bottom_right: {
+                      lat: bound.getSouthEast().lat,
+                      lon: bound.getSouthEast().lng
+                    }
+                  }
+                }
+              },
+              aggregations: {
+                'geohash': {
+                  geohash_grid: {
+                    field: "geometry",
+                    precision: prec
+                  }
+                }
+              }
+            }
+          }
+        }
+      }, getData);
+    };
+
+    function getData(error, response) {
+      layerDataSet = new mapv.DataSet(convertData(response));
+      updateView();
+    }
+
+    function convertData(response) {
+      var data = [];
+      response.aggregations.mapExtent.geohash.buckets.forEach(function (bucket) {
+        var coordinates = decodeGeoHash(bucket.key);
+        data.push({
+          geometry: {
+            type: 'Point',
+            coordinates: [coordinates.longitude[2], coordinates.latitude[2]]
+          },
+          count: bucket.doc_count
+        });
+      });
+      return data;
+    };
+
+    function updateView() {
+      if (!mapvLayer) {
+        mapvLayer = new mapboxgl.zondy.MapvLayer(map, layerDataSet, layerOptions, {
+          noWrap: true
+        });
+      } else {
+        mapvLayer.updateData(layerDataSet, layerOptions);
+      }
+    }
+
+    function getLayerOptions() {
+      return {
+        fillStyle: 'rgba(55, 50, 250, 0.9)',
+        shadowColor: 'rgba(55, 50, 250, 0.8)',
+        globalCompositeOperation: 'lighter',
+        shadowBlur: 5,
+        size: 13,
+        max: 20,
+        maxOpacity: 0.9,
+        draw: 'heatmap'
+      };
+    }
+
+    function recalcLevel(level) {
+      var prec = 5;
+      if (level <= 2) {
+        prec = 2;
+      } else if (level > 2 && level <= 5) {
+        prec = 10;
+      } else if (level > 5) {
+        prec = 12;
+      } else if (level > 8 && level <= 11) {
+        prec = 12;
+      } else if (level > 11 && level <= 13) {
+        prec = 12;
+      } else if (level > 13 && level <= 15) {
+        prec = 12;
+      } else if (level > 15) {
+        prec = 12;
+      };
+      return prec;
+    }
+
+    function wrapLatLngBounds(bound) {
+      var left = bound.getWest() < -180 ? -179.99 : bound.getWest();
+      var bottom = bound.getSouth() < -90 ? -89.99 : bound.getSouth();
+      var right = bound.getEast() > 180 ? 179.99 : bound.getEast();
+      var top = bound.getNorth() > 90 ? 89.99 : bound.getNorth();
+      return new mapboxgl.LngLatBounds(
+        new mapboxgl.LngLat(left, bottom),
+        new mapboxgl.LngLat(right, top));
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>洪水淹没</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        .ToolLib {
+            border-radius: 3px;
+            overflow: hidden;
+            width: 100%;
+            height: auto;
+            box-shadow: 0 0 2px 1px #949292;
+            text-align: center;
+            z-index: 2001;
+            border-color: #66ccff;
+            border-bottom: 1px solid #949292;
+            margin-bottom: 2px;
+        }
+
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        //定义三维视图的主要类
+        var webGlobe, viewer;
+        //定义三维瓦片类
+        var tileset;
+        //定义交互式绘制矩形控件类
+        var drawPolygon;
+        //定义洪水淹没分析类
+        var flood;
+        //加载三维视图
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+                infoBox: true,
+            });
+            viewer = webGlobe.viewer;
+            if (webGlobe) {
+                //加载谷歌矢量底图
+                webGlobe.appendGoogleMap('m@207000000');
+                //加载IGS发布的M3D缓存地图文档
+                tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {
+                    loaded: function (layer) {
+                        //判断是否已有洪水淹没分析结果
+                        if (flood != undefined) {
+                            //移除洪水淹没分析显示结果
+                            webGlobe.scene.VisualAnalysisManager.remove(flood);
+                            webGlobe.viewer.entities.removeAll();
+                        }
+                        //初始化交互式绘制矩形控件类
+                        drawPolygon = new Cesium.DrawPolygonTool(webGlobe.viewer, function (e) {
+                            if (flood) {
+                                webGlobe.scene.VisualAnalysisManager.remove(flood);
+                            }
+                            var array = new Array();
+                            for (let i = 0; i < e.points.length; i++) {
+                                let point = e.points[i];
+                                let resPoint = new Cesium.Cartesian3;
+                                let invserTran = new Cesium.Matrix4;
+                                Cesium.Matrix4.inverse(tileset[0].root.transform, invserTran);
+                                Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
+                                array.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
+                            }
+                            var hight = null;
+                            for (var arraylength = 0; arraylength < array.length; arraylength++) {
+                                hight = hight < array[arraylength].z ? array[arraylength].z : hight;
+                            }
+                            var newArray = new Array();
+                            for (var arraylength = 0; arraylength < array.length; arraylength++) {
+                                array[arraylength].z = hight;
+                                let point = array[arraylength];
+                                let resPoint = new Cesium.Cartesian3;
+                                let invserTran = new Cesium.Matrix4;
+                                Cesium.Matrix4.multiplyByPoint(tileset[0].root.transform, point, resPoint);
+                                newArray.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
+                            }
+                            //初始化洪水淹没分析类
+                            flood = new Cesium.FloodAnalysis(webGlobe.scene);
+                            //设置洪水淹没分析区域点集
+                            flood.dotsList = newArray;
+                            //设置洪水淹没区域最底高度
+                            flood.minHeight = 0;
+                            //设置洪水淹没区域最高高度
+                            flood.maxHeight = 500;
+                            //设置洪水上涨速度
+                            flood.floodSpeed = 50;
+                            //水纹频率 指波浪的个数
+                            flood.frequency = 1000;
+                            //水纹速度
+                            flood.animationSpeed = 0.01;
+                            //水波的高度
+                            flood.amplitude = 10.0
+                            //指定水面颜色 和 透明度
+                            flood.floodColor = new Cesium.Color(0.2, 0.5, 0.4, 0.7);
+                            // 指定光线强度
+                            flood.specularIntensity = 3.0;
+                            //添加洪水淹没结果显示
+                            webGlobe.scene.VisualAnalysisManager.add(flood);
+                            //取消交互式绘制矩形事件激活状态
+                            drawPolygon.deactiveTool();
+                        });
+                        //设置交互式绘制矩形事件为激活状态
+                        drawPolygon.activeTool();
+                    }
+                });
+            }
+        }
+
+        /*移除洪水淹没分析*/
+        function stopFloodAnalysis() {
+            //判断是否已有洪水淹没分析结果
+            if (flood != undefined) {
+                //移除洪水淹没分析显示结果
+                webGlobe.scene.VisualAnalysisManager.remove(flood);
+            }
+            //取消交互式绘制矩形事件激活状态
+            drawPolygon.deactiveTool();
+            webGlobe.viewer.entities.removeAll();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div style="position:absolute;left:10px;top:40px;z-index:1000000;color:aliceblue">
+        <span>鼠标左键绘制区域</span>
+        <br />
+        <span>鼠标右键执行洪水淹没分析</span>
+    </div>
+    <div id="GlobeView"></div>
+</body>
+
+</html>

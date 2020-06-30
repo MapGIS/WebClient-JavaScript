@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe = new Cesium.WebSceneControl('GlobeView', {
+      terrainExaggeration: 1,
+    });
+    webGlobe.appendGoogleMap('m@207000000');
+
+    var map = webGlobe.viewer;
+
+    initMap();
+    initMapv();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    function initMapv() {
+      var data = [];
+
+    $.get('./static/data/mapv/china-point.json', function (rs) {
+      for (var i = 0; i < rs[0].length; i++) {
+        var geoCoord = rs[0][i].geoCoord;
+        data.push({
+          geometry: {
+            type: 'Point',
+            coordinates: geoCoord
+          },
+          time: Math.random() * 10
+        });
+      }
+      // 构建对应的dataset
+      var dataSet = new mapv.DataSet(data);
+
+      // 设置对应的参数
+      // https://github.com/huiyan-fe/mapv/blob/master/API.md
+      var options = {
+        context: '2d',   //cesium必须设置画布为2d
+        postRender: true,
+        postRenderFrame: 15,
+        fillStyle: 'rgba(255, 250, 50, 0.6)',
+        //shadowColor: 'rgba(255, 250, 50, 0.5)',
+        //shadowBlur: 3,
+        updateCallback: function (time) {
+          time = time.toFixed(2);
+          $('#time').html('时间' + time);
+        },
+        size: 3,
+        draw: 'simple',
+        animation: {
+          type: 'time',
+          stepsRange: {
+            start: 0,
+            end: 10
+          },
+          trails: 1,
+          duration: 6,
+        }
+      }
+      // 声明cesium的mapv图层并将其显示到三维球上
+      var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+    });
+    }
+  </script>
+
+</body>
+
+</html>

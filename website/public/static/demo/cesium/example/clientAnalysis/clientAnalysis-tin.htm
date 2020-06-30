@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+    var geojson;
+
+    initMap();
+    loadData();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+
+      var center = Cesium.Cartesian3.fromDegrees( 114.289398, 30.59418345, 500000);
+      map.scene.camera.setView({
+        destination: center
+      });
+    }
+
+    function loadData() {
+      $.getJSON('./static/data/client-analysis/point.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+    }
+
+    function convertDataToGeoJson(origindata) {
+      var points = origindata;
+      geojson = turf.tin(points);
+    }
+
+    function updateView(data) {
+      var tindatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(data, {
+        stroke: Cesium.Color.BLACK,
+        fill: Cesium.Color.GRAY,
+        strokeWidth: 15
+      }));
+      map.flyTo(tindatasource);
+    }
+  </script>
+
+</body>
+
+</html>

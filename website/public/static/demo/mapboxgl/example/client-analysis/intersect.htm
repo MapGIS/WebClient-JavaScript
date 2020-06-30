@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>求交判断</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script
+      include="geohash,geojson,turf"
+      src="./static/libs/include-mapboxgl-local.js"
+    ></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <script>
+      var poly1, poly2, polyInter;
+      var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
+      var map = new mapboxgl.Map({
+        container: "map",
+        crs: "EPSG:4326", //经纬度一定要设置crs参数
+        maxBounds: [
+          [-180, -90],
+          [180, 90],
+        ],
+        style: {
+          version: 8,
+          sources: {
+            "tianditu-4326-vector": {
+              //来源类型为栅格瓦片
+              type: "raster",
+              tiles: [
+                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                "http://t" +
+                  Math.round(Math.random() * 7) +
+                  ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                  "&TILECOL=" +
+                  "{x}" +
+                  "&TILEROW=" +
+                  "{y}" +
+                  "&TILEMATRIX=" +
+                  "{z}" +
+                  "&tk=" +
+                  tiandituKey,
+              ],
+              //栅格瓦片的分辨率
+              tileSize: 256,
+            },
+            "tianditu-4326-symbol": {
+              //来源类型为栅格瓦片
+              type: "raster",
+              tiles: [
+                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                "http://t" +
+                  Math.round(Math.random() * 7) +
+                  ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                  "&TILECOL=" +
+                  "{x}" +
+                  "&TILEROW=" +
+                  "{y}" +
+                  "&TILEMATRIX=" +
+                  "{z}" +
+                  "&tk=" +
+                  tiandituKey,
+              ],
+              //栅格瓦片的分辨率
+              tileSize: 256,
+            },
+          },
+          layers: [
+            {
+              id: "tianditu-4326-vector",
+              type: "raster",
+              source: "tianditu-4326-vector",
+              minzoom: 0,
+              maxzoom: 22,
+            },
+            {
+              id: "tianditu-4326-symbol",
+              type: "raster",
+              source: "tianditu-4326-symbol",
+              minzoom: 0,
+              maxzoom: 22,
+            },
+          ],
+        },
+        zoom: 10,
+        center: [-122.801742, 45.48565],
+      });
+
+      map.on("load", function() {
+        loadData();
+        interSect();
+        updateView();
+      });
+
+      function loadData() {
+        poly1 = turf.polygon([
+          [
+            [-122.801742, 45.48565],
+            [-122.801742, 45.60491],
+            [-122.584762, 45.60491],
+            [-122.584762, 45.48565],
+            [-122.801742, 45.48565],
+          ],
+        ]);
+
+        poly2 = turf.polygon([
+          [
+            [-122.520217, 45.535693],
+            [-122.64038, 45.553967],
+            [-122.720031, 45.526554],
+            [-122.669906, 45.507309],
+            [-122.723464, 45.446643],
+            [-122.532577, 45.408574],
+            [-122.487258, 45.477466],
+            [-122.520217, 45.535693],
+          ],
+        ]);
+      }
+
+      function interSect() {
+        polyInter = turf.intersect(poly1, poly2);
+      }
+
+      function updateView() {
+        map.addLayer({
+          id: "poly1",
+          type: "fill",
+          source: {
+            type: "geojson",
+            data: poly1,
+          },
+          paint: {
+            "fill-color": "#222",
+            "fill-opacity": 0.8,
+            "fill-outline-color": "#FFF",
+          },
+        });
+        map.addLayer({
+          id: "poly2",
+          type: "fill",
+          source: {
+            type: "geojson",
+            data: poly2,
+          },
+          paint: {
+            "fill-color": "#222",
+            "fill-opacity": 0.8,
+            "fill-outline-color": "#FFF",
+          },
+        });
+        map.addLayer({
+          id: "polyInter",
+          type: "fill",
+          source: {
+            type: "geojson",
+            data: polyInter,
+          },
+          paint: {
+            "fill-color": "#FF0000",
+            "fill-opacity": 0.8,
+            "fill-outline-color": "#FFF",
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

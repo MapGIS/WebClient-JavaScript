@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>计算折线长度</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
+    <script include="draw" src="./static/libs/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        var drawnItems, markerlatLng;
+
+
+        /**显示地图*/
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //添加缩放控件
+                zoomControl: true,
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //中心点
+                center: [(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
+                / 2],
+                //最大级数
+                maxZoom: 10,
+                //最小级数
+                minZoom: 0,
+                //显示级数
+                zoom: 6
+            });
+            //创建地图文档图层
+            mapDocLayer = new Zondy.Map.MapDocLayer("Hubei4326", {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true
+            }).addTo(map);
+            drawnItems = L.featureGroup().addTo(map)
+
+            map.addControl(new L.Control.Draw({
+                draw: {
+                    polyline: true,
+                    polygon: false,
+                    rectangle: false,
+                    circle: false,
+                    marker: false,
+                    circlemarker: false
+                }
+            }));
+
+            map.on(L.Draw.Event.CREATED, function (event) {
+                var layer = event.layer;
+                drawnItems.addLayer(layer);
+                var latlngs = layer.editing.latlngs[0]
+                var dots = [];
+                for (var i = 0; i < latlngs.length; i++) {
+                    var latlng = latlngs[i]
+                    dots.push(new Zondy.Object.Point2D(latlng.lng, latlng.lat))
+                }
+                markerlatLng = latlngs[latlngs.length - 1]
+                //获取要计算长度的几何对象点集，服务端计算
+                CalPolyLineLength(dots)
+            }.bind(this));
+        }
+
+        /**计算折线长度*/
+        function CalPolyLineLength(dots) {
+            //初始化长度测量服务
+            var calLength = new Zondy.Service.CalPolyLineLength(dots, {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163"
+            });
+            //建议普通用户采用此类直接获取MapGIS GDB已经提供的空间参考系
+            var gdbInfo = new Zondy.Object.CGDBInfo({
+                //数据库名称
+                GDBName: "OpenLayerVecterMap",
+                //数据源名称
+                ServerName: "MapGISLocal",
+                //除MapGISLocal数据源，其它的都设置
+                Password: "",
+                //除MapGISLocal数据源，其它的都设置
+                User: ""
+            });
+            //用于进行SRSID投影的参数类
+            var projBySRSID = new Zondy.Service.CProjectBySRSID(601, gdbInfo);
+            //执行长度测量服务，measureCallBack为测量回调函数
+            calLength.execute(projBySRSID, measureCallBack);
+        }
+
+        /**测量回调函数
+         *  @param {json对象} data 获取结果对象
+         */
+        function measureCallBack(data) {
+            if (data && data.succeed) {
+                var length = data.value;
+                var output;
+                if (length > 100) {
+                    output = (Math.round(length / 1000 * 100) / 100) + "" + "km";
+                } else {
+                    output = (Math.round(length * 100) / 100) + "" + "m";
+                }
+                var markerIcon = L.divIcon({
+                    html: output,
+                    className: '',
+                    iconSize: [120, 20]
+                });
+                drawnItems.addLayer(L.marker([markerlatLng.lat, markerlatLng.lng], {icon: markerIcon}))
+            }
+        }
+
+        /**删除绘制的要素*/
+        function deleteMeasure() {
+            drawnItems.clearLayers()
+        }
+    </script>
+</head>
+<body onload="init()">
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="清除测量结果" onclick='deleteMeasure()'/>
+    <div id="introduction">
+        <font style=" float: left; text-align: left">说明：该示例是在程序里面给定点坐标进行长度测量</font><br/>
+    </div>
+</div>
+<div id="resultShow">
+</div>
+<div id="leaf_map" style="width: 100%; height:650px;"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf,colors-marker" src="./static/libs/include-leaflet-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = L.map('map').setView([39.9, 116.35], 9);
+    var geojson;
+
+    initMap();
+    loadData();
+
+    function initMap() {
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+          attribution: '<a href="#">MapGIS</a>',
+          maxZoom: 18,
+          id: 'mapbox.light'
+        }).addTo(map);
+    }
+
+    function loadData() {
+      $.getJSON('./static/data/client-analysis/buffer-hash-4.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+    }
+
+    function convertDataToGeoJson(origindata) {
+      var columnarPoints = [];
+      var points;
+      origindata.aggregations.geohash.buckets.forEach(function(bucket) {
+        var coordinates = decodeGeoHash(bucket.key);
+        var countNumber = bucket.doc_count;
+        var point = {
+          pointKey: [
+            coordinates.longitude[2], coordinates.latitude[2]
+          ],
+          count: bucket.doc_count
+        }; //[0] min [1]max [2] 中心点
+        columnarPoints.push(point);
+      });
+      points = GeoJSON.parse(columnarPoints, {
+        'Point': 'pointKey'
+      });
+      geojson = turf.centroid(points);
+      L.geoJson(points).addTo(map);
+    }
+
+    function updateView(data) {
+      // var marker = .addTo(map);
+      L.geoJson(data, {
+        pointToLayer: function(geoJsonPoint, latlng) {
+          return L.marker(latlng, {
+            icon: L.AwesomeMarkers.icon({
+              icon: 'spinner',
+              prefix: 'fa',
+              markerColor: 'red',
+              spin: true
+            })
+          });
+        }
+      }).addTo(map);
+
+    }
+  </script>
+
+</body>
+
+</html>

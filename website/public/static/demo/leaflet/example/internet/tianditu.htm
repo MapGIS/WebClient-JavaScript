@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>天地图</title>
+    <script src="./static/libs/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        /**显示地图
+         */
+        function init() {
+            "use strict";
+            //地图容器
+
+            var map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326, //这里换成TDT_WGS84对数据精度要求不高应该也能替代
+                //显示中心
+                center: [40, 100],
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 5,
+                //当前显示等级
+                zoom: 3
+                //限制显示地理范围
+                //maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+            //地形
+            var layer1 = new Zondy.Map.TDTLayer({
+                //图层类型
+                layerType: 'vec',
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
+                //设置地图不连续显示
+                noWrap: true
+            });
+            var layer2 = new Zondy.Map.TDTLayer({
+                //图层类型
+                layerType: 'cva',
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
+                //设置地图不连续显示
+                noWrap: true
+            });
+            var layer3 = new Zondy.Map.TDTLayer({
+                //图层类型
+                layerType: 'img',
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
+                //设置地图不连续显示
+                noWrap: true
+            });
+            var layer4 = new Zondy.Map.TDTLayer({
+                //图层类型
+                layerType: 'cia',
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                //key
+                token: "4c27d6e0e8a90715b23a989d42272fd8",
+                //设置地图不连续显示
+                noWrap: true
+            });
+            //图层组
+            var LayerG = L.layerGroup([layer1, layer2]);
+            //添加图层组
+            LayerG.addTo(map);
+            var vec = {
+                "矢量图层": LayerG
+            };
+            var img = {
+                "影像图层": layer3,
+                "影像注记": layer4
+            };
+            //图层控制显示控件
+            L.control.layers(vec, img).addTo(map);
+            //绘制圆，leaflet无绘制点功能，可用绘制圆或者标记功能代替
+            L.circle([30.598428, 114.321317], {
+                radius: 100,
+                color: 'blue',
+                fillColor: '#f03',
+                fillOpacity: 1
+            }).addTo(map);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
+</body>
+
+</html>

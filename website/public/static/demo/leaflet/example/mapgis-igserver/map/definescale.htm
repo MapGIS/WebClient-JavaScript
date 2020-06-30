@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>矢量地图文档显示</title>
+    <script include="proj4" src="./static/libs/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+
+        var map;
+
+        /**显示地图*/
+        function init() {
+            "use strict";
+            getTileInfo()
+        }
+
+        /**获取瓦片信息*/
+        function getTileInfo() {
+            var mapInfo = new Zondy.Catalog.TileLayer({
+                ip: "develop.smaryun.com",
+                port: "6163",
+                tileName: "武汉市区自定义比例尺"
+            });
+            mapInfo.getTileInfo(getSuccess);
+        }
+
+        function getSuccess(res) {
+            if (!res.TileInfo2) {
+                alert("未查到瓦片信息...", 3000);
+                return;
+            }
+            console.log(res)
+            //地图容器参数
+            var mapOpt = {};
+            mapOpt.zoom = res.TileInfo2.tileInfo.startLevel;
+            mapOpt.minZoom = res.TileInfo2.tileInfo.startLevel;
+            mapOpt.maxZoom = res.TileInfo2.tileInfo.endLevel;
+
+            //获取瓦片地图范围，裁剪起始点，分辨率
+            var b = {};
+            b.xMin = res.TileInfo2.fullExtent.xmin;
+            b.yMin = res.TileInfo2.fullExtent.ymin;
+            b.xMax = res.TileInfo2.fullExtent.xmax;
+            b.yMax = res.TileInfo2.fullExtent.ymax;
+            var bounds = L.bounds([[b.xMin, b.yMin], [b.xMax, b.yMax]]);
+            var origin = [res.TileInfo2.tileInfo.origin.x, res.TileInfo2.tileInfo.origin.y];
+            var resolutions = [];
+            var lods = res.TileInfo2.tileInfo.lods;
+            for (var i = 0; i < lods.length; i++) {
+                var resolution = lods[i].resolution;
+                resolutions.push(resolution);
+            }
+
+            //获取瓦片地图坐标系椭球参数
+            var lon = res.TileInfo2.tileInfo.spatialReference.tileSRefInfo.Lon / 10000;
+            var lat = res.TileInfo2.tileInfo.spatialReference.tileSRefInfo.Lat / 10000;
+            var A = res.TileInfo2.tileInfo.spatialReference.tileSRefInfo.A;
+            var B = res.TileInfo2.tileInfo.spatialReference.tileSRefInfo.B;
+            var X = res.TileInfo2.tileInfo.spatialReference.tileSRefInfo.FalseE;
+            var Y = res.TileInfo2.tileInfo.spatialReference.tileSRefInfo.FalseN;
+            var proj4;
+            var projName;
+            if (lon !== undefined && lon !== null && A && B) {
+                proj4 = "+proj=tmerc +lat_0=" + lat + " +lon_0=" + lon + " +k=1 +x_0=" + X +
+                    " +y_0=" + Y + " +a=" + A + " +b=" + B + " +units=m +no_defs";
+                projName = 'EPSG:1234';
+                mapOpt.crs = new L.Proj.CRS(projName, proj4, {
+                    resolutions: resolutions,
+                    origin: origin,
+                    bounds: bounds
+                });
+            } else {
+                if (b.xMin >= -360 && b.xMax <= 360 && b.yMin >= -360 && b.yMax <= 360) {
+                    mapOpt.crs = L.CRS.EPSG4326
+                } else {
+                    mapOpt.crs = L.CRS.EPSG3857
+                }
+            }
+
+            //设置中心，范围。将瓦片地图范围坐标转成地图可接受的经纬度坐标
+            var northEastPoint = L.point(b.xMax, b.yMax);
+            var northEastLatlng = mapOpt.crs.unproject(northEastPoint);
+            b.yMax = northEastLatlng.lat;
+            b.xMax = northEastLatlng.lng;
+            var southWestPoint = L.point(b.xMin, b.yMin);
+            var southWestLatlng = mapOpt.crs.unproject(southWestPoint);
+            b.yMin = southWestLatlng.lat;
+            b.xMin = southWestLatlng.lng;
+            mapOpt.center = [(b.yMin + b.yMax) / 2, (b.xMin + b.xMax) / 2];
+            console.log(mapOpt)
+
+            map = L.map('leaf_map', mapOpt);
+
+            new Zondy.Map.MapTileLayer("武汉市区自定义比例尺", {
+                //IGServer所在ip地址
+                ip: "develop.smaryun.com",
+                //IGServer请求端口号
+                port: "6163",
+                //设置地图不连续显示
+                noWrap: true
+            }).addTo(map);
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
+</body>
+</html>

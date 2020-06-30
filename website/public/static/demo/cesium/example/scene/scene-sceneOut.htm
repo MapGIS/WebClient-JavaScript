@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>动态圆</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+         'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+        }
+
+        /*屏幕截图*/
+        function outputImage() {
+            webGlobe.outputImage();         
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="outputImage" onclick="outputImage()">屏幕截图</button>
+    </div>
+    <div id="GlobeView"></div>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Along</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #GlobeView {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="GlobeView"></div>
+    <script>
+      var webGlobe = new Cesium.WebSceneControl("GlobeView", {
+        terrainExaggeration: 1,
+      });
+      webGlobe.appendGoogleMap("m@207000000");
+
+      var map = webGlobe.viewer;
+
+      initMap();
+      initMapv();
+
+      function initMap() {
+        var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+        map.scene.camera.setView({
+          destination: center,
+        });
+      }
+
+      function initMapv() {
+        var randomCount = 300;
+
+        var data = [];
+
+        var citys = [
+          "北京",
+          "天津",
+          "上海",
+          "重庆",
+          "石家庄",
+          "太原",
+          "呼和浩特",
+          "哈尔滨",
+          "长春",
+          "沈阳",
+          "济南",
+          "南京",
+          "合肥",
+          "杭州",
+          "南昌",
+          "福州",
+          "郑州",
+          "武汉",
+          "长沙",
+          "广州",
+          "南宁",
+          "西安",
+          "银川",
+          "兰州",
+          "西宁",
+          "乌鲁木齐",
+          "成都",
+          "贵阳",
+          "昆明",
+          "拉萨",
+          "海口",
+        ];
+
+        // 构造数据
+        while (randomCount--) {
+          var cityCenter = mapv.utilCityCenter.getCenterByCityName(
+            citys[parseInt(Math.random() * citys.length)]
+          );
+          data.push({
+            geometry: {
+              type: "Point",
+              coordinates: [
+                cityCenter.lng - 2 + Math.random() * 4,
+                cityCenter.lat - 2 + Math.random() * 4,
+              ],
+            },
+            count: 30 * Math.random(),
+          });
+        }
+
+        // 构建对应的dataset
+        var dataSet = new mapv.DataSet(data);
+
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
+        var options = {
+          context: "2d", //cesium必须设置画布为2d
+          fillStyle: "rgba(55, 50, 250, 0.8)",
+          shadowColor: "rgba(255, 250, 50, 1)",
+          shadowBlur: 20,
+          size: 40,
+          globalAlpha: 0.5,
+          label: {
+            show: true,
+            fillStyle: "white",
+            // shadowColor: 'yellow',
+            // font: '20px Arial',
+            // shadowBlur: 10,
+          },
+          gradient: {
+            0.25: "rgb(0,0,255)",
+            0.55: "rgb(0,255,0)",
+            0.85: "yellow",
+            1.0: "rgb(255,0,0)",
+          },
+          draw: "grid", // 绘制网格图
+        };
+        // 声明cesium的mapv图层并将其显示到三维球上
+        var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(
+          map,
+          dataSet,
+          options
+        );
+        
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
+        var options = {
+          context: '2d',  //cesium必须设置画布为2d
+          postRender: true,
+          postRenderFrame: 5,
+          fillStyle: "rgba(55, 50, 250, 0.8)",
+          size: 40,
+          globalAlpha: 0.5,
+          label: {
+            show: true,
+            fillStyle: "white",
+            shadowColor: "yellow",
+            font: "15px Arial",
+            shadowBlur: 10,
+          },
+          gradient: {
+            0: "rgba(49, 54, 149, 0)",
+            0.2: "rgba(69,117,180, 0.7)",
+            0.3: "rgba(116,173,209, 0.7)",
+            0.4: "rgba(171,217,233, 0.7)",
+            0.5: "rgba(224,243,248, 0.7)",
+            0.6: "rgba(254,224,144,0.7)",
+            0.7: "rgba(253,174,97,0.7)",
+            0.8: "rgba(244,109,67,0.8)",
+            0.9: "rgba(215,48,39,0.8)",
+            0.95: "rgba(165, 0, 38,0.8)",
+          },
+          shadowColor: "rgba(255, 255, 50, 1)",
+          shadowBlur: 10,
+          max: 100,
+          draw: "grid",
+        };
+      }
+    </script>
+  </body>
+</html>

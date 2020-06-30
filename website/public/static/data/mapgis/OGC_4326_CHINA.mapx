@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="gb2312" standalone="no"?>
+<datacenter>
+  <root filePath="D:\GIS\Mapx\OGC_4326_CHINA.mapx" title="地图文档" subject="" author="" category="" keywords="" comments="" version="MapGIS K10">
+    <ClibDir6x>
+    </ClibDir6x>
+    <SlibDir6x>
+    </SlibDir6x>
+    <subnode name="OGC_4326_CHINA" mapguid="d3db2371-d130-47c6-9a50-9b10ed65651f" LegendBoardGUID="00000000-0000-0000-0000-000000000000" LegendBoardID="-1" type="Map" class="CreateMap@GisCartoPrj.dll">
+      <description>
+      </description>
+      <isDisplayOnLayout>1</isDisplayOnLayout>
+      <isCustomEntireExtent>0</isCustomEntireExtent>
+      <customEntireExtent xmin="0." ymin="0." xmax="0." ymax="0.">
+      </customEntireExtent>
+      <viewExtent xmin="57.270341903916936" ymin="-5.2407753154639618" xmax="156.74295515579723" ymax="61.12960883925183">
+      </viewExtent>
+      <minScale>0.</minScale>
+      <maxScale>0.</maxScale>
+      <ScaleRangeMinScale>0.</ScaleRangeMinScale>
+      <ScaleRangeMaxScale>0.</ScaleRangeMaxScale>
+      <isFixedScalesDisplay>0</isFixedScalesDisplay>
+      <isProjTrans>0</isProjTrans>
+      <rotateCenter>
+        <X>0.</X>
+        <Y>0.</Y>
+      </rotateCenter>
+      <rotateAngle>0.</rotateAngle>
+      <backColor>9</backColor>
+      <backgroundImage>
+      </backgroundImage>
+      <displayHint>1</displayHint>
+      <imageLayerZoom>-1</imageLayerZoom>
+      <fixedMapScales>
+      </fixedMapScales>
+      <subnode name="背景图" type="SFeatureLayer" geometryType="3" class="CreateGLayer@GisCartoPrj.dll" LayerClassCode="-1">
+        <url>gdbp://MapGisLocal/OGC/sfcls/背景图</url>
+        <RelativePath>
+        </RelativePath>
+        <layerWeight>0</layerWeight>
+        <IsSnaped>1</IsSnaped>
+        <state>VISIBLE</state>
+        <directIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </directIndex>
+        <reverseIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </reverseIndex>
+        <conditions>0000000000000000000000000000000000</conditions>
+        <CustomLayerRenderInfo dllName="" className="" renderName="" descript="" midWareType="0" dataType="0" param="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+        </CustomLayerRenderInfo>
+        <IsSameAs6xNotDraw0Lin>0</IsSameAs6xNotDraw0Lin>
+        <label name="noname" type="SimpleLabel" class="CreateGLabel@GisCartoPrj.dll">
+          <state>UNVISIBLE</state>
+          <geomInfoType>5</geomInfoType>
+          <minScale>0.</minScale>
+          <maxScale>0.</maxScale>
+          <ScaleRange MinScale="0." MaxScale="0.">
+          </ScaleRange>
+          <geoInfo>
+            <annInfo height="14." width="14." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+            </annInfo>
+          </geoInfo>
+          <labelExpression>
+          </labelExpression>
+          <geomType>pnt</geomType>
+          <priority>1</priority>
+          <isLabelClientOutside>false</isLabelClientOutside>
+          <backType>1</backType>
+          <highlightClr>0</highlightClr>
+          <backGeoInfo>
+            <linInfo lib="0" id="1" ovprnt="0" outpenw="5.000000074505806e-002;5.000000074505806e-002;5.000000074505806e-002" outclr="9;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+            </linInfo>
+          </backGeoInfo>
+          <numericPrecision>0</numericPrecision>
+          <isNewLineToLabel>false</isNewLineToLabel>
+          <maxLengthPreLine>0</maxLengthPreLine>
+          <isLabelUnPlaced>false</isLabelUnPlaced>
+          <reducedSizeForContinulLabel>0</reducedSizeForContinulLabel>
+          <isHighlightLabelUnPlaced>false</isHighlightLabelUnPlaced>
+          <labelFormat>
+          </labelFormat>
+          <placeInfo type="1" offset="0." eightLocationPrioritys="1;2;3;4;5;6;7;8" anyLocationCount="1" anyLocationPrioritys="0." isAvoidPointSymbol="0" isFollowPointSymbolBorder="0">
+          </placeInfo>
+        </label>
+        <IsUseSuperLink>0</IsUseSuperLink>
+        <SuperLinkFieldName>无</SuperLinkFieldName>
+        <SuperLinkmode>1</SuperLinkmode>
+        <LayerControl LayerNo="0">
+          <LayerState>
+          </LayerState>
+        </LayerControl>
+        <systemLibGUID>9cbd5f3b-3d69-46aa-8a6d-af8d0f9f621b</systemLibGUID>
+        <vectorRenderInfoNew>
+          <IsShowSymbol>1</IsShowSymbol>
+          <ShowSymbolMinScale>1.e+100</ShowSymbolMinScale>
+          <ShowSymbolMaxScale>0.</ShowSymbolMaxScale>
+          <IsSymbolFollowZoom>0</IsSymbolFollowZoom>
+          <FollowZoomMinScale>1.e+100</FollowZoomMinScale>
+          <FollowZoomMaxScale>0.</FollowZoomMaxScale>
+          <ScaleOfSymbolSize>4004482.8891479298</ScaleOfSymbolSize>
+          <sTransParency>0</sTransParency>
+          <IsShowCoord>0</IsShowCoord>
+          <IsDispRect>0</IsDispRect>
+          <MinVisibleSize>0.</MinVisibleSize>
+          <IsShowLinDire>0</IsShowLinDire>
+          <direLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;2;2" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="0." yscale="0.">
+          </direLinInfo>
+          <IsReduceLin>0</IsReduceLin>
+          <ReduceLinStep>5.</ReduceLinStep>
+          <NotDraw0Lin>0</NotDraw0Lin>
+          <IsFillReg>1</IsFillReg>
+          <FillRegMinScale>1.e+100</FillRegMinScale>
+          <FillRegMaxScale>0.</FillRegMaxScale>
+          <IsShowRegBorder>1</IsShowRegBorder>
+          <ShowRegBorderMinScale>1.e+100</ShowRegBorderMinScale>
+          <ShowRegBorderMaxScale>0.</ShowRegBorderMaxScale>
+          <RegBorderLinInfo lib="0" id="6" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </RegBorderLinInfo>
+          <IsRegBorderShowSymbol>1</IsRegBorderShowSymbol>
+          <RegBorderShowSymbolMinScale>1.e+100</RegBorderShowSymbolMinScale>
+          <RegBorderShowSymbolMaxScale>0.</RegBorderShowSymbolMaxScale>
+          <IsRegBorderFollowZoom>0</IsRegBorderFollowZoom>
+          <RegBorderFollowZoomMinScale>1.e+100</RegBorderFollowZoomMinScale>
+          <RegBorderFollowZoomMaxScale>0.</RegBorderFollowZoomMaxScale>
+          <PixSizeofFilterSmallFeature>0</PixSizeofFilterSmallFeature>
+          <IsUseErrorSymbol>0</IsUseErrorSymbol>
+          <ErrPntInfo lib="0" id="1" height="10." width="10." angle="0." outpenw="1.;1.;1." outclr="5;4;3" ovprnt="0" fillflg="0" backexp="0." backclr="0">
+          </ErrPntInfo>
+          <ErrLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </ErrLinInfo>
+          <ErrRegInfo lib="0" id="0" ovprnt="0" fillmode="0" fillclr="5" endclr="0" pathei="5." patwid="5." ang="0." patclr="3" outpenw="0." fullpatflg="0">
+          </ErrRegInfo>
+          <ErrAnnInfo height="12." width="0." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+          </ErrAnnInfo>
+        </vectorRenderInfoNew>
+        <vectorRenderInfo sRegFillType="2" bSymbolShow="1" bSymbolSizeFollowZoom="0" bSymbolPenWidthFollowZoom="0" bAnnSizeFollowZoom="0">
+          <regBorderLinInfo id="6" outclr="1;4;3">
+          </regBorderLinInfo>
+          <directionLinInfo outclr="2;2;2" xscale="0." yscale="0.">
+          </directionLinInfo>
+        </vectorRenderInfo>
+        <IsDispElementRect>0</IsDispElementRect>
+        <Renders UseSymbolLevels="0">
+        </Renders>
+        <minScale>4.2073508331315998e-092</minScale>
+        <maxScale>1.e+100</maxScale>
+        <ScaleRange MinScale="1.e+100" MaxScale="0.">
+        </ScaleRange>
+        <Extend>
+        </Extend>
+      </subnode>
+      <subnode name="中国" type="SFeatureLayer" geometryType="3" class="CreateGLayer@GisCartoPrj.dll" LayerClassCode="-1">
+        <url>gdbp://MapGisLocal/OGC/sfcls/中国</url>
+        <RelativePath>
+        </RelativePath>
+        <layerWeight>0</layerWeight>
+        <IsSnaped>1</IsSnaped>
+        <state>VISIBLE</state>
+        <directIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </directIndex>
+        <reverseIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </reverseIndex>
+        <conditions>
+        </conditions>
+        <CustomLayerRenderInfo dllName="" className="" renderName="" descript="" midWareType="0" dataType="0" param="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+        </CustomLayerRenderInfo>
+        <IsSameAs6xNotDraw0Lin>0</IsSameAs6xNotDraw0Lin>
+        <label name="noname" type="SimpleLabel" class="CreateGLabel@GisCartoPrj.dll">
+          <state>UNVISIBLE</state>
+          <geomInfoType>5</geomInfoType>
+          <minScale>0.</minScale>
+          <maxScale>0.</maxScale>
+          <ScaleRange MinScale="0." MaxScale="0.">
+          </ScaleRange>
+          <geoInfo>
+            <annInfo height="14." width="14." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+            </annInfo>
+          </geoInfo>
+          <labelExpression>
+          </labelExpression>
+          <geomType>pnt</geomType>
+          <priority>1</priority>
+          <isLabelClientOutside>false</isLabelClientOutside>
+          <backType>1</backType>
+          <highlightClr>0</highlightClr>
+          <backGeoInfo>
+            <linInfo lib="0" id="1" ovprnt="0" outpenw="5.000000074505806e-002;5.000000074505806e-002;5.000000074505806e-002" outclr="9;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+            </linInfo>
+          </backGeoInfo>
+          <numericPrecision>0</numericPrecision>
+          <isNewLineToLabel>false</isNewLineToLabel>
+          <maxLengthPreLine>0</maxLengthPreLine>
+          <isLabelUnPlaced>false</isLabelUnPlaced>
+          <reducedSizeForContinulLabel>0</reducedSizeForContinulLabel>
+          <isHighlightLabelUnPlaced>false</isHighlightLabelUnPlaced>
+          <labelFormat>
+          </labelFormat>
+          <placeInfo type="1" offset="0." eightLocationPrioritys="1;2;3;4;5;6;7;8" anyLocationCount="1" anyLocationPrioritys="0." isAvoidPointSymbol="0" isFollowPointSymbolBorder="0">
+          </placeInfo>
+        </label>
+        <IsUseSuperLink>0</IsUseSuperLink>
+        <SuperLinkFieldName>无</SuperLinkFieldName>
+        <SuperLinkmode>1</SuperLinkmode>
+        <LayerControl LayerNo="0">
+          <LayerState>
+          </LayerState>
+        </LayerControl>
+        <systemLibGUID>9cbd5f3b-3d69-46aa-8a6d-af8d0f9f621b</systemLibGUID>
+        <vectorRenderInfoNew>
+          <IsShowSymbol>1</IsShowSymbol>
+          <ShowSymbolMinScale>1.e+100</ShowSymbolMinScale>
+          <ShowSymbolMaxScale>0.</ShowSymbolMaxScale>
+          <IsSymbolFollowZoom>0</IsSymbolFollowZoom>
+          <FollowZoomMinScale>1.e+100</FollowZoomMinScale>
+          <FollowZoomMaxScale>0.</FollowZoomMaxScale>
+          <ScaleOfSymbolSize>1000.</ScaleOfSymbolSize>
+          <sTransParency>0</sTransParency>
+          <IsShowCoord>0</IsShowCoord>
+          <IsDispRect>0</IsDispRect>
+          <MinVisibleSize>0.</MinVisibleSize>
+          <IsShowLinDire>0</IsShowLinDire>
+          <direLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;2;2" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="0." yscale="0.">
+          </direLinInfo>
+          <IsReduceLin>0</IsReduceLin>
+          <ReduceLinStep>5.</ReduceLinStep>
+          <NotDraw0Lin>0</NotDraw0Lin>
+          <IsFillReg>1</IsFillReg>
+          <FillRegMinScale>1.e+100</FillRegMinScale>
+          <FillRegMaxScale>0.</FillRegMaxScale>
+          <IsShowRegBorder>1</IsShowRegBorder>
+          <ShowRegBorderMinScale>1.e+100</ShowRegBorderMinScale>
+          <ShowRegBorderMaxScale>0.</ShowRegBorderMaxScale>
+          <RegBorderLinInfo lib="0" id="9" ovprnt="0" outpenw="1.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </RegBorderLinInfo>
+          <IsRegBorderShowSymbol>1</IsRegBorderShowSymbol>
+          <RegBorderShowSymbolMinScale>1.e+100</RegBorderShowSymbolMinScale>
+          <RegBorderShowSymbolMaxScale>0.</RegBorderShowSymbolMaxScale>
+          <IsRegBorderFollowZoom>0</IsRegBorderFollowZoom>
+          <RegBorderFollowZoomMinScale>1000000.</RegBorderFollowZoomMinScale>
+          <RegBorderFollowZoomMaxScale>10000.</RegBorderFollowZoomMaxScale>
+          <PixSizeofFilterSmallFeature>0</PixSizeofFilterSmallFeature>
+          <IsUseErrorSymbol>0</IsUseErrorSymbol>
+          <ErrPntInfo lib="0" id="1" height="10." width="10." angle="0." outpenw="1.;1.;1." outclr="5;4;3" ovprnt="0" fillflg="0" backexp="0." backclr="0">
+          </ErrPntInfo>
+          <ErrLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </ErrLinInfo>
+          <ErrRegInfo lib="0" id="0" ovprnt="0" fillmode="0" fillclr="5" endclr="0" pathei="5." patwid="5." ang="0." patclr="3" outpenw="0." fullpatflg="0">
+          </ErrRegInfo>
+          <ErrAnnInfo height="12." width="0." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+          </ErrAnnInfo>
+        </vectorRenderInfoNew>
+        <vectorRenderInfo sRegFillType="2" bSymbolShow="1" bSymbolSizeFollowZoom="0" bSymbolPenWidthFollowZoom="0" bAnnSizeFollowZoom="0">
+          <regBorderLinInfo id="9" outpenw="1.;0.;0." outclr="1;4;3">
+          </regBorderLinInfo>
+          <directionLinInfo outclr="2;2;2" xscale="0." yscale="0.">
+          </directionLinInfo>
+        </vectorRenderInfo>
+        <IsDispElementRect>0</IsDispElementRect>
+        <Renders UseSymbolLevels="0">
+        </Renders>
+        <minScale>4.2073508331315998e-092</minScale>
+        <maxScale>1.e+100</maxScale>
+        <ScaleRange MinScale="1.e+100" MaxScale="0.">
+        </ScaleRange>
+        <Extend>
+        </Extend>
+      </subnode>
+      <subnode name="省级行政区" type="SFeatureLayer" geometryType="3" class="CreateGLayer@GisCartoPrj.dll" LayerClassCode="-1">
+        <url>gdbp://MapGisLocal/OGC/sfcls/省级行政区</url>
+        <RelativePath>
+        </RelativePath>
+        <layerWeight>0</layerWeight>
+        <IsSnaped>1</IsSnaped>
+        <state>VISIBLE</state>
+        <directIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </directIndex>
+        <reverseIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </reverseIndex>
+        <conditions>0000000000000000000000000000000000</conditions>
+        <CustomLayerRenderInfo dllName="" className="" renderName="" descript="" midWareType="0" dataType="0" param="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+        </CustomLayerRenderInfo>
+        <IsSameAs6xNotDraw0Lin>0</IsSameAs6xNotDraw0Lin>
+        <label name="noname" type="SimpleLabel" class="CreateGLabel@GisCartoPrj.dll">
+          <state>UNVISIBLE</state>
+          <geomInfoType>5</geomInfoType>
+          <minScale>0.</minScale>
+          <maxScale>0.</maxScale>
+          <ScaleRange MinScale="0." MaxScale="0.">
+          </ScaleRange>
+          <geoInfo>
+            <annInfo height="14." width="14." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+            </annInfo>
+          </geoInfo>
+          <labelExpression>
+          </labelExpression>
+          <geomType>pnt</geomType>
+          <priority>1</priority>
+          <isLabelClientOutside>false</isLabelClientOutside>
+          <backType>1</backType>
+          <highlightClr>0</highlightClr>
+          <backGeoInfo>
+            <linInfo lib="0" id="1" ovprnt="0" outpenw="5.000000074505806e-002;5.000000074505806e-002;5.000000074505806e-002" outclr="9;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+            </linInfo>
+          </backGeoInfo>
+          <numericPrecision>0</numericPrecision>
+          <isNewLineToLabel>false</isNewLineToLabel>
+          <maxLengthPreLine>0</maxLengthPreLine>
+          <isLabelUnPlaced>false</isLabelUnPlaced>
+          <reducedSizeForContinulLabel>0</reducedSizeForContinulLabel>
+          <isHighlightLabelUnPlaced>false</isHighlightLabelUnPlaced>
+          <labelFormat>
+          </labelFormat>
+          <placeInfo type="1" offset="0." eightLocationPrioritys="1;2;3;4;5;6;7;8" anyLocationCount="1" anyLocationPrioritys="0." isAvoidPointSymbol="0" isFollowPointSymbolBorder="0">
+          </placeInfo>
+        </label>
+        <IsUseSuperLink>0</IsUseSuperLink>
+        <SuperLinkFieldName>无</SuperLinkFieldName>
+        <SuperLinkmode>1</SuperLinkmode>
+        <LayerControl LayerNo="0">
+          <LayerState>
+          </LayerState>
+        </LayerControl>
+        <systemLibGUID>9cbd5f3b-3d69-46aa-8a6d-af8d0f9f621b</systemLibGUID>
+        <vectorRenderInfoNew>
+          <IsShowSymbol>1</IsShowSymbol>
+          <ShowSymbolMinScale>1.e+100</ShowSymbolMinScale>
+          <ShowSymbolMaxScale>0.</ShowSymbolMaxScale>
+          <IsSymbolFollowZoom>0</IsSymbolFollowZoom>
+          <FollowZoomMinScale>1.e+100</FollowZoomMinScale>
+          <FollowZoomMaxScale>0.</FollowZoomMaxScale>
+          <ScaleOfSymbolSize>100112.072228698</ScaleOfSymbolSize>
+          <sTransParency>0</sTransParency>
+          <IsShowCoord>0</IsShowCoord>
+          <IsDispRect>0</IsDispRect>
+          <MinVisibleSize>0.</MinVisibleSize>
+          <IsShowLinDire>0</IsShowLinDire>
+          <direLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;2;2" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="0." yscale="0.">
+          </direLinInfo>
+          <IsReduceLin>0</IsReduceLin>
+          <ReduceLinStep>5.</ReduceLinStep>
+          <NotDraw0Lin>0</NotDraw0Lin>
+          <IsFillReg>1</IsFillReg>
+          <FillRegMinScale>1.e+100</FillRegMinScale>
+          <FillRegMaxScale>0.</FillRegMaxScale>
+          <IsShowRegBorder>1</IsShowRegBorder>
+          <ShowRegBorderMinScale>1.e+100</ShowRegBorderMinScale>
+          <ShowRegBorderMaxScale>0.</ShowRegBorderMaxScale>
+          <RegBorderLinInfo lib="0" id="11" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </RegBorderLinInfo>
+          <IsRegBorderShowSymbol>1</IsRegBorderShowSymbol>
+          <RegBorderShowSymbolMinScale>1.e+100</RegBorderShowSymbolMinScale>
+          <RegBorderShowSymbolMaxScale>0.</RegBorderShowSymbolMaxScale>
+          <IsRegBorderFollowZoom>0</IsRegBorderFollowZoom>
+          <RegBorderFollowZoomMinScale>1.e+100</RegBorderFollowZoomMinScale>
+          <RegBorderFollowZoomMaxScale>0.</RegBorderFollowZoomMaxScale>
+          <PixSizeofFilterSmallFeature>0</PixSizeofFilterSmallFeature>
+          <IsUseErrorSymbol>0</IsUseErrorSymbol>
+          <ErrPntInfo lib="0" id="1" height="10." width="10." angle="0." outpenw="1.;1.;1." outclr="5;4;3" ovprnt="0" fillflg="0" backexp="0." backclr="0">
+          </ErrPntInfo>
+          <ErrLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </ErrLinInfo>
+          <ErrRegInfo lib="0" id="0" ovprnt="0" fillmode="0" fillclr="5" endclr="0" pathei="5." patwid="5." ang="0." patclr="3" outpenw="0." fullpatflg="0">
+          </ErrRegInfo>
+          <ErrAnnInfo height="12." width="0." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+          </ErrAnnInfo>
+        </vectorRenderInfoNew>
+        <vectorRenderInfo sRegFillType="2" bSymbolShow="1" bSymbolSizeFollowZoom="0" bSymbolPenWidthFollowZoom="0" bAnnSizeFollowZoom="0">
+          <regBorderLinInfo id="11" outclr="1;4;3">
+          </regBorderLinInfo>
+          <directionLinInfo outclr="2;2;2" xscale="0." yscale="0.">
+          </directionLinInfo>
+        </vectorRenderInfo>
+        <IsDispElementRect>0</IsDispElementRect>
+        <Renders UseSymbolLevels="0">
+        </Renders>
+        <minScale>4.2073508331315998e-092</minScale>
+        <maxScale>1.e+100</maxScale>
+        <ScaleRange MinScale="1.e+100" MaxScale="0.">
+        </ScaleRange>
+        <Extend>
+        </Extend>
+      </subnode>
+      <subnode name="首都点" type="SFeatureLayer" geometryType="1" class="CreateGLayer@GisCartoPrj.dll" LayerClassCode="0">
+        <url>gdbp://MapGisLocal/OGC/sfcls/首都点</url>
+        <RelativePath>
+        </RelativePath>
+        <layerWeight>0</layerWeight>
+        <IsSnaped>1</IsSnaped>
+        <state>VISIBLE</state>
+        <directIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </directIndex>
+        <reverseIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </reverseIndex>
+        <conditions>0000000000000000000000000000000000</conditions>
+        <CustomLayerRenderInfo dllName="" className="" renderName="" descript="" midWareType="0" dataType="0" param="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+        </CustomLayerRenderInfo>
+        <IsSameAs6xNotDraw0Lin>0</IsSameAs6xNotDraw0Lin>
+        <label name="noname" type="SimpleLabel" class="CreateGLabel@GisCartoPrj.dll">
+          <state>UNVISIBLE</state>
+          <geomInfoType>5</geomInfoType>
+          <minScale>0.</minScale>
+          <maxScale>0.</maxScale>
+          <ScaleRange MinScale="0." MaxScale="0.">
+          </ScaleRange>
+          <geoInfo>
+            <annInfo height="14." width="14." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+            </annInfo>
+          </geoInfo>
+          <labelExpression>
+          </labelExpression>
+          <geomType>pnt</geomType>
+          <priority>1</priority>
+          <isLabelClientOutside>false</isLabelClientOutside>
+          <backType>1</backType>
+          <highlightClr>0</highlightClr>
+          <backGeoInfo>
+            <linInfo lib="0" id="1" ovprnt="0" outpenw="5.000000074505806e-002;5.000000074505806e-002;5.000000074505806e-002" outclr="9;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+            </linInfo>
+          </backGeoInfo>
+          <numericPrecision>0</numericPrecision>
+          <isNewLineToLabel>false</isNewLineToLabel>
+          <maxLengthPreLine>0</maxLengthPreLine>
+          <isLabelUnPlaced>false</isLabelUnPlaced>
+          <reducedSizeForContinulLabel>0</reducedSizeForContinulLabel>
+          <isHighlightLabelUnPlaced>false</isHighlightLabelUnPlaced>
+          <labelFormat>
+          </labelFormat>
+          <placeInfo type="1" offset="0." eightLocationPrioritys="1;2;3;4;5;6;7;8" anyLocationCount="1" anyLocationPrioritys="0." isAvoidPointSymbol="0" isFollowPointSymbolBorder="0">
+          </placeInfo>
+        </label>
+        <IsUseSuperLink>0</IsUseSuperLink>
+        <SuperLinkFieldName>
+        </SuperLinkFieldName>
+        <SuperLinkmode>1</SuperLinkmode>
+        <LayerControl LayerNo="0">
+          <LayerState>
+          </LayerState>
+        </LayerControl>
+        <systemLibGUID>00000000-0000-0000-0000-000000000000</systemLibGUID>
+        <vectorRenderInfoNew>
+          <IsShowSymbol>1</IsShowSymbol>
+          <ShowSymbolMinScale>1.e+100</ShowSymbolMinScale>
+          <ShowSymbolMaxScale>0.</ShowSymbolMaxScale>
+          <IsSymbolFollowZoom>0</IsSymbolFollowZoom>
+          <FollowZoomMinScale>1.e+100</FollowZoomMinScale>
+          <FollowZoomMaxScale>0.</FollowZoomMaxScale>
+          <ScaleOfSymbolSize>111319490.793274</ScaleOfSymbolSize>
+          <sTransParency>0</sTransParency>
+          <IsShowCoord>0</IsShowCoord>
+          <IsDispRect>0</IsDispRect>
+          <MinVisibleSize>0.</MinVisibleSize>
+          <IsShowLinDire>0</IsShowLinDire>
+          <direLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;2;2" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="0." yscale="0.">
+          </direLinInfo>
+          <IsReduceLin>0</IsReduceLin>
+          <ReduceLinStep>5.</ReduceLinStep>
+          <NotDraw0Lin>0</NotDraw0Lin>
+          <IsFillReg>1</IsFillReg>
+          <FillRegMinScale>1.e+100</FillRegMinScale>
+          <FillRegMaxScale>0.</FillRegMaxScale>
+          <IsShowRegBorder>0</IsShowRegBorder>
+          <ShowRegBorderMinScale>1.e+100</ShowRegBorderMinScale>
+          <ShowRegBorderMaxScale>0.</ShowRegBorderMaxScale>
+          <RegBorderLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </RegBorderLinInfo>
+          <IsRegBorderShowSymbol>0</IsRegBorderShowSymbol>
+          <RegBorderShowSymbolMinScale>1.e+100</RegBorderShowSymbolMinScale>
+          <RegBorderShowSymbolMaxScale>0.</RegBorderShowSymbolMaxScale>
+          <IsRegBorderFollowZoom>0</IsRegBorderFollowZoom>
+          <RegBorderFollowZoomMinScale>1.e+100</RegBorderFollowZoomMinScale>
+          <RegBorderFollowZoomMaxScale>0.</RegBorderFollowZoomMaxScale>
+          <PixSizeofFilterSmallFeature>0</PixSizeofFilterSmallFeature>
+          <IsUseErrorSymbol>0</IsUseErrorSymbol>
+          <ErrPntInfo lib="0" id="1" height="10." width="10." angle="0." outpenw="1.;1.;1." outclr="5;4;3" ovprnt="0" fillflg="0" backexp="0." backclr="0">
+          </ErrPntInfo>
+          <ErrLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </ErrLinInfo>
+          <ErrRegInfo lib="0" id="0" ovprnt="0" fillmode="0" fillclr="5" endclr="0" pathei="5." patwid="5." ang="0." patclr="3" outpenw="0." fullpatflg="0">
+          </ErrRegInfo>
+          <ErrAnnInfo height="12." width="0." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+          </ErrAnnInfo>
+        </vectorRenderInfoNew>
+        <vectorRenderInfo bSymbolShow="1" bSymbolSizeFollowZoom="0" bSymbolPenWidthFollowZoom="0" bAnnSizeFollowZoom="0">
+          <directionLinInfo outclr="2;2;2" xscale="0." yscale="0.">
+          </directionLinInfo>
+        </vectorRenderInfo>
+        <IsDispElementRect>0</IsDispElementRect>
+        <Renders UseSymbolLevels="0">
+        </Renders>
+        <minScale>4.2073508331315998e-092</minScale>
+        <maxScale>1.e+100</maxScale>
+        <ScaleRange MinScale="1.e+100" MaxScale="0.">
+        </ScaleRange>
+        <Extend>
+        </Extend>
+      </subnode>
+      <subnode name="省会城市" type="SFeatureLayer" geometryType="1" class="CreateGLayer@GisCartoPrj.dll" LayerClassCode="0">
+        <url>gdbp://MapGisLocal/OGC/sfcls/省会城市</url>
+        <RelativePath>
+        </RelativePath>
+        <layerWeight>0</layerWeight>
+        <IsSnaped>1</IsSnaped>
+        <state>VISIBLE</state>
+        <directIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </directIndex>
+        <reverseIndex transname="" InCord="0" InUnit="0" OutCord="0" OutUnit="0" type="0" lenunit="0" angunit="0" dx="0." dy="0." dz="0." wx="0." wy="0." wz="0." dm="0." ds2="0." dA2="0." df2="0." res1="0." res2="0." szEquationX="" szEquationY="" szEquationZ="">
+        </reverseIndex>
+        <conditions>0000000000000000000000000000000000</conditions>
+        <CustomLayerRenderInfo dllName="" className="" renderName="" descript="" midWareType="0" dataType="0" param="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+        </CustomLayerRenderInfo>
+        <IsSameAs6xNotDraw0Lin>0</IsSameAs6xNotDraw0Lin>
+        <label name="noname" type="SimpleLabel" class="CreateGLabel@GisCartoPrj.dll">
+          <state>UNVISIBLE</state>
+          <geomInfoType>5</geomInfoType>
+          <minScale>0.</minScale>
+          <maxScale>0.</maxScale>
+          <ScaleRange MinScale="0." MaxScale="0.">
+          </ScaleRange>
+          <geoInfo>
+            <annInfo height="14." width="14." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+            </annInfo>
+          </geoInfo>
+          <labelExpression>
+          </labelExpression>
+          <geomType>pnt</geomType>
+          <priority>1</priority>
+          <isLabelClientOutside>false</isLabelClientOutside>
+          <backType>1</backType>
+          <highlightClr>0</highlightClr>
+          <backGeoInfo>
+            <linInfo lib="0" id="1" ovprnt="0" outpenw="5.000000074505806e-002;5.000000074505806e-002;5.000000074505806e-002" outclr="9;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+            </linInfo>
+          </backGeoInfo>
+          <numericPrecision>0</numericPrecision>
+          <isNewLineToLabel>false</isNewLineToLabel>
+          <maxLengthPreLine>0</maxLengthPreLine>
+          <isLabelUnPlaced>false</isLabelUnPlaced>
+          <reducedSizeForContinulLabel>0</reducedSizeForContinulLabel>
+          <isHighlightLabelUnPlaced>false</isHighlightLabelUnPlaced>
+          <labelFormat>
+          </labelFormat>
+          <placeInfo type="1" offset="0." eightLocationPrioritys="1;2;3;4;5;6;7;8" anyLocationCount="1" anyLocationPrioritys="0." isAvoidPointSymbol="0" isFollowPointSymbolBorder="0">
+          </placeInfo>
+        </label>
+        <IsUseSuperLink>0</IsUseSuperLink>
+        <SuperLinkFieldName>
+        </SuperLinkFieldName>
+        <SuperLinkmode>1</SuperLinkmode>
+        <LayerControl LayerNo="0">
+          <LayerState>
+          </LayerState>
+        </LayerControl>
+        <systemLibGUID>00000000-0000-0000-0000-000000000000</systemLibGUID>
+        <vectorRenderInfoNew>
+          <IsShowSymbol>1</IsShowSymbol>
+          <ShowSymbolMinScale>1.e+100</ShowSymbolMinScale>
+          <ShowSymbolMaxScale>0.</ShowSymbolMaxScale>
+          <IsSymbolFollowZoom>0</IsSymbolFollowZoom>
+          <FollowZoomMinScale>1.e+100</FollowZoomMinScale>
+          <FollowZoomMaxScale>0.</FollowZoomMaxScale>
+          <ScaleOfSymbolSize>4004482.8891479261</ScaleOfSymbolSize>
+          <sTransParency>0</sTransParency>
+          <IsShowCoord>0</IsShowCoord>
+          <IsDispRect>0</IsDispRect>
+          <MinVisibleSize>0.</MinVisibleSize>
+          <IsShowLinDire>0</IsShowLinDire>
+          <direLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;2;2" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="0." yscale="0.">
+          </direLinInfo>
+          <IsReduceLin>0</IsReduceLin>
+          <ReduceLinStep>5.</ReduceLinStep>
+          <NotDraw0Lin>0</NotDraw0Lin>
+          <IsFillReg>1</IsFillReg>
+          <FillRegMinScale>1.e+100</FillRegMinScale>
+          <FillRegMaxScale>0.</FillRegMaxScale>
+          <IsShowRegBorder>0</IsShowRegBorder>
+          <ShowRegBorderMinScale>1.e+100</ShowRegBorderMinScale>
+          <ShowRegBorderMaxScale>0.</ShowRegBorderMaxScale>
+          <RegBorderLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="2;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </RegBorderLinInfo>
+          <IsRegBorderShowSymbol>0</IsRegBorderShowSymbol>
+          <RegBorderShowSymbolMinScale>1.e+100</RegBorderShowSymbolMinScale>
+          <RegBorderShowSymbolMaxScale>0.</RegBorderShowSymbolMaxScale>
+          <IsRegBorderFollowZoom>0</IsRegBorderFollowZoom>
+          <RegBorderFollowZoomMinScale>1.e+100</RegBorderFollowZoomMinScale>
+          <RegBorderFollowZoomMaxScale>0.</RegBorderFollowZoomMaxScale>
+          <PixSizeofFilterSmallFeature>0</PixSizeofFilterSmallFeature>
+          <IsUseErrorSymbol>0</IsUseErrorSymbol>
+          <ErrPntInfo lib="0" id="1" height="10." width="10." angle="0." outpenw="1.;1.;1." outclr="5;4;3" ovprnt="0" fillflg="0" backexp="0." backclr="0">
+          </ErrPntInfo>
+          <ErrLinInfo lib="0" id="0" ovprnt="0" outpenw="0.;0.;0." outclr="1;4;3" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+          </ErrLinInfo>
+          <ErrRegInfo lib="0" id="0" ovprnt="0" fillmode="0" fillclr="5" endclr="0" pathei="5." patwid="5." ang="0." patclr="3" outpenw="0." fullpatflg="0">
+          </ErrRegInfo>
+          <ErrAnnInfo height="12." width="0." space="0." fontang="0." strang="0." ifnt="0" chnt="0" ifnx="0" hvpl="0" iclr="0" ovprnt="0" fillflg="0" backexp="0." backclr="0" offsetx="0." offsety="0.">
+          </ErrAnnInfo>
+        </vectorRenderInfoNew>
+        <vectorRenderInfo bSymbolShow="1" bSymbolSizeFollowZoom="0" bSymbolPenWidthFollowZoom="0" bAnnSizeFollowZoom="0">
+          <directionLinInfo outclr="2;2;2" xscale="0." yscale="0.">
+          </directionLinInfo>
+        </vectorRenderInfo>
+        <IsDispElementRect>0</IsDispElementRect>
+        <Renders UseSymbolLevels="0">
+        </Renders>
+        <minScale>4.2073508331315998e-092</minScale>
+        <maxScale>1.e+100</maxScale>
+        <ScaleRange MinScale="1.e+100" MaxScale="0.">
+        </ScaleRange>
+        <Extend>
+        </Extend>
+      </subnode>
+      <bookMarks>
+      </bookMarks>
+      <Extend>
+        <InitOpenView>True</InitOpenView>
+        <Expand>true</Expand>
+      </Extend>
+      <GraphicsData dispos="0">
+        <Graphics_ann>R0RCRFVNUEYBAAEAAAAAAAUAAAAkAAAAYjc0MjNiNzgtNmVmZi00M2IzLWIzNGItYjFjZGJmNmQ1OTBjBgAAAAQAAAAAAAAAUAAAAAAAAAAAAQAAAAAAAIgBAAAAAAAAAgAAAAAAAAD/////////////////////AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAqpmZmZmZuX+qmZmZmZm5f6qZmZmZmbn/qpmZmZmZuf8AAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAckTkBwQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgBQAAAQAAAAAAAAD/////gAEAAAAAAADABQAAAAAAAAAAAAAAAAAAcEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAQAAAAAAAAAAAgAAAAAAAAD/////////////////////</Graphics_ann>
+        <Graphics_Pnt>R0RCRFVNUEYBAAEAAAAAAAEAAAAkAAAAYjZmNTc3NTYtMTY5OC00ODQ2LTg5N2QtNDdmY2U4MDZjNzJmDAAAAAQAAAAAAAAAQAAAAAAAAAA4AAAAAAAAAP//////////AAAAAAAAAABYAAAAAAAAAP//////////////////////////////////////////iAEAAAAAAAACAAAAAAAAAP//////////AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAACqmZmZmZm5f6qZmZmZmbl/qpmZmZmZuf+qmZmZmZm5/wAAAAAAAWUAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAA//////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAIEEAACBBAAAAAM3MTD3NzEw9zcxMPQUAAAAEAAAAAwAAAAABAACAPwEAAABYAAAAAAAAAP//////////////////////////////////////////ckTkBwQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgBQAAAQAAAAAAAAD/////gAEAAAAAAADABQAAAAAAAAAAAAAAAAAAcEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAQAAAAAAAAAAAgAAAAAAAAD//////////w==</Graphics_Pnt>
+        <Graphics_Lin>R0RCRFVNUEYBAAEAAAAAAAIAAAAkAAAAODc1MTFlZjgtMzQ5OC00OTEwLWI2YzItMWExNTFjY2NkOTZhDAAAAAQAAAAAAAAAQAAAAAAAAAA4AAAAAAAAAP///////////////////////////////wAAAAAAAAAATwAAAAAAAAD/////////////////////iAEAAAAAAAACAAAAAAAAAP//////////AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAACqmZmZmZm5f6qZmZmZmbl/qpmZmZmZuf+qmZmZmZm5/wAAAAAAAWUAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAA////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAzcxMPc3MTD3NzEw9AQAAAAQAAAADAAAAAAAAAAAAIEEAACBBTwAAAAAAAAD/////////////////////ckTkBwQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgBQAAAQAAAAAAAAD/////gAEAAAAAAADABQAAAAAAAAAAAAAAAAAAcEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACIAQAAAAAAAAAAAgAAAAAAAAD//////////w==</Graphics_Lin>
+        <Graphics_Reg>R0RCRFVNUEYBAAEAAAAAAAMAAAAkAAAAY2NmMzdlZGMtMjgyMC00M2Q5LTlkOWMtYzYxNzY3ODQxMDNjDAAAAAQAAAAAAAAAQAAAAAAAAAA4AAAAAAAAAP////////////////////////////////////////////////////8AAAAAAAAAAEoAAAAAAAAAiAEAAAAAAAACAAAAAAAAAP//////////AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAACqmZmZmZm5f6qZmZmZmbl/qpmZmZmZuf+qmZmZmZm5/wAAAAAAAWUAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAAA/////////////////////////////////////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAABQAAAAAAAAAAAKBAAACgQAAAAAADAAAAAACAPwFKAAAAAAAAAHJE5AcEBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4AUAAAEAAAAAAAAA/////4ABAAAAAAAAwAUAAAAAAAAAAAAAAAAAAHBEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiAEAAAAAAAAAAAIAAAAAAAAA//////////8=</Graphics_Reg>
+        <state>VISIBLE</state>
+        <systemLibraryGUID>00000000-0000-0000-0000-000000000000</systemLibraryGUID>
+      </GraphicsData>
+    </subnode>
+    <layout class="CreateLayOut@GisCartoPrj.dll">
+      <height>841.000000</height>
+      <width>594.000000</width>
+      <elements>
+        <element bFixAspect="0" bCanScale="1" bCanRotate="0" sysLibGuid="00000000-0000-0000-0000-000000000000" name="MapElement" desc="" DynamicGridVisible="0" type="MapElement" class="CreateGElement@GisCartoPrj.dll" MapName="OGC_4326_CHINA" MapGuid="d3db2371-d130-47c6-9a50-9b10ed65651f">
+          <MapElementCustiomViewExtent>
+            <xmin>0.</xmin>
+            <ymin>0.</ymin>
+            <xmax>0.</xmax>
+            <ymax>0.</ymax>
+          </MapElementCustiomViewExtent>
+          <Extend>
+          </Extend>
+          <border visible="0" xGrap="0." yGrap="0." BorderType="0">
+            <SimpleBorderInfo cornerRounding="0" FillType="0" lib="0" id="1" ovprnt="0" outpenw="5.000000074505806e-002;0.;0." outclr="0;0;0" headtype="0" jointype="0" adjustflg="0" makemethod="0" xscale="10." yscale="10.">
+            </SimpleBorderInfo>
+            <LaceBorderInfo>
+              <corners>
+                <cornerLB dx="0." dy="0." lib="0" id="0" height="5" width="5" angle="0" outpenw="0;0;0" outclr="0;0;0" ovprnt="0" fillflg="0" backexp="0" backclr="0">
+                </cornerLB>
+                <cornerRB dx="0." dy="0." lib="0" id="0" height="5" width="5" angle="0" outpenw="0;0;0" outclr="0;0;0" ovprnt="0" fillflg="0" backexp="0" backclr="0">
+                </cornerRB>
+                <cornerRT dx="0." dy="0." lib="0" id="0" height="5" width="5" angle="0" outpenw="0;0;0" outclr="0;0;0" ovprnt="0" fillflg="0" backexp="0" backclr="0">
+                </cornerRT>
+                <cornerLT dx="0." dy="0." lib="0" id="0" height="5" width="5" angle="0" outpenw="0;0;0" outclr="0;0;0" ovprnt="0" fillflg="0" backexp="0" backclr="0">
+                </cornerLT>
+              </corners>
+              <borders adjustmode="0">
+                <borderleft gap="0.">
+                </borderleft>
+                <borderright gap="0.">
+                </borderright>
+                <bordertop gap="0.">
+                </bordertop>
+                <borderbottom gap="0.">
+                </borderbottom>
+                <borderclose gap="0.">
+                </borderclose>
+              </borders>
+              <lines>
+              </lines>
+              <draworder>0</draworder>
+            </LaceBorderInfo>
+          </border>
+          <background visible="0" cornerRounding="0" xGrap="0." yGrap="0.">
+            <info lib="0" id="0" ovprnt="0" fillmode="0" fillclr="0" endclr="0" pathei="0." patwid="0." ang="0." patclr="0" outpenw="0." fullpatflg="0">
+            </info>
+          </background>
+          <shadow visible="0" cornerRounding="0" xGrap="0." yGrap="0.">
+            <info lib="0" id="0" ovprnt="0" fillmode="0" fillclr="0" endclr="0" pathei="0." patwid="0." ang="0." patclr="0" outpenw="0." fullpatflg="0">
+            </info>
+          </shadow>
+          <LogicRect xmin="0." ymin="0." xmax="594." ymax="841.">
+          </LogicRect>
+          <viewRect xmin="0." ymin="0." xmax="0." ymax="0.">
+          </viewRect>
+        </element>
+      </elements>
+      <bookMarks>
+      </bookMarks>
+      <Extend>
+      </Extend>
+    </layout>
+    <Extend>
+      <LayoutXml>&lt;XtraSerializer version="1.0" application="TabbedView"&gt;&lt;property name="#LayoutVersion" /&gt;&lt;property name="DocumentProperties" isnull="true" iskey="true" /&gt;&lt;property name="Orientation"&gt;Horizontal&lt;/property&gt;&lt;property name="DocumentGroupProperties" isnull="true" iskey="true" /&gt;&lt;property name="EnableFreeLayoutMode"&gt;True&lt;/property&gt;&lt;property name="EnableStickySplitters"&gt;Default&lt;/property&gt;&lt;property name="CustomResizeZoneThickness"&gt;0&lt;/property&gt;&lt;property name="FloatingDocumentContainer"&gt;DocumentsHost&lt;/property&gt;&lt;property name="LoadingIndicatorProperties" isnull="true" iskey="true" /&gt;&lt;property name="DocumentSelectorProperties" isnull="true" iskey="true" /&gt;&lt;property name="WindowsDialogProperties" isnull="true" iskey="true" /&gt;&lt;property name="Items" iskey="true" value="5"&gt;&lt;property name="Item1" isnull="true" iskey="true"&gt;&lt;property name="ParentName"&gt;DocumentGroup0&lt;/property&gt;&lt;property name="IsSelected"&gt;false&lt;/property&gt;&lt;property name="Index"&gt;0&lt;/property&gt;&lt;property name="WindowState"&gt;Normal&lt;/property&gt;&lt;property name="Pinned"&gt;false&lt;/property&gt;&lt;property name="Properties" isnull="true" iskey="true"&gt;&lt;property name="AllowClose"&gt;True&lt;/property&gt;&lt;/property&gt;&lt;property name="IsFloating"&gt;false&lt;/property&gt;&lt;property name="Location"&gt;@1,X=0@1,Y=0&lt;/property&gt;&lt;property name="Size"&gt;@4,Width=1829@3,Height=837&lt;/property&gt;&lt;property name="IsActive"&gt;false&lt;/property&gt;&lt;property name="Name"&gt;MapGIS.GDBManager.Plugin.CVContentView&lt;/property&gt;&lt;property name="TypeName"&gt;Document&lt;/property&gt;&lt;/property&gt;&lt;property name="Item2" isnull="true" iskey="true"&gt;&lt;property name="ParentName"&gt;DocumentGroup0&lt;/property&gt;&lt;property name="IsSelected"&gt;true&lt;/property&gt;&lt;property name="Index"&gt;1&lt;/property&gt;&lt;property name="WindowState"&gt;Normal&lt;/property&gt;&lt;property name="Pinned"&gt;false&lt;/property&gt;&lt;property name="Properties" isnull="true" iskey="true"&gt;&lt;property name="AllowClose"&gt;True&lt;/property&gt;&lt;/property&gt;&lt;property name="IsFloating"&gt;false&lt;/property&gt;&lt;property name="Location"&gt;@1,X=0@1,Y=0&lt;/property&gt;&lt;property name="Size"&gt;@4,Width=1236@3,Height=837&lt;/property&gt;&lt;property name="IsActive"&gt;true&lt;/property&gt;&lt;property name="Name"&gt;0$MapView&lt;/property&gt;&lt;property name="TypeName"&gt;Document&lt;/property&gt;&lt;/property&gt;&lt;property name="Item3" isnull="true" iskey="true"&gt;&lt;property name="Parent"&gt;Root&lt;/property&gt;&lt;property name="Element" isnull="true" /&gt;&lt;property name="Orientation"&gt;Horizontal&lt;/property&gt;&lt;property name="Index"&gt;0&lt;/property&gt;&lt;property name="Length" isnull="true" iskey="true"&gt;&lt;property name="UnitValue"&gt;1&lt;/property&gt;&lt;property name="UnitType"&gt;Star&lt;/property&gt;&lt;/property&gt;&lt;property name="Name"&gt;30576743&lt;/property&gt;&lt;property name="TypeName"&gt;DockingContainer&lt;/property&gt;&lt;/property&gt;&lt;property name="Item4" isnull="true" iskey="true"&gt;&lt;property name="Parent"&gt;30576743&lt;/property&gt;&lt;property name="Element"&gt;DocumentGroup0&lt;/property&gt;&lt;property name="Orientation"&gt;Horizontal&lt;/property&gt;&lt;property name="Index"&gt;0&lt;/property&gt;&lt;property name="Length" isnull="true" iskey="true"&gt;&lt;property name="UnitValue"&gt;1&lt;/property&gt;&lt;property name="UnitType"&gt;Star&lt;/property&gt;&lt;/property&gt;&lt;property name="Name"&gt;6755232&lt;/property&gt;&lt;property name="TypeName"&gt;DockingContainer&lt;/property&gt;&lt;/property&gt;&lt;property name="Item5" isnull="true" iskey="true"&gt;&lt;property name="Properties" isnull="true" iskey="true" /&gt;&lt;property name="Length"&gt;1238&lt;/property&gt;&lt;property name="Index"&gt;0&lt;/property&gt;&lt;property name="Name"&gt;DocumentGroup0&lt;/property&gt;&lt;property name="TypeName"&gt;DocumentGroup&lt;/property&gt;&lt;/property&gt;&lt;/property&gt;&lt;/XtraSerializer&gt;</LayoutXml>
+    </Extend>
+  </root>
+</datacenter>

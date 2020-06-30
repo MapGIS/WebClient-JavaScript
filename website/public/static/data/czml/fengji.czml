@@ -1,0 +1,147 @@
+[
+	{
+		"id" : "document",
+		"name" : "CZML Model",
+		"version" : "1.0"
+	}, 
+	{
+		"id" : "aerogenerator1",
+		"name" : "风机1",
+		"position" : {
+			"cartographicDegrees" : [117.9298,40.3828,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是1号风机"
+	},
+	{
+		"id" : "aerogenerator2",
+		"name" : "风机2",
+		"position" : {
+			"cartographicDegrees" : [117.9263,40.3831,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+			"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是2号风机"	
+	},
+	{
+		"id" : "aerogenerator3",
+		"name" : "风机3",
+		"position" : {
+			"cartographicDegrees" : [117.9243,40.3830,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是3号风机,型号为。。。"	
+	},
+	{
+		"id" : "aerogenerator4",
+		"name" : "风机4",
+		"position" : {
+			"cartographicDegrees" : [117.9237,40.3841,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是4号风机,型号为。。。"		
+	},
+	{
+		"id" : "aerogenerator5",
+		"name" : "风机5",
+		"position" : {
+			"cartographicDegrees" : [117.9308,40.3821,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是5号风机,型号为。。。"		
+	},	
+	{
+		"id" : "aerogenerator6",
+		"name" : "风机6",
+		"position" : {
+			"cartographicDegrees" : [117.9320,40.3812,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是6号风机,型号为。。。"		
+	},
+	{
+		"id" : "aerogenerator7",
+		"name" : "风机7",
+		"position" : {
+			"cartographicDegrees" : [117.9298,40.3809,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是7号风机,型号为。。。"		
+	},
+	{
+		"id" : "aerogenerator8",
+		"name" : "风机8",
+		"position" : {
+			"cartographicDegrees" : [117.9323,40.3803,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		},
+		"description":"这是9号风机,型号为。。。"		
+	},
+	{
+		"id" : "aerogenerator9",
+		"name" : "风机9",
+		"position" : {
+			"cartographicDegrees" : [117.9310,40.3806,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+						"scale": 1,
+             "minimumPixelSize": 64
+		}	
+	},
+	{
+		"id" : "aerogenerator10",
+		"name" : "风机10",
+		"position" : {
+			"cartographicDegrees" : [117.9291,40.3821,0]
+		},
+		"model": {
+			"gltf" : "../model/donghua.gltf",
+			"scale": 1,
+             "minimumPixelSize": 64
+		}	
+	},
+	{
+		"id" : "aerogenerator11",
+		"name" : "风机11",
+		"position" : {
+			"cartographicDegrees" : [117.9297,40.3804,0]
+		},
+		"model": {
+			"gltf" : "../model/aircraft.gltf",
+			"scale": 1,
+             "minimumPixelSize": 64
+		}	
+	}
+]

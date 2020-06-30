@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>线</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <script>
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var polygon;
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            //添加谷歌矢量地图地图（矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’)
+            webGlobe.appendGoogleMap('m@207000000');
+            //跳转到指定位置
+            webGlobe.flyTo(110, 34, 2000000, 1);
+        }
+
+        //添加多边形
+        function add() {
+            remove();
+            //点数组
+            var arryp = [110, 40, 108, 30, 114, 35, 115, 36];
+            //画多边形区
+            polygon = webGlobe.appendPolygon('三维区', arryp, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(0, 0, 1, 1));
+        }
+        //删除多边形
+        function remove() {
+            if (polygon) {
+                webGlobe.removeEntity(polygon);
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="add" onclick="add()">添加多边形</button>
+        <button class="ButtonLib" id="remove" onclick="remove()">删除多边形</button>
+    </div>
+    <div id="GlobeView">
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

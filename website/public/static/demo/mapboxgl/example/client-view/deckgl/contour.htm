@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>等高线</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script
+      include="language,deckgl"
+      src="./static/libs/include-mapboxgl-local.js"
+    ></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <script>
+      //一定要去mapbox注册一个key,这个key会失效的
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA";
+      var map = new mapboxgl.Map({
+        container: "map", // 绑定div
+        style: "mapbox://styles/mapbox/dark-v9", // 使用MapBox官方的样式
+        center: [-122.4629751, 37.73956691],
+        zoom: 13,
+        pitch: 60,
+        bearing: 30
+      });
+      map.addControl(new MapboxLanguage(), "top-right"); //中文支持
+      map.addControl(new mapboxgl.NavigationControl(), "top-left");
+      
+      $.get('../../static/data/deckgl/sfcontour_data.json', function(features) {
+        addLayer(features.features);
+      });
+
+      function addLayer(features) {
+        deckglLayer = new mapboxgl.zondy.DeckglLayer('path-layer', {
+          data: features,
+          props: {
+            widthScale: 20,
+            widthMinPixels: 2,
+            onHover: function(feature) {
+            }
+          },
+          callback: {
+            getPath: function(feature) {
+              if (!feature.geometry || !feature.geometry.coordinates) {
+                return [0, 0];
+              }
+              return feature.geometry.coordinates;
+            },
+            getColor: function(feature) {
+              if (feature.properties.elevation >= -40 && feature.properties.elevation < 79.4) {
+                return [55, 83, 94];
+              } else if (feature.properties.elevation >= 79.4 && feature.properties.elevation < 198.8) {
+                return [58, 116, 138];
+              } else if (feature.properties.elevation >= 198.8 && feature.properties.elevation < 318.1) {
+                return [75, 154, 149];
+              } else if (feature.properties.elevation >= 318.1 && feature.properties.elevation < 437.5) {
+                return [94, 171, 139];
+              } else if (feature.properties.elevation >= 437.5 && feature.properties.elevation < 556.9) {
+                return [115, 188, 132];
+              } else if (feature.properties.elevation >= 556.9 && feature.properties.elevation < 676.3) {
+                return [146, 204, 139];
+              } else if (feature.properties.elevation >= 676.3 && feature.properties.elevation < 795.6) {
+                return [190, 221, 165];
+              } else if (feature.properties.elevation >= 795.6) {
+                return [229, 238, 193];
+              }
+
+              return [0, 0, 0, 0];
+            },
+            getWidth: function(d) {
+              return 0.05;
+            }
+          }
+        });
+        deckglLayer.addTo(map);
+      }
+
+      var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+      /*16进制颜色转为RGB格式*/
+      String.prototype.colorRgb = function() {
+        var sColor = this.toLowerCase();
+        if (sColor && reg.test(sColor)) {
+          if (sColor.length === 4) {
+            var sColorNew = '#';
+            for (var i = 1; i < 4; i += 1) {
+              sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+            }
+            sColor = sColorNew;
+          }
+          //处理六位的颜色值
+          var sColorChange = [];
+          for (var i = 1; i < 7; i += 2) {
+            sColorChange.push(parseInt('0x' + sColor.slice(i, i + 2)));
+          }
+          return sColorChange;
+        } else {
+          return sColor;
+        }
+      };
+
+    </script>
+  </body>
+</html>

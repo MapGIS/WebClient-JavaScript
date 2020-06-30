@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <script>
+      //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+      "use strict";
+      //定义三维视图的主要类
+      var webGlobe;
+      //定义矢量类
+      var vecDoc;
+
+        //加载三维视图
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', { terrainExaggeration: 1, infoBox: true, });
+
+            //添加天地图
+            webGlobe.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                type: "img"
+            });
+        }
+
+        //添加二维矢量
+        function add() {
+            remove();
+            if (webGlobe) {
+                var options = {
+                    //默认范围为全球范围
+                    tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+                    //瓦片初始级的列数 默认为2
+                    colNum: 2,
+                    //瓦片初始级的行数 默认为2
+                    rowNum: 1,
+                    //瓦片最大显示级数 默认为19
+                    maxLevel: 5,
+                    // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
+                    //如瓦片裁的不是256,则需设置下面两个参数
+                    tileWidth: 256,
+                    tileHeight: 256
+                };
+                //添加二维矢量地图文档
+                vecDoc = webGlobe.append2DDocTile('http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市', options);
+            }
+        }
+        webGlobe.viewer.camera.flyTo({
+          //定位到范围中心点
+          destination: Cesium.Cartesian3.fromDegrees(116.3909, 39.9148, 500),
+          orientation: {
+            heading: Cesium.Math.toRadians(0),
+            pitch: Cesium.Math.toRadians(-90),
+            roll: 0,
+          },
+        });
+      }
+
+      //添加MapGIS发布的二维矢量地图文档
+      function remove() {
+        if (vecDoc) {
+          webGlobe.removeImageryLayer(vecDoc);
+        }
+      }
+    </script>
+<<<<<<< HEAD
+  </head>
+  <body onload="init()">
+=======
+</head>
+
+<body onload="init()">
+>>>>>>> 7efb47b58434b7c3ee3a78b75e3545517d0e15df
+    <div class="ToolLib">
+      <button class="ButtonLib" id="add" onclick="add()">添加数据</button>
+      <button class="ButtonLib" id="remove" onclick="remove()">删除数据</button>
+    </div>
+    <div id="GlobeView"></div>
+<<<<<<< HEAD
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+      <label id="coordinate_location"></label>
+      <label id="coordinate_height"></label>
+    </div>
+  </body>
+</html>
+=======
+</body>
+
+</html>
+>>>>>>> 7efb47b58434b7c3ee3a78b75e3545517d0e15df

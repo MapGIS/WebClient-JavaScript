@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>线</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <script>
+        // 使用严格模式
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        //加载三维视图
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', { terrainExaggeration: 1 });
+            webGlobe.showPosition();
+            if (webGlobe) {
+                //加载谷歌矢量底图
+                webGlobe.appendGoogleMap('m@207000000');
+                //加载IGS发布的M3D缓存地图文档
+                tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
+            }
+        }
+
+        /*绘制点*/
+        function interactionDrawPnt() {
+            removeEntities();
+            //注册事件
+            webGlobe.registerMouseEvent('LEFT_CLICK', function (movement) {
+                //屏幕坐标转笛卡尔坐标
+                var cartesian = webGlobe.viewer.getCartesian3Position(movement.position, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                var height = cartographic.height;//模型高度
+                //添加点
+                webGlobe.appendPoint(lng, lat, height, '点', 10, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(1, 1, 0, 1), 2);
+            });
+            webGlobe.registerMouseEvent('RIGHT_CLICK', function (e) {
+                webGlobe.unRegisterMouseEvent('LEFT_CLICK');
+                webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+            });
+        }
+
+        /*绘制线*/
+        function interactionDraw() {
+            removeEntities();
+            var pointArray = new Array();
+            var allPoint = new Array();
+            //注册事件
+            webGlobe.registerMouseEvent('LEFT_CLICK', function (e) {
+                //屏幕坐标转笛卡尔坐标
+                var cartesian = webGlobe.viewer.getCartesian3Position(e.position, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                pointArray.push(lng);
+                allPoint.push(lng);
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                pointArray.push(lat);
+                allPoint.push(lat);
+                //模型高度
+                var height = cartographic.height;
+                pointArray.push(height);
+                allPoint.push(height);
+                //添加点
+                if (pointArray.length > 3) {
+                    webGlobe.appendLine('不贴地线', pointArray, 2, new Cesium.Color(1, 0, 0, 0.8), true, {});
+                    pointArray = new Array();
+                    pointArray.push(lng);
+                    pointArray.push(lat);
+                    pointArray.push(height);
+                    webGlobe.viewer.entities.removeById('moveline');
+                }
+            });
+            webGlobe.registerMouseEvent('MOUSE_MOVE', function (e) {
+                webGlobe.viewer.entities.removeById('moveline');
+                if (pointArray.length < 3) {
+                    return;
+                }
+                var cartesian = webGlobe.viewer.getCartesian3Position(e.endPosition, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                var height = cartographic.height;
+                var firstPosition = Cesium.Cartesian3.fromDegrees(pointArray[0], pointArray[1], pointArray[2]);
+                var movePosition = Cesium.Cartesian3.fromDegrees(lng, lat, height);
+                var redBox = webGlobe.viewer.entities.add({
+                    id: 'moveline',
+                    polyline: {
+                        positions: [firstPosition, movePosition],
+                        width: 2,
+                        material: Cesium.Color.YELLOW
+                    }
+                });
+            });
+            webGlobe.registerMouseEvent('RIGHT_CLICK', function (e) {
+                webGlobe.viewer.entities.removeAll();
+                if (allPoint.length > 3) {
+                    webGlobe.appendLine('不贴地线', allPoint, 2, new Cesium.Color(1, 0, 0, 0.8), true, {});
+                }
+                pointArray = new Array();
+                allPoint = new Array();
+                webGlobe.unRegisterMouseEvent('LEFT_CLICK');
+                webGlobe.unRegisterMouseEvent('MOUSE_MOVE');
+                webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+            });
+        }
+
+        /*绘制多边形*/
+        function interactionDrawPolygon() {
+            removeEntities();
+            var tool = new Cesium.DrawPolygonTool(webGlobe.viewer, getDrawResult);
+            tool.activeTool();
+        }
+        /*绘制结果回调函数*/
+        function getDrawResult(entity) {
+            if (entity) {
+                var ptype = entity.pType;
+            }
+        }
+
+        /*移除绘制图形 */
+        function removeEntities() {
+            webGlobe.unRegisterMouseEvent('LEFT_CLICK');
+            webGlobe.unRegisterMouseEvent('MOUSE_MOVE');
+            webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+            webGlobe.viewer.entities.removeAll();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="drawpnt" onclick="interactionDrawPnt()">绘制点</button>
+        <button class="ButtonLib" id="drawline" onclick="interactionDraw()">绘制线</button>
+        <button class="ButtonLib" id="drawpolygon" onclick="interactionDrawPolygon()">绘制区</button>
+        <button class="ButtonLib" id="remove" onclick="removeEntities()">移除</button>
+
+    </div>
+    <div id="GlobeView"></div>
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>矢量图层查询结果(固定点查询)</title>
+    <link href="./static/assets/css/helpstyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="biaoti">
+        Fid:
+    </div>
+    <div class="xiaobiaoti">
+        一、示例功能：
+    </div>
+    <div class="zhengwen">
+        该示例实现固定点查询矢量图层的功能。
+    </div>
+    <div class="xiaobiaoti">
+        二、实现说明：
+    </div>
+    <div class="zhengwen">
+        1、实现步骤：
+        <br />
+        <br />
+        [结果显示]
+        <br />
+        <br />
+        （1）先引入ol-debug.js（ol-debug是一个专为WebGIS客户端开发提供的JavaScript 类库包，用于实现标准格式发布的地图数据访问。OpenLayers 3对OpenLayers网络地图库进行了根本的重新设计。openlayer2虽然被广泛使用，但从JavaScript开发的早期发展阶段开始，已日益显示出它的落后。
+        OL3已运用现代的设计模式从底层重写。）、ol.css（是地图样式文件，包含了地图样式的方方面面，例如，填充色、图标样式、图片样式、规则图形样式、边界样式、文字样式等，样式一般针对矢量要素图层。）、jquery-1.11.2.min.js（第三方js资源库）、zdclient.js(中地公司提供的一套基于OpenLayers的MapGISWeb二次开发的脚本库)、json2.js、jsonExtend.js（操作JSON对象的相关脚本库)；
+        <br />
+        <br />
+        （2）然后初始化查询结构对象Zondy.Service.QueryFeatureStruct，设置查询结构包含几何信息；创建一个用于查询的点形状Zondy.Object.PointForQuery，并设置它的搜索范围；实例化查询参数对象Zondy.Service.QueryByLayerParameter，设置查询分页号pageIndex和要素数目recordNumber；
+        <br />
+        <br />
+        （3）最后实例化矢量图层查询服务对象Zondy.Service.QueryLayerFeature，并调用QueryLayerFeature对象的query方法，执行查询，然后调用Process方法将结果格式化输出。
+    </div>
+    <div class="xiaobiaoti">
+        三、功能类/参数说明
+    </div>
+    <div class="zhengwen">
+        <font class="Class">1、Zondy.Service.QueryFeatureStruct类：</font>该类是要素查询结构基类<br />
+        <br />
+        <font class="constructorTile">1.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Service.QueryFeatureStruct(options)</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】IncludeAttribute：</font>（Boolean类型）是否包含属性值。<br />默认值是true；<br />
+            <font class="nextParameter">【2】IncludeGeometry：</font>（Boolean类型）是否包含几何图形信息。<br />默认值是false；<br />
+            <font class="nextParameter">【3】IncludeWebGraphic：</font>（Boolean类型）是否包含图形参数。<br />默认值是false。<br />
+        </div>
+        <font class="Class">2、Zondy.Object.PointForQuery类：</font>该类是描述一个用于查询的点几何对象<br />
+        <br />
+        <font class="constructorTile">2.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Object.PointForQuery(x, y, opt_options )</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">x：</font>（double类型）必填项，构造函数的第一个参数，创建的点几何对象的x坐标值（在该坐标系范围下的x坐标）；<br />
+            <font class="parameter">y：</font>（double类型）必填项，构造函数的第二个参数，创建的点几何对象的y坐标值（在该坐标系范围下的y坐标）；<br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】nearDis：</font>（double类型）可选项，设置点的容差半径，只在做点查询时需要设置。<br />默认值为0.0。<br />
+        </div>
+        <font class="Class">3、Zondy.Service.QueryByLayerParameter类：</font>描述基于矢量图层的查询参数<br />
+        <br />
+        <font class="constructorTile">3.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Service.QueryByLayerParameter(gdbp, options)</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">gdbp：</font>（String类型）必填项，设置要查询的矢量图层的名称（desktop平台中相对应的路径），多个用,分隔，如："gdbp1,gdbp2"；<br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】geometry：</font>（Zondy.Object.Tangram类型）用于查询的几何描述（若为属性条件查询，此参数为空；若为空间范围查询或组合查询时，此参数为必选参数）。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br/>
+            可取值类型为：<br/>
+            1、Zondy.Object.Point2D（Zondy.Object.Tangram类子类），用于描述点几何对象；<br/>
+            2、Zondy.Object.PointForQuery（Zondy.Object.Tangram类子类），用于描述点几何对象；<br/>
+            3、Zondy.Object.Circle（Zondy.Object.Tangram类子类），用于描述圆几何对象；<br/> 
+            4、Zondy.Object.PolyLine（Zondy.Object.Tangram类子类），用于描述线几何对象；<br/>
+            5、Zondy.Object.Rectangle（Zondy.Object.Tangram类子类），用于描述矩形几何对象；<br/>
+            6、(Zondy.Object.Polygon（Zondy.Object.Tangram类子类），用于描述多边形几何对象；<br/>
+            7、Zondy.Object.MultiPolygon（Zondy.Object.Tangram类子类），用于描述多多边形几何对象；<br/> 
+            <font class="nextParameter">【2】resultFormat：</font>（String类型）可选项，查询结果的序列化形式。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值是json(对于xml，kml，gml或者georss格式的类，xml类型将以text文本返回，如需要可调用$.parseXML(text)得到其xml包装)；<br />
+            <font class="nextParameter">【3】struct：</font>（Zondy.Service.QueryFeatureStruct类对象）必填项，指定查询返回结果所包含的要素信息。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />
+            <font class="nextParameter">【4】where：</font>（String类型）可选项，条件查询的SQL语句（如果为空，则表示为单一的几何查询；如果取值，表示为属性条件查询或几何和条件混合查询）。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br/>
+            例如：<br/>
+            查询属性为中国的要素："name='中国'"<br />
+            查询属性为中国或土耳其的要素："name='中国'OR name='阿富汗'"<br />
+            查询人口大于540万小于600万的要素："大于人口>=5400000 AND 人口<=6000000"<br />
+            查询名字中带有“岛”字的要素："name LIKE '岛%'"<br />
+            <font class="nextParameter">【5】rule：</font>（Zondy.Service.QueryFeatureRule类对象）可选项，指定几何查询的规则。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />
+            <font class="nextParameter">【6】objectIds：</font>（String类型）可选项，需要查询的要素OID（在zondyClient.js中为FID）号，多个间用‘，’分隔（如果此参数有值，查询将默认转化为使用要素ID查询，Where、geometry、geometryType等查询参数无效）。来自其父类（Zondy.Service.QueryParameterBase）的属性；
+            每个要素的ObjectID值可通过MapGIS工作空间（MapWorkSpace）获取，在GDBCatalog目录树中，右键图层选择“预览”，在“内容视窗”中选择“图属信息”，可查询图层所有要素的空间与属性信息，属性信息中OID则为要素的objectId的值；<br />
+            <font class="nextParameter">【7】pageIndex：</font>（Int类型）可选项，分页号。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值为0；<br />
+            <font class="nextParameter">【8】recordNumber：</font>（Int类型）可选项，每页记录数。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值为20；<br />
+            <font class="nextParameter">【9】orderField：</font>（Zondy.Service.QueryFeatureStruct类型）可选项，指定查询返回结果的排序字段。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />
+            <font class="nextParameter">【10】isAsc：</font>（Zondy.Service.QueryFeatureStruct类型）可选项，是否升序排列，与orderField配合使用。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值是false。<br />
+        </div>
+        <font class="Class">4、Zondy.Service.QueryLayerFeature类：</font>提供基于矢量图层的查询服务<br />
+        <br />
+        <font class="constructorTile">4.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Service.QueryLayerFeature(queryParam, opt_options)</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">queryParam：</font>（Zondy.Service.QueryByLayerParameter类对象）必填项，查询参数信息；<br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】ip：</font>（String类型）可选项，来源于父类（Zondy.Service.HttpRequest）参数，IGServer服务器ip。<br />默认为"localhost"；<br />
+            <font class="nextParameter">【2】port：</font>（String类型）可选项，来源于父类（Zondy.Service.HttpRequest）参数，IGServer服务端口。<br />默认为"6163"。
+        </div>
+        <font class="funDescription">4.2方法说明：</font><br />
+        <div class="zhuji">
+            <font class="functionName">query(onSuccess, onError, requestType)：</font>查询函数，向服务器发送请求（来源于父类Zondy.Service.QueryServiceBase中的方法）。<br />
+            <font class="nextParameter">onSuccess：</font>请求成功时回调函数；<br />
+            <font class="nextParameter">onError：</font>请求失败时回调函数；<br />
+            <font class="nextParameter">requestType：</font>（String类型）请求方式（GET或者POST）。<br />如果没有设置此项时，默认使用GET方式请求；<br />
+        </div>
+    </div>
+    <p>
+        <a href="http://simayun.cn:81/API/JS/JavaScript_API(OL2)/default.html" alt="MapGIS IGServer JavaScript Client的API手册。"
+           target="_blank">注：详细说明请参见MapGIS IGServer JavaScript Client的API手册。</a>
+    </p>
+</body>
+</html>
+<!-- saved from url=(0014)about:internet -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>矢量图层查询结果(固定点查询)</title>
+    <link href="../../css/helpstyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="biaoti">
+        矢量图层查询结果(固定点查询):
+    </div>
+    <div class="xiaobiaoti">
+        一、示例功能：
+    </div>
+    <div class="zhengwen">
+        该示例实现固定点查询矢量图层的功能。
+    </div>
+    <div class="xiaobiaoti">
+        二、实现说明：
+    </div>
+    <div class="zhengwen">
+        1、实现步骤：
+        <br />
+        <br />
+        [结果显示]
+        <br />
+        <br />
+        （1）先引入ol-debug.js（ol-debug是一个专为WebGIS客户端开发提供的JavaScript 类库包，用于实现标准格式发布的地图数据访问。OpenLayers 3对OpenLayers网络地图库进行了根本的重新设计。openlayer2虽然被广泛使用，但从JavaScript开发的早期发展阶段开始，已日益显示出它的落后。
+        OL3已运用现代的设计模式从底层重写。）、ol.css（是地图样式文件，包含了地图样式的方方面面，例如，填充色、图标样式、图片样式、规则图形样式、边界样式、文字样式等，样式一般针对矢量要素图层。）、jquery-1.11.2.min.js（第三方js资源库）、zdclient.js(中地公司提供的一套基于OpenLayers的MapGISWeb二次开发的脚本库)、json2.js、jsonExtend.js（操作JSON对象的相关脚本库)；
+        <br />
+        <br />
+        （2）然后初始化查询结构对象Zondy.Service.QueryFeatureStruct，设置查询结构包含几何信息；创建一个用于查询的点形状Zondy.Object.PointForQuery，并设置它的搜索范围；实例化查询参数对象Zondy.Service.QueryByLayerParameter，设置查询分页号pageIndex和要素数目recordNumber；
+        <br />
+        <br />
+        （3）最后实例化矢量图层查询服务对象Zondy.Service.QueryLayerFeature，并调用QueryLayerFeature对象的query方法，执行查询，然后调用Process方法将结果格式化输出。
+    </div>
+    <div class="xiaobiaoti">
+        三、功能类/参数说明
+    </div>
+    <div class="zhengwen">
+        <font class="Class">1、Zondy.Service.QueryFeatureStruct类：</font>该类是要素查询结构基类<br />
+        <br />
+        <font class="constructorTile">1.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Service.QueryFeatureStruct(options)</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】IncludeAttribute：</font>（Boolean类型）是否包含属性值。<br />默认值是true；<br />
+            <font class="nextParameter">【2】IncludeGeometry：</font>（Boolean类型）是否包含几何图形信息。<br />默认值是false；<br />
+            <font class="nextParameter">【3】IncludeWebGraphic：</font>（Boolean类型）是否包含图形参数。<br />默认值是false。<br />
+        </div>
+        <font class="Class">2、Zondy.Object.PointForQuery类：</font>该类是描述一个用于查询的点几何对象<br />
+        <br />
+        <font class="constructorTile">2.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Object.PointForQuery(x, y, opt_options )</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">x：</font>（double类型）必填项，构造函数的第一个参数，创建的点几何对象的x坐标值（在该坐标系范围下的x坐标）；<br />
+            <font class="parameter">y：</font>（double类型）必填项，构造函数的第二个参数，创建的点几何对象的y坐标值（在该坐标系范围下的y坐标）；<br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】nearDis：</font>（double类型）可选项，设置点的容差半径，只在做点查询时需要设置。<br />默认值为0.0。<br />
+        </div>
+        <font class="Class">3、Zondy.Service.QueryByLayerParameter类：</font>描述基于矢量图层的查询参数<br />
+        <br />
+        <font class="constructorTile">3.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Service.QueryByLayerParameter(gdbp, options)</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">gdbp：</font>（String类型）必填项，设置要查询的矢量图层的名称（desktop平台中相对应的路径），多个用,分隔，如："gdbp1,gdbp2"；<br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】geometry：</font>（Zondy.Object.Tangram类型）用于查询的几何描述（若为属性条件查询，此参数为空；若为空间范围查询或组合查询时，此参数为必选参数）。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br/>
+            可取值类型为：<br/>
+            1、Zondy.Object.Point2D（Zondy.Object.Tangram类子类），用于描述点几何对象；<br/>
+            2、Zondy.Object.PointForQuery（Zondy.Object.Tangram类子类），用于描述点几何对象；<br/>
+            3、Zondy.Object.Circle（Zondy.Object.Tangram类子类），用于描述圆几何对象；<br/> 
+            4、Zondy.Object.PolyLine（Zondy.Object.Tangram类子类），用于描述线几何对象；<br/>
+            5、Zondy.Object.Rectangle（Zondy.Object.Tangram类子类），用于描述矩形几何对象；<br/>
+            6、(Zondy.Object.Polygon（Zondy.Object.Tangram类子类），用于描述多边形几何对象；<br/>
+            7、Zondy.Object.MultiPolygon（Zondy.Object.Tangram类子类），用于描述多多边形几何对象；<br/> 
+            <font class="nextParameter">【2】resultFormat：</font>（String类型）可选项，查询结果的序列化形式。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值是json(对于xml，kml，gml或者georss格式的类，xml类型将以text文本返回，如需要可调用$.parseXML(text)得到其xml包装)；<br />
+            <font class="nextParameter">【3】struct：</font>（Zondy.Service.QueryFeatureStruct类对象）必填项，指定查询返回结果所包含的要素信息。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />
+            <font class="nextParameter">【4】where：</font>（String类型）可选项，条件查询的SQL语句（如果为空，则表示为单一的几何查询；如果取值，表示为属性条件查询或几何和条件混合查询）。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br/>
+            例如：<br/>
+            查询属性为中国的要素："name='中国'"<br />
+            查询属性为中国或土耳其的要素："name='中国'OR name='阿富汗'"<br />
+            查询人口大于540万小于600万的要素："大于人口>=5400000 AND 人口<=6000000"<br />
+            查询名字中带有“岛”字的要素："name LIKE '岛%'"<br />
+            <font class="nextParameter">【5】rule：</font>（Zondy.Service.QueryFeatureRule类对象）可选项，指定几何查询的规则。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />
+            <font class="nextParameter">【6】objectIds：</font>（String类型）可选项，需要查询的要素OID（在zondyClient.js中为FID）号，多个间用‘，’分隔（如果此参数有值，查询将默认转化为使用要素ID查询，Where、geometry、geometryType等查询参数无效）。来自其父类（Zondy.Service.QueryParameterBase）的属性；
+            每个要素的ObjectID值可通过MapGIS工作空间（MapWorkSpace）获取，在GDBCatalog目录树中，右键图层选择“预览”，在“内容视窗”中选择“图属信息”，可查询图层所有要素的空间与属性信息，属性信息中OID则为要素的objectId的值；<br />
+            <font class="nextParameter">【7】pageIndex：</font>（Int类型）可选项，分页号。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值为0；<br />
+            <font class="nextParameter">【8】recordNumber：</font>（Int类型）可选项，每页记录数。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值为20；<br />
+            <font class="nextParameter">【9】orderField：</font>（Zondy.Service.QueryFeatureStruct类型）可选项，指定查询返回结果的排序字段。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />
+            <font class="nextParameter">【10】isAsc：</font>（Zondy.Service.QueryFeatureStruct类型）可选项，是否升序排列，与orderField配合使用。来自其父类（Zondy.Service.QueryParameterBase）的属性；<br />默认值是false。<br />
+        </div>
+        <font class="Class">4、Zondy.Service.QueryLayerFeature类：</font>提供基于矢量图层的查询服务<br />
+        <br />
+        <font class="constructorTile">4.1 构造函数：</font>
+        <br />
+        <div class="zhuji">
+            <font class="constructor">Zondy.Service.QueryLayerFeature(queryParam, opt_options)</font><br />
+            <br />
+            <font class="paraDescription">参数说明：</font>
+            <br />
+            <font class="parameter">queryParam：</font>（Zondy.Service.QueryByLayerParameter类对象）必填项，查询参数信息；<br />
+            <font class="parameter">options：</font>（Object类型）可选项，设置该对象其他属性，以键值对的形式设置。<br />
+            <font class="nextParameter">【1】ip：</font>（String类型）可选项，来源于父类（Zondy.Service.HttpRequest）参数，IGServer服务器ip。<br />默认为"localhost"；<br />
+            <font class="nextParameter">【2】port：</font>（String类型）可选项，来源于父类（Zondy.Service.HttpRequest）参数，IGServer服务端口。<br />默认为"6163"。
+        </div>
+        <font class="funDescription">4.2方法说明：</font><br />
+        <div class="zhuji">
+            <font class="functionName">query(onSuccess, onError, requestType)：</font>查询函数，向服务器发送请求（来源于父类Zondy.Service.QueryServiceBase中的方法）。<br />
+            <font class="nextParameter">onSuccess：</font>请求成功时回调函数；<br />
+            <font class="nextParameter">onError：</font>请求失败时回调函数；<br />
+            <font class="nextParameter">requestType：</font>（String类型）请求方式（GET或者POST）。<br />如果没有设置此项时，默认使用GET方式请求；<br />
+        </div>
+    </div>
+    <p>
+        <a href="http://simayun.cn:81/API/JS/JavaScript_API(OL2)/default.html" alt="MapGIS IGServer JavaScript Client的API手册。"
+           target="_blank">注：详细说明请参见MapGIS IGServer JavaScript Client的API手册。</a>
+    </p>
+</body>
+</html>

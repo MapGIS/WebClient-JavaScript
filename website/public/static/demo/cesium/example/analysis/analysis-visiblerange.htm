@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>可视域分析</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        //定义鼠标事件类
+        var handler;
+        var viewshedAn = true;
+        var viewshed3daction = false;
+        var viewshed3ding = false;
+        //定义可视域分析类
+        var viewshed3d;
+        //加载三维视图
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', { terrainExaggeration: 1 });
+            webGlobe.showPosition();
+            var viewer = webGlobe.viewer;
+            var scene = webGlobe.scene;
+            if (viewer) {
+                if (webGlobe) {
+                    //加载谷歌矢量底图
+                    webGlobe.appendGoogleMap('m@207000000');
+                    //加载IGS发布的M3D缓存地图文档
+                    tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
+                }
+            }
+        }
+
+        /*可视域分析*/
+        function FviewshedAn() {
+            //获取三位场景视图对象
+            var viewer = webGlobe.viewer;
+            viewshedAn = true;
+            //可视域分析（新）
+            viewshed3d = new Cesium.ViewshedAnalysis(viewer.scene);
+            viewshed3daction = true;
+            viewshed3ding = false;
+
+            function left(movement) {
+                if (viewshedAn) {
+                    // 可视域分析
+                    if (viewshed3daction) {
+                        //获取鼠标位置
+                        var cartesian = viewer.getCartesian3Position(movement.position, cartesian);
+                        if (cartesian != undefined && !viewshed3ding) {
+                            cartesian.z += 3.6;
+                            //设置观察点坐标
+                            viewshed3d.viewPosition = cartesian;
+                            //添加可视域分析结果显示
+                            viewer.scene.VisualAnalysisManager.add(viewshed3d);
+                            viewshed3ding = true;
+                        } else {
+                            //设置可视域结果点
+                            viewshed3d.targetPosition = cartesian;
+                            viewshed3daction = false;
+                            viewshed3ding = false;
+                        }
+                        //viewshed3ding = true;
+                    }
+                }
+            }
+            //鼠标右键结束
+            function right(movement) {
+                if (viewshed3ding) {
+                    var cartesian = viewer.getCartesian3Position(movement.position, cartesian);
+                    if (viewshedAn) {
+                        if (cartesian) {
+                            //设置可视域结果点
+                            viewshed3d.targetPosition = cartesian;
+                        } else {
+                            viewshed3d.targetPoint = cartesian;
+                        }
+                    } else {
+                        if (cartesian) {
+                            //设置可视域结果点
+                            viewshed3d.targetPosition = cartesian;
+                        }
+                    }
+                }
+                viewshed3daction = false;
+                viewshed3ding = false;
+            }
+
+            function move(movement) {
+                if (viewshed3ding) {
+                    var cartesian = viewer.getCartesian3Position(movement.endPosition, cartesian);
+                    if (cartesian) {
+                        if (viewshedAn) {
+                            //设置可视域结果点
+                            viewshed3d.targetPosition = cartesian;
+                        } else {
+                            //设置可视域结果点
+                            viewshed3d.targetPosition = cartesian;
+                        }
+                    }
+                }
+            }
+            //注册事件
+            webGlobe.registerMouseEvent('LEFT_CLICK', left);
+            webGlobe.registerMouseEvent('RIGHT_CLICK', right);
+            webGlobe.registerMouseEvent('MOUSE_MOVE', move);
+        }
+
+        function stopviewshedAn() {
+            //注销事件
+            webGlobe.unRegisterMouseEvent('LEFT_CLICK');
+            webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+            webGlobe.unRegisterMouseEvent('MOUSE_MOVE');
+            //移除分析显示结果
+            webGlobe.viewer.scene.VisualAnalysisManager.removeAll();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="FviewshedAn" onclick="FviewshedAn()">可视域分析</button>
+        <button class="ButtonLib" id="remove" onclick="stopviewshedAn()">移除</button>
+    </div>
+    <div style="position:absolute;left:10px;top:40px;z-index:1000000;color:aliceblue">
+        <span>鼠标左键添加观察点</span>
+        <br />
+        <span>点击鼠标右键或再次点击鼠标左键完成可视域分析</span>
+    </div>
+    <div id="GlobeView"></div>
+</body>
+
+</html>

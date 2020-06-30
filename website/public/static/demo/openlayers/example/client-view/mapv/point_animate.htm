@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>点数据播放</title>
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="proj4,mapv" src="./static/libs/include-leaflet-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map').setView([29.578285, 106.563777], 5);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+      'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+        attribution: '<a href="#">MapGIS</a>',
+        maxZoom: 18,
+        id: 'mapbox.dark'
+      }).addTo(map);
+
+    var data = [];
+
+    $.get('../../static/data/mapv/china-point.json', function (rs) {
+      for (var i = 0; i < rs[0].length; i++) {
+        var geoCoord = rs[0][i].geoCoord;
+        data.push({
+          geometry: {
+            type: 'Point',
+            coordinates: geoCoord
+          },
+          time: Math.random() * 10
+        });
+      }
+
+      var dataSet = new mapv.DataSet(data);
+      var options = {
+        fillStyle: 'rgba(255, 250, 50, 0.6)',
+        //shadowColor: 'rgba(255, 250, 50, 0.5)',
+        //shadowBlur: 3,
+        updateCallback: function (time) {
+          time = time.toFixed(2);
+          $('#time').html('时间' + time);
+        },
+        size: 3,
+        draw: 'simple',
+        animation: {
+          type: 'time',
+          stepsRange: {
+            start: 0,
+            end: 10
+          },
+          trails: 1,
+          duration: 6,
+        }
+      }
+      var mapvLayer = new L.zondy.MapvLayer(map, dataSet, options).addTo(map);
+    });
+  </script>
+
+
+</body>
+
+</html>

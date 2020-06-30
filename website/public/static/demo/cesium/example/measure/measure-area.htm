@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>计算面积</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        // 测量面积工具
+        var measureAreaTool;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            webGlobe.appendGoogleMap('m@207000000');
+            //加载IGS发布的M3D缓存地图文档
+            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
+
+            areaMeasure();
+        }
+
+        /*面积测量*/
+        function areaMeasure() {
+            if (measureAreaTool == undefined) {
+                measureAreaTool = new Cesium.MeasureAreaTool(webGlobe.viewer);
+            }
+            measureAreaTool.startTool();
+        }
+
+        /*停止测量*/
+        function stopAreaMeasure() {
+            if (measureAreaTool != undefined) {
+                measureAreaTool.stopTool();
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

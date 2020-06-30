@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>D3-geojson</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="../.././static/libs/include-lib-local.js"></script>
+    <script  include="d3" src="../.././static/libs/include-mapboxgl-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .point-style {
+            fill: aqua;
+            stroke: crimson;
+        }
+
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mapboxd3-hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var map;
+
+        initMap();
+
+        loadData();
+
+        function initMap() {
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: {
+                    "version": 8,
+                    "sources": {
+                        "mapbox-tiles": {
+                            "type": "raster",
+                            'tiles': [
+                                "https://api.tiles.mapbox.com/v4/mapbox.dark/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw"
+                            ],
+                            'tileSize': 256
+                        }
+                    },
+                    "layers": [{
+                        "id": "dark-tiles",
+                        "type": "raster",
+                        "source": "mapbox-tiles",
+                        "minzoom": 0,
+                        "maxzoom": 22
+                    }]
+                },
+                zoom: 8,
+                pitch: 0,
+                center: [8.3221435546875, 46.81509864599243]
+            });
+
+            container = map.getCanvasContainer();
+            svg = d3.select(container).select("svg");
+        }
+        var container, svg;
+        var cities = [];
+
+        function loadData() {
+            d3.dsv(",", "../../../../static/data/d3/swiss-cities.csv", function (d) {
+                return {
+                    place: d.place,
+                    named: d.named,
+                    population: d.population,
+                    lng: d.lng,
+                    lat: d.lat,
+                }
+            }).then(function (data) {
+                cities = data.map(function (d) {
+                    d.lng = +d.lng;
+                    d.lat = +d.lat;
+                    d.population = (d.population == '') ? 2000 : +d.population; //NAs
+                    return d;
+                });
+                updateView();
+            });
+        }
+
+        var city; //这里很重要，一定不能声明再某个函数里面，必须是一个全局变量，否则无法刷新位置与地图联动
+        var projection;
+
+        function latLngToLayerPoint(longtitude, latitude) {
+            console.log("longtitude: " + longtitude + " latitude: " + latitude);
+            var screenPoint = map.project(new mapboxgl.LngLat(longtitude, latitude));
+            console.log("screenPoint x: " + screenPoint.x + " y: " + screenPoint.y);
+            return screenPoint;
+        }
+
+        function updateView() {
+
+            var citiesUpd = svg.selectAll('circle').data(cities);
+
+            var minLogPop = Math.log2(d3.min(cities, function (d) {
+                return d.population;
+            }));
+
+            console.log("minLogPop:" + minLogPop);
+
+            var city = citiesUpd.enter()
+                .append('circle')
+                .attr("class", "point-style") //设置默认的样式，屏蔽则下面的样式生效
+                .attr('r', function (d) {
+                    return 10;//Math.log2(d.population) - minLogPop + 2;
+                })
+                .attr('cx', function (d) {
+                    console.log("cx : " + d.lng);
+                    return 10;//latLngToLayerPoint(d.lng, d.lat).x;
+                })
+                .attr('cy', function (d) {
+                    return 10;//latLngToLayerPoint(d.lng, d.lat).y;
+                })
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1)
+                /* .attr('fill', function (d) {
+                    return (d.place == 'city') ? "red" : "blue";
+                }); */
+
+            /* var citiesOverlay = new mapboxgl.zondy.d3Layer(map, function (svg, proj, zoom) {
+                projection = proj;
+                var point = projection.latLngToLayerPoint(8.3221435546875, 46.81509864599243);
+                console.log("point x: " + point.x + " y: " + point.y);
+                var minLogPop = Math.log2(d3.min(cities, function (d) {
+                    return d.population;
+                }));
+                var citiesUpd = svg.selectAll('circle').data(cities);
+                if (city == undefined) {
+                    city = citiesUpd.enter()
+                        .append('circle')
+                        .attr("class", "point-style") //设置默认的样式，屏蔽则下面的样式生效
+                        .attr('r', function (d) {
+                            return Math.log2(d.population) - minLogPop + 2;
+                        })
+                        .attr('cx', function (d) {
+                            return proj.latLngToLayerPoint(d.lng, d.lat).x;
+                        })
+                        .attr('cy', function (d) {
+                            return proj.latLngToLayerPoint(d.lng, d.lat).y;
+                        })
+                        .attr('stroke', 'black')
+                        .attr('stroke-width', 1)
+                        .attr('fill', function (d) {
+                            return (d.place == 'city') ? "red" : "blue";
+                        });
+                } else {
+                    city.attr('r', function (d) {
+                            return Math.log2(d.population) - minLogPop + 2;
+                        })
+                        .attr('cx', function (d) {
+                            return proj.latLngToLayerPoint(d.lng, d.lat).x;
+                        })
+                        .attr('cy', function (d) {
+                            return proj.latLngToLayerPoint(d.lng, d.lat).y;
+                        })
+                        .attr('stroke', 'black')
+                        .attr('stroke-width', 1)
+                        .attr('fill', function (d) {
+                            return (d.place == 'city') ? "red" : "blue";
+                        });
+                }
+
+            });
+ */
+            //citiesOverlay.addTo(map);
+
+            //citiesOverlay.hide();
+            //citiesOverlay.remove();
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>场景投放</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+<script>
+    //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+    'use strict';
+    //定义三维视图的主要类
+    var webGlobe;
+    var viewer;
+    //定义三维瓦片类
+    var tileset;
+    //定义场景投影类
+    var scenePro;
+    //场景投影类型
+    var proType;
+    //场景投影状态
+    var sceneProaction;
+    //场景投影进行状态
+    var sceneProing;
+    function init() {
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        });
+        viewer = webGlobe.viewer;
+        var scene = webGlobe.scene;
+        if (webGlobe) {
+            if (webGlobe) {
+                //加载谷歌矢量底图
+                webGlobe.appendGoogleMap('m@207000000');
+                //加载IGS发布的M3D缓存地图文档
+                tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
+            }
+        }
+    }
+
+    //鼠标左击
+    function left(movement) {
+        //场景投影激活
+        if (sceneProaction) {
+            //获取鼠标位置
+            var cartesian = viewer.scene.pickPosition(movement.position);
+            if (cartesian != undefined && !sceneProing) {
+                //cartesian.z += 0.08;
+                //cartesian.z += 200;
+                //设置投影观察点
+                scenePro.viewPosition = cartesian;
+                //投影类型
+                switch (proType) {
+                    //图片数据
+                    case Cesium.SceneProjectorType.IMAGE: {
+                        scenePro.textureSource = './static/data/picture/world.jpg';
+                    } break;
+                        //视屏数据
+                    case Cesium.SceneProjectorType.VIDEO: {
+                        scenePro.textureSource = './static/data/client-analysis/媒体2.mp4';
+                    } break;
+                        //颜色
+                    case Cesium.SceneProjectorType.COLOR: {
+                        scenePro.textureSource = new Cesium.Color(1, 0, 0, 1);
+                    } break;
+
+                }
+
+            } else {
+                //设置场景投影结果点
+                scenePro.targetPosition = cartesian;
+                //取消场景投影激活
+                sceneProaction = false;
+            }
+
+            sceneProing = true;
+        }
+    }
+
+    //鼠标右键结束
+    function right(movement) {
+        if (sceneProing) {
+            //获取鼠标位置
+            var cartesian = viewer.scene.pickPosition(movement.position);
+            if (cartesian) {
+                scenePro.targetPosition = cartesian;
+            }
+        }
+        sceneProaction = false;
+        sceneProing = false;
+    }
+
+    /*颜色投影*/
+    function sceneProColor() {
+        removeAll();
+        //初始化场景投影对象
+        scenePro = new Cesium.SceneProjector(Cesium.SceneProjectorType.COLOR);
+        //添加场景投影结果显示
+        webGlobe.viewer.scene.VisualAnalysisManager.add(scenePro);
+        //激活投影状态
+        sceneProaction = true;
+        sceneProing = false;
+        //注册事件
+        webGlobe.registerMouseEvent('LEFT_CLICK', left);
+        webGlobe.registerMouseEvent('RIGHT_CLICK', right);
+    }
+
+    /*图片投影*/
+    function sceneProImg() {
+        removeAll();
+        //初始化场景投影对象
+        scenePro = new Cesium.SceneProjector(Cesium.SceneProjectorType.IMAGE);
+        //添加场景投影结果显示
+        webGlobe.viewer.scene.VisualAnalysisManager.add(scenePro);
+        //激活投影状态
+        sceneProaction = true;
+        sceneProing = false;
+        //注册事件
+        webGlobe.registerMouseEvent('LEFT_CLICK', left);
+        webGlobe.registerMouseEvent('RIGHT_CLICK', right);
+    }
+
+    /*视屏投影*/
+    function sceneProVideo() {
+        removeAll();
+        //初始化场景投影对象
+        scenePro = new Cesium.SceneProjector(Cesium.SceneProjectorType.VIDEO);
+        //添加场景投影结果显示
+        webGlobe.viewer.scene.VisualAnalysisManager.add(scenePro);
+        //激活投影状态
+        sceneProaction = true;
+        sceneProing = false;
+        //注册事件
+        webGlobe.registerMouseEvent('LEFT_CLICK', left);
+        webGlobe.registerMouseEvent('RIGHT_CLICK', right);
+    }
+
+    /*移除投影*/
+    function removeAll() {
+        //移除场景投影
+        //注销事件
+        webGlobe.unRegisterMouseEvent('LEFT_CLICK');
+        webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+        webGlobe.viewer.scene.VisualAnalysisManager.removeAll();
+    }
+
+    function updateViewPosition() {
+        webGlobe.registerMouseEvent('LEFT_CLICK', function (movement) {
+            var cartesian = viewer.scene.pickPosition(movement.position);
+            scenePro.viewPosition = cartesian;
+        });
+    }
+    function updateTargetPosition() {
+        webGlobe.registerMouseEvent('LEFT_CLICK', function (movement) {
+            var cartesian = viewer.scene.pickPosition(movement.position);
+            scenePro.targetPosition = cartesian;
+        });
+    }
+
+    function updatehorizontAngle() {
+        //获取观察点（相机位置）
+        var _viewPos = scenePro.viewPosition;
+        //将观察点转成经纬度坐标
+        let point = scenePro.viewPosition;
+        let resPoint = new Cesium.Cartesian3;
+        let invserTran = new Cesium.Matrix4;
+        Cesium.Matrix4.inverse(tileset[0].root.transform, invserTran);
+        Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
+        //wjPoint既为经纬度的点
+        var wjPoint = new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z);
+        //获取输入的方位角
+        var horizontAngleValue = Number(document.getElementById('horizontAngle').value);
+        //获取输入的高度角
+        var pitchAngleValue = Number(document.getElementById('pitchAngle').value);
+        //判断高度角的余弦值是否为0,为0说明相机方向为直上，或者直下，此时不需要方位角
+        if (Math.round(Math.cos((pitchAngleValue / 180) * Math.PI) * 1000000 / 1000000) == 0) {
+            wjPoint.z += Math.sin((pitchAngleValue / 180) * Math.PI);
+        }
+            //不为0,说明相机角度存在方位角
+        else {
+            //根据方位角计算单位长度的投放点的x长度，加上相机的位置的x坐标，既单位长度的投放点x坐标
+            wjPoint.x += Math.sin((horizontAngleValue / 180) * Math.PI);
+            //根据方位角计算单位长度的投放点的y长度，加上相机的位置的y坐标，既单位长度的投放点y坐标
+            wjPoint.y += Math.cos((horizontAngleValue / 180) * Math.PI);
+            //判断水平角是否为0，避免计算投放点z长度的时候异常,此时平面内相机点到投放点的长度为单位长度1
+            if (Math.sin((horizontAngleValue / 180) * Math.PI) == 0) {
+                wjPoint.z += Math.sin((pitchAngleValue / 180) * Math.PI);
+            }
+                //此时平面内相机点到投放点的长度为单位长度需要计算，为：1 / Math.sin((horizontAngleValue / 180) * Math.PI)
+            else {
+                wjPoint.z += Math.sin((pitchAngleValue / 180) * Math.PI) * (1 / Math.sin((horizontAngleValue / 180) * Math.PI));
+            }
+        }
+        //将经纬度的单位投放端转为视屏投放使用的世界坐标
+        let point1 = wjPoint;
+        let resPoint1 = new Cesium.Cartesian3;
+        let invserTran1 = new Cesium.Matrix4;
+        Cesium.Matrix4.multiplyByPoint(tileset[0].root.transform, point1, resPoint1);
+        //世界坐标下的单位投放点
+        var _targetPosition = new Cesium.Cartesian3(resPoint1.x, resPoint1.y, resPoint1.z);
+        //声明视屏投放的射线
+        var _direction = new Cesium.Cartesian3();
+        //通过相机位置点和单位投放点计算射线
+        Cesium.Cartesian3.subtract(_targetPosition, _viewPos, _direction);
+        Cesium.Cartesian3.normalize(_direction, _direction);
+        var _aspectRatio = scenePro._horizontAngle / scenePro._verticalAngle;
+        //设置视屏投放的距离，注意，此距离需要根据需求自己设置，不然长度太短，会导致视屏投不到模型上
+        scenePro._viewRadius += 30;
+        var _frustum = scenePro._projectorCamera.frustum;
+        _frustum.near = 0.0001 * scenePro._viewRadius;
+        _frustum.far = scenePro._viewRadius;
+        _frustum.aspectRatio = _aspectRatio;
+        _frustum.fov = scenePro._verticalAngle / 180 * Math.PI;
+        var tempCar3 = new Cesium.Cartesian3();
+        Cesium.Cartesian3.cross(_direction, _viewPos, tempCar3);
+        Cesium.Cartesian3.normalize(tempCar3, tempCar3);
+        var upCar3 = new Cesium.Cartesian3();
+        Cesium.Cartesian3.cross(tempCar3, _direction, upCar3);
+        Cesium.Cartesian3.normalize(upCar3, upCar3);
+        //重新设置相机参数
+        scenePro._projectorCamera.setView({
+            destination: scenePro.viewPosition,
+            orientation: {
+                direction: _direction,
+                up: upCar3
+            }
+        });
+    }
+</script>
+</head>
+<body onload="init()">
+<div class="ToolLib">
+    <button class="ButtonLib" id="sceneProColor" onclick="sceneProColor()">场景投影颜色</button>
+    <button class="ButtonLib" id="sceneProImg" onclick="sceneProImg()">场景投影图片</button>
+    <button class="ButtonLib" id="sceneProVideo" onclick="sceneProVideo()">场景投影视频</button>
+    <button class="ButtonLib" id="remove" onclick="removeAll()">移除投影</button>
+    <input id="horizontAngle" type="text" />
+    <input id="pitchAngle" type="text" />
+    <button class="ButtonLib" id="remove" onclick="updatehorizontAngle()">更新水平夹角</button>
+</div>
+<div style="position:absolute;left:10px;top:40px;z-index:1000000;color:red">
+    <span>鼠标左键选择观察点</span>
+    <br />
+    <span>点击鼠标右键完成场景投放</span>
+</div>
+<div id="GlobeView"></div>
+</body>
+</html>

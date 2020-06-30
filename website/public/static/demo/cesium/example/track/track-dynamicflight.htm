@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>动态航线</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        'use script';
+        var webGlobe;
+        var plague;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //加载谷歌矢量底图
+            webGlobe.appendGoogleMap('m@207000000');
+            webGlobe.flyTo(114.302312702, 30.598026044, 800000, 1);
+            //动画效果需开启计时
+            webGlobe.viewer.clock.shouldAnimate = true;//开启计时
+            //流动纹理线
+            var material = null;
+            //绘制动态航班轨迹
+            var options = {
+                //是否绘制动态航班线
+                isAdd: false,
+                //航班起始城市经纬度
+                center: { lon: 114.302312702, lat: 30.598026044 },
+                //航班终点城市数组，经纬度
+                cities: [{ "lon": 115.028495718, "lat": 30.200814617 },
+                { "lon": 110.795000473, "lat": 32.638540762 },
+                { "lon": 111.267729446, "lat": 30.698151246 },
+                { "lon": 112.126643144, "lat": 32.058588576 },
+                { "lon": 114.885884938, "lat": 30.395401912 },
+                { "lon": 112.190419415, "lat": 31.043949588 },
+                { "lon": 113.903569642, "lat": 30.932054050 },
+                { "lon": 112.226648859, "lat": 30.367904255 },
+                { "lon": 114.861716770, "lat": 30.468634833 },
+                { "lon": 114.317846048, "lat": 29.848946148 },
+                { "lon": 113.371985426, "lat": 31.704988330 },
+                { "lon": 109.468884533, "lat": 30.289012191 },
+                { "lon": 113.414585069, "lat": 30.368350431 },
+                { "lon": 112.892742589, "lat": 30.409306203 },
+                { "lon": 113.160853710, "lat": 30.667483468 },
+                { "lon": 110.670643354, "lat": 31.748540780 }]
+            };
+            plague = new Cesium.Plague(webGlobe.viewer, options);
+            plague.setVisible('add');
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+</body>
+
+</html>

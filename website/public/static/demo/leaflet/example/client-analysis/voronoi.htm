@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="./static/libs/include-leaflet-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='map'></div>
+
+  <script>
+    var map = L.map('map').setView([30.59418345, 114.289398], 8);
+    var geojson;
+    initMap();
+    loadData();
+
+    function initMap() {
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' +
+        'sk.eyJ1IjoiY2hlbmdkYWRhIiwiYSI6ImNqZDFjaGo0ZjFzcnoyeG54enoxdnNuZHUifQ.hTWXXBUQ0wdGeuDF3GWeUw', {
+          attribution: '<a href="#">MapGIS</a>',
+          maxZoom: 18,
+          id: 'mapbox.light'
+        }).addTo(map);
+    }
+
+    function loadData() {
+      $.getJSON('./static/data/client-analysis/point.json', function(data) {
+        convertDataToGeoJson(data);
+        updateView(geojson);
+      });
+    }
+
+    function convertDataToGeoJson(origindata) {
+      var points = origindata;
+      geojson = turf.voronoi(points, {
+        bbox: [113.67, 30.00, 115.20, 31.20]
+      });
+    }
+
+    function updateView(data) {
+      L.geoJson(data).addTo(map);
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>等高线</title>
+    <script include="jquery,papaparse" src="./static/libs/include-lib-local.js"></script>
+    <script
+      include="language,deckgl"
+      src="./static/libs/include-mapboxgl-local.js"
+    ></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <script>
+      //一定要去mapbox注册一个key,这个key会失效的
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA";
+      var map = new mapboxgl.Map({
+        container: "map", // 绑定div
+        style: "mapbox://styles/mapbox/dark-v9", // 使用MapBox官方的样式
+        center: [-1.8597998742833441, 52.430580528979654],
+        zoom: 6.5,
+        pitch: 40,
+        bearing: -8
+      });
+      map.addControl(new MapboxLanguage(), "top-right"); //中文支持
+      map.addControl(new mapboxgl.NavigationControl(), "top-left");
+      
+      $.get('../../static/data/deckgl/ukcommute_data.csv', function(csvstr) {
+        var features = Papa.parse(csvstr, { skipEmptyLines: true, header: true });
+        addLayer(features.data);
+      });
+
+      function addLayer(features) {
+        deckglLayer = new mapboxgl.zondy.DeckglLayer('arc-layer', {
+          data: features,
+          props: {
+            pickable: true,
+            strokeWidth: 1.5,
+            opacity: 0.3
+          },
+          callback: {
+            getStrokeWidth: 12,
+            getSourcePosition: function(feature) {
+              if (!feature.residence_lat || !feature.residence_lng) {
+                return [0, 0];
+              }
+              return [Number(feature.residence_lng), Number(feature.residence_lat)];
+            },
+            getTargetPosition: function(feature) {
+              if (!feature.workplace_lng || !feature.workplace_lat) {
+                return [0, 0];
+              }
+              return [Number(feature.workplace_lng), Number(feature.workplace_lat)];
+            },
+            getSourceColor: function(d) {
+              return [228, 155, 0, 255];
+            },
+            getTargetColor: function(d) {
+              return [149, 12, 105, 120];
+            }
+          }
+        });
+        deckglLayer.addTo(map);
+
+        var pointsProps = {
+          opacity: 0.3,
+          radiusMinPixels: 0.8,
+          autoHighlight: true,
+          highlightColor: [255, 255, 0, 255],
+          onHover: function(e) {
+      
+          }
+        };
+        var workPlace = new mapboxgl.zondy.DeckglLayer('scatter-plot', {
+          data: features,
+          props: pointsProps,
+          callback: {
+            getPosition: function(feature) {
+              if (!feature.workplace_lng || !feature.workplace_lat) {
+                return [0, 0];
+              }
+              return [Number(feature.workplace_lng), Number(feature.workplace_lat)];
+            },
+            getColor: function(d) {
+              return [255, 255, 255, 110];
+            },
+            getRadius: function(d) {
+              return 10;
+            }
+          }
+        });
+        workPlace.addTo(map);
+        var homePlace = new mapboxgl.zondy.DeckglLayer('scatter-plot', {
+          data: features,
+          props: pointsProps,
+          callback: {
+            getPosition: function(feature) {
+              if (!feature.residence_lat || !feature.residence_lng) {
+                return [0, 0];
+              }
+              return [Number(feature.residence_lng), Number(feature.residence_lat)];
+            },
+            getColor: function(d) {
+              return [255, 255, 255, 110];
+            },
+            getRadius: function(d) {
+              return 10;
+            }
+          }
+        });
+        homePlace.addTo(map);
+      }
+    </script>
+  </body>
+</html>

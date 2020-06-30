@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>北京公交夜景</title>
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="elasticsearch,language,echarts,geojson,shapefile" src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var myChart = echarts.init(document.getElementById('mapid'), null, {
+      devicePixelRatio: 1
+    });
+
+    myChart.showLoading();
+
+    refreshHistory();
+
+    var geoJSON = {
+      features: []
+    };
+    var regions = [];
+
+    function refreshHistory() {
+
+      var readShp = new Promise(function (resolve, reject) {
+        shapefile.open('../../static/data/echartsgl/beijing/buildings.shp', '../../static/data/echartsgl/beijing/buildings.dbf')
+          .then(source => source.read()
+            .then(function append(result) {
+              if (result.done) {
+                resolve();
+                return;
+              }
+              var feature = result.value;
+              feature.properties.name = geoJSON.features.length + '';
+              regions.push({
+                name: geoJSON.features.length + '',
+                value: 1,
+                height: 100
+              })
+              geoJSON.features.push(feature);
+              return source.read().then(append);
+            })
+          );
+      });
+
+      myChart.showLoading();
+
+      Promise.all([$.getJSON('../../static/data/echartsgl/beijing/tracks-fake.json'), readShp])
+        .then(function ([linesData, lastFeature]) {
+          myChart.hideLoading();
+          var data = linesData.features;
+
+          var hStep = 300 / (data.length - 1);
+          var taxiRoutes = [];
+          var i = 0;
+          for (var x in data) {
+            var lnglats = data[x].geometry.coordinates
+            taxiRoutes.push({
+              coords: lnglats,
+              lineStyle: {
+                color: echarts.color.modifyHSL('#5A94DF', Math.round(hStep * x))
+
+              },
+              value: Math.random() * 200
+            })
+          }
+
+          echarts.registerMap('buildings', geoJSON);
+
+          myChart.setOption({
+            mapbox: {
+              center: [116.35, 39.9],
+              zoom: 11,
+              pitch: 50,
+              bearing: -10,
+              altitudeScale: 2,
+              style: 'mapbox://styles/mapbox/dark-v9',
+              postEffect: {
+                enable: true,
+                screenSpaceAmbientOcclusion: {
+                  enable: true,
+                  intensity: 1.2,
+                  radius: 6,
+                  quality: 'high'
+                },
+                screenSpaceReflection: {
+                  enable: true
+                }
+              },
+              light: {
+                main: {
+                  intensity: 1,
+                  shadow: true,
+                  shadowQuality: 'high'
+                },
+                ambient: {
+                  intensity: 0.
+                },
+                ambientCubemap: {
+                  texture: '../../static/data/echartsgl/beijing/data.hdr',
+                  exposure: 1,
+                  diffuseIntensity: 0.5,
+                  specularIntensity: 2
+                }
+              }
+            },
+            series: [{
+                type: 'map3D',
+                coordinateSystem: 'mapbox',
+                map: 'buildings',
+                data: regions,
+                shading: 'realistic',
+                silent: true,
+                instancing: true,
+                realisticMaterial: {
+                  metalness: 1,
+                  roughness: 0.2,
+                }
+              },
+              {
+                type: 'lines3D',
+                coordinateSystem: 'mapbox',
+                effect: {
+                  show: true,
+                  constantSpeed: 1,
+                  trailWidth: 3,
+                  trailLength: 3,
+                  trailOpacity: 1,
+                  spotIntensity: 10
+                },
+
+                blendMode: 'lighter',
+
+                polyline: true,
+
+                data: taxiRoutes
+              }
+            ]
+          });
+          var mapbox = myChart.getModel().getComponent('mapbox3D').getMapbox();
+          mapbox.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+        });
+    }
+
+    window.addEventListener('resize', function () {
+      myChart.resize();
+    });
+  </script>
+</body>
+
+</html>

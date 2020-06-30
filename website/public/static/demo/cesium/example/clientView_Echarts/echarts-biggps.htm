@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      left: 10px;
+      top: 30px;
+      width: 100%;
+      height: 96%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+
+    initMap();
+    initEcharts();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition('coordinate_location');
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    var layer;
+
+
+    var dataCount = 0;
+    var CHUNK_COUNT = 230;   // 数据一共230片
+    /**
+     * 循环请求对应的网络数据，数据格式是Int32Array,并解析对应的二级制流
+     * @see https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/
+     * */
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      //http://echarts.baidu.com/examples/data/asset/data/gps/gps_19.bin
+      var dataURL = `./static/data/echarts/gps/gps_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Int32Array(this.response);
+        var data = new Float32Array(rawData.length);
+        var addedDataCount = rawData.length / 2;
+        for (var i = 0; i < rawData.length; i += 2) {
+          data[i] = rawData[i + 1] / 1e7;
+          data[i + 1] = rawData[i] / 1e7;
+        }
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: data
+        });
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+
+    function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
+      var option = {
+        //backgroundColor: '#000',
+        title: {
+          text: 'OSM公开GPS轨迹（千万级）',
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        cesium: {
+          roam: false
+        },
+        series: [{
+          name: '弱',
+          type: 'scatterGL',  
+          progressive: 20000,           // 一次渲染20000点
+          coordinateSystem: 'cesium',   // 设置cesium坐标系
+          symbolSize: 1,
+          zoomScale: 0.002,
+          blendMode: 'lighter',
+          largeThreshold: 50000,
+          large: true,
+          itemStyle: {
+            color: 'rgb(20, 15, 2)'
+          },
+          postEffect: {
+            enable: true
+          },
+          silent: true,
+          dimensions: ['lng', 'lat'],
+          data: new Float32Array()     // 关键点： 数据必须处理成Float32Array格式，否则超出浏览器内存
+        }]
+      };
+      // 声明cesium的echarts图层并将其显示到三维球上
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+      fetchData(0);
+    }
+  </script>
+
+</body>
+
+</html>

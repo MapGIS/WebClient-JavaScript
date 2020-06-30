@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>中心点</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script
+      include="geohash,geojson,turf"
+      src="./static/libs/include-mapboxgl-local.js"
+    ></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <script>
+      var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
+      var map = new mapboxgl.Map({
+        container: "map",
+        crs: "EPSG:4326", //经纬度一定要设置crs参数
+        maxBounds: [
+          [-180, -90],
+          [180, 90],
+        ],
+        style: {
+          version: 8,
+          sources: {
+            "tianditu-4326-vector": {
+              //来源类型为栅格瓦片
+              type: "raster",
+              tiles: [
+                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                "http://t" +
+                  Math.round(Math.random() * 7) +
+                  ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                  "&TILECOL=" +
+                  "{x}" +
+                  "&TILEROW=" +
+                  "{y}" +
+                  "&TILEMATRIX=" +
+                  "{z}" +
+                  "&tk=" +
+                  tiandituKey,
+              ],
+              //栅格瓦片的分辨率
+              tileSize: 256,
+            },
+            "tianditu-4326-symbol": {
+              //来源类型为栅格瓦片
+              type: "raster",
+              tiles: [
+                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                "http://t" +
+                  Math.round(Math.random() * 7) +
+                  ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                  "&TILECOL=" +
+                  "{x}" +
+                  "&TILEROW=" +
+                  "{y}" +
+                  "&TILEMATRIX=" +
+                  "{z}" +
+                  "&tk=" +
+                  tiandituKey,
+              ],
+              //栅格瓦片的分辨率
+              tileSize: 256,
+            },
+          },
+          layers: [
+            {
+              id: "tianditu-4326-vector",
+              type: "raster",
+              source: "tianditu-4326-vector",
+              minzoom: 0,
+              maxzoom: 22,
+            },
+            {
+              id: "tianditu-4326-symbol",
+              type: "raster",
+              source: "tianditu-4326-symbol",
+              minzoom: 0,
+              maxzoom: 22,
+            },
+          ],
+        },
+        zoom: 8,
+        pitch: 45,
+        center: [116.35, 39.9],
+      });
+      var massPoints = {
+        type: "FeatureCollection",
+        features: [],
+      };
+      var centerPoint = {
+        type: "FeatureCollection",
+        features: [],
+      };
+
+      map.on("load", function() {
+        initMap();
+        loadData();
+      });
+
+      function initMap() {
+        //请特别重视这个图层名字massPoints
+        map.addSource("massPoints", {
+          type: "geojson",
+          data: massPoints, //一开始的数据是空的,后面请求到了再更新
+        });
+
+        map.addLayer({
+          id: "masspoint",
+          type: "circle",
+          source: "massPoints", //必须和上面的massPoints一致
+          paint: {
+            "circle-radius": 15, //半径
+            "circle-color": "#202", //颜色
+            "circle-opacity": 0.8, //透明度
+            "circle-stroke-width": 5, //轮廓线宽度
+            "circle-stroke-color": "#FFFFFF", //轮廓线颜色
+            "circle-stroke-opacity": 0.9, //轮廓线透明度
+          },
+        });
+        //请特别重视这个图层名字centerPoint
+        map.addSource("centerPoint", {
+          type: "geojson",
+          data: centerPoint, //一开始的数据是空的,后面请求到了再更新
+        });
+
+        map.addLayer({
+          id: "centerpoint",
+          type: "circle",
+          source: "centerPoint", //必须和上面的centerPoint一致
+          paint: {
+            "circle-radius": 20,
+            "circle-color": "#FF0000",
+            "circle-stroke-width": 5, //轮廓线宽度
+            "circle-stroke-color": "#FFFF00", //轮廓线颜色
+            "circle-stroke-opacity": 0.9, //轮廓线透明度
+          },
+        });
+      }
+
+      function loadData() {
+        $.getJSON(
+          "../../static/data/client-analysis/buffer-hash-4.json",
+          function(data) {
+            convertDataToGeoJson(data);
+            updateView();
+          }
+        );
+      }
+
+      function convertDataToGeoJson(origindata) {
+        var columnarPoints = [];
+        var points;
+        origindata.aggregations.geohash.buckets.forEach(function(bucket) {
+          var coordinates = decodeGeoHash(bucket.key);
+          var countNumber = bucket.doc_count;
+          var point = {
+            pointKey: [coordinates.longitude[2], coordinates.latitude[2]],
+            count: bucket.doc_count,
+          }; //[0] min [1]max [2] 中心点
+          columnarPoints.push(point);
+        });
+        massPoints = GeoJSON.parse(columnarPoints, {
+          Point: "pointKey",
+        });
+        centerPoint = turf.centroid(massPoints);
+      }
+
+      function updateView() {
+        //注意massPoints是之前添加的source的名字
+        map.getSource("massPoints").setData(massPoints);
+        //注意centerPoint是之前添加的source的名字
+        map.getSource("centerPoint").setData(centerPoint);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+# WFS
+
+Web 要素服务（WFS）返回的是要素级的 GML 编码，并提供对要素的增加、修改、删除等事务操作，是对 Web 地图服务的进一步深入。OGC Web 要素服务允许客户端从多个 Web 要素服务中取得使用地理标记语言（GML）编码的地理空间数据，这个远东定义了五个操作：GetCapabilites 返回 Web 要素服务性能描述文档（用 XML 描述）；DescribeFeatureType 返回描述可以提供服务的任何要素结构的 XML 文档；GetFeature 为一个获取要素实例的请求提供服务；Transaction 为事务请求提供服务；LockFeature 处理在一个事务期间对一个或多个要素类型实例上锁的请求。
+
+# 英文原址
+
+[OpenGIS Web Feature Service (WFS) Implementation Specification](https://www.ogc.org/docs/is/)
+
+# GetFeature（获取图层要素）
+
+| URL Component       | O/M                   | Description                                                                                                                                                                                                |
+| :------------------ | :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| REQUEST=[GetFeature /GetFeatureWithLock] | M                          | The name of the WFS request.                                                                                                                                                                               |
+| OUTPUTFORMAT        | O           |  `Default: text/xml;subtype=gml/3.1.1  `The output format to use for the response. text/xml; subtype=gml/3.1.1 must be supported. Other output formats are possible as well as long as their MIME type is advertised in the capabilities document. |
+|RESULTTYPE |O|`Default:results` The resulttype parameter is used to indicate whether a WFS should generate a complete response document of whether it should generate an empty response document indicating only the number of features that the query would return. A value of results indicates that a full response should be generated. A value of hits indicates that only a count of the number of features should be returned.|
+|PROPERTYNAME |O| A list of properties may be specified for each feature type that is being queried. Refer to subclause 14.2.2 on how to form lists of parameters. A "*" character can be used to indicate that all properties should be retrieved. There is a 1:1 mapping between each element in a FEATUREID or TYPENAME list and the PROPERTYNAME list. The absense of a value also indicates that all properties should be fetched.|
+|FEATUREVERSION=[ALL/N] |O| If versioning is supported, the FEATUREVERSION parameter directs the WFS on which feature version to fetch.. A value of ALL indicates to fetch all versions of a feature. An integer value fetches the Nth version of a feature. No value indicates that the latest version of the feature should be fetched.|
+|MAXFEATURES=N |O|  A positive integer indicating the maximum number of features that the WFS should return in response to a query. If no value is specified then all result instances should be presented.|
+|EXPIRY=N |O| This parameter may only be specified if the request is GetFeatureWithLock. It indicates the length of time (in minutes) that a lock will be held on the features in the result set. If the parameter is not specified then the locks will be held indefinitely.|
+|SRSNAME| O| This parameter is used to specify a WFSsupported SRS that should be used for returned feature geometries. The value may be the DefaultSRS or any of the OtherSRS values that a WFS declares it supports in the capabilities document. The SRS may be indicated using EPSG codes or the URL form defined in [2]. If the parameter is not specified then the value of the DefaultSRS for the feature type being queried shall be used.|
+|TYPENAME (Optional if FEATUREID isspecified.) |M|  A list of feature type names to query. |
+|FEATUREID (Mutually exclusive with FILTER and BBOX) |O| An enumerated list of feature instances to fetch identified by their feature identifiers. |
+|FILTER (Prerequisite: TYPENAME) (Mutually exclusive with FEATUREID and BBOX)| O| A filter specification describes a set of features to operate upon. The filter is defined as specified in the Filter Encoding Specification [3]. If the FILTER parameter is used, one filter must be specified for each feature type listed in the TYPENAME parameter. Individual filters encoded in the FILTER parameter are enclosed in parentheses “(“ and “)”.|
+|BBOX (Prerequisite: TYPENAME) (Mutually exclusive with FEATUREID and FILTER.) |O|  In lieu of a FEATUREID or FILTER, a client may specify a bounding box as described in subclause 13.3.3.|
+|SORTBY|O| The SORTBY parameter is used to specify a list of property names whose values should be used to order (upon presentation) the set of feature instances that satify the query. The value of the SORTBY parameter shall have the form “PropertyName [A/D][,PropertyName [A/D],…]” where the letter A is used to indicate an ascending sort and the letter D is used to indicate a descending sort. If neither A nor D are specified, the default sort order shall be ascending. An example value might be: “SORTBY=Field1 D,Field2 D,Field3”. In this case the results are sorted by Field 1 descending, Field2 descending and Field3 ascending. |

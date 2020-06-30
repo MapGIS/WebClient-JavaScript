@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>开普敦出租车</title>
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="elasticsearch,echarts,geojson,shapefile,language" src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    #mapid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mapid"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var myChart = echarts.init(document.getElementById('mapid'), null, {
+      devicePixelRatio: 1
+    });
+    var ENCODE_SCALE = 1e6;
+    var geoJSON = {
+      features: []
+    };
+
+    refreshHistory();
+
+    function decodeLine(line) {
+      var result = [];
+      var prevX = line[0];
+      var prevY = line[1];
+
+      for (var i = 0; i < line[2].length; i += 2) {
+        var x = line[2].charCodeAt(i) - 64;
+        var y = line[2].charCodeAt(i + 1) - 64;
+        // ZigZag decoding
+        x = (x >> 1) ^ (-(x & 1));
+        y = (y >> 1) ^ (-(y & 1));
+        // Delta deocding
+        x += prevX;
+        y += prevY;
+
+        prevX = x;
+        prevY = y;
+        // Dequantize
+        result.push([x / ENCODE_SCALE, y / ENCODE_SCALE, 10]);
+      }
+      return result;
+    }
+
+    function refreshHistory() {
+      var regions = [];
+      var readShp = new Promise(function (resolve, reject) {
+        shapefile.open('../../static/data/echartsgl/capeton/buildings.shp', '../../static/data/echartsgl/capeton/buildings.dbf')
+          .then(source => source.read()
+            .then(function append(result) {
+              if (result.done) {
+                resolve();
+                return;
+              }
+              var feature = result.value;
+              feature.properties.name = geoJSON.features.length + '';
+              regions.push({
+                name: geoJSON.features.length + '',
+                value: 1,
+                height: feature.properties.SHAPE_leng * 10000
+              })
+              geoJSON.features.push(feature);
+              return source.read().then(append);
+            })
+          );
+      });
+
+      myChart.showLoading();
+
+      Promise.all([$.getJSON('../../static/data/echartsgl/capeton/taxi.json'), readShp])
+        .then(function ([data, lastFeature]) {
+
+          var lines = data.map(function (track) {
+            return {
+              coords: decodeLine(track)
+            };
+          });
+
+          myChart.hideLoading();
+
+          echarts.registerMap('buildings', geoJSON);
+
+          myChart.setOption({
+            mapbox: {
+              center: [18.424552361777955, -33.92188144682616],
+              zoom: 14,
+              pitch: 50,
+              bearing: -10,
+              altitudeScale: 2,
+              style: 'mapbox://styles/mapbox/dark-v9',
+              postEffect: {
+                enable: true,
+                screenSpaceAmbientOcclusion: {
+                  enable: true,
+                  intensity: 1.2,
+                  radius: 6,
+                  quality: 'high'
+                },
+                screenSpaceReflection: {
+                  enable: true
+                }
+              },
+              light: {
+                main: {
+                  intensity: 1,
+                  shadow: true,
+                  shadowQuality: 'high'
+                },
+                ambient: {
+                  intensity: 0.
+                },
+                ambientCubemap: {
+                  texture: '../../static/data/echartsgl/capeton/data.hdr',
+                  exposure: 1,
+                  diffuseIntensity: 0.5,
+                  specularIntensity: 2
+                }
+              }
+            },
+            series: [{
+              type: 'lines3D',
+              coordinateSystem: 'mapbox',
+              effect: {
+                show: true,
+                constantSpeed: 5,
+                trailWidth: 2,
+                trailLength: 0.8,
+                trailOpacity: 1,
+                spotIntensity: 10
+              },
+
+              blendMode: 'lighter',
+              polyline: true,
+
+              lineStyle: {
+                width: 0.1,
+                color: 'rgb(200, 40, 0)',
+                opacity: 0.
+              },
+
+              data: lines
+            }, {
+              type: 'map3D',
+              map: 'buildings',
+
+              coordinateSystem: 'mapbox',
+              shading: 'realistic',
+              silent: true,
+
+              instancing: true,
+              data: regions,
+
+              realisticMaterial: {
+                metalness: 1,
+                roughness: 0.2,
+              }
+            }]
+          });
+          var mapbox = myChart.getModel().getComponent('mapbox3D').getMapbox();
+          mapbox.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+        });
+    }
+    window.addEventListener('keydown', function () {
+      myChart.dispatchAction({
+        type: 'lines3DToggleEffect',
+        seriesIndex: 0
+      });
+    });
+  </script>
+</body>
+
+</html>
