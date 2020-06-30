@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>添加Gltf模型</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        var model;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            webGlobe.appendGoogleMap('m@207000000');
+
+            if (model) webGlobe.removeModel(model);
+            add();
+        }
+
+        //添加模型
+        function add() {
+            //添加模型（gltf文件）：appendModel(模型id, 模型url路径,模型所在经度 ,模型所在纬度, 高度, 缩放比)
+            model = webGlobe.appendModel('model', './static/data/model/donghua.gltf', 117.9298, 40.3828, 0, 2000);
+            //跳转到指定坐标点
+            webGlobe.flyTo(117.9298, 40.3828, 50000, 2);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

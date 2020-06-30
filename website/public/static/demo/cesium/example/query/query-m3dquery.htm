@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>M3D选取</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义三维瓦片类
+
+        var layersList;
+
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            viewer = webGlobe.viewer;
+            scene = webGlobe.scene;
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            webGlobe.appendGoogleMap('m@207000000');
+            layersList = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {});
+
+            pickModel();
+        }
+
+        function pickModel() {
+            //注册鼠标单击事件
+            webGlobe.registerMouseEvent('LEFT_CLICK', leftClick);
+        }
+
+        //单体化模型信息对象
+        var current = {
+            feature: undefined,
+            originalColor: new Cesium.Color()
+        }
+
+        //高亮的颜色
+        var HIGHLIGHT_COLOR = new Cesium.Color(1.0, 0.0, 0.0, 0.4);
+        //是否拾取
+        var enablePicking = true;
+        /*模型高亮*/
+        function highlightPicking(movement) {
+            if (enablePicking) {
+                //获取鼠标点击位置
+                var pickedFeature = scene.pick(movement.position);
+                //判断current对象中要素有值，该值和鼠标点击位置不相同
+                if (Cesium.defined(current.feature) && (current.feature !== pickedFeature)) {
+                    layerList = [current.feature.tileset];
+                    var title = current.feature.getProperty('name');
+                    var values = title.split('_');
+                    var vlueNumber = parseInt(values[2]);
+                    var idList = [vlueNumber];
+                    //结束闪烁
+                    webGlobe.stopCustomDisplay(layerList);
+                    current.feature = undefined;
+                }
+                //判断点击位置是否有值，该值和鼠标点击位置不相同
+                if (Cesium.defined(pickedFeature) && (pickedFeature !== current.feature)) {
+                    current.feature = pickedFeature;
+                    //设置高亮颜色
+                    Cesium.Color.clone(pickedFeature.color, current.originalColor);
+                    layerList = [current.feature.tileset];
+                    var title = current.feature.getProperty('name');
+                    var values = title.split('_');
+                    var vlueNumber = parseInt(values[2]);
+                    var idList = [vlueNumber];
+                    var options = {
+                        color: new Cesium.Color(1, 0, 0, 0.2)
+                    }
+                    //结束闪烁
+                    webGlobe.stopCustomDisplay(layerList);
+                    //开始闪烁查找到的模型
+                    webGlobe.startCustomDisplay(layerList, idList, options);
+                }
+            }
+        }
+
+
+        //弹出信息
+        var infobox = new Cesium.Entity('infobox');
+
+        function leftClick(movement) {
+            //模型高亮
+            highlightPicking(movement);
+            if (!enablePicking) {
+                return;
+            }
+            var feature = current.feature;
+            //显示拾取的模型相关信息
+            if (Cesium.defined(feature)) {
+                var str = '拾取到的属性，这里可以根据拾取到的id取到属性后再赋值';
+                //移除弹出信息框
+                viewer.entities.remove(infobox);
+                var properties = feature.primitive.properties;
+                infobox.name = feature.getProperty('name');
+                /*弹出信息框代码*/
+                var entity = viewer.entities.add(infobox);
+                viewer.selectedEntity = infobox;
+                feature.setProperty('clicked', true);
+            }
+        }
+
+        function stopPick() {
+            if (layersList) {
+                //结束闪烁
+                webGlobe.stopCustomDisplay(layerList);
+                //移除弹出信息框
+                viewer.entities.remove(infobox);
+                //屏蔽鼠标单击事件
+                webGlobe.unRegisterMouseEvent('LEFT_CLICK');
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

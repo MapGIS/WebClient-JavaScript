@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>线</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <script>
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var line;
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            //添加谷歌矢量地图
+            webGlobe.appendGoogleMap('m@207000000');
+            //跳转到指定位置
+            webGlobe.flyTo(106, 27, 10000, 1);
+        }
+
+        //添加贴地线
+        function add() {
+            remove();
+            var terrain = Cesium.createWorldTerrain();
+            // webGlobe.viewer.terrainProvider = terrain;
+            //定义一组坐标位置
+            var arrayp = [104.0, 28.0, 106.0, 27.0, 107.0, 28.0, 108.0, 29.0];
+            //颜色
+            var color = new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 1);
+            //绘制贴地线
+            line = webGlobe.appendGroundLine(arrayp, color);
+        }
+
+        //删除贴地线
+        function remove() {
+            if (line) {
+                webGlobe.scene.primitives.remove(line);
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="add" onclick="add()">添加贴地线</button>
+        <button class="ButtonLib" id="remove" onclick="remove()">删除贴地线</button>
+    </div>
+    <div id="GlobeView">
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

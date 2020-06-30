@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>计算折线长度</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="mapboxgl,draw,transform" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style>
+        .ButtonLib {
+            color: #0075C7;
+            display: inline-block;
+            padding: 3px 5px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            margin-left: 4px;
+            margin-right: 4px;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-color: #0075C7;
+            border-radius: 3px;
+            background-image: none;
+            background-color: transparent;
+        }
+    
+        .ButtonLib:hover {
+            color: white;
+            background-color: #0075C7;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        var markerlatLng;
+        var draw;
+        var popup;
+
+        /**显示地图*/
+        function init() {
+            //地图容器
+            map = new mapboxgl.Map({
+                container: 'map',
+                minZoom: 3,
+                zoom: 12,
+                bounds: [108.34341, 29.0125822276524, 116.150939561213, 33.2932017737021]
+            });
+
+            mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer("Hubei3857", {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true
+            });
+            mapDocLayer.addToMap(map);
+
+            var navigationControl = new mapboxgl.NavigationControl();
+            var scaleControl = new mapboxgl.ScaleControl();
+            draw = new MapboxDraw({
+                displayControlsDefault: false,
+                controls: {
+                    line_string: true,
+                    polygon: false,
+                    trash: false
+                }
+            });
+
+            map.addControl(navigationControl, 'top-left');     //导航条
+            map.addControl(scaleControl);
+            map.addControl(draw, "top-left");//绘制工具
+
+            map.on('draw.create', function (e) {
+                var lonlats = e.features[e.features.length - 1].geometry.coordinates;
+                var dots = [];
+                for (var i = 0; i < lonlats.length; i++) {
+                    dots.push(new Zondy.Object.Point2D(lonlats[i][0], lonlats[i][1]))
+                }
+                markerlatLng = lonlats[lonlats.length - 1];
+                CalPolyLineLength(dots)
+            });
+
+            popup = new mapboxgl.Popup({ closeOnClick: false });
+            popup.on("close", function () {
+                draw.deleteAll();
+            });
+        }
+
+        /**
+         * 获取多边形重心
+         * @param latlngs
+         * @returns {{x: number, y: number}}
+         */
+        function getCenterOfGravityPoint(latlngs) {
+            let area = 0.0;// 多边形面积
+            let Gx = 0.0;
+            let Gy = 0.0;// 重心的x、y
+            for (let i = 1; i <= latlngs.length; i++) {
+                const iLat = latlngs[i % latlngs.length][1];
+                const iLng = latlngs[i % latlngs.length][0];
+                const nextLat = latlngs[i - 1][1];
+                const nextLng = latlngs[i - 1][0];
+                const temp = (iLat * nextLng - iLng * nextLat) / 2.0;
+                area += temp;
+                Gy += temp * (iLat + nextLat) / 3.0;
+                Gx += temp * (iLng + nextLng) / 3.0
+            }
+            return [Gx / area, Gy / area];
+        }
+
+        /**计算折线长度*/
+        function CalPolyLineLength(dots) {
+            //初始化长度测量服务
+            var calLength = new Zondy.Service.CalPolyLineLength(dots, {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163"
+            });
+            //建议普通用户采用此类直接获取MapGIS GDB已经提供的空间参考系
+            var gdbInfo = new Zondy.Object.CGDBInfo({
+                //数据库名称
+                GDBName: "OpenLayerVecterMap",
+                //数据源名称
+                ServerName: "MapGISLocal",
+                //除MapGISLocal数据源，其它的都设置
+                Password: "",
+                //除MapGISLocal数据源，其它的都设置
+                User: ""
+            });
+            //用于进行SRSID投影的参数类
+            var projBySRSID = new Zondy.Service.CProjectBySRSID(601, gdbInfo);
+            //执行长度测量服务，measureCallBack为测量回调函数
+            calLength.execute(projBySRSID, measureCallBack);
+        }
+
+        /**测量回调函数
+         *  @param {json对象} data 获取结果对象
+         */
+        function measureCallBack(data) {
+            if (data && data.succeed) {
+                var length = data.value;
+                var output;
+                if (length > 100) {
+                    output = (Math.round(length / 1000 * 100) / 100) + "" + "km";
+                } else {
+                    output = (Math.round(length * 100) / 100) + "" + "m";
+                }
+                popup.setLngLat(markerlatLng).setHTML("线段长度：" + output).addTo(map);
+            }
+        }
+
+        /** 删除绘制的要素*/
+        function deleteMeasure() {
+            draw.deleteAll();
+            popup.remove();
+        }
+    </script>
+</head>
+<body onload="init()">
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="清除测量结果" onclick='deleteMeasure()'/>
+</div>
+<div id="resultShow">
+</div>
+<div id="map" style="width: 100%; height:700px;">
+</div>
+</body>
+</html>

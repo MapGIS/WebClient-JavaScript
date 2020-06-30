@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>谷歌地图显示</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #LayerSelect {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 20px;
+        }
+
+        .cesium-echarts-layer,
+        .cesium-echarts-layer canvas {
+            pointer-events: 'auto'
+        }
+
+        #GlobeView {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        //定义图层类
+        var baiduLayer = undefined;
+        var webGlobe, map;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            webGlobe.appendGoogleMap('m@207000000');
+
+            map = webGlobe.viewer;
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            console.log('webGlobe', webGlobe)
+            map = webGlobe.viewer;
+
+            initEcharts();
+        }
+
+        function initEcharts() {
+            var grade = [
+                "强",
+                "中",
+                "弱"
+            ]
+            var layer;
+            $.get('./static/data/echarts/weibo.json', function (weiboData) {
+                weiboData = weiboData.map(function (serieData, idx) {
+                    var px = serieData[0] / 1000;
+                    var py = serieData[1] / 1000;
+                    var res = [
+                        [px, py]
+                    ];
+
+                    for (var i = 2; i < serieData.length; i += 2) {
+                        var dx = serieData[i] / 1000;
+                        var dy = serieData[i + 1] / 1000;
+                        var x = px + dx;
+                        var y = py + dy;
+                        res.push([x.toFixed(2), y.toFixed(2), 1]);
+
+                        px = x;
+                        py = y;
+                    }
+                    return res;
+                });
+
+                option = {
+                    cesium: {
+                        roam: true
+                    },
+                    postRender: false,
+                    postRenderFrame: 10,
+                    coordinateSystem: 'cesium',
+                    title: {
+                        text: "中国微博签到图",
+                        subtext: 'From MapGIS',
+                        sublink: 'http://www.smaryun.com',
+                        left: 'center',
+                        top: 'top',
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    },
+                    tooltip: {},
+                    legend: {
+                        left: 'right',
+                        top: 'top',
+                        data: [grade[0], grade[1], grade[2]],
+                        textStyle: {
+                            color: '#ccc'
+                        }
+                    },
+                    series: [{
+                        name: grade[2],
+                        type: 'scatter',
+                        coordinateSystem: 'cesium',
+                        symbolSize: 1,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(37, 140, 249, 0.8)',
+                                color: 'rgba(37, 140, 249, 0.8)'
+                            }
+                        },
+                        data: weiboData[0]
+                    }, {
+                        name: grade[1],
+                        type: 'scatter',
+                        coordinateSystem: 'cesium',
+                        symbolSize: 1,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(14, 241, 242, 0.8)',
+                                color: 'rgba(14, 241, 242, 0.8)'
+                            }
+                        },
+                        data: weiboData[1]
+                    }, {
+                        name: grade[0],
+                        type: 'scatter',
+                        coordinateSystem: 'cesium',
+                        symbolSize: 1,
+                        large: true,
+                        itemStyle: {
+                            normal: {
+                                shadowBlur: 2,
+                                shadowColor: 'rgba(255, 255, 255, 0.8)',
+                                color: 'rgba(255, 255, 255, 0.8)'
+                            }
+                        },
+                        data: weiboData[2]
+                    }]
+                };
+                layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+            });
+        }
+    </script>
+    </head>
+
+    <body onload="init()">
+        <div id='GlobeView'></div>
+        <div id="coordinateDiv" class="coordinateClass">
+            <label id="coordinate_location"></label>
+            <label id="coordinate_height"></label>
+        </div>
+    </body>
+
+</html>

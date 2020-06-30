@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>地图文档要素查询</title>
+    <!--引入当前页面样式表-->
+    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        var drawLayer;
+
+        /** 初始化地图显示*/
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
+                    zoom: 6,
+                    projection: "EPSG:4326"
+                })
+            });
+            //初始化地图文档图层对象
+            mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(mapDocLayer);
+
+            //创建一个用于查询的多边形
+            var polygonFeature = new ol.Feature(
+                new ol.geom.Polygon(
+                    [
+                        [
+                            [112, 30],
+                            [112, 31],
+                            [113, 31],
+                            [113, 30],
+                            [112, 30]
+                        ]
+                    ]
+                )
+            );
+            //实例化一个矢量图层Vector作为绘制层
+            var source = new ol.source.Vector({
+                features: [
+                    polygonFeature
+                ]
+            });
+            var vectorLayer = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style({
+                    //填充色
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255,120,0, 0.2)'
+                    }),
+                    //边线样式
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(255,120,0, 1)',
+                        width: 2
+                    })
+                })
+            });
+            //将绘制层添加到地图容器中
+            map.addLayer(vectorLayer);
+        }
+
+        /**执行文档要素查询*/
+        function mapFeatureQuery() {
+            //显示进度条
+            startPressBar();
+            //创建查询结构对象
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //创建一个用于查询的矩形
+            var geomObj = new Zondy.Object.Rectangle(112, 30, 113, 31);
+            //制定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                //是否将要素的可见性计算在内
+                EnableDisplayCondition: false,
+                //是否完全包含
+                MustInside: false,
+                //是否仅比较要素的外包矩形
+                CompareRectOnly: false,
+                //是否相交
+                Intersect: true
+            });
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryParameter({
+                //几何对象
+                geometry: geomObj,
+                //结果格式
+                resultFormat: "json",
+                //查询结构
+                struct: queryStruct,
+                //查询规则
+                rule: rule
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 20;
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryDocFeature(queryParam, "Hubei4326", 1, {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为成功回调，queryError为失败回调
+            queryService.query(querySuccess, queryError);
+        }
+
+        /**查询成功回调函数
+         *  @param {json对象} result 获取结果对象
+         */
+        function querySuccess(result) {
+            //初始化Zondy.Format.PolygonJSON类
+            var format = new Zondy.Format.PolygonJSON();
+            //将MapGIS要素JSON反序列化为ol.Feature类型数组
+            var features = format.read(result);
+            //实例化一个矢量图层drawLayerr用于高亮显示结果
+            var drawSource = new ol.source.Vector({
+                wrapX: false
+            });
+            drawSource.addFeatures(features);
+            drawLayer = new ol.layer.Vector({
+                source: drawSource,
+                style: new ol.style.Style({
+                    //填充色
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 0, 0, 0.2)'
+                    }),
+                    //边线样式
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(255,0, 0, 1)',
+                        width: 1
+                    })
+                })
+            });
+
+            map.addLayer(drawLayer);
+            stopPressBar()
+        }
+
+        /**查询失败回调函数*/
+        function queryError() {
+            //停止进度条
+            stopPressBar();
+            alert("查询失败！");
+        }
+
+        /**删除绘制的要素*/
+        function deleteFeatures() {
+            //停止进度条
+            stopPressBar();
+            if (drawLayer) {
+                //移除高亮显示结果图层drawLayerr
+                map.removeLayer(drawLayer);
+                drawLayer = null
+            } else
+                return;
+        }
+
+        /**开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /**停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="init();">
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在操作，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="地图文档要素查询" onclick="mapFeatureQuery()"/>
+    <input type="button" class="ButtonLib" value="删除查询结果" onclick="deleteFeatures()"/>
+</div>
+<div id="mapCon" style="width: 100%; height:95%;">
+</div>
+</body>
+</html>

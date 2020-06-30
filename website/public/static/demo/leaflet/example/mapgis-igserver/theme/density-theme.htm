@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>密度专题图</title>
+    <script src="./static/libs/include-leaflet-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        //专题图操作对象
+        var ThemeOper;
+        //专题图信息数组
+        var themesInfoArr;
+        //地图文档guid
+        var guid;
+
+        /** 初始化地图显示*/
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            //地图容器
+            map = L.map('leaf_map', {
+                //地图渲染在canvas上
+                preferCanvas: true,
+                //不添加属性说明控件
+                attributionControl: false,
+                //添加缩放控件
+                zoomControl: true,
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //中心点
+                center: [(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
+                / 2],
+                //最大级数
+                maxZoom: 10,
+                //最小级数
+                minZoom: 0,
+                //显示级数
+                zoom: 6
+            });
+            //创建地图文档图层
+            mapDocLayer = new Zondy.Map.MapDocLayer("Hubei4326", {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true,
+                //文档guid
+                guid: guid
+            }).addTo(map);
+        }
+
+        /** 设置专题图默认参数*/
+        function getDefaultThemesInfoArr() {
+            //专题图信息数组
+            var themesInfoArr = [];
+            //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
+            themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo();
+            //设置图层名层
+            themesInfoArr[0].LayerName = "湖北省市级区划2";
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            themesInfoArr[0].ThemeArr = [];
+            //实例化CDotDensityTheme类
+            themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CDotDensityTheme();
+            //专题图名称
+            themesInfoArr[0].ThemeArr[0].Name = "点密度专题图";
+            //单值专题图
+            themesInfoArr[0].ThemeArr[0].IsBaseTheme = false;
+            //可见
+            themesInfoArr[0].ThemeArr[0].Visible = true;
+            themesInfoArr[0].ThemeArr[0].Expression = "GDP2016";
+            //密度单元值
+            themesInfoArr[0].ThemeArr[0].Value = "20";
+            //实例化专题图图形信息对象
+            //点图形信息
+            themesInfoArr[0].ThemeArr[0].Info = new Zondy.Object.Theme.CPntInfo();
+            themesInfoArr[0].ThemeArr[0].Info.SymID = 197;
+            //覆盖方式，覆盖
+            themesInfoArr[0].ThemeArr[0].Info.Ovprnt = true;
+            themesInfoArr[0].ThemeArr[0].Info.Height = 5;
+            themesInfoArr[0].ThemeArr[0].Info.Width = 5;
+            //[子图颜色,可变颜色1,可变颜色2]
+            themesInfoArr[0].ThemeArr[0].Info.OutClr = [6, 6, 6];
+            //[笔宽，可变笔宽1，可变笔宽2]
+            themesInfoArr[0].ThemeArr[0].Info.OutPenW = [0.05, 0.05, 0.05];
+            return themesInfoArr
+        }
+
+        /** 添加专题图*/
+        function addDotDensityThemesInfo() {
+            themesInfoArr = getDefaultThemesInfoArr();
+            //显示进度条
+            startPressBar();
+            //给指定地图文档指定图层添加专题图
+            ThemeOper = new Zondy.Service.ThemeOper(guid);
+            //设置ip地址
+            ThemeOper.ip = "develop.smaryun.com";
+            //设置端口号
+            ThemeOper.port = "6163";
+            //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
+            ThemeOper.addThemesInfo("Hubei4326", "1/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 更新专题图*/
+        function updateTheme() {
+            //显示进度条
+            startPressBar();
+            themesInfoArr = getDefaultThemesInfoArr();
+            //密度单元值
+            themesInfoArr[0].ThemeArr[0].Value = "200";
+            //更新专题图,onUniqueTheme为回调函数
+            ThemeOper.updateThemesInfo("Hubei4326", "1/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 删除专题图*/
+        function deleteTheme() {
+            if (themesInfoArr) {
+                //显示进度条
+                startPressBar();
+                //删除专题图,onUniqueTheme为回调函数
+                ThemeOper.removeThemesInfo("Hubei4326", "1/0", onUniqueTheme);
+                themesInfoArr = null;
+            } else {
+                alert("已清除或者没有该专题图信息！");
+            }
+        }
+
+        /** 调用专题图服务成功回调
+         *  @param {json对象} flg 获取结果对象
+         */
+        function onUniqueTheme(flg) {
+            //停止进度条
+            stopPressBar();
+            if (flg) {
+                //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
+                mapDocLayer.options.keepCache = false;
+                //刷新图层，实时显示专题图
+                mapDocLayer.redraw();
+                //设置为读取缓存，以加快显示效率
+                mapDocLayer.options.keepCache = true;
+            } else {
+                return false;
+            }
+        }
+
+        /** 开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /** 停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="init();">
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在操作，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="addDotDensityThemesInfo()"/>
+    <input type="button" class="ButtonLib" id="updateThemeBtn" value="更新专题图" onclick="updateTheme()"/>
+    <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height:95%;">
+</div>
+</body>
+</html>

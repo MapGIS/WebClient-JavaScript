@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>线</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <script>
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var holepolygon;
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            //添加谷歌矢量地图
+            webGlobe.appendGoogleMap('m@207000000');
+            //跳转到指定位置
+            webGlobe.flyTo(95.1550, 30.8902, 10000, 2);
+        }
+
+        //添加带洞多边形
+        function add() {
+            remove();
+            //外圈坐标
+            var latLon_out = [95.1550, 30.8902, 95.1668, 30.8800, 95.1836, 30.8902, 95.1696, 30.91];
+            //内圈坐标
+            var lanLon_in = [[95.1617, 30.8902, 95.1668, 30.8882, 95.1766, 30.8939, 95.1696, 30.8996]];
+            //添加带洞多边形（二维）
+            holepolygon = webGlobe.appendHolePolygon("带洞区", latLon_out, lanLon_in);
+        }
+
+        //删除带洞多边形
+        function remove() {
+            if (holepolygon) {
+                webGlobe.removeEntity(holepolygon);
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="add" onclick="add()">添加带洞多边形</button>
+        <button class="ButtonLib" id="remove" onclick="remove()">删除带洞多边形</button>
+    </div>
+    <div id="GlobeView">
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

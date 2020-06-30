@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>线</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        var line;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            webGlobe.appendGoogleMap('m@207000000');
+
+            if (line) webGlobe.removeEntity(line);
+            add();
+        }
+
+        //添加CZML
+        function add() {
+            //跳转到指定位置
+            webGlobe.flyTo(106, 28, 1000000, 1);
+            //点数组
+            var arrayp = [104.0, 28.0, 1000,
+                106.0, 27.0, 10000,
+                107.0, 28.0, 2000,
+                108.0, 29.0, 30000
+            ];
+            //含Z值为true,否则为false
+            var isGround = true;
+            //根据给定点画线
+            line = webGlobe.appendLine('不贴地线', arrayp, 2, new Cesium.Color(1, 0, 0, 0.8), isGround, {});
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

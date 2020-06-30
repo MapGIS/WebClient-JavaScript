@@ -1,0 +1,447 @@
+{
+  "name": "leaflet",
+  "title": "MapGIS WebClinet-Openlayers演示网站",
+  "mapmode": "openlayers",
+  "childs": [
+    {
+      "name": "互联网地图",
+      "iconfont": "iconinternet",
+      "folder": "internet",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "百度地图",
+          "file": "baidu",
+          "diffcult": "2",
+          "detail": "包含百度提供的各式各样的炫彩地图，请注意这是收费功能！！。",
+          "icon": "baidu.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "天地图",
+          "file": "tianditu",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "tianditu.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "谷歌地图",
+          "file": "google",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "google.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "Bings地图",
+          "file": "bings",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "bings.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "OSM",
+          "file": "osm",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "osm.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "ArcGIS ",
+          "file": "arcgis",
+          "diffcult": "1",
+          "detail": "",
+          "icon": "arcgis.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    },
+    {
+      "name": "OGC",
+      "iconfont": "iconstandard1",
+      "folder": "ogc",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "WMS",
+          "file": "wms",
+          "diffcult": "2",
+          "detail": "ogc-wms服务",
+          "icon": "wms.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "WMTS",
+          "file": "wmts",
+          "diffcult": "2",
+          "detail": "ogc-wmts服务",
+          "icon": "wmts.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "WFS",
+          "file": "wfs",
+          "diffcult": "2",
+          "detail": "ogc-wfs要素类服务",
+          "icon": "wfs.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    },
+    {
+      "name": "MapGIS IGServer",
+      "iconfont": "iconserver1",
+      "folder": "mapgis-igserver",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "地图",
+          "iconfont": "iconmap",
+          "folder": "map",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "EPSG4326",
+              "file": "epsg4326",
+              "diffcult": "2",
+              "detail": "ogc-wms服务",
+              "icon": "epsg4326.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "EPSG3857",
+              "file": "epsg3857",
+              "diffcult": "2",
+              "detail": "ogc-wmts服务",
+              "icon": "epsg3857.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "自定义投影",
+              "file": "defineproject",
+              "diffcult": "4",
+              "detail": "自定义投影",
+              "icon": "defineproject.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "自定义比例尺",
+              "file": "definescale",
+              "diffcult": "4",
+              "detail": "自定义比例尺",
+              "icon": "definescale.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "要素",
+          "iconfont": "iconfeature",
+          "folder": "feature",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "FID查询",
+              "file": "fid-search",
+              "diffcult": "3",
+              "detail": "",
+              "icon": "fid-search.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "要素查询",
+              "file": "feature-search",
+              "diffcult": "3",
+              "detail": "",
+              "icon": "feature-search.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "要素编辑",
+              "file": "feature-edit",
+              "diffcult": "3",
+              "detail": "",
+              "icon": "feature-edit.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "量算",
+          "iconfont": "iconlength-check",
+          "folder": "calc",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "长度",
+              "file": "calc-length",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "calc-length.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "面积",
+              "file": "calc-area",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "calc-area.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "专题图",
+          "iconfont": "icontheme",
+          "folder": "theme",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "分段",
+              "file": "range-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "range-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "单值",
+              "file": "unique-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "unique-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "随机",
+              "file": "random-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "random-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "统一",
+              "file": "simple-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "simple-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "四色",
+              "file": "fourcolor-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "fourcolor-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "密度",
+              "file": "density-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "density-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "统计",
+              "file": "graph-theme",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "graph-theme.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        },
+        {
+          "name": "空间分析",
+          "iconfont": "iconsearch",
+          "folder": "analysis",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "缓冲分析",
+              "file": "buffer-analysis",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "buffer-analysis.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "叠加分析",
+              "file": "overlayer-analysis",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "overlayer-analysis.png",
+              "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "裁剪分析",
+              "file": "clip-analysis",
+              "diffcult": "2",
+              "detail": "",
+              "icon": "clip-analysis.png",
+              "update": "最后更新时间：2019-11-07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "客户端可视化",
+      "iconfont": "iconeye",
+      "folder": "client-view",
+      "leaffolder": false,
+      "childs": [
+        {
+          "name": "专题图",
+          "iconfont": "icontheme",
+          "folder": "theme",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "单值",
+              "file": "unique",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "unique.png",
+              "update": "最后更新时间："
+            },
+            {
+              "name": "分段",
+              "file": "range",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "range.png",
+              "update": "最后更新时间："
+            },
+            {
+              "name": "随机",
+              "file": "random",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "random.png",
+              "update": "最后更新时间："
+            },
+            {
+              "name": "统一",
+              "file": "simple",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "simple.png",
+              "update": "最后更新时间："
+            },
+            {
+              "name": "等级符号",
+              "file": "grade-symbol",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "grade-symbol.png",
+              "update": "最后更新时间："
+            },
+            {
+              "name": "统计",
+              "file": "graphic",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "graphic.png",
+              "update": "最后更新时间："
+            }
+          ]
+        },
+        {
+          "name": "MapV",
+          "iconfont": "iconmap1",
+          "folder": "mapv",
+          "leaffolder": true,
+          "childs": [
+            {
+              "name": "方形网格密度",
+              "file": "point_grid",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_grid.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "蜂窝形密度",
+              "file": "point_honeycomb",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "point_honeycomb.png",
+              "update": "最后更新时间：2018-05-12"
+            },
+            {
+              "name": "多值统计线",
+              "file": "count_line",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "count_line.png",
+              "update": "最后更新时间：2018-05-12"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "客户端空间分析",
+      "iconfont": "iconsqlserver",
+      "folder": "client-analysis",
+      "leaffolder": true,
+      "childs": [
+        {
+          "name": "缓冲分析",
+          "file": "buffer",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "buffer.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "泰森多边形",
+          "file": "voronoi",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "voronoi.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "Tin三角网",
+          "file": "tin",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "tin.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "中心点",
+          "file": "centroid",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "centroid.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "插值",
+          "file": "along",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "along.png",
+          "update": "最后更新时间：2019-11-07"
+        },
+        {
+          "name": "拓扑计算",
+          "file": "intersect",
+          "diffcult": "3",
+          "detail": "",
+          "icon": "intersect.png",
+          "update": "最后更新时间：2019-11-07"
+        }
+      ]
+    }
+  ]
+}

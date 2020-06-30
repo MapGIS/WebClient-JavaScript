@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>注记</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        var labelIcon;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            webGlobe.appendGoogleMap('m@207000000');
+
+            if (labelIcon) webGlobe.removeEntity(labelIcon);
+            add();
+        }
+
+        //添加CZML
+        function add() {
+            //跳转
+            webGlobe.flyTo(110, 33, 1000, 1);
+            //位置
+            var position = Cesium.Cartesian3.fromDegrees(110, 33, 100);
+            //图片对象
+            var billboardGraphics = new Cesium.BillboardGraphics({
+                image: "./static/data/picture/icon.png",
+                width: 64,
+                height: 64,
+                //随远近缩放
+                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(1.5e5, 3.0, 1.5e7, 0.5),
+                //随远近隐藏
+                translucencyByDistance: new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0),
+            });
+            //文本对象
+            var labelGraphics = new Cesium.LabelGraphics({
+                text: "定位点",
+                font: "20pt 宋体",
+                fillColor: Cesium.Color.BLACK,
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                horizontalOrigin: Cesium.HorizontalOrigin.BOTTOM,
+                //随远近缩放
+                pixelOffset: new Cesium.Cartesian2(0.0, -64 / 4), //x,y方向偏移 相对于屏幕
+                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
+                //随远近隐藏
+                translucencyByDistance: new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0)
+            });
+            //添加图标注记
+            labelIcon = webGlobe.appendLabelIconComm("定位点", "这是属性信息查询时可以看到",
+                position, billboardGraphics, labelGraphics);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

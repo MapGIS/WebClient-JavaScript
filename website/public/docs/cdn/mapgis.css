@@ -1,0 +1,49 @@
+.top-nav {
+    background : #252d45;
+    align-items: center !important;
+}
+
+body.small-header .top-nav {
+    height: 72px !important;
+}
+
+.link {
+    color: #ffffff !important;
+}
+
+
+.link:hover {
+    color: #33dbe8 !important;
+}
+
+.top-nav h1 {
+    width      : 255px;
+    height     : 24px;
+    margin-left: 13px;
+    font-size  : 22px;
+    font-weight: bold;
+    font-style : italic;
+    color      : white;
+    line-height: 24px;
+    margin-top : 8px;
+}
+
+.image img {
+    display: block;
+    height : auto;
+    width  : fit-content !important;
+}
+
+.mapgis-webclient-logo {
+    margin-left: 79px;
+    height     : 38px !important;
+}
+
+.logo {
+    float  : left !important;
+    display: flex !important;
+}
+
+#main>.core {
+    padding: 30px !important;
+}

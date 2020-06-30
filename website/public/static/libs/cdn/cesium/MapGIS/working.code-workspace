@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "/Users/fengguiyuanzi/Desktop/Project/WebGlobe_pb"
+		},
+		{
+			"path": "/Users/fengguiyuanzi/Desktop/Project/cesium-groundpush-plugin-master"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "WebGlobe_pb"
+	}
+}

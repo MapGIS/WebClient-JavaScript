@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      left: 10px;
+      top: 30px;
+      width: 100%;
+      height: 96%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+
+    initMap();
+    initEcharts();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition('coordinate_location');
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+
+      var center = Cesium.Cartesian3.fromDegrees(-74.04327099998152, 40.86737600240287, 200000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    initEcharts();
+
+    var CHUNK_COUNT = 32;
+    var dataCount = 0;
+    var layer;
+
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      var dataURL = `./static/data/echarts/line/links_ny_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Float32Array(this.response);
+        var data = new Float64Array(rawData.length - 2);
+        var offsetX = rawData[0];
+        var offsetY = rawData[1];
+        var off = 0;
+        var addedDataCount = 0;
+        for (var i = 2; i < rawData.length;) {
+          var count = rawData[i++];
+          data[off++] = count;
+          for (var k = 0; k < count; k++) {
+            var x = rawData[i++] + offsetX;
+            var y = rawData[i++] + offsetY;
+            data[off++] = x;
+            data[off++] = y;
+
+            addedDataCount++;
+          }
+        }
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: data
+        });
+
+        dataCount += addedDataCount;
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+    function initEcharts() {
+      var option = {
+        progressive: 2000,
+        //backgroundColor: '#111',
+        cesium: {
+          roam: true
+        },
+        series: [{
+          type: 'lines',
+
+          coordinateSystem: 'cesium',
+
+          blendMode: 'lighter',
+
+          dimensions: ['value'],
+
+          data: new Float64Array(),
+          polyline: true,
+          large: true,
+
+          lineStyle: {
+            color: 'red',
+            width: 0.5,
+            opacity: 0.3
+          }
+        }]
+      }
+
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+
+      fetchData(0);
+    }
+  </script>
+
+</body>
+
+</html>

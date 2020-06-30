@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>单值专题图</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css"/>
+    <!--必要的脚本引用-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        //专题图操作对象
+        var ThemeOper;
+        //专题图信息数组
+        var themesInfoArr = null;
+        //地图文档guid
+        var guid;
+
+        /** 初始化地图显示*/
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
+                    zoom: 6,
+                    projection: "EPSG:4326"
+                })
+            });
+            //初始化地图文档图层对象
+            mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
+                ip: "develop.smaryun.com",
+                port: "6163",
+                //文档guid
+                guid: guid
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(mapDocLayer);
+            //初始化专题图服务类
+            ThemeOper = new Zondy.Service.ThemeOper(guid);
+            //设置ip地址
+            ThemeOper.ip = "develop.smaryun.com";
+            //设置端口号
+            ThemeOper.port = "6163";
+        }
+
+        /** 设置专题图参数*/
+        function createThemesInfoArr() {
+            //专题图信息数组
+            var themesInfoArr = [];
+            //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
+            themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo();
+            //设置图层名层
+            themesInfoArr[0].LayerName = "湖北省市级区划2";
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            themesInfoArr[0].ThemeArr = [];
+            //实例化CUniqueTheme类
+            themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CUniqueTheme();
+            themesInfoArr[0].ThemeArr[0].Name = "单值专题图";
+            //指定为单值的专题图
+            themesInfoArr[0].ThemeArr[0].IsBaseTheme = true;
+            themesInfoArr[0].ThemeArr[0].Visible = true;
+            themesInfoArr[0].ThemeArr[0].GeoInfoType = "Reg";
+            themesInfoArr[0].ThemeArr[0].Expression = "name";
+            //未分段值的图形信息设置
+            themesInfoArr[0].ThemeArr[0].DefaultInfo = new Zondy.Object.Theme.CThemeInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.Caption = "未分类";
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Ovprnt = true;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Angle = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.EndClr = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillClr = 2;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillMode = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FullPatFlg = true;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatClr = 45;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatHeight = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatWidth = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatID = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.OutPenW = 1;
+
+            //每段专题绘制信息
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr = [];
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0] = new Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].Value = "十堰市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].Caption = "十堰市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[0].RegInfo.FillClr = Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1] = new Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].Value = "神农架林区";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].Caption = "神农架林区";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[1].RegInfo.FillClr = Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[2] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[2].Value = "恩施市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[2].Caption = "恩施市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[2].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[2].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[2].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[3] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[3].Value = "襄阳市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[3].Caption = "襄阳市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[3].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[3].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[3].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[4] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[4].Value = "宜昌市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[4].Caption = "宜昌市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[4].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[4].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[4].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[17] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[17].Value = "孝感市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[17].Caption = "孝感市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[17].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[17].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[17].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[5] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[5].Value = "荆门市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[5].Caption = "荆门市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[5].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[5].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[5].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[6] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[6].Value = "荆州市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[6].Caption = "荆州市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[6].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[6].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[6].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[7] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[7].Value = "潜江市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[7].Caption = "潜江市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[7].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[7].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[7].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[8] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[8].Value = "天门市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[8].Caption = "天门市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[8].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[8].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[8].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[9] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[9].Value = "随州市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[9].Caption = "随州市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[9].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[9].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[9].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[10] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[10].Value = "仙桃市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[10].Caption = "仙桃市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[10].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[10].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[10].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[11] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[11].Value = "武汉市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[11].Caption = "武汉市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[11].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[11].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[11].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[12] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[12].Value = "黄冈市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[12].Caption = "黄冈市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[12].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[12].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[12].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[13] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[13].Value = "鄂州市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[13].Caption = "鄂州市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[13].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[13].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[13].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[14] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[14].Value = "黄石市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[14].Caption = "黄石市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[14].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[14].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[14].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[15] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[15].Value = "黄冈市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[15].Caption = "黄冈市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[15].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[15].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[15].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[16] = new
+            Zondy.Object.Theme.CUniqueThemeInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[16].Value = "咸宁市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[16].Caption = "咸宁市";
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[16].IsVisible = true;
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[16].RegInfo = new
+            Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].UniqueThemeInfoArr[16].RegInfo.FillClr =
+                Math.floor(Math.random() * 100 + 1);
+
+            return themesInfoArr
+        }
+
+        /** 添加专题图*/
+        function addUniqueThemesInfo() {
+            themesInfoArr = createThemesInfoArr();
+            //显示进度条
+            startPressBar();
+            //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
+            ThemeOper.addThemesInfo("Hubei4326", "1/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 更新专题图*/
+        function updateTheme() {
+            //显示进度条
+            startPressBar();
+            themesInfoArr = createThemesInfoArr();
+            //更新专题图,onUniqueTheme为回调函数
+            ThemeOper.updateThemesInfo("Hubei4326", "1/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 删除专题图*/
+        function deleteTheme() {
+            if (themesInfoArr) {
+                //显示进度条
+                startPressBar();
+                //删除专题图,onUniqueTheme为回调函数
+                ThemeOper.removeThemesInfo("Hubei4326", "1/0", onUniqueTheme);
+                themesInfoArr = null;
+            } else {
+                alert("已清除或者没有该专题图信息！");
+            }
+        }
+
+        /** 调用专题图服务成功回调
+         *  @param {json对象} flg 获取结果对象
+         */
+        function onUniqueTheme(flg) {
+            //停止进度条
+            stopPressBar();
+            if (flg) {
+                //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
+                mapDocLayer.options.keepCache = false;
+                //刷新图层，实时显示专题图
+                mapDocLayer.refresh();
+                //设置为读取缓存，以加快显示效率
+                mapDocLayer.options.keepCache = true;
+            } else {
+                return false;
+            }
+        }
+
+        /** 开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /** 停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="init();">
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在操作，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" id="createThemeBtn" value="创建专题图" onclick="addUniqueThemesInfo()"/>
+    <input type="button" class="ButtonLib" id="updateThemeBtn" value="更新专题图" onclick="updateTheme()"/>
+    <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()"/>
+</div>
+<div id="mapCon" style="position: absolute;width: 100%; height:95%;">
+</div>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>中国-100万线</title>
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="language,echarts" src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: 'mapbox://styles/mapbox/dark-v9', // 使用MapBox官方的样式
+      center: [110.04327099998152, 40.86737600240287],
+      zoom: 4
+    });
+    map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+
+    initEcharts();
+
+    var CHUNK_COUNT = 28;
+    var dataCount = 0;
+    var layer;
+
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      var dataURL = `../../static/data/echarts/road/road_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Float32Array(this.response);
+
+        var addedDataCount = 0;
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: rawData
+        });
+
+        dataCount += addedDataCount;
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+    function initEcharts() {
+      var option = {
+        title: {
+          text: '全国道路（百万级）',
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        progressive: 50000,
+        mapboxgl: {
+          roam: true
+        },
+        series: [{
+          type: 'lines',
+
+          coordinateSystem: 'mapboxgl',
+
+          blendMode: 'lighter',
+
+          dimensions: ['value'],
+
+          data: new Float64Array(),
+          polyline: true,
+          large: true,
+
+          lineStyle: {
+            color: 'orange',
+            width: 1.0,
+            opacity: 0.9
+          }
+        }]
+      }
+
+      layer = new mapboxgl.zondy.EchartsLayer(map, option).addTo(map);
+
+      fetchData(0);
+    }
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      left: 10px;
+      top: 30px;
+      width: 100%;
+      height: 96%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+
+    initMap();
+    initEcharts();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition('coordinate_location');
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    initEcharts();
+
+    var CHUNK_COUNT = 28;
+    var dataCount = 0;
+    var layer;
+
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      var dataURL = `./static/data/echarts/road/road_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Float32Array(this.response);
+
+        var addedDataCount = 0;
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: rawData
+        });
+
+        dataCount += addedDataCount;
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+    function initEcharts() {
+      var option = {
+        title: {
+          text: '全国道路（百万级）',
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        progressive: 5000,
+        cesium: {
+          roam: true
+        },
+        series: [{
+          type: 'lines',
+
+          coordinateSystem: 'cesium',
+
+          blendMode: 'lighter',
+
+          dimensions: ['value'],
+
+          data: new Float64Array(),
+          polyline: true,
+          large: true,
+
+          lineStyle: {
+            color: 'blue',
+            width: 1.0,
+            opacity: 0.9
+          }
+        }]
+      }
+
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+
+      fetchData(0);
+    }
+  </script>
+
+</body>
+
+</html>

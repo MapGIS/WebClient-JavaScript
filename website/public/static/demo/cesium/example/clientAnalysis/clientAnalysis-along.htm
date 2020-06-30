@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+    var geojson;
+
+    var origin = [89.341, 30.92];
+    var destination = [133.989, 30.92];
+
+    var startPoint = [];
+    var endPoint = [];
+    var route = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            origin,
+            destination
+          ]
+        }
+      }]
+    };
+    var simpleLine = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            origin,
+            destination
+          ]
+        }
+      }]
+    };
+
+    initMap();
+    alongLine();
+    updateView();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+    }
+
+    function alongLine() {
+      var lineDistance = turf.distance(origin, destination, {
+        units: 'kilometers'
+      });
+
+      var arc = [];
+      var count = 100; //插入100个点
+      var clip = lineDistance / count;//用于下面的循环
+
+      for (var i = 0; i < lineDistance; i+=clip) {
+        //计算对应第i个插值点的位置
+        var segment = turf.along(route.features[0], i, {
+          units: 'kilometers'
+        });
+        //将插值点加入到原始数据中
+        arc.push(segment.geometry.coordinates);
+      }
+      arc.push(destination);//补上终点
+      //更新数据
+      route.features[0].geometry.coordinates = arc;
+    }
+
+    function updateView() {
+      var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(route, {
+        stroke: Cesium.Color.GRAY,
+        fill: Cesium.Color.GRAY,
+        strokeWidth: 5
+      }));
+      var simpledatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(simpleLine, {
+        stroke: Cesium.Color.RED,
+        fill: Cesium.Color.RED,
+        strokeWidth: 5
+      }));
+      map.flyTo(routedatasource);
+    }
+  </script>
+
+</body>
+
+</html>

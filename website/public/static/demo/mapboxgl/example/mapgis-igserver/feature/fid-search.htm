@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>对象类要素查询</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="mapboxgl" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+
+        .ButtonLib {
+            color: #0075C7;
+            display: inline-block;
+            padding: 3px 5px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            margin-left: 4px;
+            margin-right: 4px;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-color: #0075C7;
+            border-radius: 3px;
+            background-image: none;
+            background-color: transparent;
+        }
+
+        .ButtonLib:hover {
+            color: white;
+            background-color: #0075C7;
+        }
+    </style>
+    <script type="text/javascript">
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        /** 初始化地图显示*/
+        function init() {
+            //地图容器
+            map = new mapboxgl.Map({
+                container: 'map',
+                minZoom: 1,
+                maxZoom: 20,
+                zoom: 10,
+                bounds: [108.34341, 29.0125822276524, 116.150939561213, 33.2932017737021]
+            });
+            var navigationControl = new mapboxgl.NavigationControl();
+            map.addControl(navigationControl, 'top-left');
+            mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer("Hubei3857", {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true
+            });
+            mapDocLayer.addToMap(map);
+        }
+
+        /** 对象类要素查询*/
+        function objFeatureQuery() {
+            startPressBar();
+            if (map.getLayer("highlayer")) {
+                map.getLayer("highlayer").visibility = "visible";
+                map.repaint = true;
+                stopPressBar();
+                return;
+            }
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct({
+                IncludeGeometry: true,//是否包含几何图形信息
+                IncludeAttribute: true,//是否包含属性信息
+                IncludeWebGraphic: false//是否包含图形显示参数
+            });
+            //gdbp://MapGisLocal/ClientTheme/ds/epsg4326/sfcls/湖北省市级区划2
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/ClientTheme/ds/epsg4326/sfcls/湖北省市级区划2", {
+                objectIds: "4,5",
+                pageIndex: 0,
+                recordNumber: 50,
+                struct: queryStruct,
+            });
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为成功回调，queryError为失败回调
+            queryService.query(querySuccess, queryError);
+        }
+
+        /** 查询成功回调函数
+         *  @param {json对象} result 获取结果对象
+         */
+        function querySuccess(result) {
+            //停止进度条
+            stopPressBar();
+            //获取查询到的结果数组,ploygonArr的个数即为查询到的结果数
+            var ploygonArr = result.SFEleArray;
+            var features = [];
+            for (var i = 0; i < ploygonArr.length; i++) {
+                //获取要素几何数组
+                var Rings = ploygonArr[i].fGeom.RegGeom[0].Rings;
+                //针对复合要素，要循环获取每一个几何
+                for (var j = 0; j < Rings.length; j++) {
+                    //取出构成多边形的数组
+                    var dots = Rings[j].Arcs[0].Dots;
+                    var finaldots = [];
+                    for (var k = 0; k < dots.length; k++) {
+                        //组织面的坐标数组
+                        finaldots.push([dots[k].x, dots[k].y]);
+                    }
+                    var feature = {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [finaldots]
+                        }
+                    }
+                    features.push(feature);
+                }
+            }
+            //用geojson创建一个多边形
+            var geometryPolygon = {
+                "type": "FeatureCollection",
+                "features": features
+            };
+            var source = {
+                "type": "geojson",
+                "data": geometryPolygon
+            };
+            map.addLayer({
+                //此id可随意设置，但是要唯一
+                "id": "highlayer",
+                //指定类型为fill（填充区域）
+                "type": "fill",
+                //设置数据来源
+                "source": source,
+                //设置绘制参数
+                "paint": {
+                    //设置填充颜色
+                    "fill-color": '#7FFF00',
+                    //设置透明度
+                    "fill-opacity": 0.5,
+                    "fill-outline-color": '#FFA500'
+                }
+            });
+            stopPressBar()
+        }
+
+        /** 查询失败回调函数*/
+        function queryError() {
+            //停止进度条
+            stopPressBar();
+            alert("查询失败！");
+        }
+
+        /** 删除绘制的要素*/
+        function deleteFeatures() {
+            //停止进度条
+            stopPressBar();
+            //隐藏图层
+            if (map.getLayer("highlayer")) {
+                map.getLayer("highlayer").visibility = "none";
+                map.repaint = true;
+            }
+        }
+
+        /** 开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /** 停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="preview"
+    style="display: none; text-align: center; padding-top: 250px; font-weight: bold;position: absolute;background: rgba(3, 3, 3, 0.1);color: #fff;float: left; width: 100%;height: 100%;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;z-index: 20000;">
+    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在操作，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="对象类查询" onclick="objFeatureQuery()"/>
+    <input type="button" class="ButtonLib" value="删除查询结果" onclick="deleteFeatures()"/>
+</div>
+<div id="map" style="width: 100%; height:700px;">
+</div>
+</body>
+</html>

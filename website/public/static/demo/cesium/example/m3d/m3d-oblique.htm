@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>M3D-倾斜摄影数据展示</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe = undefined;
+        //定义M3D图层对象
+        var obliqueLayer = undefined;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //设置鼠标位置信息（经纬度、高程、视角高度）展示控件
+            webGlobe.showPosition('coordinate_location');
+
+            //添加Google影像地图
+            webGlobe.appendGoogleMapExt({
+                ptype: 's@130'
+            });
+            
+            //构造M3D模型层管理对象
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({ viewer: webGlobe.viewer });
+            //加载M3D地图文档（服务地址，配置参数）
+            obliqueLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/DYT', {});
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'>
+    </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

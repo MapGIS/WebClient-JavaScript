@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var m3dlayer = undefined;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl("GlobeView", {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition("coordinate_location");
+            if (m3dlayer) webGlobe.removeM3dLayer(m3dlayer);
+
+            webGlobe.viewer.imageryLayers.removeAll();
+            webGlobe.viewer.scene.skyAtmosphere.show = false;
+            webGlobe.viewer.scene.globe.enableTransparent = true;
+            webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(
+                1,
+                1,
+                1,
+                0.001
+            );
+            var vm = this;
+            m3dlayer = webGlobe.append(
+                "http://develop.smaryun.com:6163/igs/rest/g3d/geobody2",
+                {
+                    loaded: function (layer) {
+                        window.setTimeout(function () {
+                            vm.start();
+                        }, 10000);
+                    },
+                }
+            );
+        }
+
+        function start() {
+            var start = new Promise(function (resolve, reject) {
+                resolve();
+            });
+            start
+                .then(() => loadDiZhiTiLabel())
+                .then(() => loopDiZhiTi(1))
+                .then(() => loopDiZhiTi(2))
+                .then(() => loopDiZhiTi(3))
+                .then(() => loopDiZhiTi(4));
+        }
+
+        var posList, labelInfo;
+        var layer1Ids = [1, 13, 23, 35, 46, 68];
+        var layer2Ids = [2, 14, 24, 27, 41, 57, 65, 70, 78];
+        var layer3Ids = [11, 15, 21, 33, 44, 66, 79];
+        var layer4Ids = [12, 22, 34, 45, 67, 80];
+        var heightList = [-20, -2020, -4020, -6020, -8020];
+        var layerIdList = [layer1Ids, layer2Ids, layer3Ids, layer4Ids];
+        var views = {
+            x: -2409000.537620648,
+            y: 5383711.9414498275,
+            z: 2423196.5983786564,
+            orientation: {
+                heading: 5.68804248606544,
+                pitch: -0.16234016603729629,
+                roll: 6.281840352551258,
+            },
+        };
+        function loadDiZhiTiLabel() {
+            flyToEx(views);
+            var pos1 = Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 1800);
+            var pos2 = Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 1600);
+            var pos3 = Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 1400);
+            var pos4 = Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 1200);
+            var pos5 = Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 1000);
+            posList = [pos1, pos2, pos3, pos4, pos5];
+            labelInfo = webGlobe.viewer.entities.add({
+                name: "1",
+                position: pos1,
+                label: {
+                    text: "这是一个展示示例",
+                    showBackground: true,
+                    font: "20px 楷体",
+                    backgroundColor: Cesium.Color.ORANGE.withAlpha(0.7),
+                    scale: 0.8,
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                    show: false,
+                },
+                polyline: {
+                    positions: [
+                        Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 0),
+                        Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 1000),
+                    ],
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: Cesium.Color.ORANGE,
+                        dashLength: 8.0,
+                    }),
+                    width: 2.0,
+                    show: true,
+                },
+                point: {
+                    show: false,
+                },
+            });
+
+            return new Promise(function (resolve, reject) {
+                window.setTimeout(resolve, 1000);
+            });
+        }
+        function loopDizhitiLabel(index) {
+            var texts = [
+                "地下1层---杂填土\t\n杂色，松散，大孔隙，上部为砼地坪，含较多的碎石。\r\n具有*****特性。\r\n可进行###开发。",
+                "地下2层---灰岩\r\n 隐晶质结构中厚层状构造，岩石结构致密坚硬，\r\n裂隙发育大部分闭合，由方解石充填，岩芯多呈短柱状，\r\n碎粒状，土状，长度20~40cm局部溶蚀现像严重，\r\n岩芯表面呈峰窝状，溶径5~20mm,最大50mm.\r\n可进行###开发。",
+                "地下3层是XXX层这个地层结构稳定\r\n具有*****特性。\r\n可进行###开发。",
+                "地下4层是XXX层这个地层结构稳定\r\n具有*****特性。\r\n可进行###开发。",
+                "地下5层是XXX层这个地层结构稳定\r\n具有*****特性。\r\n可进行###开发。",
+            ];
+
+            labelInfo.position._value = posList[index];
+            labelInfo.polyline.positions._value = [
+                Cesium.Cartesian3.fromDegrees(114.0441, 22.5416, 0),
+                posList[index],
+            ];
+            labelInfo.label.show = true;
+            labelInfo.polyline.show = true;
+            labelInfo.point.show = true;
+            labelInfo.label.text._value = texts[index];
+        }
+        function loopDiZhiTi(index) {
+            loopDizhitiLabel(index);
+
+            return new Promise(function (resolve, reject) {
+                window.setTimeout(function () {
+                    //这个功能是逐层显示地质体
+                    var layerIds = layerIdList[index];
+
+                    webGlobe.stopCustomDisplay(m3dlayer);
+                    webGlobe.startCustomDisplay(m3dlayer, layerIds, {
+                        colorBlendMode: Cesium.Cesium3DTileColorBlendMode.MIX,
+                        color: new Cesium.Color(1, 1, 1, 0.0),
+                        //applyForLayer: true,
+                        negate: true,
+                    });
+                    resolve();
+                }, 6000);
+            });
+        }
+
+        function flyToEx(globeView) {
+            if (
+                globeView.x > 180 ||
+                globeView.x < -180 ||
+                globeView.y > 180 ||
+                globeView.y < -180
+            ) {
+                var center = new Cesium.Cartesian3(
+                    globeView.x,
+                    globeView.y,
+                    globeView.z
+                );
+            } else {
+                var center = new Cesium.Cartesian3.fromDegrees(
+                    globeView.x,
+                    globeView.y,
+                    globeView.z
+                );
+            }
+
+            var heading = Cesium.Math.toRadians(0);
+            var pitch = Cesium.Math.toRadians(-6.0);
+            var range = 100.0;
+
+            webGlobe.viewer.camera.flyToEx({
+                target: center,
+                offset: new Cesium.HeadingPitchRange(
+                    globeView.orientation.heading,
+                    globeView.orientation.pitch,
+                    range
+                ),
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

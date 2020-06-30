@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>模型压平</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        'use script';
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            webGlobe.appendGoogleMap('m@207000000');
+            //加载IGS发布的M3D缓存地图文档
+            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {
+                loaded: function (layer) {
+                    ///绘制结果回调函数
+                    function getDrawResult(entity) {
+                        //获取绘制多边形区域的定点（这是三维的点xyz）
+                        positionsArray = entity.points;
+                        /*对绘制区域的顶点循环处理一下，以便用于模型压平参数的赋值*/
+                        var array = [];
+                        for (let i = 0; i < positionsArray.length; i++) {
+                            let point = positionsArray[i];
+                            let resPoint = new Cesium.Cartesian3;
+                            let invserTran = new Cesium.Matrix4;
+                            Cesium.Matrix4.inverse(tileset[0]._root.transform, invserTran);
+                            Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
+                            resPoint.y = -resPoint.y;
+                            array.push(new Cesium.Cartesian2(resPoint.x, resPoint.y));
+                        }
+                        array.push(array[0]);
+                        ///模型压平功能的参数赋值
+                        //是否进行压平。值为true时执行压平
+                        tileset[0].u_isFlatten = true;
+                        //将高度压倒0
+                        tileset[0].u_height = 0.0;
+                        //压平多边形的顶点序列长度
+                        tileset[0].u_arrayLength = positionsArray.length;
+                        //顶点序列。顶点序列需要闭合，也就是说，例如一个矩形是四个顶点ABCD，那序列就应该是【ABCDA】
+                        tileset[0].u_positionArray = array;
+                        //场景渲染（渲染最新的压平效果）
+                        webGlobe.viewer.scene.requestRender();
+                    }
+                    ///交互式绘制压平区域
+                    //定义绘制区域的图形顶点
+                    var positionsArray;
+                    //创建交互式绘制工具
+                    var tool = new Cesium.DrawPolygonTool(webGlobe.viewer, getDrawResult);
+                    tool.activeTool();
+                }
+            });
+
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

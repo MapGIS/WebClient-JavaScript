@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>谷歌地图显示</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #LayerSelect {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 20px;
+        }
+
+        #GlobeView {
+            position: absolute;
+            left: 10px;
+            top: 30px;
+            width: 100%;
+            height: 96%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var GoogleLayer = undefined;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+
+            GoogleLayer = webGlobe.appendGoogleMapExt({
+                ptype: 'm@207000000'
+            });
+        }
+        /**图层切换函数*/
+        function changeLayer() {
+            let layer = document.getElementById("LayerSelect").value
+            if (GoogleLayer) {
+                webGlobe.removeImageryLayer(GoogleLayer);
+            }
+            if (layer == 'm') {
+                GoogleLayer = webGlobe.appendGoogleMapExt({
+                    ptype: 'm@207000000'
+                });
+            } else if (layer === 's') {
+                GoogleLayer = webGlobe.appendGoogleMapExt({
+                    ptype: 's@130'
+                });
+            } else if (layer === 't') {
+                GoogleLayer = webGlobe.appendGoogleMapExt({
+                    ptype: 't@130'
+                });
+            } else if (layer === 'h') {
+                GoogleLayer = webGlobe.appendGoogleMapExt({
+                    ptype: 'h@207000000'
+                });
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="menu">
+        <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
+            <option value="m">矢量地图</option>
+            <option value="s">影像地图</option>
+            <option value="t">栅格地图</option>
+            <option value="h">道路地图</option>
+        </select>
+    </div>
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

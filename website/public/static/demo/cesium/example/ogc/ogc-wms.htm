@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var layer = undefined;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            if (layer) webGlobe.removeImageryLayer(layer);
+            layer = webGlobe.appendWMSTile("http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WMSServer",
+                //图层名
+                '北京市:北京市,绿地_1,绿地_2,绿地_3,水域_1,水域_2,水域_3,住宅用地,医院,商业用地,铁路_1,铁路_2,铁路_3', {
+                //版本信息
+                version: '1.1.1',
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

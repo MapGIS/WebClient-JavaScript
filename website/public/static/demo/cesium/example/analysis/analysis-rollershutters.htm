@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>动态卷帘</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //定义三维瓦片类
+        var tileset;
+        var tileset1;
+        var dynaCut;
+        var dynaCut1;
+        var planetEntity;
+        var planetEntity1;
+        var distance = 500;
+        var distance1 = -500;
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+            });
+
+            if (webGlobe) {
+                if (webGlobe) {
+                    //加载谷歌矢量底图
+                    webGlobe.appendGoogleMap('m@207000000');
+                    //加载IGS发布的M3D缓存地图文档
+                    tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
+                    tileset1 = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {
+                        autoReset: false
+                    });
+                }
+            }
+        }
+        function DynamicCutting() {
+            webGlobe.deleteDynamicCutting(dynaCut);
+            //进行剖切分析的面，向右切
+            var plane = new Cesium.ClippingPlane(new Cesium.Cartesian3(1, 0, 0), -200.0)
+            //进行剖切分析的面，向左切
+            var plane1 = new Cesium.ClippingPlane(new Cesium.Cartesian3(-1, 0, 0), -200.0)
+            //创建剖切
+            dynaCut = webGlobe.createDynamicCutting(tileset1, [plane], { color: new Cesium.Color(1.0, 1.00, 1.0, 0.3) });
+            //获取剖切切面
+            planetEntity = dynaCut.planes[0];
+            //设置切面回调函数
+            planetEntity.plane.plane = new Cesium.CallbackProperty(function (date) {
+                //设置剖切面距离
+                plane.distance = distance;
+                return Cesium.Plane.transform(plane, tileset1[0].modelMatrix, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
+            }, false);
+            //创建剖切
+            dynaCut1 = webGlobe.createDynamicCutting(tileset, [plane1], { color: new Cesium.Color(1.0, 0, 0, 0.3) });
+            //获取剖切切面
+            planetEntity1 = dynaCut1.planes[0];
+            //设置切面回调函数
+            planetEntity1.plane.plane = new Cesium.CallbackProperty(function (date) {
+                //设置剖切面距离
+                plane1.distance = distance1;
+                return Cesium.Plane.transform(plane1, tileset[0].modelMatrix, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
+            }, false);
+        }
+
+        function change() {
+            distance = Number(document.getElementById('range').value);
+            distance1 = -Number(document.getElementById('range').value);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="ToolLib">
+        <button class="ButtonLib" id="sceneProColor" onclick="DynamicCutting()">卷帘分析</button>
+    </div>
+    <div id="GlobeView">
+        <div style="position:absolute;z-index:9999">
+            <span>卷帘距离：</span>
+            <input type="range" id="range" min="-4000" max="4000" value="500" oninput="change()" />
+        </div>
+    </div>
+</body>
+
+</html>

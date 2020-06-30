@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Buffer缓冲区分析</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      left: 10px;
+      top: 30px;
+      width: 100%;
+      height: 96%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+
+    var origindata = {
+      "type": "FeatureCollection",
+      "features": [{
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.24270629882811,30.622550184776674]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [114.34810638427734,30.634958017061198],
+              [114.2856216430664,30.554869984737515],
+              [114.246826171875,30.4954261715298]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.33815002441406,30.502230042106245],
+                [114.34398651123045,30.485071542395932],
+                [114.3728256225586,30.472348632640834],
+                [114.38278198242188,30.49010107130931],
+                [114.35256958007811,30.50518809826035],
+                [114.33815002441406,30.502230042106245]
+              ]
+            ]
+          }
+        }
+      ]
+    };
+    var geojson;
+
+    initMap();
+    loadData();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition('coordinate_location');
+      map = webGlobe.viewer;
+      webGlobe.appendGoogleMap('m@207000000');
+
+      var center = Cesium.Cartesian3.fromDegrees(114.289398, 30.59418345, 50000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+      var origindatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(origindata, {
+        stroke: Cesium.Color.BLACK,
+        fill: Cesium.Color.GRAY,
+        strokeWidth: 15
+      }));
+      map.flyTo(origindatasource);
+    }
+
+    function loadData() {
+      geojson = turf.buffer(origindata, 1.5, {
+        units: 'miles'
+      });
+      map.dataSources.add(Cesium.GeoJsonDataSource.load(geojson, {
+        stroke: Cesium.Color.BLACK,
+        fill: Cesium.Color.GRAY,
+        strokeWidth: 15
+      }));
+    }
+
+  </script>
+
+</body>
+
+</html>

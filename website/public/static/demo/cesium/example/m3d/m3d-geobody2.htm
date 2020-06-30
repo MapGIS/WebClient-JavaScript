@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var m3dlayer = undefined;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl("GlobeView", {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition("coordinate_location");
+            if (m3dlayer) webGlobe.removeM3dLayer(m3dlayer);
+            webGlobe.viewer.imageryLayers.removeAll();
+            webGlobe.viewer.scene.skyAtmosphere.show = false;
+            webGlobe.viewer.scene.globe.enableTransparent = true;
+            webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(
+                1,
+                1,
+                1,
+                0.001
+            );
+            m3dlayer = webGlobe.append(
+                "http://develop.smaryun.com:6163/igs/rest/g3d/geobody2",
+                {
+                    loaded: function (layer) {
+                        var boundingSphere = layer.boundingSphere;
+
+                        var cartographic = Cesium.Cartographic.fromCartesian(
+                            layer.boundingSphere.center
+                        );
+                        var surface = Cesium.Cartesian3.fromRadians(
+                            cartographic.longitude,
+                            cartographic.latitude,
+                            0.0
+                        );
+                        var offset = Cesium.Cartesian3.fromRadians(
+                            cartographic.longitude,
+                            cartographic.latitude,
+                            -12
+                        );
+                        var translation = Cesium.Cartesian3.subtract(
+                            offset,
+                            surface,
+                            new Cesium.Cartesian3()
+                        );
+                        layer.modelMatrix = Cesium.Matrix4.fromTranslation(
+                            translation
+                        );
+                    },
+                }
+            );
+            tdLayer = webGlobe.appendTDTuMap({
+                //天地图经纬度数据
+                url: "http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}",
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "f5347cab4b28410a6e8ba5143e3d5a35",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                type: "img",
+            });
+            tdLayer.alpha = 0.05;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

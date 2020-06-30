@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe = new Cesium.WebSceneControl('GlobeView', {
+      terrainExaggeration: 1,
+    });
+    webGlobe.appendGoogleMap('m@207000000');
+    var map = webGlobe.viewer;
+
+    initMap();
+    initMapv();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    function initMapv() {
+      $.get('./static/data/mapv/car.csv', function (csvstr) {
+        var options = {
+          context: '2d',
+          strokeStyle: 'rgba(50, 50, 255, 0.8)',
+          lineWidth: 0.05,
+          globalCompositeOperation: 'lighter',
+          draw: 'simple'
+        };
+        var dataSet = mapv.csv.getDataSet(csvstr);
+        new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+      });
+    }
+  </script>
+
+</body>
+
+</html>

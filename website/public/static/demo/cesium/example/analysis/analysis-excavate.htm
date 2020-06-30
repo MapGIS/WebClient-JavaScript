@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>开挖分析</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        .ToolLib {
+            border-radius: 3px;
+            overflow: hidden;
+            width: 100%;
+            height: auto;
+            box-shadow: 0 0 2px 1px #949292;
+            text-align: center;
+            z-index: 2001;
+            border-color: #66ccff;
+            border-bottom: 1px solid #949292;
+            margin-bottom: 2px;
+        }
+
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        var webGlobe, viewer;
+        //定义三维瓦片类
+        var tileset;
+        var dynaCut;
+        var distance = 100;
+        var planetEntity;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            viewer = webGlobe.viewer;
+            webGlobe.appendGoogleMap('m@207000000');
+            //加载IGS发布的M3D缓存地图文档
+            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {
+                loaded: function (layer) {
+                    //清除开挖
+                    if (dynaCut) {
+                        webGlobe.deleteDynamicCutting(dynaCut);
+                    }
+                    //开挖面设置,这五个面分别表示前后左右，底面，其中底面用于控制开挖深度
+                    var planes = [
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(3, 0.0, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(-3, 0.0, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, 3, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, -3, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, 0.0, -5), 0.0)
+                    ]
+                    var clippingPlanes = planes;
+                    //场景中指定图层的模型矩阵
+                    var transform = tileset[0].modelMatrix;
+                    // 经纬度用于设置开挖区域的中心点，用于控制挖那一部分的模型数据
+                    dynaCut = webGlobe.createExcavateAnalysis({
+                        //模型
+                        tileSet: tileset[0],
+                        //开挖面设置
+                        planes: clippingPlanes,
+                        //开挖颜色c
+                        material: new Cesium.Color(0.2, 0.4, 0.3, 0.7),
+                        edgeWidth: 3,
+                        //开挖坐标
+                        longitude: 0.0737,
+                        latitude: -0.2049,
+                        height: 0
+                    });
+                    // 设置开挖的动态效果
+                    planetEntity = dynaCut.planes[0];
+                    planetEntity.plane.plane = new Cesium.CallbackProperty(function (date) {
+                        for (var i = 0; i < planes.length; i++) {
+                            if (i === planes.length - 1) {
+                                var plane = planes[i];
+                                plane.distance = distance;
+                                Cesium.Plane.transform(plane, transform, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
+                            }
+                        }
+
+                    }, false);
+                }
+            });
+        }
+
+        function change() {
+            distance = Number(document.getElementById('range').value);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div style="position:absolute;z-index:9999">
+            <span>开挖深度：</span>
+            <input type="range" id="range" min="-100" max="100" value="100" oninput="change()" />
+        </div>
+    </div>
+</body>
+
+</html>

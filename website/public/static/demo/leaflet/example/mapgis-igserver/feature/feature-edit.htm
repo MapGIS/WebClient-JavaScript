@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>矢量图层要素添加</title>
+    <link href="../../css/leaflet/style.css" rel="stylesheet" type="text/css"/>
+    <script include="json" src="./static/libs/include-leaflet-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图和矢量图层
+        var map, vectorLayer;
+        //添加要素的FID，由mapgis后台生成，前端无法传入
+        var featureIds = ''
+
+        /** 初始化地图显示*/
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //中心点
+                center: [(30.7083224461318 + 30.4575715847217) / 2, (114.125678154779 + 114.475830260539)
+                / 2],
+                //最大级数
+                maxZoom: 15,
+                //最小级数
+                minZoom: 0,
+                //显示级数
+                zoom: 11
+            });
+            //创建矢量图层
+            vectorLayer = new Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/武汉市区/sfcls/行政区", "gdbp://MapGisLocal/武汉市区/sfcls/点编辑"], {
+                //投影坐标系
+                crs: L.CRS.EPSG4326,
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true,
+                //添加guid，确保图层从IGS中加载，不读取缓存文件
+                guid: (new Date()).getTime().toString()
+            }).addTo(map);
+        }
+
+        /** 创建一个新要素*/
+        function newFeature(color, fid) {//fid只有在更新要素的时候才会生效
+            //创建一个点形状，描述点形状的几何信息
+            var gpoint = new Zondy.Object.GPoint(114.30, 30.59);
+            //设置当前点要素的几何信息
+            var fGeom = new Zondy.Object.FeatureGeometry({PntGeom: [gpoint]});
+            //描述点要素的符号参数信息
+            var pointInfo = new Zondy.Object.CPointInfo({
+                Angle: 0, Color: color, Space: 0, SymHeight: 10, SymID: 98, SymWidth: 10
+            });
+            //设置当前点要素的图形参数信息
+            var webGraphicInfo = new Zondy.Object.WebGraphicsInfo({
+                InfoType: 1, PntInfo: pointInfo
+            });
+            //设置添加点要素的属性信息
+            var attValue = ["1", "市政协", "", "", "江岸区", "0", "0"];
+            //创建一个要素
+            var feature = new Zondy.Object.Feature({
+                fGeom: fGeom, GraphicInfo: webGraphicInfo, AttValue: attValue
+            });
+            //设置要素为点要素
+            feature.setFType(1);
+            //设置更新要素的FID
+            if (fid !== undefined && fid !== null) {
+                feature.setFID(fid);
+            }
+            //创建一个要素数据集
+            var featureSet = new Zondy.Object.FeatureSet();
+            featureSet.clear();
+            //设置属性结构
+            var cAttStruct = new Zondy.Object.CAttStruct({
+                FldNumber: 7,
+                FldName: ["ID", "名称", "地址", "图片", "城区", "LayerID", "mpLayer"],
+                FldType: ["long", "string", "string", "string", "string", "long", "long"],
+                FldAlias: [null, null, null, null, null, null, null]
+            });
+            featureSet.AttStruct = cAttStruct;
+            //添加要素到要素数据集
+            featureSet.addFeature(feature);
+            return featureSet
+        }
+
+        /** 添加点要素*/
+        function addFeature() {
+            //显示进度条
+            startPressBar();
+            var featureSet = newFeature(3, null)
+            //创建一个编辑服务类
+            var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑",
+                {ip: "develop.smaryun.com", port: "6163"});
+            //执行添加点要素功能,OnSuccess为回调函数
+            editService.add(featureSet, addSuccess);
+        }
+
+        /** 添加点要素回调函数
+         *  @param {json对象} rlt 获取结果对象
+         */
+        function addSuccess(rlt) {
+            //停止进度条
+            stopPressBar();
+            var result = rlt;
+            if (result) {
+                alert("添加点要素成功！");
+                //刷新图层
+                vectorLayer.redraw();
+            } else {
+                alert("添加点要素失败！");
+            }
+        }
+
+        /** 查询新添加的要素信息*/
+        async function queryFeatures() {
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = false;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/武汉市区/sfcls/点编辑", {
+                resultFormat: "json",
+                struct: queryStruct
+            });
+            //设置查询要素数目
+            queryParam.recordNumber = 1000;
+            //设置属性条件
+            queryParam.where = "名称='市政协'";
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            //queryService.query(querySuccess);
+            const promise = new Promise(resolve => {
+                queryService.query((res) => {
+                    if (!res || !res.SFEleArray || res.SFEleArray.length <= 0) {
+                        resolve(null)
+                    } else {
+                        // 获取属性值，还需知道res.AttStruct，才能将值与属性名对应起来
+                        resolve(res)
+                    }
+                })
+            })
+            return promise.then((res) => {
+                return res
+            })
+        }
+
+        /** 查询成功回调函数
+         *  @param {json对象} a 获取结果对象
+         */
+        async function querySuccess() {
+            var a = await queryFeatures()
+            if (a.SFEleArray != null) {
+                if (a.SFEleArray.length === 0) {
+                    alert("查询结果为空");
+                } else {
+                    featureIds = ''
+                    for (var i = 0; i < a.SFEleArray.length; i++) {
+                        var obj = a.SFEleArray[i];
+                        featureIds += obj.FID
+                        if (i < a.SFEleArray.length - 1) {
+                            featureIds += ','
+                        }
+                    }
+                }
+            } else {
+                alert("当前地图未查到要素，请先运行对应的要素添加示例！");
+            }
+        }
+
+        /** 更新新添加的要素*/
+        async function updateFeature() {
+            //更新添加的要素前，先查询出添加要素的FID
+            await querySuccess();
+            var fid
+            if (featureIds.indexOf(',') > -1) {
+                var ids = featureIds.split(',')
+                fid = ids[ids.length - 1]
+            } else {
+                fid = featureIds
+            }
+            //显示进度条
+            startPressBar();
+            var featureSet = newFeature(12, fid)
+            //创建一个编辑服务类
+            var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑", {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //更新所选要素，UpdateSuccess为回调函数
+            editService.update(featureSet, UpdateSuccess);
+        }
+
+        /** 修改点要素回调函数
+         *  @param {json对象} rlt 获取结果对象
+         */
+        function UpdateSuccess(rlt) {
+            //停止进度条
+            stopPressBar();
+            var result = rlt;
+            if (result) {
+                alert("修改点要素成功！");
+                //刷新图层
+                vectorLayer.redraw();
+            } else {
+                alert("修改点要素失败！");
+            }
+        }
+
+        /** 删除新添加的要素*/
+        async function deleteFeature() {
+            //删除添加的要素前，先查询出添加要素的FID
+            await querySuccess();
+            //显示进度条
+            startPressBar();
+            //执行删除要素操作
+            var deleteService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑", {
+                ip: "develop.smaryun.com",
+                port: "6163"
+            });
+            //删除所选要素，featureIds为要素id，DeleteSuccess为回调函数
+            deleteService.deletes(featureIds, deleteSuccess);
+        }
+
+        /** 删除点要素回调函数
+         *  @param {json对象} rlt 获取结果对象
+         */
+        function deleteSuccess(rlt) {
+            //停止进度条
+            stopPressBar();
+            var result = rlt;
+            if (result) {
+                alert("删除点要素成功！");
+                //刷新图层
+                vectorLayer.redraw();
+            } else {
+                alert("删除点要素失败！");
+            }
+        }
+
+        /** 开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /** 停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="init();">
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在操作，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" value="矢量要素添加" onclick="addFeature()"/>
+    <input type="button" class="ButtonLib" value="更新添加的要素" onclick="updateFeature()"/>
+    <input type="button" class="ButtonLib" value="删除添加的要素" onclick="deleteFeature()"/>
+</div>
+<div id="leaf_map" style="width: 100%; height:95%;position: absolute;">
+</div>
+</body>
+</html>

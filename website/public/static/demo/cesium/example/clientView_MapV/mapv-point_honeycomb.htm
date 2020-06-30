@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Along</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #GlobeView {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe = new Cesium.WebSceneControl('GlobeView', {
+      terrainExaggeration: 1,
+    });
+    webGlobe.appendGoogleMap('m@207000000');
+
+    var map = webGlobe.viewer;
+
+    initMap();
+    initMapv();
+
+    function initMap() {
+      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    function initMapv() {
+      var randomCount = 500;
+      var data = [];
+      while (randomCount--) {
+        data.push({
+          geometry: {
+            type: 'Point',
+            coordinates: [75 + Math.random() * 50, 20.3 + Math.random() * 20]
+          },
+          count: 30 * Math.random()
+        });
+      }
+
+      var dataSet = new mapv.DataSet(data);
+
+      var options = {
+        context: '2d',
+        postRender: false,
+        postRenderFrame: 5,
+        //fillStyle: 'rgba(255, 250, 50, 0.7)',
+        label: {
+          show: true,
+          fillStyle: 'white',
+          shadowColor: 'yellow',
+          font: '15px Arial',
+          shadowBlur: 10
+        },
+        size: 30,
+        gradient: {
+          0: "rgba(49, 54, 149, 0)",
+          0.2: "rgba(69,117,180, 0.7)",
+          0.3: "rgba(116,173,209, 0.7)",
+          0.4: "rgba(171,217,233, 0.7)",
+          0.5: "rgba(224,243,248, 0.7)",
+          0.6: "rgba(254,224,144,0.7)",
+          0.7: "rgba(253,174,97,0.7)",
+          0.8: "rgba(244,109,67,0.8)",
+          0.9: "rgba(215,48,39,0.8)",
+          0.95: "rgba(165, 0, 38,0.8)"
+        },
+        max: 100,
+        draw: 'honeycomb'
+      }
+      var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+    }
+  </script>
+
+</body>
+
+</html>

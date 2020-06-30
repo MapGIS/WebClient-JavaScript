@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>交互式移动模型数据</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type='text/css'>
+        .ToolLib {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        #GlobeView {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            height: 95%;
+        }
+    </style>
+    <script>
+         'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var model;
+        // 视图模型
+        var viewModel;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            webGlobe.appendGoogleMap('m@207000000');
+            //添加模型（gltf文件）：appendModel(模型id, 模型url路径,模型所在经度 ,模型所在纬度, 高度, 缩放比)
+            model = webGlobe.appendModel('model', './static/data/model/donghua.gltf', 117.9298, 40.3828, 0, 2000);
+            //跳转到指定坐标点
+            webGlobe.flyTo(117.9298, 40.3828, 50000, 2);
+            movelModel();
+        }
+
+        /*移动模型*/
+        function movelModel() {
+            if (viewModel) {
+                if (Cesium.defined(viewModel)) {
+                    viewModel.deactivate();
+                }
+            }
+            function rightClick(movement) {
+                if (viewModel) {
+                    if (Cesium.defined(viewModel)) {
+                        viewModel.deactivate();
+                    }
+                }
+                webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+            }
+            function leftClick(movement) {
+                //选择模型
+                var res = webGlobe.scene.pick(movement.position);
+                if (Cesium.defined(res) && Cesium.defined(res.primitive)) {
+                    model = res.primitive;
+                    if (!Cesium.defined(model)) {
+                        return;
+                    }
+                    updateEditor(model);
+                    viewModel.activate();
+                    webGlobe.registerMouseEvent('RIGHT_CLICK', rightClick);
+                }
+            }
+            //注册鼠标左键单击事件
+            webGlobe.registerMouseEvent('LEFT_CLICK', leftClick);
+
+        }
+
+        function updateEditor(model) {
+            var transformEditor;
+            if (!Cesium.defined(transformEditor)) {
+                //创建编辑器
+                transformEditor = new Cesium.TransformEditor({
+                    container: webGlobe.viewer.container,
+                    scene: webGlobe.viewer.scene,
+                    transform: model.modelMatrix,
+                    boundingSphere: model.boundingSphere
+                });
+                viewModel = transformEditor.viewModel;
+            }
+            else {
+                transformEditor.transform = model.modelMatrix;
+                transformEditor.boundingSphere = model.boundingSphere;
+            }
+            viewModel.setModeTranslation();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id='GlobeView'>
+    </div>
+</body>
+
+</html>

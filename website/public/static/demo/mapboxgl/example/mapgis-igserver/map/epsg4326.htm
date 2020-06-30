@@ -1,0 +1,41 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>矢量地图文档显示</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="mapboxgl" src="./static/libs/include-mapboxgl-local.js"></script>
+    <script type="text/javascript">
+        /**显示地图
+         */
+        function init() {
+            "use strict";
+            //地图容器
+            var map = new mapboxgl.Map({
+                container: 'map',
+                crs: 'EPSG:4326',
+                minZoom: 3,
+                zoom: 6,
+                center: [112.247175, 31.152892]
+            });
+            var navigationControl = new mapboxgl.NavigationControl();
+            map.addControl(navigationControl, 'top-left');
+            var docLayer = new mapboxgl.Zondy.Map.MapDocLayer("Hubei4326", {
+                layerID:'mapgis-doc-4326',
+                //IP地址
+                ip: "develop.smaryun.com",
+                //端口号
+                port: "6163",
+                //只显示一个图层,不平铺显示
+                noWrap: true,
+                serverType : 'doc',
+                tileSize: 512
+            });
+            docLayer.addToMap(map);
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="map" style="width: 100%; height:700px;">
+</div>
+</body>
+</html>

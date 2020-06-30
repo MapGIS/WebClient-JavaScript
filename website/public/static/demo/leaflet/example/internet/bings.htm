@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>OSM地图显示</title>
+    <script include="bing" src="./static/libs/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        /**显示地图
+         */
+        function init() {
+            "use strict";
+
+            var BING_KEY = 'AnYM1Mc95gvJhvI4AqRArTEzXhk4_kd53oAN539aU9ME7rFBbUX7AoSSBX_9oeqr'
+
+            var map = L.map('leaf_map').setView([51.505, -0.09], 13)
+
+            var bingLayer = L.tileLayer.bing(BING_KEY).addTo(map)
+
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="leaf_map" style="width: 100%; height:700px;">
+</div>
+</body>
+</html>

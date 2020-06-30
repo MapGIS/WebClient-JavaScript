@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>统一配置专题图</title>
+    <!--导入外部样式表-->
+    <link href="../../css/openlayers/style.css" rel="stylesheet" type="text/css"/>
+    <!--必要的脚本引用-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        //专题图操作对象
+        var ThemeOper;
+        //专题图信息数组
+        var themesInfoArr;
+        //地图文档guid
+        var guid;
+
+        /** 初始化地图显示*/
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
+                    zoom: 6,
+                    projection: "EPSG:4326"
+                })
+            });
+            //初始化地图文档图层对象
+            mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
+                ip: "develop.smaryun.com",
+                port: "6163",
+                //文档guid
+                guid: guid
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(mapDocLayer);
+        }
+
+        /** 设置专题图默认参数*/
+        function getDefaultThemesInfo() {
+            //专题图信息数组
+            var themesInfoArr = [];
+            //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
+            themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo();
+            //设置图层名层
+            themesInfoArr[0].LayerName = "湖北省湖泊2";
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            themesInfoArr[0].ThemeArr = [];
+            //实例化CSimpleThem类
+            themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CSimpleTheme();
+            //专题图名称
+            themesInfoArr[0].ThemeArr[0].Name = "统一配置专题图";
+            //单值专题图
+            themesInfoArr[0].ThemeArr[0].IsBaseTheme = false;
+            //可见
+            themesInfoArr[0].ThemeArr[0].Visible = true;
+            //实例化专题图图形信息对象
+            themesInfoArr[0].ThemeArr[0].DefaultInfo = new Zondy.Object.Theme.CThemeInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.Caption = "";
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo = new Zondy.Object.Theme.CRegInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Ovprnt = false;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Angle = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.EndClr = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillClr = 7;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillMode = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FullPatFlg = true;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatClr = 3;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatHeight = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatWidth = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.PatID = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.OutPenW = 1;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.Transparency = 0;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.LibID = 0;
+            return themesInfoArr
+        }
+
+        /** 添加专题图*/
+        function addSimpleThemesInfo() {
+            themesInfoArr = getDefaultThemesInfo();
+            //显示进度条
+            startPressBar();
+            //给指定地图文档指定图层添加专题图
+            ThemeOper = new Zondy.Service.ThemeOper(guid);
+            //设置ip地址
+            ThemeOper.ip = "develop.smaryun.com";
+            //设置端口号
+            ThemeOper.port = "6163";
+            //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
+            ThemeOper.addThemesInfo("Hubei4326", "2/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 更新专题图*/
+        function updateTheme() {
+            //显示进度条
+            startPressBar();
+            themesInfoArr = getDefaultThemesInfo();
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillClr = 5;
+            //更新专题图,onUniqueTheme为回调函数
+            ThemeOper.updateThemesInfo("Hubei4326", "2/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 删除专题图*/
+        function deleteTheme() {
+            if (themesInfoArr) {
+                //显示进度条
+                startPressBar();
+                //删除专题图,onUniqueTheme为回调函数
+                ThemeOper.removeThemesInfo("Hubei4326", "2/0", onUniqueTheme);
+                themesInfoArr = null;
+            } else {
+                alert("已清除或者没有该专题图信息！");
+            }
+        }
+
+        /** 调用专题图服务成功回调
+         *  @param {json对象} flg 获取结果对象
+         */
+        function onUniqueTheme(flg) {
+            //停止进度条
+            stopPressBar();
+            if (flg) {
+                //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
+                mapDocLayer.options.keepCache = false;
+                //刷新图层，实时显示专题图
+                mapDocLayer.refresh();
+                //设置为读取缓存，以加快显示效率
+                mapDocLayer.options.keepCache = true;
+            } else {
+                return false;
+            }
+        }
+
+        /** 开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+
+        /** 停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="init();">
+<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在操作，请稍候</span>
+</div>
+<div class="ToolLib">
+    <input type="button" class="ButtonLib" id="createThemeBtn" value="创建专题图" onclick="addSimpleThemesInfo()"/>
+    <input type="button" class="ButtonLib" id="updateThemeBtn" value="更新专题图" onclick="updateTheme()"/>
+    <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()"/>
+</div>
+<div id="mapCon" style="position: absolute;width: 100%; height:95%;">
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>WFS地图显示</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="mouseposition" src="./static/libs/include-leaflet-local.js"></script>
+    <script type="text/javascript">
+        "use strict";
+
+        /**显示地图
+        */
+        var map;
+        function init() {
+            //地图容器
+            map = L.map('leaf_map', {
+                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                crs: L.CRS.EPSG4326,
+                //显示中心
+                center: [0, 0],
+                //最小显示等级
+                minZoom: 1,
+                //最大显示等级
+                maxZoom: 5,
+                //当前显示等级
+                zoom: 2,
+                //限制显示地理范围
+                maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+            });
+            //添加鼠标位置控件
+            L.control.mousePosition().addTo(map);
+            //瓦片地图，JWWORLDTILE为IGServer上发布的瓦片服务名称
+            var layer = new Zondy.Map.MapTileLayer("JWWORLDTILE", {
+                //IGServer所在ip地址
+                ip: 'develop.smaryun.com',
+                //IGServer请求端口号
+                port: '6163',
+                //设置地图不连续显示
+                noWrap: true
+            }).addTo(map);
+            //WFS服务地址
+            var baseurl = "http://develop.smaryun.com:6163/igs/rest/ogc/doc/WorldJWVector/WFSServer?REQUEST=GetFeature&version=1.1.0&service=wfs&typename=WorldJWVector:主要城市&maxfeatures=600";
+            //通过一般处理程序解决跨域
+            var url = './static/libs/cdn/zondyclient/ZDproxy.ashx?url=' + baseurl;
+            //发送Ajax请求获取数据
+            $.ajax({
+                type: 'get',
+                url: url,
+                dataType: 'xml',
+                contentType: "application/x-www-form-urlencoded",
+                success: function (result) {
+                    //解析数据
+                    if (result.children[0].children.length > 0) {
+                        for (var datalength = 0; datalength < result.children[0].children[0].children.length; datalength++) {
+                            var data = result.children[0].children[0].children[datalength].children[0].children[0].children[0].textContent.split(" ");
+                            //添加标记
+                            L.marker([Number(data[1]), Number(data[0])], {
+                                //添加悬浮名称
+                                title: result.children[0].children[0].children[datalength].children[11].innerHTML
+                            }).addTo(map);
+                        }
+
+                    }
+                },
+                error: function () {
+                    alert("请求WFS服务失败");
+                }
+            });
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="leaf_map" style="width: 100%; height:700px;">
+    </div>
+</body>
+</html>

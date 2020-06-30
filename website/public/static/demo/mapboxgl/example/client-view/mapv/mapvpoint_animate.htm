@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>点数据播放</title>
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="language,proj4,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    //一定要去mapbox注册一个key,这个key会失效的
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: 'mapbox://styles/mapbox/dark-v9', // 使用MapBox官方的样式
+      center: [114.321317, 30.398428],
+      zoom: 3
+    });
+    map.addControl(new MapboxLanguage(), 'top-right');//中文支持
+    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+    var data = [];
+
+    $.get('../../static/data/mapv/china-point.geojson', function(rs) {
+      for (var i = 0; i < rs[0].length; i++) {
+        var geoCoord = rs[0][i].geoCoord;
+        data.push({
+          geometry: {
+            type: 'Point',
+            coordinates: geoCoord
+          },
+          time: Math.random() * 10
+        });
+      }
+
+      var dataSet = new mapv.DataSet(data);
+      var options = {
+        context: '2d',
+        fillStyle: 'rgba(255, 250, 50, 0.6)',
+        //shadowColor: 'rgba(255, 250, 50, 0.5)',
+        //shadowBlur: 3,
+        updateCallback: function(time) {
+          time = time.toFixed(2);
+          $('#time').html('时间' + time);
+        },
+        size: 3,
+        draw: 'simple',
+        animation: {
+          type: 'time',
+          stepsRange: {
+            start: 0,
+            end: 10
+          },
+          trails: 1,
+          duration: 6,
+        }
+      }
+      var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
+    });
+  </script>
+
+
+</body>
+
+</html>

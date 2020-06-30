@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>要素移动</title>
+    <script src="./static/libs/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #menu {
+            text-align: center;
+            width: 100%;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            left: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图
+        var map;
+        //geojson格式的点数据
+        var geometryPoint;
+        //计时器返回的 ID 值
+        var intervalId;
+        //离散后的点集合
+        var coordinates;
+        //动画启动标志
+        var animating = true;
+        /**初始化地图显示
+        */
+        function init() {
+            //构造地图容器
+            map = new mapboxgl.Map({
+                //地图容器div的ID
+                container: 'map',
+                //设置样式
+                style: {
+                    "version": 8,
+                    "sources": {
+                        "osm-tiles": {
+                            "type": "raster",
+                            'tiles': ["http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+                            'tileSize': 256
+                        }
+                    },
+                    "layers": [{
+                        "id": "simple-tiles",
+                        "type": "raster",
+                        "source": "osm-tiles",
+                        "minzoom": 0,
+                        "maxzoom": 16
+                    }]
+                },
+                //显示中心
+                center: [114, 30],
+                //最小显示等级
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 16,
+                //当前显示等级
+                zoom: 3,
+                //水平旋转角度
+                bearingnumber: 0,
+                //垂直倾斜角度
+                pitch: 0,
+                //支持倾斜交互操作
+                pitchWithRotate: true,
+                //支持旋转交互操作
+                dragRotate: true
+            });
+            //添加导航控件，设置显示位置。位置包括：'top-left'，'top-right'，'bottom-left'，'bottom-right'
+            map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+            /**地图加载完成事件
+            *  @param {string}   type 事件类型（地图加载完成）
+            *  @param {function} listener 事件触发后的响应函数
+            */
+            map.on('load', function () {
+                //添加图形
+                addGeometry();
+            });
+        }
+
+        /**添加图形至地图中显示
+        */
+        function addGeometry() {
+            //用geojson创建一条线
+            var geometryLine = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [[80, 40], [114, 30]]
+                }
+            };
+            //将线添加到一个图层中，在地图中显示
+            map.addLayer({
+                //此id可随意设置，但是要唯一
+                "id": "Line",
+                //指定类型为线
+                "type": "line",
+                //设置数据来源
+                "source": {
+                    "type": "geojson",
+                    "data": geometryLine
+                },
+                //设置线型
+                "layout": {
+                    //线条末端样式
+                    'line-cap': 'round',
+                    //线条相交处样式  
+                    'line-join': 'round'
+                },
+                //设置绘制参数
+                "paint": {
+                    //设置线颜色
+                    "line-color": 'rgba(237, 212, 0, 0.8)',
+                    //设置线宽度，像素单位
+                    "line-width": 6
+                }
+            });
+
+            //用geojson创建一个点
+            geometryPoint = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [80, 40]
+                }
+            };
+            //将点添加到一个图层中，在地图中显示
+            map.addLayer({
+                //此id可随意设置，但是要唯一
+                "id": "Point",
+                //指定类型为点
+                "type": "circle",
+                //设置数据来源
+                "source": {
+                    "type": "geojson",
+                    "data": geometryPoint
+                },
+                //设置绘制参数
+                "paint": {
+                    //设置点的半径，像素单位
+                    "circle-radius": 7,
+                    //设置点的填充颜色
+                    "circle-color": 'black',
+                    //设置边线宽度，像素单位
+                    "circle-stroke-width": 2,
+                    //设置边线颜色
+                    "circle-stroke-color": 'white'
+                }
+            });
+            //在起始点添加标注
+            var startMarker = new mapboxgl.Marker().setLngLat([80, 41]).addTo(map);
+            //在终止点添加标注
+            var endMarker = new mapboxgl.Marker().setLngLat([114, 31]).addTo(map);
+        }
+
+        /**开启要素移动动画
+        */
+        function startAnimation() {
+            //animating为true时，要素开始运动
+            if (animating) {
+                //改变按钮的显示内容
+                document.getElementById("start-animation").innerHTML = "结束运动";
+                //取消运动状态
+                animating = false;
+                //离散起始点和终止点，得到点集合
+                coordinates = Interval([80, 40], [114, 30], 100);
+                //创建索引
+                var i = 0;
+                //获取移动速度值
+                var speed = document.getElementById("speed").value;
+                //利用计时器移动要素
+                intervalId = setInterval(function () {
+                    //修改geojson点的坐标
+                    geometryPoint.geometry.coordinates = coordinates[i];
+                    //将修改后的数据重新置于source中
+                    map.getSource('Point').setData(geometryPoint);
+                    i++;
+                    //当移动结束后
+                    if (i > 100) {
+                        //改变按钮的显示内容
+                        document.getElementById("start-animation").innerHTML = "开始运动";
+                        //启动运动状态
+                        animating = true;
+                        //关闭计时器
+                        window.clearInterval(intervalId);
+                    }
+                }, 10000/speed);
+            }
+            //要素停止运动
+            else {
+                //改变按钮的显示内容
+                document.getElementById("start-animation").innerHTML = "开始运动";
+                //启动运动状态
+                animating = true;
+                //关闭计时器
+                window.clearInterval(intervalId);
+                //将点重新设置到起始位置
+                geometryPoint.geometry.coordinates = coordinates[0];
+                map.getSource('Point').setData(geometryPoint);
+            }
+        }
+
+        /**离散点
+        *  @param {array} dot1     起始点
+        *  @param {array} dot2     终止点
+        *  @param {int}   interval 离散间隔
+        */
+        function Interval(dot1, dot2, interval) {
+            //计算两个点的坐标偏移值
+            var x = dot2[0] - dot1[0];
+            var y = dot2[1] - dot1[1];
+            //计算每个离散点的坐标增量
+            var dx = x / interval;
+            var dy = y / interval;
+            //创建结果点数组
+            var finalCoordinates = new Array();
+            for (var i = 0; i <= interval; i++) {
+                //通过循环，将离散点存放到结果数组中
+                finalCoordinates.push([dot1[0] + dx * i, dot1[1] + dy * i]);
+            }
+            //返回离散后的点集合
+            return finalCoordinates;
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="menu">
+        <label style="font-weight: bold;">
+            运动速度:&nbsp;
+            <input id="speed" type="range" min="50" max="1000" step="10" value="100" />
+        </label>
+        <button id="start-animation" class="ButtonLib" onclick="startAnimation()">
+            开始运动
+        </button>
+    </div>
+    <div id="map" style="width: 100%; height: 95%;position: absolute;">
+    </div>
+</body>
+</html>

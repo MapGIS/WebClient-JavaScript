@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var assiselayer = undefined;
+        var drilllayer = undefined;
+        var vm = this;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl("GlobeView", {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition("coordinate_location");
+            if (assiselayer) webGlobe.removeM3dLayer(assiselayer);
+            if (drilllayer) webGlobe.removeM3dLayer(drilllayer);
+            webGlobe.viewer.imageryLayers.removeAll();
+            webGlobe.viewer.scene.skyAtmosphere.show = false;
+            webGlobe.viewer.scene.globe.enableTransparent = true;
+            webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(
+                1,
+                1,
+                1,
+                0.001
+            );
+            assiselayer = webGlobe.append(
+                "http://develop.smaryun.com:6163/igs/rest/g3d/geobody2",
+                {
+                    loaded: function (layer) { },
+                }
+            );
+            drilllayer = webGlobe.append(
+                "http://develop.smaryun.com:6163/igs/rest/g3d/drilling",
+                {
+                    loaded: function (layer) { },
+                }
+            );
+        }
+        // window.clearInterval(cutTime);
+        var cutcutTime = undefined;
+        var curDis = 10;
+        var g_planeTerTile = new Cesium.ClippingPlane(
+            new Cesium.Cartesian3(0.0, 1.0, 0.0),
+            -200.0
+        );
+        var g_planeDiziti = new Cesium.ClippingPlane(
+            new Cesium.Cartesian3(0.0, 1.0, 0.0),
+            -200.0
+        );
+        window.setTimeout(() => {
+            vm.initCut();
+        }, 5000);
+        function initCut() {
+            assiselayer[0].clippingPlanes = new Cesium.ClippingPlaneCollection({
+                modelMatrix: assiselayer[0].modelMatrix,
+                planes: [g_planeDiziti],
+                enabled: true,
+            });
+            var transformCenter = Cesium.Matrix4.getTranslation(
+                assiselayer[0].root.transform,
+                new Cesium.Cartesian3()
+            );
+            webGlobe.scene.globe.clippingPlanes = new Cesium.ClippingPlaneCollection(
+                {
+                    modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
+                        transformCenter
+                    ),
+                    planes: [g_planeTerTile],
+                    enabled: true,
+                }
+            );
+
+            cutTime = window.setInterval(function () {
+                curDis++;
+                if (curDis >= 500) curDis = 500;
+                cutLayer(curDis);
+            }, 100);
+        }
+        function cutLayer(index) {
+            let distance = -1 * index * 20;
+            g_planeTerTile.distance = distance;
+            g_planeDiziti.distance = distance;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>
