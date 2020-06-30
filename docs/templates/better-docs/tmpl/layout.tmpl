@@ -1,0 +1,72 @@
+<?js
+var betterDocs
+
+if(env.conf.templates && env.conf.templates.betterDocs) {
+    betterDocs = env.conf.templates.betterDocs
+} else {
+    betterDocs = {}
+}
+
+var self = this
+var isTutorial = subtitle === 'Tutorial'
+
+var search = env.conf.templates && env.conf.templates.search
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<?js= this.partial('head.tmpl', { betterDocs, title }) ?>
+
+<body class="<?js= self.smallHeader ? 'layout small-header' : 'layout'?>">
+    <div id="stickyNavbarOverlay"></div>
+    <?js= this.partial('topnav.tmpl', { betterDocs }) ?>
+    <div id="main">
+        <div
+            class="sidebar <?js= isTutorial ? 'tutorials' : '' ?>"
+            id="sidebarNav"
+        >
+            <?js if(search) { ?>
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            <?js } ?>
+            <nav>
+                <?js if (isTutorial) { ?>
+                    <?js= this.tutorialsNav ?>
+                <?js } else { ?>
+                    <?js= this.nav ?>
+                <?js } ?>
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p><?js= subtitle ?></p>
+                    <h1><?js= title ?></h1>
+                </header>
+                <?js= content ?>
+            </div>
+            <?js if (betterDocs.hideGenerator !== true) { ?>
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>文档生成<a href="https://github.com/jsdoc3/jsdoc">JSDoc <?js= env.version.number ?></a><?js if(env.conf.templates && env.conf.templates.default && env.conf.templates.default.includeDate) { ?> on <?js= (new Date()) ?><?js } ?></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://www.smaryun.com" target="_blank">司马云</a> <span>© 2020 云生态圈</span>
+                        <a href="http://develop.smaryun.com:8899/" target="_blank">MapGIS Client for JavaScript</a>
+                    </p>
+                </div>
+            </footer>
+            <?js } ?>
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+<?js if(search) { ?>
+<script src="scripts/search.js"> </script>
+<?js } ?>
+</body>
+</html>
