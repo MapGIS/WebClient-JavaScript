@@ -8,12 +8,12 @@
 /docs/openlayers/
 /docs/cesium/
 
-/leaflet/theme/
-/mapboxgl/theme/
-/openlayers/theme/
-/common/overlay/
-/common/assets/
-/config/common/
+/src/leaflet/theme/
+/src/mapboxgl/theme/
+/src/openlayers/theme/
+/src/common/overlay/
+/src/common/assets/
+/src/config/common/
 
 /website/node_modules/
 /website/public/docs/leaflet/
