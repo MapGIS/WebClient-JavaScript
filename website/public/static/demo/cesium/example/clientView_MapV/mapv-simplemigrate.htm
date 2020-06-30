@@ -191,13 +191,14 @@
           }
         });
         geojsonDataSet = new mapv.DataSet(data);
-
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, geojsonDataSet, geojsonOptions);
-
+        // 构建对应的dataset
         var textDataSet = new mapv.DataSet(textData);
-
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var textOptions = {
-          context: '2d',
+          context: '2d',   //cesium必须设置画布为2d
           draw: 'text',
           font: '14px Arial',
           fillStyle: 'white',
@@ -206,13 +207,13 @@
           zIndex: 11,
           shadowBlur: 10
         }
-
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, textDataSet, textOptions);
 
         var lineDataSet = new mapv.DataSet(lineData);
-
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var lineOptions = {
-          context: '2d',
+          context: '2d',  //cesium必须设置画布为2d
           strokeStyle: 'rgba(255, 250, 50, 0.8)',
           shadowColor: 'rgba(255, 250, 50, 1)',
           shadowBlur: 20,
@@ -220,11 +221,11 @@
           zIndex: 100,
           draw: 'simple'
         }
-
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, lineDataSet, lineOptions);
-
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var pointOptions = {
-          context: '2d',
+          context: '2d',  //cesium必须设置画布为2d
           fillStyle: 'rgba(254,175,3,0.7)',
           shadowColor: 'rgba(55, 50, 250, 0.5)',
           shadowBlur: 10,
@@ -235,15 +236,14 @@
 
 
         var pointDataSet = new mapv.DataSet(pointData);
-
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, pointDataSet, pointOptions);
 
         var timeDataSet = new mapv.DataSet(timeData);
 
-        console.log(timeData);
-
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var timeOptions = {
-          context: '2d',
+          context: '2d',  //cesium必须设置画布为2d
           fillStyle: 'rgba(255, 250, 250, 0.5)',
           zIndex: 200,
           size: 2.5,
@@ -258,7 +258,7 @@
           },
           draw: 'simple'
         }
-
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, timeDataSet, timeOptions);
 
       });

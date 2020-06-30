@@ -381,7 +381,7 @@
             ].forEach(function (item, i) {
                 series.push({
                     name: item[0] + ' Top10',
-                    coordinateSystem: 'cesium',
+                    coordinateSystem: 'cesium',   // 设置cesium坐标系
                     type: 'lines',
                     zlevel: 1,
                     effect: {
@@ -401,7 +401,7 @@
                     data: convertData(item[1])
                 }, {
                     name: item[0] + ' Top10',
-                    coordinateSystem: 'cesium',
+                    coordinateSystem: 'cesium',   // 设置cesium坐标系
                     type: 'lines',
                     zlevel: 2,
                     effect: {
@@ -423,7 +423,7 @@
                 }, {
                     name: item[0] + ' Top10',
                     type: 'effectScatter',
-                    coordinateSystem: 'cesium',
+                    coordinateSystem: 'cesium',   // 设置cesium坐标系
                     zlevel: 2,
                     rippleEffect: {
                         brushType: 'stroke'
@@ -460,7 +460,7 @@
                 },
                 postRender: true,
                 postRenderFrame: 10,
-                coordinateSystem: 'cesium',
+                coordinateSystem: 'cesium',   // 设置cesium坐标系
                 title: {
                     text: '模拟迁徙',
                     subtext: '数据纯属虚构',
@@ -484,9 +484,8 @@
                 },
                 series: series
             };
-
+            // 声明cesium的echarts图层并将其显示到三维球上
             layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
-
         }
     </script>
 </head>

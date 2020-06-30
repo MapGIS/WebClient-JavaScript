@@ -87,7 +87,7 @@
                     },
                     postRender: false,
                     postRenderFrame: 10,
-                    coordinateSystem: 'cesium',
+                    coordinateSystem: 'cesium',   // 设置cesium坐标系
                     title: {
                         text: "中国微博签到图",
                         subtext: 'From MapGIS',
@@ -110,7 +110,7 @@
                     series: [{
                         name: grade[2],
                         type: 'scatter',
-                        coordinateSystem: 'cesium',
+                        coordinateSystem: 'cesium',    // 设置cesium坐标系
                         symbolSize: 1,
                         large: true,
                         itemStyle: {
@@ -124,7 +124,7 @@
                     }, {
                         name: grade[1],
                         type: 'scatter',
-                        coordinateSystem: 'cesium',
+                        coordinateSystem: 'cesium',   // 设置cesium坐标系
                         symbolSize: 1,
                         large: true,
                         itemStyle: {
@@ -138,7 +138,7 @@
                     }, {
                         name: grade[0],
                         type: 'scatter',
-                        coordinateSystem: 'cesium',
+                        coordinateSystem: 'cesium',   // 设置cesium坐标系
                         symbolSize: 1,
                         large: true,
                         itemStyle: {
@@ -151,6 +151,7 @@
                         data: weiboData[2]
                     }]
                 };
+                // 声明cesium的echarts图层并将其显示到三维球上
                 layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
             });
         }

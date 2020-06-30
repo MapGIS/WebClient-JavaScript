@@ -45,9 +45,10 @@
 
     function initMapv() {
       $.get('./static/data/mapv/beijing-village.json', function (data) {
-
+        // 构建对应的dataset
         var dataSet = new mapv.DataSet(data);
-
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var options = {
           context: '2d',
           fillStyle: 'rgba(255, 80, 53, 0.8)',
@@ -56,6 +57,7 @@
           lineWidth: 1,
           draw: 'simple'
         };
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
       });
     }

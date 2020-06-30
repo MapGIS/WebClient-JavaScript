@@ -47,6 +47,7 @@
 
     function convertData(data) {
       var res = [];
+      // 将城市的几何中心点与对应的属性值联系起来
       for (var i = 0; i < data.length; i++) {
         var geoCoord = geoCoordMap[data[i].name];
         if (geoCoord) {
@@ -60,6 +61,8 @@
     }
 
     function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
       option = {
         title: {
           text: "全国主要城市PM 2.5热力图",
@@ -70,7 +73,7 @@
           sublink: "http://www.pm25.in",
           left: "center",
         },
-        cesium: {
+        cesium: {    // 热力图必须设置改属性
           roam: false,
         },
         postRender: false,
@@ -90,13 +93,14 @@
           {
             name: "热力图",
             type: "heatmap",
-            coordinateSystem: "cesium",
-            data: convertData(data),
+            coordinateSystem: "cesium",   // 设置cesium坐标系
+            data: convertData(data),      // 转换数据
             pointSize: 5,
             blurSize: 6,
           },
         ],
       };
+      // 声明cesium的echarts图层并将其显示到三维球上
       layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
     }
 

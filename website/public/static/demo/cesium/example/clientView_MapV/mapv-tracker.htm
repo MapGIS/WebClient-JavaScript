@@ -76,11 +76,12 @@
         });
 
       }
-
+      // 构建对应的dataset
       var dataSet1 = new mapv.DataSet(data);
-
+      // 设置对应的参数
+      // https://github.com/huiyan-fe/mapv/blob/master/API.md
       var options = {
-        context: '2d',
+        context: '2d',   //cesium必须设置画布为2d
         strokeStyle: 'rgba(53,57,255,0.5)',
         coordType: 'bd09mc',
         // globalCompositeOperation: 'lighter',
@@ -89,12 +90,11 @@
         lineWidth: 3.0,
         draw: 'simple'
       };
-
+      // 声明cesium的mapv图层并将其显示到三维球上
       new CesiumZondy.Overlayer.MapvLayer(map, dataSet1, options);
-
-
+      // 构建对应的dataset
       var dataSet2 = new mapv.DataSet(timeData);
-
+      // https://github.com/huiyan-fe/mapv/blob/master/API.md
       var options = {
         context: '2d',
         fillStyle: 'rgba(255, 250, 250, 0.2)',
@@ -111,7 +111,7 @@
         },
         draw: 'simple'
       };
-
+      // 声明cesium的mapv图层并将其显示到三维球上
       new CesiumZondy.Overlayer.MapvLayer(map, dataSet2, options);
     });
     }

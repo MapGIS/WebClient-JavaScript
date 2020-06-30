@@ -56,10 +56,13 @@
         });
       }
 
+      // 构建对应的dataset
       var dataSet = new mapv.DataSet(data);
 
+      // 设置对应的参数
+      // https://github.com/huiyan-fe/mapv/blob/master/API.md
       var options = {
-        context: '2d',
+        context: '2d',    //cesium必须设置画布为2d
         postRender: false,
         postRenderFrame: 5,
         //fillStyle: 'rgba(255, 250, 50, 0.7)',
@@ -84,8 +87,9 @@
           0.95: "rgba(165, 0, 38,0.8)"
         },
         max: 100,
-        draw: 'honeycomb'
+        draw: 'honeycomb'   // 绘制蜂窝图
       }
+      // 声明cesium的mapv图层并将其显示到三维球上
       var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
     }
   </script>

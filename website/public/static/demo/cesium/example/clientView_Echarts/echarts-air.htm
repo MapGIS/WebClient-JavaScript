@@ -38,7 +38,7 @@
             //显示鼠标位置控件
             webGlobe.showPosition('coordinate_location');
             map = webGlobe.viewer;
-
+            //添加google底图
             webGlobe.appendGoogleMap('m@207000000');
             
             initData();
@@ -47,6 +47,7 @@
 
         function convertData(data) {
             var res = [];
+            // 将城市的几何中心点与对应的属性值联系起来
             for (var i = 0; i < data.length; i++) {
                 var geoCoord = geoCoordMap[data[i].name];
                 if (geoCoord) {
@@ -60,6 +61,8 @@
         };
 
         function initEcharts() {
+            // options参数请参考百度echarts-options
+            // https://echarts.apache.org/zh/option.html#title
             option = {
                 title: {
                     text: '全国主要城市空气质量 - 百度地图提供数据',
@@ -88,9 +91,9 @@
                 postRender: true,
                 series: [{
                         name: 'pm2.5',
-                        type: 'scatter',
-                        coordinateSystem: 'cesium',
-                        data: convertData(data),
+                        type: 'scatter', // 散点图
+                        coordinateSystem: 'cesium', // 设置cesium坐标系
+                        data: convertData(data),    // 转换数据
                         symbolSize: function (val) {
                             return val[2] / 10;
                         },
@@ -119,7 +122,7 @@
                     {
                         name: 'Top 5',
                         type: 'effectScatter',
-                        coordinateSystem: 'cesium',
+                        coordinateSystem: 'cesium', // 设置cesium坐标系
                         data: convertData(data.sort(function (a, b) {
                             return b.value - a.value;
                         }).slice(0, 6)),
@@ -149,6 +152,7 @@
                     }
                 ]
             }
+            // 声明cesium的echarts图层并将其显示到三维球上
             layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
         }
 

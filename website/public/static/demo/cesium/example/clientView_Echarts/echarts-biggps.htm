@@ -51,8 +51,11 @@
 
 
     var dataCount = 0;
-    var CHUNK_COUNT = 230;
-    // https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/
+    var CHUNK_COUNT = 230;   // 数据一共230片
+    /**
+     * 循环请求对应的网络数据，数据格式是Int32Array,并解析对应的二级制流
+     * @see https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/
+     * */
     function fetchData(idx) {
       if (idx >= CHUNK_COUNT) {
         return;
@@ -85,6 +88,8 @@
 
 
     function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
       var option = {
         //backgroundColor: '#000',
         title: {
@@ -99,9 +104,9 @@
         },
         series: [{
           name: '弱',
-          type: 'scatterGL',
-          progressive: 20000,
-          coordinateSystem: 'cesium',
+          type: 'scatterGL',  
+          progressive: 20000,           // 一次渲染20000点
+          coordinateSystem: 'cesium',   // 设置cesium坐标系
           symbolSize: 1,
           zoomScale: 0.002,
           blendMode: 'lighter',
@@ -115,9 +120,10 @@
           },
           silent: true,
           dimensions: ['lng', 'lat'],
-          data: new Float32Array()
+          data: new Float32Array()     // 关键点： 数据必须处理成Float32Array格式，否则超出浏览器内存
         }]
       };
+      // 声明cesium的echarts图层并将其显示到三维球上
       layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
       fetchData(0);
     }

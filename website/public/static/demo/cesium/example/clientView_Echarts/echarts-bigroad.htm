@@ -48,10 +48,12 @@
 
     initEcharts();
 
-    var CHUNK_COUNT = 28;
+    var CHUNK_COUNT = 28;    // 数据一共28片
     var dataCount = 0;
     var layer;
-
+    /**
+     * 循环请求对应的网络数据，数据格式是Int32Array,并解析对应的二级制流
+     * */
     function fetchData(idx) {
       if (idx >= CHUNK_COUNT) {
         return;
@@ -80,6 +82,8 @@
     }
 
     function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
       var option = {
         title: {
           text: '全国道路（百万级）',
@@ -88,20 +92,20 @@
             color: '#fff'
           }
         },
-        progressive: 5000,
+        progressive: 5000,   // 一次渲染5000点
         cesium: {
           roam: true
         },
         series: [{
           type: 'lines',
 
-          coordinateSystem: 'cesium',
+          coordinateSystem: 'cesium',  // 设置cesium坐标系
 
           blendMode: 'lighter',
 
           dimensions: ['value'],
 
-          data: new Float64Array(),
+          data: new Float64Array(),  // 关键点： 数据必须处理成Float64Array格式，否则超出浏览器内存
           polyline: true,
           large: true,
 
@@ -112,7 +116,7 @@
           }
         }]
       }
-
+      // 声明cesium的echarts图层并将其显示到三维球上
       layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
 
       fetchData(0);

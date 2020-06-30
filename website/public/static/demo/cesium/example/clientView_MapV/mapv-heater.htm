@@ -50,7 +50,7 @@
       var citys = ["北京", "天津", "上海", "重庆", "石家庄", "太原", "呼和浩特", "哈尔滨", "长春", "沈阳", "济南", "南京", "合肥", "杭州", "南昌", "福州",
         "郑州", "武汉", "长沙", "广州", "南宁", "西安", "银川", "兰州", "西宁", "乌鲁木齐", "成都", "贵阳", "昆明", "拉萨", "海口"
       ];
-      // 构造数据
+      // 构造数据 将数据处理成对应的geojson格式
       while (randomCount--) {
         var cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[parseInt(Math.random() * citys.length)]);
         data.push({
@@ -63,10 +63,13 @@
         });
       }
 
+      // 构建对应的dataset
       var dataSet = new mapv.DataSet(data);
 
+      // 设置对应的参数
+      // https://github.com/huiyan-fe/mapv/blob/master/API.md
       var options = {
-        context: '2d',
+        context: '2d',  //cesium必须设置画布为2d
         postRender: true,
         postRenderFrame: 10,
         size: 13,
@@ -86,9 +89,9 @@
           trails: 10,
           duration: 4,
         },
-        draw: 'heatmap'
+        draw: 'heatmap'   // 绘制热力图
       }
-
+      // 声明cesium的mapv图层并将其显示到三维球上
       var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
     }
   </script>

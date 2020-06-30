@@ -49,6 +49,7 @@
 
         function initEcharts() {
             $.get('./static/data/echarts/line-bus.json', function (data) {
+                // 遍历数据并处理成对应echarts格式
                 var hStep = 300 / (data.length - 1);
                 busLines = [].concat.apply([], data.map(function (busLine, idx) {
                     var prevPt;
@@ -82,7 +83,7 @@
                     postRenderFrame: 2,
                     series: [{
                         type: 'lines',
-                        coordinateSystem: 'cesium',
+                        coordinateSystem: 'cesium',     // 设置cesium坐标系
                         polyline: true,
                         data: busLines,
                         silent: true,
@@ -94,11 +95,11 @@
                                 width: 1
                             }
                         },
-                        progressiveThreshold: 500,
-                        progressive: 200
+                        progressiveThreshold: 500,     // 一次渲染500点
+                        progressive: 200               // 渲染频率
                     }, {
                         type: 'lines',
-                        coordinateSystem: 'cesium',
+                        coordinateSystem: 'cesium',    // 设置cesium坐标系
                         polyline: true,
                         data: busLines,
                         lineStyle: {
@@ -115,6 +116,7 @@
                         zlevel: 1
                     }]
                 }
+                // 声明cesium的echarts图层并将其显示到三维球上
                 layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
             });
         }

@@ -100,10 +100,12 @@
             }
           }
         }
-
+        // 构建对应的dataset
         var dataSet = new mapv.DataSet(data);
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var options = {
-          context: '2d',
+          context: '2d',  //cesium必须设置画布为2d
           postRender: false,
           postRenderFrame: 30,
           strokeStyle: 'rgba(55, 50, 250, 0.3)',
@@ -117,14 +119,15 @@
             1: 'rgba(55, 50, 250, 1)'
           },
           lineWidth: .2,
-          draw: 'intensity'
+          draw: 'intensity'   // 绘制强度图
         };
 
+        // 声明cesium的mapv图层并将其显示到三维球上
         var linelayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
-
+        // 构建对应的dataset
         var dataSet = new mapv.DataSet(timeData);
         var options = {
-          context: '2d',  
+          context: '2d',   //cesium必须设置画布为2d
           fillStyle: 'rgba(255, 250, 250, 0.9)',
           size: .5,
           animation: {
@@ -136,8 +139,9 @@
             trails: 1,
             duration: 5,
           },
-          draw: 'simple'
+          draw: 'simple'   // 绘制简单图
         };
+        // 声明cesium的mapv图层并将其显示到三维球上
         var maplayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
       }
     });

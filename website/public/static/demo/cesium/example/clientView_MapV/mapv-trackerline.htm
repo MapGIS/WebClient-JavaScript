@@ -44,14 +44,17 @@
 
     function initMapv() {
       $.get('./static/data/mapv/car.csv', function (csvstr) {
+        // 设置对应的参数
+        // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var options = {
-          context: '2d',
+          context: '2d',   //cesium必须设置画布为2d
           strokeStyle: 'rgba(50, 50, 255, 0.8)',
           lineWidth: 0.05,
           globalCompositeOperation: 'lighter',
           draw: 'simple'
         };
         var dataSet = mapv.csv.getDataSet(csvstr);
+        // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
       });
     }
