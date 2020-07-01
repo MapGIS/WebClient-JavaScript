@@ -21,8 +21,8 @@ const SelectionIndicatorMode = {
 
 /**
  * @description Cesium的点击查询效果，针对点击事件实现了2种不同的点击方式针对geojson查询内部回主动区别不同的查询方法
- * @function animateAppear 点击一下后光标短暂散开
- * @function animateDepart 点击一下后光标等待旋转
+ * animateAppear 点击一下后光标短暂散开
+ * animateDepart 点击一下后光标等待旋转
  * @param Cesium的webGlobe对象
  */
 export class CesiumSelectionIndicator {

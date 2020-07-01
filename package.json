@@ -22,7 +22,8 @@
     "service-release": "webpack --config src/configopensource/service-release-config.js --progress",
     "build-docs-leaflet": "jsdoc -c ./docs/jsdoc-config/leaflet/docs.json -R ./docs/jsdoc-config/leaflet/index.md -r",
     "build-docs-mapboxgl": "jsdoc -c ./docs/jsdoc-config/mapboxgl/docs.json -R ./docs/jsdoc-config/mapboxgl/index.md -r",
-    "build-docs-openlayers": "jsdoc -c ./docs/jsdoc-config/openlayers/docs.json -R ./docs/jsdoc-config/openlayers/index.md -r"
+    "build-docs-openlayers": "jsdoc -c ./docs/jsdoc-config/openlayers/docs.json -R ./docs/jsdoc-config/openlayers/index.md -r",
+    "build-docs-cesium": "jsdoc -c ./docs/jsdoc-config/cesium/docs.json -R ./docs/jsdoc-config/cesium/index.md -r"
   },
   "author": "mapgis",
   "license": "Apache2",
