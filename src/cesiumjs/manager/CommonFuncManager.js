@@ -439,7 +439,6 @@ export default class CommonFuncManager {
      * @param {Cartographic} center 中心点 （第一个点） 坐标为弧度
      * @param {Cartographic} target 目标点 （第二个点）坐标为弧度
      * @returns {Number} heading
-     * @example
      */
     caculHeadingFromCartographic(center, target) {
         let centerCar3 = Cesium.Cartesian3.fromRadians(
@@ -524,24 +523,67 @@ export default class CommonFuncManager {
         return heading;
     }
 
+     /**
+      * @private
+     * 深度拷贝对象
+     * @param  {object} o 被拷贝对象
+     * @return {object} 拷贝结果
+     */
+    deepCopy(o) {
+        if (o instanceof Array) {
+            var n = [];
+            for (var i = 0; i < o.length; ++i) {
+                n[i] = this.deepCopy(o[i]);
+            }
+            return n;
+
+        } else if (o instanceof Object) {
+            var n = {}
+            for (var i in o) {
+                n[i] = this.deepCopy(o[i]);
+            }
+            return n;
+        } else {
+            return o;
+        }
+    }
+
     /**
      * 化简抽稀(用于折线路绘制)
      * @param  {Array<Cartesian3>} positions 坐标点序列
      * @return {Array<Cartesian3>} 抽稀后的坐标点序列
+     * @example
+     * let polyline;
+     * let drawElement = new Cesium.DrawElement(viewer);
+     * let commfun = new CommonFun({viewer:viewer});
+     * drawElement.startDrawingPolyline({
+     *               callback: function(positions){
+     *                   let simplify = commfun.simplifyLine(positions);
+     *                   polyline = new Cesium.DrawElement.PolylinePrimitive({
+     *                       positions: simplify,
+     *                       width: 1,
+     *                       geodesic: true
+     *                   });
+     *                  viewer.scene.primitives.add(polyline);
+     *               }
+     *           });
      */
     simplifyLine(positions) {
         //该抽稀对于三点之间夹角>175度则删除，如果是高程拐点则必须保留，高程没有赋值的也需删除（因为可能没取到地形数据）
         if (positions !== null && positions.length >= 3) {
-            let pos_copy = deepCopy(positions);
+            let pos_copy = this.deepCopy(positions);
             //先删除高程值有异常坐标
-            for (let j in pos_copy) {
+            let len = pos_copy.length;
+            for (let j = 0; j<len; j++) {
                 if (pos_copy[j].z === undefined || pos_copy[j].z === null) {
                     pos_copy = pos_copy
                         .slice(0, j)
                         .concat(pos_copy.slice(j + 1));
                 }
             }
-            for (let i in pos_copy) {
+            len = len - 3;
+            for (let i = 0; i <= len; i++) {
+
                 let isVertice =
                     (pos_copy[i].z - pos_copy[i + 1].z) *
                         (pos_copy[i + 1].z - pos_copy[i + 2].z) >
@@ -566,9 +608,12 @@ export default class CommonFuncManager {
 
     /**
      * @private
-     * 未知功能，可能是计算2点高差
-     * @param {Object} options
-     * @param {*} resultOut
+     * 计算2点高差
+     * @param {Object} options 参数
+     * @param {Array} options.position 经纬度点数组
+     * @param {Array} options.height 高度 
+     * @param {Array} resultOut 经纬度高程数组
+     * @return 点数组结果
      */
     calcParabola(options, resultOut) {
         //方程 y=-(4h/L^2)*x^2+h h:顶点高度 L：横纵间距较大者
@@ -621,5 +666,15 @@ export default class CommonFuncManager {
         return result;
     }
 }
-
+    /**
+     * 计算三点的角度（0-180之间）
+     */
+    function calAngleOf3Pnt(p1, p2, p3) {
+        //var p = (p1[0]-p2[0])*(p2[0]-p3[0])+(p1[1]-p2[1])*(p2[1]-p3[1])+(p1[2]-p2[2])*(p2[2]-p3[2]);
+        var p = (p1[0] - p2[0]) * (p3[0] - p2[0]) + (p1[1] - p2[1]) * (p3[1] - p2[1]) + (p1[2] - p2[2]) * (p3[2] - p2[2]);
+        var a = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2) + Math.pow(p2[2] - p1[2], 2));
+        var b = Math.sqrt(Math.pow(p3[0] - p2[0], 2) + Math.pow(p3[1] - p2[1], 2) + Math.pow(p3[2] - p2[2], 2));
+        var angle = Math.acos(p / (a * b));  //0-PI
+        return angle * 180 / Math.PI;
+    }
 CesiumZondy.Manager.CommonFuncManager = CommonFuncManager;
