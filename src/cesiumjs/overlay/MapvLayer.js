@@ -14,10 +14,10 @@ var idIndex = 0;
  * @class  module:客户端可视化.MapVLayer
  * @classdesc CesiumZondy.Overlayer.MapVLayer 基于新建立的Html Element嵌入mapv
  * @param map - {Object} 传入的cesium的地图对象Viewer
- * @param dataset - {MapvDataSet} 传入的mapv的属性。 <br>
- * @param mapVOptions - {MapvOption} 可选参数。<br>
+ * @param dataset - {MapvDataSet} 传入的mapv的属性
+ * @param mapVOptions - {MapvOption} 可选参数。https://github.com/huiyan-fe/mapv/blob/master/API.md
  * @param {Boolean} [mapVOptions.postRender=false] 是否实时渲染
- * @param container - {Element} 外部传入的div;外接的方式使用mapv<br>
+ * @param container - {Element} 外部传入的div;外接的方式使用mapv
  */
 export class MapvLayer {
     constructor(map, dataSet, mapVOptions, container) {
@@ -131,6 +131,7 @@ export class MapvLayer {
      * 
      * @param data - {Array} 数据.
      * @param options - {Object} 只做额外增加的字段作用
+     * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
      */
     addData(data, options) {
         if (this.mapvBaseLayer == undefined) return;
@@ -143,6 +144,7 @@ export class MapvLayer {
      * 
      * @param data - {Array} 数据.
      * @param options - {Object} 只做额外增加的字段作用
+     * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
      */
     updateData(data, options) {
         if (this.mapvBaseLayer == undefined) return;
@@ -155,6 +157,7 @@ export class MapvLayer {
      * 
      * @param data - {Array} 数据.
      * @param options - {Object} 只做额外增加的字段作用
+     * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
      */
     getData() {
         if (this.mapvBaseLayer) {

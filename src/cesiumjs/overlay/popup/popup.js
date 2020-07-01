@@ -1,5 +1,14 @@
 import Cesium from '../../../../node_modules/cesium/Source/Cesium';
 
+/**
+ * @description 用来调整相机视角的时候设置对应的
+ * @param {Viewer} viewer Cesium的viewer对象
+ * @param {Cartesian3} cartesian Cesium.cartesian3对象
+ * @param {String} popupId 整个popup渲染外包div的id
+ * @param {String} popupContentId 整个popup渲染内容的id
+ * @param {Object} [options.longitude] 传入的经度,内部换算笛卡尔积
+ * @param {Object} [options.latitude] 传入的纬度,内部换算笛卡尔积
+ */
 export function updataPopupPosition(viewer, cartesian, popupId, popupContentId, options) {
     if(!cartesian) return ;
     let scene = viewer.scene;

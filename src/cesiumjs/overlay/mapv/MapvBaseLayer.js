@@ -15,6 +15,7 @@ var BaseLayer = baiduMapLayer ? baiduMapLayer.__proto__ : Function;
  * @param layer -{Object} 图层
  * @param dataSet -{Object} 数据集
  * @param options -{Object} 交互时所需可选参数。
+ * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
  * @extends BaseLayer
  *
  */

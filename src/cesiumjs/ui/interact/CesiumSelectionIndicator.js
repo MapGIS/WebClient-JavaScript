@@ -1,16 +1,3 @@
-// import i18next from "i18next";
-/*global require*/
-/* var Cartesian2 = require("terriajs-cesium/Source/Core/Cartesian2").default;
-var defined = require("terriajs-cesium/Source/Core/defined").default;
-var DeveloperError = require("terriajs-cesium/Source/Core/DeveloperError")
-  .default;
-var EasingFunction = require("terriajs-cesium/Source/Core/EasingFunction")
-  .default;
-var knockout = require("terriajs-cesium/Source/ThirdParty/knockout").default;
-var SceneTransforms = require("terriajs-cesium/Source/Scene/SceneTransforms")
-  .default;
-const selectionIndicatorUrl = require("../../wwwroot/images/NM-LocationTarget.svg");
- */
 import {CesiumZondy} from '../../core/Base'; 
 import Cesium from '../../../../node_modules/cesium/Source/Cesium';
 var Cartesian2 = Cesium.Cartesian2;
@@ -24,13 +11,7 @@ import selectionIndicatorUrl from '../../assets/svg/NM-LocationTarget.svg';
 import getTimestamp from '../../../../node_modules/cesium/Source/Core/getTimestamp';
 import Matrix4 from '../../../../node_modules/cesium/Source/Core/Matrix4';
 import JulianDate from "../../../../node_modules/cesium/Source/Core/JulianDate";
-import { select } from 'd3';
 
-/* import Store from '@mapgis/webclient-store';
-const { ViewState } = Store.Map;
-const { IgsDocLayer, IgsLayerType } = Store.Layer; */
-
-var screenSpacePos = new Cartesian2();
 var offScreen = "-1000px";
 
 const SelectionIndicatorMode = {
@@ -38,6 +19,12 @@ const SelectionIndicatorMode = {
   Query: 'Query'
 }
 
+/**
+ * @description Cesium的点击查询效果，针对点击事件实现了2种不同的点击方式针对geojson查询内部回主动区别不同的查询方法
+ * @function animateAppear 点击一下后光标短暂散开
+ * @function animateDepart 点击一下后光标等待旋转
+ * @param Cesium的webGlobe对象
+ */
 export class CesiumSelectionIndicator {
   constructor(webGlobe) {
       //>>includeStart('debug', pragmas.debug);
