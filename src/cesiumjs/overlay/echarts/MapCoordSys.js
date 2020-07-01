@@ -2,8 +2,9 @@ import Cesium from '../../../../node_modules/cesium/Source/Cesium';
 import echarts from 'echarts';
 
 /**
- * @author 潘卓然ParnDeedlit
- * @description 后面接手的人，没看懂echarts源码之前请不要改动下面的代码
+ * @private
+ * @author 基础平台-潘卓然ParnDeedlit
+ * @description 请仔细对应echart4.0的代码，目前只升级到了echarts-4.4.0版本
  * @example prepareCustoms 这个函数我后来在echarts的bug清单中发现了问题所在，请不要随便改动
  */
 

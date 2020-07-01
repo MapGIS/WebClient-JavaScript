@@ -10,7 +10,6 @@ import LayerType from './LayerType';
  * @classdesc M3DLayer M3D模型层管理类
  * @description M3D图层管理类,实现M3D模型层相关操作
  * @param option.viewer = viewer 视图
- * @see
  */
 export default class M3DLayer extends BaseLayer {
     constructor(option) {

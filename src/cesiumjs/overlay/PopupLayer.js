@@ -54,7 +54,7 @@ var popupsIdIndex = 0;
         return popup;
       });
  */
-export class PopupLayer {
+export default class PopupLayer {
   constructor(map, position, options, container) {
     this.map = map;
     this.scene = map.scene;

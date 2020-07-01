@@ -109,7 +109,7 @@ var echartsIdIndex = 0;
     }
     layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
  */
-export class EchartsLayer {
+export default class EchartsLayer {
 
     /**
      * @param {Cesium.Viewer} map Cesium.Viewer

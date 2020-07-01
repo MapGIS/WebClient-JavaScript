@@ -11,7 +11,7 @@ import TilesLayer from '../layer/TilesLayer';
  * @category  LayerManager
  * @classdesc LayerManager图层管理类
  * @description 图层管理类,处理场景相关操作
- * @see
+ * @param options.viewer 场景视图
  */
 export default class LayerManager {
     constructor(option) {

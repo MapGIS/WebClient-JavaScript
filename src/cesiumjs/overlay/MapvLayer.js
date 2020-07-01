@@ -18,8 +18,44 @@ var idIndex = 0;
  * @param mapVOptions - {MapvOption} 可选参数。https://github.com/huiyan-fe/mapv/blob/master/API.md
  * @param {Boolean} [mapVOptions.postRender=false] 是否实时渲染
  * @param container - {Element} 外部传入的div;外接的方式使用mapv
+ * @example 
+ *  // 构建对应的dataset
+    var dataSet = new mapv.DataSet(data);
+
+    // 设置对应的参数
+    // https://github.com/huiyan-fe/mapv/blob/master/API.md
+    var options = {
+    context: '2d',    //cesium必须设置画布为2d
+    postRender: false,
+    postRenderFrame: 5,
+    //fillStyle: 'rgba(255, 250, 50, 0.7)',
+    label: {
+        show: true,
+        fillStyle: 'white',
+        shadowColor: 'yellow',
+        font: '15px Arial',
+        shadowBlur: 10
+    },
+    size: 30,
+    gradient: {
+        0: "rgba(49, 54, 149, 0)",
+        0.2: "rgba(69,117,180, 0.7)",
+        0.3: "rgba(116,173,209, 0.7)",
+        0.4: "rgba(171,217,233, 0.7)",
+        0.5: "rgba(224,243,248, 0.7)",
+        0.6: "rgba(254,224,144,0.7)",
+        0.7: "rgba(253,174,97,0.7)",
+        0.8: "rgba(244,109,67,0.8)",
+        0.9: "rgba(215,48,39,0.8)",
+        0.95: "rgba(165, 0, 38,0.8)"
+    },
+    max: 100,
+    draw: 'honeycomb'   // 绘制蜂窝图
+    }
+    // 声明cesium的mapv图层并将其显示到三维球上
+    var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
  */
-export class MapvLayer {
+export default class MapvLayer {
     constructor(map, dataSet, mapVOptions, container) {
         this.map = map;
         this.scene = map.scene;

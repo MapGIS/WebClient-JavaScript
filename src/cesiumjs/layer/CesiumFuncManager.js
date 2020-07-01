@@ -2,12 +2,12 @@ import { CesiumZondy } from '../core/Base';
 import LayerManager from '../manager/LayerManager';
 
 /**
- * @author
- * @class
- * @category
- * @classdesc
- * @description
- * @see
+ * @author 三维基础平台研发中心
+ * @class CesiumFuncManager
+ * @category CesiumFuncManager
+ * @classdesc 实体绘制控制器类
+ * @description 该类实现了实体数据的绘制与删除功能
+ * @param option.viewer = viewer 视图
  */
 export default class CesiumFuncManager extends LayerManager {
     constructor() {

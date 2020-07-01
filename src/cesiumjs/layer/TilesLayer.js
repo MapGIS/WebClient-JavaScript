@@ -9,7 +9,7 @@ import LayerType from './LayerType';
  * @category  BaseLayer.TilesLayer
  * @classdesc TilesLayer  瓦片图层管理类
  * @description 瓦片服务管理类,实现瓦片图层相关操作
- * @see
+ * @param options.viewer 场景视窗
  */
 export default class TilesLayer extends BaseLayer {
     constructor(option) {

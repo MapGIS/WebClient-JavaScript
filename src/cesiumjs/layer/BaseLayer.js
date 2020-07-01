@@ -6,7 +6,7 @@ import { CesiumZondy } from '../core/Base';
  * @category BaseLayer
  * @classdesc BaseLayer
  * @description 图层管理基类,实现图层公共方法
- * @param option.viewer = viewer 视图
+ * @param option.viewer = viewer 场景视图
  */
 export default class BaseLayer {
     constructor(option) {
