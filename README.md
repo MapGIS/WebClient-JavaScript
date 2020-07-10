@@ -6,7 +6,7 @@
 [npm-img]: https://img.shields.io/badge/npm-10.5.0-brightgreen
 [npm-url]: https://www.npmjs.com/package/@mapgis/webclient
 
-MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openlayers、Leaflet、MapBox等框架ECharts、MapV、D3等可视化库，在传统WebGIS开发基础之上，增强大数据、实时流数据的高效可视化表达和分析，为用户带来全新开发体验。
+MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openlayers、Leaflet、MapBox、Cesium,等框架ECharts、MapV、D3等可视化库，在传统WebGIS开发基础之上，增强大数据、实时流数据的高效可视化表达和分析，为用户带来全新开发体验。
 
 <img alt="MapGIS" src="website/public/static/assets/logo/framework.png">
 
@@ -18,6 +18,7 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
   - [特性](#特性)
   - [示例](#示例)
 - [深入了解](#深入了解)
+  - [代码结构](#代码结构) 
   - [编译](#编译)
   - [问题](#问题)
   - [依赖](#依赖)
@@ -29,6 +30,8 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 
 ### 司马云
 [MapGIS Client for Javascript](http://develop.smaryun.com:8899/)
+
+> 本脚本所有的示例都在对应的演示站点有详细的说明教程
 
 ### github
 1. github是初始模板，物理上整合了leaflet,mapboxgl,cesium,openlayers, zondyclient等多个脚本，仅做技术验证&选型
@@ -86,6 +89,27 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 </p>
 
 ## 深入了解
+### 代码结构
+``` text
+ |-- WebClient-JavaSript
+   |-- docs                         -- JsDoc文档生成模块
+      |-- cdn                       -- 模块依赖离线cdn
+      |-- jsdoc-config              -- JsDoc的四大地图脚本的配置格式
+      |-- templates                 -- JsDoc的内置模板
+   |-- src                          -- sdk
+      |-- cesiumjs                  -- cesium的代码结构
+      |-- common                    -- 封装通用的基本类以及抽象类
+      |-- config                    -- webpack 打包脚本
+      |-- leaflet                   -- leaflet 代码结构
+      |-- mapboxgl                  -- mapboxgl 代码结构
+      |-- openlayers                -- openlayers 代码结构
+      |-- service                   -- 封装igserver服务
+   |-- website                      -- 示例网站
+      |-- express                   -- node服务，在一些wind2003等老机器上替代IIS
+      |-- public                    -- 网页的公共路径
+      |-- src                       -- 示例网页的vue代码
+```
+
 ### 编译
 0. 安装依赖
     ``` sh
@@ -105,6 +129,22 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
     npm run service-debug          #单独编译服务调试版本
     npm run service-release        #单独编译服务生产版本
     ```
+
+### 运行示例网页
+1. 进入对应的目录
+    ``` sh
+    cd website
+    ```
+
+1. 安装依赖  
+    ``` sh
+    npm install
+    ```
+1. 运行网页  
+    ``` sh
+    npm start
+    ```  
+
 ### 问题
 
 * [判断多边形自相交?](https://github.com/MapGIS/WebClient-JavaScript/issues/18)
@@ -118,6 +158,8 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
   *  [OpenLayers](https://openlayers.org/) version 5.0+
 * mapboxgl [1.9+]() ([CDN链接](https://www.npmjs.com/package/@mapgis/mapbox-gl))
   *  [MapboxGL](https://www.npmjs.com/package/@mapgis/mapbox-gl) version 1.9+
+* cesium 
+  *  [mapgis司马云pro版本-cesium]()
 
 
 ## 资源
@@ -130,9 +172,13 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 
 ### 团队
 
-* `service` [IGServer]()
-* `DataStore` [DataStore]()
-* `M3D` [M3D]()
+* 协议格式
+  * `M3D` [M3D三维部门]()
+* 服务
+  * `service` [IGServer]()
+  * `DataStore` [DataStore]()
+* 前端  
+  * `技术支持` [技术支持部]()
 
 ### 证书
 
