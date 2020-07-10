@@ -61,6 +61,21 @@ export const routes = [
         name: "download",
         component: () => import("@/views/total/Download"),
       },
+      {
+        path: "detailChart",
+        name: "detailChart",
+        component: () => import("@/views/total/DetailChart"),
+      },
+      {
+        path: "pluginTags",
+        name: "pluginTags",
+        component: () => import("@/views/total/PluginTags"),
+      },
+      {
+        path: "bugCommit",
+        name: "bugCommit",
+        component: () => import("@/views/total/BugCommit"),
+      }
     ],
   },
   {

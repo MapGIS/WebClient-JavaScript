@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="mapgis-header"
-    :class="{'mapgis-header-mobile': mobile}"
-  >
+  <div :class="{'mapgis-header': true, 'mapgis-header-mobile': mobile}">
     <router-link to="/">
       <div class="mapgis-webclient-header">
         <img
@@ -19,7 +16,7 @@
     </router-link>
     <div class="mapgis-webclient-menu">
       <el-popover
-        v-for="(h,i) in mobile ? mobileHeaders: headers"
+        v-for="(h,i) in mobile ? mobileHeaders : headers"
         :key="i"
         placement="top-start"
         trigger="hover"
@@ -103,16 +100,30 @@ export default {
 
 <style lang="scss">
 .mapgis-header-mobile {
+  padding: 0px;
+  height: 48px !important;
   .mapgis-webclient-logo {
     margin-left: 22px !important;
+    height: 24px !important;
+  }
+  .mapgis-webclient-header {
+    width: fit-content;
+    height: 48px !important;
   }
   .mapgis-webclient-menu {
     margin-right: 22px !important;
+  }
+  .mapgis-webclient-menu {
+    height: 48px !important;  
+    span {
+      font-size: 13px !important;
+    }
   }
 }
 .mapgis-header {
   font-family: Microsoft YaHei;
   width: 100%;
+  padding: 0px;
   height: 72px;
   background: rgba(37, 45, 69, 1);
 

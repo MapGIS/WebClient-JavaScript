@@ -43,9 +43,9 @@ export default {
   },
   computed: {},
   watch: {
-    scrollActive (next) {
-      this.defaultOpeneds = next;
-      this.defaultActive = next.length > 0 ? next[next.length - 1] : '';
+    scrollActive (/* next */) {
+      // this.defaultOpeneds = next
+      // this.defaultActive = next.length > 0 ? next[next.length - 1] : ''
     }
   },
   mounted () {
@@ -64,9 +64,12 @@ export default {
       } */
       return key;
     },
-    handleOpen (key) {
-      var href = window.location.href.split("#");
-      var localte = "#" + key;
+    handleOpen (key, keys) {
+      let href = window.location.href.split("#");
+      let localte ='';
+      keys.forEach(k => {
+        localte = localte + '#' + k
+      });
       if (href.length >= 2) {
         let newHref = href[0] + "#" + href[1] + localte;
         window.location.href = newHref;
@@ -85,16 +88,11 @@ export default {
     border-left: 7px solidrgba(49, 225, 230, 1);
   }
   .is-opened:last-child  {
-    background: linear-gradient(
+    /* background: linear-gradient(
       90deg,
       rgba(71, 148, 250, 1),
-      rgba(49, 225, 230, 1));
-    // .el-submenu__title{  
+      rgba(49, 225, 230, 1)); */
   }
-  /* .el-menu-item .is-active {
-    border-left: 4px solid #409eff;
-  } */
-  // .el-submenu:hover,
   .el-menu-item:focus,
   .el-menu-item:hover {
     outline: 0;
@@ -106,11 +104,11 @@ export default {
     );
   }
   .el-menu-item.is-active {
-    background: linear-gradient(
+/*     background: linear-gradient(
       90deg,
       rgba(71, 148, 250, 1),
       rgba(49, 225, 230, 1)
-    );
+    ); */
     color: #ffffff;
   }
   .el-menu-item {

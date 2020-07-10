@@ -1,12 +1,15 @@
 <template>
   <el-container>
-    <el-header style="padding:0px;height:72px;">
+    <el-header :class="{'webclient-three-header-mobile':mobile}">
       <Header></Header>
     </el-header>
     <el-main class="webclient-three-layout">
       <app-main></app-main>
     </el-main>
-    <el-footer :height="mobile?'300':'250'" style="padding:0px;">
+    <el-footer
+      :height="mobile?'300':'250'"
+      style="padding:0px;"
+    >
       <main-footer></main-footer>
     </el-footer>
   </el-container>
@@ -34,6 +37,14 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.webclient-three-header-mobile {
+  padding: 0px;
+  height: 48px !important;
+}
+.webclient-three-header {
+  padding: 0px;
+  height: 72px !important;
+}
 .webclient-three-layout {
   padding: 0px;
   min-height: 80vh;

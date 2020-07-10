@@ -6,29 +6,23 @@ export const Headers = [
       {
         title: "概述",
         links: [
-          ["详细服务", "插件列表", "调用方式", "四大引擎选择", "下载"],
-          ["其他"],
+          ["核心服务","详细服务", "插件列表", "调用方式", "四大引擎选择", "下载"],
+          ["其他","详细图表","插件标签","提交bug"],
         ],
         routes: [
           [
+            "/total/core",
             "/total/detail",
             "/total/plugins",
             "/total/use",
             "/total/select",
-            "download",
+            "/total/download",
           ],
-          ["/total/other"],
-        ],
-      },
-      {
-        title: "协议",
-        links: [["epsg", "ogc", "geojson", "socket"]],
-        routes: [
           [
-            "/standard/epsg",
-            "/standard/ogc",
-            "/standard/geojson",
-            "/standard/socket",
+            "/total/other",
+           "/total/detailChart",
+           "/total/pluginTags",
+           "/total/bugCommit",
           ],
         ],
       },
@@ -68,7 +62,7 @@ export const Headers = [
           [
             "/gallery/cesium#analysis",
             "/gallery/cesium#track",
-            "/gallery/cesium#drawGraphic-picture",
+            "/gallery/cesium#drawGraphic",
             "/gallery/cesium#measure",
             "/gallery/cesium#query",
           ],
@@ -83,15 +77,14 @@ export const Headers = [
       },
       {
         title: "开发API",
-        links: [
-          ["IGServer", "IGServer-X", "IGServer-S"],
-          ["客户端可视化", "客户端空间分析", "ElasticSearch"],
-          ["开源Cesium-API"],
-        ],
+        links: [["向导"], ["客户端可视化", "客户端渲染"], ["Cesium", "TurfJs"]],
         routes: [
-          ["./docs/cesium/index.html", "igserverx", "igservers"],
-          ["clientview", "http://turfjs.org/", "elasticsearch"],
-          ["https://cesium.com/docs/cesiumjs-ref-doc/"],
+          ["./docs/cesium/index.html"],
+          [
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html",
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E6%25B8%25B2%25E6%259F%2593.html",
+          ],
+          ["https://cesium.com/docs/cesiumjs-ref-doc/", "http://turfjs.org/"],
         ],
       },
     ],
@@ -105,23 +98,19 @@ export const Headers = [
         links: [
           ["互联网地图", "OGC服务"],
           ["地图", "要素", "量算", "专题图", "空间分析"],
-          [
-            "客户端可视化",
-            "客户端空间分析",
-            "ElasticSearch",
-          ],
+          ["客户端可视化", "客户端空间分析", "ElasticSearch"],
         ],
         routes: [
           ["/gallery/mapboxgl#internet", "/gallery/mapboxgl#ogc"],
           [
-            "/gallery/mapboxgl#map",
-            "/gallery/mapboxgl#feature",
-            "/gallery/mapboxgl#calc",
-            "/gallery/mapboxgl#theme",
-            "/gallery/mapboxgl#analysis",
+            "/gallery/mapboxgl#mapgis-igserver#map",
+            "/gallery/mapboxgl#mapgis-igserver#feature",
+            "/gallery/mapboxgl#mapgis-igserver#calc",
+            "/gallery/mapboxgl#mapgis-igserver#theme",
+            "/gallery/mapboxgl#mapgis-igserver#analysis",
           ],
           [
-            "/gallery/mapboxgl#vectortile",
+            "/gallery/mapboxgl#client-view#vectortile",
             "/gallery/mapboxgl#client-analysis",
             "/gallery/mapboxgl#elasticsearch",
           ],
@@ -162,23 +151,19 @@ export const Headers = [
         links: [
           ["互联网地图", "OGC服务"],
           ["地图", "要素", "量算", "专题图", "空间分析"],
-          [
-            "客户端可视化",
-            "客户端空间分析",
-            "ElasticSearch",
-          ],
+          ["客户端可视化", "客户端空间分析", "ElasticSearch"],
         ],
         routes: [
           ["/gallery/leaflet#internet", "/gallery/leaflet#ogc"],
           [
-            "/gallery/leaflet#map",
-            "/gallery/leaflet#feature",
-            "/gallery/leaflet#calc",
-            "/gallery/leaflet#theme",
-            "/gallery/leaflet#analysis",
+            "/gallery/leaflet#mapgis-igserver#map",
+            "/gallery/leaflet#mapgis-igserver#feature",
+            "/gallery/leaflet#mapgis-igserver#calc",
+            "/gallery/leaflet#mapgis-igserver#theme",
+            "/gallery/leaflet#mapgis-igserver#analysis",
           ],
           [
-            "/gallery/leaflet#vectortile",
+            "/gallery/leaflet#client-view#vectortile",
             "/gallery/leaflet#client-analysis",
             "/gallery/leaflet#elasticsearch",
           ],
@@ -219,22 +204,19 @@ export const Headers = [
         links: [
           ["互联网地图", "OGC服务"],
           ["地图", "要素", "量算", "专题图", "空间分析"],
-          [
-            "客户端可视化",
-            "客户端空间分析",
-          ],
+          ["客户端可视化", "客户端空间分析"],
         ],
         routes: [
           ["/gallery/openlayers#internet", "/gallery/openlayers#ogc"],
           [
-            "/gallery/openlayers#map",
-            "/gallery/openlayers#feature",
-            "/gallery/openlayers#calc",
-            "/gallery/openlayers#theme",
-            "/gallery/openlayers#analysis",
+            "/gallery/openlayers#mapgis-igserver#map",
+            "/gallery/openlayers#mapgis-igserver#feature",
+            "/gallery/openlayers#mapgis-igserver#calc",
+            "/gallery/openlayers#mapgis-igserver#theme",
+            "/gallery/openlayers#mapgis-igserver#analysis",
           ],
           [
-            "/gallery/openlayers#mapv",
+            "/gallery/openlayers#client-view#theme",
             "/gallery/openlayers#client-analysis",
             "/gallery/openlayers#elasticsearch",
           ],
@@ -265,7 +247,7 @@ export const Headers = [
         ],
       },
     ],
-  }
+  },
 ];
 
 export const SubHeader = [
@@ -351,11 +333,7 @@ export const SubHeader = [
             links: [
               ["互联网地图", "OGC服务"],
               ["地图", "要素", "量算", "专题图", "空间分析"],
-              [
-                "客户端可视化",
-                "客户端空间分析",
-                "ElasticSearch",
-              ],
+              ["客户端可视化", "客户端空间分析", "ElasticSearch"],
             ],
             routes: [
               ["/gallery/mapboxgl#internet", "/gallery/mapboxgl#ogc"],
@@ -412,11 +390,7 @@ export const SubHeader = [
             links: [
               ["互联网地图", "OGC服务"],
               ["地图", "要素", "量算", "专题图", "空间分析"],
-              [
-                "客户端可视化",
-                "客户端空间分析",
-                "ElasticSearch",
-              ],
+              ["客户端可视化", "客户端空间分析", "ElasticSearch"],
             ],
             routes: [
               ["/gallery/leaflet#internet", "/gallery/leaflet#ogc"],
@@ -428,7 +402,7 @@ export const SubHeader = [
                 "/gallery/leaflet#analysis",
               ],
               [
-                "/gallery/leaflet#vectortile",
+                "/gallery/leaflet#client-view#common",
                 "/gallery/leaflet#client-analysis",
                 "/gallery/leaflet#elasticsearch",
               ],
@@ -473,10 +447,7 @@ export const SubHeader = [
             links: [
               ["互联网地图", "OGC服务"],
               ["地图", "要素", "量算", "专题图", "空间分析"],
-              [
-                "客户端可视化",
-                "客户端空间分析",
-              ],
+              ["客户端可视化", "客户端空间分析"],
             ],
             routes: [
               ["/gallery/openlayers#internet", "/gallery/openlayers#ogc"],
@@ -488,7 +459,7 @@ export const SubHeader = [
                 "/gallery/openlayers#analysis",
               ],
               [
-                "/gallery/openlayers#mapv",
+                "/gallery/openlayers#client-view#theme",
                 "/gallery/openlayers#client-analysis",
                 "/gallery/openlayers#elasticsearch",
               ],
@@ -566,8 +537,8 @@ export const MobileSubHeader = [
         menus: [
           {
             title: "常用链接",
-            links: [["产品简介", "演示示例", "API文档", "快速入门"]],
-            routes: [["sdkinfo", "/gallery/cesium", "sdkservice", "sdkquiker"]],
+            links: [["演示示例", "API文档"]],
+            routes: [["/gallery/cesium", "./docs/cesium/index.html"]],
           },
         ],
       },
@@ -576,8 +547,8 @@ export const MobileSubHeader = [
         menus: [
           {
             title: "常用链接",
-            links: [["产品简介", "演示示例", "API文档", "快速入门"]],
-            routes: [["sdkinfo", "/gallery/cesium", "sdkservice", "sdkquiker"]],
+            links: [["演示示例", "API文档"]],
+            routes: [["/gallery/mapboxgl", "./docs/mapboxgl/index.html"]],
           },
         ],
       },
@@ -586,8 +557,8 @@ export const MobileSubHeader = [
         menus: [
           {
             title: "常用链接",
-            links: [["产品简介", "演示示例", "API文档", "快速入门"]],
-            routes: [["sdkinfo", "/gallery/cesium", "sdkservice", "sdkquiker"]],
+            links: [["演示示例", "API文档"]],
+            routes: [["/gallery/openlayers", "./docs/openlayers/index.html"]],
           },
         ],
       },
@@ -596,8 +567,8 @@ export const MobileSubHeader = [
         menus: [
           {
             title: "常用链接",
-            links: [["产品简介", "演示示例", "API文档", "快速入门"]],
-            routes: [["sdkinfo", "/gallery/cesium", "sdkservice", "sdkquiker"]],
+            links: [["演示示例", "API文档"]],
+            routes: [["/gallery/leaflet", "./docs/leaflet/index.html"]],
           },
         ],
       },

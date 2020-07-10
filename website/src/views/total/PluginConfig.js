@@ -318,3 +318,164 @@ export const Cesium = [
     licesen: "MIT License",
   },
 ];
+
+
+export const Tags = {
+  Leaflet: {
+    view: {
+      styleObject: 'border-radius: 6px; background-color: #66b1ff',
+      list: [
+        { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
+        { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
+        { name: 'echarts', info: '图表可视化，用于与图表相关的可视化表达以及对应的大数据渲染.' }
+      ],
+    },
+    format: {
+      styleObject: 'border-radius: 6px; background:	#FFB6C1',
+      list:[
+        { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
+        { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
+        { name: 'elasticsearch', info: 'Els，用于els的时空查询.' },
+        { name: 'geohash', info: 'geohash地理坐标转换.' },
+        { name: 'geojson', info: 'geojson地理坐标转换.' },
+        { name: 'shapefile', info: 'ArcGIS shapefile格式处理.' },
+        { name: 'turf', info: '客户端空间分析.' },
+        { name: 'pdf/picture', info: '导出pdf/picture.' }
+      ],
+    },
+    render: {
+      styleObject: 'border-radius: 6px; background:	#7FFFAA',
+      list:[
+        { name: 'vectortile', info: '不支持行业符号的矢量瓦片，支持4326／3857.' },
+        { name: 'mvt', info: '支持行业符号的矢量瓦片，支持3857.' }
+      ],
+    },
+    common: {
+      styleObject: 'border-radius: 6px; background: #FFE4C4',
+      list:[
+          { name: 'cluster/heater', info: '官方聚类图/热力图.' },
+          { name: 'colors-marker /animate-marker/ realmove-marker', info: '注记的各种动画，颜色，样式.' },
+          { name: 'iconglyph/iconpulse/ arrow/graticule/milstd', info: '图表绘制，箭头，图形操作，军标绘制等插件.' }
+      ],
+    },
+    control: {
+      styleObject: 'border-radius: 6px; background: #00FFFF',
+      list:[
+        { name: 'measure/ measurement/ pathdrag/ snake', info: '测量/拖拽/移动等操作.' },
+        { name: 'editable/draw/ boundarycanvas', info: '编辑，绘制，地图裁剪等操作.' },
+        { name: 'toolbar/fullscreen/minimap/ mouseposition/magnifying/ opacity', info: '工具栏，全屏，鼠标位置，鹰眼，图层探查，透明度等控件.' },
+        { name: 'wfs/china', info: 'wfs服务，中国天地图，高德，百度等地图服务.' }
+      ],
+    },
+  },
+  Mapbox: {
+    view: {
+      styleObject: 'border-radius: 6px; background: #66b1ff',
+      list: [
+        { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
+        { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
+        { name: 'echarts', info: '图表可视化，用于与图表相关的可视化表达以及对应的大数据渲染.' }
+      ],
+    },
+    format: {
+      styleObject: 'border-radius: 6px; background:	#FFB6C1',
+      list:[
+        { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
+        { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
+        { name: 'elasticsearch', info: 'Els，用于els的时空查询.' },
+        { name: 'geohash', info: 'geohash地理坐标转换.' },
+        { name: 'geojson', info: 'geojson地理坐标转换.' },
+        { name: 'shapefile', info: 'ArcGIS shapefile格式处理.' },
+        { name: 'turf', info: '客户端空间分析.' },
+        { name: 'pdf/picture', info: '导出pdf/picture.' }
+      ],
+    },
+    common: {
+      styleObject: 'border-radius: 6px; background: #FFE4C4',
+      list:[
+          { name: 'compare', info: '卷帘左右对比功能.' },
+          { name: 'languager', info: '地图注记语言支持.' },
+          { name: 'layersearch', info: '图层探查功能.' },
+          { name: 'draw', info: '图层绘制功能.' },
+          { name: 'transform', info: '坐标转换功能.' }
+      ],
+    },
+  },
+  Openlayers: {
+    view: {
+      styleObject: 'border-radius: 6px; background: #66b1ff',
+      list: [
+        { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
+        { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
+        { name: 'echarts', info: '图表可视化，用于与图表相关的可视化表达以及对应的大数据渲染.' }
+      ],
+    },
+    format: {
+      styleObject: 'border-radius: 6px; background:	#FFB6C1',
+      list:[
+        { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
+        { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
+        { name: 'elasticsearch', info: 'Els，用于els的时空查询.' },
+        { name: 'geohash', info: 'geohash地理坐标转换.' },
+        { name: 'geojson', info: 'geojson地理坐标转换.' },
+        { name: 'shapefile', info: 'ArcGIS shapefile格式处理.' },
+        { name: 'turf', info: '客户端空间分析.' },
+        { name: 'pdf/picture', info: '导出pdf/picture.' }
+      ],
+    },
+    render: {
+      styleObject: 'border-radius: 6px; background:	#7FFFAA',
+      list:[
+        { name: 'vectortile', info: '不支持行业符号的矢量瓦片，支持4326／3857.' }
+      ],
+    },
+  },
+  Cesium: {
+    view: {
+      styleObject: 'border-radius: 6px; background: #66b1ff',
+      list: [
+        { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
+        { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
+        { name: 'echarts', info: '图表可视化，用于与图表相关的可视化表达以及对应的大数据渲染.' }
+      ],
+    },
+    format: {
+      styleObject: 'border-radius: 6px; background:	#FFB6C1',
+      list:[
+        { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
+        { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
+        { name: 'elasticsearch', info: 'Els，用于els的时空查询.' },
+        { name: 'geohash', info: 'geohash地理坐标转换.' },
+        { name: 'geojson', info: 'geojson地理坐标转换.' },
+        { name: 'turf', info: '客户端空间分析.' }
+      ],
+    },
+  },
+  Lib: {
+    view: {
+      styleObject: 'border-radius: 6px; background: #66b1ff',
+      list: [
+        { name: 'jquery', info: '著名的js框架，专门用于处理简单的网络封装于DOM的操作.版本1.12.4.' },
+        { name: 'jquery-easyui', info: 'jquery配套的ui库.' },
+        { name: 'bootstrap', info: '著名的js快速开发框架，版本是bootstrap-v3.' }
+      ],
+    },
+    format: {
+      styleObject: 'border-radius: 6px; background:	#FFB6C1',
+      list:[
+        { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
+        { name: 'geohash', info: 'geohash地理坐标转换.' },
+        { name: 'geojson', info: 'geojson地理坐标转换.' },
+        { name: 'shapefile', info: 'ArcGIS shapefile格式处理.' }
+      ],
+    },
+    render: {
+      styleObject: 'border-radius: 6px; background:	#7FFFAA',
+      list:[
+        { name: 'colorpicker', info: '颜色获取按钮，点击选择颜色.' },
+        { name: 'lazyload', info: '图片懒加载.' },
+        { name: 'checkjs', info: 'js验证插件.' }
+      ],
+    },
+  },
+}

@@ -1,15 +1,15 @@
 <template>
-  <div class="webclient-home">
+  <div :class="{'webclient-home': true, 'webclient-home-mobile': mobile}">
     <Header class="home-header" />
     <el-row
       type="flex"
       justify="center"
       class="banner banner-desc"
     >
-      <div class="banner-desc-wrapper">
+      <div :class="{'banner-desc-wrapper': true, 'banner-desc-wrapper-mobile': mobile}">
         <el-carousel
           :interval="4000"
-          height="640px"
+          :height="mobile?'240px':'640px'"
           width="100vw"
         >
           <el-carousel-item
@@ -23,7 +23,10 @@
           </el-carousel-item>
         </el-carousel>
 
-        <div class="main-bane-texts">
+        <div
+          class="main-bane-texts"
+          v-if="!mobile"
+        >
           <div
             class="main-bane-text"
             v-for="d in detailMains"
@@ -43,15 +46,11 @@
       <div>
         <h1 class="text-center">云 GIS 网络客户端开发平台</h1>
         <h6 class="text-center text-detail">MapGIS Client for JavaScript，在云计算、大数据管理与分析等技术支撑下，将传统WebGIS与云GIS完美融合，
-集成四大主流地图开源框架和Echarts、MapV、D3等可视化库，进一步增强了大数据、实时流数据的高效可视化表达和分析功能
+          集成四大主流地图开源框架和Echarts、MapV、D3等可视化库，进一步增强了大数据、实时流数据的高效可视化表达和分析功能
         </h6>
-        <!-- <el-divider><i
-            class="el-icon-star-on"
-            style="color:#666666"
-        ></i></el-divider> -->
         <el-row justify="space-around">
           <el-col
-            :xs="24"
+            :xs="12"
             :sm="12"
             :md="6"
             :lg="6"
@@ -106,23 +105,38 @@
     </el-row>
     <el-row class="banner banner-carousel">
       <div>
-        <h1 class="text-center">功能特性</h1>        
-          <el-row v-for="(b,i) in banners" :key="i">
-            <el-col :class="{'banner-right': i % 2 === 0}" :span="10" :offset="2">
-              <img class="feature-image" :src="b.icon">
-            </el-col>  
-            <el-col :class="{'banner-right': i % 2 === 0}" :span="10">
-              <h3>{{b.title}}</h3>
-              <p class="h3-divider"/>
-              <span>{{b.detail}}</span>
-            </el-col>  
-          </el-row>
+        <h1 class="text-center">功能特性</h1>
+        <el-row
+          v-for="(b,i) in banners"
+          :key="i"
+        >
+          <el-col
+            :class="{'banner-right': i % 2 === 1 && !mobile}"
+            :span="mobile ? 20 :10"
+            :offset="2"
+          >
+            <h3>{{b.title}}</h3>
+            <p class="h3-divider" />
+            <span>{{b.detail}}</span>
+          </el-col>
+          <el-col
+            :class="{'banner-right': i % 2 === 1  && !mobile}"
+            :span="mobile ? 20 :10"
+            :offset="mobile? 2 : 0"
+          >
+            <img
+              class="feature-image"
+              :src="b.icon"
+            >
+          </el-col>
+          <p v-if="mobile" />
+        </el-row>
       </div>
     </el-row>
     <el-row class="banner banner-history">
       <el-col
-        :span="mobile?20:16"
-        :offset="mobile?2:4"
+        :span="mobile?23:16"
+        :offset="mobile?0:4"
       >
         <h1 class="text-center">版本进化史</h1>
         <el-divider><i
@@ -195,6 +209,34 @@ export default {
 <style  lang="scss">
 $padding-left: 60px;
 $margin-left: 80px;
+.webclient-home-mobile {
+  h1 {
+    font-family: MicrosoftYaHei;
+    font-size: 24px !important;
+    margin-top: 40px !important;
+  }
+  h3 {
+    margin-top: 10px !important;
+  }
+  .text-detail {
+    width: 80vw !important;
+    margin-left: 10vw !important;
+  }
+  .main-flat-card {
+    margin: 35px 5px !important;
+  }
+  .banner-gallery {
+    padding: 30px 10px !important;
+  }
+  .banner-carousel {
+    padding: 0 10px !important;
+  }
+  .feature-image {
+    width: 250px !important;
+    height: 180px !important;
+    background: transparent;
+  }
+}
 .webclient-home {
   .mapgis-header {
     background: transparent !important;
@@ -241,7 +283,7 @@ $margin-left: 80px;
     line-height: 25px;
   }
   .main-bane-img {
-    height: 640px;
+    height: 100%;
     width: 100%;
   }
   .main-div-flex {
@@ -252,6 +294,10 @@ $margin-left: 80px;
   .banner-desc-wrapper {
     width: 100%;
     height: 640px;
+  }
+  .banner-desc-wrapper-mobile {
+    width: 100%;
+    height: 240px !important;
   }
   .banner-developer {
     min-height: 630px;
@@ -283,12 +329,8 @@ $margin-left: 80px;
       width: 121px;
       height: 2px;
       margin-bottom: 28px;
-      background-image: linear-gradient(90deg, 
-        #4794fa 0%, 
-        #31e1e6 100%), 
-      linear-gradient(
-        #2575f2, 
-        #2575f2);
+      background-image: linear-gradient(90deg, #4794fa 0%, #31e1e6 100%),
+        linear-gradient(#2575f2, #2575f2);
       background-blend-mode: normal, normal;
     }
 

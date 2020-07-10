@@ -1,12 +1,12 @@
 <template>
   <splitpanes
     :horizontal="mobile"
-    class="default-theme webclient-showcase"
+    :class="{'default-theme': true, 'webclient-showcase': true, 'webclient-showcase-mobile': mobile}"
   >
-    <pane size="60">
+    <pane :size="mobile ? 60 :60">
       <el-row
         v-loading="loading"
-        class="webclient-showcase-content"
+        :class="{'webclient-showcase-content':true}"
       >
         <!-- <el-button
           v-show="full"
@@ -30,12 +30,13 @@
     </pane>
     <pane
       min-size="0"
-      size="40"
+      :size="mobile ? 40 :40"
     >
       <el-button-group class="toolbar-showcase-group">
         <el-tooltip
           class="item"
           effect="dark"
+          v-show="!mobile"
           :content="fullscreen ? '关闭全屏': '开启全屏'"
           placement="top"
         >
@@ -343,7 +344,10 @@ export default {
         markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 92 + "px";
       } else {
         if (this.mobile) {
+          window.console.log('scoll', demoContent, markdownContent);
           codeContent[0].style.height = window.innerHeight / 2 - 162 + "px";
+          // demoContent[0].style.height = window.innerHeight - 102 + "px";
+          // markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 242 + "px";
         } else {
           codeContent[0].style.height = window.innerHeight - 295 + "px";
           demoContent[0].style.height = window.innerHeight - 230 + "px";
@@ -474,6 +478,12 @@ export default {
 .splitpanes__pane {
   background-color: #ffffff !important;
 }
+.webclient-showcase-mobile {
+  .element-scroll-content {
+    height: calc(100vh - 45vh - 150px) !important;
+    overflow-x: hidden;
+  }
+}
 .webclient-showcase {
   .showcase-exit-fullscreen {
     position: absolute;
@@ -508,7 +518,7 @@ export default {
   }
 
   .iframemobile {
-    height: calc(50vh - 80px);
+    height: 100%;
   }
 
   .editer-codemirror-content {

@@ -1,8 +1,9 @@
 <template>
-  <el-container class="webclient-showcase-main">
+  <el-container :class="{'webclient-showcase-main': true, 'webclient-showcase-main-mobile' : mobile}">
     <el-header
       v-if="!fullScreen"
-      style="height:72px;padding:0px;"
+      style="height:72px;"
+      :class="{'mapgis-header': !mobile, 'mapgis-header-mobile': mobile}"
     >
       <transition name="bounce">
         <Header></Header>
@@ -93,7 +94,7 @@ export default {
   components: {
     Header,
     MainFooter,
-    SidebarDemo,
+    SidebarDemo,  //边栏展示
     IconFont,
     ShowGallery
   },
@@ -127,6 +128,12 @@ export default {
   methods: {
     handleFullscreen (fullscreen) {
       this.fullScreen = fullscreen;
+      if (fullscreen && this.mobile) {
+        var mobileContent = document.getElementsByClassName("main-demo-wrapper");
+        if (mobileContent.length > 0) {
+          mobileContent[0].style.height = window.innerHeight - 20 + 'px';
+        }
+      }
     },
     handleDrawer () {
       this.drawerShow = !this.drawerShow;
@@ -192,7 +199,25 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.webclient-showcase-main-mobile {
+  .main-demo-wrapper {
+    margin-left: 0px !important;
+    height: calc(100vh - 155px) !important;
+  }
+  .main-scroll-content {
+    overflow-y: hidden;
+    padding: 6px !important;
+  }
+  .mapgis-header-mobile {
+    padding: 0px !important;
+    height: 48px !important;
+  }
+}
 .webclient-showcase-main {
+/*   .mapgis-header {
+    padding: 0px;
+    height: 72px;
+  } */
   .el-footer {
     padding: 0 0px;
   }

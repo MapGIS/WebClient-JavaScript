@@ -1,5 +1,5 @@
 <template>
-  <div class="gallery-image-col">
+  <div :class="{'gallery-image-col':true, 'gallery-image-col-mobile':mobile}">
     <div
       v-for="(item, i) in list"
       :key="i"
@@ -124,6 +124,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.gallery-image-col-mobile {
+  margin: 6px 0px !important;
+  .image {
+    height: 64px !important;
+    width: 64px !important;
+  }
+}
 .gallery-image-col {
   display: flex;
   margin: 10px 0px;

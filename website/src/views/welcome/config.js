@@ -72,64 +72,58 @@ export const Develops = [
 
 export const Gallerys = [
   {
+    icon: "./static/assets/gallery/m3d.png",
+    title: "M3D三维协议",
+    subtitle: "高效、轻量的新一代三维交换格式",
+    index: "/demo/cesium/m3d/m3d-landscape",
+  },
+  {
     icon: "./static/assets/gallery/assise.png",
     title: "M3D地质建模",
     subtitle: "根据专控动态渲染生成地质模型，高保证，高密度三角网",
-    index: "/demo/cesium/m3d/assise",
-  },
-  {
-    icon: "./static/assets/gallery/biggps.png",
-    title: "亿级全球千万GPS点",
-    subtitle: "动态渲染全球的GPS热点聚类情况",
-    index: "",
-  },
-  {
-    icon: "./static/assets/gallery/contour.png",
-    title: "等高线",
-    subtitle: "展示不同高度不同线性粗细的等高线",
-    index: "",
-  },
-  {
-    icon: "./static/assets/gallery/darkstyle.png",
-    title: "矢量瓦片",
-    subtitle: "前端动态渲染矢量绘制能力",
-    index: "",
-  },
-  {
-    icon: "./static/assets/gallery/earthquake.png",
-    title: "地震分布",
-    subtitle: "动态展示地震的强度以及范围",
-    index: "",
-  },
-  {
-    icon: "./static/assets/gallery/echartsheater.png",
-    title: "热力图",
-    subtitle: "动态展示全中国的热力情况",
-    index: "",
-  },
-  {
-    icon: "./static/assets/gallery/grid-search.png",
-    title: "蜂窝聚类图",
-    subtitle: "展示北京一天的出租车的聚类情况",
-    index: "",
-  },
-  {
-    icon: "./static/assets/gallery/heat-search.png",
-    title: "热力聚类图",
-    subtitle: "展示北京一天的出租车的聚类情况",
-    index: "",
+    index: "/demo/cesium/m3d/m3d-geobody1",
   },
   {
     icon: "./static/assets/gallery/oblique.png",
     title: "倾斜摄影",
     subtitle: "展示大雁塔的倾斜摄影",
-    index: "/demo/cesium/mapgis-igserver/map/oblique",
+    index: "/demo/cesium/mapgis/mapgis-oblique",
   },
   {
     icon: "./static/assets/gallery/dem.png",
     title: "全球数字高程",
     subtitle: "基于250M、90M、30M的全球数字高程模型展示",
-    index: "/demo/cesium/dem/dem250",
+    index: "/demo/cesium/mapgis/mapgis-dem",
+  },
+  {
+    icon: "./static/assets/gallery/biggps.png",
+    title: "亿级全球千万GPS点",
+    subtitle: "动态渲染全球的GPS热点聚类情况",
+    index: "/demo/mapboxgl/client-view/echarts/echartsbiggps",
+  },
+/*   {
+    icon: "./static/assets/gallery/contour.png",
+    title: "等高线",
+    subtitle: "展示不同高度不同线性粗细的等高线",
+    index: "",
+  }, */
+  {
+    icon: "./static/assets/gallery/commons.png",
+    title: "聚类分布",
+    subtitle: "动态展示聚类的强度以及范围",
+    index: "/demo/leaflet/client-view/common/common_cluster",
+  },
+  {
+    icon: "./static/assets/gallery/vectortile.png",
+    title: "矢量瓦片",
+    subtitle: "前端动态渲染矢量绘制能力-个性化地图表达",
+    index: "/demo/mapboxgl/client-view/vectortile/mapgisstyle",
+  },
+  {
+    icon: "./static/assets/gallery/chinadata.png",
+    title: "海量矢量数据",
+    subtitle: "国家级数据量的高效渲染，高比例尺地物",
+    index: "/demo/mapboxgl/client-view/vectortile/lightstyle",
   },
 ];
 

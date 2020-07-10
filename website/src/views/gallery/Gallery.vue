@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="webclient-gallery-wrapper">
     <el-header style="padding:0px;height:72px;">
       <Header></Header>
     </el-header>
@@ -31,11 +31,20 @@
           wrapStyle="overflow-x: hidden;"
           viewStyle="overflow-y: hidden;"
         >
-          <sidebar-gallery :scrollActive="scrollActive" :config-list="config"/>
+          <sidebar-gallery
+            :scrollActive="scrollActive"
+            :config-list="config"
+          />
         </el-scrollbar>
       </el-aside>
       <el-container>
         <el-main class="main-scroll-content">
+          <gallery-anchor
+            v-if="!mobile"
+            class="fix-anchor"
+            :anchors="heightHash"
+            :active="scrollActive"
+          />
           <div
             class="mobili-drawer-open"
             @click="handleDrawer"
@@ -50,7 +59,10 @@
             viewStyle="overflow-x: hidden;display:grid;"
           >
             <el-backtop></el-backtop>
-            <gallery-card :scrollActive="scrollActive" :config-list="config" />
+            <gallery-card
+              :scrollActive="scrollActive"
+              :config-list="config"
+            />
             <el-footer :height="mobile?'300':'250'">
               <main-footer></main-footer>
             </el-footer>
@@ -71,14 +83,17 @@ import { Header, SidebarGallery, MainFooter } from "@/views/layout/components";
 import GalleryCard from "@/components/Gallery/GalleryCard";
 import IconFont from "@/components/IconFont/iconfront";
 
+import GalleryAnchor from './GalleryAnchor';
+
 export default {
-  name: "Layout",
+  name: "GalleryLayout",
   components: {
     Header,
     MainFooter,
     SidebarGallery,
     GalleryCard,
-    IconFont
+    IconFont,
+    GalleryAnchor
   },
   data () {
     return {
@@ -87,7 +102,10 @@ export default {
       drawerSize: "60%",
       drawerShow: false,
       config: {},
+      heightHash: [],
       scrollActive: [],
+      modeChange: false,
+      heightChange: false
     };
   },
   watch: {
@@ -95,18 +113,33 @@ export default {
       const vm = this;
       // 对路由变化作出响应...
       if (to.params.mapmode !== from.params.mapmode) {
-        vm.initConfig();
+        vm.initConfig(vm.initHeights);
       }
+
+      const toPath = to.path;
+      const fromPath = from.path;
+
+      this.$nextTick(() => {
+        vm.goAnchor();
+      });
+
+      if (toPath === fromPath && to.hash) {
+        vm.goAnchor();
+      }
+
       const actives = to.hash.split('#');
       this.scrollActive = actives;
-    },
-    "$route.path" () {
-      // 触发伪滚动条更新
-      this.componentScrollBox.scrollTop = 0;
-      this.$nextTick(() => {
-        this.componentScrollBar.update();
-      });
     }
+  },
+  updated () {
+    if (this.modeChange && this.heightChange) {
+      this.initHeights();
+      this.goAnchor();
+      this.heightChange = false;
+      this.modeChange = false;
+    }
+  },
+  beforeUpdate () {
   },
   methods: {
     renderAnchorHref () {
@@ -129,7 +162,7 @@ export default {
         let anchor = "#" + anchors[anchors.length - 1];
         const elm = document.querySelector(anchor);
         if (!elm) return;
-        
+
         setTimeout(() => {
           self.componentScrollBox.scrollTop = elm.offsetTop - 40;
           self.$forceUpdate();
@@ -145,20 +178,17 @@ export default {
       if (scrollTop === 0) {
         this.showHeader = true;
       }
-      /* if (!this.navFaded) {
-        bus.$emit("fadeNav");
-      } */
-      this.scrollTop = scrollTop;     
-      scrollTop = scrollTop + 40; 
-      for(let i = 0; i < this.heightHash.length - 1; i++){
+      this.scrollTop = scrollTop;
+      scrollTop = scrollTop + 72;
+      for (let i = 0; i < this.heightHash.length - 1; i++) {
         if (this.heightHash[i].height < scrollTop
-          && this.heightHash[i+1].height > scrollTop) {
-            let actives = []
-            if (this.heightHash[i].parent) {
-              actives.push(this.heightHash[i].parent.folder);
-            }
-            actives.push(this.heightHash[i].anchor);
-            this.scrollActive = actives;
+          && this.heightHash[i + 1].height > scrollTop) {
+          let actives = []
+          if (this.heightHash[i].parent) {
+            actives.push(this.heightHash[i].parent.folder);
+          }
+          actives.push(this.heightHash[i].anchor);
+          this.scrollActive = actives;
         }
       }
     },
@@ -172,45 +202,69 @@ export default {
       });
       this.heightHash = Object.keys(hash).map(k => {
         return {
+          name: hash[k].name,
           anchor: k,
           height: hash[k].height,
           parent: hash[k].parent,
         }
       }).sort((a, b) => a.height > b.height);
+      this.heightChange = true;
     },
     loopTree (node, hash, parent) {
-      const elm = document.querySelector('#'+ node.folder);  
-      if (elm) hash[node.folder] = {height: elm.offsetTop, parent: parent};
+      const elm = document.querySelector('#' + node.folder);
+      if (elm) hash[node.folder] = {
+        name: node.name,
+        height: elm.offsetTop,
+        parent: parent
+      };
       if (!node.leaffolder && node.childs) {
-          node.childs.forEach(c => {
-            this.loopTree(c, hash, node)
-          });
+        node.childs.forEach(c => {
+          this.loopTree(c, hash, node)
+        });
       }
     },
-    initConfig (cb) {
+    initConfig (callback) {
       const vm = this;
       const mapmode = this.$route.params.mapmode
       let url;
 
-      if (mapmode === 'mapboxgl') {
-        url = './static/demo/config/config-mapboxgl.json';
-      } else if (mapmode === 'cesium') {
-        url = './static/demo/config/config-cesium.json';
-      } else if (mapmode === 'openlayers') {
-        url = './static/demo/config/config-openlayers.json';
-      } else if (mapmode === 'leaflet') {
-        url = './static/demo/config/config-leaflet.json';
+      if (!window.WebclientGalleryConfig) {
+        window.WebclientGalleryConfig = {};
       }
-      axios.get(url).then(res => {
-        vm.config = res.data;        
-        vm.$forceUpdate();
-        cb();
-      });
+
+      const config = window.WebclientGalleryConfig[mapmode];
+      if (config) {
+        vm.config = config;
+        vm.modeChange = true;
+        vm.heightChange = true;
+        if (callback) callback();
+      } else {
+        if (mapmode === 'mapboxgl') {
+          url = './static/demo/config/config-mapboxgl.json';
+        } else if (mapmode === 'cesium') {
+          url = './static/demo/config/config-cesium.json';
+        } else if (mapmode === 'openlayers') {
+          url = './static/demo/config/config-openlayers.json';
+        } else if (mapmode === 'leaflet') {
+          url = './static/demo/config/config-leaflet.json';
+        }
+        axios.get(url).then(res => {
+          window.WebclientGalleryConfig[mapmode] = res.data;
+          vm.config = res.data;
+          vm.modeChange = true;
+          vm.heightChange = true;
+          if (callback) callback();
+        });
+      }      
     },
   },
   mounted () {
     const vm = this;
-    this.componentScrollBar = this.$refs.componentScrollBar;    
+    window.onresize = function temp () {
+      vm.initHeights();
+    };
+
+    this.componentScrollBar = this.$refs.componentScrollBar;
     this.componentScrollBox = this.componentScrollBar.$el.querySelector(
       ".el-scrollbar__wrap"
     );
@@ -219,8 +273,6 @@ export default {
       "scroll",
       this.throttledScrollHandler
     );
-    // this.renderAnchorHref();
-    // this.goAnchor();
     document.body.classList.add("is-component");
     this.initConfig(() => {
       setTimeout(() => { vm.goAnchor(); vm.initHeights(); }, 100);
@@ -234,71 +286,68 @@ export default {
       "scroll",
       this.throttledScrollHandler
     );
-  },
-  beforeRouteUpdate (to, from, next) {
-    next();
-    let vm = this;
-    setTimeout(() => {
-      const toPath = to.path;
-      const fromPath = from.path;
-
-      document.documentElement.scrollTop = document.body.scrollTop = 0;
-
-      if (toPath === fromPath && to.hash) {
-        vm.goAnchor();
-        vm.initHeights();
-      }
-      if (toPath !== fromPath) {
-        // document.documentElement.scrollTop = document.body.scrollTop = 0;
-        // self.renderAnchorHref();
-      }
-    }, 100);
-  },
+  }
 };
 </script>
 
-<style rel='stylesheet/scss' lang='scss' scoped>
-.el-footer {
-  padding: 0 0px;
-}
-.main-scroll-content {
-  height: calc(100vh - 80px);
-  /*   .el-scrollbar__view {
+<style lang='scss'>
+.webclient-gallery-wrapper {
+  .el-footer {
+    padding: 0 0px;
+  }
+  .main-scroll-content {
+    height: calc(100vh - 80px);
+    /*   .el-scrollbar__view {
     overflow-y: hidden;
     display: grid !important;
   } */
-}
-.aside-scroll-content {
-  height: calc(100vh - 80px);
-  overflow-x: hidden;
-}
-.element-scroll-content {
-  height: calc(100vh - 80px);
-  overflow-x: hidden;
-}
-.el-main {
-  padding: 0 6px;
-}
-.mobili-drawer-open {
-  position: absolute;
-  top: 100px;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  z-index: 100;
-  text-align: center;
-  line-height: 40px;
-  font-size: 16px;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #fff;
-  -webkit-box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-  border-radius: 0 4px 4px 0;
+  }
+  .aside-scroll-content {
+    height: calc(100vh - 80px);
+    overflow-x: hidden;
+  }
+  .fix-anchor {
+    pointer-events: none;
+    z-index: 1000;
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    padding: 16px 20px;
+    background: #252d45cc;
+    border-radius: 6px;
+  }
+  .element-scroll-content {
+    height: calc(100vh - 80px);
+    overflow-x: hidden;
+  }
+  .el-main {
+    padding: 0 6px;
+  }
+  .el-timeline-item {
+    position: relative;
+    padding-bottom: 8px !important;
+  }
+  .mobili-drawer-open {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 100;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: #fff;
+    -webkit-box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    border-radius: 0 4px 4px 0;
+  }
 }
 </style>

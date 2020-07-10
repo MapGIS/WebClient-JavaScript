@@ -10,10 +10,23 @@
           slot="header"
           class="box-card-header"
         >
-          <img lazy
+          <img
+            lazy
             :src="imgUrl"
             class="card-image"
           />
+           <!-- <el-image
+            lazy
+            :src="imgUrl"
+            class="card-image"
+          >
+            <div
+              slot="error"
+              class="card-image"
+            >
+              <i class="el-icon-picture-outline"></i>
+            </div>
+          </el-image> -->
         </div>
         <div style="position:relative;">
           <span class="title">{{ name }}</span>
@@ -115,6 +128,8 @@ export default {
   .card-image {
     height: 256px;
     width: 256px;
+    /* min-height: 256px;
+    min-width: 256px; */
   }
   .el-card__header {
     padding: 0px 0px;

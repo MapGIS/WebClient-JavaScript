@@ -11,6 +11,11 @@ import ElementUI from 'element-ui';
 import IconFont from './components/IconFont/iconfont'
 import VueLazyload from 'vue-lazyload'
 
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/component/tooltip'
+Vue.component('v-chart', ECharts)
+
 Vue.use(ElementUI);
 Vue.use(VueLazyload);
 
