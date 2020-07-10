@@ -1,6 +1,6 @@
 import { CesiumZondy } from '../core/Base';
 
-import LayerType from '../layer/BaseLayer';
+import LayerType from '../layer/LayerType';
 import M3DLayer from '../layer/M3DLayer';
 import TerrainLayer from '../layer/TerrainLayer';
 import TilesLayer from '../layer/TilesLayer';
@@ -27,19 +27,23 @@ export default class LayerManager {
      * @param {Boolean} [options.loaded = function] 回调函数
      * @param {DefaultProxy} [options.proxy = defaultProxy] 代理
      * @example
+     * let layerManager = new LayerManager(view);
      * function callBackfunction(layer){
      * console.log(layer)
      * }
-     * webDlobe.append('http://192.168.90.102:6163/igs/rest/g3d/1218示例', {
+     * layerManager.append('http://192.168.90.102:6163/igs/rest/g3d/1218示例', {
      * autoReset:false,
      * synchronous:true,
      * loaded:callBackfunction
      * });
+     * //添加地形
+     * let terrainProivder = layerManager.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain');
      */
     append(url, options) {
         if (!Cesium.defined(url)) {
             return new Cesium.DeveloperError('必须指定url');
         }
+        options = Cesium.defaultValue(options , {});
         let synchronous = true;
         let baseUrl = url;
         let resource;
@@ -76,11 +80,15 @@ export default class LayerManager {
                             break;
                         case LayerType.TERRAINLAYER:
                             {
-                                let { elevationScale, layerRange } = layers[i];
                                 let sceneIndex = 0;
                                 let terrainLayer = new TerrainLayer({
                                     viewer: this.viewer,
                                 });
+                                let opt = {
+                                    range:layers[i].range,
+                                    scale:layers[i].terrainLayer.elevationScale
+                                };
+                                Object.extend(options, opt);
                                 layerRes = terrainLayer.appendTerrainLayer(
                                     baseUrl,
                                     sceneIndex,
@@ -214,7 +222,6 @@ export default class LayerManager {
         );
         if (Object.prototype.toString.call(onsuccess) === '[object Function]') {
             tileset.readyPromise.then(() => {
-                debugger;
                 onsuccess(tileset);
             });
         }
@@ -340,7 +347,6 @@ export default class LayerManager {
      *  var czml = webGlobe.addCZML('SampleData/model.czml');
      */
     appendCZML(url, successCall) {
-        debugger;
         let dataSource = new Cesium.CzmlDataSource();
         let datasourcePromise = this.viewer.dataSources.add(
             dataSource.load(url),

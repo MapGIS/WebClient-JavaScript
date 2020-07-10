@@ -1,5 +1,6 @@
-import { CesiumZondy } from "../core/Base";
+import { CesiumZondy } from '../core/Base';
 
+import CommonFuncManager from './CommonFuncManager';
 /**
  * 全局变量，用于控制爆炸中参数传递到回调函数中
  */
@@ -11,24 +12,24 @@ let optionE = {
  * @param {object} param
  */
 function clockT(param) {
-    var children = Cesium.defaultValue(optionE.children, undefined);
-    var isAxis = optionE.isAxis;
+    let children = Cesium.defaultValue(optionE.children, undefined);
+    let isAxis = optionE.isAxis;
     if (!Cesium.defined(children)) {
         return undefined;
     }
-    var distance = Cesium.defaultValue(optionE.distance, 50);
-    var matrixChild = undefined;
-    var viewer = optionE.viewer;
+    let distance = Cesium.defaultValue(optionE.distance, 50);
+    let matrixChild = undefined;
+    let viewer = optionE.viewer;
     optionE.deltaDistance += optionE.speed;
     if (isAxis) {
-        for (var i = 0; i < children.length; i++) {
-            var child = children[i];
-            var distance = optionE.distances[i];
+        for (let i = 0; i < children.length; i++) {
+            let child = children[i];
+            let distance = optionE.distances[i];
             if (optionE.deltaDistance > distance) {
                 break;
             }
             matrixChild = child.transform;
-            var directionTemp = optionE.directions[i].clone();
+            let directionTemp = optionE.directions[i].clone();
             Cesium.Cartesian3.multiplyByScalar(
                 directionTemp,
                 optionE.speed,
@@ -43,10 +44,10 @@ function clockT(param) {
             viewer.clock.onTick.removeEventListener(clockT);
         }
     } else {
-        for (var i = 0; i < children.length; i++) {
-            var child = children[i];
+        for (let i = 0; i < children.length; i++) {
+            let child = children[i];
             matrixChild = child.transform;
-            var directionTemp = optionE.directions[i].clone();
+            let directionTemp = optionE.directions[i].clone();
             Cesium.Cartesian3.multiplyByScalar(
                 directionTemp,
                 optionE.speed,
@@ -72,6 +73,15 @@ export default class AnalysisManager {
     constructor(option) {
         this._viewer = Cesium.defaultValue(option.viewer, undefined);
         this._scene = this._viewer.scene;
+        this._commFun = new CommonFuncManager(option);
+    }
+
+    get viewer() {
+        return this._viewer;
+    }
+
+    get scene() {
+        return this._scene;
     }
 
     /**
@@ -83,11 +93,7 @@ export default class AnalysisManager {
      * @returns {object} 热力图实例
      */
     createHeatMap(bounds, minValue, maxValue, data, options) {
-        let heatMap = Cesium.CesiumHeatmap.create(
-            this._viewer,
-            bounds,
-            options
-        );
+        let heatMap = Cesium.CesiumHeatmap.create(this.viewer, bounds, options);
         heatMap.setWGS84Data(minValue, maxValue, data);
         return heatMap;
     }
@@ -118,17 +124,17 @@ export default class AnalysisManager {
             seconds,
             new Cesium.JulianDate()
         );
-        this._viewer.clock.startTime = start.clone();
-        this._viewer.clock.stopTime = stop.clone();
-        this._viewer.clock.currentTime = start.clone();
-        this._viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP; //Loop at the end
-        this._viewer.clock.multiplier = 10;
+        this.viewer.clock.startTime = start.clone();
+        this.viewer.clock.stopTime = stop.clone();
+        this.viewer.clock.currentTime = start.clone();
+        this.viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP; //Loop at the end
+        this.viewer.clock.multiplier = 10;
         for (let i = 0; i < positionArr.length; i++) {
             let position_t = Cesium.Cartesian3.fromDegrees(
                 positionArr[i][0],
                 positionArr[i][1]
             );
-            let pntEntity = this._viewer.entities.add({
+            let pntEntity = this.viewer.entities.add({
                 position: position_t,
                 point: {
                     pixelSize: 8,
@@ -145,7 +151,7 @@ export default class AnalysisManager {
             start,
             clockFrequency
         );
-        let modelEntity = this._viewer.entities.add({
+        let modelEntity = this.viewer.entities.add({
             availability: new Cesium.TimeIntervalCollection([
                 new Cesium.TimeInterval({
                     start: start,
@@ -175,9 +181,9 @@ export default class AnalysisManager {
 
     /**
      * 计算位置样本
-     * @param {*} positions 点数组
-     * @param {*} startTime 起始时间
-     * @param {*} multiplier 乘数
+     * @param {Array} positions 点数组
+     * @param {JulianDate} startTime 起始时间
+     * @param {Number} multiplier 乘数
      */
     calculatePositionSamples(positions, startTime, multiplier) {
         if (positions !== undefined) {
@@ -202,13 +208,126 @@ export default class AnalysisManager {
     }
 
     /**
+     * 模型漫游贴地
+     * @param  {String} modelURL 模型路径
+     * @param  {Array[]} positionArr 漫游线路节点坐标数组 Array<[x,y]>
+     * @param  {bool} isShowPath 是否显示线路和节点
+     * @param  {Number} clockFrequency 漫游时钟频率
+     * @param  {Function} callback 回调函数 
+     * @example
+     *      function successCreate(entities) {
+                viewer.trackedEntity = entities[entities.length - 1];
+            };
+            let positionArr = [];
+            for (let i = 0; i <= 360; i += 45) {
+                let radians = Cesium.Math.toRadians(i);
+                positionArr.push([121.0924 + (0.03 * 1.5 * Math.cos(radians)), 23.1476 + (0.03 * Math.sin(radians))]);
+            }
+            analysisManager.cruiseModelGround('../data/donghua.gltf', positionArr, true, 10, successCreate);
+            analysisManager.startCruiseModel();
+     */
+    cruiseModelGround(modelURL, positionArr, isShowPath, clockFrequency, callback) {
+        let resultEntities = [];
+        let cartesianArr = [];
+        for (let i = 0; i < positionArr.length; i++) {
+            cartesianArr.push(Cesium.Cartesian3.fromDegrees(positionArr[i][0], positionArr[i][1]));
+        }
+
+        let numOforiPnt = positionArr.length;
+
+        let len = 0;
+        for (let j = 0; j < cartesianArr.length - 1; j++) {
+            len += Math.sqrt(Math.pow((cartesianArr[j].x - cartesianArr[j + 1].x), 2) + Math.pow((cartesianArr[j].y - cartesianArr[j + 1].y), 2));
+        }
+        let pnts = this._commFun.linearInterpolate3D(cartesianArr, len / 300);
+
+        let cartographicsArr = this._viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(cartesianArr);
+        cartographicsArr = cartographicsArr.concat(this._viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(pnts));
+        
+        let start = Cesium.JulianDate.fromDate(new Date(2015, 2, 25, 16));
+        let seconds = (positionArr.length - 1) * Cesium.defaultValue(clockFrequency, 10);
+        let stop = Cesium.JulianDate.addSeconds(start, seconds, new Cesium.JulianDate());
+        this.viewer.clock.startTime = start.clone();
+        this.viewer.clock.stopTime = stop.clone();
+        this.viewer.clock.currentTime = start.clone();
+        this.viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP; //Loop at the end
+        this.viewer.clock.multiplier = 10;
+
+        Cesium.sampleTerrain(this.viewer.terrainProvider, 7, cartographicsArr).then((updatedPositions)=> {
+            let cartesianPositions = this.viewer.scene.globe.ellipsoid.cartographicArrayToCartesianArray(updatedPositions);
+            let oriVertices = cartesianPositions.slice(0, numOforiPnt);
+            let samplePoints = cartesianPositions.slice(numOforiPnt);
+
+            for (let j = 0; j < oriVertices.length; j++) {
+                let pntEntity = this.viewer.entities.add({
+                    position: oriVertices[j],
+                    point: {
+                        pixelSize: 8,
+                        color: Cesium.Color.TRANSPARENT,
+                        outlineColor: Cesium.Color.YELLOW,
+                        outlineWidth: 3
+                    },
+                    show: Cesium.defaultValue(isShowPath, true)
+                });
+                resultEntities.push(pntEntity);
+            }
+
+            let clockFrequency_tem = clockFrequency * (oriVertices.length - 1) / (samplePoints.length - 1);
+            let position = this.calculatePositionSamplesGround(samplePoints, start, clockFrequency_tem);
+            let modelEntity = this.viewer.entities.add({
+                availability: new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({
+                    start: start,
+                    stop: stop
+                })]),
+                position: position,
+                orientation: new Cesium.VelocityOrientationProperty(position),
+                model: {
+                    uri: modelURL,
+                    minimumPixelSize: 128
+                },
+                path: {
+                    resolution: 1,
+                    material: new Cesium.PolylineGlowMaterialProperty({
+                        glowPower: 0.1,
+                        color: Cesium.Color.YELLOW
+                    }),
+                    width: 10,
+                    show: Cesium.defaultValue(isShowPath, true)
+                }
+            });
+            resultEntities.push(modelEntity);
+            if (typeof callback === 'function') {
+                callback(resultEntities);
+            }
+        });
+    }
+
+    /**
+     * @private
+     * @param {Array} positions 点序列
+     * @param {JulianDate} startTime 起始时间
+     * @param {Number} multiplier 乘数
+     */
+    calculatePositionSamplesGround(positions, startTime, multiplier) {
+        if (positions !== undefined) {
+            if (positions.constructor === Array) {
+                let property = new Cesium.SampledPositionProperty();
+                for (let since = 0; since < positions.length; since++) {
+                    property.addSample(Cesium.JulianDate.addSeconds(startTime, multiplier * since, new Cesium.JulianDate()), positions[since]);
+                }
+                return property;
+            }
+        }
+    }
+
+    /**
      * 清除模型漫游
      * @param {object} modelEntities 模型实例
      */
     clearCruiseModel(modelEntities) {
         if (modelEntities.constructor === Array) {
             for (let i = modelEntities.length - 1; i >= 0; i--) {
-                this._viewer.entities.remove(modelEntities[i]);
+                this.viewer.entities.remove(modelEntities[i]);
             }
         }
     }
@@ -216,13 +335,13 @@ export default class AnalysisManager {
      * 开始模型漫游
      */
     startCruiseModel() {
-        this._viewer.clock.shouldAnimate = true;
+        this.viewer.clock.shouldAnimate = true;
     }
     /**
      * 结束模型漫游
      */
     stopCruiseModel() {
-        this._viewer.clock.shouldAnimate = false;
+        this.viewer.clock.shouldAnimate = false;
     }
 
     /**
@@ -282,7 +401,7 @@ export default class AnalysisManager {
         let planeEntityArray = [];
         let radius = tileSet.boundingSphere.radius;
         for (let i = 0; i < planes.length; ++i) {
-            let planeEntity = this._viewer.entities.add({
+            let planeEntity = this.viewer.entities.add({
                 position: center,
                 plane: {
                     dimensions: new Cesium.Cartesian2(
@@ -403,17 +522,17 @@ export default class AnalysisManager {
      * @param {Object} planes 平面集
      * @param {Boolean} interaction 交互
      */
-    createDynamicCutting(tileSets, planes, otherOptions) {
+    createDynamicCutting(tileSets, planes, options) {
         if (!Cesium.defined(tileSets) && tileSets.length > 0) {
             return;
         }
         let material = Cesium.Color.WHITE.withAlpha(0.02);
         let interaction = false;
         let distance = 1;
-        if (Cesium.defined(otherOptions)) {
-            material = Cesium.defaultValue(otherOptions.color, material);
-            interaction = Cesium.defaultValue(otherOptions.interaction, false);
-            distance = Cesium.defaultValue(otherOptions.distance, 1);
+        if (Cesium.defined(options)) {
+            material = Cesium.defaultValue(options.color, material);
+            interaction = Cesium.defaultValue(options.interaction, false);
+            distance = Cesium.defaultValue(options.distance, 1);
         }
         let that = this;
         let cutPlanes = [];
@@ -430,7 +549,7 @@ export default class AnalysisManager {
             let center = new Cesium.Cartesian3();
             Cesium.Matrix4.getTranslation(transform, center);
             for (let i = 0; i < planes.length; ++i) {
-                let planeEntity = this._viewer.entities.add({
+                let planeEntity = this.viewer.entities.add({
                     position: center,
                     plane: {
                         dimensions: new Cesium.Cartesian2(
@@ -447,7 +566,7 @@ export default class AnalysisManager {
         let downHandler;
         if (interaction) {
             downHandler = new Cesium.ScreenSpaceEventHandler(
-                this._viewer.scene.canvas
+                this.viewer.scene.canvas
             );
             downHandler.setInputAction(function (movement) {
                 let pickedObject = that.scene.pick(movement.position);
@@ -532,7 +651,7 @@ export default class AnalysisManager {
         for (let i = 0; i < planes.length; ++i) {
             let plane = planes[i];
             plane.distance = 0;
-            this._viewer.entities.remove(plane);
+            this.viewer.entities.remove(plane);
         }
         if (Cesium.defined(tileSets)) {
             for (let j = 0; j < tileSets.length; ++j) {
@@ -547,6 +666,65 @@ export default class AnalysisManager {
         }
     }
 
+    /**
+     * 卷帘
+     * @param {object} tileset 图层集
+     * @param {Array} planeArray 用于卷帘分析的两个面
+     * @param {Number} distance 平面一的距离
+     * @param {Number} distance1 平面二的距离
+     * @param {Color} options.color 剖切一的颜色
+     * @param {Color} options.color1 剖切二的颜色
+     * @example
+     * 调用方法
+     * analysisManager.createRollershutters([tileset],distance,distance2);
+     */
+    createRollershutters(tileset, planeArray, distance, distance1, options) {
+        if (!Cesium.defined(options)) {
+            options = {};
+        }
+        let plane = Cesium.defaultValue(
+            planeArray[0],
+            new Cesium.ClippingPlane(new Cesium.Cartesian3(1, 0, 0), -200.0)
+        );
+        let plane1 = Cesium.defaultValue(
+            planeArray[1],
+            new Cesium.ClippingPlane(new Cesium.Cartesian3(-1, 0, 0), -200.0)
+        );
+        let dynaCut = this.createDynamicCutting(tileset, [plane], {
+            color: Cesium.defaultValue(
+                options.color,
+                new Cesium.Color(1.0, 1.0, 1.0, 0.3)
+            )
+        });
+        let planetEntity = dynaCut.planes[0];
+        planetEntity.plane.plane = new Cesium.CallbackProperty(function (date) {
+            plane.distance = distance;
+            return Cesium.Plane.transform(
+                plane,
+                tileset[0].modelMatrix,
+                new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0)
+            );
+        }, false);
+        let dynaCut1 = this.createDynamicCutting(tileset, [plane1], {
+            color: Cesium.defaultValue(
+                options.color1,
+                new Cesium.Color(1.0, 1.0, 1.0, 0.3)
+            )
+        });
+        let planetEntity1 = dynaCut1.planes[0];
+        planetEntity1.plane.plane = new Cesium.CallbackProperty(function (
+            date
+        ) {
+            plane1.distance = distance1;
+            return Cesium.Plane.transform(
+                plane1,
+                tileset[0].modelMatrix,
+                new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0)
+            );
+        },
+        false);
+    }
+
     /**高亮
      * @param {Array<layer>} layerList 图层列表
      * @param {Array<id>} idList id列表
@@ -558,41 +736,38 @@ export default class AnalysisManager {
      * @param {Color} [options.negate = true] 是否取反 ——意思是除了id列表中的要素应用color
      * @param {Color} [options.negateColor = new Cesium.Color.WHITE] 取反的颜色  只有在negate=true 的时候才起作用
      * @param {String} [options.style='EdgeHighlight'] 高亮模式//'EdgeHighlight'高亮+描边   'Edge'//描边
-     * @param {Color}[options.edgeColor=new Cesium.Color(0, 0, 1,1.0)]//描边颜色 默认红色
+     * @param {Color}[options.edgeColor=new Cesium.Color(0, 0, 1,1.0)] //描边颜色 默认红色
      *
      */
-    startCustomDisplay(layerList, idList, otherOptions) {
+    startCustomDisplay(layerList, idList, options) {
         if (!Cesium.defined(layerList) || !Cesium.defined(idList)) {
             return;
         }
-        if (!Cesium.defined(otherOptions)) {
-            otherOptions = {};
+        if (!Cesium.defined(options)) {
+            options = {};
         }
         let that = this;
         let colorUse = Cesium.defaultValue(
-            otherOptions.color,
+            options.color,
             new Cesium.Color(1, 0, 0, 0.5)
         );
         let edgeColorUse = Cesium.defaultValue(
-            otherOptions.edgeColor,
+            options.edgeColor,
             new Cesium.Color(1, 0, 0, 1.0)
         );
-        let negate = Cesium.defaultValue(otherOptions.negate, false);
+        let negate = Cesium.defaultValue(options.negate, false);
         let negateColor = Cesium.defaultValue(
-            otherOptions.negateColor,
+            options.negateColor,
             Cesium.Color.WHITE
         );
-        let applyForLayer = Cesium.defaultValue(
-            otherOptions.applyForLayer,
-            false
-        );
-        let style = Cesium.defaultValue(otherOptions.style, '');
+        let applyForLayer = Cesium.defaultValue(options.applyForLayer, false);
+        let style = Cesium.defaultValue(options.style, '');
         let colorBlendMode = Cesium.defaultValue(
-            otherOptions.colorBlendMode,
+            options.colorBlendMode,
             Cesium.Cesium3DTileColorBlendMode.HIGHLIGHT
         );
         let colorBlendAmount = Cesium.defaultValue(
-            otherOptions.colorBlendAmount,
+            options.colorBlendAmount,
             0.5
         );
         if (style === 'Edge' && !Cesium.defined(this._edgeDetectionStageCD)) {
@@ -603,15 +778,15 @@ export default class AnalysisManager {
             this._silhouetteStageCD = Cesium.PostProcessStageLibrary.createSilhouetteStage(
                 [this._edgeDetectionStageCD]
             );
-            this._viewer.scene.postProcessStages.add(this._silhouetteStageCD);
+            this.viewer.scene.postProcessStages.add(this._silhouetteStageCD);
         }
 
         function evaluateColorCallBack(feature, result) {
-            var title = feature.getProperty('name');
-            var layerNow = feature.tileset;
-            var values = title.split('_');
-            var vlueNumber = parseInt(values[2]);
-            var color = feature.color;
+            let title = feature.getProperty('name');
+            let layerNow = feature.tileset;
+            let values = title.split('_');
+            let vlueNumber = parseInt(values[2]);
+            let color = feature.color;
             colorUse = layerNow.color;
             if (style === 'EdgeHighlight' || style === 'Edge') {
                 if (!defined(layerNow._edgeDetectionfeatureList)) {
@@ -685,23 +860,21 @@ export default class AnalysisManager {
             Cesium.defined(this._edgeDetectionStageCD) &&
             Cesium.defined(this._silhouetteStageCD)
         ) {
-            this._viewer.scene.postProcessStages.remove(
-                this._silhouetteStageCD
-            );
+            this.viewer.scene.postProcessStages.remove(this._silhouetteStageCD);
             this._edgeDetectionStageCD = undefined;
             this._silhouetteStageCD.destroy();
             this._silhouetteStageCD = undefined;
         }
-        this._viewer.scene.render();
+        this.viewer.scene.render();
     }
 
     /**
      * 根据id停止高亮
      * @param {Array<layer>} layerList 图层列表
      * @param {Array<id>} idList ID列表
-     * @param {obj} otherOptions 其他参数
+     * @param {obj} options 其他参数
      */
-    stopCustomDisplayByIds(layerList, idList, otherOptions) {
+    stopCustomDisplayByIds(layerList, idList, options) {
         if (!Cesium.defined(layerList) || !Cesium.defined(idList)) {
             return;
         }
@@ -848,8 +1021,8 @@ export default class AnalysisManager {
             new Cesium.Cartesian3(0.0, 0.0, 1.0)
         );
         optionE.distance = Cesium.defaultValue(option.distance, 50);
-        optionE.scene = this._scene;
-        optionE.viewer = this._viewer;
+        optionE.scene = this.scene;
+        optionE.viewer = this.viewer;
         optionE.deltaDistance = Cesium.defaultValue(option.speed, 1);
         optionE.directions = [];
         optionE.distancesCenterPoint = [];
@@ -904,11 +1077,11 @@ export default class AnalysisManager {
             optionE.children = result.childList;
             optionE.distances = result.distances;
             optionE.maxDistances = result.distances[0];
-            this._viewer.clock.onTick.addEventListener(clockT);
+            this.viewer.clock.onTick.addEventListener(clockT);
         } else {
-            this._viewer.clock.onTick.addEventListener(clockT);
+            this.viewer.clock.onTick.addEventListener(clockT);
         }
-        this._scene.requestRender();
+        this.scene.requestRender();
     }
 
     /**
@@ -933,7 +1106,7 @@ export default class AnalysisManager {
         let distance = Cesium.defaultValue(option.distance, 50);
         let isAxis = Cesium.defaultValue(option.isAxis, false);
         let expDistance = Cesium.defaultValue(option.expDistance, 100);
-        let scene = this._scene;
+        let scene = this.scene;
 
         let matrixChild = new Cesium.Matrix4();
         if (isAxis === false) {
@@ -1033,16 +1206,18 @@ export default class AnalysisManager {
                 child.transform = matrixChild.clone();
             }
         }
-        this._scene.requestRender();
+        this.scene.requestRender();
     }
 
     /**
      * 添加场景特效
      * @param {Object} effect 场景特效实例
+     * @see https://cesium.com/docs/cesiumjs-ref-doc/PostProcessStage.html
+     * @see https://cesium.com/docs/cesiumjs-ref-doc/PostProcessStageComposite.html
      */
     addSceneEffect(effect) {
         if (Cesium.defined(effect)) {
-            return this._scene.postProcessStages.add(effect._effect);
+            return this.scene.postProcessStages.add(effect._effect);
         }
         return undefined;
     }
@@ -1052,14 +1227,14 @@ export default class AnalysisManager {
      */
     removeSceneEffect(effect) {
         if (Cesium.defined(effect)) {
-            this._scene.postProcessStages.remove(effect._effect);
+            this.scene.postProcessStages.remove(effect._effect);
         }
     }
     /**
      * 移除全部场景特效
      */
     removeAllSceneEffect() {
-        this._scene.postProcessStages.removeAll();
+        this.scene.postProcessStages.removeAll();
     }
 }
 

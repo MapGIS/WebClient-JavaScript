@@ -1,4 +1,4 @@
-import {CesiumZondy} from "../core/Base";
+import { CesiumZondy } from '../core/Base';
 
 export default class CommonFuncManager {
     constructor(option) {
@@ -69,12 +69,12 @@ export default class CommonFuncManager {
             } else {
                 cartesianPosition = this.viewer.camera.pickEllipsoid(
                     position,
-                    this.ellipsoid,
+                    this.ellipsoid
                 );
             }
             if (Cesium.defined(cartesianPosition)) {
                 cartographicPosition = this.ellipsoid.cartesianToCartographic(
-                    cartesianPosition,
+                    cartesianPosition
                 );
             }
         }
@@ -95,7 +95,7 @@ export default class CommonFuncManager {
             } else {
                 cartesianPosition = this.viewer.camera.pickEllipsoid(
                     position,
-                    this.ellipsoid,
+                    this.ellipsoid
                 );
             }
         }
@@ -176,12 +176,12 @@ export default class CommonFuncManager {
             let w = controlDiv.offsetWidth; //宽度
             let ua = navigator.userAgent.toLowerCase();
 
-            let isOpera = ua.indexOf("opera") !== -1;
-            let isIE = ua.indexOf("msie") !== -1 && !isOpera;
+            let isOpera = ua.indexOf('opera') !== -1;
+            let isIE = ua.indexOf('msie') !== -1 && !isOpera;
 
             if (
                 controlDiv.parentNode === null ||
-                controlDiv.style.display === "none"
+                controlDiv.style.display === 'none'
             ) {
                 return;
             }
@@ -193,11 +193,11 @@ export default class CommonFuncManager {
                 box = controlDiv.getBoundingClientRect();
                 let scrollTop = Math.max(
                     document.documentElement.scrollTop,
-                    document.body.scrollTop,
+                    document.body.scrollTop
                 );
                 let scrollLeft = Math.max(
                     document.documentElement.scrollLeft,
-                    document.body.scrollLeft,
+                    document.body.scrollLeft
                 );
                 x = box.left + scrollLeft;
                 y = box.top + scrollTop;
@@ -222,9 +222,9 @@ export default class CommonFuncManager {
                     }
                 }
                 if (
-                    ua.indexOf("opera") !== -1 ||
-                    (ua.indexOf("safari") !== -1 &&
-                        controlDiv.style.position === "absolute")
+                    ua.indexOf('opera') !== -1 ||
+                    (ua.indexOf('safari') !== -1 &&
+                        controlDiv.style.position === 'absolute')
                 ) {
                     pos[0] -= document.body.offsetLeft;
                     pos[1] -= document.body.offsetTop;
@@ -238,8 +238,8 @@ export default class CommonFuncManager {
             }
             while (
                 parent &&
-                parent.tagName !== "BODY" &&
-                parent.tagName !== "HTML"
+                parent.tagName !== 'BODY' &&
+                parent.tagName !== 'HTML'
             ) {
                 pos[0] -= parent.scrollLeft;
                 pos[1] -= parent.scrollTop;
@@ -260,11 +260,11 @@ export default class CommonFuncManager {
             if (this.scene.mode === Cesium.SceneMode.SCENE3D) {
                 pick1 = this.scene.globe.pick(
                     viewer.camera.getPickRay(position1),
-                    this.scene,
+                    this.scene
                 );
                 pick2 = this.scene.globe.pick(
                     viewer.camera.getPickRay(position2),
-                    this.scene,
+                    this.scene
                 );
             } else {
                 pick1 = viewer.camera.pickEllipsoid(position1, this.ellipsoid);
@@ -275,20 +275,20 @@ export default class CommonFuncManager {
             }
             //将三维坐标转成地理坐标
             let geoPt1 = viewer.scene.globe.ellipsoid.cartesianToCartographic(
-                pick1,
+                pick1
             );
             let geoPt2 = viewer.scene.globe.ellipsoid.cartesianToCartographic(
-                pick2,
+                pick2
             );
 
             //地理坐标转换为经纬度坐标
             let point1 = [
                 (geoPt1.longitude / Math.PI) * 180,
-                (geoPt2.latitude / Math.PI) * 180,
+                (geoPt2.latitude / Math.PI) * 180
             ];
             let point2 = [
                 (geoPt2.longitude / Math.PI) * 180,
-                (geoPt1.latitude / Math.PI) * 180,
+                (geoPt1.latitude / Math.PI) * 180
             ];
             return [point1, point2];
         }
@@ -318,17 +318,17 @@ export default class CommonFuncManager {
      */
     rotationView(type, options) {
         if (!Cesium.defined(type)) {
-            return new Cesium.DeveloperError("必须指定旋转类型");
+            return new Cesium.DeveloperError('必须指定旋转类型');
         }
         if (!Cesium.defined(options)) {
             options = {};
         }
         let position = options.position;
-        if (type === "rotationAroundPos" && !Cesium.defined(position)) {
-            return new Cesium.DeveloperError("必须指定旋转点");
+        if (type === 'rotationAroundPos' && !Cesium.defined(position)) {
+            return new Cesium.DeveloperError('必须指定旋转点');
         }
         let pitch = Cesium.Math.toRadians(
-            Cesium.defaultValue(options.pitch, -30),
+            Cesium.defaultValue(options.pitch, -30)
         );
         let distance = Cesium.defaultValue(options.distance, 5000);
         let duration = Cesium.defaultValue(options.duration, 8);
@@ -337,7 +337,7 @@ export default class CommonFuncManager {
         let stopTime = Cesium.JulianDate.addSeconds(
             startTime,
             duration,
-            new Cesium.JulianDate(),
+            new Cesium.JulianDate()
         );
         this.viewer.clock.startTime = startTime.clone();
         this.viewer.clock.stopTime = stopTime.clone();
@@ -348,26 +348,26 @@ export default class CommonFuncManager {
         let update = () => {
             let delTime = Cesium.JulianDate.secondsDifference(
                 this.viewer.clock.currentTime,
-                this.viewer.clock.startTime,
+                this.viewer.clock.startTime
             );
             let heading =
                 -Cesium.Math.toRadians(delTime * angle) + currentHeading;
             let nowPostion = this.scene.camera.position;
-            if (type === "rotationAroundPos" && Cesium.defined(position)) {
+            if (type === 'rotationAroundPos' && Cesium.defined(position)) {
                 nowPostion = position;
             }
             this.scene.camera.setView({
                 destination: nowPostion,
                 orientation: {
                     heading: heading,
-                    pitch: pitch,
-                },
+                    pitch: pitch
+                }
             });
             this.scene.camera.moveBackward(distance);
             if (
                 Cesium.JulianDate.compare(
                     this.viewer.clock.currentTime,
-                    this.viewer.clock.stopTime,
+                    this.viewer.clock.stopTime
                 ) >= 0
             ) {
                 this.viewer.clock.onTick.removeEventListener(update);
@@ -446,14 +446,14 @@ export default class CommonFuncManager {
             center.latitude,
             center.height,
             this.ellipsoid,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
         let targetCar3 = Cesium.Cartesian3.fromRadians(
             target.longitude,
             target.latitude,
             target.height,
             this.ellipsoid,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
         return this.getHeadingFromCartesian3(centerCar3, targetCar3);
     }
@@ -470,7 +470,7 @@ export default class CommonFuncManager {
         carCenter = Cesium.Cartographic.fromCartesian(
             center,
             this.ellipsoid,
-            carCenter,
+            carCenter
         );
         carCenter.height = 0;
         let centerUse = Cesium.Cartesian3.fromRadians(
@@ -478,19 +478,19 @@ export default class CommonFuncManager {
             carCenter.latitude,
             carCenter.height,
             this.ellipsoid,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
         let centerUseEx = Cesium.Cartesian3.fromRadians(
             carCenter.longitude,
             carCenter.latitude + 0.1,
             carCenter.height,
             this.ellipsoid,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
         let tempdir = Cesium.Cartesian3.subtract(
             centerUseEx,
             centerUse,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
         tempdir = Cesium.Cartesian3.normalize(tempdir, tempdir);
 
@@ -498,7 +498,7 @@ export default class CommonFuncManager {
         carTarget = Cesium.Cartographic.fromCartesian(
             target,
             this.ellipsoid,
-            carTarget,
+            carTarget
         );
         carTarget.height = 0;
         let targetUse = Cesium.Cartesian3.fromRadians(
@@ -506,13 +506,13 @@ export default class CommonFuncManager {
             carTarget.latitude,
             carTarget.height,
             this.ellipsoid,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
 
         let tarDir = Cesium.Cartesian3.subtract(
             targetUse,
             centerUse,
-            new Cesium.Cartesian3(),
+            new Cesium.Cartesian3()
         );
         tarDir = Cesium.Cartesian3.normalize(tarDir, tarDir);
         let heading = Cesium.Cartesian3.angleBetween(tempdir, tarDir);
@@ -523,8 +523,8 @@ export default class CommonFuncManager {
         return heading;
     }
 
-     /**
-      * @private
+    /**
+     * @private
      * 深度拷贝对象
      * @param  {object} o 被拷贝对象
      * @return {object} 拷贝结果
@@ -536,9 +536,8 @@ export default class CommonFuncManager {
                 n[i] = this.deepCopy(o[i]);
             }
             return n;
-
         } else if (o instanceof Object) {
-            var n = {}
+            var n = {};
             for (var i in o) {
                 n[i] = this.deepCopy(o[i]);
             }
@@ -574,31 +573,19 @@ export default class CommonFuncManager {
             let pos_copy = this.deepCopy(positions);
             //先删除高程值有异常坐标
             let len = pos_copy.length;
-            for (let j = 0; j<len; j++) {
+            for (let j = 0; j < len; j++) {
                 if (pos_copy[j].z === undefined || pos_copy[j].z === null) {
                     pos_copy = pos_copy
                         .slice(0, j)
                         .concat(pos_copy.slice(j + 1));
                 }
             }
-            len = len - 3;
-            for (let i = 0; i <= len; i++) {
+            for (let i = 0; i <= pos_copy.length - 3; i++) {
+                let isVertice = (pos_copy[i].z - pos_copy[i + 1].z) * (pos_copy[i + 1].z - pos_copy[i + 2].z) > 0 ? false : true;
+                let angle = calAngleOf3Pnt([pos_copy[i].x, pos_copy[i].y, pos_copy[i].z], [pos_copy[i + 1].x, pos_copy[i + 1].y, pos_copy[i + 1].z], [pos_copy[i + 2].x, pos_copy[i + 2].y, pos_copy[i + 2].z]);
 
-                let isVertice =
-                    (pos_copy[i].z - pos_copy[i + 1].z) *
-                        (pos_copy[i + 1].z - pos_copy[i + 2].z) >
-                    0
-                        ? false
-                        : true;
-                let angle = calAngleOf3Pnt(
-                    [pos_copy[i].x, pos_copy[i].y, pos_copy[i].z],
-                    [pos_copy[i + 1].x, pos_copy[i + 1].y, pos_copy[i + 1].z],
-                    [pos_copy[i + 2].x, pos_copy[i + 2].y, pos_copy[i + 2].z],
-                );
-                if (angle > 175.0 && !isVertice) {
-                    pos_copy = pos_copy
-                        .slice(0, i + 1)
-                        .concat(pos_copy.slice(i + 2));
+                if (angle > 175 && !isVertice) {
+                    pos_copy = pos_copy.slice(0, i + 1).concat(pos_copy.slice(i + 2));
                 }
             }
             return pos_copy;
@@ -611,7 +598,7 @@ export default class CommonFuncManager {
      * 计算2点高差
      * @param {Object} options 参数
      * @param {Array} options.position 经纬度点数组
-     * @param {Array} options.height 高度 
+     * @param {Array} options.height 高度
      * @param {Array} resultOut 经纬度高程数组
      * @return 点数组结果
      */
@@ -665,16 +652,127 @@ export default class CommonFuncManager {
         }
         return result;
     }
-}
-    /**
-     * 计算三点的角度（0-180之间）
+
+     /*
+     * 线性插值（二维坐标）
+     * @param  {Array<Cartesian2>}  positions 坐标点序列
+     * @param  {Number} step    步长
+     * @return {Array<Cartesian2>}   插值后的坐标点序列
      */
-    function calAngleOf3Pnt(p1, p2, p3) {
-        //var p = (p1[0]-p2[0])*(p2[0]-p3[0])+(p1[1]-p2[1])*(p2[1]-p3[1])+(p1[2]-p2[2])*(p2[2]-p3[2]);
-        var p = (p1[0] - p2[0]) * (p3[0] - p2[0]) + (p1[1] - p2[1]) * (p3[1] - p2[1]) + (p1[2] - p2[2]) * (p3[2] - p2[2]);
-        var a = Math.sqrt(Math.pow(p2[0] - p1[0], 2) + Math.pow(p2[1] - p1[1], 2) + Math.pow(p2[2] - p1[2], 2));
-        var b = Math.sqrt(Math.pow(p3[0] - p2[0], 2) + Math.pow(p3[1] - p2[1], 2) + Math.pow(p3[2] - p2[2], 2));
-        var angle = Math.acos(p / (a * b));  //0-PI
-        return angle * 180 / Math.PI;
+    linearInterpolate(positions, step) {
+        let pnts = [];
+        let len = positions.length - 1;
+        for (let m = 0; m < len; m++) {
+            let pnt_s = positions[m];
+            let pnt_e = positions[m + 1];
+            if (m === 0) {
+                pnts.push(pnt_s);
+            }
+            let dis = Math.sqrt(Math.pow(pnt_e.x - pnt_s.x, 2) + Math.pow(pnt_e.y - pnt_s.y, 2));
+            if (dis > step) {
+                let n = dis / step;
+                for (let i = 1; i < n; i++) {
+                    let x = (pnt_e.x - pnt_s.x) * (i * step / dis) + pnt_s.x;
+                    let y = (pnt_e.y - pnt_s.y) * (i * step / dis) + pnt_s.y;
+                    pnts.push(new Cesium.Cartesian2(x, y));
+                }
+            }
+            pnts.push(pnt_e);
+        }
+        return pnts;
     }
+
+    /**
+     * 线性插值(三维坐标)
+     * @param  {Array<Cartesian3>} positions 坐标点序列
+     * @param  {Number} step 步长
+     * @return {Array<Cartesian3>} 插值后的坐标点序列
+     */
+    linearInterpolate3D(positions, step) {
+        let pnts = [];
+        for (let m = 0; m < positions.length - 1; m++) {
+            let pnt_s = positions[m];
+            let pnt_e = positions[m + 1];
+            if (m === 0) {
+                pnts.push(pnt_s);
+            }
+            let dis = Math.sqrt(Math.pow(pnt_e.x - pnt_s.x, 2) + Math.pow(pnt_e.y - pnt_s.y, 2));
+            if (dis > step) {
+                let n = dis / step;
+                for (let i = 1; i < n; i++) {
+                    let x = (pnt_e.x - pnt_s.x) * (i * step / dis) + pnt_s.x;
+                    let y = (pnt_e.y - pnt_s.y) * (i * step / dis) + pnt_s.y;
+                    let z = (pnt_e.z - pnt_s.z) * (i * step / dis) + pnt_s.z;
+                    pnts.push(new Cesium.Cartesian3(x, y, z));
+                }
+            }
+            pnts.push(pnt_e);
+        }
+        return pnts;
+    }
+
+    /**
+     * 生成随机数
+     */
+    generateRandom() {
+        let guid = "";
+        for (let i = 1; i <= 32; i++) {
+            let n = Math.floor(Math.random() * 16.0).toString(16);
+            guid += n;
+            if ((i == 8) || (i == 12) || (i == 16) || (i == 20))
+                guid += "-";
+        }
+        return guid;
+    }
+
+    /**
+     * 根据地形设置二维坐标的高程值
+     * @param  {CesiumTerrainProvider} TerrainProvider 地形
+     * @param  {Number} level 以地形的级数为基准
+     * @param  {Array<Cartesian2>} positions 需设置高程的二维坐标点序列
+     * @return {function}  设置成功后的回调
+     */
+    setZValueByTerrain(terrainProvider, level, positions, ellipsoid, callback) {
+        let cartographics = [];
+        if (positions != null && positions.length > 0) {
+            for (let i = 0; i < positions.length; i++) {
+                let cartographic = ellipsoid.cartesianToCartographic(Cesium.Cartesian3.fromDegrees(positions[i]['x'], positions[i]['y'], 0, ellipsoid));
+                cartographics.push(cartographic);
+            }
+        }
+
+        let promise = Cesium.sampleTerrain(terrainProvider, level, cartographics).then( updatedPositions => {
+            let cartesianPositions = this.ellipsoid.cartographicArrayToCartesianArray(updatedPositions);
+            if (typeof callback == 'function') {
+                callback(cartesianPositions);
+            }
+        });
+    }
+}
+
+/**
+ * 计算三点的角度（0-180之间）
+ * @param {*} p1  第一个点
+ * @param {*} p2 第二个点
+ * @param {*} p3 第三个点
+ */
+function calAngleOf3Pnt(p1, p2, p3) {
+    let p =
+        (p1[0] - p2[0]) * (p3[0] - p2[0]) +
+        (p1[1] - p2[1]) * (p3[1] - p2[1]) +
+        (p1[2] - p2[2]) * (p3[2] - p2[2]);
+    let a = Math.sqrt(
+        Math.pow(p2[0] - p1[0], 2) +
+            Math.pow(p2[1] - p1[1], 2) +
+            Math.pow(p2[2] - p1[2], 2)
+    );
+    let b = Math.sqrt(
+        Math.pow(p3[0] - p2[0], 2) +
+            Math.pow(p3[1] - p2[1], 2) +
+            Math.pow(p3[2] - p2[2], 2)
+    );
+    let angle = Math.acos(p / (a * b)); 
+    return (angle * 180) / Math.PI;
+};
+
 CesiumZondy.Manager.CommonFuncManager = CommonFuncManager;

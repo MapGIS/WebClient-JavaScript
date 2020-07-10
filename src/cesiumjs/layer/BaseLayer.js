@@ -13,8 +13,35 @@ export default class BaseLayer {
         this._viewer = Cesium.defaultValue(option.viewer, undefined);
     }
 
+    /**
+     *  当前椭球
+     * @memberof BaseLayer.protype
+     * @type {Ellipsoid}
+     * @readonly
+     *
+     */
+    get ellipsoid() {
+        return this._viewer.scene.globe.ellipsoid;
+    }
+
+    /**
+     * 视图
+     * @memberof BaseLayer.prototype
+     * @type {Viewer}
+     * @readonly
+     */
     get viewer() {
         return this._viewer;
+    }
+
+    /**
+     * 场景 
+     * @memberof BaseLayer.prototype
+     * @type {Scene}
+     * @readonly
+     */
+    get scene() {
+        return this._viewer.scene;
     }
 
     /**
@@ -27,7 +54,6 @@ export default class BaseLayer {
             boundingSphere,
             new Cesium.HeadingPitchRange(0.0, -0.5, boundingSphere.radius)
         );
-        debugger;
         this.viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
     }
 
@@ -74,12 +100,39 @@ export default class BaseLayer {
      * @param {Object} gridlayers 网格图层
      */
     removeGridInfo(gridlayers) {
-        debugger;
         let imagelayers = this.viewer.imageryLayers;
         if (imagelayers !== null && imagelayers !== undefined) {
             if (imagelayers.contains(gridlayers)) {
                 imagelayers.remove(gridlayers, true);
             }
+        }
+    }
+
+    /**
+     * 通用删除影像图层
+     * @param  {imagelayer} google等图层,其为addImageryProvider返回的值
+     * @param  {boolean}    isdestroy,是否销毁图层 在图层需要频繁切换的情况下，isdestroy最好取false
+     * @example
+     * let tilelayer = tile.appendGoogleMap({ptype:'m@207000000'});
+     * tile.removeImageLayer(tilelayer, true);
+     */
+    removeImageLayer(imagelayer, isdestroy) {
+        let imagelayers = this.viewer.imageryLayers;
+        if (imagelayers !== null && imagelayers !== undefined) {
+            if (imagelayers.contains(imagelayer)) {
+                imagelayers.remove(imagelayer, isdestroy);
+            }
+        }
+    }
+
+    /**
+     * 清空影像图层,包括地球表面
+     * @param  {boolean}    isdestroy,是否销毁图层
+     */
+    removeAllImageLayers(isdestroy) {
+        var imagelayers = this.viewer.imageryLayers;
+        if (imagelayers !== null && imagelayers !== undefined) {
+            imagelayers.removeAll(isdestroy);
         }
     }
 }

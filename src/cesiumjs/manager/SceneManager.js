@@ -13,6 +13,13 @@ export default class SceneManager {
         this._ellipsoid = this._viewer.scene.globe.ellipsoid;
     }
 
+    get viewer(){
+        return this._viewer;
+    }
+
+    get scene(){
+        return this._scene;
+    }
     /**
      * 显示经纬度 高程 视角高度
      * @param {Element|String} elementId 要显示的div的id
@@ -50,7 +57,7 @@ export default class SceneManager {
         let cartesian = new Cesium.Cartesian3();
         let height = null;
         let ellipsoid = this._ellipsoid;
-        let tilesToRender = this._viewer.scene.globe._surface.tileProvider
+        let tilesToRender = this.viewer.scene.globe._surface.tileProvider
             ._tilesToRenderByTextureCount;
         let selectedTile;
         let lastScreenPos;
@@ -188,20 +195,20 @@ export default class SceneManager {
                 '.coordinate_location {color: #F0EFEF; line-height: 30px; margin-left: 30%;bottom:0px;font-size: 80%;font:"雅黑";}';
             element.style = style1;
             elementPt.appendChild(element);
-            this._viewer._element.appendChild(elementPt);
+            this.viewer._element.appendChild(elementPt);
         }
         if (elementId !== undefined) {
-            this._viewer.scene.globe.tileLoadProgressEvent.addEventListener(
+            this.viewer.scene.globe.tileLoadProgressEvent.addEventListener(
                 function (datalength) {
                     updateViewLevel();
                 }
             );
-            this._viewer.camera.changed.addEventListener(function () {
+            this.viewer.camera.changed.addEventListener(function () {
                 updateViewLevel();
             });
             if (!Cesium.defined(this.screenSpaceMouseEventHandler)) {
                 this.screenSpaceMouseEventHandler = new Cesium.ScreenSpaceEventHandler(
-                    this._scene.canvas
+                    this.scene.canvas
                 );
             }
             this.screenSpaceMouseEventHandler.setInputAction(function (
@@ -235,11 +242,11 @@ export default class SceneManager {
     flyTo(lon, lat, height, duration) {
         if (height === null || height === '' || height === undefined) {
             let cameraHeight = Math.ceil(
-                this._viewer.camera.positionCartographic.height
+                this.viewer.camera.positionCartographic.height
             );
             height = cameraHeight;
         }
-        this._viewer.camera.flyTo({
+        this.viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             duration: duration,
             orientation: {
@@ -287,11 +294,11 @@ export default class SceneManager {
         }
         if (height === null || height === '' || height === undefined) {
             let cameraHeight = Math.ceil(
-                this._viewer.camera.positionCartographic.height
+                this.viewer.camera.positionCartographic.height
             );
             height = cameraHeight;
         }
-        this._viewer.camera.flyTo({
+        this.viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             duration: duration,
             orientation: {
@@ -312,7 +319,7 @@ export default class SceneManager {
     flyToComm(lon, lat, height, options) {
         if (height === null || height === '' || height === undefined) {
             let cameraHeight = Math.ceil(
-                this._viewer.camera.positionCartographic.height
+                this.viewer.camera.positionCartographic.height
             );
             height = cameraHeight;
         }
@@ -322,7 +329,7 @@ export default class SceneManager {
         if (Cesium.defined(options)) {
             Cesium.Object.extend(flyOptions, options);
         }
-        this._viewer.camera.flyTo(flyOptions);
+        this.viewer.camera.flyTo(flyOptions);
     }
 
     /**
@@ -335,7 +342,7 @@ export default class SceneManager {
      * @param {Number} curRoll    绕经度线旋转度数
      */
     setView(lon, lat, height, curHeading, curPitch, curRoll) {
-        this._viewer.camera.setView({
+        this.viewer.camera.setView({
             position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             heading: Cesium.Math.toRadians(curHeading),
             pitch: Cesium.Math.toRadians(curPitch),
@@ -345,8 +352,8 @@ export default class SceneManager {
 
     /**
      * icrf
-     * @param {*} scene
-     * @param {*} time
+     * @param {object} scene 场景
+     * @param {object} time 时间
      */
     icrf(scene, time) {
         if (scene.mode !== Cesium.SceneMode.SCENE3D) {
@@ -365,11 +372,11 @@ export default class SceneManager {
      * 开启自转
      */
     openRotation() {
-        this._viewer.camera.flyHome(0);
-        this._viewer.clock.multiplier = 3 * 60 * 60;
-        this._viewer.scene.preRender.addEventListener(this.icrf);
+        this.viewer.camera.flyHome(0);
+        this.viewer.clock.multiplier = 3 * 60 * 60;
+        this.viewer.scene.preRender.addEventListener(this.icrf);
         if (!this._shouldAnimate) {
-            this._viewer.clock._shouldAnimate = true;
+            this.viewer.clock._shouldAnimate = true;
         }
     }
 
@@ -377,17 +384,17 @@ export default class SceneManager {
      * 关闭自转
      */
     closeRotation() {
-        this._scene.preRender.removeEventListener(this.icrf);
-        this._viewer.clock.multiplier = 1;
-        this._viewer.clock._shouldAnimate = this._shouldAnimate;
-        this._viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+        this.scene.preRender.removeEventListener(this.icrf);
+        this.viewer.clock.multiplier = 1;
+        this.viewer.clock._shouldAnimate = this._shouldAnimate;
+        this.viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
     }
 
     /**
      * 复位
      */
     goHome() {
-        this._viewer.camera.flyTo({
+        this.viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(104, 30, 15682725)
         });
     }
@@ -411,13 +418,13 @@ export default class SceneManager {
                 break;
         }
         let mDuraion = Cesium.defaultValue(duration, 2.0);
-        if (this._scene.mode !== mSceneMode) {
+        if (this.scene.mode !== mSceneMode) {
             if (mSceneMode === Cesium.SceneMode.SCENE3D) {
-                this._viewer.scene.morphTo3D(mDuraion);
+                this.viewer.scene.morphTo3D(mDuraion);
             } else if (mSceneMode === Cesium.SceneMode.COLUMBUS_VIEW) {
-                this._viewer.scene.morphToColumbusView(mDuraion);
+                this.viewer.scene.morphToColumbusView(mDuraion);
             } else {
-                this._viewer.scene.morphTo2D(mDuraion);
+                this.viewer.scene.morphTo2D(mDuraion);
             }
         }
     }
@@ -427,9 +434,9 @@ export default class SceneManager {
      */
     zoomOut() {
         let cameraHeight = this._ellipsoid.cartesianToCartographic(
-            this._viewer.camera.position
+            this.viewer.camera.position
         ).height;
-        this._viewer.camera.zoomOut(cameraHeight / 10);
+        this.viewer.camera.zoomOut(cameraHeight / 10);
     }
 
     /**
@@ -437,9 +444,9 @@ export default class SceneManager {
      */
     zoomIn() {
         let cameraHeight = this._ellipsoid.cartesianToCartographic(
-            this._viewer.camera.position
+            this.viewer.camera.position
         ).height;
-        this._viewer.camera.zoomIn(cameraHeight / 10);
+        this.viewer.camera.zoomIn(cameraHeight / 10);
     }
 
     /**
@@ -459,9 +466,9 @@ export default class SceneManager {
      */
     changeSkyBox(skybox) {
         if (Cesium.defined(skybox)) {
-            this._scene.skyBox = skybox;
-            let frameState = this._scene._frameState;
-            this._scene.skyBox.update(frameState);
+            this.scene.skyBox = skybox;
+            let frameState = this.scene._frameState;
+            this.scene.skyBox.update(frameState);
         }
     }
 

@@ -31,7 +31,6 @@ export default class M3DLayer extends BaseLayer {
      * @param {Boolean} [options.loaded = function] 回调函数
      * @param {DefaultProxy} [options.proxy = defaultProxy] 代理
      * @returns m3d层对象
-     * @see{@link }
      * @example
      * function callBackfunction(layer){
      * console.log(layer)
@@ -119,6 +118,7 @@ export default class M3DLayer extends BaseLayer {
         if (!Cesium.defined(url)) {
             return new Cesium.DeveloperError('必须指定url');
         }
+        options = Cesium.defaultValue(options , {});
         let synchronous = true;
         let baseUrl = url;
         let resource;
@@ -157,6 +157,7 @@ export default class M3DLayer extends BaseLayer {
                             options
                         );
                         docLayers.push(m3d);
+                        m3d.readyPromise.then(_callBack);
                     }
                 }
             }
@@ -195,6 +196,64 @@ export default class M3DLayer extends BaseLayer {
     }
 
     /**
+     * 添加m3d服务图层（mongodb）
+     * @param {String} url 服务地址（发布的m3d缓存服务）
+     * @param {Object} options
+     * @param {Boolean} [options.autoReset = true]
+     * @param {Boolean} [options.loaded = function]
+     * @param {DefaultProxy} 代理
+     * @example
+     * let view = { viewer: window.globe.viewer };
+       let m3d = new M3DLayer(view);
+       function callBackfunction(layer){
+       }
+       m3d.appendM3dLayer('http://localhost:6163/igs/rest/g3d/cache/jg', {
+       autoReset:false
+       loaded:callBackfunction
+       });
+     */
+    appendM3dCacheFromMangoDB(baseUrl, options) {
+        options = Cesium.defaultValue(options , {});
+        let proxy;
+        let autoReset = true;
+        if (Cesium.defined(options)) {
+            if (Cesium.defined(options.proxy)) {
+                proxy = new Cesium.DefaultProxy(options.proxy); //不放在defaultValue中 new 会影响性能
+            }
+            Cesium.defaultValue(options.proxy, undefined);
+            autoReset = Cesium.defaultValue(options.autoReset, true);
+        }
+        var resource = new Cesium.Resource({
+            url: baseUrl + '/GetCacheInfo',
+            proxy: proxy
+        });
+        var layer = [];
+        var dataUrlCache = baseUrl + '/GetDataStreams?';
+        //处理版本信息判断是否清除缓存
+        var m3dLayrCache = new Cesium.MapGISM3DSet({
+            url: dataUrlCache,
+            igserver: true
+        });
+        layer = this.viewer.scene.primitives.add(m3dLayrCache);
+        resource.fetchJson().then(json=> {
+            layer.readyPromise.then(function(layer) {
+                if (autoReset) {
+                    var boundingSphere = layer.boundingSphere;
+                    that.viewer.camera.viewBoundingSphere(boundingSphere, new Cesium.HeadingPitchRange(0.0, -0.5,
+                        boundingSphere.radius));
+                    that.viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+                    if (typeof options.loaded === 'function') {
+                        options.loaded(layer);
+                    }
+                }
+
+            });
+        });
+
+        return layer;
+    }
+
+    /**
      * 设置模型层按方向移动
      * @param {param} layer m3d图层对象
      * @param {param} direction 移动方向
@@ -205,7 +264,7 @@ export default class M3DLayer extends BaseLayer {
      *  let dir = new Cesium.Cartesian3(0.0, 1.0, 1.0); 分别表示xyz方向
      *  m3d.setM3dLayerMovement(tilelayer[0],dir,10.0)
      */
-    setM3dLayerMovement(layer, direction, distance, option) {
+    setM3dLayerMovement(layer, direction, distance, options) {
         if (
             undefined === layer ||
             undefined === direction ||

@@ -66,18 +66,14 @@ export default class TerrainLayer extends BaseLayer {
      * @param {DefaultProxy} [options.proxy = defaultProxy] 代理
      * @returns 地形层对象
      * @example
-     * function callBackfunction(layer){
-     * console.log(layer)
-     * }
-     * terrain = new TerrainLayer(view);
-     * terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain',{
-     * loaded:callBackfunction
-     * });
+     * terrain = new TerrainLayer(viewer:viewer);
+     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain');
      */
     append(url, options) {
         if (!Cesium.defined(url)) {
             return new Cesium.DeveloperError('必须指定url');
         }
+        options = Cesium.defaultValue(options , {});
         let synchronous = true;
         let baseUrl = url;
         let resource;
@@ -97,11 +93,15 @@ export default class TerrainLayer extends BaseLayer {
             if (info !== undefined && info.sceneInfos.length > 0) {
                 let layers = info.sceneInfos[0].layers;
                 for (let i in layers) {
-                    let { layerType, layerRenderIndex } = layers[i];
+                    let { layerType, layerRenderIndex ,elevationScale, range} = layers[i];
                     let type = parseInt(layerType);
                     if (type === LayerType.TERRAINLAYER) {
                         let sceneIndex = 0;
-                        debugger;
+                        let opt = {
+                            range:range,
+                            scale:elevationScale
+                        };
+                        Object.extend(options, opt);
                         let layerRes = this.appendTerrainLayer(
                             baseUrl,
                             sceneIndex,

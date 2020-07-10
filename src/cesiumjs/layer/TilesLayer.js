@@ -1,7 +1,6 @@
 import { CesiumZondy } from '../core/Base';
 
 import BaseLayer from './BaseLayer';
-import LayerType from './LayerType';
 
 /**
  * @author 基础平台研发中心·冯桂英
@@ -62,8 +61,8 @@ export default class TilesLayer extends BaseLayer {
                 colNum: options.colNum,
                 rowNum: options.rowNum,
                 maximumLevel: options.maxLevel,
-                proxy: proxy,
-            }),
+                proxy: proxy
+            })
         );
         return mapGisDocTile;
     }
@@ -98,9 +97,7 @@ export default class TilesLayer extends BaseLayer {
             options = {};
         }
         options.url = url;
-        let mapGis2DDocTile = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.MapGIS2DDocMapProvider(options),
-        );
+        let mapGis2DDocTile = this.viewer.imageryLayers.addImageryProvider(new Cesium.MapGIS2DDocMapProvider(options));
         return mapGis2DDocTile;
     }
 
@@ -150,14 +147,13 @@ export default class TilesLayer extends BaseLayer {
                 tileWidth: options.tileWidth,
                 tileHeight: options.tileHeight,
                 proxy: proxy,
-                mapStyle: options.mapStyle,
-            }),
+                mapStyle: options.mapStyle
+            })
         );
         return mapGisTile;
     }
 
     /**
-     * @private
      * 添加WMS服务图层
      * @param {String} tileUrl 服务地址
      * @param {String} layerName 图层名
@@ -166,12 +162,13 @@ export default class TilesLayer extends BaseLayer {
      * @param {String} options.proxy=null  代理
      * @returns 瓦片层对象
      * @example
+     * let tile = new TilesLayer({viewer:viewer});  
      * tilelayer = tile.appendWMSTile("http://develop.smaryun.com:6163/igs/rest/ogc/doc/WorldJWVector/WMSServer",
-     *        //图层名
-     *       'WorldJWVector:背景图层,世界政区,中国注记', {
-     *        //版本信息
-     *        version: '1.1.1',
-     *      });
+                //图层名
+                 'WorldJWVector:背景图层,世界政区,中国注记', {
+                 //版本信息
+                  version: '1.1.1',
+                });
      */
     appendWMSTile(tileUrl, layerName, options) {
         let _proxy;
@@ -182,19 +179,16 @@ export default class TilesLayer extends BaseLayer {
             url: tileUrl,
             layers: layerName, //'cite:1996' Here just give layer name
             parameters: options.parameters,
-            proxy: _proxy,
+            proxy: _proxy
         };
         if (Cesium.defined(options)) {
             Object.extend(wmsOptions, options);
         }
-        let wmsLayer = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.WebMapServiceImageryProvider(wmsOptions),
-        );
+        let wmsLayer = this.viewer.imageryLayers.addImageryProvider(new Cesium.WebMapServiceImageryProvider(wmsOptions));
         return wmsLayer;
     }
 
     /**
-     * @private
      * 添加WMTS(WebMapTileService) 标准的瓦片
      * @param {String}tileUrl      瓦片服务地址
      * @param {String}layerName     图层名称
@@ -202,16 +196,18 @@ export default class TilesLayer extends BaseLayer {
      * @param {Number}maximumLevel 最大级数
      * @param {Number}startLevel 初始级别 正常默认为0 有的为1
      * @returns 瓦片层对象
+     * @example
+     * let tile = new TilesLayer({viewer:viewer});       
+     * tileLyaer = tile.appendWMTSTile(
+                //瓦片服务地址
+                "http://develop.smaryun.com:6163/igs/rest/ogc/WMTSServer",
+                //图层名称
+                "beijing", 'EPSG:4326_北京市_028mm_GB',
+                //最大级数
+                17,
+                null, 'default', 0);
      */
-    appendWMTSTile(
-        tileUrl,
-        layerName,
-        tileMatrixSetID,
-        maxnumLevel,
-        proxy,
-        style,
-        startLevel,
-    ) {
+    appendWMTSTile(tileUrl, layerName, tileMatrixSetID, maxnumLevel, proxy, style, startLevel) {
         let _proxy = '';
         let _tilingScheme;
         if (proxy !== '' && Cesium.defined(proxy)) {
@@ -221,25 +217,14 @@ export default class TilesLayer extends BaseLayer {
             _tilingScheme = new Cesium.WebMercatorTilingScheme({
                 numberOfLevelZeroTilesX: 1,
                 numberOfLevelZeroTilesY: 1,
-                rectangleSouthwestInMeters: new Cesium.Cartesian2(
-                    -20037508.342789244,
-                    -20037508.342789244,
-                ),
-                rectangleNortheastInMeters: new Cesium.Cartesian2(
-                    20037508.342789244,
-                    20037508.342789244,
-                ),
+                rectangleSouthwestInMeters: new Cesium.Cartesian2(-20037508.342789244, -20037508.342789244),
+                rectangleNortheastInMeters: new Cesium.Cartesian2(20037508.342789244, 20037508.342789244)
             });
         } else {
             _tilingScheme = new Cesium.GeographicTilingScheme({
-                rectangle: Cesium.Rectangle.fromDegrees(
-                    -180.0,
-                    -90.0,
-                    180.0,
-                    90.0,
-                ),
+                rectangle: Cesium.Rectangle.fromDegrees(-180.0, -90.0, 180.0, 90.0),
                 numberOfLevelZeroTilesX: 2,
-                numberOfLevelZeroTilesY: 1,
+                numberOfLevelZeroTilesY: 1
             });
         }
         let wmtsLayer = this.viewer.imageryLayers.addImageryProvider(
@@ -253,8 +238,8 @@ export default class TilesLayer extends BaseLayer {
                 credit: new Cesium.Credit('MapGIS'),
                 tilingScheme: _tilingScheme,
                 proxy: _proxy,
-                startLevel: Cesium.defaultValue(startLevel, 0),
-            }),
+                startLevel: Cesium.defaultValue(startLevel, 0)
+            })
         );
         return wmtsLayer;
     }
@@ -297,8 +282,7 @@ export default class TilesLayer extends BaseLayer {
         let synchronous = Cesium.defaultValue(options.synchronous, true);
         let serverName = Cesium.defaultValue(options.serverName, undefined);
         let layer;
-        let queryURL =
-            wmtsBaseUrl + '?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities';
+        let queryURL = wmtsBaseUrl + '?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities';
         if (Cesium.defined(options.proxy)) {
             queryURL = options.proxy + '?url=' + queryURL;
         }
@@ -310,33 +294,19 @@ export default class TilesLayer extends BaseLayer {
             let maxLevel = -1;
             let contentNodes;
             let startLevel;
-            let capabilityNodes = styleXml.getElementsByTagNameNS(
-                '*',
-                'Capabilities',
-            );
-            debugger;
+            let capabilityNodes = styleXml.getElementsByTagNameNS('*', 'Capabilities');
             if (capabilityNodes !== null && capabilityNodes.length > 0) {
                 var capabilityNode = capabilityNodes[0];
                 if (capabilityNode !== null) {
-                    contentNodes = capabilityNode.getElementsByTagNameNS(
-                        '*',
-                        'Contents',
-                    );
+                    contentNodes = capabilityNode.getElementsByTagNameNS('*', 'Contents');
                     if (contentNodes !== null && contentNodes.length > 0) {
-                        let layerNodes = contentNodes[0].getElementsByTagNameNS(
-                            '*',
-                            'Layer',
-                        );
+                        let layerNodes = contentNodes[0].getElementsByTagNameNS('*', 'Layer');
                         let temLayerNode;
                         if (!Cesium.defined(serverName)) {
                             temLayerNode = layerNodes[0];
                             for (let i in temLayerNode.childNodes) {
-                                if (
-                                    temLayerNode.childNodes[i].nodeName ===
-                                    'ows:Title'
-                                ) {
-                                    serverName =
-                                        temLayerNode.childNodes[i].textContent;
+                                if (temLayerNode.childNodes[i].nodeName === 'ows:Title') {
+                                    serverName = temLayerNode.childNodes[i].textContent;
                                     layerNode = temLayerNode;
                                     break;
                                 }
@@ -344,20 +314,9 @@ export default class TilesLayer extends BaseLayer {
                         } else {
                             for (let i in layerNodes) {
                                 temLayerNode = layerNodes[i];
-                                for (
-                                    var j = 0;
-                                    j < temLayerNode.childNodes.length;
-                                    j++
-                                ) {
-                                    if (
-                                        temLayerNode.childNodes[i].nodeName ===
-                                        'ows:Title'
-                                    ) {
-                                        if (
-                                            serverName ===
-                                            temLayerNode.childNodes[j]
-                                                .textContent
-                                        ) {
+                                for (var j = 0; j < temLayerNode.childNodes.length; j++) {
+                                    if (temLayerNode.childNodes[i].nodeName === 'ows:Title') {
+                                        if (serverName === temLayerNode.childNodes[j].textContent) {
                                             layerNode = temLayerNode;
                                         }
                                         break;
@@ -372,92 +331,44 @@ export default class TilesLayer extends BaseLayer {
                 }
             }
             if (layerNode !== null) {
-                let layerStyleNodes = layerNode.getElementsByTagNameNS(
-                    '*',
-                    'Style',
-                );
+                let layerStyleNodes = layerNode.getElementsByTagNameNS('*', 'Style');
                 if (layerStyleNodes !== null && layerStyleNodes.length > 0) {
                     for (let i in layerStyleNodes[0].childNodes) {
-                        if (
-                            layerStyleNodes[0].childNodes[i].nodeName ===
-                            'ows:Identifier'
-                        ) {
-                            layerStyle =
-                                layerStyleNodes[0].childNodes[i].textContent;
+                        if (layerStyleNodes[0].childNodes[i].nodeName === 'ows:Identifier') {
+                            layerStyle = layerStyleNodes[0].childNodes[i].textContent;
                             break;
                         }
                     }
                 }
 
-                let tileMatrixsetLinks = layerNode.getElementsByTagNameNS(
-                    '*',
-                    'TileMatrixSetLink',
-                );
-                if (
-                    tileMatrixsetLinks !== null &&
-                    tileMatrixsetLinks.length > 0
-                ) {
-                    var TileMatrixSetNodes = tileMatrixsetLinks[0].getElementsByTagNameNS(
-                        '*',
-                        'TileMatrixSet',
-                    );
-                    if (
-                        TileMatrixSetNodes !== null &&
-                        TileMatrixSetNodes.length > 0
-                    ) {
+                let tileMatrixsetLinks = layerNode.getElementsByTagNameNS('*', 'TileMatrixSetLink');
+                if (tileMatrixsetLinks !== null && tileMatrixsetLinks.length > 0) {
+                    var TileMatrixSetNodes = tileMatrixsetLinks[0].getElementsByTagNameNS('*', 'TileMatrixSet');
+                    if (TileMatrixSetNodes !== null && TileMatrixSetNodes.length > 0) {
                         TileMatrixSet = TileMatrixSetNodes[0].textContent;
                     }
-                    var TileMatrixSetLimits = tileMatrixsetLinks[0].getElementsByTagNameNS(
-                        '*',
-                        'TileMatrixSetLimits',
-                    );
-                    if (
-                        TileMatrixSetLimits !== null &&
-                        TileMatrixSetLimits.length > 0
-                    ) {
-                        var TileMatrixLimits = TileMatrixSetLimits[0].getElementsByTagNameNS(
-                            '*',
-                            'TileMatrixLimits',
-                        );
-                        if (
-                            TileMatrixLimits !== null &&
-                            TileMatrixLimits.length > 0
-                        ) {
+                    var TileMatrixSetLimits = tileMatrixsetLinks[0].getElementsByTagNameNS('*', 'TileMatrixSetLimits');
+                    if (TileMatrixSetLimits !== null && TileMatrixSetLimits.length > 0) {
+                        var TileMatrixLimits = TileMatrixSetLimits[0].getElementsByTagNameNS('*', 'TileMatrixLimits');
+                        if (TileMatrixLimits !== null && TileMatrixLimits.length > 0) {
                             maxLevel = TileMatrixLimits.length;
                         }
-                    } else if (
-                        maxLevel === -1 &&
-                        Cesium.defined(contentNodes)
-                    ) {
-                        var TileMatrix = contentNodes[0].getElementsByTagNameNS(
-                            '*',
-                            'TileMatrix',
-                        );
+                    } else if (maxLevel === -1 && Cesium.defined(contentNodes)) {
+                        var TileMatrix = contentNodes[0].getElementsByTagNameNS('*', 'TileMatrix');
                         if (TileMatrix !== null && TileMatrix.length > 0) {
-                            let maxLevelNode =
-                                TileMatrix[TileMatrix.length - 1];
+                            let maxLevelNode = TileMatrix[TileMatrix.length - 1];
                             let startLevelNode = TileMatrix[0];
                             for (let i in startLevelNode.childNodes) {
-                                let name =
-                                    startLevelNode.childNodes[i].nodeName;
-                                if (
-                                    startLevelNode.childNodes[i].nodeName ===
-                                    'ows:Identifier'
-                                ) {
-                                    startLevel =
-                                        startLevelNode.childNodes[i]
-                                            .textContent;
+                                let name = startLevelNode.childNodes[i].nodeName;
+                                if (startLevelNode.childNodes[i].nodeName === 'ows:Identifier') {
+                                    startLevel = startLevelNode.childNodes[i].textContent;
                                     startLevel = parseInt(startLevel); //eval(startLevel);
                                     break;
                                 }
                             }
                             for (let i in maxLevelNode.childNodes) {
-                                if (
-                                    maxLevelNode.childNodes[i].nodeName ===
-                                    'ows:Identifier'
-                                ) {
-                                    maxLevel =
-                                        maxLevelNode.childNodes[i].textContent;
+                                if (maxLevelNode.childNodes[i].nodeName === 'ows:Identifier') {
+                                    maxLevel = maxLevelNode.childNodes[i].textContent;
                                     maxLevel = parseInt(maxLevel); // eval(maxLevel);
                                     maxLevel = maxLevel - startLevel;
                                     break;
@@ -467,11 +378,7 @@ export default class TilesLayer extends BaseLayer {
                     }
                 }
             }
-            if (
-                TileMatrixSet !== null &&
-                maxLevel !== -1 &&
-                layerStyle !== null
-            ) {
+            if (TileMatrixSet !== null && maxLevel !== -1 && layerStyle !== null) {
                 let tileURL = '';
                 if (Cesium.defined(options.proxy)) {
                     tileURL = options.proxy + '?url=';
@@ -484,15 +391,7 @@ export default class TilesLayer extends BaseLayer {
                     '&style=' +
                     layerStyle +
                     '&tilecol={TileCol}&tilerow={TileRow}&tilematrixset={TileMatrixSet}&format=image/png&service=WMTS&version=1.0.0&&request=GetTile';
-                layer = this.appendWMTSTile(
-                    tileURL,
-                    serverName,
-                    TileMatrixSet,
-                    maxLevel,
-                    options.proxy,
-                    layerStyle,
-                    startLevel,
-                );
+                layer = this.appendWMTSTile(tileURL, serverName, TileMatrixSet, maxLevel, options.proxy, layerStyle, startLevel);
                 if (options.loaded) {
                     options.loaded(layer);
                 }
@@ -501,7 +400,7 @@ export default class TilesLayer extends BaseLayer {
 
         if (synchronous) {
             let resource = new Cesium.Resource({
-                url: queryURL,
+                url: queryURL
             });
             resource.fetchXML().then((styleXml) => parseXml(styleXml));
         } else {
@@ -511,10 +410,7 @@ export default class TilesLayer extends BaseLayer {
             if (request.status === 200) {
                 //所有浏览器统一用这种方式处理(因为高版本的浏览器都支持)
                 var parser = new DOMParser();
-                var xmlObject = parser.parseFromString(
-                    request.responseText,
-                    'text/xml',
-                );
+                var xmlObject = parser.parseFromString(request.responseText, 'text/xml');
                 if (xmlObject) {
                     parseXml(xmlObject);
                 }
@@ -535,25 +431,19 @@ export default class TilesLayer extends BaseLayer {
         if (!Cesium.defined(options)) {
             options = {};
         }
-        this._isHistoryImage = Cesium.defaultValue(
-            options.isHistoryImage,
-            false,
-        );
+        this._isHistoryImage = Cesium.defaultValue(options.isHistoryImage, false);
         this._imageVersion = Cesium.defaultValue(options.imageVersion, '0');
         let offset = Cesium.defaultValue(options.Offset, false);
         let offsetLabel = '';
         if (offset) {
             offsetLabel = '&gl=cn';
         }
-        let _url =
-            'http://mt{s}.google.cn/vt/{type}&hl=zh-CN' +
-            offsetLabel +
-            '&x={x}&y={y}&z={z}&s=Galileo';
+        let _url = 'http://mt{s}.google.cn/vt/{type}&hl=zh-CN' + offsetLabel + '&x={x}&y={y}&z={z}&s=Galileo';
         _url = _url.replace('{type}', options.ptype);
         let googleMap = this.viewer.imageryLayers.addImageryProvider(
             new Cesium.GoogleMapProvider({
-                url: _url,
-            }),
+                url: _url
+            })
         );
         return googleMap;
     }
@@ -570,9 +460,7 @@ export default class TilesLayer extends BaseLayer {
      * let tilelayer = tile.appendGoogleMapExt({ptype:'s'});
      */
     appendGoogleMapExt(options) {
-        let googleMap = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.GoogleMapProvider(options),
-        );
+        let googleMap = this.viewer.imageryLayers.addImageryProvider(new Cesium.GoogleMapProvider(options));
         return googleMap;
     }
 
@@ -591,15 +479,13 @@ export default class TilesLayer extends BaseLayer {
         }
         let maximumLevel = Cesium.defaultValue(options.maximumLevel, 16);
         let type = Cesium.defaultValue(options.type, 'vec');
-        let baseUrl =
-            'http://{s}.is.autonavi.com/appmaptile?&size=1&scale=1&x={x}&y={y}&z={z}';
+        let baseUrl = 'http://{s}.is.autonavi.com/appmaptile?&size=1&scale=1&x={x}&y={y}&z={z}';
         let url = baseUrl;
         let gaodeLayer;
-        switch (ptype) {
+        switch (options.ptype) {
             case 'img':
                 {
-                    url =
-                        'https://{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}';
+                    url = 'https://{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}';
                 }
                 break;
             case 'road':
@@ -618,11 +504,9 @@ export default class TilesLayer extends BaseLayer {
             credit: new Cesium.Credit('高德地图服务'),
             subdomains: ['webst01', 'webst02', 'webst03', 'webst04'],
             tilingScheme: new Cesium.WebMercatorTilingScheme(),
-            maximumLevel: maximumLevel,
+            maximumLevel: maximumLevel
         });
-        gaodeLayer = this.viewer.imageryLayers.addImageryProvider(
-            gaodeProvider,
-        );
+        gaodeLayer = this.viewer.imageryLayers.addImageryProvider(gaodeProvider);
         return gaodeLayer;
     }
 
@@ -634,9 +518,7 @@ export default class TilesLayer extends BaseLayer {
      * let tilelayer = tile.appendBaiduMap({ptype:'sate'});
      */
     appendBaiduMap(options) {
-        let baiduProvider = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.BaiduMapProvider(options),
-        );
+        let baiduProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduMapProvider(options));
         return baiduProvider;
     }
 
@@ -654,44 +536,33 @@ export default class TilesLayer extends BaseLayer {
         switch (options.ptype) {
             case 'Pressure':
                 {
-                    options.url =
-                        'https://h.maps.owm.io/map/pressure_new/{level}/{row}/{col}?appid=' +
-                        options.appid;
+                    options.url = 'https://h.maps.owm.io/map/pressure_new/{level}/{row}/{col}?appid=' + options.appid;
                 }
                 break;
             case 'Temperature':
                 {
-                    options.url =
-                        'https://h.maps.owm.io/map/temp_new/{level}/{row}/{col}?appid=' +
-                        options.appid;
+                    options.url = 'https://h.maps.owm.io/map/temp_new/{level}/{row}/{col}?appid=' + options.appid;
                 }
                 break;
             case 'Windspeed':
                 {
-                    options.url =
-                        'https://h.maps.owm.io/map/wind_new/{level}/{row}/{col}?appid=' +
-                        options.appid;
+                    options.url = 'https://h.maps.owm.io/map/wind_new/{level}/{row}/{col}?appid=' + options.appid;
                 }
                 break;
             case 'Clouds':
                 {
-                    options.url =
-                        'https://h.maps.owm.io/map/clouds_new/{level}/{row}/{col}?appid=' +
-                        options.appid;
+                    options.url = 'https://h.maps.owm.io/map/clouds_new/{level}/{row}/{col}?appid=' + options.appid;
                 }
                 break;
             case 'Label':
                 {
-                    options.url =
-                        'http://c.basemaps.cartocdn.com/light_only_labels/{level}/{row}/{col}.png';
+                    options.url = 'http://c.basemaps.cartocdn.com/light_only_labels/{level}/{row}/{col}.png';
                 }
                 break;
             default:
                 break;
         }
-        let openWeatherProvider = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.OpenWeatherMapProvider(options),
-        );
+        let openWeatherProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.OpenWeatherMapProvider(options));
         return openWeatherProvider;
     }
 
@@ -710,10 +581,7 @@ export default class TilesLayer extends BaseLayer {
             return new Cesium.DeveloperError('必须指定url 或type ');
         }
         if (!Cesium.defined(options.token)) {
-            Cesium.deprecationWarning(
-                'http://www.tianditu.gov.cn',
-                '请到天地图官网自行申请开发token，自带token仅做功能验证随时可能失效',
-            );
+            Cesium.deprecationWarning('http://www.tianditu.gov.cn', '请到天地图官网自行申请开发token，自带token仅做功能验证随时可能失效');
         }
         const url = 'http://t0.tianditu.com/DataServer?';
         const row = '_c&X={x}&Y={y}&L={l}';
@@ -738,12 +606,33 @@ export default class TilesLayer extends BaseLayer {
                     options.url = `${url}T=cia${row}`;
                 }
                 break;
+            case 'cva':
+                {
+                    options.url = `${url}T=cva${row}`;
+                }
+                break;
+            case 'eia':
+                {
+                    options.url = `${url}T=eia${row}`;
+                }
+                break;
+            case 'eva':
+                {
+                    options.url = `${url}T=eva${row}`;
+                }
+                break;
+            case 'ibo':
+                {
+                    options.url = `${url}T=ibo${row}`;
+                }
+                break;
+            case 'cta': {
+                options.url = `${url}T=cta${row}`;
+            }
             default:
                 break;
         }
-        let TDTuProvider = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.TiandituMapProvider(options),
-        );
+        let TDTuProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.TiandituMapProvider(options));
         return TDTuProvider;
     }
 
@@ -760,10 +649,7 @@ export default class TilesLayer extends BaseLayer {
         if (!Cesium.defined(options)) {
             options = {};
         }
-        let token = Cesium.defaultValue(
-            options.token,
-            '9c157e9585486c02edf817d2ecbc7752',
-        );
+        let token = Cesium.defaultValue(options.token, '9c157e9585486c02edf817d2ecbc7752');
         if (Cesium.defined(options.ptype)) {
             let url =
                 'http://{s}.tianditu.com/{lw}/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer={layerType}&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset=w&format=tiles&tk=' +
@@ -786,30 +672,17 @@ export default class TilesLayer extends BaseLayer {
                     url = url.replace('{layerType}', 'cia');
                     break;
             }
-            let tiandituTerwProvider = new Cesium.WebMapTileServiceImageryProvider(
-                {
-                    url: url,
-                    layer: options.ptype,
-                    style: 'default',
-                    format: 'tiles',
-                    tileMatrixSetID: 'w',
-                    credit: new Cesium.Credit('天地图'),
-                    subdomains: [
-                        't0',
-                        't1',
-                        't2',
-                        't3',
-                        't4',
-                        't5',
-                        't6',
-                        't7',
-                    ],
-                    maximumLevel: 18,
-                },
-            );
-            let tiandituImage = this.viewer.imageryLayers.addImageryProvider(
-                tiandituTerwProvider,
-            );
+            let tiandituTerwProvider = new Cesium.WebMapTileServiceImageryProvider({
+                url: url,
+                layer: options.ptype,
+                style: 'default',
+                format: 'tiles',
+                tileMatrixSetID: 'w',
+                credit: new Cesium.Credit('天地图'),
+                subdomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
+                maximumLevel: 18
+            });
+            let tiandituImage = this.viewer.imageryLayers.addImageryProvider(tiandituTerwProvider);
             return tiandituImage;
         }
         return null;
@@ -869,18 +742,16 @@ export default class TilesLayer extends BaseLayer {
     appendTileMapServiceImage(url, options) {
         var para = {
             url: url,
-            maximumLevel: 8,
+            maximumLevel: 8
         };
         if (defined(options)) {
             Object.extend(para, options);
         }
         var imageryProvider = new Cesium.UrlTemplateImageryProvider(para);
 
-        var tileMapService = this.viewer.imageryLayers.addImageryProvider(
-            imageryProvider,
-        );
+        var tileMapService = this.viewer.imageryLayers.addImageryProvider(imageryProvider);
         return tileMapService;
     }
 }
-
+ 
 CesiumZondy.Layer.TilesLayer = TilesLayer;
