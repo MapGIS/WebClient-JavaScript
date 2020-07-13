@@ -126,7 +126,7 @@
         v-for="l in smaryun"
         :key="l.name"
       >
-        <span class="information">Openlayers</span>
+        <span class="information">{{l.name}}</span>
         <p> <a
             :href="l.href"
             target="_blank"
@@ -207,15 +207,15 @@ export default {
           href: "http://develop.smaryun.com:8899/static/libs/include-openlayers-local.js",
         },
         {
-          name: "Openlayers",
+          name: "leaflet",
           href: "http://develop.smaryun.com:8899/static/libs/include-leaflet-local.js",
         },
         {
-          name: "Openlayers",
+          name: "mapboxgl",
           href: "http://develop.smaryun.com:8899/static/libs/include-mapboxgl-local.js",
         },
         {
-          name: "Openlayers",
+          name: "cesium",
           href: "http://develop.smaryun.com:8899/static/libs/include-cesium-local.js",
         }
       ]

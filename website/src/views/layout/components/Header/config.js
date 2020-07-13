@@ -6,8 +6,15 @@ export const Headers = [
       {
         title: "概述",
         links: [
-          ["核心服务","详细服务", "插件列表", "调用方式", "四大引擎选择", "下载"],
-          ["其他","详细图表","插件标签","提交bug"],
+          [
+            "核心服务",
+            "详细服务",
+            "插件列表",
+            "调用方式",
+            "四大引擎选择",
+            "下载",
+          ],
+          ["详细图表", "插件标签", "提交bug", "其他"],
         ],
         routes: [
           [
@@ -19,10 +26,10 @@ export const Headers = [
             "/total/download",
           ],
           [
+            "/total/detailChart",
+            "/total/pluginTags",
+            "/total/bugCommit",
             "/total/other",
-           "/total/detailChart",
-           "/total/pluginTags",
-           "/total/bugCommit",
           ],
         ],
       },
@@ -253,6 +260,7 @@ export const Headers = [
 export const SubHeader = [
   {
     title: "开发指南",
+    active: 'Cesium',
     menus: [
       {
         title: "Cesium",
@@ -495,7 +503,8 @@ export const SubHeader = [
   },
 ];
 
-export const MobileHeaders = [
+export const MobileHeaders = [];
+export const MobileHeadersOrigin = [
   {
     title: "首页",
     menus: [
@@ -508,7 +517,7 @@ export const MobileHeaders = [
             "/total/plugins",
             "/total/use",
             "/total/select",
-            "download",
+            "/total/download",
           ],
         ],
       },
@@ -530,7 +539,52 @@ export const MobileHeaders = [
 
 export const MobileSubHeader = [
   {
-    title: "快速访问",
+    title: "首页",
+    active: '功能',
+    menus: [
+      {
+        title: "功能",
+        menus: [
+          {
+            title: "概述",
+            links: [
+              ["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"],
+            ],
+            routes: [
+              [
+                "/total/core",
+                "/total/detail",
+                "/total/use",
+                "/total/select",
+                "/total/download",
+              ],
+            ],
+          },
+        ],
+      },
+      {
+        title: "插件",
+        menus: [
+          {
+            title: "插件详情",
+            links: [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
+            routes: [
+              [
+                "/total/plugins",
+                "/total/detailChart",
+                "/total/pluginTags",
+                "/total/bugCommit",
+                "/total/other",
+              ],
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "开发指南",
+    active: "Cesium",
     menus: [
       {
         title: "Cesium",

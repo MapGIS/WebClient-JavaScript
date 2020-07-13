@@ -28,14 +28,14 @@ body.small-header .top-nav {
     margin-top : 8px;
 }
 
-.image img {
+/* .image img {
     display: block;
     height : auto;
     width  : fit-content !important;
-}
+} */
 
 .mapgis-webclient-logo {
-    margin-left: 79px;
+    /* margin-left: 79px; */
     height     : 38px !important;
 }
 
@@ -45,5 +45,5 @@ body.small-header .top-nav {
 }
 
 #main>.core {
-    padding: 30px !important;
+    padding: 6px !important;
 }

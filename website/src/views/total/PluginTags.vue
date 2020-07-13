@@ -1,13 +1,13 @@
 <template>
   <div class="webclient-plugin-list">
     <el-row type="flex">
-      <el-col :span="mobile ? 23 : 18" offset="3">
-        <h1>{{title}}</h1>
+      <el-col :offset="mobile ? 1 : 3">
+        <h2>{{title}}</h2>
       </el-col>
     </el-row>
 
     <el-row type="flex">
-      <el-col :span="mobile ? 23 : 18" offset="3">
+      <el-col :offset="mobile ? 1 : 3">
         <h4>{{titledetail}}</h4>
       </el-col>
     </el-row>

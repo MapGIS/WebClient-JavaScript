@@ -1,230 +1,153 @@
 <template>
-  <div>
-    <el-row type="flex" justify="center" class="banner">
-      <el-col :span="16">
-        <el-tabs tab-position='left' style="height: 100%;">
-          <el-tab-pane label="提交问题">
-            <h4>{{submitquestion.title}}</h4>
-            <p>{{submitquestion.detail}}</p>
-          </el-tab-pane>
-          <el-tab-pane label="DataAnalysis">
-            <el-table :data="dataanalysis" border stripe style="width: 100%">
-              <el-table-column type="index">
-              </el-table-column>
-              <el-table-column prop="func" label="功能">
-              </el-table-column>
-              <el-table-column prop="detail" label="说明">
-              </el-table-column>
-              <el-table-column prop="url" label="Url地址">
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
-          <el-tab-pane label="DataView">
-            <el-table :data="dataview" border stripe style="width: 100%">
-              <el-table-column type="index">
-              </el-table-column>
-              <el-table-column prop="func" label="功能">
-              </el-table-column>
-              <el-table-column prop="detail" label="说明">
-              </el-table-column>
-              <el-table-column prop="url" label="环境依赖">
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
-          <el-tab-pane label="IgServer">
-            <el-table :data="igserver" border stripe style="width: 100%">
-              <el-table-column type="index">
-              </el-table-column>
-              <el-table-column prop="func" label="功能">
-              </el-table-column>
-              <el-table-column prop="detail" label="说明">
-              </el-table-column>
-              <el-table-column prop="url" label="环境依赖">
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
-        </el-tabs>
+  <div class="website-bug-commit">
+    <h1>提交BUG说明</h1>
+    <el-row type="flex" justify="center">
+      <el-col :span="mobile ? 23 : 12">
+        <h3>{{subQuestion.title}}</h3>
+        <div class="tip">
+          <p>
+            {{subQuestion.detail}}
+            <a
+              :href="'https://github.com/MapGIS/WebClient-JavaScript/issues'"
+              target="_blank"
+            >https://github.com/MapGIS/WebClient-JavaScript/issues</a>
+          </p>
+        </div>
+        <el-divider></el-divider>
+
+        <h3>{{funRequire.title}}</h3>
+        <div class="tip">
+          <p>{{funRequire.detail}}</p>
+          <br />
+          <el-image
+            :class="{'image-mobile': mobile}"
+            :src="funRequire.img"
+            :preview-src-list="[funRequire.img]"
+          />
+        </div>
+        <el-divider></el-divider>
+
+        <h3>{{bugReport.title}}</h3>
+        <div class="tip">
+          <p>{{bugReport.detail}}</p>
+          <br />
+          <el-image
+            :class="{'image-mobile': mobile}"
+            :src="bugReport.img"
+            :preview-src-list="[bugReport.img]"
+          />
+        </div>
+        <el-divider></el-divider>
+
+        <h3>{{estimate.title}}</h3>
+        <div class="tip">
+          <p>{{estimate.detail}}</p>
+          <br />
+          <el-image
+            :class="{'image-mobile': mobile}"
+            :src="estimate.img"
+            :preview-src-list="[estimate.img]"
+          />
+        </div>
+        <el-divider></el-divider>
+
+        <h3>{{applyBug.title}}</h3>
+        <div class="tip">
+          <p>{{applyBug.detail}}</p>
+          <br />
+          <el-image
+            :class="{'image-mobile': mobile}"
+            :src="applyBug.img"
+            :preview-src-list="[applyBug.img]"
+          />
+        </div>
+        <el-divider></el-divider>
+
+        <h3>{{assignees.title}}</h3>
+        <div class="tip">
+          <p>{{assignees.detail}}</p>
+          <br />
+          <el-image
+            :class="{'image-mobile': mobile}"
+            :src="assignees.img"
+            :preview-src-list="[assignees.img]"
+          />
+        </div>
+        <el-divider></el-divider>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        submitquestion:{
-          title:'新的问题',
-          detail:'用户点击新问题，有两种方式可供选择。分别是功能需求、bug报告。其中功能需求更侧重于添加新的功能，完善此前不足；bug报告则是对功能本身存在不足提出要求。提交bug的网址为:https://github.com/MapGIS/WebClient-JavaScript/issues'
-        },
-        datastore: [{
-          func: '创建大数据存储-Windows',
-          detail: '创建大数据存储window版本（postgresql、ES集群、mongoDB集群）',
-          url: '无说明'
-        }, {
-          func: '创建大数据存储-Linux',
-          detail: '创建大数据存储linux版本（postgresql、ES集群、mongoDB集群、hdfs集群）',
-          url: '无说明'
-        }, {
-          func: '数据导入',
-          detail: 'MapGisDataStore数据导入工具',
-          url: '无说明'
-        }, {
-          func: '数据管理',
-          detail: 'MapGisDataStores数据管理（数据目录、数据预览、词典上传（ES）、文件操作（hdfs））',
-          url: '无说明'
-        }, {
-          func: '时空查询功能',
-          detail: '根据空间、时间、ID列表、其它属性条件进行分页查询',
-          url: '/es/stQuery?'
-        }, {
-          func: '时空聚合统计功能',
-          detail: '	根据空间、时间、其它属性条件以及聚合条件（sum、max、min、average等）进行聚合查询',
-          url: '/es/stQueryByAgg?'
-        }, {
-          func: '时空聚合查询功能（GeoHash聚合）',
-          detail: '根据空间、时间、其它属性条件对指定属性字段的值进行GeoHash聚合',
-          url: '/es/stGeoHashQueryByAgg?'
-        }, {
-          func: '	地理围栏功能',
-          detail: '根据空间围栏、时间、属性围栏条件进行查询返回结果确定对象是否在围栏内',
-          url: '/es/GeoEnclosureQuery?'
-        }],
-        dataanalysis: [{
-          func: '拷贝数据任务',
-          detail: '拷贝数据任务提交接口',
-          url: '/analysticservice/job/copyData/submit?'
-        }, {
-          func: '计算字段任务',
-          detail: '计算字段任务提交接口',
-          url: '/analysticservice/job/calculateField/submit?'
-        }, {
-          func: '连接要素图层任务',
-          detail: '连接要素图层任务提交接口',
-          url: '/analysticservice/job/joinFeature/submit?'
-        }, {
-          func: '属性汇总任务',
-          detail: '属性汇总任务提交接口',
-          url: '/analysticservice/job/summaryAttribute/submit?'
-        }, {
-          func: '范围内汇总要素任务',
-          detail: '范围内汇总要素任务提交接口',
-          url: '/analysticservice/job/summaryWithin/submit?'
-        }, {
-          func: '格网聚合点要素任务',
-          detail: '格网聚合点要素任务提交接口',
-          url: '/analysticservice/job/summaryMesh/submit?'
-        }, {
-          func: '构建追踪轨迹任务',
-          detail: '构建追踪轨迹任务提交接口',
-          url: '/analysticservice/job/reconstructTracks/submit?'
-        }, {
-          func: '创建缓冲分析任务',
-          detail: '创建缓冲分析任务提交接口',
-          url: '/analysticservice/job/createBuffer/submit?'
-        }, {
-          func: '探测事件分析任务',
-          detail: '探测事件分析任务提交接口',
-          url: '/analysticservice/job/detectIncidents/submit?'
-        }, {
-          func: '查找相似位置任务',
-          detail: '查找相似位置任务提交接口',
-          url: '/analysticservice/job/findSimilarLocation/submit?'
-        }, {
-          func: '计算密度任务',
-          detail: '计算密度任务提交接口',
-          url: '/analysticservice/job/calculateDensity/submit?'
-        }, {
-          func: '计算热点任务',
-          detail: '计算热点任务提交接口',
-          url: '	/analysticservice/job/findHotSpot/submit?'
-        }, {
-          func: '计算时空立方体任务',
-          detail: '计算时空立方体任务提交接口',
-          url: '/analysticservice/job/createSpaceTimeCube/submit?'
-        }],
-        dataview: [{
-          func: '矢量瓦片',
-          detail: '支持mvt.pbf的矢量瓦片功能',
-          url: 'igserver的矢量瓦片的出图服务'
-        }, {
-          func: '矢量专题图',
-          detail: '支持geojson，object的矢量专题图功能',
-          url: 'igserver的矢量元素的出图服务'
-        }, {
-          func: '百度EchartGL',
-          detail: '支持百度EchartGL三维球的地图服务功能',
-          url: '编辑样式的时候必须严格遵守百度EchartGL的格式'
-        }, {
-          func: '百度MapV',
-          detail: '支持百度MapV的二维地图数据可视化表达',
-          url: '编辑样式的时候必须严格遵守百度MapV的格式'
-        }, {
-          func: '聚类图/热力图/密度图',
-          detail: '支持四大引擎的聚类热力密度图可视化表达',
-          url: 'MapBoxGl/Openlayers/Cesium无要求，leaflet必须引入对应插件'
-        }, {
-          func: 'ElasticSearch服务对接',
-          detail: '封装了原始的ElasticSearch.js接口和适应空间信息的中地接口，按照各自需求进行选择',
-          url: '必须引入对应elasticSearch/datastore的脚本'
-        }, {
-          func: 'GeoSpark服务对接',
-          detail: '针对分布式空间分析的结构进行的中地业务的封装，提供Rest的服务',
-          url: '必须引入对应dataanalysis的脚本'
-        }, {
-          func: '基本地图操作',
-          detail: '针对四大地图引擎的基本地图操作',
-          url: '必须引入对应地图引擎如leaflet.js/mapbox-gl.js/openlayers.js/cesium.js'
-        }, {
-          func: '前端空间分析服务',
-          detail: '针对四大地图引擎的前端空间分析服务',
-          url: '除了必须引入对应地图引擎如leaflet.js / mapbox-gl.js / openlayers.js / cesium.js外,必须引入公司对应turf.js脚本'
-        }, {
-          func: '前端GeoJSON服务',
-          detail: '针对四大地图引擎的前端GeoJSON的绘制、分析、计算服务',
-          url: '除了必须引入对应地图引擎外,必须引入对应geojson.js脚本用于格式解析、反解析'
-        }],
-        igserver: [{
-          func: '底图服务',
-          detail: '针对四大地图引擎，关于mapgis的相关数据出图',
-          url: '除原始地图引擎脚本外，还需引入igserver.js,（leaflet 100%，mapboxgl 测试验证完成）'
-        }, {
-          func: '目录服务',
-          detail: '通用的mapgis提供的rest服务',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }, {
-          func: '要素服务',
-          detail: '通用的mapgis提供的rest服务',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }, {
-          func: '工作流服务',
-          detail: '通用的mapgis提供的rest服务',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }, {
-          func: '几何空间分析服务',
-          detail: '通用的mapgis提供的rest服务',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }, {
-          func: '地图服务',
-          detail: '通用的mapgis提供的rest服务',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }, {
-          func: '专题图服务',
-          detail: '通用的mapgis提供的rest服务',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }, {
-          func: '客户端专题图',
-          detail: '通过rest服务获取相关数据，绘制客户端专题图',
-          url: '除原始地图引擎脚本外，还需引入igserver.js'
-        }]
+import imgfunRequire from './bug-img/funRequire.png'
+import imgbugReport from './bug-img/bugReport.png'
+import imgestimate from './bug-img/estimate.png'
+import imgapplyBug from './bug-img/applyBug.png'
+import imgassignees from './bug-img/assignees.png'
+import { isMobile } from '@/utils/mobile'
+
+export default {
+  data() {
+    return {
+      mobile: isMobile(),
+      subQuestion: {
+        title: '新的问题',
+        detail:
+          '用户点击新问题，有两种方式可供选择。分别是功能需求、bug报告。其中功能需求更侧重于添加新的功能，完善此前不足；bug报告则是对功能本身存在不足提出要求。提交bug的网址为:'
+      },
+      funRequire: {
+        title: '功能需求',
+        detail:
+          '提出问题的类型之一是功能需求，以下截图则为功能需求模板，可以根据给出的模板做相应的调整。',
+        img: imgfunRequire
+      },
+      bugReport: {
+        title: '问题报告',
+        detail:
+          '提出问题的类型之二是bug报告，当工程中存在bug未解决时，可以选择此模式，具体模板见下面截图。',
+        img: imgbugReport
+      },
+      estimate: {
+        title: '问题标签',
+        detail:
+          '当用户向维护者提出一个问题后，可以给此问题拟定一个可以表达此问题含义的标题，方便维护者查找。',
+        img: imgestimate
+      },
+      applyBug: {
+        title: '问题难度系数',
+        detail: '给问题一定描述后，可以给此问题选择一个与此匹配的难度系数。',
+        img: imgapplyBug
+      },
+      assignees: {
+        title: '维护者',
+        detail:
+          '首先选择问题类型，然后给出问题的相关描述，最后给问题指定具体负责人。',
+        img: imgassignees
       }
     }
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .banner {
-    padding-top: 20px;
-    text-align: left;
+.website-bug-commit {
+  h1 {
+    font-size: 30px;
+    text-align: center;
   }
+  .tip {
+    padding: 8px 16px;
+    background-color: #ecf8ff;
+    border-radius: 4px;
+    border-left: 5px solid #50bfff;
+    margin: 20px 0;
+    .image-mobile {
+      width: 80vw;
+    }
+  }
+  .image-mobile {
+    width: 90vw;
+  }
+}
 </style>

@@ -21,13 +21,19 @@
         placement="top-start"
         trigger="hover"
       >
-        <header-menu :menus="h.menus" :icon="h.icon"/>        
+        <header-menu
+          :menus="h.menus"
+          :icon="h.icon"
+        />
         <el-button
           type="text"
           slot="reference"
-          :class="{'active': isActive(h.title)}"
+          :class="{'active': isActiveMenu(h.title)}"
         >
-          <IconFont :type="h.icon" class="menu-icon"/>
+          <IconFont
+            :type="h.icon"
+            class="menu-icon"
+          />
           {{h.title}}
         </el-button>
       </el-popover>
@@ -39,7 +45,7 @@
           trigger="hover"
         >
           <header-sub-menu
-            :active="activeTab"
+            :active="activeTabs[h.title]"
             :menus="h.menus"
           />
           <el-button
@@ -69,38 +75,66 @@ export default {
     return {
       mobile: isMobile(),
       logo: './static/assets/logo/mapgis_blue.png',
-      activeTab: 'cesium',
+      activeMenu: '',
+      activeTabs: {},
       headers: Headers,
       subheaders: SubHeader,
       mobileHeaders: MobileHeaders,
       mobileSubheaders: MobileSubHeader,
     };
   },
+  created () {
+    const headers = isMobile() ? MobileSubHeader : SubHeader;
+    headers.forEach((h) => {
+      this.activeTabs[h.title] = h.active.toLowerCase();
+    });
+  },
+  mounted () {
+    this.activeMenu = this.$route.params.mapmode.toLowerCase();
+  },
   watch: {
     '$route' (to, from) {
       // 对路由变化作出响应...
-      if (to.params.mapmode !== from.params.mapmode) {
-        this.activeTab = to.params.mapmode;
+      let mapmode = to.params.mapmode
+      if (mapmode !== from.params.mapmode) {
+        const headers = this.mobile ? MobileSubHeader : SubHeader;
+        this.activeMenu = mapmode.toLowerCase();
+        headers.forEach(header => {
+          header.menus.forEach(m => {
+            let active = m.title.toLowerCase();
+            if (active === mapmode) {
+              this.activeTabs[header.title] = active
+            }
+          })
+        });
       }
     },
   },
   methods: {
-    isActive (title) {
-      if (title.toLowerCase().indexOf(this.activeTab) >= 0) {
-        return true;
-      }
+    isActiveTab (title) {
+      title = title.toLowerCase()
+      Object.keys(this.activeTabs).forEach(key => {
+        let active = this.activeTabs[key]
+        if (title.indexOf(active) >= 0) {
+          return true;
+        }
+      })
       return false;
+    },
+    isActiveMenu (title) {
+      if (!this.activeMenu || !title) return false
+      title = title.toLowerCase();
+      if (title.indexOf(this.activeMenu) >= 0) {
+        return true
+      }
+      return false
     }
-  },
-  mounted () {
-    this.activeTab = this.$route.params.mapmode;
   }
 }
 </script>
 
 <style lang="scss">
 .mapgis-header-mobile {
-  padding: 0px;
   height: 48px !important;
   .mapgis-webclient-logo {
     margin-left: 22px !important;
@@ -114,7 +148,7 @@ export default {
     margin-right: 22px !important;
   }
   .mapgis-webclient-menu {
-    height: 48px !important;  
+    height: 48px !important;
     span {
       font-size: 13px !important;
     }
@@ -123,7 +157,7 @@ export default {
 .mapgis-header {
   font-family: Microsoft YaHei;
   width: 100%;
-  padding: 0px;
+  padding: 0px !important;
   height: 72px;
   background: rgba(37, 45, 69, 1);
 

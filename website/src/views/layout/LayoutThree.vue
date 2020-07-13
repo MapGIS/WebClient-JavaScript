@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header :class="{'webclient-three-header-mobile':mobile}">
+    <el-header :class="{'webclient-three-header-mobile':mobile, 'webclient-three-header': true}">
       <Header></Header>
     </el-header>
     <el-main class="webclient-three-layout">
@@ -43,7 +43,7 @@ export default {
 }
 .webclient-three-header {
   padding: 0px;
-  height: 72px !important;
+  height: 72px;
 }
 .webclient-three-layout {
   padding: 0px;

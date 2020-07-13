@@ -1,6 +1,9 @@
 <template>
   <el-container class="webclient-gallery-wrapper">
-    <el-header style="padding:0px;height:72px;">
+    <el-header
+      style="padding:0px;"
+      :height="mobile?'48px':'72px'"
+    >
       <Header></Header>
     </el-header>
     <el-container>
@@ -255,7 +258,7 @@ export default {
           vm.heightChange = true;
           if (callback) callback();
         });
-      }      
+      }
     },
   },
   mounted () {
