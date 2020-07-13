@@ -14,8 +14,8 @@
   },
   "source": {
     "includePattern": ".+\\.js?$",
-    "include": ["service/", "mapboxgl/"],
-    "exclude": ["service/baseserver"]
+    "include": ["src/service/", "src/mapboxgl/"],
+    "exclude": ["src/service/baseserver"]
   },
   "plugins": ["plugins/markdown"],
   "templates": {
@@ -28,7 +28,6 @@
       "outputSourceFiles": true
     },
     "better-docs": {
-      "name": "Client for JavaScript",
       "logo": "../image/mapgis_blue.png",
       "title": "",
       "hideGenerator": false,

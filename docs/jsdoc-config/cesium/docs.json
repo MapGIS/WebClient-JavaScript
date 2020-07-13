@@ -4,19 +4,21 @@
     "private": false,
     "recurse": true,
     "lenient": true,
-    "tutorials": "./docs/jsdoc-config/leaflet/tutorials",
-    "destination": "./website/public/docs/leaflet",
+    "tutorials": "./docs/jsdoc-config/cesium/tutorials",
+    "destination": "./website/public/docs/cesium",
     "template": "./docs/templates/better-docs"
   },
   "disqus": "",
   "tags": {
-    "allowUnknownTags": true,
-    "linkdoc-leaflet": "https://www.mapbox.com/mapbox-gl-js/api/"
+    "allowUnknownTags": true
   },
   "source": {
     "includePattern": ".+\\.js?$",
-    "include": ["src/service/", "src/leaflet/"],
-    "exclude": ["src/service/baseserver", "src/leaflet/extend/leaflet-plugins"]
+    "include": ["src/cesiumjs/"],
+    "exclude": [
+      "src/cesiumjs/overlay/echarts/",
+      "src/cesiumjs/overlay/mapv/"
+    ]
   },
   "plugins": ["plugins/markdown"],
   "templates": {

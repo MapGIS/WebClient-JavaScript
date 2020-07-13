@@ -381,7 +381,7 @@ function buildGroupNav (members, title) {
   if (title) {
     nav += '<h2>' + title + '</h2>'
   }
-  nav += buildMemberNav(members.tutorials || [], 'Tutorials', seenTutorials, linktoTutorial)
+  /* nav += buildMemberNav(members.tutorials || [], 'Tutorials', seenTutorials, linktoTutorial)
   nav += buildMemberNav(members.modules || [], 'Modules', {}, linkto)
   nav += buildMemberNav(members.externals || [], 'Externals', seen, linktoExternal)
   nav += buildMemberNav(members.namespaces || [], 'Namespaces', seen, linkto)
@@ -389,7 +389,17 @@ function buildGroupNav (members, title) {
   nav += buildMemberNav(members.interfaces || [], 'Interfaces', seen, linkto)
   nav += buildMemberNav(members.events || [], 'Events', seen, linkto)
   nav += buildMemberNav(members.mixins || [], 'Mixins', seen, linkto)
-  nav += buildMemberNav(members.components || [], 'Components', seen, linkto)
+  nav += buildMemberNav(members.components || [], 'Components', seen, linkto) */
+
+  nav += buildMemberNav(members.tutorials || [], '向导', seenTutorials, linktoTutorial)
+  nav += buildMemberNav(members.modules || [], '模块', {}, linkto)
+  nav += buildMemberNav(members.externals || [], 'Externals', seen, linktoExternal)
+  nav += buildMemberNav(members.namespaces || [], '命名空间', seen, linkto)
+  nav += buildMemberNav(members.classes || [], '类名', seen, linkto)
+  nav += buildMemberNav(members.interfaces || [], '接口', seen, linkto)
+  nav += buildMemberNav(members.events || [], '事件', seen, linkto)
+  nav += buildMemberNav(members.mixins || [], '混入', seen, linkto)
+  nav += buildMemberNav(members.components || [], '组件', seen, linkto)  
     
   if (members.globals && members.globals.length) {
     globalNav = ''
@@ -403,10 +413,10 @@ function buildGroupNav (members, title) {
 
     if (!globalNav) {
       // turn the heading into a link so you can actually get to the global page
-      nav += '<h3>' + linkto('global', 'Global') + '</h3>'
+      nav += '<h3>' + linkto('global', '全局') + '</h3>'
     }
     else {
-      nav += '<h3>Global</h3><ul>' + globalNav + '</ul>'
+      nav += '<h3>全局</h3><ul>' + globalNav + '</ul>'
     }
   }
   nav += '</div>'
@@ -430,13 +440,15 @@ function buildGroupNav (members, title) {
  */
 function buildNav(members, navTypes = null, betterDocs) {
   const href = betterDocs.landing ? 'docs.html' : 'index.html'
-  var nav = navTypes ? '' : `<h2><a href="${href}">Documentation</a></h2>`
+  var nav = navTypes ? '' : `<h2><a href="${href}">API文档</a></h2>`
 
   var categorised = {}
   var rootScope = {}
 
   var types = navTypes || ['modules', 'externals', 'namespaces', 'classes',
     'components', 'interfaces', 'events', 'mixins', 'globals']
+  /* var types = navTypes || ['模块', 'externals', '命名空间', '类',
+    '组件', '接口', '事件', '混入', '全局'] */
   types.forEach(function(type) {
     if (!members[type]) { return }
     members[type].forEach(function(element) {

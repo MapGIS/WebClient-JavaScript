@@ -437,7 +437,7 @@ export default class AdvancedAnalysisManager {
      * @param {String} modelUrl 模型url
      * @example
      * fireExtinguisher.gltf 灭火器，gltf格式
-     * @param {Array[3]} position 模型位置，position[0]：经度，position[1]：纬度，position[2]：高度
+     * @param {Array} position 模型位置，position[0]：经度，position[1]：纬度，position[2]：高度
      * @param {String} imageUrl 火焰图片url
      * @param {Number} options.minimumPixelSize 模型最小像素尺寸
      * @param {Number} options.startScale 起始规模

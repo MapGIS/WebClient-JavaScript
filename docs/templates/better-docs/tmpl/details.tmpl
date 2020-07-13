@@ -14,7 +14,7 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
     if (properties && properties.length && properties.forEach && !data.hideconstructor) {
 ?>
 
-    <h5 class="subsection-title">Properties:</h5>
+    <h5 class="subsection-title">属性:</h5>
 
     <?js= this.partial('properties.tmpl', data) ?>
 
@@ -82,7 +82,7 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
     <?js } ?>
 
     <?js if (data.author && author.length) {?>
-    <dt class="tag-author">Author:</dt>
+    <dt class="tag-author">作者:</dt>
     <dd class="tag-author">
         <ul><?js author.forEach(function(a) { ?>
             <li><?js= self.resolveAuthorLinks(a) ?></li>
@@ -135,7 +135,7 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
 
     <?js if (data.meta && self.outputSourceFiles) {?>
         <p class="tag-source">
-            <?js= self.linkto(meta.shortpath, 'View Source', 'button') ?>
+            <?js= self.linkto(meta.shortpath, '查看源代码', 'button') ?>
             <span>
                 <?js= self.linkto(meta.shortpath) ?>, <?js= self.linkto(meta.shortpath, 'line ' + meta.lineno, null, 'line' + meta.lineno) ?>
             </span>

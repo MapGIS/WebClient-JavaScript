@@ -61,7 +61,7 @@ var self = this;
 <?js } ?>
 
 <?js if (data.params && params.length && !data.hideconstructor) { ?>
-    <h5>Parameters:</h5>
+    <h5>参数:</h5>
     <?js= this.partial('params.tmpl', params) ?>
 <?js } ?>
 
@@ -142,7 +142,7 @@ var self = this;
 
 <?js if (data.returns && returns.length) { ?>
     <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-2"><label>返回值:</label></div>
         <div class="column is-10">
             <?js
                 returns.forEach(function(r) { ?>

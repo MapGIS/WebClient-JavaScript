@@ -64,7 +64,7 @@
                 <div class="members">
                     <div class="member">
                         <div class=name>
-                            <span class="tag">Constructor</span>
+                            <span class="tag">构造函数</span>
                         </div>
                         <?js= self.partial('method.tmpl', doc) ?>
                     </div>
@@ -107,13 +107,13 @@
         <?js }; ?>
     <?js }; ?>
     <?js if (doc.augments && doc.augments.length) { ?>
-        <h3 class="subsection-title">Extends</h3>
+        <h3 class="subsection-title">继承关系</h3>
 
         <?js= self.partial('augments.tmpl', doc) ?>
     <?js } ?>
 
     <?js if (doc.requires && doc.requires.length) { ?>
-        <h3 class="subsection-title">Requires</h3>
+        <h3 class="subsection-title">依赖</h3>
 
         <ul><?js doc.requires.forEach(function(r) { ?>
             <li><?js= self.linkto(r, r) ?></li>
@@ -124,7 +124,7 @@
         var classes = self.find({kind: 'class', memberof: doc.longname});
         if (!isGlobalPage && classes && classes.length) {
     ?>
-        <h3 class="subsection-title">Classes</h3>
+        <h3 class="subsection-title">类名</h3>
 
         <dl><?js classes.forEach(function(c) { ?>
             <dt><?js= self.linkto(c.longname, c.name) ?></dt>
@@ -194,7 +194,7 @@
         if (methods && methods.length && methods.forEach) {
     ?>
         <div class='vertical-section'>
-            <h1>Methods</h1>
+            <h1>方法</h1>
             <div class="members">
             <?js methods.forEach(function(m) { ?>
                 <div class="member"><?js= self.partial('method.tmpl', m) ?></div>
@@ -231,7 +231,7 @@
         if (events && events.length && events.forEach) {
     ?>
         <div class='vertical-section'>
-            <h1>Events</h1>
+            <h1>事件</h1>
             <div class="members">
             <?js events.forEach(function(e) { ?>
                 <div class="member">
