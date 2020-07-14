@@ -2,7 +2,7 @@
 import {MapServiceBase}  from  "./MapServiceBase";
 /**
  * 地图图片服务
- * @class module:量算服务.GetTileImageService
+ * @class module:地图服务.GetTileImageService
  * @classdesc Zondy.Service.GetTileImageService 瓦片图片服务
  * @extends  Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对

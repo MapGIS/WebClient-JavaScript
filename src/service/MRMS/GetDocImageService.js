@@ -13,7 +13,7 @@ import {
 
 /**
  * 地图文档图片服务
- * @class module:量算服务.GetDocImageService
+ * @class module:地图服务.GetDocImageService
  * @classdesc Zondy.Service.GetDocImageService 取矢量地图文档图片，若采用动态裁切瓦片方式发布的矢量地图文档，可取指定行列号的矢量地图图片；
  * 若采用普通方式发布的矢量地图文档，可取一定范围内的矢量地图图片，还可设置该地图文档的动态投影参考信息、显示条件、显示样式等信息
  * @param {Object} option 属性键值对

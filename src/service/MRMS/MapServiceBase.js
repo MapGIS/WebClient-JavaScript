@@ -2,7 +2,7 @@
 import {ServiceBase}  from  "../ServiceBase";
 
 /**
- * @class module:量算服务.MapServiceBase
+ * @class module:地图服务.MapServiceBase
  * @classdesc Zondy.Service.MapServiceBase 地图服务基类
  * @extends Zondy.Service.ServiceBase
  * @param {Object} option 属性键值对

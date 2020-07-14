@@ -3,7 +3,7 @@ import {MapServiceBase}  from  "./MapServiceBase";
 import {MapType}  from  "../common/EnumComm";
 /**
  * 地图图片服务
- * @class module:量算服务.GetMapImageService
+ * @class module:地图服务.GetMapImageService
  * @classdesc Zondy.Service.GetMapImageService图层图片服务
  * @extends  Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对

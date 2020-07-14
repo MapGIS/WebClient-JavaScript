@@ -4,7 +4,7 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 import {newGuid}  from  "../common/Util";
 /**
  * 地图图片服务
- * @class module:量算服务.GetMapInfoService
+ * @class module:地图服务.GetMapInfoService
  * @classdesc Zondy.Service.GetMapInfoService 地图信息服务
  * @extends  Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对
