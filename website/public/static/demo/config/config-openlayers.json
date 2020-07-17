@@ -298,7 +298,7 @@
       "leaffolder": false,
       "childs": [
         {
-          "name": "专题图",
+          "name": "客户端专题图",
           "iconfont": "icontheme",
           "folder": "theme",
           "leaffolder": true,

@@ -2,7 +2,7 @@
 
 ### 示例功能
 
-此功能用于在当前三维场景中添加热力图显示效果。通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `createHeatMap()` 方法添加热力图。
+此功能用于在当前三维场景中添加热力图显示效果。初始化Cesium三维球控件 `Cesium.WebSceneControl()` , 创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `createHeatMap()` 方法添加热力图。
 
 ### 示例实现：
 
@@ -25,18 +25,23 @@ var webGlobe = new Cesium.WebSceneControl('GlobeView', {
 <div id='GlobeView'></div>
 ```
 
-3.<font color=red>添加热力图</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `createHeatMap()` 方法添加热力图显示；
+3.<font color=red>添加热力图</font>创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `createHeatMap()` 方法添加热力图。
 
 ``` Javascript
+var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+    viewer: webGlobe.viewer
+})
 //创建热力图（范围、最大值、最小值）
-var instance = webGlobe.createHeatMap(bounds, valueMin, valueMax, data, options);
+var instance = analysisManager.createHeatMap(bounds, valueMin, valueMax, data, options);
 ```
 
 ### 关键接口
 
 #### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
 
-##### (1) `createHeatMap(bounds, maxValue, minValue, data)` 创建热力图
+#### 2.【分析功能管理类】 `CesiumZondy.Manager.AnalysisManager`
+
+##### (1) `createHeatMap(bounds, minValue, maxValue, data, options)` 创建热力图
 
 > `createHeatMap` 方法主要参数
 

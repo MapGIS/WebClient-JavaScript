@@ -4,6 +4,15 @@
     position: absolute;
 }
 
+#coordinateDiv {
+    color: #F0EFEF;
+    line-height: 30px;
+    margin-left: 30%;
+    bottom: 0px;
+    font-size: 80%;
+    font: '雅黑';
+}
+
 .message {
     position: absolute;
     top: 16px;

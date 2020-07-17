@@ -157,9 +157,9 @@
                     '0.3': 'green',
                 }
             };
-
+            var analysisManager=new CesiumZondy.Manager.AnalysisManager({viewer: webGlobe.viewer})
             //创建热力图（范围、最大值、最小值）
-            var instance = webGlobe.createHeatMap(bounds, valueMin, valueMax, data, options);
+            var instance = analysisManager.createHeatMap(bounds, valueMin, valueMax, data, options);
             //跳转到创建的热力图实例
             webGlobe.viewer.flyTo(instance._layer);
         }

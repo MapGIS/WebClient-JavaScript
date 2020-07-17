@@ -58,32 +58,34 @@
 4. 注册地图加载事件，当天地图底图加载后添加WFS标准的地图服务数据，示例中的WFS地图服务是通过MapGIS IGServer发布；
 
    ```javascript
-   //注册地图加载事件
-   map.on("load", function() {
-     var baseurl =
-       " http://develop.smaryun.com:6163/igs/rest/ogc/doc/OGC_4326_CHINA/WFSServer?" +
-       "REQUEST=GetFeature" +
-       "&version=1.1.0" +
-       "&service=wfs" +
-       "&typename=OGC_4326_CHINA:背景图,中国,省级行政区,首都点,省会城市" +
-       "&maxFeatures=10";
-     var url = "./static/libs/cdn/zondyclient/ZDproxy.ashx?url=" + baseurl;
-     $.ajax({
-       url: url,
+   map.on("load", function () {
+       var baseurl =
+       "http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WFSServer?REQUEST=GetFeature&version=1.1.0&service=wfs&typename=北京市:北京市&maxFeatures=10";
+       $.ajax({
+       url: baseurl,
        type: "get",
        dataType: "xml",
        contentType: "application/x-www-form-urlencoded",
        success: loadGeoJson,
-       error: function(xml) {
-         console.warn(
-           "目前IGServer针对WFS没处理跨域 要改代码支持跨域，请用用后端代理转发处理."
-         );
-       },
-     });
+       error: function (xml) {
+           alert("请求失败");
+       }
+       });
    });
    
    function loadGeoJson(xml) {
-     console.log("loadWFS", xml);
+       if (!!xml) {
+       var beijing = xml.children[0].children[0].children[0].children;
+       var html = "<table>";
+       for (var i = 1; i < 7; i++) {
+           const element = beijing[i];
+           html += "<tr><td><b>" + beijing[i].localName + "</b></td><td>" + beijing[i].textContent + "</td></tr>"
+       }
+       html += "</table>";
+       popup.setLngLat([116.39, 39.90]).setHTML(html).addTo(map);
+       } else {
+       alert("没有查询到数据");
+       }
    }
    ```
    

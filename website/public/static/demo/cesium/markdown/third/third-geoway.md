@@ -14,33 +14,24 @@
 
 ### 实现步骤
 
-1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库；
+1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库，完成此步骤后才可调用三维WebGL的功能；
 
 2. 创建布局：创建`id='GlobeView'`的div作为三维视图的容器，并设置其样式；
 
-3. 构造三维场景控件：实例化WebSceneControl对象；
+3. 构造三维场景控件：实例化`Cesium.WebSceneControl`对象，完成此步骤后可在三维场景中加载三维球控件；
 
-    ``` javascript
-    //构造三维视图类（视图容器div的id，三维视图设置参数）
-    var webGlobe = new Cesium.WebSceneControl('GlobeView', {
-        terrainExaggeration: 1,
-    });
-    ```
+   ``` javascript
+   //构造三维视图对象（视图容器div的id，三维视图设置参数）
+   var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+   ```
 
-4. 加载数据：在此示例中对接的是WMTS类型的吉威地图，所以可调用WMTS类型地图的通用方法`appendWMTSTileExt()`来加载，需传入地图服务的URL地址，以及相应的参数，设置`from`为`'jiwei'`即代表是吉威地图；
+4. 加载数据：在此示例中对接的是WMTS类型的吉威地图，所以可调用WMTS类型地图的通用方法`appendWMTSTileExt()`来加载，需传入地图服务的URL地址，以及相应的参数，设置`from`为`'jiwei'`即代表是吉威地图。
 
     ``` javascript
     //添加吉威地图
     webGlobe.appendWMTSTileExt("http://59.252.165.22:8066/ime-cloud/rest/2016qgfdqrjszy/wmts", {
         from: 'jiwei'
     });
-    ```
-
-5. 鼠标位置显示控件：创建`id="coordinate_location"`的div作为容器，用于显示鼠标当前位置的经纬度、高程、视角高度信息；然后调用`showPosition()`方法为三维场景控件设置鼠标位置显示控件。
-
-    ``` javascript
-    //显示鼠标位置控件
-    webGlobe.showPosition('coordinate_location');
     ```
 
 ### 关键接口
@@ -83,20 +74,3 @@
 |serverName|String|无|（可选）服务名|
 |proxy|String|无|（可选）代理服务器地址|
 |from|String|'jiwei'|（可选）哪家公司的服务|
-
-##### （3）`showPosition(elementId, options)`：显示经纬度 高程 视角高度
-
-> `showPosition`方法主要参数
-
-|参数名|类 型|说 明|
-|-|-|-|
-|elementId|Element \| String|要显示的div的id|
-|options|Object|附加属性|
-
-> `options`属性主要参数
-
-|参数名|类 型|默认值|说 明|
-|-|-|-|-|
-|showHpr|Boolean|false|（可选） |
-|showSelectTileInfo|Boolean|false|（可选）显示当前鼠标所在位置拾取到的级别|
-|showViewLevelInfo|Boolean|false|（可选）显示视图级别|

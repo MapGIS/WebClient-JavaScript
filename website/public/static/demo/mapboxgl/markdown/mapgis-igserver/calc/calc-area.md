@@ -38,22 +38,21 @@
 
    ```javascript
    map.on('draw.create', function (e) {
-       console.log(e);
-       var lonlats = e.features[e.features.length - 1].geometry.coordinates;
+       var lonlats = e.features[e.features.length - 1].geometry.coordinates[0];
        var dots = [];
        for (var i = 0; i < lonlats.length; i++) {
            dots.push(new Zondy.Object.Point2D(lonlats[i][0], lonlats[i][1]))
        }
-       markerlatLng = lonlats[lonlats.length - 1];
-       CalPolyLineLength(dots)
+       markerlatLng = getCenterOfGravityPoint(lonlats);
+       CalArea(dots)
    });
    ```
    
 6. 创建`面积测量功能服务`及相关参数对象，执行测量功能；
 
    ```javascript
-   //初始化长度测量服务
-   var calLength = new Zondy.Service.CalArea(dots, {
+   //初始化面积测量服务
+   var calArea = new Zondy.Service.CalArea(dots, {
        //IP地址
        ip: "develop.smaryun.com",
        //端口号
@@ -72,8 +71,8 @@
    });
    //用于进行SRSID投影的参数类
    var projBySRSID = new Zondy.Service.CProjectBySRSID(601, gdbInfo);
-   //执行长度测量服务，measureCallBack为测量回调函数
-   calLength.execute(projBySRSID, measureCallBack);
+   //执行面积测量服务，measureCallBack为测量回调函数
+   calArea.execute(projBySRSID, measureCallBack);
    ```
 
 7. 测量结果展示，在查询成功的回调函数中将结果通过标记的形式展示，其中`GeoJSON数据源`的使用请参考`MapGIS IGServer`目录下的`要素-要素查询`示例；

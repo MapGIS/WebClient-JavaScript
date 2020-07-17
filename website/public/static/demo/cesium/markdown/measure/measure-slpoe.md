@@ -50,7 +50,7 @@ measureSlopeTool.stopTool();
 
 ### 关键接口
 
-#### 2. `Cesium.MeasureSlopeTool(viewer, options)` : 坡度测量工具主要类
+#### 2. 【坡度测量工具主要类】`Cesium.MeasureSlopeTool(viewer, options)`
 
 > `Cesium.MeasureSlopeTool` 主要参数
 

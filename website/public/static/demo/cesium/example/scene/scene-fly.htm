@@ -4,39 +4,67 @@
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>动态圆</title>
+    <title>跳转定位</title>
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-         'use strict';
+        'use strict';
         //定义三维视图的主要类
         var webGlobe;
         //地图初始化函数
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //添加天地图
+            webGlobe.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                type: "img"
             });
+            var options = {
+                tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+                //瓦片初始级的列数 默认为2
+                colNum: 2,
+                //瓦片初始级的行数 默认为2
+                rowNum: 1,
+                //瓦片最大显示级数 默认为19
+                maxLevel: 19,
+                // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
+                //如瓦片裁的不是256,则需设置下面两个参数
+                tileWidth: 256,
+                tileHeight: 256
+            };
+            //添加MapGISIGServer发布的瓦片
+            var tilelayer = new CesiumZondy.Layer.TilesLayer({
+                viewer: webGlobe.viewer
+            });
+            tilelayer.appendMapGISTile('http://develop.smaryun.com:6163/igs/rest/mrms/tile/北京市', options);
         }
 
-        function flyto(){
-            webGlobe.flyTo(114.06, 22.54, 2000000, 2);
+        function flyto() {
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //跳转视图
+            sceneManager.flyTo(116.348, 40.236, 300000, 2);
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="outputImage" onclick="flyto()">跳转</button>
+    <div id="GlobeView">
+        <div class="message">
+            <button id="outputImage" onclick="flyto()">跳转</button>
+        </div>
     </div>
-    <div id="GlobeView"></div>
 </body>
+
 </html>

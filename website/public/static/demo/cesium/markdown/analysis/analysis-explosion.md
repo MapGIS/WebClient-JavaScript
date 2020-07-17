@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `append()` 加载M3D数据后，调用Cesium三维球控件 `Cesium.WebSceneControl()`的`createExplosion()`方法爆炸模型。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` ，初始化M3D模型层管理类 `CesiumZondy.Layer.M3DLayer` 并调用 `append()` 方法加载M3D数据后，创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `createExplosion()` 方法爆炸模型。
 
 ### 实现步骤：
 
@@ -18,41 +18,41 @@
 //构造三维视图类（视图容器div的id，三维视图设置参数）
 var webGlobe = new Cesium.WebSceneControl('GlobeView', {
     terrainExaggeration: 1,
-}); 
+});
 ```
 
 ``` html
 <div id='GlobeView'></div>
 ```
 
-3. <font color=red>加载数据</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `append()` 方法传入M3D数据服务地址，即可加载浏览数据；
+3. <font color=red>加载数据</font>：初始化M3D模型层管理类 `CesiumZondy.Layer.M3DLayer` 并调用 `append()` 方法传入M3D数据服务地址，即可加载浏览数据；
 
 ``` Javascript
-//加载数据
-var tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {});
+//构造M3D模型层管理对象
+var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+    viewer: webGlobe.viewer
+});
+//加载M3D地图文档（服务地址，配置参数）
+landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {});
 ```
 
-4. <font color=red>爆炸模型</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()`的`createExplosion()`方法爆炸模型
+4. <font color=red>爆炸模型</font>：创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `createExplosion()` 方法爆炸模型
 
 ``` Javascript
-//爆炸模型
-var option = {
-    // 返回的图层子节点
-    children: tileset[0].root.children,
-    // 爆炸中心
-    center: tileset[0].boundingSphere.center,
-    // 整体爆炸，(1.0, 0.0, 0.0)沿X轴方向。(0.0,1.0,0.0)沿Y轴方向，(0.0, 0.0, 1.0)沿Z轴方向
-    direction: new Cesium.Cartesian3(1.0, 0.0, 0.0),
-    // 爆炸距离
-    distance: 50
-};
-webGlobe.createExplosion(option);
+//初始化分析功能管理类
+var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+    viewer: webGlobe.viewer
+});
+analysisManager.createExplosion(option);
 ```
 
 ### 关键接口
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
 
-##### (1) `append(url, options, 代理)` 添加地图文档
+#### 1.【三维视图的主要类】 `Cesium.WebSceneControl`
+
+#### 2.【M3D模型层管理类】 `CesiumZondy.Layer.M3DLayer`
+
+##### (1) `append(url, options)` 添加M3D地图文档
 
 > `append` 方法主要参数
 
@@ -60,7 +60,6 @@ webGlobe.createExplosion(option);
 |-|-|-|
 |url|String|事件类型 LEFT_CLICK RIGHT_CLICK MOUSE_MOVE LEFT_DOUBLE_CLICK RIGHT_DOUBLE_CLICK WHEEL(鼠标滚轮)|
 |options|Object|可选参数|
-|代理|DefaultProxy|暂无|
 
 > `options` 主要参数
 
@@ -69,11 +68,19 @@ webGlobe.createExplosion(option);
 |autoReset|Boolean|true|(可选)是否自动定位|
 |synchronous|Boolean|true|(可选)是否异步请求|
 |loaded|function|function|(可选)回调函数|
+|proxy|DefaultProxy|defaultProxy|代理|
+|showBoundingVolume|Boolean|false|是否显示包围盒|
+|maximumScreenSpaceError|Number|16|用于控制模型显示细节|
 
-##### (2) `createExplosion(options)` 
+#### 3.【分析功能管理类】 `CesiumZondy.Manager.AnalysisManager`
+
+##### (1) `createExplosion(options)` 创建模型爆炸动画实例
 
 > `options` 主要参数
 
 |参数名|类型|说明|
 |---|---|---|
-|暂无|暂无|暂无|
+|children|Array<child>|当前图层子节点|
+|center|Cartesian3|爆炸中心|
+|direction|Cartesian3|图层整体爆炸方向|
+|distance|Number|沿当前方向移动距离|

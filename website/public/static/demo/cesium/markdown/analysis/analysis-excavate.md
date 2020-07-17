@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `append()` 方法加载M3D数据后，创建 `Cesium.ClippingPlane()` 切面对象，调用 `Cesium.WebSceneControl()` 的 `createExcavateAnalysis()` 方法创建开挖分析对象通过设置剖切面距离进行数据开挖分析。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` ， 初始化M3D模型层管理类 `CesiumZondy.Layer.M3DLayer` 并调用 `append()` 方法加载M3D数据后，创建 `Cesium.ClippingPlane()` 切面对象，创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `createDynamicCutting()` 方法创建开挖分析对象通过设置剖切面距离进行数据开挖分析。
 
 ### 实现步骤：
 
@@ -18,18 +18,27 @@
 //构造三维视图类（视图容器div的id，三维视图设置参数）
 var webGlobe = new Cesium.WebSceneControl('GlobeView', {
     terrainExaggeration: 1,
-}); 
+});
 ```
 
 ``` html
 <div id='GlobeView'></div>
 ```
 
-3. <font color=red>加载数据</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `append()` 方法传入M3D数据服务地址，即可加载浏览数据；
+3. <font color=red>加载数据</font>：初始化M3D模型层管理类 `CesiumZondy.Layer.M3DLayer` 并调用 `append()` 方法传入M3D数据服务地址，即可加载浏览数据；
 
 ``` Javascript
-//加载数据
-var tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {});
+//构造M3D模型层管理对象
+var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+    viewer: webGlobe.viewer
+});
+var drilllayer = m3dLayer.append(
+    "http://develop.smaryun.com:6163/igs/rest/g3d/钻孔_2_钻孔模型s", {
+        autoReset: false,
+    }
+);
+//加载M3D地图文档（服务地址，配置参数）
+landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/钻孔分层点_Sur_000_Ent', {});
 ```
 
 4. <font color=red>创建切面</font>：初始化切面对象 `Cesium.ClippingPlane()` ; 
@@ -45,47 +54,56 @@ var tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D'
  ]
 ```
 
-5. <font color=red>创建开挖分析</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `createExcavateAnalysis()` 方法创建开挖分析对象, 并获取剖切切面；
+5. <font color=red>创建开挖分析</font>：化M3D模型层管理类 `CesiumZondy.Layer.M3DLayer` 并调用 `append()` 方法加载M3D数据后，创建 `Cesium.ClippingPlane()` 切面对象，创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `createDynamicCutting()` 方法创建开挖分析对象, 并获取剖切切面；
 
 ``` Javascript
- // 经纬度用于设置开挖区域的中心点，用于控制挖那一部分的模型数据
- dynaCut = webGlobe.createExcavateAnalysis({
-     //模型
-     tileSet: tileset[0],
-     //开挖面设置
-     planes: clippingPlanes,
-     //开挖颜色c
-     material: new Cesium.Color(0.2, 0.4, 0.3, 0.7),
-     edgeWidth: 3,
-     //开挖坐标
-     longitude: 0.0737,
-     latitude: -0.2049,
-     height: 0
- });
- // 设置开挖的动态效果
- planetEntity = dynaCut.planes[0];
+  //初始化分析功能管理类
+  var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+      viewer: webGlobe.viewer
+  });
+  //创建开挖分析实例
+  dynaCut = analysisManager.createExcavateAnalysis({
+      //图层信息
+      tileSet: landscapeLayer[0],
+      //开挖面的形状
+      planes: planes,
+      //裁剪面材质
+      material: new Cesium.Color(0.2, 0.4, 0.3, 0.7),
+      //边界线颜色
+      edgeColor: new Cesium.Color(0.2, 0.4, 0.3, 0.7),
+      //边界线宽度
+      edgeWidth: 3,
+      //裁减法线方向，默认值为 false
+      unionClippingRegions: false,
+      //开挖坐标
+      longitude: 113.0402,
+      latitude: 30.0264,
+      height: 0
+  });
 ```
 
 6. <font color=red>设置剖切面距离</font>：通过设置切面回调函数，动态设置剖切面距离完成动态剖切分析。
 
 ``` Javascript
-planetEntity.plane.plane = new Cesium.CallbackProperty(function(date) {
+dynaCut.planes[0].plane.plane = new Cesium.CallbackProperty(function(date) {
+    console.log(planes);
     for (var i = 0; i < planes.length; i++) {
         if (i === planes.length - 1) {
             var plane = planes[i];
             plane.distance = distance;
-            Cesium.Plane.transform(plane, transform, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
+            Cesium.Plane.transform(plane, landscapeLayer[0].modelMatrix, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
         }
     }
-
 }, false);
 ```
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1.【三维视图的主要类】 `Cesium.WebSceneControl`
 
-##### (1) `append(url, options, 代理)` 添加地图文档
+#### 2.【M3D模型层管理类】 `CesiumZondy.Layer.M3DLayer`
+
+##### (1) `append(url, options)` 添加M3D地图文档
 
 > `append` 方法主要参数
 
@@ -93,7 +111,6 @@ planetEntity.plane.plane = new Cesium.CallbackProperty(function(date) {
 |-|-|-|
 |url|String|事件类型 LEFT_CLICK RIGHT_CLICK MOUSE_MOVE LEFT_DOUBLE_CLICK RIGHT_DOUBLE_CLICK WHEEL(鼠标滚轮)|
 |options|Object|可选参数|
-|代理|DefaultProxy|暂无|
 
 > `options` 主要参数
 
@@ -102,27 +119,39 @@ planetEntity.plane.plane = new Cesium.CallbackProperty(function(date) {
 |autoReset|Boolean|true|(可选)是否自动定位|
 |synchronous|Boolean|true|(可选)是否异步请求|
 |loaded|function|function|(可选)回调函数|
+|proxy|DefaultProxy|defaultProxy|代理|
+|showBoundingVolume|Boolean|false|是否显示包围盒|
+|maximumScreenSpaceError|Number|16|用于控制模型显示细节|
 
-##### (2) `createExcavateAnalysis(options)` 
+#### 3. `Cesium.ClippingPlane(normal, distance)` : 裁剪平面类
 
-> `options` 主要参数
-
-|参数名|类型|说明|
-|---|---|---|
-|tileSet|模型|如果是数组的话，请选择数组中的某一个|
-|planes|clippingPlanes|切割面|
-|material|Color或者纹理|材质 或者 Cesium. Color|
-|edgeColor|Cesium. Color|边线颜色|
-|edgeWidth|数值型|边线宽度|
-|unionClippingRegions|裁剪的方向|默认false，内裁剪方式|
-|longitude|数值型|切面的经度|
-|latitude|数值型|切面的纬度|
-|height|数值型|切面默认高度|
-
-#### 2. `Cesium.ClippingPlane(normal, distance)` :裁剪平面类
 > `Cesium.ClippingPlane` 主要参数
 
 |参数名|类型|说 明|
 |-|-|-|
 |normal|Cartesian3|法线|
 |distance|Number|最短距离|
+
+#### 4.【分析功能管理类】 `CesiumZondy.Manager.AnalysisManager`
+
+##### (1) `createExcavateAnalysis(option)` 创建开挖实例
+
+> `createExcavateAnalysis` 方法主要参数
+
+|参数名|类型|说明|
+|-|-|-|
+|option|Object|参数设置|
+
+> `options` 主要参数
+
+|参数名|类型|说明|
+|---|---|---|
+|tileSet|Object|图层信息|
+|planes|Object|开挖面的形状|
+|material|Object|裁剪面材质|
+|edgeColor|Object|边界线颜色|
+|edgeWidth|Object|边界线宽度|
+|unionClippingRegions|Object|裁减法线方向，默认值为 false|
+|longitude|Object|开挖面定位点经度|
+|latitude|Object|开挖面定位点纬度|
+|height|Object|开挖面定位点高度|

@@ -3,63 +3,72 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>线</title>
-    <!--引入第三方的jquery脚本库-->
+    <title>贴地线绘制</title>
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
         'use strict';
-        //定义三维视图的主要类
-        var webGlobe;
+
+        //定义三维场景控件对象
+        var webGlobe = undefined;
         var line;
+
+        //加载三维场景
         function init() {
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
-            //添加谷歌矢量地图
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //加载Google地图
             webGlobe.appendGoogleMap('m@207000000');
-            //跳转到指定位置
-            webGlobe.flyTo(106, 27, 10000, 1);
+
+            //视点跳转（经度，纬度，视角高度，跳转持续时间）
+            webGlobe.flyTo(114.28930528613337, 30.546849344910772, 10000, 1);
+
+            //添加贴地线
+            add();
         }
 
         //添加贴地线
         function add() {
-            remove();
-            var terrain = Cesium.createWorldTerrain();
-            // webGlobe.viewer.terrainProvider = terrain;
-            //定义一组坐标位置
-            var arrayp = [104.0, 28.0, 106.0, 27.0, 107.0, 28.0, 108.0, 29.0];
-            //颜色
-            var color = new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 1);
-            //绘制贴地线
-            line = webGlobe.appendGroundLine(arrayp, color);
-        }
+            //构造实体绘制控制器对象
+            var entityController = new CesiumZondy.Layer.EntityController({
+                viewer: webGlobe.viewer
+            });
 
-        //删除贴地线
-        function remove() {
-            if (line) {
-                webGlobe.scene.primitives.remove(line);
-            }
+            //定义一组坐标位置
+            var arrayp = [
+                114.29326686402278, 30.54691048615991,
+                114.28238521698825, 30.552850641911828,
+                114.27353580837766, 30.536521489533488,
+                114.29257062566866, 30.525800315003725
+            ];
+            //颜色
+            var color = new Cesium.ColorGeometryInstanceAttribute(1, 0, 0, 0.5);
+
+            //绘制贴地线
+            line = entityController.appendGroundLine(arrayp, color);
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="add" onclick="add()">添加贴地线</button>
-        <button class="ButtonLib" id="remove" onclick="remove()">删除贴地线</button>
-    </div>
-    <div id="GlobeView">
-    </div>
-    <!--坐标容器-->
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
     </div>
 </body>
 

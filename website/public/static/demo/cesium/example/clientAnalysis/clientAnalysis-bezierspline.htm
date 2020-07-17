@@ -5,7 +5,9 @@
   <meta charset='utf-8' />
   <title>Along</title>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <!--引入第三方的jquery脚本库-->
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <!--Cesium脚本库文件引用-->
   <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
   <style>
     body {
@@ -26,28 +28,36 @@
 
   <div id='GlobeView'></div>
   <script>
+    //定义三维视图的主要类变量
     var webGlobe, map;
+    //构造线对象、贝兹曲线geojson对象
     var line, geojson;
-
+    //加载三维场景控件
     initMap();
+    //加载数据
     loadData();
+    //执行贝兹曲线
     excuteBezier();
+    //更新视图
     updateView();
-
+    //加载三维场景控件函数
     function initMap() {
+      //定义三维视图的主要类
       webGlobe = new Cesium.WebSceneControl('GlobeView', {
         terrainExaggeration: 1,
       });
-
+      //获取三维场景视图对象
       map = webGlobe.viewer;
+      //加载谷歌地图
       webGlobe.appendGoogleMap('m@207000000');
-
+      //经纬度坐标转世界坐标
       var center = Cesium.Cartesian3.fromDegrees(18.427501, -76.091308, 800000.0);
+      //场景定位跳转
       map.scene.camera.setView({
         destination: center
       });
     }
-
+    //加载数据函数
     function loadData() {
       line = turf.lineString([
         [-76.091308, 18.427501],
@@ -58,23 +68,32 @@
         [-73.157958, 20.210656]
       ]);
     }
-
+    //贝兹曲线函数
     function excuteBezier() {
       geojson = turf.bezierSpline(line);
     }
 
-
+    //更新视图函数
     function updateView() {
+      //添加线显示
       var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(line, {
+        //线颜色
         stroke: Cesium.Color.GRAY,
+        //填充色
         fill: Cesium.Color.GRAY,
+        //线宽
         strokeWidth: 5
       }));
+      //添加贝兹曲线显示
       var simpledatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(geojson, {
+        //线颜色
         stroke: Cesium.Color.RED,
+        //填充色
         fill: Cesium.Color.RED,
+        //线宽
         strokeWidth: 5
       }));
+      //跳转至显示线的区域
       map.flyTo(routedatasource);
     }
   </script>

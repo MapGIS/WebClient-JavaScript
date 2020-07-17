@@ -7,30 +7,21 @@
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl,transform" src="./static/libs/include-mapboxgl-local.js"></script>
     <style>
-        .ButtonLib {
-            color: #0075C7;
-            display: inline-block;
-            padding: 3px 5px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-            margin-left: 4px;
-            margin-right: 4px;
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 1.42857143;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            border: 1px solid transparent;
-            border-color: #0075C7;
-            border-radius: 3px;
-            background-image: none;
-            background-color: transparent;
+        .mapboxgl-ctrl-icon {
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: 60%;
         }
     
-        .ButtonLib:hover {
-            color: white;
-            background-color: #0075C7;
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-add {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594093104250" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4905"><path d="M789.994 771.154L459.266 670.616l295.152-343.032-380.88 318.478L64.28 553.82l896.008-427.218-170.294 644.552z m-341.168 127.42v-177.38l108.868 30.812-108.868 146.568z" p-id="4906"></path></svg>');
+        }
+    
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-update {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594090532673" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1150"><path d="M512 269.922592l0 121.038704 161.384597-161.384597L512 68.191078l0 121.038704c-178.330548 0-322.770218 144.43967-322.770218 322.770218 0 63.343677 18.559705 122.047684 50.02944 171.874509l58.905598-58.905598c-17.953907-33.689287-28.242228-72.018244-28.242228-112.969934C269.922592 378.251833 378.251833 269.922592 512 269.922592zM784.740778 340.124468l-58.905598 58.905598c17.953907 33.689287 28.242228 72.018244 28.242228 112.969934 0 133.748167-108.329241 242.077408-242.077408 242.077408L512 633.038704 350.614379 794.423301l161.384597 161.384597L511.998977 834.770218c178.330548 0 322.770218-144.43967 322.770218-322.770218C834.770218 448.656323 816.210513 389.952316 784.740778 340.124468z" p-id="1151"></path></svg>');
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: 60%;
         }
     </style>
     <script type="text/javascript">
@@ -39,11 +30,9 @@
         // 定义地图容器全局变量
         var map;
         // 定义矢量图层全局变量
-        var vectorLayer;
+        var vectorLayer, resultLayer;
         //缓存结果图层的基地址
-        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
-        // 缓冲区图层id
-        var layerId = [];
+        var resultBaseUrl = "gdbp://MapGisLocal/ClientTheme/ds/SpatialAnalysis/sfcls/";
         // 定义矢量图层guid
         var guid;
 
@@ -56,19 +45,14 @@
             map = new mapboxgl.Map({
                 // 地图显示的div容器
                 container: 'map',
-                // 设置地图不连续显示
-                renderWorldCopies: false,
-                // 设置地图最大显示范围
-                maxBounds: [
-                    [-180, -90],
-                    [180, 90]
-                ]
+                minZoom: 3,
+                zoom: 6,
+                center: [112.247175, 30.152892]
             });
             var navigationControl = new mapboxgl.NavigationControl();
             map.addControl(navigationControl, 'top-left');
             // 创建矢量图层
-            vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(
-                "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp", {
+            vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省市级区划1", "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/clipcircle"], {
                 // IGServer所在ip地址
                 ip: 'develop.smaryun.com',
                 // IGServer请求端口号
@@ -78,14 +62,22 @@
             });
             // 将矢量图层添加到地图
             vectorLayer.addToMap(map);
+
+            var html = '<div class="mapboxgl-ctrl mapboxgl-ctrl-group">' +
+                '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-add" type="button" title="圆裁剪分析" onclick="clipByCircleAnalysis()" aria-label="add"></button>' +
+                '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-update" type="button" title="重置" onclick="reset()" aria-label="update"></button>' +
+                '</div>';
+            $(".mapboxgl-ctrl-top-right").append(html);
         }
 
         /** 执行圆裁剪分析
          */
         function clipByCircleAnalysis() {
-            clearA();
+            //停止进度条
+            stopPressBar();
             //显示进度条
             startPressBar();
+            reset();
             // 设置结果图层的URL
             var resultname = resultBaseUrl + "clipByCircleAnalysisResultLayer" + getCurentTime();
             //实例化Zondy.Service.ClipByCircle类
@@ -95,11 +87,11 @@
                 //IGServer请求端口号
                 port: "6163",
                 //设置圆心坐标
-                center: lonLat2Mercator(88.62, 47.09).x + "," + lonLat2Mercator(88.62, 47.09).y,
+                center: lonLat2Mercator(112.69, 31).x + "," + lonLat2Mercator(112.69, 31).y,
                 //设置圆半径长度
-                radius: 6000000,
+                radius: 100000,
                 //设置被裁剪图层URL
-                srcInfo: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",
+                srcInfo: "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省市级区划1",
                 //设置结果图层的UR
                 desInfo: resultname
             });
@@ -127,7 +119,7 @@
                     //结果图层的名称
                     var resultLayerUrl = data.results[0].Value;
                     //将结果图层添加到地图视图中显示
-                    var resultLayer = new mapboxgl.Zondy.Map.MapVectorLayer(encodeURIComponent(resultBaseUrl + resultLayerUrl), {
+                    resultLayer = new mapboxgl.Zondy.Map.MapVectorLayer(encodeURIComponent(resultBaseUrl + resultLayerUrl), {
                         //IGServer所在ip地址
                         ip: "develop.smaryun.com",
                         //IGServer请求端口号
@@ -135,23 +127,22 @@
                         //图层guid
                         guid: (new Date()).getTime().toString()
                     });
+                    if (map.getLayer(vectorLayer.layerID)) {
+                        map.removeLayer(vectorLayer.layerID);
+                    }
                     resultLayer.addToMap(map);
-                    layerId.push(resultLayer.layerID);
                 }
             }
         }
 
-        /** 清除客户端分析结果信息
+        /** 重置地图显示
          */
-        function clearA() {
-            //停止进度条
-            stopPressBar();
-            //清除缓冲区的图层
-            if (layerId && layerId.length > 0) {
-                for (var i = layerId.length - 1; i >= 0; i--) {
-                    map.removeLayer(layerId[i]);
-                    layerId.pop();
-                }
+        function reset() {
+            if (!map.getLayer(vectorLayer.layerID)) {
+                vectorLayer.addToMap(map);
+            }
+            if (resultLayer && map.getLayer(resultLayer.layerID)) {
+                map.removeLayer(resultLayer.layerID);
             }
         }
 
@@ -209,11 +200,7 @@
         <img src="./static/assets/graphic-image/39-1.gif" alt='' />
         <br />
         <br />
-        <span>正在缓冲区分析，请稍候</span>
-    </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="圆裁剪分析" onclick="clipByCircleAnalysis()" />
-        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
+        <span>正在执行裁剪分析，请稍候</span>
     </div>
     <div id="map" style="width: 100%; height: 700px;">
     </div>

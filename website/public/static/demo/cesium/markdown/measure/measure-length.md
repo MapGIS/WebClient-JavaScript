@@ -50,7 +50,7 @@ measureLengthTool.stopTool();
 
 ### 关键接口
 
-#### 1. `Cesium.MeasureLengthTool(viewer, options)` : 距离测量工具主要类
+#### 1. 【距离测量工具主要类】`Cesium.MeasureLengthTool(viewer, options)`
 
 > `Cesium.MeasureLengthTool` 主要参数
 

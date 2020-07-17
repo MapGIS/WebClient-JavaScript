@@ -4,29 +4,26 @@
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>动态圆</title>
+    <title>地下模式</title>
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-         'use strict';
+        'use strict';
         //定义三维视图的主要类
         var webGlobe;
         //地图初始化函数
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
-            });
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //设置地下模式
             webGlobe.viewer.scene.globe.undergroundMode = true;
+            //大气显示
             webGlobe.viewer.scene.skyAtmosphere.show = false;
+            //透明度
             webGlobe.viewer.scene.globe.transparent = 0.3;
         }
     </script>
@@ -35,4 +32,5 @@
 <body onload="init()">
     <div id="GlobeView"></div>
 </body>
+
 </html>

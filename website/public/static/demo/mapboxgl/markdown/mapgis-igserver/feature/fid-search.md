@@ -62,24 +62,37 @@
 5. 查询结果展示，在查询成功的回调函数中将查询结果格式化为<a href="https://geojson.org/" target="_blank">GeoJSON</a>格式，以图层的方式添加到地图中；
 
    ```javascript
-   //将多边形添加到一个图层中，在地图中显示
+   var feature = {
+       "type": "Feature",
+       "geometry": {
+           "type": "Polygon",
+           "coordinates": [finaldots]
+       }
+   }
+   features.push(feature);
+   //用geojson创建一个多边形
+   var geometryPolygon = {
+       "type": "FeatureCollection",
+       "features": features
+   };
+   var source = {
+       "type": "geojson",
+       "data": geometryPolygon
+   };
    map.addLayer({
        //此id可随意设置，但是要唯一
-       "id": id,
+       "id": "highlayer",
        //指定类型为fill（填充区域）
        "type": "fill",
        //设置数据来源
-       "source": {
-           "type": "geojson",
-           "data": geometryPolygon
-       },
+       "source": source,
        //设置绘制参数
        "paint": {
            //设置填充颜色
-           "fill-color": options.fillColor,
+           "fill-color": '#7FFF00',
            //设置透明度
-           "fill-opacity": options.fillOpacity,
-           "fill-outline-color": options.fillOutlineColor
+           "fill-opacity": 0.5,
+           "fill-outline-color": '#FFA500'
        }
    });
    ```

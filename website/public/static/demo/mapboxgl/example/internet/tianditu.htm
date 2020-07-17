@@ -6,17 +6,24 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <title>天地图显示</title>
     <!--引入第三方的jquery脚本库-->
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="jquery,bootstrap" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-mapboxgl-local.js"></script>
     <!--引入当前页面样式表-->
     <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
     <style type='text/css'>
         #map {
             position: absolute;
-            top: 30px;
-            bottom: 0;
             width: 100%;
             height: 100%;
+        }
+        .dropdown {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            z-index: 1000;
+        }
+        .dropdown-menu {
+            min-width: 95px;
         }
     </style>
     <script>
@@ -24,7 +31,8 @@
         "use strict";
         var map;
         var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
-        /**地图初始化函数*/
+        /** 地图初始化
+         */
         function init() {
             //实例化要加载的source来源对象（全球矢量图）
             var vecsrc = {
@@ -131,8 +139,9 @@
                 }
             });
         }
-        //图层切换函数
-        function changeLayer() {
+        /** 图层切换
+         */
+        function changeLayer(src) {
             //获取地图的所有图层
             var Layers = map.getStyle().layers;
             var layerL = Layers.length;
@@ -140,7 +149,6 @@
                 //移除图层
                 map.removeLayer(Layers[i].id);
             }
-            var src = $("#LayerSelect").val();
             //添加图层
             map.addLayer({
                 "id": src,
@@ -176,13 +184,22 @@
 </head>
 
 <body onload="init()">
-    <div id="menu">
-        <label style="font-weight: bold;">切换图层：</label>
-        <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
-            <option value="vecsrc">VEC</option>
-            <option value="imgsrc">RASTER</option>
-            <option value="tersrc">TERRAIN </option>
-        </select>
+    <div class="dropdown">
+        <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+            切换图层
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="javascipt:void(0)" onclick="changeLayer('vecsrc')">street</a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="javascipt:void(0)" onclick="changeLayer('imgsrc')">raster</a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="javascipt:void(0)" onclick="changeLayer('tersrc')">terrian</a>
+            </li>
+        </ul>
     </div>
     <div id='map'>
     </div>

@@ -7,140 +7,124 @@
     <title>填挖方计算</title>
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        .ToolLib {
-            border-radius: 3px;
-            overflow: hidden;
-            width: 100%;
-            height: auto;
-            box-shadow: 0 0 2px 1px #949292;
-            text-align: center;
-            z-index: 2001;
-            border-color: #66ccff;
-            border-bottom: 1px solid #949292;
-            margin-bottom: 2px;
-        }
-
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
         var webGlobe, viewer;
         //定义三维瓦片类
-        var tileset;
+        var terrainLayer;
         //定义交互式绘制矩形控件类
-        var drawPolygon;
+        var drawElement;
         //定义填挖方计算类
         var cutFill;
-        var drawElement;
         //地图初始化函数
         function init() {
-            //实例化要加载的source来源对象（世界矢量地图）
             //构造三维视图类（视图容器div的id，三维视图设置参数）
             webGlobe = new Cesium.WebSceneControl('GlobeView', {
                 terrainExaggeration: 1,
             });
+            //获取三维场景的视图对象
             viewer = webGlobe.viewer;
-            webGlobe.appendGoogleMap('m@207000000');
-            //加载IGS发布的M3D缓存地图文档
-            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {});
+            //添加Google影像地图
+            webGlobe.appendGoogleMapExt({
+                ptype: 's@130'
+            });
+            //构造地形图层管理类
+            var terrain = new CesiumZondy.Layer.TerrainLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载三维地形地图文档（服务地址，配置参数）
+            terrainlayer = terrain.append("http://develop.smaryun.com:6163/igs/rest/g3d/terrain", {});
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //视点跳转
+            sceneManager.flyToEx(120.9819, 23.5307, {
+                height: 9161,
+                heading: 30,
+                pitch: -10,
+                roll: 0
+            });
+            //初始化交互式绘制控件
             drawElement = new Cesium.DrawElement(webGlobe.viewer);
-            cutFill = new Cesium.CutFillAnalyzeC(viewer, {
-                callBack: callFillCut
-            });
-        }
-        // 绘制边界围栏>
-        function drawGreenWall(viewer, positions) {
-            positions[positions.length - 1] = positions[0];
-            viewer.entities.add({
-                name: '围栏',
-                wall: {
-                    positions: positions,
-                    material: Cesium.Color.GREEN,
-                    outline: true
-                }
-            });
-        }
-
-        function callFillCut(result) {
-            //两种结果表达方式
-            var inputheightRange = document.getElementById("heightRange");
-            var inputsurfaceArea = document.getElementById("surfaceArea");
-            var inputcutVolume = document.getElementById("cutVolume");
-            var inputfillVolume = document.getElementById("fillVolume");
-            inputheightRange.value = result.minHeight + "~" + result.maxHeight;
-            inputsurfaceArea.value = result.surfaceArea;
-            inputcutVolume.value = result.cutVolume;
-            inputfillVolume.value = result.fillVolume;
-
-            alert('高程范围：' + result.minHeight + '~' + result.maxHeight +
-                '\r\n表面积：' + result.surfaceArea +
-                '\r\n挖体积：' + result.cutVolume +
-                '\r\n填体积：' + result.fillVolume);
-        }
-
-
-        /*填挖方计算*/
-        function cutfillMeasure() {
+            //激活交互式绘制工具
             drawElement.startDrawingPolygon({
-                callback: function (positions) {
+                //绘制完成回调函数
+                callback: function(positions) {
+                    //移除视图中所有的实体对象
                     viewer.entities.removeAll();
-                    var greenWall = drawGreenWall(viewer, positions);
-
-                    var xPaneNum = document.getElementById("xPaneNum").value;
-                    var yPaneNum = document.getElementById("yPaneNum").value;
-                    var Height = document.getElementById("Height").value;
-
-                    cutFill.xPaneNumber = xPaneNum;
-                    cutFill.yPaneNumber = yPaneNum;
-                    cutFill.height = Height;
-
-                    cutFill._pointsPolygon = positions;
-                    var minMax = cutFill.getMinAndMaxCartesian();
-                    cutFill.start(minMax);
+                    //添加填挖方分析显示实体
+                    //构造闭合区点数组
+                    positions[positions.length - 1] = positions[0];
+                    //在视图中添加围栏实体
+                    viewer.entities.add({
+                        //实体名称
+                        name: '围栏',
+                        //示例类型
+                        wall: {
+                            //实体点数组
+                            positions: positions,
+                            //实体材质
+                            material: new Cesium.Color(0.2, 0.5, 0.4, 0.7),
+                            //实体轮廓
+                            outline: true
+                        }
+                    });
+                    //初始化高级分析功能管理类
+                    var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                        viewer: viewer
+                    });
+                    //创建填挖方实例
+                    cutFill = advancedAnalysisManager.createCutFill(0.0, {
+                        //设置x方向采样点个数
+                        xPaneNum: document.getElementById("x").value <= 0 ? 16 : document.getElementById("x").value,
+                        //设置y方向采样点个数参数
+                        yPaneNum: document.getElementById("y").value <= 0 ? 16 : document.getElementById("y").value,
+                        //设置填挖规整高度
+                        Height: document.getElementById("z").value <= 0 ? 16 : document.getElementById("z").value,
+                        //返回结果的回调函数
+                        callback: function(result) {
+                            document.getElementById("height").value = result.minHeight.toFixed(2) + '~' + result.maxHeight.toFixed(2);
+                            document.getElementById("surfaceArea").value = result.surfaceArea;
+                            document.getElementById("cutVolume").value = result.cutVolume;
+                            document.getElementById("fillVolume").value = result.fillVolume;
+                        }
+                    });
+                    //开始执行填挖方分析
+                    advancedAnalysisManager.startCutFill(cutFill, positions);
                 }
             });
         }
 
         /*移除填挖方计算*/
         function stopCutFillM() {
+            //移除视图中所有的实体对象
             viewer.entities.removeAll();
+            //停止交互式绘制工具
             drawElement.stopDrawing();
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="addCutFill" onclick="cutfillMeasure()">填挖方计算</button>
-        <button class="ButtonLib" id="remove" onclick="stopCutFillM()">移除</button>
+    <div id="GlobeView">
+        <div class="message" style="left: 10px;">
+            <p>参数</p>
+            <span><font>x方向采样点个数:</font><input type="text" id="x" value="16"></span></br>
+            <span><font>y方向采样点个数:</font><input type="text" id="y" value="16"></span></br>
+            <span><font>填挖规整高度:</font><input type="text" id="z" value="16"></span></br>
+        </div>
+        <div class="message" style="right: 10px;">
+            <p>填挖结果</p>
+            <span><font>高程范围：</font><input type="text" id="height" value="0"></span></br>
+            <span><font>表面积：</font><input type="text" id="surfaceArea" value="0"></span></br>
+            <span><font>挖体积：</font><input type="text" id="cutVolume" value="0"></span></br>
+            <span><font>填体积：</font><input type="text" id="fillVolume" value="0"></span></br>
+        </div>
     </div>
-    <div id="toolbar1" style="position:absolute;left:10px;top:40px;z-index:1000000;color:aliceblue">
-        <label>参数输入：</label>
-        <form id="form1" name="form1" method="get" action="">
-            <label>x方向采样点个数:</label>
-            <input type="text" name="xPaneNum" id="xPaneNum" value="16" /><br />
-            <label>y方向采样点个数:</label>
-            <input type="text" name="yPaneNum" id="yPaneNum" value="16" /><br />
-            <label>设置平整高程</label>
-            <input type="text" name="Height" id="Height" value="16" /><br />
-        </form>
-        <label>结果输出：</label><br />
-        <label>高程范围:</label>
-        <input type="text" name="heightRange" id="heightRange" readonly="readonly"
-            style="width:280px;position:absolute" /><br />
-        <label>表面积:</label>
-        <input type="text" name="surfaceArea" id="surfaceArea" readonly="readonly" /><br />
-        <label>挖体积:</label>
-        <input type="text" name="cutVolume" id="cutVolume" readonly="readonly" /><br />
-        <label>填体积:</label>
-        <input type="text" name="fillVolume" id="fillVolume" readonly="readonly" /><br />
-    </div>
-    <div id="GlobeView"></div>
 </body>
 
 </html>

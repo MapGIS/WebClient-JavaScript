@@ -38,4 +38,4 @@ webGlobe.viewer.scene.globe.imageryLayers.get(1).alpha = 0;
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1. 【三维视图的主要类】 `Cesium.WebSceneControl`

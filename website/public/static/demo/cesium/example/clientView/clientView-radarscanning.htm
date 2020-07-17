@@ -25,7 +25,10 @@
                 terrainExaggeration: 1,
             });
             webGlobe.appendGoogleMap('m@207000000');
-            webGlobe.flyTo(114.06, 22.54, 80000, 1);
+            //初始化视图功能管理类
+            var sceneManager=new CesiumZondy.Manager.SceneManager({viewer: webGlobe.viewer});
+            //跳转视图
+            sceneManager.flyTo(114.06, 22.54, 80000, 1);
             var radar = new Cesium.RadarScanEffect(webGlobe.viewer, {
                 center: Cesium.Cartesian3.fromDegrees(114.06, 22.54, 20),
                 radius: 20000,
@@ -33,6 +36,7 @@
                 duration: 8000
                 //transform:tileset.root.transform
             });
+            var analysisManager=new CesiumZondy.Manager.AnalysisManager({viewer: webGlobe.viewer})
             webGlobe.addSceneEffect(radar);
         }
     </script>

@@ -10,27 +10,27 @@ xmlns:atom="http://www.w3.org/2005/Atom">
 <LineStyle><color>7f0000ff</color><width>0</width></LineStyle>
 <IconStyle>
 <scale>0.8</scale>
-<Icon><href>./img/glyphicons_242_google_maps.png</href></Icon>
+<Icon><href>./img/car.png</href></Icon>
 </IconStyle>
 </Style>
 <Style id="start"><IconStyle>
 <scale>0.5</scale>
-<Icon><href>./img/glyphicons_242_google_maps.png</href></Icon>
+<Icon><href>./img/car.png</href></Icon>
 <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
 </IconStyle></Style>
 <Style id="end"><IconStyle>
 <scale>0.8</scale>
-<Icon><href>./img/glyphicons_242_google_maps.png</href></Icon>
+<Icon><href>./img/car.png</href></Icon>
 <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
 </IconStyle></Style>
 <Style id="statistics"><IconStyle>
 <scale>0.8</scale>
-<Icon><href>./img/glyphicons_242_google_maps.png</href></Icon>
+<Icon><href>./img/car.png</href></Icon>
 <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
 </IconStyle></Style>
 <Style id="waypoint"><IconStyle>
 <scale>0.8</scale>
-<Icon><href>./img/glyphicons_242_google_maps.png</href></Icon>
+<Icon><href>./img/car.png</href></Icon>
 <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
 </IconStyle></Style>
 <Schema id="schema">

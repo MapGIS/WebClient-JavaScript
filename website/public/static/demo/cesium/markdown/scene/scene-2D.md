@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `changeSceneMode()` 方法切换地图显示模式。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` 后初始化视图功能管理类 `CesiumZondy.Manager.SceneManager()` ，调用视图功能管理类的 `changeSceneMode()` 方法切换地图显示模式。
 
 ### 实现步骤：
 
@@ -25,16 +25,22 @@ var webGlobe = new Cesium.WebSceneControl('GlobeView', {
 <div id='GlobeView'></div>
 ```
 
-3.<font color=red>模式切换</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `changeSceneMode()` 方法切换地图显示模式；
+3. <font color=red>模式切换</font>：初始化视图功能管理类 `CesiumZondy.Manager.SceneManager()` ，调用视图功能管理类的 `changeSceneMode()` 方法切换地图显示模式；
 
 ``` Javascript
-//模式切换
-webGlobe.changeSceneMode('2D', 1)
+ //初始化视图功能管理类
+ var sceneManager = new CesiumZondy.Manager.SceneManager({
+     viewer: webGlobe.viewer
+ });
+ //切换场景模式
+ sceneManager.changeSceneMode('2D', 1);
 ```
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1. 【三维视图的主要类】 `Cesium.WebSceneControl`
+
+#### 2. 【视图功能管理类】 `CesiumZondy.Manager.SceneManager`
 
 ##### (1) `changeSceneMode(sceneMode, duration)` 切换场景模式
 

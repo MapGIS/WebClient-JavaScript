@@ -38,18 +38,16 @@
 
    ```javascript
    map.on('draw.create', function (e) {
-       console.log(e);
-       var lonlats = e.features[e.features.length - 1].geometry.coordinates[0];
+       var lonlats = e.features[e.features.length - 1].geometry.coordinates;
        var dots = [];
        for (var i = 0; i < lonlats.length; i++) {
            dots.push(new Zondy.Object.Point2D(lonlats[i][0], lonlats[i][1]))
        }
-       console.log(lonlats)
-       markerlatLng = getCenterOfGravityPoint(lonlats);
-       CalArea(dots)
+       markerlatLng = lonlats[lonlats.length - 1];
+       CalPolyLineLength(dots)
    });
    ```
-
+   
 6. 创建`折线长度测量功能服务`及相关参数对象，执行测量功能；
 
    ```javascript

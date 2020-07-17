@@ -5,7 +5,7 @@
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl" src="./static/libs/include-mapboxgl-local.js"></script>
     <script type="text/javascript">
-        /**显示地图
+        /** 地图初始化
          */
         function init() {
             "use strict";
@@ -14,13 +14,13 @@
                 container: 'map',
                 crs: 'EPSG:4326',
                 minZoom: 3,
-                zoom: 6,
-                center: [112.247175, 31.152892]
+                zoom: 9,
+                center: [116.39, 39.90]
             });
             var navigationControl = new mapboxgl.NavigationControl();
             map.addControl(navigationControl, 'top-left');
-            var docLayer = new mapboxgl.Zondy.Map.MapDocLayer("Hubei4326", {
-                layerID:'mapgis-doc-4326',
+            var docLayer = new mapboxgl.Zondy.Map.MapDocLayer("北京市", {
+                layerID:'mapgis-doc-beijing',
                 //IP地址
                 ip: "develop.smaryun.com",
                 //端口号

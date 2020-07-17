@@ -8,12 +8,8 @@
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
         var webGlobe;
         //定义三维瓦片类
@@ -78,9 +74,9 @@
                     var vlueNumber = parseInt(values[2]);
                     var idList = [vlueNumber];
                     var options = {
-                        color: new Cesium.Color(1, 0, 0, 0.2)
-                    }
-                    //结束闪烁
+                            color: new Cesium.Color(1, 0, 0, 0.2)
+                        }
+                        //结束闪烁
                     webGlobe.stopCustomDisplay(layerList);
                     //开始闪烁查找到的模型
                     webGlobe.startCustomDisplay(layerList, idList, options);

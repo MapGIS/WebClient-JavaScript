@@ -8,18 +8,13 @@
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
         'use script';
         var webGlobe;
         //定义三维瓦片类
-        var tileset;
+        var landscapeLayer;
         //地图初始化函数
         function init() {
             //实例化要加载的source来源对象（世界矢量地图）
@@ -27,35 +22,60 @@
             webGlobe = new Cesium.WebSceneControl('GlobeView', {
                 terrainExaggeration: 1,
             });
-            webGlobe.appendGoogleMap('m@207000000');
-            //加载IGS发布的M3D缓存地图文档
-            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {
-                loaded: function (layer) {
+            //添加Google影像地图
+            webGlobe.appendGoogleMapExt({
+                ptype: 's@130'
+            });
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //视点跳转
+            sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                height: 100.85856618500283,
+                heading: -45.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+            //构造M3D模型层管理对象
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
+                autoReset: false,
+                maximumScreenSpaceError: 8,
+                loaded: function(layer) {
                     ///绘制结果回调函数
-                    function getDrawResult(entity) {
+                    function getDrawResult(positions) {
                         //获取绘制多边形区域的定点（这是三维的点xyz）
-                        positionsArray = entity.points;
+                        positionsArray = positions;
                         /*对绘制区域的顶点循环处理一下，以便用于模型压平参数的赋值*/
                         var array = [];
                         for (let i = 0; i < positionsArray.length; i++) {
                             let point = positionsArray[i];
                             let resPoint = new Cesium.Cartesian3;
                             let invserTran = new Cesium.Matrix4;
-                            Cesium.Matrix4.inverse(tileset[0]._root.transform, invserTran);
+                            Cesium.Matrix4.inverse(landscapeLayer[0]._root.transform, invserTran);
                             Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
                             resPoint.y = -resPoint.y;
                             array.push(new Cesium.Cartesian2(resPoint.x, resPoint.y));
                         }
                         array.push(array[0]);
-                        ///模型压平功能的参数赋值
-                        //是否进行压平。值为true时执行压平
-                        tileset[0].u_isFlatten = true;
-                        //将高度压倒0
-                        tileset[0].u_height = 0.0;
-                        //压平多边形的顶点序列长度
-                        tileset[0].u_arrayLength = positionsArray.length;
-                        //顶点序列。顶点序列需要闭合，也就是说，例如一个矩形是四个顶点ABCD，那序列就应该是【ABCDA】
-                        tileset[0].u_positionArray = array;
+                        //初始化高级分析功能管理类
+                        var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                            viewer: webGlobe.viewer
+                        });
+                        advancedAnalysisManager.createModelFlatten(landscapeLayer[0], {
+                            //是否进行压平。值为true时执行压平
+                            isFlatten: true,
+                            //将高度压到0
+                            height: 0,
+                            //压平多边形的顶点序列长度
+                            arrayLength: positionsArray.length,
+                            //顶点序列。顶点序列需要闭合，也就是说，例如一个矩形是四个顶点ABCD，那序列就应该是【ABCDA】
+                            array: array
+                        });
                         //场景渲染（渲染最新的压平效果）
                         webGlobe.viewer.scene.requestRender();
                     }
@@ -63,8 +83,11 @@
                     //定义绘制区域的图形顶点
                     var positionsArray;
                     //创建交互式绘制工具
-                    var tool = new Cesium.DrawPolygonTool(webGlobe.viewer, getDrawResult);
-                    tool.activeTool();
+                    var tool = new Cesium.DrawElement(webGlobe.viewer);
+                    //激活交互式绘制工具
+                    tool.startDrawingPolygon({
+                        callback: getDrawResult
+                    });
                 }
             });
 

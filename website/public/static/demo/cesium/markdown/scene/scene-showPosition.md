@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `showPosition()` 方法切换地图显示模式。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` 后初始化视图功能管理类 `CesiumZondy.Manager.SceneManager()` ，调用视图功能管理类的 `showPosition()` 方法显示位置信息。
 
 ### 实现步骤：
 
@@ -35,16 +35,22 @@ var webGlobe = new Cesium.WebSceneControl('GlobeView', {
 </div>
 ```
 
-4. <font color=red>位置显示</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `showPosition()` 方法切换地图显示模式；
+4. <font color=red>位置显示</font>：初始化视图功能管理类 `CesiumZondy.Manager.SceneManager()` ，调用视图功能管理类的 `showPosition()` 方法显示位置信息；
 
 ``` Javascript
+//初始化视图功能管理类
+var sceneManager = new CesiumZondy.Manager.SceneManager({
+    viewer: webGlobe.viewer
+});
 //显示鼠标位置控件
-webGlobe.showPosition('coordinate_location');
+sceneManager.showPosition('coordinateDiv');
 ```
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1. 【三维视图的主要类】 `Cesium.WebSceneControl`
+
+#### 2. 【视图功能管理类】 `CesiumZondy.Manager.SceneManager`
 
 ##### (1) `showPosition(elementId, options)` 切换场景模式
 
@@ -52,7 +58,7 @@ webGlobe.showPosition('coordinate_location');
 
 |参数名|类型|说明|
 |-|-|-|
-|elementId|String|要显示的div的id
+|elementId|String|附加属性|
 |options|Object|附加属性|
 
 > `options` 参数说明

@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `cruiseModel()` 方法创建模型漫游，通过 `startCruiseModel()` 方法开始模型漫游，通过 `stopCruiseModel()` 方法暂停模型漫游, 通过 `clearCruiseModel()` 方法清除模型漫游。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` ，创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `cruiseModel()` 方法创建模型漫游，通过 `startCruiseModel()` 方法开始模型漫游，通过 `stopCruiseModel()` 方法暂停模型漫游, 通过 `clearCruiseModel()` 方法清除模型漫游。
 
 ### 实现步骤：
 
@@ -25,23 +25,29 @@ var webGlobe = new Cesium.WebSceneControl('GlobeView', {
 <div id='GlobeView'></div>
 ```
 
-3. <font color=red>创建模型漫游</font>：通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `cruiseModel()` 方法创建模型漫游；
+3. <font color=red>创建模型漫游</font>：创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `cruiseModel()` 方法创建模型漫游；
 
 ``` Javascript
+//初始化分析功能管理类
+var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+    viewer: webGlobe.viewer
+});
 //模型URL地址、漫游点集、是否显示漫游路径、漫游时钟频率、漫游成功回调
-modelEntity = webGlobe.cruiseModel('./static/data/model/donghua.gltf', positionArr, true, 30);
+modelEntity = analysisManager.cruiseModel('./static/data/model/GroundVehicle.glb', positionArr, true, 30);
 ```
 
-4. <font color=red>开始模型漫游</font>：通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `startCruiseModel()` 方法开始模型漫游；
+4. <font color=red>开始模型漫游</font>：创建分析功能管理类 `CesiumZondy.Manager.AnalysisManager()` ，调用 `startCruiseModel()` 方法开始模型漫游；
 
 ``` Javascript
 /*开始漫游*/
-webGlobe.startCruiseModel();
+analysisManager.startCruiseModel();
 ```
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1.【三维视图的主要类】 `Cesium.WebSceneControl`
+
+#### 2.【分析功能管理类】 `CesiumZondy.Manager.AnalysisManager`
 
 ##### (1) `cruiseModel(modelURL, positionArr, isShowPath, clockFrequency)` 模型漫游
 
@@ -50,7 +56,7 @@ webGlobe.startCruiseModel();
 |参数名|类型|说明|
 |-|-|-|
 |modelURL|string|模型url|
-|positionArr|Array.<Array>|	漫游线路节点坐标数组 Array<[x,y]>|
+|positionArr|Array.<Array>|	漫游线路节点坐标数组 Array<[x, y]>|
 |isShowPath|bool|是否显示线路和节点|
 |clockFrequency|Number|漫游时钟频率|
 

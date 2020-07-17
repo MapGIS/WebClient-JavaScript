@@ -3,58 +3,79 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>线</title>
-    <!--引入第三方的jquery脚本库-->
+    <title>区实体绘制</title>
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
         'use strict';
-        //定义三维视图的主要类
-        var webGlobe;
+
+        //定义三维场景控件对象
+        var webGlobe = undefined;
         var polygon;
+
+        //加载三维场景
         function init() {
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
-            //添加谷歌矢量地图地图（矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’)
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //添加谷歌矢量地图（矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’)
             webGlobe.appendGoogleMap('m@207000000');
-            //跳转到指定位置
-            webGlobe.flyTo(110, 34, 2000000, 1);
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.40608773750783, 30.476922693690902, {
+                height: 1303.233185789504,
+                heading: 0.04063306919502985,
+                pitch: -90,
+                roll: 0
+            });
+
+            //添加多边形
+            add();
         }
 
         //添加多边形
         function add() {
-            remove();
+            //构造实体绘制控制器对象
+            var entityController = new CesiumZondy.Layer.EntityController({
+                viewer: webGlobe.viewer
+            });
+            
             //点数组
-            var arryp = [110, 40, 108, 30, 114, 35, 115, 36];
+            var arryp = [114.40328987990017, 30.479789358042233,
+                114.40255973680176, 30.473707285934392,
+                114.40905754990294, 30.473938016458956,
+                114.40971219770601, 30.479196348500707,
+                114.40328987990017, 30.479789358042233];
+
             //画多边形区
-            polygon = webGlobe.appendPolygon('三维区', arryp, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(0, 0, 1, 1));
-        }
-        //删除多边形
-        function remove() {
-            if (polygon) {
-                webGlobe.removeEntity(polygon);
-            }
+            polygon = entityController.appendPolygon(
+                '三维区',
+                arryp,
+                webGlobe.getColor(1, 1, 0, 0.5),
+                webGlobe.getColor(1, 0, 0, 1)
+            );
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="add" onclick="add()">添加多边形</button>
-        <button class="ButtonLib" id="remove" onclick="remove()">删除多边形</button>
-    </div>
-    <div id="GlobeView">
-    </div>
-    <!--坐标容器-->
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
     </div>
 </body>
 

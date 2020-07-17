@@ -3,57 +3,86 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>Popup</title>
-    <!--引入第三方的jquery脚本库-->
+    <title>气泡弹窗</title>
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-        var webGlobe;
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe = undefined;
         //定义三维瓦片类
         var tileset;
         var popup;
-        //地图初始化函数
+
+        //加载三维场景
         function init() {
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //添加Google地图
             webGlobe.appendGoogleMap('m@207000000');
 
-            // if (popup) webGlobe.removePopUp('popup');
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({ viewer: webGlobe.viewer });
+            //视点跳转
+            sceneManager.flyToEx(114.30182411077577, 30.531049970088603, {
+                height: 1632.9864145259676,
+                heading: 0,
+                pitch: -46,
+                roll: 0
+            });
+
+            //添加气泡弹窗
             add();
         }
 
-        //添加CZML
+        //添加气泡弹窗
         function add() {
-            //跳转到固定位置
-            webGlobe.flyTo(114.2, 31, 10000, 2);
+            //构造实体绘制控制器对象
+            var popupController = new CesiumZondy.Manager.PopupController({
+                viewer: webGlobe.viewer
+            });
+
             //popup的位置
-            var postion = Cesium.Cartesian3.fromDegrees(114.2, 31);
+            var postion = Cesium.Cartesian3.fromDegrees(114.30252372618706, 30.544641875459394);
             //添加PopUP
-            popup = webGlobe.AppendPopUp('popup', '测试1测试1测试1<br/>测试1测试2<br/>', postion, [95, 0], webGlobe.removePopUp);
+            popup = popupController.appendPopUp(
+                //容器的div id
+                'popup',
+                //文本
+                '<center>黄鹤楼</center>位于湖北省武汉市长江南岸的武昌蛇山之巅',
+                //坐标位置
+                postion,
+                //偏移
+                [0, 0],
+                //popup的close按钮点击回调函数
+                popupController.removePopUp);
             //刷新
-            webGlobe.refreshPopUps();
+            popupController.refreshPopUps();
         }
     </script>
 </head>
 
 <body onload="init()">
+    <!--三维场景容器-->
     <div id='GlobeView'></div>
     <div id='popup' style="color:red;font-size:20px;"></div>
-    <!--坐标容器-->
+    <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
     </div>
 </body>
 

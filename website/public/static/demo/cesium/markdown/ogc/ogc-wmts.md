@@ -2,7 +2,7 @@
 
 ### 示例功能
 
-本示例对接OGC服务，实现在三维场景中加载WMTS地图。
+本示例对接OGC服务，实现在三维场景中加载WMTS服务地图。
 
 ### WMTS介绍
 
@@ -12,46 +12,42 @@ Web Map Tile Service（网络地图瓦片服务），简称WMTS，由开放地�
 
 数据准备：可在MapGIS IGServer中发布WMTS地图服务获取数据地址，也可通过其他方式发布服务或者获取地址，只要是基于OGC标准的WMTS地图服务都能支持。
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendWMSTile()`方法，以此来加载WMTS地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.OGCLayer`类提供的`appendWMSTile()`方法，以此来加载WMTS地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
 ### 实现步骤
 
-1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库；
+1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库，完成此步骤后才可调用三维WebGL的功能；
 
 2. 创建布局：创建`id='GlobeView'`的div作为三维视图的容器，并设置其样式；
 
-3. 构造三维场景控件：实例化WebSceneControl对象；
+3. 构造三维场景控件：实例化`Cesium.WebSceneControl`对象，完成此步骤后可在三维场景中加载三维球控件；
+
+   ``` javascript
+   //构造三维视图对象（视图容器div的id，三维视图设置参数）
+   var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+   ```
+
+4. 加载数据：调用`appendWMTSTile()`方法，并配置服务地址、图层名称、最大级数等信息，即可实现WMTS地图服务数据的加载，在此传入的是IGServer中发布的WMTS地图服务地址，可做参考。
 
     ``` javascript
-    //构造三维视图类（视图容器div的id，三维视图设置参数）
-    var webGlobe = new Cesium.WebSceneControl('GlobeView', {
-        terrainExaggeration: 1,
+    //构造OGC图层管理对象（视图）
+    var ogcLayer = new CesiumZondy.Layer.OGCLayer({
+        viewer: webGlobe.viewer
     });
-    ```
-
-4. 加载数据：调用`appendWMTSTile()`方法，并配置服务地址、图层名称、最大级数等信息，即可实现WMTS地图服务数据的加载，在此传入的是IGServer中发布的WMTS地图服务地址，可做参考；
-
-    ``` javascript
-    //构造三维视图类（视图容器div的id，三维视图设置参数）
-    webGlobe.appendWMTSTile(
+    //添加WMTS地图服务
+    var wmtsLayer = ogcLayer.appendWMTSTile(
         //瓦片服务地址
         "http://develop.smaryun.com:6163/igs/rest/ogc/WMTSServer",
         //图层名称
-        "SAMPLETILE", 'EPSG:2379_SAMPLETILE_028mm_GB',
+        "beijing", 
+        'EPSG:4326_北京市_028mm_GB',
         //最大级数
-        15,
-        null, 
-        'default', 
-        13);
-    ```
-
-5. 鼠标位置显示控件：创建`id="coordinate_location"`的div作为容器，用于显示鼠标当前位置的经纬度、高程、视角高度信息；然后调用`showPosition()`方法为三维场景控件设置鼠标位置显示控件。
-
-    ``` javascript
-    //显示鼠标位置控件
-    webGlobe.showPosition('coordinate_location');
+        17,
+        null,
+        'default',
+        0);
     ```
 
 ### 关键接口
@@ -78,34 +74,19 @@ Web Map Tile Service（网络地图瓦片服务），简称WMTS，由开放地�
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendWMTSTile(tileUrl, layerName, tileMatrixSetID, maximumLevel, startLevel)`：添加WMTS标准的瓦片
+#### 2.【OGC标准瓦片服务管理类】CesiumZondy.Layer.OGCLayer
+
+##### （1）`appendWMTSTile(tileUrl, layerName, tileMatrixSetID, maximumLevel, startLevel)`：添加WMTS标准的瓦片服务
 
 > `appendWMTSTile`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
 |tileUrl|String|瓦片服务地址|
-|layerName|String|图层名|
-|tileMatrixSetID|String| |
+|layerName|String|图层名称|
+|tileMatrixSetID|String|瓦片数据集格式|
 |maximumLevel|Number|最大级数|
 |startLevel|Number|初始级别 正常默认为0 有的为1|
-
-##### （3）`showPosition(elementId, options)`：显示经纬度 高程 视角高度
-
-> `showPosition`方法主要参数
-
-|参数名|类 型|说 明|
-|-|-|-|
-|elementId|Element \| String|要显示的div的id|
-|options|Object|附加属性|
-
-> `options`属性主要参数
-
-|参数名|类 型|默认值|说 明|
-|-|-|-|-|
-|showHpr|Boolean|false|（可选） |
-|showSelectTileInfo|Boolean|false|（可选）显示当前鼠标所在位置拾取到的级别|
-|showViewLevelInfo|Boolean|false|（可选）显示视图级别|
 
 ### 要点补充：WMTS服务操作介绍
 

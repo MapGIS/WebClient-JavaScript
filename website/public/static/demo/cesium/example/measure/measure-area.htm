@@ -7,46 +7,55 @@
     <title>计算面积</title>
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
+        //定义三维视图的主要类
         var webGlobe;
         //定义三维瓦片类
-        var tileset;
+        var landscapeLayer;
         // 测量面积工具
         var measureAreaTool;
         //地图初始化函数
         function init() {
-            //实例化要加载的source来源对象（世界矢量地图）
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //构造M3D模型层管理对象
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({ viewer: webGlobe.viewer });
+            //加载M3D地图文档（服务地址，配置参数）
+            landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
+                autoReset: false,
+                maximumScreenSpaceError: 8
             });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
-            webGlobe.appendGoogleMap('m@207000000');
-            //加载IGS发布的M3D缓存地图文档
-            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
-
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({ viewer: webGlobe.viewer });
+            //视点跳转
+            sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                height: 100.85856618500283,
+                heading: -45.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+            //调用面积测量函数
             areaMeasure();
         }
 
         /*面积测量*/
         function areaMeasure() {
             if (measureAreaTool == undefined) {
+                //创建面积测量工具
                 measureAreaTool = new Cesium.MeasureAreaTool(webGlobe.viewer);
             }
+            //激活面积测量工具
             measureAreaTool.startTool();
         }
 
         /*停止测量*/
         function stopAreaMeasure() {
             if (measureAreaTool != undefined) {
+                //停止面积测量工具
                 measureAreaTool.stopTool();
             }
         }
@@ -55,11 +64,6 @@
 
 <body onload="init()">
     <div id='GlobeView'>
-    </div>
-    <!--坐标容器-->
-    <div id="coordinateDiv" class="coordinateClass">
-        <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
     </div>
 </body>
 

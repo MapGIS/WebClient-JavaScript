@@ -3,65 +3,83 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>线</title>
-    <!--引入第三方的jquery脚本库-->
+    <title>贴地多边形绘制</title>
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
         'use strict';
-        //定义三维视图的主要类
-        var webGlobe;
+
+        //定义三维场景控件对象
+        var webGlobe = undefined;
         var polygon;
+
+        //加载三维场景
         function init() {
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
             //添加谷歌矢量地图地图（矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’)
             webGlobe.appendGoogleMap('m@207000000');
-            //跳转到指定位置
-            webGlobe.flyTo(95.1550, 30.8902, 10000, 2);
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.40608773750783, 30.476922693690902, {
+                height: 1303.233185789504,
+                heading: 0.04063306919502985,
+                pitch: -90,
+                roll: 0
+            });
+
+            //添加贴地多边形
+            add();
         }
 
         //添加贴地多边形
         function add() {
-            remove();
-            var terrain = Cesium.createWorldTerrain();
-            // webGlobe.viewer.terrainProvider = terrain;
-            //外圈坐标数组（经纬度）
-            var latLon_out = [95.1550, 30.8902, 95.1668, 30.8800, 95.1836, 30.8902, 95.1696, 30.91];
-            //nerPnts 内圈坐标数组（经纬度）
-            var lanLon_in = [[95.1617, 30.8902, 95.1668, 30.8882, 95.1766, 30.8939, 95.1696, 30.8996]];
-            //填充颜色
-            var color = new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5);
-            //根据给定点画贴地多边形
-            polygon = webGlobe.appendGroundPolygon(latLon_out, lanLon_in, color);
-        }
+            //构造实体绘制控制器对象
+            var entityController = new CesiumZondy.Layer.EntityController({
+                viewer: webGlobe.viewer
+            });
 
-        //删除贴地多边形
-        function remove() {
-            if (polygon) {
-                webGlobe.scene.primitives.remove(polygon);
-            }
+            //坐标点数组（经纬度）
+            var latLon_out = [114.40328987990017, 30.479789358042233,
+                114.40255973680176, 30.473707285934392,
+                114.40905754990294, 30.473938016458956,
+                114.40971219770601, 30.479196348500707,
+                114.40328987990017, 30.479789358042233];
+            //填充颜色
+            var color = new Cesium.ColorGeometryInstanceAttribute(1, 1, 0, 0.5);
+
+            //根据给定点画贴地多边形
+            polygon = webGlobe.appendGroundPolygon(
+                //外圈坐标数组（经纬度）
+                latLon_out,
+                //内圈坐标数组（经纬度）
+                null,
+                //填充颜色
+                color
+            );
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="add" onclick="add()">添加贴地多边形</button>
-        <button class="ButtonLib" id="remove" onclick="remove()">删除贴地多边形</button>
-    </div>
-    <div id="GlobeView">
-    </div>
-    <!--坐标容器-->
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
     </div>
 </body>
 

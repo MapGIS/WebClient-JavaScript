@@ -30,9 +30,9 @@
        //IGServer请求端口号
        port: "6163",
        //设置被叠加图层URL
-       srcInfo1: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界河流.wl_1",
+       srcInfo1: "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省行政区1_1",
        //设置叠加图层URL
-       srcInfo2: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",
+       srcInfo2: "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省湖泊1_1",
        //设置结果URL
        desInfo: resultname,
        //设置结果图层的图形参数信息

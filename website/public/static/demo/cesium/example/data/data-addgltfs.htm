@@ -3,33 +3,45 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>添加Gltf模型</title>
-    <!--引入第三方的jquery脚本库-->
+    <title>批量添加Gltf模型</title>
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-        var webGlobe;
-        //定义三维瓦片类
-        var tileset;
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe = undefined;
         var modelSource = [];
-        //地图初始化函数
+
+        //加载三维场景
         function init() {
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //添加Google地图
             webGlobe.appendGoogleMap('m@207000000');
 
-            if (modelSource) webGlobe.removeModels(modelSource);
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(119.96326524779111, 40.07955462004772, {
+                height: 81144,
+                heading: -55,
+                pitch: -20,
+                roll: 0
+            });
+
+            //添加模型
             add();
         }
 
@@ -105,8 +117,13 @@
                     "description": "这是3号风机"
                 }
             ];
+            
+            //创建图层管理对象
+            var layerManager = new CesiumZondy.Manager.LayerManager({
+                viewer: webGlobe.viewer
+            });
             //添加多个模型
-            modelSource = webGlobe.appendModels(models);
+            modelSource = layerManager.appendModels(models);
             //跳转到模型处
             webGlobe.viewer.zoomTo(modelSource);
         }
@@ -114,12 +131,11 @@
 </head>
 
 <body onload="init()">
-    <div id='GlobeView'>
-    </div>
-    <!--坐标容器-->
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
     </div>
 </body>
 

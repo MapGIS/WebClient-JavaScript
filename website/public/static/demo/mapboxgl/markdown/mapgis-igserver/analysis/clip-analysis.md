@@ -30,11 +30,11 @@
        //IGServer请求端口号
        port: "6163",
        //设置圆心坐标
-       center: lonLat2Mercator(88.62, 47.09).x + "," + lonLat2Mercator(88.62, 47.09).y,
+       center: lonLat2Mercator(112.69, 31).x + "," + lonLat2Mercator(112.69, 31).y,
        //设置圆半径长度
-       radius: 6000000,
+       radius: 100000,
        //设置被裁剪图层URL
-       srcInfo: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp",
+       srcInfo: "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省市级区划1",
        //设置结果图层的UR
        desInfo: resultname
    });

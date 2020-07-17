@@ -6,17 +6,17 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendModels()`方法，实现多个模型数据的批量加载。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Manager.LayerManager`类提供的`appendModels()`方法，实现多个模型数据的批量加载。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
 ### 实现步骤
 
-1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库；
+1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库，完成此步骤后才可调用三维WebGL的功能；
 
-2. 创建三维视图容器，构造三维场景控件，构造并设置鼠标位置显示控件，并加载Google地图作为底图；
+2. 创建三维视图Div容器，构造三维场景控件WebSceneControl，构造并设置鼠标位置信息显示控件，加载Google地图作为底图显示；
 
-3. 添加模型：首先构造多模型对象models，构造时需传递模型ID、模型名称、描述、添加的位置、模型文件路径、模型缩放比例等信息，然后调用`appendModels()`方法即可实现多模型的批量加载；
+3. 添加模型：首先构造`CesiumZondy.Manager.LayerManager`图层管理对象，构造多模型对象models，构造时需传递模型ID、模型名称、描述、添加的位置、模型文件路径、模型缩放比例等信息，然后调用`appendModels()`方法即可实现多模型的批量加载；
 
     ``` javascript
     //多个模型
@@ -66,31 +66,15 @@
             },
             //描述
             "description": "这是2号风机"
-        },
-        {
-            //模型的ID
-            "id": "aerogenerator3",
-            //模型的名字
-            "name": "风机3",
-            //模型要添加的坐标位置
-            "position": {
-                "cartographicDegrees": [117.9298, 42.3828, 0]
-            },
-            //模型文件参数
-            "model": {
-                //模型文件的路径
-                "gltf": "./static/data/model/donghua.gltf",
-                //模型的比例
-                "scale": 20000,
-                //模型最小显示的像素
-                "minimumPixelSize": 16
-            },
-            //描述
-            "description": "这是3号风机"
         }
     ];
+
+    //创建图层管理对象
+    var layerManager = new CesiumZondy.Manager.LayerManager({
+        viewer: webGlobe.viewer
+    });
     //添加多个模型
-    modelSource = webGlobe.appendModels(models);
+    var modelSource = layerManager.appendModels(models);
     ```
 
     添加完模型后，可利用以下方法跳转到模型所在处；
@@ -99,17 +83,12 @@
     //跳转到模型处
     webGlobe.viewer.zoomTo(modelSource);
     ```
-    
-    可以批量添加模型，当然也可批量移除模型，可通过`removeModels()`方法来实现；
-
-    ``` javascript
-    //移除模型
-    if (modelSource) webGlobe.removeModels(modelSource);
-    ```
 
 ### 关键接口
 
 #### 1.【三维场景控件】WebSceneControl
+
+#### 2.【图层管理类】CesiumZondy.Manager.LayerManager
 
 ##### （1）`appendModels(modelsString, successCall)`：批量添加模型
 

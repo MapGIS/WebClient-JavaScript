@@ -1,156 +1,83 @@
-# Mapv API
-## DataSet
-DasetSet是mapv中统一规范的数据对象，用来保存javascript数据对象。可以增删改查数据，并且可以订阅数据修改事件。
+## 点数据播放
 
-### 简单示例
+### 示例功能
+
+本示例对接MapV，实现在三维场景中加载MapV点数据播放图。
+
+### 示例实现
+
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` 后构造热力图数据，通过mapv图层对象类 `CesiumZondy.Overlayer.MapvLayer` 来实现MapV图层的加载。
+
+> 开发库使用请参见**首页**-**概述**-**原生JS调用**内容
+
+#### Mapv
+
+> 特别说明：MapGIS Client for JavaScript在Cesium中对接了MapV插件，若插件本身存在问题，请优先参考<a target="_blank" href="https://mapv.baidu.com/">Mapv官方教程</a>寻找解决方案
+
+### 实现步骤
+
+1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库，需要设置 `include` 属性为 `mapv` ；   
 
 ``` javascript
-var data = [    
-        {
-            city: '北京',
-            count: 30
+    < script include = "mapv"
+    src = "./static/libs/include-cesium-local.js" > < /script>
+```
+
+2. 创建三维视图容器，构造三维场景控件，构造并设置鼠标位置显示控件，并加载Google地图作为底图；
+
+3. 创建 `DataSet` 对象: 首先构造DataSet对象需要的数据，然后使用数据创建DataSet对象。<a target="_blank" href="https://github.com/huiyan-fe/mapv/blob/master/src/data/DataSet.md">DataSet</a>对象使用Mapv框架的原生API创建，更多详细信息参考<a target="_blank" href="https://mapv.baidu.com/">Mapv官方教程</a>；
+
+``` javascript
+for (var i = 0; i < rs[0].length; i++) {
+    var geoCoord = rs[0][i].geoCoord;
+    data.push({
+        geometry: {
+            type: 'Point',
+            coordinates: geoCoord
         },
-        {
-            city: '南京',
-            count: 30
-        }
-    ];
+        time: Math.random() * 10
+    });
+}
+
 var dataSet = new mapv.DataSet(data);
 ```
 
-### 地理信息数据
-mapv中主要都是展示地理信息数据用的，需要在数据中加个geometry字段，geometry字段的内容统一使用[Geojavascript](http://geojavascript.org/)的规范。
-
-### 地理信息数据示例
+4. 构造 `options` 参数，<a target="_blank" href="https://github.com/huiyan-fe/mapv/blob/master/src/map/baidu-map/Layer.md">options</a>参数参考Mapv框架的原生API创建，更多详细信息参考<a target="_blank" href="https://mapv.baidu.com/">Mapv官方教程</a>； 
 
 ``` javascript
-var data = [
-        // 点数据
-        {
-            geometry: {
-                type: 'Point',
-                coordinates: [123, 23]
-            },
-            fillStyle: 'red',
-            size: 30
+var options = {
+    context: '2d',
+    fillStyle: 'rgba(255, 250, 50, 0.6)',
+    updateCallback: function(time) {
+        time = time.toFixed(2);
+        $('#time').html('时间' + time);
+    },
+    size: 3,
+    draw: 'simple',
+    animation: {
+        type: 'time',
+        stepsRange: {
+            start: 0,
+            end: 10
         },
-        {
-            geometry: {
-                type: 'Point',
-                coordinates: [121, 33]
-            },
-            fillStyle: 'rgba(255, 255, 50, 0.5)',
-            size: 90
-        },
-        // 线数据
-        {
-            geometry: {
-                type: 'LineString',
-                coordinates: [
-                    [123, 23], 
-                    [124, 24]
-                ]
-            },
-            count: 30
-        },
-        // 面数据
-        {
-            geometry: {
-                type: 'Polygon',
-                coordinates: [
-                    [
-                        [123, 23], 
-                        [123, 23], 
-                        [123, 23]
-                    ]
-                ]
-            },
-            count: 30 * Math.random()
-        }
-    ];
-    var dataSet = new mapv.DataSet(data);
-```
-
-### dataSet的方法
-#### dataSet.get
-通过此方法可以获取当前数据集的数据:
-
-``` javascript
-var data = dataSet.get();
-```
-      
-同时可通过filter参数方法获取过滤后的数据:
-
-``` javascript
-var data = dataSet.get({
-        filter: function(item){
-            if (item.count > 10 && item.count < 50) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    });
-```
-   
-#### dataSet.set
-通过此方法可以修改数据集的内容:
-
-``` javascript
-dataSet.set([
-        {
-            geometry: {
-                type: 'Point',
-                coordinates: [123, 23]
-            },
-            fillStyle: 'red',
-            size: 30
-        }
-    ]);
-```
-
-## mapv.baiduMapLayer
-
-### 创建地图
-mapv部分效果展示需要依赖于地图，我们可以通过以下方式创建地图：
-
-以百度地图为例(具体的方法请参阅百度地图的js [api手册](http://lbsyun.baidu.com/index.php?title=jspopular))
-
-``` javascript
-// 创建Map实例
-var map = new BMap.Map("map", {
-  enableMapClick: false
-});    
-       
-// 初始化地图,设置中心点坐标和地图级别
-map.centerAndZoom(new BMap.Point(106.962497, 38.208726), 4);  
-
-// 设置地图样式
-map.setMapStyle({
-  style: 'midnight'
-});
-```
-
-添加百度地图可视化叠加图层。
-
-``` javascript
-    var options = {
-        fillStyle: 'rgba(55, 50, 250, 0.6)',
-        shadowColor: 'rgba(55, 50, 250, 0.5)',
-        shadowBlur: 10,
-        size: 5,
-        draw: 'simple'
+        trails: 1,
+        duration: 6,
     }
-
-    var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
+}
 ```
 
-### options
-
-#### options通用的属性:
+6. 数据展示，根据前面的步骤，将 `map` 、 `dataSet` 、 `options` 三个参数传入 `CesiumZondy.Overlayer.MapvLayer` 中创建对象，创建完成数据在三维场景中加载展示。
 
 ``` javascript
-options = {
+var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+```
+
+###  关键接口
+
+#### 1. options属性
+
+``` json
+{
     zIndex: 1, // 层级
     size: 5, // 大小值
     unit: 'px', // 'px': 以像素为单位绘制,默认值。'm': 以米制为单位绘制，会跟随地图比例放大缩小
@@ -177,6 +104,9 @@ options = {
         },
         mousemove: function(item) { // 鼠标移动事件，对应鼠标经过的元素对象值
             console.log(item);
+        },
+        tap: function(item) {
+            console.log(item) // 只针对移动端,点击事件
         }
     },
     animation: {
@@ -191,289 +121,3 @@ options = {
 }
 ```
 
-#### options.draw 
-* simple 最直接的方式绘制点线面
-* time 按时间字段来动画展示数据
-* heatmap 热力图展示
-* grid 网格状展示
-* honeycomb 蜂窝状展示
-* bubble 用不同大小的圆来展示
-* intensity 根据不同的值对应按渐变色中颜色进行展示
-* category 按不同的值进行分类，并使用对应的颜色展示
-* choropleth 按不同的值区间进行分类，并使用对应的颜色展示
-* text 展示文本
-* icon 展示icon
-
-#### simple:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-simple.html)
-dataSet中也可直接配置每个数据项的样式
-
-``` javascript
-{
-    draw: 'simple',
-    geometry: {
-        type: 'Point',
-        coordinates: [123, 23]
-    },
-    size: 10, // 点数据时候使用
-    fillStyle: 'red', // 点数据时候使用
-    strokeStyle: 'red' // 线数据时候使用
-}
-```
-#### heatmap:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-heatmap.html)
-
-``` javascript
-var options = {
-    draw: 'heatmap',
-    size: 13, // 每个热力点半径大小
-    gradient: { // 热力图渐变色
-        0.25: "rgb(0,0,255)",
-        0.55: "rgb(0,255,0)",
-        0.85: "yellow",
-        1.0: "rgb(255,0,0)"
-    },
-    max: 100, // 最大权重值
-}
-//dataSet中加count字段，代表权重，根据上面配置用以计算它的热度
-```
-
-#### grid:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-grid.html)
-
-``` javascript
-{
-    draw: 'grid',
-    size: 40,
-    label: { // 网格中显示累加的值总和
-        show: true,
-        fillStyle: 'white',
-        shadowColor: 'yellow',
-        font: '20px Arial',
-        shadowBlur: 10,
-    },
-    gradient: { 0.25: "rgb(0,0,255)", 0.55: "rgb(0,255,0)", 0.85: "yellow", 1.0: "rgb(255,0,0)"},
-}
-```
-
-#### honeycomb:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-honeycomb.html)
-
-``` javascript
-{
-    draw: 'honeycomb',
-    size: 40,
-    label: { // 网格中显示累加的值总和
-        show: true,
-        fillStyle: 'white',
-        shadowColor: 'yellow',
-        font: '20px Arial',
-        shadowBlur: 10,
-    },
-    gradient: { 0.25: "rgb(0,0,255)", 0.55: "rgb(0,255,0)", 0.85: "yellow", 1.0: "rgb(255,0,0)"},
-}
-```
-
-#### bubble对应的options:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-bubble.html)
-
-``` javascript
-{
-    draw: 'bubble',
-    max: 100, // 数值最大值范围
-    maxSize: 10, // 显示的圆最大半径大小
-}
-```
-dataSet中加count字段，代表权重，根据上面配置用以计算它实际展示的大小
-
-#### intensity对应的options:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-intensity.html)
-
-``` javascript
-{
-    draw: 'intensity',
-    max: 100, // 最大阈值
-    min: 0, // 最小阈值
-    gradient: { // 显示的颜色渐变范围$
-        '0': 'blue',
-        '0.6': 'cyan',
-        '0.7': 'lime',
-        '0.8': 'yellow',
-        '1.0': 'red'
-    }$
-}
-```
-
-#### category对应的options:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-category.html)
-
-```javascript
-{
-    draw: 'category',
-    splitList: { // 按对应的值按相应颜色展示
-        other: 'rgba(255, 255, 0, 0.8)',
-        1: 'rgba(253, 98, 104, 0.8)',
-        2: 'rgba(255, 146, 149, 0.8)',
-        3: 'rgba(255, 241, 193, 0.8)',
-        4: 'rgba(110, 176, 253, 0.8)',
-        5: 'rgba(52, 139, 251, 0.8)',
-        6: 'rgba(17, 102, 252)'
-    }
-}
-```
-
-#### choropleth对应的options:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-choropleth.html)
-
-```javascript 
-{
-    draw: 'choropleth',
-    // 按数值区间来展示不同颜色的点
-    splitList: [
-        {
-            start: 0,
-            end: 2,
-            color: randomColor()
-        },{
-            start: 2,
-            end: 4,
-            color: randomColor()
-        },{
-            start: 4,
-            end: 6,
-            color: randomColor()
-        },{
-            start: 6,
-            end: 8,
-            color: randomColor()
-        },{
-            start: 8,
-            color: randomColor()
-        }
-    ]
-}
-```
-
-#### icon对应的options:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-icon.html)
-
-```javascript
-{
-    draw: 'icon',
-    rotate: '90', // 图片旋转角度
-    width: 10, // 规定图像的宽度
-    height: 10, // 规定图像的高度
-    size: 10, // 添加点击事件时候可以用来设置点击范围
-    sx: 10, // 开始剪切的 x 坐标位置
-    sy: 10, // 开始剪切的 y 坐标位置
-    swidth: 10, // 被剪切图像的宽度
-    sheight: 10, // 被剪切图像的高度
-}
-```
-dataSet中添加字段
-
-```javascript
-{
-    icon: Image, // 加载好的Image对象
-    rotate: '90', // 图片旋转角度
-}
-```
-
-#### text对应的options:
-[示例地址](http://mapv.baidu.com/examples/#baidu-map-point-text.html)
-
-```javascript
-{
-    draw: 'text',
-    fillStyle: 'white',
-    textAlign: 'center',
-    avoid: true, // 开启文本标注避让
-    textBaseline: 'middle',
-    offset: { // 文本便宜值
-        x: 0,
-        y: 0
-    }
-}
-```
-dataSet中添加字段
-
-``` javascript
-{
-    text: '文本内容' 
-}
-```
-
-### animation:
-[点动画1](http://mapv.baidu.com/examples/#baidu-map-point-time.html)
-[点动画2](http://mapv.baidu.com/examples/#baidu-map-point-time1.html)
-[线动画](http://mapv.baidu.com/examples/#baidu-map-polyline-time.html)
-
-```json
-{
-    draw: 'simple',
-    animation: {
-        type: 'time', // 按时间展示动画
-        stepsRange: { // 动画时间范围,time字段中值
-            start: 0,
-            end: 100
-        },
-        trails: 10, // 时间动画的拖尾大小
-        duration: 5, // 单个动画的时间，单位秒
-    }
-}
-```
-
-
-### 方法
-+ mapvLayer.update({options: {} // 修改配置}); 
-+ mapvLayer.setOptions({size: 1}); // 重新设置配置
-+ mapvLayer.show(); // 显示图层
-+ mapvLayer.hide(); // 隐藏图层
-+ mapvLayer.destroy(); // 销毁当前图层
-
-## utilDataRangeIntensity
-值域组件，可以按照强度获取对应渐变色中的颜色或半径大小值。
-
-### 类
-实例化值域组件。
-
-```javascript
-var intensity = new mapv.utilDataRangeIntensity({
-    maxSize: 100, // 定义最大的半径大小值
-    gradient: { // 渐变色设置
-        0.25: "rgb(0,0,255)",
-        0.55: "rgb(0,255,0)",
-        0.85: "yellow",
-        1.0: "rgb(255,0,0)"
-    },
-    max: 100 // 最大权重值
-});
-```
-
-### 方法
-
-#### getSize
-根据权重值获取对应的大小。
-
-```javascript
-    var size = intensity.getSize(count);
-```
-#### getColor
-根据权重值获取对应的颜色。
-
-```javascript
-    var size = intensity.getColor(count);
-```
-#### setMax
-修改最大权重值。
-
-```javascript
-    intensity.setMax(100);
-```
-### setMaxSize
-修改最大半径值。
-
-```javascript
-    intensity.setMaxSize(100);
-```
-    

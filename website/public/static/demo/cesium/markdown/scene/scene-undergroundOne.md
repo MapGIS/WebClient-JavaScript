@@ -35,4 +35,4 @@ webGlobe.viewer.scene.globe.transparent = 0.3;
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1. 【三维视图的主要类】 `Cesium.WebSceneControl`

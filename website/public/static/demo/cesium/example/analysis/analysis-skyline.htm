@@ -8,54 +8,80 @@
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-         //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
-         'use strict';
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        'use strict';
         //定义三维视图的主要类
         var webGlobe;
-        var scene;
         //定义三维瓦片类
-        var tileset;
+        var landscapeLayer;
         var skyLineAn;
+
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-            });
-            scene = webGlobe.scene;
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
             if (webGlobe) {
-                if (webGlobe) {
-                    //加载谷歌矢量底图
-                    webGlobe.appendGoogleMap('m@207000000');
-                    //加载IGS发布的M3D缓存地图文档
-                    tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
-                }
+                //添加Google影像地图
+                webGlobe.appendGoogleMapExt({
+                    ptype: 's@130'
+                });
+                //初始化视图功能管理类
+                var sceneManager = new CesiumZondy.Manager.SceneManager({
+                    viewer: webGlobe.viewer
+                });
+                //视点跳转
+                sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                    height: 100.85856618500283,
+                    heading: -45.4940479913348135,
+                    pitch: -15,
+                    roll: 0
+                });
+                //构造M3D模型层管理对象
+                var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载M3D地图文档（服务地址，配置参数）
+                landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
+                    autoReset: false,
+                    maximumScreenSpaceError: 8,
+                    loaded: function(layer) {
+                        function left() {
+                            if (skyLineAn) {
+                                //销毁天际线分析结果
+                                skyLineAn.destroy();
+                            }
+                            //初始化高级分析功能管理类
+                            var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                                viewer: webGlobe.viewer
+                            });
+                            //创建天际线实例
+                            skyLineAn = advancedAnalysisManager.createSkyLine()
+                        }
+
+                        function right() {
+                            if (skyLineAn) {
+                                //销毁天际线分析结果
+                                skyLineAn.destroy();
+                            }
+                        }
+                        //注册鼠标事件
+                        webGlobe.registerMouseEvent('LEFT_CLICK', left);
+                        webGlobe.registerMouseEvent('RIGHT_CLICK', right);
+                    }
+                })
             }
-        }
-
-        function skyLineAnasisly() {
-            scene.logarithmicDepthBuffer = false;
-            skyLineAn = new Cesium.SkyLineAnalysis(scene);
-            scene.VisualAnalysisManager.add(skyLineAn);
-        }
-
-
-        function deleteskyLineAn() {
-            skyLineAn.destroy();
         }
     </script>
 </head>
+
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="sceneProColor" onclick="skyLineAnasisly()">天际线分析</button>
-        <button class="ButtonLib" id="sceneProColor" onclick="deleteskyLineAn()">删除天际线分析</button>
+    <div id="GlobeView">
+        <div class="message" style="left: 10px;">
+            <font>鼠标左键点击执行天际线分析</font>
+        </div>
     </div>
-    <div id="GlobeView"></div>
 </body>
+
 </html>

@@ -38,7 +38,7 @@
    themesInfoArr[0].ThemeArr[0].IsBaseTheme = true;
    themesInfoArr[0].ThemeArr[0].Visible = true;
    themesInfoArr[0].ThemeArr[0].GeoInfoType = "Reg";
-   themesInfoArr[0].ThemeArr[0].Expression = "name";
+   themesInfoArr[0].ThemeArr[0].Expression = "NAME";
    //未分段值的图形信息设置
    themesInfoArr[0].ThemeArr[0].DefaultInfo = new Zondy.Object.Theme.CThemeInfo();
    themesInfoArr[0].ThemeArr[0].DefaultInfo.Caption = "未分类";

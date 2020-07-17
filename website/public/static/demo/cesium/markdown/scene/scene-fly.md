@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `flyTo()` 方法进行视点跳转。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` , 初始化视图功能管理类 `CesiumZondy.Manager.SceneManager()` ，调用视图功能管理类的 `flyTo()` 方法进行视点跳转。
 
 ### 实现步骤：
 
@@ -25,16 +25,22 @@ var webGlobe = new Cesium.WebSceneControl('GlobeView', {
 <div id='GlobeView'></div>
 ```
 
-3.<font color=red>视点跳转</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `flyTo()` 方法进行视点跳转；
+3. <font color=red>视点跳转</font>：初始化视图功能管理类 `CesiumZondy.Manager.SceneManager()` ，调用视图功能管理类的 `flyTo()` 方法进行视点跳转；
 
 ``` Javascript
-//试点跳转
-webGlobe.flyTo(114.06, 22.54, 2000000, 2);
+//初始化视图功能管理类
+var sceneManager = new CesiumZondy.Manager.SceneManager({
+    viewer: webGlobe.viewer
+});
+//跳转视图
+sceneManager.flyTo(116.44, 40, 300000, 2);
 ```
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1. 【三维视图的主要类】 `Cesium.WebSceneControl`
+
+#### 2. 【视图功能管理类】 `CesiumZondy.Manager.SceneManager`
 
 ##### (1) `flyTo(lon, lon, height, duration)` 跳转
 

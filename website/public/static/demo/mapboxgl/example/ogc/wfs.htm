@@ -27,9 +27,11 @@
     <script>
       //使用严格模式
       "use strict";
-      var map;
+      var map, popup;
       var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
-      //地图初始化函数
+       /**
+       * 地图初始化
+       */
       function init() {
         //实例化要加载的source来源对象（世界矢量地图）
         var dark = {
@@ -37,16 +39,16 @@
           tiles: [
             //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
             "http://t" +
-              Math.round(Math.random() * 7) +
-              ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
-              "&TILECOL=" +
-              "{x}" +
-              "&TILEROW=" +
-              "{y}" +
-              "&TILEMATRIX=" +
-              "{z}" +
-              "&tk=" +
-              tiandituKey,
+            Math.round(Math.random() * 7) +
+            ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+            "&TILECOL=" +
+            "{x}" +
+            "&TILEROW=" +
+            "{y}" +
+            "&TILEMATRIX=" +
+            "{z}" +
+            "&tk=" +
+            tiandituKey,
           ],
           //栅格瓦片的分辨率
           tileSize: 256,
@@ -84,36 +86,42 @@
               },
             ],
           },
-          zoom: 2,
-          center: [110, 30],
+          zoom: 10,
+          center: [116.39, 39.90]
         });
+        popup = new mapboxgl.Popup({ closeOnClick: false });
+        popup.on("close", function () {
 
+        });
         //注册地图加载事件
-        map.on("load", function() {
+        map.on("load", function () {
           var baseurl =
-            " http://develop.smaryun.com6163/igs/rest/ogc/doc/OGC_4326_CHINA/WFSServer?" +
-            "REQUEST=GetFeature" +
-            "&version=1.1.0" +
-            "&service=wfs" +
-            "&typename=OGC_4326_CHINA:背景图,中国,省级行政区,首都点,省会城市" +
-            "&maxFeatures=10";
-          var url = "./static/libs/cdn/zondyclient/ZDproxy.ashx?url=" + baseurl;
+            "http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WFSServer?REQUEST=GetFeature&version=1.1.0&service=wfs&typename=北京市:北京市&maxFeatures=10";
           $.ajax({
-            url: url,
+            url: baseurl,
             type: "get",
             dataType: "xml",
             contentType: "application/x-www-form-urlencoded",
             success: loadGeoJson,
-            error: function(xml) {
-              console.warn(
-                "目前IGServer针对WFS没处理跨域 要改代码支持跨域，请用用后端代理转发处理."
-              );
-            },
+            error: function (xml) {
+              alert("请求失败");
+            }
           });
         });
 
         function loadGeoJson(xml) {
-          console.log("loadWFS", xml);
+          if (!!xml) {
+            var beijing = xml.children[0].children[0].children[0].children;
+            var html = "<table>";
+            for (var i = 1; i < 7; i++) {
+              const element = beijing[i];
+              html += "<tr><td><b>" + beijing[i].localName + "</b></td><td>" + beijing[i].textContent + "</td></tr>"
+            }
+            html += "</table>";
+            popup.setLngLat([116.39, 39.90]).setHTML(html).addTo(map);
+          } else {
+            alert("没有查询到数据");
+          }
         }
       }
     </script>

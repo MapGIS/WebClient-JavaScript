@@ -27,9 +27,9 @@
 4. 创建**矢量图层对象**，将MapGIS矢量图层添加到地图中，其中**行政区**图层（gdbp://MapGisLocal/武汉市区/sfcls/行政区）作为底图，**点编辑**图层（gdbp://MapGisLocal/武汉市区/sfcls/点编辑）是进行矢量要素编辑的图层；
 
    ```javascript
-   guid = (new Date()).getTime().toString()
+   guid = (new Date()).getTime().toString();
    //创建矢量图层
-   vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/武汉市区/sfcls/行政区", "gdbp://MapGisLocal/武汉市区/sfcls/点编辑"], {
+   vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/ClientTheme/ds/epsg4326/sfcls/湖北省市级区划2", "gdbp://MapGisLocal/ClientTheme/ds/epsg4326/sfcls/点编辑"], {
        //IP地址
        ip: "develop.smaryun.com",
        //端口号
@@ -90,8 +90,7 @@
 
      ```javascript
      //创建一个编辑服务类
-     var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑",
-         {ip: "develop.smaryun.com", port: "6163"});
+     var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/ClientTheme/ds/epsg4326/sfcls/点编辑",{ ip: "develop.smaryun.com", port: "6163" });
      //执行添加点要素功能,OnSuccess为回调函数
      editService.add(featureSet, addSuccess);
      editService.update(featureSet, UpdateSuccess);
@@ -136,7 +135,7 @@
          })
      })
      ```
-
+   
 6. 编辑结果展示，在编辑成功的回调函数中刷新矢量图层即可查看编辑结果；
 
    ```javascript

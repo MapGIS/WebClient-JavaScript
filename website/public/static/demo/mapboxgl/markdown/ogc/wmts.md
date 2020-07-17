@@ -64,29 +64,29 @@
    ```javascript
    //注册地图加载事件
    map.on("load", function () {
-     map.addLayer({
+       map.addLayer({
        id: "wmts-layer",
        type: "raster",
        source: {
-         type: "raster",
-         tiles: [                
-           "http://develop.smaryun.com:6163/igs/rest/ogc/OGC_4326_CHINA_WMTS/WMTSServer?" +
-             "service=WMTS" +
-             "&request=GetTile" +
-             "&version=1.0.0" +
-             "&style=default" +
-             "&tilematrixSet=EPSG:4326_OGC_4326_CHINA_arcgis_GB" +
-             "&format=image/png" +
-             "&layer=OGC_4326_CHINA_WMTS" +
-             "&tilematrix={z}" +
-             "&tilerow={y}" +
-             "&tilecol={x}",
-         ],
-         tileSize: 256,
-         mapgisOffset: -1,
+           type: "raster",
+           tiles: [                
+           "http://develop.smaryun.com:6163/igs/rest/ogc/beijing/WMTSServer?" +
+               "service=WMTS" +
+               "&request=GetTile" +
+               "&version=1.0.0" +
+               "&style=default" +
+               "&tilematrixSet=EPSG:4326_北京市_arcgis_GB" +
+               "&format=image/png" +
+               "&layer=beijing" +
+               "&tilematrix={z}" +
+               "&tilerow={y}" +
+               "&tilecol={x}",
+           ],
+           tileSize: 256,
+           mapgisOffset: -1,
        },
        paint: {},
-     });
+       });
    });
    ```
    

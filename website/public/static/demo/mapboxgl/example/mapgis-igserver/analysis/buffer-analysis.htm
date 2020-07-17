@@ -7,30 +7,22 @@
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl,transform" src="./static/libs/include-mapboxgl-local.js"></script>
     <style>
-        .ButtonLib {
-            color: #0075C7;
-            display: inline-block;
-            padding: 3px 5px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-            margin-left: 4px;
-            margin-right: 4px;
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 1.42857143;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            border: 1px solid transparent;
-            border-color: #0075C7;
-            border-radius: 3px;
-            background-image: none;
-            background-color: transparent;
+        .mapboxgl-ctrl-icon {
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: 60%;
         }
-
-        .ButtonLib:hover {
-            color: white;
-            background-color: #0075C7;
+    
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-add {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594093104250" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4905"><path d="M789.994 771.154L459.266 670.616l295.152-343.032-380.88 318.478L64.28 553.82l896.008-427.218-170.294 644.552z m-341.168 127.42v-177.38l108.868 30.812-108.868 146.568z" p-id="4906"></path></svg>');
+        }
+    
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-update {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594090532673" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1150"><path d="M512 269.922592l0 121.038704 161.384597-161.384597L512 68.191078l0 121.038704c-178.330548 0-322.770218 144.43967-322.770218 322.770218 0 63.343677 18.559705 122.047684 50.02944 171.874509l58.905598-58.905598c-17.953907-33.689287-28.242228-72.018244-28.242228-112.969934C269.922592 378.251833 378.251833 269.922592 512 269.922592zM784.740778 340.124468l-58.905598 58.905598c17.953907 33.689287 28.242228 72.018244 28.242228 112.969934 0 133.748167-108.329241 242.077408-242.077408 242.077408L512 633.038704 350.614379 794.423301l161.384597 161.384597L511.998977 834.770218c178.330548 0 322.770218-144.43967 322.770218-322.770218C834.770218 448.656323 816.210513 389.952316 784.740778 340.124468z" p-id="1151"></path></svg>');
+        }
+    
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-delete {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594092749945" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4754"><path d="M517.59 21.609c-100.299 0-181.703 79.514-185.167 179.34H98.603c-25.979 0-47.235 21.099-47.235 47.236 0 25.98 21.099 47.237 47.236 47.237h52.117v528.416c0 99.196 67.233 180.285 150.37 180.285h423.55c82.98 0 150.37-80.616 150.37-180.285V295.737h47.236c25.98 0 47.236-21.1 47.236-47.237 0-25.98-21.099-47.236-47.236-47.236H702.441C699.449 101.124 617.888 21.61 517.59 21.61z m-96.677 179.34c3.464-51.172 45.19-90.85 96.834-90.85s93.37 39.835 96.362 90.85H420.913z m-119.98 714.842c-29.444 0-61.88-37.789-61.88-91.953V295.737h547.311V824.31c0 54.007-32.436 91.954-61.88 91.954H300.933v-0.473z m0 0" p-id="4755"></path><path d="M364.387 802.267c21.57 0 39.363-21.571 39.363-48.653V476.022c0-27.082-17.635-48.654-39.363-48.654-21.572 0-39.364 21.572-39.364 48.654v277.592c0 26.924 17.32 48.653 39.364 48.653z m142.496 0c21.571 0 39.363-21.571 39.363-48.653V476.022c0-27.082-17.635-48.654-39.363-48.654-21.571 0-39.364 21.572-39.364 48.654v277.592c0 26.924 17.793 48.653 39.364 48.653z m149.896 0c21.571 0 39.364-21.571 39.364-48.653V476.022c0-27.082-17.635-48.654-39.364-48.654-21.571 0-39.363 21.572-39.363 48.654v277.592c0 26.924 17.162 48.653 39.363 48.653z m0 0" p-id="4756"></path></svg>');
         }
     </style>
     <script type="text/javascript">
@@ -41,7 +33,7 @@
         // 定义矢量图层全局变量
         var vectorLayer;
         //缓存结果图层的基地址
-        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
+        var resultBaseUrl = "gdbp://MapGisLocal/ClientTheme/ds/SpatialAnalysis/sfcls/";
         // 缓冲区图层id
         var layerId = [];
         // 定义矢量图层guid
@@ -56,17 +48,15 @@
             map = new mapboxgl.Map({
                 // 地图显示的div容器
                 container: 'map',
-                // 设置地图不连续显示
-                renderWorldCopies: false,
-                zoom: 1,
-                // 设置地图最大显示范围
-                maxBounds: [[-180, -90], [180, 90]]
+                minZoom: 3,
+                zoom: 6,
+                center: [112.247175, 30.152892]
             });
             var navigationControl = new mapboxgl.NavigationControl();
             map.addControl(navigationControl, 'top-left');
 
             // 创建矢量图层
-            vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer("gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图Google坐标系/sfcls/世界政区.wp", {
+            vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省边界1", "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省市级区划1"], {
                 // IGServer所在ip地址
                 ip: 'develop.smaryun.com',
                 // IGServer请求端口号
@@ -76,9 +66,51 @@
             });
             // 将矢量图层添加到地图
             vectorLayer.addToMap(map);
+            map.on('load', function () {
+                var poly = [[[112.59, 30.67], [112.80, 30.83], [112.86, 30.70], [113.28, 30.90], [113.45, 30.63], [113.45, 30.38], [112.90, 30.56], [112.86, 30.50], [112.59, 30.67]]];
+                var feature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": poly
+                    }
+                }
+                //用geojson创建一个多边形
+                var geometryPolygon = {
+                    "type": "FeatureCollection",
+                    "features": [feature]
+                };
+                var source = {
+                    "type": "geojson",
+                    "data": geometryPolygon
+                };
+                //将多边形添加到一个图层中，在地图中显示
+                map.addLayer({
+                    //此id可随意设置，但是要唯一
+                    "id": "poly",
+                    //指定类型为fill（填充区域）
+                    "type": "fill",
+                    //设置数据来源
+                    "source": source,
+                    //设置绘制参数
+                    "paint": {
+                        //设置填充颜色
+                        "fill-color": "rgba(255, 0, 0, 0.2)",
+                        "fill-outline-color": '#FF0000'
+                    }
+                });
+            })
+
+            var html = '<div class="mapboxgl-ctrl mapboxgl-ctrl-group">' +
+                '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-add" type="button" title="多圈缓冲区分析" onclick="multiBuffAnalysis()" aria-label="add"></button>' +
+                '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-delete" type="button" title="清除结果" onclick="clearA()" aria-label="delete"></button>' +
+                '</div>';
+            $(".mapboxgl-ctrl-top-right").append(html);
         }
 
-        /** 执行多圈缓冲区分析*/
+        /**
+         * 执行多圈缓冲区分析
+         */
         function multiBuffAnalysis() {
             clearA();
             //显示进度条
@@ -88,11 +120,16 @@
             //设置区要素的空间几何信息
             var gReg = new Zondy.Object.GRegion([
                 new Zondy.Object.AnyLine([new Zondy.Object.Arc([
-                    new Zondy.Object.Point2D(lonLat2Mercator(0.46, 30.1).x, lonLat2Mercator(0.46, 30.1).y),
-                    new Zondy.Object.Point2D(lonLat2Mercator(11.48, 6.22).x, lonLat2Mercator(11.48, 6.22).y),
-                    new Zondy.Object.Point2D(lonLat2Mercator(36.73, 7.6).x, lonLat2Mercator(36.73, 7.6).y),
-                    new Zondy.Object.Point2D(lonLat2Mercator(58.77, 25.51).x, lonLat2Mercator(58.77, 25.51).y),
-                    new Zondy.Object.Point2D(lonLat2Mercator(41.33, 49.39).x, lonLat2Mercator(41.33, 49.39).y)])])]);
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.59, 30.67).x, lonLat2Mercator(112.59, 30.67).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.80, 30.83).x, lonLat2Mercator(112.80, 30.83).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.86, 30.70).x, lonLat2Mercator(112.86, 30.70).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(113.28, 30.90).x, lonLat2Mercator(113.28, 30.90).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(113.45, 30.63).x, lonLat2Mercator(113.45, 30.63).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(113.45, 30.38).x, lonLat2Mercator(113.45, 30.38).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.90, 30.56).x, lonLat2Mercator(112.90, 30.56).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.86, 30.50).x, lonLat2Mercator(112.86, 30.50).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.59, 30.67).x, lonLat2Mercator(112.59, 30.67).y)
+                ])])]);
             //设置区要素几何信息
             regGeo.setRegGeom([gReg]);
             //实例化CAttStruct类
@@ -114,7 +151,7 @@
                 //IGServer请求端口号
                 port: "6163",
                 //设置多圈缓冲分析的缓冲半径字符串
-                radiusStr: "500000,1000000,2000000"
+                radiusStr: "1000,20000,30000"
             });
             /*设置缓冲分析参数*/
             //设置几何信息
@@ -145,7 +182,6 @@
         function AnalysisSuccess(data) {
             //停止进度条
             stopPressBar();
-            console.log(data)
             if (!data.succeed) {
                 alert("要素多圈缓冲分析失败，请检查参数！");
             } else {
@@ -233,11 +269,7 @@
         style="display: none; text-align: center; padding-top: 250px; font-weight: bold;position: absolute;background: rgba(3, 3, 3, 0.1);color: #fff;float: left; width: 100%;height: 100%;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;z-index: 20000;">
         <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
         <br />
-        <span>正在缓冲区分析，请稍候</span>
-    </div>
-    <div class="ToolLib">
-        <input type="button" class="ButtonLib" value="多圈缓冲区分析" onclick="multiBuffAnalysis()" />
-        <input type="button" class="ButtonLib" value="清除结果" onclick="clearA()" />
+        <span>正在执行缓冲分析，请稍候</span>
     </div>
     <div id="map" style="width: 100%; height: 700px;">
     </div>

@@ -6,7 +6,7 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，通过Cesium三维球控件 `Cesium.WebSceneControl()` 的 `outputImage()` 方法进行场景输出图片。
+本示例需要使用include-cesium-local.js开发库实现，初始化Cesium三维球控件 `Cesium.WebSceneControl()` 后初始化常用功能管理类 `CesiumZondy.Manager.CommonFuncManager()` ，调用常用功能管理类的 `outputImageFile()` 方法进行场景输出图片。
 
 ### 实现步骤：
 
@@ -18,21 +18,33 @@
 //构造三维视图类（视图容器div的id，三维视图设置参数）
 var webGlobe = new Cesium.WebSceneControl('GlobeView', {
     terrainExaggeration: 1,
-}); 
+});
 ```
 
 ``` html
 <div id='GlobeView'></div>
 ```
 
-3.<font color=red>场景出图</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `outputImage()` 方法输出当前场景为图片；
+3. <font color=red>场景出图</font>：初始化常用功能管理类 `CesiumZondy.Manager.CommonFuncManager()` ，调用常用功能管理类的 `outputImageFile()` 方法进行场景输出图片；
 
 ``` Javascript
-//场景出图
-webGlobe.outputImage()
+var commonFuncManager = new CesiumZondy.Manager.CommonFuncManager({
+    viewer: webGlobe.viewer
+});
+//当前屏幕图片输出
+commonFuncManager.outputImageFile("图片.png");
 ```
 
 ### 关键接口
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
 
-##### (1) `outputImage()` 场景输出图片
+#### 1. 【三维视图的主要类】 `Cesium.WebSceneControl`
+
+#### 2. 【常用功能管理类】`CesiumZondy.Manager.CommonFuncManager`
+
+##### (1) `outputImageFile(fileName)` 场景输出图片
+
+> `outputImageFile` 方法主要参数
+
+|参数名|类型|说明|
+|-|-|-|
+|fileName|String|输出图片名称|

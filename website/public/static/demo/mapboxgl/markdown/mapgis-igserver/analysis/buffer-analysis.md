@@ -28,11 +28,16 @@
      //设置区要素的空间几何信息
      var gReg = new Zondy.Object.GRegion([
          new Zondy.Object.AnyLine([new Zondy.Object.Arc([
-             new Zondy.Object.Point2D(lonLat2Mercator(0.46, 30.1).x, lonLat2Mercator(0.46, 30.1).y),
-             new Zondy.Object.Point2D(lonLat2Mercator(11.48, 6.22).x, lonLat2Mercator(11.48, 6.22).y),
-             new Zondy.Object.Point2D(lonLat2Mercator(36.73, 7.6).x, lonLat2Mercator(36.73, 7.6).y),
-             new Zondy.Object.Point2D(lonLat2Mercator(58.77, 25.51).x, lonLat2Mercator(58.77, 25.51).y),
-             new Zondy.Object.Point2D(lonLat2Mercator(41.33, 49.39).x, lonLat2Mercator(41.33, 49.39).y)])])]);
+             new Zondy.Object.Point2D(lonLat2Mercator(112.59, 30.67).x, lonLat2Mercator(112.59, 30.67).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(112.80, 30.83).x, lonLat2Mercator(112.80, 30.83).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(112.86, 30.70).x, lonLat2Mercator(112.86, 30.70).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(113.28, 30.90).x, lonLat2Mercator(113.28, 30.90).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(113.45, 30.63).x, lonLat2Mercator(113.45, 30.63).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(113.45, 30.38).x, lonLat2Mercator(113.45, 30.38).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(112.90, 30.56).x, lonLat2Mercator(112.90, 30.56).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(112.86, 30.50).x, lonLat2Mercator(112.86, 30.50).y),
+             new Zondy.Object.Point2D(lonLat2Mercator(112.59, 30.67).x, lonLat2Mercator(112.59, 30.67).y)
+         ])])]);
      //设置区要素几何信息
      regGeo.setRegGeom([gReg]);
      ```
@@ -69,7 +74,7 @@
        //IGServer请求端口号
        port: "6163",
        //设置多圈缓冲分析的缓冲半径字符串
-       radiusStr: "500000,1000000,2000000"
+       radiusStr: "1000,20000,30000"
    });
    /*设置缓冲分析参数*/
    //设置几何信息

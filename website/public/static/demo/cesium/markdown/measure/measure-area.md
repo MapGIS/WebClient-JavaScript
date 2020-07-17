@@ -50,7 +50,7 @@ measureAreaTool.stopTool();
 
 ### 关键接口
 
-#### 1. `Cesium.MeasureAreaTool(viewer, options)` : 面积测量工具主要类
+#### 1. 【面积测量工具主要类】`Cesium.MeasureAreaTool(viewer, options)`
 
 > `Cesium.MeasureAreaTool` 主要参数
 

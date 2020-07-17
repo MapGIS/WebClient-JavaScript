@@ -1,36 +1,45 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <title>ArcGIS地图显示</title>
     <!--引入第三方的jquery脚本库-->
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="jquery,bootstrap" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-mapboxgl-local.js"></script>
     <!--引入当前页面样式表-->
     <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
     <style type='text/css'>
         #map {
             position: absolute;
-            top: 30px;
-            bottom: 0;
             width: 100%;
             height: 100%;
+        }
+        .dropdown {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            z-index: 1000;
+        }
+        .dropdown-menu {
+            min-width: 95px;
         }
     </style>
     <script>
         //使用严格模式
         "use strict";
-        var map ;
-        /**地图初始化函数*/
+        var map;
+        /** 地图初始化
+         */
         function init() {
             //实例化要加载的source来源对象（世界道路）
             var streetsrc = {
                 //来源类型为栅格瓦片
                 "type": "raster",
                 'tiles': [
-                //来源请求地址，请求ArcGIS提供的世界道路瓦片地图服务
-                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
+                    //来源请求地址，请求ArcGIS提供的世界道路瓦片地图服务
+                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
                 ],
                 //栅格瓦片的分辨率
                 'tileSize': 256
@@ -49,28 +58,28 @@
                     },
                     //设置加载并显示来源的图层信息
                     "layers": [
-                         {
-                             //图层id，要保证唯一性
-                             "id": "streetsrc",
-                             //图层类型
-                             "type": "raster",
-                             //连接图层来源
-                             "source": "streetsrc",
-                             //图层最小缩放级数
-                             "minzoom": 0,
-                             //图层最大缩放级数
-                             "maxzoom": 22
-                         }
+                        {
+                            //图层id，要保证唯一性
+                            "id": "streetsrc",
+                            //图层类型
+                            "type": "raster",
+                            //连接图层来源
+                            "source": "streetsrc",
+                            //图层最小缩放级数
+                            "minzoom": 0,
+                            //图层最大缩放级数
+                            "maxzoom": 22
+                        }
                     ]
                 }
-              
+
             });
             //实例化要加载的source来源对象（世界影像）
             var imgsrc = {
                 "type": "raster",
                 'tiles': [
-                 //来源请求地址，请求ArcGIS提供的世界影像瓦片地图服务
-                "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
+                    //来源请求地址，请求ArcGIS提供的世界影像瓦片地图服务
+                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
                 ],
                 'tileSize': 256
             };
@@ -78,8 +87,8 @@
             var terrainsrc = {
                 "type": "raster",
                 'tiles': [
-                  //来源请求地址，请求ArcGIS提供的世界地形瓦片地图服务
-                 "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
+                    //来源请求地址，请求ArcGIS提供的世界地形瓦片地图服务
+                    "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
                 ],
                 'tileSize': 256
             }
@@ -89,10 +98,11 @@
                 map.addSource("imgsrc", imgsrc);
                 map.addSource("terrainsrc", terrainsrc);
             });
-           
+
         }
-        /**图层切换函数*/
-        function changeLayer() {
+        /** 图层切换
+         */
+        function changeLayer(src) {
             //获取地图的所有图层
             var Layers = map.getStyle().layers;
             var layerL = Layers.length;
@@ -100,29 +110,39 @@
                 //移除图层
                 map.removeLayer(Layers[i].id);
             }
-            var src = $("#LayerSelect").val();
             //添加图层
             map.addLayer({
-                   "id": src,
-                   "type": "raster",
-                   //连接图层来源
-                   "source": src,
-                   "minzoom": 0,
-                   "maxzoom": 22
+                "id": src,
+                "type": "raster",
+                //连接图层来源
+                "source": src,
+                "minzoom": 0,
+                "maxzoom": 22
             });
         }
     </script>
 </head>
+
 <body onload="init()">
-    <div id="menu">
-        <label style="font-weight: bold;">切换图层：</label>
-        <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
-            <option value="streetsrc">STREET</option>
-            <option value="imgsrc">RASTER</option>
-            <option value="terrainsrc">TERRAIN </option>
-        </select>
+    <div class="dropdown">
+        <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+            切换图层
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="javascipt:void(0)" onclick="changeLayer('streetsrc')">street</a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="javascipt:void(0)" onclick="changeLayer('imgsrc')">raster</a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="javascipt:void(0)" onclick="changeLayer('terrainsrc')">terrian</a>
+            </li>
+        </ul>
     </div>
     <div id='map'>
     </div>
 </body>
+
 </html>

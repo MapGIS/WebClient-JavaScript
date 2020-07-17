@@ -12,20 +12,9 @@
 
 ### 实现步骤：
 
-1. <font color=red>引用开发库</font>：本示例引用local本地【include-cesium-local.js】开发库, 完成此步后方可正常使用所有三维WebGL的功能；
+1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库，完成此步骤后才可调用三维WebGL的功能；
 
-2. <font color=red>创建三维地图容器并加载三维球控件</font>：创建 `id='GlobeView'` 的div作为三维视图的容器，并设置其样式，初始化Cesium三维球控件 `Cesium.WebSceneControl()` ，完成此步后可在三维场景中加载三维球控件；
-
-``` Javascript
-//构造三维视图类（视图容器div的id，三维视图设置参数）
-var webGlobe = new Cesium.WebSceneControl('GlobeView', {
-    terrainExaggeration: 1,
-}); 
-```
-
-``` html
-<div id='GlobeView'></div>
-```
+2. 创建三维视图Div容器，构造三维场景控件WebSceneControl，构造并设置鼠标位置信息显示控件，加载Google地图作为底图显示；
 
 以下分别对绘制点绘制线绘制区的实现步骤进行介绍
 
@@ -51,11 +40,15 @@ var lat = Cesium.Math.toDegrees(cartographic.latitude);
 var height = cartographic.height;
 ```
 
-5. <font color=red>添加点</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `appendPoint()` 方法传入相关经纬度坐标信息以及其他的信息进行添加点，完成此步后可在三维场景中看到添加的点显示出来；
+5. <font color=red>添加点</font>：调用实体绘制控制器 `CesiumZondy.Layer.EntityController` 的 `appendPoint()` 方法传入相关经纬度坐标信息以及其他的信息进行添加点，完成此步后可在三维场景中看到添加的点显示出来；
 
 ``` Javascript
-//添加点
-webGlobe.appendPoint(lng, lat, height, '点', 10, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(1, 1, 0, 1), 2);
+//构造实体绘制控制器对象
+var entityController = new CesiumZondy.Layer.EntityController({
+    viewer: webGlobe.viewer
+});
+//添加点：经度、纬度、高程、名称、像素大小、颜色、外边线颜色、边线宽度
+entityController.appendPoint(lng, lat, height, '点', 10, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(1, 1, 0, 1), 2);
 ```
 
 6. <font color=red>注销鼠标事件</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `unRegisterMouseEvent()` 方法注销已添加的鼠标事件，完成此步后，点击鼠标不再触发鼠标事件。
@@ -63,22 +56,6 @@ webGlobe.appendPoint(lng, lat, height, '点', 10, webGlobe.getColor(1, 0, 0, 1),
 ``` Javascript
 //注销鼠标事件
 webGlobe.unRegisterMouseEvent('LEFT_CLICK');
-```
-
-#### 绘制区
-
-3. <font color=red>创建交互式绘制区工具</font>：初始化 `Cesium.DrawPolygonTool()` 对象，完成交互式绘制区工具的创建；
-
-``` Javascript
-//创建交互式绘制区工具
-var tool = new Cesium.DrawPolygonTool(webGlobe.viewer, getDrawResult);
-```
-
-4. <font color=red>激活交互式绘制区工具</font>：调用 `Cesium.DrawPolygonTool()` 对象的activeTool()方法，激活交互式绘制区工具，完成此步后，可在三维场景中通过鼠标左键点击绘制多边形。
-
-``` Javascript
-//激活交互式绘制区工具
-tool.activeTool();
 ```
 
 ### 关键接口
