@@ -4,9 +4,9 @@ import { CesiumZondy } from '../core/Base';
  * @author 基础平台研发中心·冯桂英
  * @class BaseLayer
  * @category BaseLayer
- * @classdesc BaseLayer
+ * @classdesc BaseLayer 数据服务基类
  * @description 图层管理基类,实现图层公共方法
- * @param option.viewer = viewer 场景视图
+ * @param option.viewer 场景视图
  */
 export default class BaseLayer {
     constructor(option) {
@@ -35,7 +35,7 @@ export default class BaseLayer {
     }
 
     /**
-     * 场景 
+     * 场景
      * @memberof BaseLayer.prototype
      * @type {Scene}
      * @readonly
@@ -49,15 +49,12 @@ export default class BaseLayer {
      * @param {Object} layer 图层对象
      */
     zoomToM3dLayer(layer) {
-        let boundingSphere = layer.boundingSphere;
-        this.viewer.camera.viewBoundingSphere(
-            boundingSphere,
-            new Cesium.HeadingPitchRange(0.0, -0.5, boundingSphere.radius)
-        );
+        const { boundingSphere } = layer;
+        this.viewer.camera.viewBoundingSphere(boundingSphere, new Cesium.HeadingPitchRange(0.0, -0.5, boundingSphere.radius));
         this.viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
     }
 
-    /***
+    /**
      * 移除m3d 图层
      */
     removeM3dLayer(layer) {
@@ -65,42 +62,57 @@ export default class BaseLayer {
     }
 
     /**
-     * 移除添加的所有m3d文档，layers为图层数组
+     * 移除添加的文档
      */
     removeDocs(layers) {
         if (!Cesium.defined(layers)) {
             return;
         }
-        for (var i in layers) {
+        for (let i = 0; i < layers.length; i += 1) {
             this.viewer.scene.primitives.remove(layers[i]);
         }
-        return;
+    }
+
+    /**
+     * 通用添加影像图层
+     * @param {Imagelayer} google等图层
+     * @returns {Imagelayer} 返回瓦片层
+     */
+    addImageLayer(imagelayer) {
+        const imagelayers = this.viewer.imageryLayers;
+        if (imagelayers !== null && imagelayers !== undefined) {
+            if (!imagelayers.contains(imagelayer)) {
+                return imagelayers.addImageryProvider(imagelayer);
+            }
+        }
+        return undefined;
     }
 
     /**
      * 添加全球网格信息
-     * @returns 网格图层
+     * @returns {ImageryLayer} 网格图层
      */
     addGridInfo() {
         if (undefined === this._tileGridLayer) {
-            let tileGridLayer = new Cesium.TileCoordinatesImageryProvider({
+            const tileGridLayer = new Cesium.TileCoordinatesImageryProvider({
                 showLonlats: true
             });
-            let imagelayers = this.viewer.imageryLayers;
+            const imagelayers = this.viewer.imageryLayers;
             if (imagelayers !== null && imagelayers !== undefined) {
                 if (!imagelayers.contains(tileGridLayer)) {
                     return imagelayers.addImageryProvider(tileGridLayer);
                 }
             }
         }
+        return undefined;
     }
 
     /**
      * 移除全球网格信息
-     * @param {Object} gridlayers 网格图层
+     * @param {ImageryLayer} gridlayers 网格图层
      */
     removeGridInfo(gridlayers) {
-        let imagelayers = this.viewer.imageryLayers;
+        const imagelayers = this.viewer.imageryLayers;
         if (imagelayers !== null && imagelayers !== undefined) {
             if (imagelayers.contains(gridlayers)) {
                 imagelayers.remove(gridlayers, true);
@@ -110,14 +122,14 @@ export default class BaseLayer {
 
     /**
      * 通用删除影像图层
-     * @param  {imagelayer} google等图层,其为addImageryProvider返回的值
-     * @param  {boolean}    isdestroy,是否销毁图层 在图层需要频繁切换的情况下，isdestroy最好取false
+     * @param {Imagelayer} google等图层其为addImageryProvider返回的值
+     * @param {Boolean} isdestroy 是否销毁图层 在图层需要频繁切换的情况下，isdestroy最好取false
      * @example
      * let tilelayer = tile.appendGoogleMap({ptype:'m@207000000'});
      * tile.removeImageLayer(tilelayer, true);
      */
     removeImageLayer(imagelayer, isdestroy) {
-        let imagelayers = this.viewer.imageryLayers;
+        const imagelayers = this.viewer.imageryLayers;
         if (imagelayers !== null && imagelayers !== undefined) {
             if (imagelayers.contains(imagelayer)) {
                 imagelayers.remove(imagelayer, isdestroy);
@@ -127,13 +139,51 @@ export default class BaseLayer {
 
     /**
      * 清空影像图层,包括地球表面
-     * @param  {boolean}    isdestroy,是否销毁图层
+     * @param {Boolean} isdestroy 是否销毁图层
      */
     removeAllImageLayers(isdestroy) {
-        var imagelayers = this.viewer.imageryLayers;
+        const imagelayers = this.viewer.imageryLayers;
         if (imagelayers !== null && imagelayers !== undefined) {
             imagelayers.removeAll(isdestroy);
         }
+    }
+
+    /**
+     * 移除实体
+     * @param  {Entity} entity 实体对象
+     */
+    removeEntity(entity) {
+        this.viewer.entities.remove(entity);
+    }
+
+    /**
+     * 移除所有实体
+     */
+    removeAllEntities() {
+        this.viewer.entities.removeAll();
+    }
+
+    /**
+     * 移除primitive实体
+     * @param {Primitive} 移除对象
+     */
+    removePrimitive(primitive) {
+        this.scene.primitives.remove(primitive);
+    }
+
+    /**
+     * 移除全部实体
+     */
+    removeAllPrimitives() {
+        this.scene.primitives.removeAll();
+    }
+
+    /**
+     * 移除地形图层
+     */
+    removeTerrain() {
+        const ElliProvider = new Cesium.EllipsoidTerrainProvider();
+        this.viewer.terrainProvider = ElliProvider;
     }
 }
 

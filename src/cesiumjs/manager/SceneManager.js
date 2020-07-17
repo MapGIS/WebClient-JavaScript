@@ -1,10 +1,25 @@
 import { CesiumZondy } from '../core/Base';
 
+function icrf(scene, time) {
+    if (scene.mode !== Cesium.SceneMode.SCENE3D) {
+        return;
+    }
+    const icrfToFixed = Cesium.Transforms.computeIcrfToFixedMatrix(time);
+    if (Cesium.defined(icrfToFixed)) {
+        const { camera } = scene;
+        const offset = Cesium.Cartesian3.clone(scene.camera.position);
+        const transform = Cesium.Matrix4.fromRotationTranslation(icrfToFixed);
+        camera.lookAtTransform(transform, offset);
+    }
+}
+
 /**
  * @author 三维基础平台研发中心·周凌风
- * @class SceneManager
+ * @class module:客户端视图管理.SceneManager
  * @classdesc 视图功能管理类
  * @description 视图功能的创建与移除
+ * @param {Object} options 视图功能管理类构造参数
+ * @param {Object} options.viewer 视图
  */
 export default class SceneManager {
     constructor(option) {
@@ -13,20 +28,34 @@ export default class SceneManager {
         this._ellipsoid = this._viewer.scene.globe.ellipsoid;
     }
 
-    get viewer(){
+    /**
+     * 视图
+     * @memberof SceneManager.prototype
+     * @type {Viewer}
+     * @readonly
+     */
+    get viewer() {
         return this._viewer;
     }
 
-    get scene(){
+    /**
+     * 场景
+     * @memberof SceneManager.prototype
+     * @readonly
+     * @type {Scene}
+     */
+    get scene() {
         return this._scene;
     }
+
     /**
      * 显示经纬度 高程 视角高度
+     * @function module:客户端视图管理.SceneManager.prototype.showPosition
      * @param {Element|String} elementId 要显示的div的id
-     * @param {Object} options 附加属性
-     * @param {Boolean}[options.showHpr = false]
-     * @param {Boolean}[options.showSelectTileInfo = false] 显示当前鼠标所在位置拾取到的级别
-     * @param {Boolean}[options.showViewLevelInfo = false] 显示视图级别
+     * @param {Object} optionsParam 附加属性
+     * @param {Boolean} [optionsParam.showHpr = false] 显示
+     * @param {Boolean}[optionsParam.showSelectTileInfo = false] 显示当前鼠标所在位置拾取到的级别
+     * @param {Boolean}[optionsParam.showViewLevelInfo = false] 显示视图级别
      * @example
      * webGlobe.showPosition('', {
      * showHpr: true,
@@ -36,67 +65,38 @@ export default class SceneManager {
      * @returns {Element} element 状态栏的element
      * @  deprecated 该接口即将弃用 请用show替换
      */
-    showPosition(elementId, options) {
-        let that = this;
-        if (!Cesium.defined(options)) {
-            options = {};
-        }
-        let showHpr = Cesium.defaultValue(options.showHpr, false);
-        let showSelectTileInfo = Cesium.defaultValue(
-            options.showSelectTileInfo,
-            false
-        );
-        let showViewLevelInfo = Cesium.defaultValue(
-            options.showViewLevelInfo,
-            false
-        );
+    showPosition(elementId, optionsParam) {
+        const that = this;
+        let elementIdValue = elementId;
+        const options = Cesium.defaultValue(optionsParam, {});
+        const showHpr = Cesium.defaultValue(options.showHpr, false);
+        const showSelectTileInfo = Cesium.defaultValue(options.showSelectTileInfo, false);
+        const showViewLevelInfo = Cesium.defaultValue(options.showViewLevelInfo, false);
         let viewLevel = 0;
         let longitudeString = null;
         let latitudeString = null;
         let cameraHeight = null;
         let cartesian = new Cesium.Cartesian3();
         let height = null;
-        let ellipsoid = this._ellipsoid;
-        let tilesToRender = this.viewer.scene.globe._surface.tileProvider
-            ._tilesToRenderByTextureCount;
+        const ellipsoid = this._ellipsoid;
+        const tilesToRender = this.viewer.scene.globe._surface.tileProvider._tilesToRenderByTextureCount;
         let selectedTile;
         let lastScreenPos;
 
         function selectTile(e) {
             let selectedTileTmp;
-            let cartesian = that.viewer.scene.camera.pickEllipsoid(
-                e,
-                ellipsoid
-            );
+            cartesian = that.viewer.scene.camera.pickEllipsoid(e, ellipsoid);
             if (Cesium.defined(cartesian)) {
-                let cartographic = ellipsoid.cartesianToCartographic(cartesian);
-                let tilesRendered =
-                    that.viewer.scene.globe._surface.tileProvider
-                        ._tilesToRenderByTextureCount;
-                for (
-                    let textureCount = 0;
-                    !selectedTileTmp && textureCount < tilesRendered.length;
-                    ++textureCount
-                ) {
-                    let tilesRenderedByTextureCount =
-                        tilesRendered[textureCount];
-                    if (!Cesium.defined(tilesRenderedByTextureCount)) {
-                        continue;
-                    }
-                    for (
-                        let tileIndex = 0;
-                        !selectedTileTmp &&
-                        tileIndex < tilesRenderedByTextureCount.length;
-                        ++tileIndex
-                    ) {
-                        let tile = tilesRenderedByTextureCount[tileIndex];
-                        if (
-                            Cesium.Rectangle.contains(
-                                tile.rectangle,
-                                cartographic
-                            )
-                        ) {
-                            selectedTileTmp = tile;
+                const cartographic = ellipsoid.cartesianToCartographic(cartesian);
+                const tilesRendered = that.viewer.scene.globe._surface.tileProvider._tilesToRenderByTextureCount;
+                for (let textureCount = 0; !selectedTileTmp && textureCount < tilesRendered.length; textureCount += 1) {
+                    const tilesRenderedByTextureCount = tilesRendered[textureCount];
+                    if (Cesium.defined(tilesRenderedByTextureCount)) {
+                        for (let tileIndex = 0; !selectedTileTmp && tileIndex < tilesRenderedByTextureCount.length; tileIndex += 1) {
+                            const tile = tilesRenderedByTextureCount[tileIndex];
+                            if (Cesium.Rectangle.contains(tile.rectangle, cartographic)) {
+                                selectedTileTmp = tile;
+                            }
                         }
                     }
                 }
@@ -105,19 +105,10 @@ export default class SceneManager {
         }
 
         function updateViewLevel() {
-            for (let i = 0; i < tilesToRender.length; i++) {
+            for (let i = 0; i < tilesToRender.length; i += 1) {
                 if (tilesToRender[i]) {
-                    for (
-                        let tileIndex = 0;
-                        tileIndex < tilesToRender[i].length;
-                        tileIndex++
-                    ) {
-                        if (
-                            Cesium.Rectangle.contains(
-                                tilesToRender[i][tileIndex].rectangle,
-                                that.viewer.camera.positionCartographic
-                            )
-                        ) {
+                    for (let tileIndex = 0; tileIndex < tilesToRender[i].length; tileIndex += 1) {
+                        if (Cesium.Rectangle.contains(tilesToRender[i][tileIndex].rectangle, that.viewer.camera.positionCartographic)) {
                             viewLevel = tilesToRender[i][tileIndex]._level;
                         }
                     }
@@ -127,138 +118,97 @@ export default class SceneManager {
 
         function updateShowInfo(screenPos) {
             cartesian = that.viewer.getCartesian3Position(screenPos, cartesian);
-            let camera = that.viewer.camera;
+            const { camera } = that.viewer;
             let longlatHeight = '';
             if (cartesian) {
-                let cartographic = ellipsoid.cartesianToCartographic(cartesian);
+                const cartographic = ellipsoid.cartesianToCartographic(cartesian);
                 longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
                 latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
-                cameraHeight = Math.ceil(
-                    that.viewer.camera.positionCartographic.height
-                );
-                height = Math.max(
-                    that.viewer.scene.globe.getHeight(cartographic),
-                    cartographic.height
-                );
-                longlatHeight =
-                    '经度:' +
-                    longitudeString.toFixed(4) +
-                    '°，纬度:' +
-                    latitudeString.toFixed(4) +
-                    '°，海拔高度:' +
-                    height.toFixed(0) +
-                    '米' +
-                    '，相机视角高度:' +
-                    cameraHeight.toFixed(0) +
-                    '米';
+                cameraHeight = Math.ceil(that.viewer.camera.positionCartographic.height);
+                height = Math.max(that.viewer.scene.globe.getHeight(cartographic), cartographic.height);
+                longlatHeight = `经度:${longitudeString.toFixed(4)}°，纬度:${latitudeString.toFixed(4)}°，海拔高度:${height.toFixed(0)}米，相机视角高度:${cameraHeight.toFixed(0)}米`;
             }
             let strHpr = '';
             if (showHpr) {
-                strHpr =
-                    ' heading：' +
-                    Cesium.Math.toDegrees(camera.heading).toFixed(1) +
-                    ' pitch：' +
-                    Cesium.Math.toDegrees(camera.pitch).toFixed(1) +
-                    ' roll：' +
-                    Cesium.Math.toDegrees(camera.roll).toFixed(1);
+                strHpr = ` heading：${Cesium.Math.toDegrees(camera.heading).toFixed(1)} pitch：${Cesium.Math.toDegrees(camera.pitch).toFixed(1)} roll：${Cesium.Math.toDegrees(camera.roll).toFixed(1)}`;
             }
             let selectTileInfo = '';
             if (showSelectTileInfo && selectedTile) {
-                selectTileInfo =
-                    '，瓦片X:' +
-                    selectedTile.x +
-                    '，瓦片Y:' +
-                    selectedTile.y +
-                    '，瓦片级别:' +
-                    selectedTile.level +
-                    '，';
+                selectTileInfo = `，瓦片X:${selectedTile.x}，瓦片Y:${selectedTile.y}，瓦片级别:${selectedTile.level}，`;
             }
             if (height === undefined || height < -7000) {
                 height = 0;
             }
             let level = '';
             if (showViewLevelInfo) {
-                level = '当前地图级别:' + viewLevel;
+                level = `当前地图级别:${viewLevel}`;
             }
-            let iHtml = longlatHeight + strHpr + selectTileInfo + level;
+            const iHtml = longlatHeight + strHpr + selectTileInfo + level;
             document.getElementById(elementId).innerHTML = iHtml;
         }
 
         if (elementId === undefined || elementId === null) {
-            let elementPt = document.createElement('div');
+            const elementPt = document.createElement('div');
             elementPt.className = 'coordinateClass';
             elementPt.id = 'coordinateDiv';
-            let element = document.createElement('label');
-            elementId = element.id = 'coordinate_location';
-            let style1 = document.createElement('style');
-            style1.innerHTML =
-                '.coordinate_location {color: #F0EFEF; line-height: 30px; margin-left: 30%;bottom:0px;font-size: 80%;font:"雅黑";}';
+            const element = document.createElement('label');
+            element.id = 'coordinate_location';
+            elementIdValue = 'coordinate_location';
+            const style1 = document.createElement('style');
+            style1.innerHTML = '.coordinate_location {color: #F0EFEF; line-height: 30px; margin-left: 30%;bottom:0px;font-size: 80%;font:"雅黑";}';
             element.style = style1;
             elementPt.appendChild(element);
             this.viewer._element.appendChild(elementPt);
         }
         if (elementId !== undefined) {
-            this.viewer.scene.globe.tileLoadProgressEvent.addEventListener(
-                function (datalength) {
-                    updateViewLevel();
-                }
-            );
-            this.viewer.camera.changed.addEventListener(function () {
+            this.viewer.scene.globe.tileLoadProgressEvent.addEventListener(() => {
+                updateViewLevel();
+            });
+            this.viewer.camera.changed.addEventListener(() => {
                 updateViewLevel();
             });
             if (!Cesium.defined(this.screenSpaceMouseEventHandler)) {
-                this.screenSpaceMouseEventHandler = new Cesium.ScreenSpaceEventHandler(
-                    this.scene.canvas
-                );
+                this.screenSpaceMouseEventHandler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
             }
-            this.screenSpaceMouseEventHandler.setInputAction(function (
-                movement
-            ) {
+            this.screenSpaceMouseEventHandler.setInputAction((movement) => {
                 updateViewLevel();
                 selectedTile = selectTile(movement.endPosition);
                 updateShowInfo(movement.endPosition);
                 lastScreenPos = movement.endPosition;
-            },
-            Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-            this.screenSpaceMouseEventHandler.setInputAction(function (
-                movement
-            ) {
+            }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+            this.screenSpaceMouseEventHandler.setInputAction(() => {
                 updateViewLevel();
                 selectedTile = selectTile(lastScreenPos);
                 updateShowInfo(lastScreenPos);
-            },
-            Cesium.ScreenSpaceEventType.WHEEL);
+            }, Cesium.ScreenSpaceEventType.WHEEL);
         }
-        return document.getElementById(elementId);
+        return document.getElementById(elementIdValue);
     }
 
     /**
      * 跳转到
+     * @function module:客户端视图管理.SceneManager.prototype.flyTo
      * @param  {Number} lon 经度
      * @param  {Number} lon 纬度
-     * @param  {Number} height  视角高度
+     * @param  {Number} heightParam  视角高度
      * @param  {Number} duration 跳转持续时间
      */
-    flyTo(lon, lat, height, duration) {
-        if (height === null || height === '' || height === undefined) {
-            let cameraHeight = Math.ceil(
-                this.viewer.camera.positionCartographic.height
-            );
-            height = cameraHeight;
-        }
+    flyTo(lon, lat, heightParam, duration) {
+        const height = Cesium.defaultValue(heightParam, Math.ceil(this.viewer.camera.positionCartographic.height));
         this.viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lon, lat, height),
-            duration: duration,
+            duration,
             orientation: {
                 heading: Cesium.Math.toRadians(0),
                 pitch: Cesium.Math.toRadians(-90),
-                roll: Cesium.Math.toRadians(0) //0
+                roll: Cesium.Math.toRadians(0) // 0
             }
         });
     }
 
     /**
      * 跳转到
+     * @function module:客户端视图管理.SceneManager.prototype.flyToEx
      * @param  {Number} lon 经度
      * @param  {Number} lon 纬度
      * @param  {Object} [options] 跳转持续时间
@@ -276,15 +226,9 @@ export default class SceneManager {
         let duration;
         if (options) {
             height = Cesium.defaultValue(options.height, undefined);
-            heading = Cesium.Math.toRadians(
-                Cesium.defaultValue(options.heading, Cesium.Math.toRadians(0))
-            );
-            pitch = Cesium.Math.toRadians(
-                Cesium.defaultValue(options.pitch, Cesium.Math.toRadians(-90))
-            );
-            roll = Cesium.Math.toRadians(
-                Cesium.defaultValue(options.roll, Cesium.Math.toRadians(0))
-            );
+            heading = Cesium.Math.toRadians(Cesium.defaultValue(options.heading, Cesium.Math.toRadians(0)));
+            pitch = Cesium.Math.toRadians(Cesium.defaultValue(options.pitch, Cesium.Math.toRadians(-90)));
+            roll = Cesium.Math.toRadians(Cesium.defaultValue(options.roll, Cesium.Math.toRadians(0)));
             duration = Cesium.defaultValue(options.duration, 1);
         } else {
             heading = Cesium.Math.toRadians(0);
@@ -293,37 +237,31 @@ export default class SceneManager {
             duration = 1.0;
         }
         if (height === null || height === '' || height === undefined) {
-            let cameraHeight = Math.ceil(
-                this.viewer.camera.positionCartographic.height
-            );
+            const cameraHeight = Math.ceil(this.viewer.camera.positionCartographic.height);
             height = cameraHeight;
         }
         this.viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(lon, lat, height),
-            duration: duration,
+            duration,
             orientation: {
-                heading: heading,
-                pitch: pitch,
-                roll: roll
+                heading,
+                pitch,
+                roll
             }
         });
     }
 
     /**
      * 通用跳转接口
+     * @function module:客户端视图管理.SceneManager.prototype.flyToComm
      * @param  {Number} lon 经度
-     * @param  {Number} lon 纬度
-     * @param  {Number} height  视角高度
-     * @param  {object} options 扩展参数 兼容原生
+     * @param  {Number} lat 纬度
+     * @param  {Number} heightParam  视角高度
+     * @param  {Object} [options] 扩展参数 兼容原生
      */
-    flyToComm(lon, lat, height, options) {
-        if (height === null || height === '' || height === undefined) {
-            let cameraHeight = Math.ceil(
-                this.viewer.camera.positionCartographic.height
-            );
-            height = cameraHeight;
-        }
-        let flyOptions = {
+    flyToComm(lon, lat, heightParam, options) {
+        const height = Cesium.defaultValue(heightParam, Math.ceil(this.viewer.camera.positionCartographic.height));
+        const flyOptions = {
             destination: Cesium.Cartesian3.fromDegrees(lon, lat, height)
         };
         if (Cesium.defined(options)) {
@@ -334,6 +272,7 @@ export default class SceneManager {
 
     /**
      * 设置当前视图范围
+     * @function module:客户端视图管理.SceneManager.prototype.setView
      * @param {Number} lon 经度
      * @param {Number} lat 纬度
      * @param {Number} height 高度
@@ -351,30 +290,13 @@ export default class SceneManager {
     }
 
     /**
-     * icrf
-     * @param {object} scene 场景
-     * @param {object} time 时间
-     */
-    icrf(scene, time) {
-        if (scene.mode !== Cesium.SceneMode.SCENE3D) {
-            return;
-        }
-        let icrfToFixed = Cesium.Transforms.computeIcrfToFixedMatrix(time);
-        if (Cesium.defined(icrfToFixed)) {
-            let camera = scene.camera;
-            let offset = Cesium.Cartesian3.clone(scene.camera.position);
-            let transform = Cesium.Matrix4.fromRotationTranslation(icrfToFixed);
-            camera.lookAtTransform(transform, offset);
-        }
-    }
-
-    /**
      * 开启自转
+     * @function module:客户端视图管理.SceneManager.prototype.openRotation
      */
     openRotation() {
         this.viewer.camera.flyHome(0);
         this.viewer.clock.multiplier = 3 * 60 * 60;
-        this.viewer.scene.preRender.addEventListener(this.icrf);
+        this.viewer.scene.preRender.addEventListener(icrf);
         if (!this._shouldAnimate) {
             this.viewer.clock._shouldAnimate = true;
         }
@@ -382,9 +304,10 @@ export default class SceneManager {
 
     /**
      * 关闭自转
+     * @function module:客户端视图管理.SceneManager.prototype.closeRotation
      */
     closeRotation() {
-        this.scene.preRender.removeEventListener(this.icrf);
+        this.scene.preRender.removeEventListener(icrf);
         this.viewer.clock.multiplier = 1;
         this.viewer.clock._shouldAnimate = this._shouldAnimate;
         this.viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
@@ -392,6 +315,7 @@ export default class SceneManager {
 
     /**
      * 复位
+     * @function module:客户端视图管理.SceneManager.prototype.goHome
      */
     goHome() {
         this.viewer.camera.flyTo({
@@ -401,8 +325,9 @@ export default class SceneManager {
 
     /**
      * 切换场景模式
+     * @function module:客户端视图管理.SceneManager.prototype.changeSceneMode
      * @param  {String} sceneMode 场景模式'3D', '2D','COLUMBUS_VIEW'(平面三维)
-     * @param  {Number} duration  动画持续时间，<=0时，保持场景范围不变
+     * @param  {Number} [duration]  动画持续时间，<=0时，保持场景范围不变
      */
     changeSceneMode(sceneMode, duration) {
         let mSceneMode = null;
@@ -416,8 +341,10 @@ export default class SceneManager {
             case '2D':
                 mSceneMode = Cesium.SceneMode.SCENE2D;
                 break;
+            default:
+                break;
         }
-        let mDuraion = Cesium.defaultValue(duration, 2.0);
+        const mDuraion = Cesium.defaultValue(duration, 2.0);
         if (this.scene.mode !== mSceneMode) {
             if (mSceneMode === Cesium.SceneMode.SCENE3D) {
                 this.viewer.scene.morphTo3D(mDuraion);
@@ -431,107 +358,90 @@ export default class SceneManager {
 
     /**
      * 放大
+     * @function module:客户端视图管理.SceneManager.prototype.zoomOut
      */
     zoomOut() {
-        let cameraHeight = this._ellipsoid.cartesianToCartographic(
-            this.viewer.camera.position
-        ).height;
+        const cameraHeight = this._ellipsoid.cartesianToCartographic(this.viewer.camera.position).height;
         this.viewer.camera.zoomOut(cameraHeight / 10);
     }
 
     /**
      * 缩小
+     * @function module:客户端视图管理.SceneManager.prototype.zoomIn
      */
     zoomIn() {
-        let cameraHeight = this._ellipsoid.cartesianToCartographic(
-            this.viewer.camera.position
-        ).height;
+        const cameraHeight = this._ellipsoid.cartesianToCartographic(this.viewer.camera.position).height;
         this.viewer.camera.zoomIn(cameraHeight / 10);
     }
 
     /**
      * 修改场景的天空盒
+     * @function module:客户端视图管理.SceneManager.prototype.changeSkyBox
      * @param  {SkyBox} skybox 天空和对象
      * @example
-     *let skybox = new Cesium.SkyBox({
-     *                    sources : {
-     *                      positiveX : 'Assets/Textures/SkyBox2/front.jpg',
-     *                      negativeX : 'Assets/Textures/SkyBox2/back.jpg',
-     *                      positiveY : 'Assets/Textures/SkyBox2/left.jpg',
-     *                      negativeY : 'Assets/Textures/SkyBox2/right.jpg',
-     *                      positiveZ : 'Assets/Textures/SkyBox2/top.jpg',
-     *                      negativeZ : 'Assets/Textures/SkyBox2/bottom.jpg'
-     *                 }
-     *            });
+     * let skybox = new Cesium.SkyBox({
+     *     sources : {
+     *         positiveX : 'Assets/Textures/SkyBox2/front.jpg',
+     *         negativeX : 'Assets/Textures/SkyBox2/back.jpg',
+     *         positiveY : 'Assets/Textures/SkyBox2/left.jpg',
+     *         negativeY : 'Assets/Textures/SkyBox2/right.jpg',
+     *         positiveZ : 'Assets/Textures/SkyBox2/top.jpg',
+     *         negativeZ : 'Assets/Textures/SkyBox2/bottom.jpg'
+     *     }
+     * });
      */
     changeSkyBox(skybox) {
         if (Cesium.defined(skybox)) {
             this.scene.skyBox = skybox;
-            let frameState = this.scene._frameState;
+            const frameState = this.scene._frameState;
             this.scene.skyBox.update(frameState);
         }
     }
 
     /**
      * 根据ID飞行到特定要素位置
+     * @function module:客户端视图管理.SceneManager.prototype.flyToFeatureById
      * @param {Array<layer>} layerList 图层列表
      * @param {Array<id>} id ID列表
-     * @param {object} options 其他参数
+     * @param {Object} [optionsParam] 其他参数
      */
-    flyToFeatureById(layerList, id, options) {
+    flyToFeatureById(layerList, id, optionsParam) {
         if (!Cesium.defined(layerList)) {
             return;
         }
-        if (!Cesium.defined(options)) {
-            options = {};
-        }
-        let that = this;
+        const options = Cesium.defaultValue(optionsParam, {});
+        const that = this;
         let first = true;
 
         function flyToF(feature) {
-            let maxPoint = feature.getProperty('maxPoint');
-            let minPoint = feature.getProperty('minPoint');
-            let min = new Cesium.Cartesian3(
-                minPoint[0],
-                -minPoint[2],
-                minPoint[1]
-            );
-            let max = new Cesium.Cartesian3(
-                maxPoint[0],
-                -maxPoint[2],
-                maxPoint[1]
-            );
-            let transform = feature.tileset.root.transform;
+            const maxPoint = feature.getProperty('maxPoint');
+            const minPoint = feature.getProperty('minPoint');
+            let min = new Cesium.Cartesian3(minPoint[0], -minPoint[2], minPoint[1]);
+            let max = new Cesium.Cartesian3(maxPoint[0], -maxPoint[2], maxPoint[1]);
+            const { transform } = feature.tileset.root;
             max = Cesium.Matrix4.multiplyByPoint(transform, max, max);
             min = Cesium.Matrix4.multiplyByPoint(transform, min, min);
-            let heading = Cesium.Math.toRadians(0);
-            let pitch = Cesium.Math.toRadians(0);
-            let range = Cesium.defaultValue(options.range, 0.0);
+            const heading = Cesium.Math.toRadians(0);
+            const pitch = Cesium.Math.toRadians(0);
+            const range = Cesium.defaultValue(options.range, 0.0);
             let boundingSphere = new Cesium.BoundingSphere();
-            boundingSphere = Cesium.BoundingSphere.fromCornerPoints(
-                min,
-                max,
-                boundingSphere
-            );
+            boundingSphere = Cesium.BoundingSphere.fromCornerPoints(min, max, boundingSphere);
             that.viewer.camera.flyToBoundingSphere(boundingSphere, {
-                offset: Cesium.defaultValue(
-                    options.offset,
-                    new Cesium.HeadingPitchRange(heading, pitch, range)
-                )
+                offset: Cesium.defaultValue(options.offset, new Cesium.HeadingPitchRange(heading, pitch, range))
             });
-            for (let i = 0; i < layerList.length; ++i) {
-                let tileset = layerList[i];
+            for (let i = 0; i < layerList.length; i += 1) {
+                const tileset = layerList[i];
                 tileset.style = undefined;
                 tileset.styleEngine.justSelect(false, true);
             }
             first = false;
         }
 
-        function evaluateColorCallBack(feature, result) {
+        function evaluateColorCallBack(feature) {
             if (first) {
-                let title = feature.getProperty('name');
-                let values = title.split('_');
-                let vlueNumber = parseInt(values[2]);
+                const title = feature.getProperty('name');
+                const values = title.split('_');
+                const vlueNumber = parseInt(values[2], 10);
                 if (vlueNumber === id && first) {
                     flyToF(feature);
                 }
@@ -539,8 +449,8 @@ export default class SceneManager {
             return feature.color;
         }
 
-        for (let i = 0; i < layerList.length; ++i) {
-            let tileset = layerList[i];
+        for (let i = 0; i < layerList.length; i += 1) {
+            const tileset = layerList[i];
             tileset.styleEngine.justSelect(true);
             tileset.style = new Cesium.Cesium3DTileStyle();
             tileset.style.color = {

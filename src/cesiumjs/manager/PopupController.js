@@ -2,12 +2,34 @@ import { CesiumZondy } from '../core/Base';
 
 import BaseLayer from '../layer/BaseLayer';
 import CommonFuncManager from './CommonFuncManager';
+import PopupElement from './PopupElement';
 
+function calcaluteGrade(curValue, stdNearFar) {
+    let curPara = -1;
+    if (curValue <= stdNearFar.near) {
+        curPara = stdNearFar.nearValue;
+    } else if (curValue >= stdNearFar.far) {
+        curPara = stdNearFar.farValue;
+    } else {
+        const totalGrade = Math.ceil(Math.log(stdNearFar.far / stdNearFar.near) / Math.log(2));
+        const curGrade = Math.round(Math.log(curValue / stdNearFar.near) / Math.log(2));
+        curPara = stdNearFar.nearValue + ((stdNearFar.farValue - stdNearFar.nearValue) * curGrade) / totalGrade;
+    }
+    return curPara;
+}
+
+/**
+ * @author 基础平台研发中心·冯桂英
+ * @class module:客户端可视化.PopupController
+ * @category BaseLayer.PopupController
+ * @classdesc PopupController  标绘类
+ * @description 标绘管理类,实现标绘相关操作
+ * @param optionsParam.viewer 场景视窗
+ */
 export default class PopupController extends BaseLayer {
     constructor(option) {
         super(option);
         this._popupContain = [];
-        this._commonFun = new CommonFuncManager(option);
     }
 
     /**
@@ -30,25 +52,28 @@ export default class PopupController extends BaseLayer {
 
     /**
      * 添加PopUP:需考虑相机的高度对PopUp大小、透明度、偏移值的影响
-     * @param  {string} containID 容器的div id（注意该容器不能放在球容器中）
-     * @param  {string} content popup的内容，可以为带html标签的字符串
-     * @param  {Posion:Cartesian3} posion     popup的位置（地图单位）
-     * @param  {Array} offset [x,y]偏移值，像素单位
-     * @param  {Function} closeCallback popup的close按钮点击回调函数
-     * @param  {{scaleByDistance:Cesium.NearFarScalar,translucencyByDistance:Cesium.NearFarScalar,pixelOffsetScaleByDistance:Cesium.NearFarScalar}}  options
+     * @function module:客户端可视化.PopupController.prototype.appendPopup
+     * @param {String} containID 容器的div id（注意该容器不能放在球容器中）
+     * @param {String} content popup的内容，可以为带html标签的字符串
+     * @param {Cartesian3} position  popup的位置（地图单位）
+     * @param {Array} offset [x,y]偏移值，像素单位
+     * @param {Function} closeCallback popup的close按钮点击回调函数
+     * @param {Object} options 参数
+     * @param {Number} options.scaleByDistance options.scaleByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
+     * 基于距摄像机距离指定广告牌比例
+     * @param {Number} options.translucencyByDistance options.translucencyByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
+     * 基于距摄像机的距离来指定广告牌的透明度
+     * @param {Number} options.pixelOffsetScaleByDistance options.pixelOffsetScaleByDistance = new Cesium.NearFarScalar(1.5e2, 0.0, 8.0e6, 10.0)
+     * 基于距摄像机的距离指定广告牌像素偏移
      * @example
-     *  appendPopUp('aaa','测试1测试1测试1<br/>测试1测试2<br/>',entity._position._value,[95,0],removePopUp)
+     *  let popup = appendPopup('aaa','这是一个测试pop<br/>测试pop<br/>',entity._position._value,[95,0],removePopup)
      */
-    appendPopUp(containID, content, posion, offset, closeCallback, options) {
+    appendPopup(containID, content, posion, offsetParam, closeCallback, options) {
         if (this.popupContain !== null && this.popupContain.length > 0) {
-            for (let i = 0; i < this.popupContain.length; i++) {
-                let t_postion = this.popupContain[i].position;
-                if (
-                    t_postion.x === posion.x &&
-                    t_postion.y === posion.y &&
-                    t_postion.z === posion.z
-                ) {
-                    return;
+            for (let i = 0; i < this.popupContain.length; i += 1) {
+                const conPostion = this.popupContain[i].position;
+                if (conPostion.x === posion.x && conPostion.y === posion.y && conPostion.z === posion.z) {
+                    return undefined;
                 }
             }
         }
@@ -57,78 +82,61 @@ export default class PopupController extends BaseLayer {
             containDiv = document.createElement('div');
             containDiv.id = 'popup';
         }
-        let randID = this.commFun.generateRandom();
-        let rootContentDiv = document.createElement('div');
-        rootContentDiv.setAttribute('id', 'popup_' + randID);
+        const randID = CommonFuncManager.generateRandom();
+        const rootContentDiv = document.createElement('div');
+        rootContentDiv.setAttribute('id', `popup_${randID}`);
         rootContentDiv.setAttribute('class', 'leaflet-popup');
         rootContentDiv.setAttribute('style', 'top:5px;left:0;');
-        let closeDiv = document.createElement('a');
+        const closeDiv = document.createElement('a');
         closeDiv.setAttribute('class', 'leaflet-popup-close-button');
         closeDiv.setAttribute('href', '#');
         closeDiv.innerHTML = '×';
-        let webControl = this;
+        const webControl = this;
         if (typeof closeCallback === 'function') {
-            closeDiv.onclick = function () {
-                closeCallback('popup_' + randID, webControl);
+            closeDiv.onclick = () => {
+                closeCallback(`popup_${randID}`, webControl);
             };
         }
         rootContentDiv.appendChild(closeDiv);
 
-        let contentDiv = document.createElement('div');
+        const contentDiv = document.createElement('div');
         contentDiv.setAttribute('class', 'leaflet-popup-content-wrapper');
-        let contentLinkDiv = document.createElement('div');
+        const contentLinkDiv = document.createElement('div');
         contentLinkDiv.setAttribute('class', 'leaflet-popup-content');
         contentLinkDiv.setAttribute('style', 'max-width: 300px;');
         contentLinkDiv.innerHTML = content;
         contentDiv.appendChild(contentLinkDiv);
         rootContentDiv.appendChild(contentDiv);
 
-        let tipContainDiv = document.createElement('div');
+        const tipContainDiv = document.createElement('div');
         tipContainDiv.setAttribute('class', 'leaflet-popup-tip-container');
-        let tipDiv = document.createElement('div');
+        const tipDiv = document.createElement('div');
         tipDiv.setAttribute('class', 'leaflet-popup-tip');
         tipContainDiv.appendChild(tipDiv);
         rootContentDiv.appendChild(tipContainDiv);
 
         containDiv.appendChild(rootContentDiv);
-        let wposion = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
-            this.viewer.scene,
-            posion
-        );
+        const wposion = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.viewer.scene, posion);
         wposion.x = Math.round(wposion.x);
         wposion.y = Math.round(wposion.y);
+        const offset = Cesium.defaultValue(offsetParam, [0, 0]);
 
-        if (offset === null || offset === undefined) {
-            offset = [0, 0];
-        }
-
-        //根据相机高度计算偏移值和比例及透明度（opacity ）
-        let cameraHeight = Math.ceil(
-            this.viewer.camera.positionCartographic.height
-        );
+        // 根据相机高度计算偏移值和比例及透明度（opacity ）
+        const cameraHeight = Math.ceil(this.viewer.camera.positionCartographic.height);
         let scaleSize = -1;
         let opacity = -1;
         let pixelOffsetScale = -1;
 
         if (Cesium.defined(options)) {
             if (Cesium.defined(options.scaleByDistance)) {
-                scaleSize = calcaluteGrade(
-                    cameraHeight,
-                    options.scaleByDistance
-                );
+                scaleSize = calcaluteGrade(cameraHeight, options.scaleByDistance);
             }
 
             if (Cesium.defined(options.translucencyByDistance)) {
-                opacity = calcaluteGrade(
-                    cameraHeight,
-                    options.translucencyByDistance
-                );
+                opacity = calcaluteGrade(cameraHeight, options.translucencyByDistance);
             }
             if (Cesium.defined(options.pixelOffsetScaleByDistance)) {
-                pixelOffsetScale = calcaluteGrade(
-                    cameraHeight,
-                    options.pixelOffsetScaleByDistance
-                );
+                pixelOffsetScale = calcaluteGrade(cameraHeight, options.pixelOffsetScaleByDistance);
             }
         }
         pixelOffsetScale = pixelOffsetScale > 0 ? pixelOffsetScale : 1;
@@ -138,35 +146,13 @@ export default class PopupController extends BaseLayer {
         let x = 0;
         let y = 0;
         if (scaleSize > 0) {
-            x =
-                wposion.x -
-                (rootContentDiv.offsetWidth * scaleSize) / 2 +
-                offset[0] * pixelOffsetScale * scaleSize;
-            y =
-                wposion.y -
-                rootContentDiv.offsetHeight * scaleSize +
-                offset[1] * pixelOffsetScale * scaleSize;
-            rootContentDiv.style.transform =
-                'translate3d(' +
-                x +
-                'px, ' +
-                y +
-                'px, 0)  scale(' +
-                scaleSize +
-                ', ' +
-                scaleSize +
-                ') ';
+            x = wposion.x - (rootContentDiv.offsetWidth * scaleSize) / 2 + offset[0] * pixelOffsetScale * scaleSize;
+            y = wposion.y - rootContentDiv.offsetHeight * scaleSize + offset[1] * pixelOffsetScale * scaleSize;
+            rootContentDiv.style.transform = `translate3d(${x}px, ${y}px, 0)  scale(${scaleSize}, ${scaleSize}) `;
         } else {
-            x =
-                wposion.x -
-                rootContentDiv.offsetWidth / 2 +
-                offset[0] * pixelOffsetScale;
-            y =
-                wposion.y -
-                rootContentDiv.offsetHeight +
-                offset[1] * pixelOffsetScale;
-            rootContentDiv.style.transform =
-                'translate3d(' + x + 'px, ' + y + 'px, 0) ';
+            x = wposion.x - rootContentDiv.offsetWidth / 2 + offset[0] * pixelOffsetScale;
+            y = wposion.y - rootContentDiv.offsetHeight + offset[1] * pixelOffsetScale;
+            rootContentDiv.style.transform = `translate3d(${x}px, ${y}px, 0) `;
         }
         if (opacity >= 0) {
             rootContentDiv.style.opacity = opacity;
@@ -174,36 +160,36 @@ export default class PopupController extends BaseLayer {
         if (Cesium.defined(options)) {
             this.popupContain.push(
                 new PopupElement({
-                    id: 'popup_' + randID,
-                    containID: containID,
+                    id: `popup_${randID}`,
+                    containID,
                     position: posion,
                     element: rootContentDiv,
-                    offset: offset,
+                    offset,
                     scaleByDistance: options.scaleByDistance,
                     translucencyByDistance: options.translucencyByDistance,
-                    pixelOffsetScaleByDistance:
-                        options.pixelOffsetScaleByDistance
+                    pixelOffsetScaleByDistance: options.pixelOffsetScaleByDistance
                 })
             );
         } else {
             this.popupContain.push(
                 new PopupElement({
-                    id: 'popup_' + randID,
-                    containID: containID,
+                    id: `popup_${randID}`,
+                    containID,
                     position: posion,
                     element: rootContentDiv,
                     wPosition: wposion,
-                    offset: offset
+                    offset
                 })
             );
         }
-        return 'popup_' + randID;
+        return `popup_${randID}`;
     }
 
-	/**
-	 * 添加popup更新事件
-	 */
-    refreshPopUps() {
+    /**
+     * 添加popup更新事件
+     * @function module:客户端可视化.PopupController.prototype.refreshPopups
+     */
+    refreshPopups() {
         this.viewer.camera.percentageChanged = 0.01;
         this.viewer.camera.changed.addEventListener(this.updatePopups, this);
     }
@@ -211,35 +197,24 @@ export default class PopupController extends BaseLayer {
     /**
      * @private
      */
-    updatePopups(e) {
-        let popupArray = this.popupContain;
+    updatePopups() {
+        const popupArray = this.popupContain;
         if (popupArray !== null && popupArray.length > 0) {
-            let cameraHeight = Math.ceil(
-                this.viewer.camera.positionCartographic.height
-            );
-            for (let i = 0; i < popupArray.length; i++) {
-                let popEle = popupArray[i];
+            const cameraHeight = Math.ceil(this.viewer.camera.positionCartographic.height);
+            for (let i = 0; i < popupArray.length; i += 1) {
+                const popEle = popupArray[i];
                 let scaleSize = -1;
                 let opacity = -1;
                 let pixelOffsetScale = -1;
                 if (Cesium.defined(popEle.scaleByDistance)) {
-                    scaleSize = calcaluteGrade(
-                        cameraHeight,
-                        popEle.scaleByDistance
-                    );
+                    scaleSize = calcaluteGrade(cameraHeight, popEle.scaleByDistance);
                 }
 
                 if (Cesium.defined(popEle.translucencyByDistance)) {
-                    opacity = calcaluteGrade(
-                        cameraHeight,
-                        popEle.translucencyByDistance
-                    );
+                    opacity = calcaluteGrade(cameraHeight, popEle.translucencyByDistance);
                 }
                 if (Cesium.defined(popEle.pixelOffsetScaleByDistance)) {
-                    pixelOffsetScale = calcaluteGrade(
-                        cameraHeight,
-                        popEle.pixelOffsetScaleByDistance
-                    );
+                    pixelOffsetScale = calcaluteGrade(cameraHeight, popEle.pixelOffsetScaleByDistance);
                 }
                 pixelOffsetScale = pixelOffsetScale > 0 ? pixelOffsetScale : 1;
                 opacity = opacity >= 0 ? opacity : 1;
@@ -248,16 +223,13 @@ export default class PopupController extends BaseLayer {
                     popEle.element.style.opacity = opacity;
                 }
 
-                let cur_wp = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
-                    this.viewer.scene,
-                    popEle.position
-                );
-                if (cur_wp === undefined) {
+                const curWp = Cesium.SceneTransforms.wgs84ToWindowCoordinates(this.viewer.scene, popEle.position);
+                if (curWp === undefined) {
                     return;
                 }
 
-                cur_wp.x = Math.round(cur_wp.x);
-                cur_wp.y = Math.round(cur_wp.y);
+                curWp.x = Math.round(curWp.x);
+                curWp.y = Math.round(curWp.y);
 
                 popEle.element.style.transformOrigin = 'left top';
 
@@ -265,56 +237,31 @@ export default class PopupController extends BaseLayer {
                 let y = 0;
 
                 if (scaleSize > 0) {
-                    x = Math.round(
-                        cur_wp.x -
-                            (popEle.element.offsetWidth * scaleSize) / 2 +
-                            popEle.offset[0] * pixelOffsetScale * scaleSize
-                    );
-                    y = Math.round(
-                        cur_wp.y -
-                            popEle.element.offsetHeight * scaleSize +
-                            popEle.offset[1] * pixelOffsetScale * scaleSize
-                    );
-                    popEle.element.style.transform =
-                        'translate3d(' +
-                        x +
-                        'px, ' +
-                        y +
-                        'px, 0)  scale(' +
-                        scaleSize +
-                        ', ' +
-                        scaleSize +
-                        ') ';
+                    x = Math.round(curWp.x - (popEle.element.offsetWidth * scaleSize) / 2 + popEle.offset[0] * pixelOffsetScale * scaleSize);
+                    y = Math.round(curWp.y - popEle.element.offsetHeight * scaleSize + popEle.offset[1] * pixelOffsetScale * scaleSize);
+                    popEle.element.style.transform = `translate3d(${x}px, ${y}px, 0)  scale(${scaleSize}, ${scaleSize}) `;
                 } else {
-                    x = Math.round(
-                        cur_wp.x -
-                            popEle.element.offsetWidth / 2 +
-                            popEle.offset[0] * pixelOffsetScale
-                    );
-                    y = Math.round(
-                        cur_wp.y -
-                            popEle.element.offsetHeight +
-                            popEle.offset[1] * pixelOffsetScale
-                    );
-                    popEle.element.style.transform =
-                        'translate3d(' + x + 'px, ' + y + 'px, 0)';
+                    x = Math.round(curWp.x - popEle.element.offsetWidth / 2 + popEle.offset[0] * pixelOffsetScale);
+                    y = Math.round(curWp.y - popEle.element.offsetHeight + popEle.offset[1] * pixelOffsetScale);
+                    popEle.element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 }
             }
         }
     }
 
     /**
-     * 删除PopUP
-     * @param {string} popID popup的的div id
-	 * @param {Object} popup 所有者
-	 * @param {Options} 扩展参数
-	 * @param {Options} options.removeDiv = false 是否移除div
-	 * @example
-	 * popupControl.removePopUp('popup', null, { removeDiv: false });
+     * 删除PopuP
+     * @function module:客户端可视化.PopupController.prototype.removePopup
+     * @param {String} popID popup的div id 添加popup返回值
+     * @param {Object} popup 所有者
+     * @param {Options} 扩展参数
+     * @param {Options} options.removeDiv = false 是否移除div
+     * @example
+     *   popupControl.removePopup(popup, null, { removeDiv: false });
      */
-    removePopUp(popID, popupOwner, options) {
-        let owner = Cesium.defaultValue(popupOwner, this);
-        let popDiv = document.getElementById(popID);
+    removePopup(popID, popupOwner, options) {
+        const owner = Cesium.defaultValue(popupOwner, this);
+        const popDiv = document.getElementById(popID);
         if (popDiv === null || popDiv === undefined) {
             return;
         }
@@ -329,32 +276,29 @@ export default class PopupController extends BaseLayer {
             popDiv.parentNode.removeChild(popDiv);
         }
         if (owner.popupContain !== null && owner.popupContain.length > 0) {
-            for (let i = 0, n = 0; i < owner.popupContain.length; i++) {
+            for (let i = 0, n = 0; i < owner.popupContain.length; i += 1) {
                 if (owner.popupContain[i].id !== popID) {
-                    owner.popupContain[n++] = owner.popupContain[i];
+                    owner.popupContain[(n += 1)] = owner.popupContain[i];
                 }
             }
             owner.popupContain.length -= 1;
         }
         if (owner.popupContain.length <= 0) {
             owner.viewer.camera.percentageChanged = 0.5;
-            owner.viewer.camera.changed.removeEventListener(
-                this.updatePopups,
-                this
-            );
+            owner.viewer.camera.changed.removeEventListener(this.updatePopups, this);
         }
     }
 
     /**
-     * 清空所有的PopUP
-     * @param
+     * 清空所有的PopuP
+     * @function module:客户端可视化.PopupController.prototype.clearPopups
      */
-    clearPopUps() {
+    clearPopups() {
         if (this.popupContain !== null && this.popupContain.length > 0) {
-            for (let i = 0; i < this.popupContain.length; i++) {
-                let popID = this.popupContain[i].id;
+            for (let i = 0; i < this.popupContain.length; i += 1) {
+                const popID = this.popupContain[i].id;
                 if (popID !== null) {
-                    let popDiv = document.getElementById(popID);
+                    const popDiv = document.getElementById(popID);
                     while (popDiv.hasChildNodes()) {
                         popDiv.removeChild(popDiv.firstChild);
                     }
@@ -367,57 +311,8 @@ export default class PopupController extends BaseLayer {
         }
         if (this.popupContain.length <= 0) {
             this.viewer.camera.percentageChanged = 0.5;
-            this.viewer.camera.changed.removeEventListener(
-                this.updatePopups,
-                this
-            );
+            this.viewer.camera.changed.removeEventListener(this.updatePopups, this);
         }
-    }
-}
-
-function calcaluteGrade(curValue, std_NearFar) {
-    let curPara = -1;
-    if (curValue <= std_NearFar.near) {
-        curPara = std_NearFar.nearValue;
-    } else if (curValue >= std_NearFar.far) {
-        curPara = std_NearFar.farValue;
-    } else {
-        let totalGrade = Math.ceil(
-            Math.log(std_NearFar.far / std_NearFar.near) / Math.log(2)
-        );
-        let curGrade = Math.round(
-            Math.log(curValue / std_NearFar.near) / Math.log(2)
-        );
-        curPara =
-            std_NearFar.nearValue +
-            ((std_NearFar.farValue - std_NearFar.nearValue) * curGrade) /
-                totalGrade;
-    }
-    return curPara;
-}
-
-/**
- * @private
- * PopUp元素对象
- * @param  {object} options
- */
-class PopupElement {
-    constructor(option) {
-        this.id = Cesium.defaultValue(option.id, null); //代表divID
-        this.containID = Cesium.defaultValue(option.containID, null); //容器divID
-        this.position = Cesium.defaultValue(option.position, null); //坐标（地图坐标）
-        this.element = Cesium.defaultValue(option.element, null); //div元素
-        this.wPosition = Cesium.defaultValue(option.wPosition, null); //窗口位置
-        this.offset = Cesium.defaultValue(option.offset, [0, 0]);
-        this.scaleByDistance = Cesium.defaultValue(option.scaleByDistance, null);
-        this.translucencyByDistance = Cesium.defaultValue(
-            option.translucencyByDistance,
-            null
-        );
-        this.pixelOffsetScaleByDistance = Cesium.defaultValue(
-            option.pixelOffsetScaleByDistance,
-            null
-        );
     }
 }
 

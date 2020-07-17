@@ -1,8 +1,32 @@
 import { CesiumZondy } from '../core/Base';
 
+/**
+ * 计算三点的角度（0-180之间）
+ * @param {Array} p1 第一个点
+ * @param {Array} p2 第二个点
+ * @param {Array} p3 第三个点
+ * @returns {Number} 角度值
+ */
+function calAngleOf3Pnt(p1, p2, p3) {
+    const p = (p1[0] - p2[0]) * (p3[0] - p2[0]) + (p1[1] - p2[1]) * (p3[1] - p2[1]) + (p1[2] - p2[2]) * (p3[2] - p2[2]);
+    const a = Math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2 + (p2[2] - p1[2]) ** 2);
+    const b = Math.sqrt((p3[0] - p2[0]) ** 2 + (p3[1] - p2[1]) ** 2 + (p3[2] - p2[2]) ** 2);
+    const angle = Math.acos(p / (a * b));
+    return (angle * 180) / Math.PI;
+}
+
+/**
+ * @author 三维基础平台研发中心·冯桂英
+ * @class module:客户端公共方法.CommonFuncManager
+ * @category CommonFuncManager
+ * @classdesc 辅助计算类
+ * @description 该类实提供加密点等辅助计算函数
+ * @param optionsParam.viewer 场景视窗
+ */
 export default class CommonFuncManager {
-    constructor(option) {
-        this._viewer = Cesium.defaultValue(option.viewer, undefined);
+    constructor(optionsParam) {
+        const options = optionsParam;
+        this._viewer = Cesium.defaultValue(options.viewer, undefined);
         if (this._viewer) {
             this._scene = Cesium.defaultValue(this._viewer.scene, undefined);
             this._shouldAnimate = this.viewer.clock.shouldAnimate;
@@ -53,9 +77,11 @@ export default class CommonFuncManager {
 
     /**
      * 屏幕坐标转为经纬度坐标
-     * @param  {Position} position 屏幕坐标点
-     * @returns {Position}  三维经纬度坐标点(单位弧度)
-     * let result = screenPositionToCartesian(position);
+     * @function module:客户端公共方法.CommonFuncManager.prototype.screenPositionToCartographic
+     * @param {Position} position 屏幕坐标点
+     * @returns {Position} 三维经纬度坐标点(单位弧度)
+     * @example
+     * let result = commfun.screenPositionToCartesian(position);
      * let lng=Cesium.Math.toDegrees(result.longitude);//转为经度值
      * let lat=Cesium.Math.toDegrees(result.latitude);//转为纬度值
      */
@@ -64,18 +90,13 @@ export default class CommonFuncManager {
         let cartographicPosition = null;
         if (position) {
             if (this.scene._mode === Cesium.SceneMode.SCENE3D) {
-                let ray = this.viewer.camera.getPickRay(position);
+                const ray = this.viewer.camera.getPickRay(position);
                 cartesianPosition = this.scene.globe.pick(ray, this.scene);
             } else {
-                cartesianPosition = this.viewer.camera.pickEllipsoid(
-                    position,
-                    this.ellipsoid
-                );
+                cartesianPosition = this.viewer.camera.pickEllipsoid(position, this.ellipsoid);
             }
             if (Cesium.defined(cartesianPosition)) {
-                cartographicPosition = this.ellipsoid.cartesianToCartographic(
-                    cartesianPosition
-                );
+                cartographicPosition = this.ellipsoid.cartesianToCartographic(cartesianPosition);
             }
         }
         return cartographicPosition;
@@ -83,20 +104,18 @@ export default class CommonFuncManager {
 
     /**
      * 屏幕坐标转为笛卡尔坐标
-     * @param  {Position} position 屏幕坐标点
+     * @function module:客户端公共方法.CommonFuncManager.prototype.screenPositionToCartesian
+     * @param {Position} position 屏幕坐标点
      * @returns {Position} 三维笛卡尔坐标点
      */
     screenPositionToCartesian(position) {
         let cartesianPosition = null;
         if (position) {
             if (this.scene._mode === Cesium.SceneMode.SCENE3D) {
-                let ray = this.viewer.camera.getPickRay(position);
+                const ray = this.viewer.camera.getPickRay(position);
                 cartesianPosition = this.scene.globe.pick(ray, this.scene);
             } else {
-                cartesianPosition = this.viewer.camera.pickEllipsoid(
-                    position,
-                    this.ellipsoid
-                );
+                cartesianPosition = this.viewer.camera.pickEllipsoid(position, this.ellipsoid);
             }
         }
         return cartesianPosition;
@@ -104,7 +123,8 @@ export default class CommonFuncManager {
 
     /**
      * 输出屏幕截图对象，可保存为不同类型图片
-     * @returns 图片对象
+     * @function module:客户端公共方法.CommonFuncManager.prototype.outputImageObj
+     * @returns {Object} 图片对象
      * @example
      * let res = comm.outputImageObj();
      * res.downloadPng(name);
@@ -117,11 +137,12 @@ export default class CommonFuncManager {
      */
     outputImageObj() {
         this.viewer.render();
-        return ReImg.fromCanvas(this.viewer.canvas);
+        return Cesium.reimg.fromCanvas(this.viewer.canvas);
     }
 
     /**
      * 屏幕截图输出为图片
+     * @function module:客户端公共方法.CommonFuncManager.prototype.outputImageFile
      * @param {String} fileName 输出图片名称
      * @example
      * res.outputImageFile(name);
@@ -130,20 +151,21 @@ export default class CommonFuncManager {
      */
     outputImageFile(fileName) {
         this.viewer.render();
-        ReImg.fromCanvas(this.viewer.canvas).downloadPng(fileName);
+        Cesium.reimg.fromCanvas(this.viewer.canvas).downloadPng(fileName);
     }
 
     /**
      * 根据经纬度计算高度值
+     * @function module:客户端公共方法.CommonFuncManager.prototype.getHeightFromDegrees
      * @param {Number} longitude 经度值
      * @param {Number} latitude 纬度值
-     * @retuns 计算的高度值
+     * @returns {Number} 计算的高度值
      * @example
      * let res = commfun.getHeightFromDegrees(120.0,23.0)
      */
     getHeightFromDegrees(longitude, latitude) {
-        var position;
-        var height = 0;
+        let position;
+        let height = 0;
         if (longitude && latitude) {
             position = Cesium.Cartographic.fromDegrees(longitude, latitude);
             height = this.viewer.scene.globe.getHeight(position);
@@ -153,62 +175,53 @@ export default class CommonFuncManager {
 
     /**
      * 获取颜色
+     * @function module:客户端公共方法.CommonFuncManager.prototype.getColor
      * @param {Number} red 红色分量（0-1.0）
      * @param {Number} green 绿色分量（0-1.0）
      * @param {Number} blue 蓝色分量（0-1.0）
-     * @param {Number} alpha 透明度  （0-1.0）
+     * @param {Number} alpha 透明度 (0-1.0）
      * @returns {Color} 颜色对象
      * @example
-     * getColor(0.3,0.4,0.1,1.0);
+     * let res = CommonFun.getColor(0.3, 0.4, 0.1, 1.0);
      */
-    getColor(red, green, blue, alpha) {
+    static getColor(red, green, blue, alpha) {
         return new Cesium.Color(red, green, blue, alpha);
     }
 
     /**
      * 计算场景的二维范围
+     * @function module:客户端公共方法.CommonFuncManager.prototype.getSceneRange
+     * @param {String} 视图元素ID
      * @returns {Array[]} 场景范围（单位：经纬度）Array<[lon,lat]>
      */
-    getSceneRange() {
-        let controlDiv = document.getElementById(this.elementID);
+    getSceneRange(elementID) {
+        const controlDiv = document.getElementById(elementID);
         if (Cesium.defined(controlDiv)) {
-            let h = controlDiv.offsetHeight; //高度
-            let w = controlDiv.offsetWidth; //宽度
-            let ua = navigator.userAgent.toLowerCase();
+            const h = controlDiv.offsetHeight; // 高度
+            const w = controlDiv.offsetWidth; // 宽度
+            const ua = navigator.userAgent.toLowerCase();
 
-            let isOpera = ua.indexOf('opera') !== -1;
-            let isIE = ua.indexOf('msie') !== -1 && !isOpera;
+            const isOpera = ua.indexOf('opera') !== -1;
+            const isIE = ua.indexOf('msie') !== -1 && !isOpera;
 
-            if (
-                controlDiv.parentNode === null ||
-                controlDiv.style.display === 'none'
-            ) {
-                return;
+            if (controlDiv.parentNode === null || controlDiv.style.display === 'none') {
+                return undefined;
             }
             let parent = null;
             let pos = [];
             let box;
-            let x, y;
+            let x;
+            let y;
             if (isIE) {
                 box = controlDiv.getBoundingClientRect();
-                let scrollTop = Math.max(
-                    document.documentElement.scrollTop,
-                    document.body.scrollTop
-                );
-                let scrollLeft = Math.max(
-                    document.documentElement.scrollLeft,
-                    document.body.scrollLeft
-                );
+                const scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+                const scrollLeft = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
                 x = box.left + scrollLeft;
                 y = box.top + scrollTop;
             } else if (document.getBoxObjectFor) {
                 box = document.getBoxObjectFor(controlDiv);
-                let borderLeft = controlDiv.style.borderLeftWidth
-                    ? parseInt(controlDiv.style.borderLeftWidth)
-                    : 0;
-                let borderTop = controlDiv.style.borderTopWidth
-                    ? parseInt(controlDiv.style.borderTopWidth)
-                    : 0;
+                const borderLeft = controlDiv.style.borderLeftWidth ? parseInt(controlDiv.style.borderLeftWidth, 10) : 0;
+                const borderTop = controlDiv.style.borderTopWidth ? parseInt(controlDiv.style.borderTopWidth, 10) : 0;
                 pos = [box.x - borderLeft, box.y - borderTop];
             } // safari & opera
             else {
@@ -221,11 +234,7 @@ export default class CommonFuncManager {
                         parent = parent.offsetParent;
                     }
                 }
-                if (
-                    ua.indexOf('opera') !== -1 ||
-                    (ua.indexOf('safari') !== -1 &&
-                        controlDiv.style.position === 'absolute')
-                ) {
+                if (ua.indexOf('opera') !== -1 || (ua.indexOf('safari') !== -1 && controlDiv.style.position === 'absolute')) {
                     pos[0] -= document.body.offsetLeft;
                     pos[1] -= document.body.offsetTop;
                 }
@@ -236,11 +245,7 @@ export default class CommonFuncManager {
             } else {
                 parent = null;
             }
-            while (
-                parent &&
-                parent.tagName !== 'BODY' &&
-                parent.tagName !== 'HTML'
-            ) {
+            while (parent && parent.tagName !== 'BODY' && parent.tagName !== 'HTML') {
                 pos[0] -= parent.scrollLeft;
                 pos[1] -= parent.scrollTop;
                 if (parent.parentNode) {
@@ -249,62 +254,49 @@ export default class CommonFuncManager {
                     parent = null;
                 }
             }
-            x = pos[0];
-            y = pos[1];
+            const { 0: posx, 1: posy } = pos;
+            x = posx;
+            y = posy;
 
-            let position1 = new Cesium.Cartesian2(x, y);
-            let position2 = new Cesium.Cartesian2(x + w, y + h);
-            let viewer = this.viewer;
-            let pick1, pick2;
+            const position1 = new Cesium.Cartesian2(x, y);
+            const position2 = new Cesium.Cartesian2(x + w, y + h);
+            const { viewer } = this;
+            let pick1;
+            let pick2;
 
             if (this.scene.mode === Cesium.SceneMode.SCENE3D) {
-                pick1 = this.scene.globe.pick(
-                    viewer.camera.getPickRay(position1),
-                    this.scene
-                );
-                pick2 = this.scene.globe.pick(
-                    viewer.camera.getPickRay(position2),
-                    this.scene
-                );
+                pick1 = this.scene.globe.pick(viewer.camera.getPickRay(position1), this.scene);
+                pick2 = this.scene.globe.pick(viewer.camera.getPickRay(position2), this.scene);
             } else {
                 pick1 = viewer.camera.pickEllipsoid(position1, this.ellipsoid);
                 pick2 = viewer.camera.pickEllipsoid(position2, this.ellipsoid);
             }
             if (pick1 === undefined || pick2 === undefined) {
-                return null;
+                return undefined;
             }
-            //将三维坐标转成地理坐标
-            let geoPt1 = viewer.scene.globe.ellipsoid.cartesianToCartographic(
-                pick1
-            );
-            let geoPt2 = viewer.scene.globe.ellipsoid.cartesianToCartographic(
-                pick2
-            );
+            // 将三维坐标转成地理坐标
+            const geoPt1 = viewer.scene.globe.ellipsoid.cartesianToCartographic(pick1);
+            const geoPt2 = viewer.scene.globe.ellipsoid.cartesianToCartographic(pick2);
 
-            //地理坐标转换为经纬度坐标
-            let point1 = [
-                (geoPt1.longitude / Math.PI) * 180,
-                (geoPt2.latitude / Math.PI) * 180
-            ];
-            let point2 = [
-                (geoPt2.longitude / Math.PI) * 180,
-                (geoPt1.latitude / Math.PI) * 180
-            ];
+            // 地理坐标转换为经纬度坐标
+            const point1 = [(geoPt1.longitude / Math.PI) * 180, (geoPt2.latitude / Math.PI) * 180];
+            const point2 = [(geoPt2.longitude / Math.PI) * 180, (geoPt1.latitude / Math.PI) * 180];
             return [point1, point2];
         }
-        return null;
+        return undefined;
     }
 
     /**
      * 绕点旋转 相机绕点飞行一周 或者相机绕自身旋转一周
-     * @param {Number} [type='rotationAroundPos'] 旋转类型  默认绕相机自身旋转
-     * @param {Object} [options] 附加参数系信息
-     * @param {Cartesian3} [options.position] 要进行围绕旋转的点
-     * @param {Number} [options.pitch=-30] 相机的俯仰角   单位（度）
-     * @param {Number} [options.distance=500000] 相机距离点的距离 单位（米）
-     * @param {Number} [options.duration=10] 绕点飞行一周所用的时间  单位（秒）
-     * @param {Number} [options.ClockRange=Cesium.ClockRange.CLAMPED] 循环方式
-     * @returns Event 绕点旋转事件
+     * @function module:客户端公共方法.CommonFuncManager.prototype.rotationView
+     * @param {String} [type='rotationAroundPos'] 旋转类型  默认绕相机自身旋转
+     * @param {Object} [optionsParam] 附加参数系信息
+     * @param {Cartesian3} [optionsParam.position] 要进行围绕旋转的点
+     * @param {Number} [optionsParam.pitch=-30] 相机的俯仰角   单位（度）
+     * @param {Number} [optionsParam.distance=500000] 相机距离点的距离 单位（米）
+     * @param {Number} [optionsParam.duration=10] 绕点飞行一周所用的时间  单位（秒）
+     * @param {Number} [optionsParam.ClockRange=Cesium.ClockRange.CLAMPED] 循环方式
+     * @returns {Event} 绕点旋转事件
      * @example
      * let opt ={
      *   position:Cesium.Cartesian3.fromDegrees(110,20,100),
@@ -316,42 +308,30 @@ export default class CommonFuncManager {
      * let update = commfun.rotationView('rotationAroundPos',opt) ;
      *
      */
-    rotationView(type, options) {
+    rotationView(type, optionsParam) {
         if (!Cesium.defined(type)) {
             return new Cesium.DeveloperError('必须指定旋转类型');
         }
-        if (!Cesium.defined(options)) {
-            options = {};
-        }
-        let position = options.position;
+        const options = Cesium.defaultValue(optionsParam, {});
+        const { position } = options;
         if (type === 'rotationAroundPos' && !Cesium.defined(position)) {
             return new Cesium.DeveloperError('必须指定旋转点');
         }
-        let pitch = Cesium.Math.toRadians(
-            Cesium.defaultValue(options.pitch, -30)
-        );
-        let distance = Cesium.defaultValue(options.distance, 5000);
-        let duration = Cesium.defaultValue(options.duration, 8);
-        let angle = 360.0 / duration;
-        let startTime = Cesium.JulianDate.fromDate(new Date());
-        let stopTime = Cesium.JulianDate.addSeconds(
-            startTime,
-            duration,
-            new Cesium.JulianDate()
-        );
+        const pitch = Cesium.Math.toRadians(Cesium.defaultValue(options.pitch, -30));
+        const distance = Cesium.defaultValue(options.distance, 5000);
+        const duration = Cesium.defaultValue(options.duration, 8);
+        const angle = 360.0 / duration;
+        const startTime = Cesium.JulianDate.fromDate(new Date());
+        const stopTime = Cesium.JulianDate.addSeconds(startTime, duration, new Cesium.JulianDate());
         this.viewer.clock.startTime = startTime.clone();
         this.viewer.clock.stopTime = stopTime.clone();
         this.viewer.clock.currentTime = startTime.clone();
         this.viewer.clock.clockRange = Cesium.ClockRange.CLAMPED;
         this.viewer.clock.clockStep = Cesium.ClockStep.SYSTEM_CLOCK;
-        let currentHeading = this.viewer.camera.heading;
-        let update = () => {
-            let delTime = Cesium.JulianDate.secondsDifference(
-                this.viewer.clock.currentTime,
-                this.viewer.clock.startTime
-            );
-            let heading =
-                -Cesium.Math.toRadians(delTime * angle) + currentHeading;
+        const currentHeading = this.viewer.camera.heading;
+        const update = () => {
+            const delTime = Cesium.JulianDate.secondsDifference(this.viewer.clock.currentTime, this.viewer.clock.startTime);
+            const heading = -Cesium.Math.toRadians(delTime * angle) + currentHeading;
             let nowPostion = this.scene.camera.position;
             if (type === 'rotationAroundPos' && Cesium.defined(position)) {
                 nowPostion = position;
@@ -359,17 +339,12 @@ export default class CommonFuncManager {
             this.scene.camera.setView({
                 destination: nowPostion,
                 orientation: {
-                    heading: heading,
-                    pitch: pitch
+                    heading,
+                    pitch
                 }
             });
             this.scene.camera.moveBackward(distance);
-            if (
-                Cesium.JulianDate.compare(
-                    this.viewer.clock.currentTime,
-                    this.viewer.clock.stopTime
-                ) >= 0
-            ) {
+            if (Cesium.JulianDate.compare(this.viewer.clock.currentTime, this.viewer.clock.stopTime) >= 0) {
                 this.viewer.clock.onTick.removeEventListener(update);
             }
         };
@@ -380,6 +355,7 @@ export default class CommonFuncManager {
 
     /**
      * 移除绕点自旋转事件
+     * @function module:客户端公共方法.CommonFuncManager.prototype.removeRotationView
      * @param {Event} event 绕点旋转事件
      * @example
      * let opt ={
@@ -401,6 +377,7 @@ export default class CommonFuncManager {
 
     /**
      * 暂停围绕旋转
+     * @function module:客户端公共方法.CommonFuncManager.prototype.pauseRotationView
      * @example
      * //let opt ={
      * //    position:Cesium.Cartesian3.fromDegrees(110,20,100),
@@ -418,6 +395,7 @@ export default class CommonFuncManager {
 
     /**
      * 开始围绕旋转 与暂停配合使用
+     * @function module:客户端公共方法.CommonFuncManager.prototype.startRotationAroundPos
      * @example
      * //let opt ={
      * //    position:Cesium.Cartesian3.fromDegrees(110,20,100),
@@ -436,25 +414,18 @@ export default class CommonFuncManager {
 
     /**
      * 计算两点间的heading 航向角
+     * @function module:客户端公共方法.CommonFuncManager.prototype.caculHeadingFromCartographic
      * @param {Cartographic} center 中心点 （第一个点） 坐标为弧度
      * @param {Cartographic} target 目标点 （第二个点）坐标为弧度
-     * @returns {Number} heading
+     * @returns {Number} heading 
+     * @example 
+     *      let center = new Cesium.Cartographic(113, 23, 200);
+            let target = new Cesium.Cartographic(114, 24, 200);
+            let res = commfun.caculHeadingFromCartographic(source,target);
      */
     caculHeadingFromCartographic(center, target) {
-        let centerCar3 = Cesium.Cartesian3.fromRadians(
-            center.longitude,
-            center.latitude,
-            center.height,
-            this.ellipsoid,
-            new Cesium.Cartesian3()
-        );
-        let targetCar3 = Cesium.Cartesian3.fromRadians(
-            target.longitude,
-            target.latitude,
-            target.height,
-            this.ellipsoid,
-            new Cesium.Cartesian3()
-        );
+        const centerCar3 = Cesium.Cartesian3.fromRadians(center.longitude, center.latitude, center.height, this.ellipsoid, new Cesium.Cartesian3());
+        const targetCar3 = Cesium.Cartesian3.fromRadians(target.longitude, target.latitude, target.height, this.ellipsoid, new Cesium.Cartesian3());
         return this.getHeadingFromCartesian3(centerCar3, targetCar3);
     }
 
@@ -467,53 +438,19 @@ export default class CommonFuncManager {
      */
     getHeadingFromCartesian3(center, target) {
         let carCenter = new Cesium.Cartographic();
-        carCenter = Cesium.Cartographic.fromCartesian(
-            center,
-            this.ellipsoid,
-            carCenter
-        );
+        carCenter = Cesium.Cartographic.fromCartesian(center, this.ellipsoid, carCenter);
         carCenter.height = 0;
-        let centerUse = Cesium.Cartesian3.fromRadians(
-            carCenter.longitude,
-            carCenter.latitude,
-            carCenter.height,
-            this.ellipsoid,
-            new Cesium.Cartesian3()
-        );
-        let centerUseEx = Cesium.Cartesian3.fromRadians(
-            carCenter.longitude,
-            carCenter.latitude + 0.1,
-            carCenter.height,
-            this.ellipsoid,
-            new Cesium.Cartesian3()
-        );
-        let tempdir = Cesium.Cartesian3.subtract(
-            centerUseEx,
-            centerUse,
-            new Cesium.Cartesian3()
-        );
+        const centerUse = Cesium.Cartesian3.fromRadians(carCenter.longitude, carCenter.latitude, carCenter.height, this.ellipsoid, new Cesium.Cartesian3());
+        const centerUseEx = Cesium.Cartesian3.fromRadians(carCenter.longitude, carCenter.latitude + 0.1, carCenter.height, this.ellipsoid, new Cesium.Cartesian3());
+        let tempdir = Cesium.Cartesian3.subtract(centerUseEx, centerUse, new Cesium.Cartesian3());
         tempdir = Cesium.Cartesian3.normalize(tempdir, tempdir);
 
         let carTarget = new Cesium.Cartographic();
-        carTarget = Cesium.Cartographic.fromCartesian(
-            target,
-            this.ellipsoid,
-            carTarget
-        );
+        carTarget = Cesium.Cartographic.fromCartesian(target, this.ellipsoid, carTarget);
         carTarget.height = 0;
-        let targetUse = Cesium.Cartesian3.fromRadians(
-            carTarget.longitude,
-            carTarget.latitude,
-            carTarget.height,
-            this.ellipsoid,
-            new Cesium.Cartesian3()
-        );
+        const targetUse = Cesium.Cartesian3.fromRadians(carTarget.longitude, carTarget.latitude, carTarget.height, this.ellipsoid, new Cesium.Cartesian3());
 
-        let tarDir = Cesium.Cartesian3.subtract(
-            targetUse,
-            centerUse,
-            new Cesium.Cartesian3()
-        );
+        let tarDir = Cesium.Cartesian3.subtract(targetUse, centerUse, new Cesium.Cartesian3());
         tarDir = Cesium.Cartesian3.normalize(tarDir, tarDir);
         let heading = Cesium.Cartesian3.angleBetween(tempdir, tarDir);
         if (carTarget.longitude < carCenter.longitude) {
@@ -526,31 +463,32 @@ export default class CommonFuncManager {
     /**
      * @private
      * 深度拷贝对象
-     * @param  {object} o 被拷贝对象
-     * @return {object} 拷贝结果
+     * @param  {Object} o 被拷贝对象
+     * @returns {Object} 拷贝结果
      */
     deepCopy(o) {
         if (o instanceof Array) {
-            var n = [];
-            for (var i = 0; i < o.length; ++i) {
+            const n = [];
+            for (let i = 0; i < o.length; i += 1) {
                 n[i] = this.deepCopy(o[i]);
             }
             return n;
-        } else if (o instanceof Object) {
-            var n = {};
-            for (var i in o) {
-                n[i] = this.deepCopy(o[i]);
-            }
-            return n;
-        } else {
-            return o;
         }
+        if (o instanceof Object) {
+            const n = {};
+            Object.keys(o).forEach((key) => {
+                n[key] = this.deepCopy(o[key]);
+            });
+            return n;
+        }
+        return o;
     }
 
     /**
      * 化简抽稀(用于折线路绘制)
+     * @function module:客户端公共方法.CommonFuncManager.prototype.simplifyLine
      * @param  {Array<Cartesian3>} positions 坐标点序列
-     * @return {Array<Cartesian3>} 抽稀后的坐标点序列
+     * @returns {Array<Cartesian3>} 抽稀后的坐标点序列
      * @example
      * let polyline;
      * let drawElement = new Cesium.DrawElement(viewer);
@@ -568,211 +506,182 @@ export default class CommonFuncManager {
      *           });
      */
     simplifyLine(positions) {
-        //该抽稀对于三点之间夹角>175度则删除，如果是高程拐点则必须保留，高程没有赋值的也需删除（因为可能没取到地形数据）
+        // 该抽稀对于三点之间夹角>175度则删除，如果是高程拐点则必须保留，高程没有赋值的也需删除（因为可能没取到地形数据）
         if (positions !== null && positions.length >= 3) {
-            let pos_copy = this.deepCopy(positions);
-            //先删除高程值有异常坐标
-            let len = pos_copy.length;
-            for (let j = 0; j < len; j++) {
-                if (pos_copy[j].z === undefined || pos_copy[j].z === null) {
-                    pos_copy = pos_copy
-                        .slice(0, j)
-                        .concat(pos_copy.slice(j + 1));
+            let posCopy = this.deepCopy(positions);
+            // 先删除高程值有异常坐标
+            const len = posCopy.length;
+            for (let j = 0; j < len; j += 1) {
+                if (posCopy[j].z === undefined || posCopy[j].z === null) {
+                    posCopy = posCopy.slice(0, j).concat(posCopy.slice(j + 1));
                 }
             }
-            for (let i = 0; i <= pos_copy.length - 3; i++) {
-                let isVertice = (pos_copy[i].z - pos_copy[i + 1].z) * (pos_copy[i + 1].z - pos_copy[i + 2].z) > 0 ? false : true;
-                let angle = calAngleOf3Pnt([pos_copy[i].x, pos_copy[i].y, pos_copy[i].z], [pos_copy[i + 1].x, pos_copy[i + 1].y, pos_copy[i + 1].z], [pos_copy[i + 2].x, pos_copy[i + 2].y, pos_copy[i + 2].z]);
+            for (let i = 0; i <= posCopy.length - 3; i += 1) {
+                const isVertice = !((posCopy[i].z - posCopy[i + 1].z) * (posCopy[i + 1].z - posCopy[i + 2].z) > 0);
+                const angle = calAngleOf3Pnt([posCopy[i].x, posCopy[i].y, posCopy[i].z], [posCopy[i + 1].x, posCopy[i + 1].y, posCopy[i + 1].z], [posCopy[i + 2].x, posCopy[i + 2].y, posCopy[i + 2].z]);
 
                 if (angle > 175 && !isVertice) {
-                    pos_copy = pos_copy.slice(0, i + 1).concat(pos_copy.slice(i + 2));
+                    posCopy = posCopy.slice(0, i + 1).concat(posCopy.slice(i + 2));
                 }
             }
-            return pos_copy;
+            return posCopy;
         }
         return null;
     }
 
     /**
-     * @private
-     * 计算2点高差
+     * 按照分段加密
+     * @function module:客户端公共方法.CommonFuncManager.prototype.calcParabola
      * @param {Object} options 参数
-     * @param {Array} options.position 经纬度点数组
-     * @param {Array} options.height 高度
-     * @param {Array} resultOut 经纬度高程数组
-     * @return 点数组结果
+     * @param {Array} [options.position] 经纬度点数组
+     * @param {Array} [options.height] 高度
+     * @param {Number} [options.num] 数量
+     * @returns {Array} 点数组结果
+     * @example
+     * let opt = {
+                num: 5,
+                heigtht: 500,
+                position1: {
+                    lon: 112, lat: 30
+                },
+                position2: {
+                    lon: 113, lat: 32
+                }
+            }
+            let res = CommonFun.calcParabola(opt);
      */
-    calcParabola(options, resultOut) {
-        //方程 y=-(4h/L^2)*x^2+h h:顶点高度 L：横纵间距较大者
-        let h = options.height && options.height > 5000 ? options.height : 5000;
-        let L =
-            Math.abs(options.position1.lon - options.position2.lon) >
-            Math.abs(options.position1.lat - options.position2.lat)
-                ? Math.abs(options.position1.lon - options.position2.lon)
-                : Math.abs(options.position1.lat - options.position2.lat);
-        let num = options.num && options.num > 50 ? options.num : 50;
-        let result = [];
+    static calcParabola(options) {
+        // 方程 y=-(4h/L^2)*x^2+h h:顶点高度 L：横纵间距较大者
+        const h = options.height && options.height > 5000 ? options.height : 5000;
+        const L = Math.abs(options.position1.lon - options.position2.lon) > Math.abs(options.position1.lat - options.position2.lat) ? Math.abs(options.position1.lon - options.position2.lon) : Math.abs(options.position1.lat - options.position2.lat);
+        const num = options.num && options.num > 50 ? options.num : 50;
+        const result = [];
         let dlt = L / num;
-        if (
-            Math.abs(options.position1.lon - options.position2.lon) >
-            Math.abs(options.position1.lat - options.position2.lat)
-        ) {
-            //以lon为基准
-            let delLat = (options.position2.lat - options.position1.lat) / num;
+        if (Math.abs(options.position1.lon - options.position2.lon) > Math.abs(options.position1.lat - options.position2.lat)) {
+            // 以lon为基准
+            const delLat = (options.position2.lat - options.position1.lat) / num;
             if (options.position1.lon - options.position2.lon > 0) {
                 dlt = -dlt;
             }
-            for (var i = 0; i < num; i++) {
-                var tempH =
-                    h -
-                    (Math.pow(-0.5 * L + Math.abs(dlt) * i, 2) * 4 * h) /
-                        Math.pow(L, 2);
-                var lon = options.position1.lon + dlt * i;
-                var lat = options.position1.lat + delLat * i;
+            for (let i = 0; i < num; i += 1) {
+                const tempH = h - ((-0.5 * L + Math.abs(dlt) * i) ** 2 * 4 * h) / L ** 2;
+                const lon = options.position1.lon + dlt * i;
+                const lat = options.position1.lat + delLat * i;
                 result.push([lon, lat, tempH]);
             }
         } else {
-            //以lat为基准
-            let delLon = (options.position2.lon - options.position1.lon) / num;
+            // 以lat为基准
+            const delLon = (options.position2.lon - options.position1.lon) / num;
             if (options.position1.lat - options.position2.lat > 0) {
                 dlt = -dlt;
             }
-            for (var j = 0; j < num; j++) {
-                var tempH2 =
-                    h -
-                    (Math.pow(-0.5 * L + Math.abs(dlt) * j, 2) * 4 * h) /
-                        Math.pow(L, 2);
-                var lon2 = options.position1.lon + delLon * j;
-                var lat2 = options.position1.lat + dlt * j;
+            for (let j = 0; j < num; j += 1) {
+                const tempH2 = h - ((-0.5 * L + Math.abs(dlt) * j) ** 2 * 4 * h) / L ** 2;
+                const lon2 = options.position1.lon + delLon * j;
+                const lat2 = options.position1.lat + dlt * j;
                 result.push([lon2, lat2, tempH2]);
             }
-        }
-        if (resultOut !== undefined) {
-            resultOut = result;
         }
         return result;
     }
 
-     /*
+    /**
      * 线性插值（二维坐标）
-     * @param  {Array<Cartesian2>}  positions 坐标点序列
-     * @param  {Number} step    步长
-     * @return {Array<Cartesian2>}   插值后的坐标点序列
+     * @function module:客户端公共方法.CommonFuncManager.prototype.linearInterpolate
+     * @param {Array<Cartesian2>} positions 坐标点序列
+     * @param {Number} step 步长
+     * @returns {Array<Cartesian2>} 插值后的坐标点序列
      */
-    linearInterpolate(positions, step) {
-        let pnts = [];
-        let len = positions.length - 1;
-        for (let m = 0; m < len; m++) {
-            let pnt_s = positions[m];
-            let pnt_e = positions[m + 1];
+    static linearInterpolate(positions, step) {
+        const pnts = [];
+        const len = positions.length - 1;
+        for (let m = 0; m < len; m += 1) {
+            const pntS = positions[m];
+            const pntE = positions[m + 1];
             if (m === 0) {
-                pnts.push(pnt_s);
+                pnts.push(pntS);
             }
-            let dis = Math.sqrt(Math.pow(pnt_e.x - pnt_s.x, 2) + Math.pow(pnt_e.y - pnt_s.y, 2));
+            const dis = Math.sqrt((pntE.x - pntS.x) ** 2 + (pntE.y - pntS.y) ** 2);
             if (dis > step) {
-                let n = dis / step;
-                for (let i = 1; i < n; i++) {
-                    let x = (pnt_e.x - pnt_s.x) * (i * step / dis) + pnt_s.x;
-                    let y = (pnt_e.y - pnt_s.y) * (i * step / dis) + pnt_s.y;
+                const n = dis / step;
+                for (let i = 1; i < n; i += 1) {
+                    const x = (pntE.x - pntS.x) * ((i * step) / dis) + pntS.x;
+                    const y = (pntE.y - pntS.y) * ((i * step) / dis) + pntS.y;
                     pnts.push(new Cesium.Cartesian2(x, y));
                 }
             }
-            pnts.push(pnt_e);
+            pnts.push(pntE);
         }
         return pnts;
     }
 
     /**
      * 线性插值(三维坐标)
-     * @param  {Array<Cartesian3>} positions 坐标点序列
-     * @param  {Number} step 步长
-     * @return {Array<Cartesian3>} 插值后的坐标点序列
+     * @function module:客户端公共方法.CommonFuncManager.prototype.linearInterpolate3D
+     * @param {Array<Cartesian3>} positions 坐标点序列
+     * @param {Number} step 步长
+     * @returns {Array<Cartesian3>} 插值后的坐标点序列
      */
-    linearInterpolate3D(positions, step) {
-        let pnts = [];
-        for (let m = 0; m < positions.length - 1; m++) {
-            let pnt_s = positions[m];
-            let pnt_e = positions[m + 1];
+    static linearInterpolate3D(positions, step) {
+        const pnts = [];
+        for (let m = 0; m < positions.length - 1; m += 1) {
+            const pntS = positions[m];
+            const pntE = positions[m + 1];
             if (m === 0) {
-                pnts.push(pnt_s);
+                pnts.push(pntS);
             }
-            let dis = Math.sqrt(Math.pow(pnt_e.x - pnt_s.x, 2) + Math.pow(pnt_e.y - pnt_s.y, 2));
+            const dis = Math.sqrt((pntE.x - pntS.x) ** 2 + (pntE.y - pntS.y) ** 2);
             if (dis > step) {
-                let n = dis / step;
-                for (let i = 1; i < n; i++) {
-                    let x = (pnt_e.x - pnt_s.x) * (i * step / dis) + pnt_s.x;
-                    let y = (pnt_e.y - pnt_s.y) * (i * step / dis) + pnt_s.y;
-                    let z = (pnt_e.z - pnt_s.z) * (i * step / dis) + pnt_s.z;
+                const n = dis / step;
+                for (let i = 1; i < n; i += 11) {
+                    const x = (pntE.x - pntS.x) * ((i * step) / dis) + pntS.x;
+                    const y = (pntE.y - pntS.y) * ((i * step) / dis) + pntS.y;
+                    const z = (pntE.z - pntS.z) * ((i * step) / dis) + pntS.z;
                     pnts.push(new Cesium.Cartesian3(x, y, z));
                 }
             }
-            pnts.push(pnt_e);
+            pnts.push(pntE);
         }
         return pnts;
     }
 
     /**
      * 生成随机数
+     * @function module:客户端公共方法.CommonFuncManager.prototype.generateRandom
      */
-    generateRandom() {
-        let guid = "";
-        for (let i = 1; i <= 32; i++) {
-            let n = Math.floor(Math.random() * 16.0).toString(16);
+    static generateRandom() {
+        let guid = '';
+        for (let i = 1; i <= 32; i += 1) {
+            const n = Math.floor(Math.random() * 16.0).toString(16);
             guid += n;
-            if ((i == 8) || (i == 12) || (i == 16) || (i == 20))
-                guid += "-";
+            if (i === 8 || i === 12 || i === 16 || i === 20) guid += '-';
         }
         return guid;
     }
 
     /**
      * 根据地形设置二维坐标的高程值
-     * @param  {CesiumTerrainProvider} TerrainProvider 地形
-     * @param  {Number} level 以地形的级数为基准
-     * @param  {Array<Cartesian2>} positions 需设置高程的二维坐标点序列
-     * @return {function}  设置成功后的回调
+     * @param {CesiumTerrainProvider} TerrainProvider 地形
+     * @param {Number} level 以地形的级数为基准
+     * @param {Array<Cartesian2>} positions 需设置高程的二维坐标点序列
+     * @returns {Function} 设置成功后的回调
      */
     setZValueByTerrain(terrainProvider, level, positions, ellipsoid, callback) {
-        let cartographics = [];
+        const cartographics = [];
         if (positions != null && positions.length > 0) {
-            for (let i = 0; i < positions.length; i++) {
-                let cartographic = ellipsoid.cartesianToCartographic(Cesium.Cartesian3.fromDegrees(positions[i]['x'], positions[i]['y'], 0, ellipsoid));
+            for (let i = 0; i < positions.length; i += 1) {
+                const cartographic = ellipsoid.cartesianToCartographic(Cesium.Cartesian3.fromDegrees(positions[i].x, positions[i].y, 0, ellipsoid));
                 cartographics.push(cartographic);
             }
         }
 
-        let promise = Cesium.sampleTerrain(terrainProvider, level, cartographics).then( updatedPositions => {
-            let cartesianPositions = this.ellipsoid.cartographicArrayToCartesianArray(updatedPositions);
-            if (typeof callback == 'function') {
+        Cesium.sampleTerrain(terrainProvider, level, cartographics).then((updatedPositions) => {
+            const cartesianPositions = this.ellipsoid.cartographicArrayToCartesianArray(updatedPositions);
+            if (typeof callback === 'function') {
                 callback(cartesianPositions);
             }
         });
     }
 }
-
-/**
- * 计算三点的角度（0-180之间）
- * @param {*} p1  第一个点
- * @param {*} p2 第二个点
- * @param {*} p3 第三个点
- */
-function calAngleOf3Pnt(p1, p2, p3) {
-    let p =
-        (p1[0] - p2[0]) * (p3[0] - p2[0]) +
-        (p1[1] - p2[1]) * (p3[1] - p2[1]) +
-        (p1[2] - p2[2]) * (p3[2] - p2[2]);
-    let a = Math.sqrt(
-        Math.pow(p2[0] - p1[0], 2) +
-            Math.pow(p2[1] - p1[1], 2) +
-            Math.pow(p2[2] - p1[2], 2)
-    );
-    let b = Math.sqrt(
-        Math.pow(p3[0] - p2[0], 2) +
-            Math.pow(p3[1] - p2[1], 2) +
-            Math.pow(p3[2] - p2[2], 2)
-    );
-    let angle = Math.acos(p / (a * b)); 
-    return (angle * 180) / Math.PI;
-};
 
 CesiumZondy.Manager.CommonFuncManager = CommonFuncManager;

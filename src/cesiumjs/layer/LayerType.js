@@ -1,4 +1,4 @@
-import {CesiumZondy} from "../core/Base";
+import { CesiumZondy } from '../core/Base';
 
 /**
  * 描述图层类型.
@@ -8,7 +8,7 @@ import {CesiumZondy} from "../core/Base";
  *
  * @see Layer#type
  */
-let LayerType = {
+const LayerType = {
     /**
      * 未知类型.
      *
@@ -55,7 +55,7 @@ let LayerType = {
      * @type {Number}
      * @constant
      */
-    M3DLAYER: 10,
+    M3DLAYER: 10
 };
 
 export default Object.freeze(LayerType);
