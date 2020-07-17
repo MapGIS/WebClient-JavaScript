@@ -5,31 +5,39 @@ export const Headers = [
     menus: [
       {
         title: "概述",
-        links: [
-          [
-            "核心服务",
-            "详细服务",
-            "插件列表",
-            "调用方式",
-            "四大引擎选择",
-            "下载",
-          ],
-          ["详细图表", "插件标签", "提交bug", "其他"],
-        ],
+        links: [["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]],
         routes: [
           [
             "/total/core",
             "/total/detail",
-            "/total/plugins",
             "/total/use",
             "/total/select",
             "/total/download",
           ],
+        ],
+      },
+      {
+        title: "插件",
+        links: [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
+        routes: [
           [
+            "/total/plugins",
             "/total/detailChart",
             "/total/pluginTags",
             "/total/bugCommit",
             "/total/other",
+          ],
+        ],
+      },
+      {
+        title: "协议",
+        links: [["epsg", "ogc", "geojson", "socket"]],
+        routes: [
+          [
+            "/standard/epsg",
+            "/standard/ogc",
+            "/standard/geojson",
+            "/standard/socket",
           ],
         ],
       },
@@ -55,7 +63,7 @@ export const Headers = [
             "客户端-Echarts",
             "客户端-MapV",
             "客户端空间分析",
-            "国际化",
+            /* "国际化", */
           ],
         ],
         routes: [
@@ -63,7 +71,7 @@ export const Headers = [
             "/gallery/cesium#m3d",
             "/gallery/cesium#third",
             "/gallery/cesium#ogc",
-            "/gallery/cesium#dem",
+            "/gallery/cesium#mapgis",
             "/gallery/cesium#scene",
           ],
           [
@@ -78,7 +86,7 @@ export const Headers = [
             "/gallery/cesium#clientView_Echarts",
             "/gallery/cesium#clientView_MapV",
             "/gallery/cesium#clientAnalysis",
-            "/gallery/cesium#globe",
+            /* "/gallery/cesium#globe", */
           ],
         ],
       },
@@ -260,7 +268,7 @@ export const Headers = [
 export const SubHeader = [
   {
     title: "开发指南",
-    active: 'Cesium',
+    active: "Cesium",
     menus: [
       {
         title: "Cesium",
@@ -540,7 +548,7 @@ export const MobileHeadersOrigin = [
 export const MobileSubHeader = [
   {
     title: "首页",
-    active: '功能',
+    active: "功能",
     menus: [
       {
         title: "功能",

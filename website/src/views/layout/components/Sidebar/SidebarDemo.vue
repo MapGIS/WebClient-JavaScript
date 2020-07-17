@@ -2,10 +2,10 @@
   <div class="sidebar-demo-wrapper">
     <el-menu
       mode="vertical"
-      @select="handleSelect"
       :show-timeout="200"
       :default-openeds="defaultOpeneds"
       :default-active="defaultActive"
+      @select="handleSelect"
       @open="handleOpen"
       @close="handleOpen"
     >
@@ -90,6 +90,10 @@ export default {
     background: #f4f7fb;
   }
   .el-menu-item {
+    text-decoration: none !important;
+    font-size: 12px;
+    height: 36px !important;
+    line-height: 36px !important;
     border-left: 7px solidrgba(49, 225, 230, 1);
   }
   /* .el-menu-item .is-active {

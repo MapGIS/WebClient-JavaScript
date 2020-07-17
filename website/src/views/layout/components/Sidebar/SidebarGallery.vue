@@ -2,7 +2,7 @@
   <div class="sidebar-gallery-wrapper">
     <el-menu
       mode="vertical"
-      :collapse="false"
+      :show-timeout="200"
       :default-openeds="defaultOpeneds"
       :default-active="defaultActive"
       @select="handleSelect"
@@ -66,7 +66,7 @@ export default {
     },
     handleOpen (key, keys) {
       let href = window.location.href.split("#");
-      let localte ='';
+      let localte = '';
       keys.forEach(k => {
         localte = localte + '#' + k
       });
@@ -85,9 +85,12 @@ export default {
     background: #f4f7fb;
   }
   .el-menu-item {
+    font-size: 12px;
+    height: 36px !important;
+    line-height: 36px !important;
     border-left: 7px solidrgba(49, 225, 230, 1);
   }
-  .is-opened:last-child  {
+  .is-opened:last-child {
     /* background: linear-gradient(
       90deg,
       rgba(71, 148, 250, 1),
@@ -104,7 +107,7 @@ export default {
     );
   }
   .el-menu-item.is-active {
-/*     background: linear-gradient(
+    /*     background: linear-gradient(
       90deg,
       rgba(71, 148, 250, 1),
       rgba(49, 225, 230, 1)

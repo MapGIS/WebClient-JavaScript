@@ -26,7 +26,7 @@
       </el-drawer>
       <el-aside
         class="aside-scroll-content"
-        width="280px"
+        width="220px"
         v-else
       >
         <el-scrollbar
@@ -40,14 +40,8 @@
           />
         </el-scrollbar>
       </el-aside>
-      <el-container>
+      <el-container class="main-container-content">
         <el-main class="main-scroll-content">
-          <gallery-anchor
-            v-if="!mobile"
-            class="fix-anchor"
-            :anchors="heightHash"
-            :active="scrollActive"
-          />
           <div
             class="mobili-drawer-open"
             @click="handleDrawer"
@@ -57,9 +51,9 @@
           </div>
           <el-scrollbar
             ref="componentScrollBar"
-            class="element-scroll-content"
+            :class="{'gallery-scroll-content': true, 'gallery-scroll-content-mobile': mobile}"
             wrapStyle="overflow-x: hidden;"
-            viewStyle="overflow-x: hidden;display:grid;"
+            viewStyle="overflow-x: hidden;display:inline-grid;"
           >
             <el-backtop></el-backtop>
             <gallery-card
@@ -70,6 +64,12 @@
               <main-footer></main-footer>
             </el-footer>
           </el-scrollbar>
+          <gallery-anchor
+            v-if="!mobile"
+            class="gallery-fix-anchor"
+            :anchors="heightHash"
+            :active="scrollActive"
+          />
         </el-main>
       </el-container>
     </el-container>
@@ -299,28 +299,52 @@ export default {
     padding: 0 0px;
   }
   .main-scroll-content {
+    display: flex;
+    background: #ffffff;
     height: calc(100vh - 80px);
     /*   .el-scrollbar__view {
     overflow-y: hidden;
     display: grid !important;
   } */
   }
+  .element-scroll-content {
+    height: calc(100vh - 80px);
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
   .aside-scroll-content {
     height: calc(100vh - 80px);
     overflow-x: hidden;
   }
-  .fix-anchor {
-    pointer-events: none;
-    z-index: 1000;
-    position: absolute;
-    top: 90px;
-    right: 20px;
+  .gallery-fix-anchor {
+    // float: right;
+    width: 120px;
     padding: 16px 20px;
-    background: #252d45cc;
-    border-radius: 6px;
+    background: #f4f7fb;
+    border-left: solid 1px #e6e6e6;
+    border-radius: 0px;
+
+    -webkit-box-sizing: unset;
+    box-sizing: unset;
+
+    ul {
+      display: block;
+      list-style-type: disc;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      padding-inline-start: 40px;
+    }
   }
-  .element-scroll-content {
+  .gallery-scroll-content {
     height: calc(100vh - 80px);
+    width: calc(100vw - 220px - 120px);
+    overflow-x: hidden;
+  }
+  .gallery-scroll-content-mobile {
+    height: calc(100vh - 80px);
+    width: calc(100vw) !important;
     overflow-x: hidden;
   }
   .el-main {

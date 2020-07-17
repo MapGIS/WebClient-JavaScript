@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="webclient-card-group">
     <el-col :span="24">
       <el-col
         :span="24"
@@ -12,7 +12,6 @@
         >
           <el-tag
             v-if="secondname"
-            type="info"
             effect="light"
           >{{ secondname }}</el-tag>
           <el-divider
@@ -103,18 +102,24 @@ export default {
 };
 </script>
 
-<style lang="less">
-.gallery-divider {
-  background: transparent;
+<style lang="scss">
+.webclient-card-group {
+  .el-tag.el-tag--info {
+    background-color: #f4f4f500;
+    border-color: #e9e9eb;
+    color: #909399;
+  }
+  .gallery-divider {
+    background: transparent;
 
-  /* .el-divider--horizontal {
+    /* .el-divider--horizontal {
     display: block;
     height: 10px;
     width: 100%;
     margin: 24px 6px;
   } */
 
-  /* .el-divider {
+    /* .el-divider {
     background: linear-gradient(
       90deg,
       rgba(71, 148, 250, 1),
@@ -122,74 +127,75 @@ export default {
     );
     position: relative;
   } */
-}
-.col-divider-style {
-  margin-top: 16px;
-  margin-bottom: 10px;
-}
+  }
+  .col-divider-style {
+    margin-top: 16px;
+    margin-bottom: 10px;
+  }
 
-.card-breadcrumb-content {
-  width: calc(100vw - 200px);
-}
-.title {
-  /* background: #f0f0f0; */
-  margin-top: 30px;
-  margin-bottom: 5px;
-  border-radius: 3px;
-}
+  .card-breadcrumb-content {
+    width: calc(100vw - 200px);
+  }
+  .title {
+    /* background: #f0f0f0; */
+    margin-top: 30px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+  }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
 
-.clearfix:after {
-  clear: both;
-}
+  .clearfix:after {
+    clear: both;
+  }
 
-.card-group {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
+  .card-group {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
 
-.card-breadcrumb {
-  height: 36px;
-  width: 100%;
-  background: #f00;
-  margin-left: 10px;
-  margin-top: 15px;
-}
+  .card-breadcrumb {
+    height: 36px;
+    width: 100%;
+    background: #f00;
+    margin-left: 10px;
+    margin-top: 15px;
+  }
 
-.time {
-  font-size: 13px;
-  color: #999;
-}
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
 
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-}
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
 
-.button {
-  padding: 0;
-  float: right;
-  font-size: 13px;
-}
+  .button {
+    padding: 0;
+    float: right;
+    font-size: 13px;
+  }
 
-.float-card {
-  float: left;
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
+  .float-card {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
 
-.card-image {
-  height: 100%;
-  width: 300px;
+  .card-image {
+    height: 100%;
+    width: 300px;
+  }
 }
 </style>

@@ -4,27 +4,28 @@
     @mouseover="handleInStyle"
     @mouseout="handleOutStyle"
   >
-    <router-link :to="index">
-      <img
-        :src="src"
-        class="image"
-      />
-      <div class="title">
-        {{title}}
-      </div>
-      <div class="subtitle">
-        {{subtitle}}
-      </div>
-      <div class="actions">
-        <router-link :to="routeGallery">
-          <span>示例</span>
-        </router-link>
-        <el-divider direction="vertical"></el-divider>
-        <a :href="routeAPI" target="_blank">
-          <span>API</span>
-        </a>
-      </div>
-    </router-link>
+    <img
+      :src="src"
+      class="image"
+    />
+    <div class="title">
+      {{title}}
+    </div>
+    <div class="subtitle">
+      {{subtitle}}
+    </div>
+    <div class="actions">
+      <router-link :to="routeGallery">
+        <span>示例</span>
+      </router-link>
+      <el-divider direction="vertical"></el-divider>
+      <a
+        :href="routeAPI"
+        target="_blank"
+      >
+        <span>API</span>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -38,7 +39,7 @@ export default {
     subtitle: String,
     index: String,
     routeGallery: String,
-    routeAPI: String  
+    routeAPI: String
   },
   mounted () {
     this.src = this.icon;

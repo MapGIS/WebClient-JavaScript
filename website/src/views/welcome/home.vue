@@ -32,8 +32,21 @@
             v-for="d in detailMains"
             :key="d.title"
           >
-            <div class="title">{{d.title}}</div>
-            <span>{{d.subtitle}}</span>
+            <a
+              v-if="d.link"
+              :href="d.link"
+              target="_blank"
+            >
+              <div class="title">{{d.title}}</div>
+              <span>{{d.subtitle}}</span>
+            </a>
+            <router-link
+              v-if="d.index"
+              :to="d.index"
+            >
+              <div class="title">{{d.title}}</div>
+              <span>{{d.subtitle}}</span>
+            </router-link>
           </div>
         </div>
       </div>
@@ -155,9 +168,13 @@
             <el-card>
               <h4>{{h.title}}</h4>
               <a
-                :href="h.link"
+                v-for="l in h.link"
+                :key="l"
+                :href="l"
                 target="_blank"
-              >{{h.link}}</a>
+              >
+                <p>{{l}}</p>
+              </a>
               <p class="client-timeline-p">{{h.detail}}</p>
             </el-card>
           </el-timeline-item>

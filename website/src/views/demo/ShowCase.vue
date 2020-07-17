@@ -32,7 +32,7 @@
       </el-drawer>
       <el-aside
         class="aside-scroll-content"
-        width="280px"
+        width="220px"
         v-if="!fullScreen && !mobile"
       >
         <el-scrollbar

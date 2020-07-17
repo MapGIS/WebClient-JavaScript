@@ -45,15 +45,17 @@ export default {
     }
   }
   .el-timeline-item__node--normal {
-    left: -3px;
-    width: 12px;
-    height: 12px;
+    left: -1px;
+    width: 8px;
+    height: 8px;
   }
   .el-timeline-item__node {
     border: 2px solid #ffffff;
   }
   .el-timeline-item__content {
-    color: #ffffff;
+    color: #303133;
+    font-size: 12px;
+    // max-width: 96px;
   }
 }
 </style>

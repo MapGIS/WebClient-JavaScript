@@ -1,12 +1,23 @@
 <template>
   <router-link :to="linkUrl">
-    <el-menu-item class="submenu-item-span" v-if="child.name" 
-      :key="child.file" :index="child.file">
+    <el-menu-item
+      class="submenu-item-span"
+      v-if="child.name"
+      :key="child.file"
+      :index="child.file"
+    >
       <div class="menu-item-left">
-        <IconFont v-if="child&&child.diffcult" class="icon" :type="getDiffIcon(child.diffcult)"></IconFont>
+        <IconFont
+          v-if="child&&child.diffcult"
+          class="icon"
+          :type="getDiffIcon(child.diffcult)"
+        ></IconFont>
       </div>
       <div class="menu-item-right">
-        <span v-if="child.name" slot="title">{{child.name}}</span>
+        <span
+          v-if="child.name"
+          slot="title"
+        >{{child.name}}</span>
       </div>
     </el-menu-item>
   </router-link>
@@ -30,7 +41,7 @@ export default {
   components: {
     IconFont
   },
-  data() {
+  data () {
     return {
       linkUrl: this.getLinkUrl(
         this.type,
@@ -65,7 +76,7 @@ export default {
     }
   },
   methods: {
-    getLinkUrl(type, file, firstkind, secondkind) {
+    getLinkUrl (type, file, firstkind, secondkind) {
       var baseUrl = "/demo/" + type + "/" + firstkind + "/";
       if (secondkind !== undefined) {
         baseUrl = baseUrl + secondkind + "/" + file;
@@ -74,7 +85,17 @@ export default {
       }
       return baseUrl;
     },
-    getDiffIcon(diffcult) {
+    getLinkObject (type, file, firstkind, secondkind) {
+      var baseUrl = "/demo/" + type + "/" + firstkind + "/";
+      if (secondkind !== undefined) {
+        baseUrl = baseUrl + secondkind + "/" + file;
+      } else {
+        baseUrl += file;
+      }
+      let route = { path: baseUrl };
+      return route;
+    },
+    getDiffIcon (diffcult) {
       let icon = "iconstar1-vue";
       if (diffcult == 1) {
         icon = "iconstar1-vue";
@@ -97,6 +118,10 @@ export default {
 .submenu-item-span {
   width: 100%;
   display: flex;
+  .menu-item-row {
+    width: 100%;
+    height: 100%;
+  }
 
   .menu-item-left {
     float: left;
