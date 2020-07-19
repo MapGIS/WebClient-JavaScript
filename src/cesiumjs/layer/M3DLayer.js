@@ -74,20 +74,20 @@ export default class M3DLayer extends BaseLayer {
      * 添加m3d文档服务
      * @function module:客户端数据服务.M3DLayer.prototype.append
      * @param {String} url 服务地址
-     * @param {Object} optionsParam 参数
+     * @param {Object} optionsParam 包含以下参数
      * @param {Boolean} [optionsParam.autoReset = true] 是否自动定位
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {Function} [optionsParam.loaded = function] 回调函数
      * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
      * @param {Boolean} [optionsParam.showBoundingVolume = false] 是否显示包围盒
      * @param {Number} [optionsParam.maximumScreenSpaceError = 16] 用于控制模型显示细节  值较大将会渲染更少的贴图,进而可以提高性能,而较低的值将提高视觉质量
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileset.html?classFilter=3dtile}
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileset.html}
      * @returns [Array<MapGISM3DSet>] 返回m3d图层对象数组,长度为图层对象个数
      * @example
      * function callBackfunction(layer){
      * console.log(layer)
      * }
-     * result = m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D, {
+     * let result = m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D, {
      * autoReset:false,
      * synchronous:true,
      * showBoundingVolume:false,
@@ -164,7 +164,7 @@ export default class M3DLayer extends BaseLayer {
      * 添加m3d服务图层（mongodb）
      * @function module:客户端数据服务.M3DLayer.prototype.appendM3dCacheFromMangoDB
      * @param {String} url 服务地址（发布的m3d缓存服务）
-     * @param {Object} optionsParam 参数
+     * @param {Object} optionsParam 包含以下参数
      * @param {Boolean} [optionsParam.autoReset = true] 是否自动复位
      * @param {Function} [optionsParam.loaded = function] 回调函数
      * @param {DefaultProxy} 代理

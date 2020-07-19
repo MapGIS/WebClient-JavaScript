@@ -81,7 +81,7 @@ export default class CommonFuncManager {
      * @param {Position} position 屏幕坐标点
      * @returns {Position} 三维经纬度坐标点(单位弧度)
      * @example
-     * let result = commfun.screenPositionToCartesian(position);
+     * let result = commfun.screenPositionToCartographic(position);
      * let lng=Cesium.Math.toDegrees(result.longitude);//转为经度值
      * let lat=Cesium.Math.toDegrees(result.latitude);//转为纬度值
      */
@@ -107,6 +107,8 @@ export default class CommonFuncManager {
      * @function module:客户端公共方法.CommonFuncManager.prototype.screenPositionToCartesian
      * @param {Position} position 屏幕坐标点
      * @returns {Position} 三维笛卡尔坐标点
+     * @example
+     * let result = commfun.screenPositionToCartesian(movement.position);
      */
     screenPositionToCartesian(position) {
         let cartesianPosition = null;
@@ -534,7 +536,7 @@ export default class CommonFuncManager {
      * @function module:客户端公共方法.CommonFuncManager.prototype.calcParabola
      * @param {Object} options 参数
      * @param {Array} [options.position] 经纬度点数组
-     * @param {Array} [options.height] 高度
+     * @param {Number} [options.height] 高度
      * @param {Number} [options.num] 数量
      * @returns {Array} 点数组结果
      * @example
@@ -661,6 +663,7 @@ export default class CommonFuncManager {
 
     /**
      * 根据地形设置二维坐标的高程值
+     * @function module:客户端公共方法.CommonFuncManager.prototype.setZValueByTerrain
      * @param {CesiumTerrainProvider} TerrainProvider 地形
      * @param {Number} level 以地形的级数为基准
      * @param {Array<Cartesian2>} positions 需设置高程的二维坐标点序列

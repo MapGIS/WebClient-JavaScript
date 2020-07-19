@@ -212,9 +212,9 @@ export default class LabelLayer extends BaseLayer {
      * @param {String} description 描述
      * @param {Cartesian3} position 位置
      * @param {BillboardGraphics} billboardGraphics 图片对象
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/BillboardGraphics.html?classFilter=billboard } 图片对象参数
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/BillboardGraphics.html } 图片对象参数
      * @param {LabelGraphics} labelGraphics 文本对象
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/LabelGraphics.html?classFilter=LabelGraphics } 文本对象参数
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/LabelGraphics.html } 文本对象参数
      * @example
      * let labelLayer = new LabelLayer({viewer:viewer});
      * let labelGraphics = { //文字标签

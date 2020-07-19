@@ -47,7 +47,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * 添加google地图服务(扩展)：
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendGoogleMapExt
      * @param {Object} optionsParam 参数
-     * @param {Object} [optionsParam.ptype] {ptype:'s'} 类型
+     * @param {Object} optionsParam.ptype {ptype:'s'} 类型
      * s:卫星地图
      * h:skeleton map light
      * m:全地图
@@ -103,7 +103,8 @@ export default class ThirdPartyLayer extends BaseLayer {
     /**
      * 添加baidu地图服务:提供ptype='tile'和ptype='sate'、 'traffic'三种百度地图（瓦片和卫星、交通）
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendBaiduMap
-     * @param {Object} optionsParam {ptype:'sate'}
+     * @param {Object} optionsParam 包含以下参数
+     * @param {String} optionsParam.ptype 类型 ptype='tile'和 ptype='sate'以及'traffic'
      * @returns 瓦片层对象
      * @example
      * let tilelayer = thirdLayer.appendBaiduMap({ptype:'sate'});
@@ -153,7 +154,7 @@ export default class ThirdPartyLayer extends BaseLayer {
     /**
      * 添加天地图(经纬度)
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendTDTuMap
-     * @param {Object} options 参数
+     * @param {Object} optionsParam 包含以下参数
      * @param {String} optionsParam.ptype 地图类型 'vec'矢量 'img'影像 'ter'地形
      * @param {String} optionsParam.token 开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
      * @returns {ImageryLayer} 瓦片层对象
@@ -209,6 +210,7 @@ export default class ThirdPartyLayer extends BaseLayer {
     /**
      * 通过wmts服务添加天地图
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendTDTuMapByWMTS
+     * @param {Object} optionsParam 包含以下参数
      * @param {String} optionsParam.ptype 地图类型 'img':影像 'ter':地形 'cta':注记
      * @param {String} optionsParam.token 天地图的token
      * @returns {ImageryLayer} 瓦片层对象

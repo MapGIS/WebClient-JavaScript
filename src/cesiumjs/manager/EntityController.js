@@ -27,7 +27,7 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 添加点
-     * @function module:客户端公共方法.EntityController.prototype.appendPoint
+     * @function module:客户端可视化.EntityController.prototype.appendPoint
      * @param  {Number} lat 经度
      * @param  {Number} lon 纬度
      * @param  {Number} height 高程
@@ -37,6 +37,7 @@ export default class EntityController extends BaseLayer {
      * @param  {Color}  outlineColor 外边线颜色
      * @param  {Number} outlineWidth 边线宽度
      * @param  {String} description 属性描述信息
+     * @returns {Entity}    返回点对象 移除通过removeEntity(entity)
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let color1 = new Cesium.Color(1, 0, 0, 1);
@@ -45,7 +46,6 @@ export default class EntityController extends BaseLayer {
      * // 跳转到点位置
      * viewer.flyTo(point);
      *
-     * @returns {Entity}    返回点对象 移除通过removeEntity(entity)
      */
     appendPoint(lat, lon, height, name, pixelSize, color, outlineColor, outlineWidth, description) {
         if (undefined === this.viewer) {
@@ -68,14 +68,14 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 通用添加点
-     * @function module:客户端公共方法.EntityController.prototype.appendPointComm
+     * @function module:客户端可视化.EntityController.prototype.appendPointComm
      * @param  {Number} lat 经度
      * @param  {Number} lon 纬度
      * @param  {Number} height 高程
      * @param  {String} name 名称
      * @param  {String} description 属性描述信息
      * @param  {Object} options entity参数信息对象
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/PointGraphics.html?classFilter=point } 参数信息
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/PointGraphics.html } 参数信息
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let entity = entityController.appendPointComm(115.2, 31, 200,'点','通用点',Cesium.Color.BLUE,{outlineColor:Cesium.Color.WHITE,outlineWidth:1});
@@ -97,8 +97,9 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 添加
-     * @function module:客户端公共方法.EntityController.prototype.appendGraphics
+     * @function module:客户端可视化.EntityController.prototype.appendGraphics
      * @param {Object} options 包含entity中相关选项设置
+     * @returns {Entity} 返回点对象 移除通过removeEntity(entity)
      *{
      *    id:
      *   name:
@@ -110,7 +111,6 @@ export default class EntityController extends BaseLayer {
      *   viewFrom:
      *   parent:
      *}
-     * @returns {Entity}    返回点对象 移除通过removeEntity(entity)
      */
     appendGraphics(options) {
         if (!Cesium.defined(options)) {
@@ -123,7 +123,7 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 画多边形区
-     * @function module:客户端公共方法.EntityController.prototype.appendPolygon
+     * @function module:客户端可视化.EntityController.prototype.appendPolygon
      * @param {String} name  名称
      * @param {Array} points  点数组 顺序是逆时针
      * @param {Color} fillColorParam  区填充色 默认白色半透明
@@ -216,7 +216,7 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 添加带洞贴地区
-     * @function module:客户端公共方法.EntityController.prototype.appendHolePolygonOnTerrain
+     * @function module:客户端可视化.EntityController.prototype.appendHolePolygonOnTerrain
      * @param {String} name 名称
      * @param {Array} latLonsOut 外圈点
      * @param {Array} latLonsIn 内圈点
@@ -443,10 +443,10 @@ export default class EntityController extends BaseLayer {
      * 根据给定点画贴地多边形
      * @function module:客户端公共方法.EntityController.prototype.appendGroundPolygon
      * @param  {Array} outPnts   外圈坐标数组（经纬度）
-     * @param  {Array} inerPnts <Array<>> inerPnts 内圈坐标数组（经纬度）
+     * @param  {Array} innerPnts <Array<>> inerPnts 内圈坐标数组（经纬度）
      * @param  {Color} color     填充颜色(默认不指定时为蓝色) 通过getColor(red, green, blue, alpha)
      * @param  {Options} 扩展参数
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/GroundPrimitive.html?classFilter=GroundPrimitive }
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/GroundPrimitive.html }
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let latLon_out = [121.1550, 23.8902, 121.1668, 23.8800, 121.1836, 23.8902, 121.1696, 23.91];
@@ -454,19 +454,19 @@ export default class EntityController extends BaseLayer {
      * var color =  new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5);
      * let entity = entityController.appendGroundPolygon(latLon_out,lanLon_in,color);
      */
-    appendGroundPolygon(outPnts, inerPnts, color, options) {
+    appendGroundPolygon(outPnts, innerPnts, color, options) {
         let polygonGeom = null;
         if (outPnts === undefined || outPnts.length <= 0) {
             return null;
         }
-        if (inerPnts === null || inerPnts.length <= 0) {
+        if (innerPnts === null || innerPnts.length <= 0) {
             polygonGeom = new Cesium.PolygonGeometry({
                 polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(outPnts))
             });
         } else {
             const holePolygon = [];
-            for (let i = 0; i < inerPnts.length; i += 1) {
-                holePolygon.push(new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(inerPnts[i])));
+            for (let i = 0; i < innerPnts.length; i += 1) {
+                holePolygon.push(new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(innerPnts[i])));
             }
             polygonGeom = new Cesium.PolygonGeometry({
                 polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(outPnts), holePolygon)

@@ -21,9 +21,9 @@ export default class OGCLayer extends BaseLayer {
      * @function module:客户端数据服务.OGCLayer.prototype.appendWMSTile
      * @param {String} tileUrl 服务地址
      * @param {String} layerName 图层名
-     * @param {Object} optionsParam 附加选项
-     * @param {String} optionsParam.version='1.1.0'  版本 默认1.1.0
-     * @param {String} optionsParam.proxy=null  代理
+     * @param {Object} optionsParam 附加选项,包含以下参数
+     * @param {String} [optionsParam.version='1.1.0']  版本 默认1.1.0
+     * @param {String} [optionsParam.proxy=null]  代理
      * @returns {ImageryLayer} 瓦片层对象
      * @example
      * let ogcLayer = new OGCLayer({viewer:viewer});  

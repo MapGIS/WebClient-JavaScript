@@ -3,6 +3,10 @@
  * 定义命名空间
  * 提供公共模块
  */
+import './analysis';
+import './common';
+import './event';
+import './scene';
 
 window.CesiumZondy = window.CesiumZondy || {};
 

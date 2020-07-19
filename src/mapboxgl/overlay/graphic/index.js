@@ -1,1 +1,0 @@
-export {Graphic} from './Graphic'

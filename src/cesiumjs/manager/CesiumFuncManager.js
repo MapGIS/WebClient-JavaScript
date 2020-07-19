@@ -58,7 +58,7 @@ export default class CesiumFuncManager extends LayerManager {
      * @param {String} url 路径
      * @param {Function} onsuccess 成功回调
      * @param {Object} options 扩展参数
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileset.html?classFilter=Cesium3DTileset }
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileset.html }
      * @returns {Object} kml数据对象
      * @example
      * function load(layer) {
@@ -104,8 +104,8 @@ export default class CesiumFuncManager extends LayerManager {
      * @param {Number} lat 模型坐在纬度
      * @param {Number} height 高度
      * @param {Number} scale 缩放比
-     * @param {Option} 参数
-     * @param {Color} 颜色 
+     * @param {Option} 包含以下参数
+     * @param {Color} [options.color] 颜色 
      * @param {ColorBlendMode} [options.colorBlendMode] 颜色混合模式 Cesium.ColorBlendMode.MIX
      * @param {Number} [options.colorBlendAmount] 颜色混合程度
      * @returns {Object} model 移除通过 removeModel()
@@ -180,8 +180,8 @@ export default class CesiumFuncManager extends LayerManager {
      * 加载Kml、kmz数据
      * @function module:客户端公共方法.CesiumFuncManager.prototype.appendKml
      * @param {String} url 路径
-     * @param {String} options 参数
-     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/KmlDataSource.html?classFilter=KmlDataSource }
+     * @param {Object} options 参数
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/KmlDataSource.html }
      * @returns {KmlDataSource} kml数据对象
      */
     appendKml(url, options, successCall) {

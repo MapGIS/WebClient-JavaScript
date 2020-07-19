@@ -24,7 +24,7 @@ function calcaluteGrade(curValue, stdNearFar) {
  * @category BaseLayer.PopupController
  * @classdesc PopupController  标绘类
  * @description 标绘管理类,实现标绘相关操作
- * @param optionsParam.viewer 场景视窗
+ * @param option.viewer 场景视窗
  */
 export default class PopupController extends BaseLayer {
     constructor(option) {
@@ -59,11 +59,11 @@ export default class PopupController extends BaseLayer {
      * @param {Array} offset [x,y]偏移值，像素单位
      * @param {Function} closeCallback popup的close按钮点击回调函数
      * @param {Object} options 参数
-     * @param {Number} options.scaleByDistance options.scaleByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
+     * @param {Number} [options.scaleByDistance=cameraHeight] options.scaleByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
      * 基于距摄像机距离指定广告牌比例
-     * @param {Number} options.translucencyByDistance options.translucencyByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
+     * @param {Number} [options.translucencyByDistance=cameraHeight] options.translucencyByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
      * 基于距摄像机的距离来指定广告牌的透明度
-     * @param {Number} options.pixelOffsetScaleByDistance options.pixelOffsetScaleByDistance = new Cesium.NearFarScalar(1.5e2, 0.0, 8.0e6, 10.0)
+     * @param {Number} [options.pixelOffsetScaleByDistance=cameraHeight] options.pixelOffsetScaleByDistance = new Cesium.NearFarScalar(1.5e2, 0.0, 8.0e6, 10.0)
      * 基于距摄像机的距离指定广告牌像素偏移
      * @example
      *  let popup = appendPopup('aaa','这是一个测试pop<br/>测试pop<br/>',entity._position._value,[95,0],removePopup)

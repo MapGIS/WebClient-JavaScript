@@ -24,7 +24,7 @@ export default class TerrainLayer extends BaseLayer {
      * @param {Number} sceneIndex 场景索引
      * @param {Number} layerIndex 图层索引
      * @param {DefaultProxy} [options.proxy = defaultProxy] 代理
-     * @param {Object} optionsParam
+     * @param {Object} optionsParam 包含以下参数
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {Number} [optionsParam.scale = 1] 地形缩放比例
      * @param {Object} [optionsParam.range] 地形范围
@@ -57,13 +57,13 @@ export default class TerrainLayer extends BaseLayer {
      * 添加三维场景地形服务
      * @function module:客户端数据服务.TerrainLayer.prototype.append
      * @param {String} url 地形文档服务地址
-     * @param {Object} optionsParam 参数
+     * @param {Object} optionsParam 包含以下参数
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {Function} [optionsParam.loaded = function] 回调函数
      * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
      * @returns 地形层对象
      * @example
-     * terrain = new TerrainLayer(viewer:viewer);
+     * let terrain = new TerrainLayer(viewer:viewer);
      * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain');
      */
     append(url, optionsParam) {
