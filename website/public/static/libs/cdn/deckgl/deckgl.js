@@ -1,11 +1,11 @@
 /*!
  * 
- *     deck.gl.js (https://github.com/SuperMap/deck.gl.git)
+ *     deck.gl.js (https://github.com/Uber/deck.gl.git)
  *     license: MIT
  *     
  *     origin: 'https://github.com/uber/deck.gl.git'
- *     fork: 'https://github.com/SuperMap/deck.gl.git'
- *     branch: 'https://github.com/SuperMap/deck.gl/tree/deck.gl-for-iclient'
+ *     fork: 'https://github.com/Uber/deck.gl.git'
+ *     branch: 'https://github.com/Uber/deck.gl/tree/deck.gl-for-iclient'
  * 
  * 
  */
