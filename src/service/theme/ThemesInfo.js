@@ -7,7 +7,8 @@ import {
 /**
  * 专题图结构信息对象构造函数
  * @class module:专题图服务.ThemesInfo
- * @classdesc Zondy.Object.Theme.ThemesInfo 专题图结构信息对象构造函数
+ * @classdesc 专题图结构信息对象构造函数
+ * @description Zondy.Object.Theme.ThemesInfo 
  * @param {String} [LayerName = ""] 图层名
  * @param {Array} [themeArr = null] 专题图数组 Array<{@link Zondy.Object.Theme.CTheme}>
  */

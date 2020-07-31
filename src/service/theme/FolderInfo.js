@@ -8,7 +8,8 @@ import {
 /**
  * 文件夹信息
  * @class module:专题图服务.FolderInfo
- * @classdesc Zondy.Object.Theme.FolderInfo 文件夹信息
+ * @classdesc 文件夹信息
+ * @description Zondy.Object.Theme.FolderInfo 
  * @param {String} [n = null] 名称
  * @param {Zondy.Object.Theme.FolderInfoAttribute} [att = null] 属性 {@link Zondy.Object.Theme.FolderInfoAttribute}
  */

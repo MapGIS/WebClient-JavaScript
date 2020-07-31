@@ -14,7 +14,8 @@ import {
 /**
  * 单值专题图
  * @class module:专题图服务.CUniqueTheme
- * @classdesc Zondy.Object.Theme.CUniqueTheme 单值专题图
+ * @classdesc 单值专题图
+ * @description Zondy.Object.Theme.CUniqueTheme 
  * @extends CTheme
  * @param {Object} opt_options 属性键值对
  * @param {Zondy.Object.Theme.CThemeInfo} [opt_options.DefaultInfo = null] 缺省专题绘制信息 {@link Zondy.Object.Theme.CThemeInfo}

@@ -11,7 +11,8 @@ import {
 /**
  * 等级符号专题图
  * @class module:专题图服务.CGraduatedSymbolTheme
- * @classdesc Zondy.Object.Theme.CGraduatedSymbolTheme 等级符号专题图
+ * @classdesc 等级符号专题图
+ * @description Zondy.Object.Theme.CGraduatedSymbolTheme
  * @extends CTheme
  * @param {Object} opt_options 属性键值对。
  * @param {Number} [opt_options.BaseValue = 0.000141] 一定大小的符号代表的属性值

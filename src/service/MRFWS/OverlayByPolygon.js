@@ -4,7 +4,8 @@ import {OverlayBase}  from  "./OverlayBase";
 /**
  * 多边形叠加
  * @class module:分析服务.OverlayByPolygon
- * @classdesc Zondy.Service.OverlayByPolygon 多边形叠加
+ * @classdesc 多边形叠加
+ * @description Zondy.Service.OverlayByPolygon
  * @extends Zondy.Service.OverlayBase
  * @param {Object} option 属性键值对
  * @param {String} [option.strGRegionXML = null] 多边形坐标序列化对象

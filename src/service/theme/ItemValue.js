@@ -10,7 +10,8 @@ import {
 /**
  * 分段专题图分段值对象构造函数
  * @class module:专题图服务.ItemValue
- * @classdesc Zondy.Object.Theme.ItemValue 分段专题图分段值对象构造函数
+ * @classdesc 分段专题图分段值对象构造函数
+ * @description Zondy.Object.Theme.ItemValue 
  * @param {Object} opt_options 属性键值对
  * @param {String} [startValue = ""] 开始值
  * @param {String} [endValue = ""] 结束值

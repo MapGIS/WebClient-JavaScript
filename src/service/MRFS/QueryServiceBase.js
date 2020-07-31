@@ -1,14 +1,15 @@
-﻿import {Zondy} from '../common/Base';
-import {extend}  from  "../common/Util";
-import {copyExcluce}  from  "../common/Util";
-import {ServiceBase}  from  "../ServiceBase";
-import {FeatureSet}  from  "../common/FeatureSet";
-import {QueryParameter}  from  "./QueryParameter";
-import {IgsServiceBase}  from  "../baseserver/IServiceBase";
+﻿import { Zondy } from '../common/Base';
+import { extend } from '../common/Util';
+import { copyExcluce } from '../common/Util';
+import { ServiceBase } from '../ServiceBase';
+import { FeatureSet } from '../common/FeatureSet';
+import { QueryParameter } from './QueryParameter';
+import { IgsServiceBase } from '../baseserver/IServiceBase';
 /**
  * @author 基础平台/研究院 陈琪
  * @class module:要素服务.QueryServiceBase
- * @classdesc Zondy.Service.QueryServiceBase 查询服务基类
+ * @classdesc 查询服务基类
+ * @description Zondy.Service.QueryServiceBase
  * @extends  ServiceBase
  * @param option - {Object} 属性键值对。
  * @param {Object} [option.resultCallBack =null] 返回结果回调
@@ -18,7 +19,7 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 class QueryServiceBase extends ServiceBase {
     constructor(option) {
         var options = option || {};
-        options.baseUrl = "igs/rest/mrfs";
+        options.baseUrl = 'igs/rest/mrfs';
         super(options);
         /**
          * @private
@@ -42,7 +43,7 @@ class QueryServiceBase extends ServiceBase {
          * @type {String}
          * @description  请求方式 GET|POST
          */
-        this.requestType = options.requestType !== undefined ? options.requestType : "GET";
+        this.requestType = options.requestType !== undefined ? options.requestType : 'GET';
     }
 
     /**
@@ -87,14 +88,13 @@ class QueryServiceBase extends ServiceBase {
                 processFailed: onError
             }
         });
-        if (way === "GET") {
+        if (way === 'GET') {
             service.processAsync();
-        }
-        else {
+        } else {
             service.processAsync({
                 method: 'POST',
                 data: JSON.stringify(dataObject),
-                headers: {'Content-Type': 'text/plain;charset=UTF-8'}
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
             });
         }
     }
@@ -110,35 +110,33 @@ class QueryServiceBase extends ServiceBase {
         if (this.queryParam === null) {
             return;
         }
-        var fullRestUrl = "";
+        var fullRestUrl = '';
 
         if (this.queryParam instanceof QueryParameter) {
             fullRestUrl = this.getFullUrl();
-        }
-        else {
+        } else {
             return;
         }
-        var way = "";
+        var way = '';
         var dataObject = null;
         if (!requestType) {
             if (!this.requestType) {
-                way = "GET";
+                way = 'GET';
             } else {
                 way = this.requestType;
             }
         } else {
             way = requestType;
         }
-        if (way.toUpperCase() === "GET") {
-            fullRestUrl += "?" + this.queryParam.getParameterURL();
+        if (way.toUpperCase() === 'GET') {
+            fullRestUrl += '?' + this.queryParam.getParameterURL();
             // 必须encodeURI,避免url中出现特殊字符导致请求出错
             fullRestUrl = encodeURI(fullRestUrl);
-        }
-        else {
+        } else {
             dataObject = this.queryParam.getParameterObject();
         }
         this.restQuery(fullRestUrl, dataObject, onSuccess, way, onError, this.queryParam.resultFormat.toLowerCase());
     }
 }
-export {QueryServiceBase};
+export { QueryServiceBase };
 Zondy.Service.QueryServiceBase = QueryServiceBase;

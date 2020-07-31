@@ -8,7 +8,8 @@ import {
 /**
  * 专题图信息统计类
  * @class module:专题图服务.CChartThemeInfo
- * @classdesc Zondy.Object.Theme.CChartThemeInfo专题图信息统计类
+ * @classdesc 专题图信息统计类
+ * @description Zondy.Object.Theme.CChartThemeInfo
  * @extends CThemeInfo
  * @param {Object} options 属性键值对。
  * @param {String} expression 字段表达式

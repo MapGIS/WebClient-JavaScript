@@ -4,7 +4,8 @@ import {QueryFeatureStruct}  from  "./QueryFeatureStruct";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.QueryByLayerParameter
- * @classdesc Zondy.Service.QueryByLayerParameter 矢量图层参数查询类
+ * @classdesc 矢量图层参数查询类
+ * @description Zondy.Service.QueryByLayerParameter
  * @extends Zondy.Service.QueryParameter
  * @param gdbp -{Object} 对象类GDBP地址。<br>
  * @param option - {Object} 属性键值对。<br>

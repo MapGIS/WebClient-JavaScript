@@ -7,8 +7,9 @@ import {
 
 /**
  * 几何分析服务基类
- * @class  module:量算服务.GeometryAnalysisBase
- * @classdesc Zondy.Service.GeometryAnalysisBase几何分析服务基类
+ * @class  module:几何分析服务.GeometryAnalysisBase
+ * @classdesc 几何分析服务基类
+ * @description Zondy.Service.GeometryAnalysisBase
  * @extends Zondy.Service.ServiceBase
  * @param {Object} option 属性键值对,拓展属性,为其他属性赋值的键值对
  */

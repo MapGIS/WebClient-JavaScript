@@ -8,7 +8,8 @@ import {
 /**
  * 多边形裁剪
  * @class module:分析服务.ClipByPolygon
- * @classdesc Zondy.Service.ClipByPolygon 多边形裁剪
+ * @classdesc 多边形裁剪
+ * @description Zondy.Service.ClipByPolygon
  * @extends Zondy.Service.ClipBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo = null] 源图层URL

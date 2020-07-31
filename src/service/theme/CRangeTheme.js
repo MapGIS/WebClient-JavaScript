@@ -17,7 +17,8 @@ import {
 /**
  * 分段专题图（单字段分段）
  * @class module:专题图服务.CRangeTheme
- * @classdesc Zondy.Object.Theme.CRangeTheme 分段专题图（单字段分段）
+ * @classdesc 分段专题图（单字段分段）
+ * @description Zondy.Object.Theme.CRangeTheme 
  * @extends CTheme
  * @param {Object} opt_options 属性键值对
  * @param {Number} [opt_options.AllOtherDataItemInfoSource = CAllOtherDataItemInfoSource.DefaultThemeInfo] 未参与分类数据图形参数 {@link Zondy.Object.Theme.CAllOtherDataItemInfoSource}

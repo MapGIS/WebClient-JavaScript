@@ -1,10 +1,11 @@
-﻿import {Zondy} from '../common/Base';
-import {extend}  from  "../common/Util";
-import {toJSON}  from  "../common/Util";
+﻿import { Zondy } from '../common/Base';
+import { extend } from '../common/Util';
+import { toJSON } from '../common/Util';
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.QueryFeatureStruct
- * @classdesc Zondy.Service.QueryFeatureStruct 要素结构查询类构造函数
+ * @classdesc 要素结构查询类构造函数
+ * @description Zondy.Service.QueryFeatureStruct 
  * @param option - {Object} 属性键值对。<br>
  * @param {Boolean} [option.IncludeAttribute=true] 是否包含属性值
  * @param {Boolean} [option.IncludeGeometry=false] 是否包含几何图形信息
@@ -23,7 +24,7 @@ var QueryFeatureStruct = function (option) {
      * @description 是否包含属性值
      * @default true
      */
-    this.IncludeAttribute = options.IncludeAttribute !== undefined && (typeof (options.IncludeAttribute) === "boolean") ? options.IncludeAttribute : true;
+    this.IncludeAttribute = options.IncludeAttribute !== undefined && typeof options.IncludeAttribute === 'boolean' ? options.IncludeAttribute : true;
 
     /**
      * @private
@@ -32,7 +33,7 @@ var QueryFeatureStruct = function (option) {
      * @description 是否包含几何图形信息
      * @default false
      */
-    this.IncludeGeometry = options.IncludeGeometry !== undefined && (typeof (options.IncludeGeometry) === "boolean") ? options.IncludeGeometry : false;
+    this.IncludeGeometry = options.IncludeGeometry !== undefined && typeof options.IncludeGeometry === 'boolean' ? options.IncludeGeometry : false;
 
     /**
      * @private
@@ -41,7 +42,8 @@ var QueryFeatureStruct = function (option) {
      * @description 是否包含图形参数
      * @default false
      */
-    this.IncludeWebGraphic = options.IncludeWebGraphic !== undefined && (typeof (options.IncludeWebGraphic) === "boolean") ? options.IncludeWebGraphic : false;
+    this.IncludeWebGraphic =
+        options.IncludeWebGraphic !== undefined && typeof options.IncludeWebGraphic === 'boolean' ? options.IncludeWebGraphic : false;
 };
 /**
  * @description 获取此类的json形式的字符串
@@ -51,5 +53,5 @@ var QueryFeatureStruct = function (option) {
 QueryFeatureStruct.prototype.toJSON = function () {
     return toJSON(this);
 };
-export {QueryFeatureStruct};
+export { QueryFeatureStruct };
 Zondy.Service.QueryFeatureStruct = QueryFeatureStruct;

@@ -7,7 +7,8 @@ import {
 /**
  * 随机专题图
  * @class module:专题图服务.CRandomTheme
- * @classdesc Zondy.Object.Theme.CRandomTheme 随机专题图
+ * @classdesc 随机专题图
+ * @description Zondy.Object.Theme.CRandomTheme 
  * @extends CTheme
  * @param {Object} opt_options 属性键值对
  */

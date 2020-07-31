@@ -13,8 +13,9 @@ import {
 
 /**
  * 计算面积服务
- * @class module:量算服务.CalArea
- * @classdesc Zondy.Service.CalArea 计算面积服务
+ * @class module:几何分析服务.CalArea
+ * @classdesc 计算面积服务
+ * @description Zondy.Service.CalArea
  * @extends Zondy.Service.CalServiceBase
  * @param {Zondy.Object.Point2D} obj 需要计算的点数组 Array<{@link Zondy.Object.Point2D}>
  * @param {Object} option 属性键值对,拓展属性

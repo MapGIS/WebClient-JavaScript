@@ -10,8 +10,9 @@ import {
 
 /**
  * 对矩形范围坐标点进行投影转换
- * @class  module:量算服务.ProjectRang
- * @classdesc Zondy.Service.ProjectRang 对矩形范围坐标点进行投影转换
+ * @class  module:几何分析服务.ProjectRang
+ * @classdesc 对矩形范围坐标点进行投影转换
+ * @description Zondy.Service.ProjectRang
  * @extends Zondy.Service.GeometryAnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.gdbsvrName = "MapGISLocal"] 数据源名称

@@ -13,7 +13,8 @@ import {
 
 /**
  * @class module:专题图服务.CChartThemeRepresentInfo
- * @classdesc Zondy.Object.Theme.CChartThemeRepresentInfo 统计图符号参数信息
+ * @classdesc 统计图符号参数信息
+ * @description Zondy.Object.Theme.CChartThemeRepresentInfo
  * @param {Object} opt_options 属性键值对。
  * @param {Object} [opt_options.AnnInfoLabel = new CAnnInfo()] 统计值作为注记的表现信息 {@link Zondy.Object.Theme.CAnnInfo}
  * @param {Number} [opt_options.DigitLabel = 0] 统计值小数点位置

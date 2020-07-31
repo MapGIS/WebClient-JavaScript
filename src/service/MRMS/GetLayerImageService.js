@@ -5,7 +5,8 @@ import {CDisplayStyleExtend}  from  "../common/CDisplayStyleExtend";
 /**
  * 地图文档图片服务
  * @class module:地图服务.GetLayerImageService
- * @classdesc Zondy.Service.GetLayerImageService 图层图片服务
+ * @classdesc 图层图片服务
+ * @description Zondy.Service.GetLayerImageService
  * @extends Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对
  * @param {String} [option.gdbps= null] 图层URL

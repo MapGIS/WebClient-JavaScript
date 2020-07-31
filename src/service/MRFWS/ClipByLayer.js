@@ -8,7 +8,8 @@ import {
 /**
  * 图层裁剪
  * @class module:分析服务.ClipByLayer
- * @classdesc Zondy.Service.ClipByLayer 图层裁剪
+ * @classdesc 图层裁剪
+ * @description Zondy.Service.ClipByLayer
  * @extends Zondy.Service.ClipBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo1 = null] 源图层URL

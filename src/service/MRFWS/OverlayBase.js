@@ -8,7 +8,8 @@ import {
 /**
  * 叠加分析服务基类
  * @class module:分析服务.OverlayBase
- * @classdesc Zondy.Service.OverlayBase 叠加分析服务基类
+ * @classdesc 叠加分析服务基类
+ * @description Zondy.Service.OverlayBase 
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo1 = null] 被叠加简单要素类的信息

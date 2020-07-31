@@ -7,7 +7,8 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.MapDoc
- * @classdesc Zondy.Catalog.MapDoc 地图文档类
+ * @classdesc 地图文档类
+ * @description Zondy.Catalog.MapDoc
  * @extends Zondy.Catalog.CatalogService
  * @param option - {Object} 属性键值对，地图属性字段。<br>
  * @param {String} [option.docName = null] 地图文档名称

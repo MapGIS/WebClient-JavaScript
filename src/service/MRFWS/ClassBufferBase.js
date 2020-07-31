@@ -8,7 +8,8 @@ import {
 /**
  * 缓冲分析服务基类
  * @class module:分析服务.ClassBufferBase
- * @classdesc Zondy.Service.ClassBufferBase 缓冲分析服务基类
+ * @classdesc 缓冲分析服务基类
+ * @description Zondy.Service.AnalysisBase
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo = null] 源简单要素类的URL

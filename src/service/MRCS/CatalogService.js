@@ -4,7 +4,8 @@ import {ServiceBase}  from  "../ServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.CatalogService
- * @classdesc Zondy.Catalog.CatalogService 目录服务类
+ * @classdesc 目录服务类
+ * @description Zondy.Catalog.CatalogService
  * @extends  ServiceBase
  * @param option - {Object} 属性键值对。<br>
  * @param {String} [option.baseUrl = igs/rest/mrcs] 基本地址

@@ -3,7 +3,8 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.ColorInfo
- * @classdesc  Zondy.Catalog.ColorInfo 颜色信息类
+ * @classdesc  颜色信息类
+ * @description Zondy.Catalog.ColorInfo 
  * @extends  Zondy.Catalog.CatalogService
  * @param option - {Object} 属性键值对，颜色属性字段。<br>
  * @param {Number} [option.SystemLibID = 0] 系统库索引号

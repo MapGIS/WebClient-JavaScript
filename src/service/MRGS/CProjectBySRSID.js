@@ -7,8 +7,9 @@ import {
 
 /**
  * 用于进行SRSID投影的参数类
- * @class  module:量算服务.CProjectBySRSID
- * @classdesc Zondy.Service.CProjectBySRSID 用于进行SRSID投影的参数类
+ * @class  module:几何分析服务.CProjectBySRSID
+ * @classdesc 用于进行SRSID投影的参数类
+ * @description Zondy.Service.CProjectBySRSID
  * @param {Number} srsID 目标SRSID号
  * @param {Zondy.Object.CGDBInfo} gdbInfo 关于SRSID的GDB信息
  */

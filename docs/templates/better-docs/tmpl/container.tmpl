@@ -126,10 +126,13 @@
     ?>
         <h3 class="subsection-title">类名</h3>
 
-        <dl><?js classes.forEach(function(c) { ?>
-            <dt><?js= self.linkto(c.longname, c.name) ?></dt>
-            <dd><?js if (c.summary) { ?><?js= c.summary ?><?js } ?></dd>
-        <?js }); ?></dl>
+        <div><?js classes.forEach(function(c) { ?>
+          <div class="module-list-info">
+            <span class="module-class-name"><?js= self.linkto(c.longname, c.name) ?></span>
+            <span class="module-summary"><?js if (c.summary) { ?><?js= c.summary ?><?js } ?></span>
+            <span class="module-classdesc"><?js if (c.classdesc) { ?><?js= c.classdesc ?><?js } ?></span>
+          </div>
+        <?js }); ?></div>
     <?js } ?>
 
     <?js

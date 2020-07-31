@@ -13,8 +13,9 @@ import {
 
 /**
  * 光滑线
- * @class  module:量算服务.Smooth
- * @classdesc Zondy.Service.Smooth 光滑线.插值方式:可取值0、1、2、3
+ * @class  module:几何分析服务.Smooth
+ * @classdesc 光滑线
+ * @description Zondy.Service.Smooth 插值方式:可取值0、1、2、3
  * @extends Zondy.Service.GeometryAnalysisBase
  * @param {Object} option 属性键值对
  * @param {Number} [option.type = 0] 0为二次样条、1为三次样条、2为三次Beizer样条、3为三次B样条

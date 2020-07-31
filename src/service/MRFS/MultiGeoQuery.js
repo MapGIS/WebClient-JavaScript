@@ -5,7 +5,8 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.MultiGeoQuery
- * @classdesc Zondy.Service.MultiGeoQuery 多几何查询类
+ * @classdesc 多几何查询类
+ * @description Zondy.Service.MultiGeoQuery
  * @extends  Zondy.Service.QueryServiceBase
  * @param queryParam  -{Zondy.Object.QueryByLayerParameter} 查询参数信息。
  * @param docName  - {String} 文档名称。

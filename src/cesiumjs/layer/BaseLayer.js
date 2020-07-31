@@ -2,9 +2,9 @@ import { CesiumZondy } from '../core/Base';
 
 /**
  * @author 基础平台研发中心·冯桂英
- * @class BaseLayer
+ * @class BaseLayer 数据服务基类
  * @category BaseLayer
- * @classdesc BaseLayer 数据服务基类
+ * @classdesc BaseLayer
  * @description 图层管理基类,实现图层公共方法
  * @param option.viewer 场景视图
  */

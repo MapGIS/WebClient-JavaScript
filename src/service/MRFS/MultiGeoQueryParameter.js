@@ -4,7 +4,8 @@ import {extend}  from  "../common/Util";
  * @author 基础平台/产品2部 龚跃健
  * @description 多几何参数查询类构造函数
  * @class module:要素服务.MultiGeoQueryParameter
- * @classdesc Zondy.Service.MultiGeoQueryParameter 多几何参数查询类构造函数
+ * @classdesc 多几何参数查询类构造函数
+ * @description Zondy.Service.MultiGeoQueryParameter
  * @param option - {Object} 属性键值对。<br>
  * @param {Array} [option.geometry = null] 用于查询的多几何数组
  * @param {String} [option.geometryType = null] 几何类型，表示geometry中元素代表的几何类型，可取值为"point","line","polygon"

@@ -52,7 +52,8 @@ import {
 /**
  * 专题图服务
  * @class module:专题图服务.ThemeOper
- * @classdesc Zondy.Service.ThemeOper专题图服务
+ * @classdesc 专题图服务
+ * @description Zondy.Service.ThemeOper
  * @extends ServiceBase
  * @param {Object} options 属性键值对
  * @param {Function} [options.p_onSuccess=null] 获取成功回调方法 onSuccess(Array<Zondy.Object.Theme.CThemeInfo>)

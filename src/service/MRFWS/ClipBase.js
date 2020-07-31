@@ -1,14 +1,11 @@
-﻿import {
-    Zondy
-} from '../common/Base';
-import {
-    AnalysisBase
-} from "./AnalysisBase";
+﻿import { Zondy } from '../common/Base';
+import { AnalysisBase } from './AnalysisBase';
 
 /**
  * 裁剪分析服务基类
  * @class module:分析服务.ClipBase
- * @classdesc Zondy.Service.ClipBase 裁剪分析服务基类
+ * @classdesc 裁剪分析服务基类
+ * @description Zondy.Service.ClipBase
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.desInfo = null] 裁剪分析结果图层URL
@@ -98,7 +95,5 @@ class ClipBase extends AnalysisBase {
         this.isValidReg = options.isValidReg !== undefined ? options.isValidReg : false;
     }
 }
-export {
-    ClipBase
-};
+export { ClipBase };
 Zondy.Service.ClipBase = ClipBase;

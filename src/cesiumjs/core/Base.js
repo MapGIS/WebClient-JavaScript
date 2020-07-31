@@ -7,6 +7,7 @@ import './analysis';
 import './common';
 import './event';
 import './scene';
+import './view';
 
 window.CesiumZondy = window.CesiumZondy || {};
 

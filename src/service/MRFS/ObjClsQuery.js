@@ -1,11 +1,12 @@
-﻿import {Zondy} from '../common/Base';
-import {QueryServiceBase}  from  "./QueryServiceBase";
-import {ObjClsQueryParameter}  from  "./ObjClsQueryParameter";
-import {IgsServiceBase}  from  "../baseserver/IServiceBase";
+﻿import { Zondy } from '../common/Base';
+import { QueryServiceBase } from './QueryServiceBase';
+import { ObjClsQueryParameter } from './ObjClsQueryParameter';
+import { IgsServiceBase } from '../baseserver/IServiceBase';
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.ObjClsQuery
- * @classdesc Zondy.Service.ObjClsQuery 注记查询类
+ * @classdesc 注记查询类
+ * @description Zondy.Service.ObjClsQuery
  * @extends Zondy.Service.QueryServiceBase
  * @param queryParam -{Zondy.Service.ObjClsQueryParameter} 对象类查询的参数类。
  * @param gdbp -{String} 对象类的GDBP地址。<br>
@@ -13,7 +14,6 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
  * @param {Zondy.Object.QueryByLayerParameter} [option.queryParam = null] 查询参数信息
  */
 class ObjClsQuery extends QueryServiceBase {
-
     constructor(queryParam, gdbp, option) {
         var options = option ? option : {};
         super(options);
@@ -37,14 +37,14 @@ class ObjClsQuery extends QueryServiceBase {
          * @type {String}
          * @description 基类地址
          */
-        this.baseUrl = "igs/rest/extend/dxlcz";
+        this.baseUrl = 'igs/rest/extend/dxlcz';
         /**
          * @private
          * @member Zondy.Service.ObjClsQuery.prototype.partUrl
          * @type {String}
          * @description 查询参数地址
          */
-        this.partUrl = "objlayer/query?gdbp=" + gdbp;
+        this.partUrl = 'objlayer/query?gdbp=' + gdbp;
         this.partUrl += queryParam.getParameterURL();
     }
 
@@ -97,5 +97,5 @@ class ObjClsQuery extends QueryServiceBase {
         service.processAsync();
     }
 }
-export {ObjClsQuery};
+export { ObjClsQuery };
 Zondy.Service.ObjClsQuery = ObjClsQuery;

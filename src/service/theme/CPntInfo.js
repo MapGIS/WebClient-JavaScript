@@ -7,7 +7,8 @@ import {
 /**
  * 点图形参数对象
  * @class module:专题图服务.CPntInfo
- * @classdesc Zondy.Object.Theme.CPntInfo 点图形参数对象
+ * @classdesc 点图形参数对象
+ * @description Zondy.Object.Theme.CPntInfo 
  * @param {Object} opt_options
  * @param {Number} [opt_options.LibID = 0] 库ID
  * @param {Boolean} [opt_options.Ovprnt = false] 覆盖方式

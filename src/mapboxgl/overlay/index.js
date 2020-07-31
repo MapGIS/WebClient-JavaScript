@@ -1,6 +1,5 @@
 import { EchartsLayer } from "./EchartsLayer";
 import { MapvLayer } from "./MapvLayer";
-import { DeckglLayer } from "./DeckglLayer";
 
 /* import {
   StreamLayer
@@ -9,7 +8,6 @@ import { DeckglLayer } from "./DeckglLayer";
 export {
   EchartsLayer,
   MapvLayer,
-  DeckglLayer,
   /* StreamLayer */
 };
 

@@ -4,7 +4,8 @@ import {ChineseToUtf8} from '../common/Util';
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.GDBInfo
- * @classdesc Zondy.Catalog.GDBInfo 地理数据库信息类
+ * @classdesc 地理数据库信息类
+ * @description Zondy.Catalog.GDBInfo
  * @extends  Zondy.Catalog.CatalogService
  * @param option - {Object} 属性键值对，数据库属性字段。<br>
  * @param {String} [option.serverName = null] 服务器名称

@@ -7,7 +7,8 @@ import {QueryParameterBase} from "./QueryParameterBase";
  * @origin author kyle / http://nikai.us/
  * @author 基础平台/研究院 陈琪
  * @class module:要素服务.QueryParameter
- * @classdesc Zondy.Service.QueryParameter 参数查询类
+ * @classdesc 参数查询类
+ * @description Zondy.Service.QueryParameter
  * @extends  Zondy.Service.QueryParameterBase
  * @param option - {Object} 属性键值对。<br>
  * @param {Zondy.Object.Tangram} [option.geometry=null] 用于查询的几何描述

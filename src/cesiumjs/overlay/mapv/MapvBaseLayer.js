@@ -199,20 +199,6 @@ export class MapvBaseLayer extends BaseLayer {
             context.clear(context.COLOR_BUFFER_BIT);
         }
 
-        /*  if (self.options.minZoom && map.getZoom() < self.options.minZoom || self.options.maxZoom && map.getZoom() > self.options.maxZoom) {
-             return;
-         } */
-
-/*         var dataGetOptions = {
-            transferCoordinate: function (coordinate) {
-                var position = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1]);
-                var point = Cesium.SceneTransforms.wgs84ToWindowCoordinates(scene, position);
-                if (point == undefined) {
-                    return [-1, -1];
-                }
-                return [point.x, point.y];
-            }
-        }; */
         var dataGetOptions = {
             transferCoordinate: function (coordinate) {
                 var pointSphere = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1]);  
@@ -255,10 +241,8 @@ export class MapvBaseLayer extends BaseLayer {
         }
 
         var pixel = Cesium.SceneTransforms.wgs84ToWindowCoordinates(scene, Cesium.Cartesian3.fromDegrees(0, 0));
-        let point;
-        if (!pixel) point = [0, 0];
-        point = [pixel.x, pixel.y];
-        this.drawContext(context, new DataSet(data), self.options, point);
+        if (!pixel) pixel = [0, 0];
+        this.drawContext(context, new DataSet(data), self.options, pixel);
 
         self.options.updateCallback && self.options.updateCallback(time);
     }

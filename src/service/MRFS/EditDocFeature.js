@@ -5,7 +5,8 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.EditDocFeature
- * @classdesc  Zondy.Service.EditDocFeature 文档要素编辑类
+ * @classdesc 文档要素编辑类
+ * @description Zondy.Service.EditDocFeature 
  * @extends  Zondy.Service.EditServiceBase
  * @param option - {Object} 属性键值对，颜色属性字段。<br>
  * @param {String} [option.docName = null] 文档名称

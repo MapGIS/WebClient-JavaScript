@@ -1,5 +1,5 @@
 ﻿/**
- *@module 量算服务
+ *@module 几何分析服务
  */
 
 import {CalArea} from './CalArea';

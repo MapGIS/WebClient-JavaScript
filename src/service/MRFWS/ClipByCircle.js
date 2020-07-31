@@ -8,7 +8,8 @@ import {
 /**
  * 圆裁剪
  * @class module:分析服务.ClipByCircle
- * @classdesc Zondy.Service.ClipByCircle 圆裁剪
+ * @classdesc 圆裁剪
+ * @description Zondy.Service.ClipByCircle
  * @extends Zondy.Service.ClipBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo = null] 源图层URL

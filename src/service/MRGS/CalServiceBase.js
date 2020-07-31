@@ -19,8 +19,9 @@ import {
 
 /**
  * 测量服务基类
- * @class module:量算服务.CalServiceBase
- * @classdesc Zondy.Service.CalServiceBase 测量服务基类
+ * @class module:几何分析服务.CalServiceBase
+ * @classdesc 测量服务基类
+ * @description Zondy.Service.CalServiceBase
  * @extends Zondy.Service.GeometryAnalysisBase
  * @param {Object} option 属性键值对,拓展属性,为其他属性赋值的键值对<br>
  * @param {Zondy.Object.Point2D} [option.dots=null] 需要计算的点数组 Array<{@link Zondy.Object.Point2D}>}

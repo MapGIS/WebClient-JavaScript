@@ -1,22 +1,19 @@
-import {
-    CesiumZondy
-} from '../core/Base';
-import {
-    MapvBaseLayer
-} from "./mapv/MapvBaseLayer";
-
-// import Cesium from '../../../node_modules/cesium/Source/Cesium';
+import { CesiumZondy } from '../core/Base';
+import { MapvBaseLayer } from './mapv/MapvBaseLayer';
 
 var idIndex = 0;
 
 /**
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
  * @class  module:客户端可视化.MapVLayer
- * @classdesc CesiumZondy.Overlayer.MapVLayer 基于新建立的Html Element嵌入mapv
+ * @classdesc  Mapv图表图层
+ * @description CesiumZondy.Overlayer.MapVLayer 基于新建立的Html Element嵌入mapv
  * @param map - {Object} 传入的cesium的地图对象Viewer
  * @param dataset - {MapvDataSet} 传入的mapv的属性
  * @param mapVOptions - {MapvOption} 可选参数。https://github.com/huiyan-fe/mapv/blob/master/API.md
- * @param {Boolean} [mapVOptions.postRender=false] 是否实时渲染
+ * @param {Object} [mapVOptions.cesium] cesium的渲染模式
+ * @param {Boolean} [mapVOptions.cesium.postRender=false] 是否实时渲染
+ * @param {Boolean} [mapVOptionscesium.cesium.postRenderFrame=30] 每间隔多少帧渲染一次
  * @param container - {Element} 外部传入的div;外接的方式使用mapv
  * @example 
  *  // 构建对应的dataset
@@ -69,7 +66,12 @@ export default class MapvLayer {
 
         this.render = this.render.bind(this);
         this.postRenderTime = 0;
-        this.postRenderFrame = mapVOptions.postRenderFrame || 30;
+
+        let cesiumOpt = mapVOptions.cesium;
+        if (cesiumOpt) {
+            this.postRender = cesiumOpt.postRender || false;
+            this.postRenderFrame = cesiumOpt.postRenderFrame || 30;
+        }
 
         if (container != undefined) {
             this.container = container;
@@ -108,20 +110,23 @@ export default class MapvLayer {
         this.innnerZoomEnd = this.zoomEndEvent.bind(this);
 
         this.postEventHandle = this.postEvent.bind(this);
-
+        this.postStartEvent = this.postStartEvent.bind(this);
+        this.postEndEvent = this.postEndEvent.bind(this);
 
         var handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
         //handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-        if (this.mapVOptions.postRender) {
-            this.scene.postRender.addEventListener(this.postEventHandle);
+        if (this.postRender) {
+            // this.scene.postRender.addEventListener(this.postEventHandle);
+            this.scene.camera.moveStart.addEventListener(this.postStartEvent, this);
+            this.scene.camera.moveEnd.addEventListener(this.postEndEvent, this);
         } else {
             handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.WHEEL);
             handler.setInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
             handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.LEFT_UP);
             handler.setInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
             handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.RIGHT_UP);
-    
-            map.scene.camera.moveEnd.addEventListener(function(){
+
+            map.scene.camera.moveEnd.addEventListener(function () {
                 //获取当前相机高度
                 self.innerMoveEnd();
             });
@@ -129,7 +134,27 @@ export default class MapvLayer {
     }
 
     unbindEvent() {
-        var map = this.map;
+        if (this.postRender) {
+            this.scene.camera.moveStart.removeEventListener(this.postStartEvent, this);
+            this.scene.camera.moveEnd.removeEventListener(this.postEndEvent, this);
+        }
+    }
+
+    postStartEvent() {
+        if (this.mapvBaseLayer) {
+            this.mapvBaseLayer.animatorMovestartEvent();
+            this.scene.postRender.addEventListener(this._reset, this);
+        }
+        this._visiable();
+    }
+
+    postEndEvent() {
+        if (this.mapvBaseLayer) {
+            this.mapvBaseLayer.animatorMoveendEvent();
+            this.scene.postRender.removeEventListener(this._reset, this);
+        }
+        this._reset();
+        this._visiable();
     }
 
     moveStartEvent() {
@@ -155,7 +180,7 @@ export default class MapvLayer {
     }
 
     postEvent() {
-        this.postRenderTime++
+        this.postRenderTime++;
         if (this.postRenderTime % this.postRenderFrame === 0) this.moveEndEvent();
     }
 
@@ -164,7 +189,7 @@ export default class MapvLayer {
     /**
      * 增加数据
      * @function module:客户端可视化.MapVLayer.prototype.addData
-     * 
+     *
      * @param data - {Array} 数据.
      * @param options - {Object} 只做额外增加的字段作用
      * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
@@ -177,7 +202,7 @@ export default class MapvLayer {
     /**
      * 更新数据
      * @function module:客户端可视化.MapVLayer.prototype.updateData
-     * 
+     *
      * @param data - {Array} 数据.
      * @param options - {Object} 只做额外增加的字段作用
      * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
@@ -190,7 +215,7 @@ export default class MapvLayer {
     /**
      * 获取数据
      * @function module:客户端可视化.MapVLayer.prototype.getData
-     * 
+     *
      * @param data - {Array} 数据.
      * @param options - {Object} 只做额外增加的字段作用
      * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
@@ -228,12 +253,12 @@ export default class MapvLayer {
 
     _createCanvas() {
         var canvas = document.createElement('canvas');
-        canvas.id = this.mapVOptions.layerid || ("mapv" + idIndex++);
+        canvas.id = this.mapVOptions.layerid || 'mapv' + idIndex++;
         canvas.style.position = 'absolute';
-        canvas.style.top = "0px";
-        canvas.style.left = "0px";
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
 
-        canvas.style.pointerEvents = "none";
+        canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = this.mapVOptions.zIndex || 100;
 
         canvas.width = parseInt(this.map.canvas.width);
@@ -249,19 +274,19 @@ export default class MapvLayer {
 
     _creteWidgetCanvas() {
         var canvas = document.createElement('canvas');
-        
-        canvas.id = this.mapVOptions.layerid || ("mapv" + idIndex++);
-        canvas.style.position = 'absolute';
-        canvas.style.top = "0px";
-        canvas.style.left = "0px";
 
-        canvas.style.pointerEvents = "none";
+        canvas.id = this.mapVOptions.layerid || 'mapv' + idIndex++;
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
+
+        canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = this.mapVOptions.zIndex || 100;
 
-        canvas.width =  parseInt(this.map.canvas.width);
-        canvas.height =  parseInt(this.map.canvas.height);
-        canvas.style.width =  this.map.canvas.style.width;
-        canvas.style.height =  this.map.canvas.style.height;
+        canvas.width = parseInt(this.map.canvas.width);
+        canvas.height = parseInt(this.map.canvas.height);
+        canvas.style.width = this.map.canvas.style.width;
+        canvas.style.height = this.map.canvas.style.height;
         var devicePixelRatio = this.devicePixelRatio;
         if (this.mapVOptions.context == '2d') {
             canvas.getContext('2d').scale(devicePixelRatio, devicePixelRatio);
@@ -315,13 +340,11 @@ export default class MapvLayer {
     remove() {
         if (this.mapvBaseLayer == undefined) return;
         this.removeAllData();
+        this.unbindEvent();
         this.mapvBaseLayer.clear(this.mapvBaseLayer.getContext());
         this.mapvBaseLayer = undefined;
         var parent = this.canvas.parentElement;
         parent.removeChild(this.canvas);
-        if (this.options.postRender) {
-            this.scene.postRender.removeEventListener(this.postEventHandle);
-        }
     }
 
     /**
@@ -337,11 +360,11 @@ export default class MapvLayer {
 
     resizeCanvas() {
         //this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
-        if(this.canvas == undefined || this.canvas == null) return;
+        if (this.canvas == undefined || this.canvas == null) return;
         var canvas = this.canvas;
         canvas.style.position = 'absolute';
-        canvas.style.top = "0px";
-        canvas.style.left = "0px";
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
         canvas.width = parseInt(this.map.canvas.width);
         canvas.height = parseInt(this.map.canvas.height);
         //canvas.style.width = this.map.canvas.style.width;
@@ -352,13 +375,9 @@ export default class MapvLayer {
         }
     }
 
-    fixPosition() {
+    fixPosition() {}
 
-    }
-
-    onResize() {
-
-    }
+    onResize() {}
 
     render() {
         if (this.mapvBaseLayer == undefined) return;

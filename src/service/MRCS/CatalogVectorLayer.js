@@ -1,11 +1,12 @@
-﻿import {newGuid}  from  "../common/Util";
-import {GDBInfo}  from  "./CatalogGDBInfo";
-import {IgsServiceBase}  from  "../baseserver/IServiceBase";
-import {CAttStruct}  from  "../common/CAttStruct";
+﻿import { newGuid } from '../common/Util';
+import { GDBInfo } from './CatalogGDBInfo';
+import { IgsServiceBase } from '../baseserver/IServiceBase';
+import { CAttStruct } from '../common/CAttStruct';
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.VectorLayer
- * @classdesc Zondy.Catalog.VectorLayer 矢量图层类
+ * @classdesc 矢量图层类
+ * @description Zondy.Catalog.VectorLayer
  * @extends  Zondy.Catalog.GDBInfo
  * @param option - {Object} 属性键值对。<br>
  * @param {String} [option.serverName = null] 服务器名称
@@ -17,7 +18,6 @@ import {CAttStruct}  from  "../common/CAttStruct";
  * @param {Boolean} [option.containAll = true] 是否包含所有
  */
 class VectorLayer extends GDBInfo {
-
     constructor(option) {
         var options = option || {};
         super(options);
@@ -47,10 +47,21 @@ class VectorLayer extends GDBInfo {
      */
     getSfclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/sfcls?containAll=" + me.containAll + "&f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/sfcls?containAll=' + me.containAll + '&f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/sfcls?user=" + me.User + "&psw=" + me.Password + "&containAll=" + this.containAll + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/sfcls?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&containAll=' +
+                this.containAll +
+                '&f=json';
 
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
@@ -87,10 +98,21 @@ class VectorLayer extends GDBInfo {
      */
     getAclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/acls?containAll=" + me.containAll + "&f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/acls?containAll=' + me.containAll + '&f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/acls?user=" + me.User + "&psw=" + me.Password + "&containAll=" + me.containAll + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/acls?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&containAll=' +
+                me.containAll +
+                '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -125,12 +147,22 @@ class VectorLayer extends GDBInfo {
                 });
      */
     getOclsList(onSuccess, onError) {
-
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/ocls?containAll=" + me.containAll + "&f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/ocls?containAll=' + me.containAll + '&f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/ocls?user=" + me.User + "&psw=" + me.Password + "&containAll=" + me.containAll + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/ocls?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&containAll=' +
+                me.containAll +
+                '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -166,10 +198,21 @@ class VectorLayer extends GDBInfo {
      */
     getNclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/ncls?containAll=" + me.containAll + "&f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/ncls?containAll=' + me.containAll + '&f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/ncls?user=" + me.User + "&psw=" + me.Password + "&containAll=" + me.containAll + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/ncls?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&containAll=' +
+                me.containAll +
+                '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -205,10 +248,21 @@ class VectorLayer extends GDBInfo {
      */
     getRdsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/rds?containAll=" + me.containAll + "&f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/rds?containAll=' + me.containAll + '&f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/rds?user=" + me.User + "&psw=" + me.Password + "&containAll=" + me.containAll + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/rds?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&containAll=' +
+                me.containAll +
+                '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -247,10 +301,11 @@ class VectorLayer extends GDBInfo {
      */
     getDsSfclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/sfcls?f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0 || me.serverName.toLowerCase() === 'mapgislocalplus')
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/sfcls?f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/sfcls?user=" + me.User + "&psw=" + me.Password + "&f=json";
+            me.partUrl =
+                'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/sfcls?user=' + me.User + '&psw=' + me.Password + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -289,10 +344,11 @@ class VectorLayer extends GDBInfo {
      */
     getDsAclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/acls?f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/acls?f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/acls?user=" + me.User + "&psw=" + me.Password + "&f=json";
+            me.partUrl =
+                'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/acls?user=' + me.User + '&psw=' + me.Password + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -331,10 +387,11 @@ class VectorLayer extends GDBInfo {
      */
     getDsOclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/ocls?f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/ocls?f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/ocls?user=" + me.User + "&psw=" + me.Password + "&f=json";
+            me.partUrl =
+                'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/ocls?user=' + me.User + '&psw=' + me.Password + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -373,10 +430,11 @@ class VectorLayer extends GDBInfo {
      */
     getDsNclsList(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/ncls?f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/ncls?f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/ncls?user=" + me.User + "&psw=" + me.Password + "&f=json";
+            me.partUrl =
+                'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/ncls?user=' + me.User + '&psw=' + me.Password + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -415,10 +473,11 @@ class VectorLayer extends GDBInfo {
      */
     getRdsListInRcs(onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.rcsName + "/rds?f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.rcsName + '/rds?f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.rcsName + "/rds?user=" + me.User + "&psw=" + me.Password + "&f=json";
+            me.partUrl =
+                'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.rcsName + '/rds?user=' + me.User + '&psw=' + me.Password + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -456,10 +515,23 @@ class VectorLayer extends GDBInfo {
      */
     getLayerList(clsType, onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + clsType + "?containAll=" + me.containAll + "&f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + clsType + '?containAll=' + me.containAll + '&f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + clsType + "?user=" + me.User + "&psw=" + me.Password + "&containAll=" + me.containAll + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/' +
+                clsType +
+                '?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&containAll=' +
+                me.containAll +
+                '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -499,10 +571,23 @@ class VectorLayer extends GDBInfo {
      */
     getLayerListInDS(clsType, onSuccess, onError) {
         var me = this;
-        if (me.serverName.toLowerCase() === "mapgislocal")
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/" + clsType + "?f=json";
+        if (me.serverName.toLowerCase().indexOf('mapgislocal') >= 0)
+            me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + me.dsName + '/' + clsType + '?f=json';
         else
-            me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + me.dsName + "/" + clsType + "?user=" + me.User + "&psw=" + me.Password + "&f=json";
+            me.partUrl =
+                'datasource/' +
+                me.serverName +
+                '/' +
+                me.gdbName +
+                '/' +
+                me.dsName +
+                '/' +
+                clsType +
+                '?user=' +
+                me.User +
+                '&psw=' +
+                me.Password +
+                '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -535,7 +620,7 @@ class VectorLayer extends GDBInfo {
      */
     getLayerInfo(gdbpUrl, onSuccess, onError, encryptPassword) {
         var me = this;
-        me.partUrl = "layerinfo?gdbpUrl=" + gdbpUrl + "&f=json" + "&encryptPassword=" + encryptPassword + "&proj=" + this.proj;
+        me.partUrl = 'layerinfo?gdbpUrl=' + gdbpUrl + '&f=json' + '&encryptPassword=' + encryptPassword + '&proj=' + this.proj;
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -600,20 +685,34 @@ class VectorLayer extends GDBInfo {
 
     CreateVectCls(vectCls, onSuccess, onError) {
         var me = this;
-        vectCls = (vectCls !== null) ? vectCls : null;
+        vectCls = vectCls !== null ? vectCls : null;
         if (vectCls === null || me.serverName === null || me.gdbName === null) {
             return;
         }
         if (me.User !== null && me.Password !== null) {
-            me.partUrl = "datasource/" + me.User + ":" + me.Password + "@";
-        }
-        else {
-            me.partUrl = "datasource/";
+            me.partUrl = 'datasource/' + me.User + ':' + me.Password + '@';
+        } else {
+            me.partUrl = 'datasource/';
         }
         if (vectCls.clsName === null) {
             vectCls.clsName = newGuid();
         }
-        me.partUrl += me.serverName + "/" + me.gdbName + "/" + vectCls.clsType + "/" + vectCls.clsName + "/create?" + "geoType=" + vectCls.geoType + "&srefName=" + vectCls.srefName + "&dsName=" + vectCls.dsName + "&f=json";
+        me.partUrl +=
+            me.serverName +
+            '/' +
+            me.gdbName +
+            '/' +
+            vectCls.clsType +
+            '/' +
+            vectCls.clsName +
+            '/create?' +
+            'geoType=' +
+            vectCls.geoType +
+            '&srefName=' +
+            vectCls.srefName +
+            '&dsName=' +
+            vectCls.dsName +
+            '&f=json';
 
         if (vectCls.attStruct === null) {
             vectCls.attStruct = new CAttStruct();
@@ -629,7 +728,7 @@ class VectorLayer extends GDBInfo {
         service.processAsync({
             method: 'POST',
             data: JSON.stringify(vectCls.attStruct),
-            headers: {'Content-Type': 'text/plain;charset=UTF-8'}
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
         });
     }
 
@@ -662,7 +761,7 @@ class VectorLayer extends GDBInfo {
         if (me.serverName === null || me.gdbName === null || clsType === null || clsName === null) {
             return;
         }
-        me.partUrl = "datasource/" + me.serverName + "/" + me.gdbName + "/" + clsType + "/" + clsName + "/delete?f=json";
+        me.partUrl = 'datasource/' + me.serverName + '/' + me.gdbName + '/' + clsType + '/' + clsName + '/delete?f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -673,8 +772,6 @@ class VectorLayer extends GDBInfo {
         });
         service.processAsync();
     }
-
 }
-export {VectorLayer};
+export { VectorLayer };
 Zondy.Catalog.VectorLayer = VectorLayer;
-

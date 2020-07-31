@@ -7,7 +7,8 @@ import {
 /**
  * 区图形参数对象
  * @class module:专题图服务.CRegInfo
- * @classdesc Zondy.Object.Theme.CRegInfo 区图形参数对象
+ * @classdesc 区图形参数对象
+ * @description Zondy.Object.Theme.CRegInfo 
  * @param {Object} opt_options
  * @param {Number} [opt_options.LibID = 0] 库ID
  * @param {Boolean} [opt_options.Ovprnt = false] 覆盖方式

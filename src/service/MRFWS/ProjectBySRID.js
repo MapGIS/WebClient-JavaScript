@@ -11,7 +11,8 @@ import {
 /**
  * 投影服务基类
  * @class module:分析服务.ProjectBySRID
- * @classdesc Zondy.Service.ProjectBySRID 投影服务基类
+ * @classdesc 投影服务基类
+ * @description Zondy.Service.ProjectBySRID
  * @extends Zondy.Service.ProjectBase
  * @param {Object} project 投影参数
  * @param {String} [project.srID = 32] 投影座标系ID

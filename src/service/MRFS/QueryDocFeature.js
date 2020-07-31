@@ -3,7 +3,8 @@ import {QueryServiceBase}  from  "./QueryServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.QueryDocFeature
- * @classdesc Zondy.Service.QueryDocFeature 要素文档查询类
+ * @classdesc 要素文档查询类
+ * @description Zondy.Service.QueryDocFeature
  * @extends  Zondy.Service.QueryServiceBase
  * @param queryParam - {Zondy.Service.QueryParameter} 查询参数信息。
  * @param docName - {String} 地图文档名称。

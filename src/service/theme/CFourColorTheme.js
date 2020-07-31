@@ -8,7 +8,8 @@ import {
 /**
  * 四色专题图
  * @class module:专题图服务.CFourColorTheme
- * @classdesc Zondy.Object.Theme.CFourColorTheme 四色专题图
+ * @classdesc 四色专题图
+ * @description Zondy.Object.Theme.CFourColorTheme
  * @extends CTheme
  * @param {Object} opt_options 属性键值对。
  * @param {Array} [opt_options.ClrInfo = [25, 57, 89, 121]] 颜色信息 Array<Integer>

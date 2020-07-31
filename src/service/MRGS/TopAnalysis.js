@@ -22,8 +22,9 @@ import {
 
 /**
  * 拓扑分析类,您只应该对pnt,line,reg3个属性中的一个赋值
- * @class module:量算服务.TopAnalysis
- * @classdesc Zondy.Service.TopAnalysis 拓扑分析类,您只应该对pnt,line,reg3个属性中的一个赋值
+ * @class module:几何分析服务.TopAnalysis
+ * @classdesc  拓扑分析类
+ * @description Zondy.Service.TopAnalysis 只应该对pnt,line,reg3个属性中的一个赋值
  * @extends Zondy.Service.GeometryAnalysisBase
  * @param {Object} option 属性键值对
  * @param {Zondy.Object.GPoint} [option.pnt = null] 需要设置的点类型

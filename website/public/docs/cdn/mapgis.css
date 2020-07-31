@@ -223,3 +223,19 @@ body {
     border-radius: 4px;
     background   : transparent;
 }
+
+.module-list-info {
+    display: flex !important;
+}
+
+.module-class-name {
+    width: 150px;
+}
+
+.module-summary {
+    margin-left: 20px !important;
+}
+
+.module-classdesc {
+    margin-left: 20px !important;
+}

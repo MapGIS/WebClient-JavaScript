@@ -14,7 +14,8 @@ import {
 /**
  * 网络分析类
  * @class module:分析服务.NetAnalysis
- * @classdesc Zondy.Service.NetAnalysis 网络分析类
+ * @classdesc 网络分析类
+ * @description Zondy.Service.NetAnalysis
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.netClsUrl = null] 网络类URL

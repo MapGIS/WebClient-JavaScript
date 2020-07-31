@@ -3,7 +3,8 @@ import {extend}  from  "../common/Util";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.ObjClsQueryParameter
- * @classdesc Zondy.Service.ObjClsQueryParameter 注记参数查询类构造函数
+ * @classdesc 注记参数查询类构造函数
+ * @description Zondy.Service.ObjClsQueryParameter
  * @param option - {Object} 属性键值对。<br>
  * @param {Object} [options.objectIds=null]  需要查询的要素OID号，多个间用‘，’分隔
  * @param {String} [options.where=null] 条件查询的SQL语句

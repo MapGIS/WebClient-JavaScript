@@ -7,9 +7,9 @@ import {
 
 /**
  * @author 基础平台/产品2部 龚跃健
- * 类缓冲分析（单圈）
  * @class module:分析服务.ClassBufferBySingleRing
- * @classdesc Zondy.Service.ClassBufferBySingleRing 类缓冲分析（单圈）
+ * @description  Zondy.Service.ClassBufferBySingleRing 类缓冲分析（单圈）
+ * @classdesc 类缓冲分析（单圈）
  * @extends Zondy.Service.ClassBufferBase
  * @param {Object} option 属性键值对
  * @param {Number} [option.leftRad = 0.001] 缓冲分析左半径

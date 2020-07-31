@@ -14,7 +14,8 @@ import {
 /**
  * 分段专题图（多字段）
  * @class module:专题图服务.CMultiClassTheme
- * @classdesc Zondy.Object.Theme.CMultiClassTheme 分段专题图（多字段）
+ * @classdesc 分段专题图（多字段）
+ * @description Zondy.Object.Theme.CMultiClassTheme 
  * @extends CTheme
  * @param {Object} opt_options 属性键值对。
  * @param {Zondy.Object.Theme.CThemeInfo} [opt_options.DefaultInfo = null] 缺省专题绘制信息 {@link Zondy.Object.Theme.CThemeInfo}

@@ -11,7 +11,8 @@ import {
 /**
  * 点密度专题图
  * @class module:专题图服务.CDotDensityTheme
- * @classdesc Zondy.Object.Theme.CDotDensityTheme 点密度专题图
+ * @classdesc 点密度专题图
+ * @description Zondy.Object.Theme.CDotDensityTheme
  * @extends CTheme
  * @param {Object} opt_options 属性键值对。
  * @param {String} [opt_options.Expression = ] 字段表达式

@@ -10,7 +10,8 @@ import {
 /**
  * 统一配置专题图
  * @class module:专题图服务.CSimpleTheme
- * @classdesc Zondy.Object.Theme.CSimpleTheme 统一配置专题图
+ * @classdesc 统一配置专题图
+ * @description Zondy.Object.Theme.CSimpleTheme 
  * @extends CTheme
  * @param {Object} opt_options 属性键值对
  * @param {Zondy.Object.Theme.CThemeInfo} [opt_options.ThemeInfo = new CThemeInfo()] 缺省专题绘制信息 {@link Zondy.Object.Theme.CThemeInfo}

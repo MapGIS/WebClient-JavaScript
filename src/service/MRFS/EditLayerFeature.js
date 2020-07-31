@@ -4,7 +4,8 @@ import {IgsServiceBase}  from  "../baseserver/IServiceBase";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.EditLayerFeature
- * @classdesc Zondy.Service.EditLayerFeature 矢量图层要素编辑类
+ * @classdesc 矢量图层要素编辑类
+ * @description Zondy.Service.EditLayerFeature
  * @extends   Zondy.Service.EditServiceBase
  * @param gdbp  - {String} 图层的URL，添加要素只能同时操作单个图层。
  * @param option - {Object} 属性键值对。<br>

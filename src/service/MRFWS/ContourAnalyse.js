@@ -20,7 +20,8 @@ import {
 /**
  * 等值线追踪分析
  * @class module:分析服务.ContourAnalyse
- * @classdesc Zondy.Service.ContourAnalyse 等值线追踪分析
+ * @classdesc 等值线追踪分析
+ * @description Zondy.Service.ContourAnalyse 
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.linSfclsURL = null] 线简单要素Url

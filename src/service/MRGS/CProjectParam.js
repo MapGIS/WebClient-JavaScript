@@ -7,8 +7,9 @@ import {
 
 /**
  * 投影转换空间参数类
- * @class  module:量算服务.CProjectParam
- * @classdesc Zondy.Service.CProjectParam 投影转换空间参数类
+ * @class  module:几何分析服务.CProjectParam
+ * @classdesc 投影转换空间参数类
+ * @description Zondy.Service.CProjectParam
  * @param {Object} option
  * @param {Number} [option.ProjAngleUnit = 0] 角度单位
  * @param {Number} [option.ProjLat = 0.00] 投影原点纬度

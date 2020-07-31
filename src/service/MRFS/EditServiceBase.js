@@ -4,7 +4,8 @@ import {newGuid}  from  "../common/Util";
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.EditServiceBase
- * @classdesc Zondy.Service.EditServiceBase 编辑服务基类
+ * @classdesc 编辑服务基类
+ * @description Zondy.Service.EditServiceBase
  * @extends   ServiceBase
  * @param option - {Object} 属性键值对。<br>
  * @param {Object} [option.guid = newGuid()] 唯一标识

@@ -8,7 +8,8 @@ import {
 /**
  * 要素缓冲分析服务基类
  * @class module:分析服务.FeatureBuffBase
- * @classdesc Zondy.Service.FeatureBuffBase 要素缓冲分析服务基类
+ * @classdesc 要素缓冲分析服务基类
+ * @description Zondy.Service.FeatureBuffBase
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.sfGeometryXML = null] 分析的要素的空间信息,序列化为字符串

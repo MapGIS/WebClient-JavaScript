@@ -1,10 +1,11 @@
-import {CatalogService} from "./CatalogService";
-import {IgsServiceBase} from "../baseserver/IServiceBase";
+import { CatalogService } from './CatalogService';
+import { IgsServiceBase } from '../baseserver/IServiceBase';
 
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.SystomInfo
- * @classdesc Zondy.Catalog.SystomInfo瓦片图层类
+ * @classdesc 瓦片图层类
+ * @description Zondy.Catalog.SystomInfo
  * @extends  Zondy.Catalog.CatalogService
  * @param option - {Object} 属性键值对。<br>
  * @param {String} [option.f=json] 回结果的格式,缺省xml(json / xml),base64_geometry:返回单个三维几何信息的流，并转为base64
@@ -84,7 +85,7 @@ class SystomInfo extends CatalogService {
      */
     GetSystemLibrary(onSuccess, onError) {
         var me = this;
-        me.partUrl = "systemlibraries?f=" + me.f;
+        me.partUrl = 'systemlibraries?f=' + me.f;
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -122,15 +123,15 @@ class SystomInfo extends CatalogService {
      */
     GetSymbol(onSuccess, onError) {
         var me = this;
-        var str = "symbols?&systemLib=" + me.systemLib + "&type=" + me.type;
+        var str = 'symbols?&systemLib=' + me.systemLib + '&type=' + me.type;
         if (me.f) {
-            str += "&f=" + me.f;
+            str += '&f=' + me.f;
         }
         if (me.page) {
-            str += "&page=" + me.page;
+            str += '&page=' + me.page;
         }
         if (me.size) {
-            str += "&size=" + me.pageCount;
+            str += '&size=' + me.pageCount;
         }
         me.partUrl = str;
         var url = me.getFullUrl();
@@ -145,5 +146,5 @@ class SystomInfo extends CatalogService {
     }
 }
 
-export {SystomInfo};
+export { SystomInfo };
 Zondy.Catalog.SystomInfo = SystomInfo;

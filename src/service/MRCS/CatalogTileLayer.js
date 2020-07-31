@@ -1,10 +1,11 @@
-﻿import {CatalogService}  from  "./CatalogService";
-import {IgsServiceBase}  from  "../baseserver/IServiceBase";
+﻿import { CatalogService } from './CatalogService';
+import { IgsServiceBase } from '../baseserver/IServiceBase';
 
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:目录服务.TileLayer
- * @classdesc Zondy.Catalog.TileLayer 瓦片图层类
+ * @classdesc 瓦片图层类
+ * @description Zondy.Catalog.TileLayer
  * @extends   Zondy.Catalog.CatalogService
  * @param option - {Object} 属性键值对。<br>
  * @param {String} [option.tileName = null] 瓦片名称
@@ -30,7 +31,7 @@ class TileLayer extends CatalogService {
          * @description 瓦片版本
          * @default 2.0
          */
-        this.version = options.version !== undefined ? options.version : "2.0";
+        this.version = options.version !== undefined ? options.version : '2.0';
     }
 
     /**
@@ -51,12 +52,12 @@ class TileLayer extends CatalogService {
      */
     getTileList(onSuccess, onError) {
         var me = this;
-        me.partUrl = "tiles?f=json";
+        me.partUrl = 'tiles?f=json';
         if (this.version) {
-            if (me.version === "2.0") {
-                me.partUrl += "&v=2";
+            if (me.version === '2.0') {
+                me.partUrl += '&v=2';
             } else {
-                me.partUrl += "&v=" + me.version;
+                me.partUrl += '&v=' + me.version;
             }
         }
         var url = me.getFullUrl();
@@ -90,9 +91,9 @@ class TileLayer extends CatalogService {
      */
     getTileInfo(onSuccess, onError) {
         var me = this;
-        me.partUrl = "tiles/" + me.tileName + "?f=json";
+        me.partUrl = 'tiles/' + me.tileName + '?f=json';
         if (me.version) {
-            me.partUrl += "&v=" + me.version;
+            me.partUrl += '&v=' + me.version;
         }
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
@@ -105,5 +106,5 @@ class TileLayer extends CatalogService {
         service.processAsync();
     }
 }
-export {TileLayer};
+export { TileLayer };
 Zondy.Catalog.TileLayer = TileLayer;

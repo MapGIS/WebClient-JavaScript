@@ -5,7 +5,8 @@ import {newGuid}  from  "../common/Util";
 /**
  * 地图图片服务
  * @class module:地图服务.GetMapInfoService
- * @classdesc Zondy.Service.GetMapInfoService 地图信息服务
+ * @classdesc 地图信息服务
+ * @description Zondy.Service.GetMapInfoService
  * @extends  Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对
  * @param {String} [option.mapName= null] 地图文档/瓦片地图名称

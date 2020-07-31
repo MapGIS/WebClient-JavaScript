@@ -4,7 +4,8 @@
 /**
  * 统计图类型枚举
  * @class module:专题图服务.CChartType
- * @classdesc Zondy.Object.Theme.CChartType 统计图类型枚举
+ * @classdesc 统计图类型枚举
+ * @description Zondy.Object.Theme.CChartType
  * @param Unknown 未知类型
  * @param Bar 直方图
  * @param Bar3D 3D直方图

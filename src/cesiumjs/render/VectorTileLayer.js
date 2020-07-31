@@ -8,7 +8,8 @@ import axios from 'axios';
 /**
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
  * @class module:客户端渲染.VectorTileLayer
- * @classdesc CesiumZondy.zondy.VectorTileLayer 基于Mapbox的矢量瓦片进行绘制渲染.
+ * @classdesc  基于Mapbox的矢量瓦片进行绘制渲染.
+ * @description CesiumZondy.zondy.VectorTileLayer, 前端实时绘制矢量瓦片
  * @param viewer - {Object} 传入的cesium的地图viewer
  * @param option - {Object} 属性键值对，地图属性字段。
  * @param {String} [option.ip = localhost] 地图服务ip

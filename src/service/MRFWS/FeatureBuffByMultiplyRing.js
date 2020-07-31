@@ -8,7 +8,8 @@ import {
 /**
  * 要素缓冲分析（多圈）
  * @class module:分析服务.FeatureBuffByMultiplyRing
- * @classdesc Zondy.Service.FeatureBuffByMultiplyRing 要素缓冲分析（多圈）
+ * @classdesc 要素缓冲分析（多圈）
+ * @description Zondy.Service.FeatureBuffByMultiplyRing
  * @extends Zondy.Service.FeatureBuffBase
  * @param {Object} option 属性键值对
  * @param {String} [option.radiusStr = "0.003,0.002,0.001"] 设置多圈缓冲分析的缓冲半径字符串

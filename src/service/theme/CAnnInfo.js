@@ -8,7 +8,8 @@ import {
 /**
  * 注记图形参数信息
  * @class module:专题图服务.CAnnInfo
- * @classdesc Zondy.Object.Theme.CAnnInfo 注记图形参数信息
+ * @classdesc 注记图形参数信息
+ * @description Zondy.Object.Theme.CAnnInfo 
  * @param {Object} opt_options
  * @param {Number} [opt_options.LibID = 0] 库ID
  * @param {Boolean} [opt_options.Ovprnt = false] 覆盖方式

@@ -7,7 +7,8 @@ import {
 /**
  * 分段专题图表达式信息对象构造函数
  * @class module:专题图服务.ExpInfo
- * @classdesc Zondy.Object.Theme.ExpInfo 分段专题图表达式信息对象构造函数
+ * @classdesc 分段专题图表达式信息对象构造函数
+ * @description Zondy.Object.Theme.ExpInfo 
  * @param {String} [expression=] 分级字段表达式
  * @param {Array} [itemValueArr=null] 分段专题图分段值
  * @param {Object} opt_options 属性键值对

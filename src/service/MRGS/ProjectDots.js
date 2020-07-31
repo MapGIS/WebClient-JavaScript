@@ -16,8 +16,9 @@ import {
 
 /**
  * 投影点数组
- * @class  module:量算服务.ProjectDots
- * @classdesc Zondy.Service.ProjectDots 投影点数组
+ * @class  module:几何分析服务.ProjectDots
+ * @classdesc 投影点数组
+ * @description Zondy.Service.ProjectDots
  * @extends Zondy.Service.GeometryAnalysisBase
  * @param {Zondy.Object.Point2D} dots 需要转换的点坐标 Array{@link Zondy.Object.Point2D}
  * @param {Zondy.Service.CProjectParam} srcparam 源投影参数

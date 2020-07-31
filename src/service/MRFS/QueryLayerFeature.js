@@ -1,9 +1,10 @@
-﻿import {Zondy} from '../common/Base';
-import {QueryServiceBase}  from  "./QueryServiceBase";
+﻿import { Zondy } from '../common/Base';
+import { QueryServiceBase } from './QueryServiceBase';
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.QueryLayerFeature
- * @classdesc Zondy.Service.QueryLayerFeature 矢量图层要素查询类
+ * @classdesc 矢量图层要素查询类
+ * @description Zondy.Service.QueryLayerFeature
  * @extends  Zondy.Service.QueryServiceBase
  * @param queryParam -{Zondy.Object.QueryByLayerParameter} 查询参数信息。
  * @param option - {Object} 属性键值对。<br>
@@ -73,8 +74,8 @@ class QueryLayerFeature extends QueryServiceBase {
          * @type {String}
          * @description  查询参数地址
          */
-        this.partUrl = "layer/query";
+        this.partUrl = 'layer/query';
     }
 }
-export {QueryLayerFeature};
+export { QueryLayerFeature };
 Zondy.Service.QueryLayerFeature = QueryLayerFeature;

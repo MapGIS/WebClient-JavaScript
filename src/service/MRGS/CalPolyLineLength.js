@@ -13,8 +13,9 @@ import {
 
 /**
  * 折线长度计算服务
- * @class module:量算服务.CalPolyLineLength
- * @classdesc Zondy.Service.CalPolyLineLength 折线长度计算服务
+ * @class module:几何分析服务.CalPolyLineLength
+ * @classdesc 折线长度计算服务
+ * @description Zondy.Service.CalPolyLineLength
  * @extends Zondy.Service.CalServiceBase
  * @param {Zondy.Object.Point2D} obj 需要计算的点数组 Array<{@link Zondy.Object.Point2D}>
  * @param {Object} option 属性键值对,拓展属性,为其他属性赋值的键值对

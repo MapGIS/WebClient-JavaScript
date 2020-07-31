@@ -1,10 +1,11 @@
-﻿import {Zondy} from '../common/Base';
-import {extend}  from  "../common/Util";
-import {toJSON}  from  "../common/Util";
+﻿import { Zondy } from '../common/Base';
+import { extend } from '../common/Util';
+import { toJSON } from '../common/Util';
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:要素服务.QueryFeatureRule
- * @classdesc Zondy.Service.QueryFeatureRule 要素规则查询类构造函数
+ * @classdesc 要素规则查询类构造函数
+ * @description Zondy.Service.QueryFeatureRule 
  * @param option - {Object} 属性键值对。<br>
  * @param {Boolean} [option.CompareRectOnly=false] 是否仅比较要素的外包矩形，来判定是否与几何约束图形有交集
  * @param {Boolean} [option.EnableDisplayCondition=false] 是否将要素的可见性计算在内
@@ -32,7 +33,7 @@ var QueryFeatureRule = function (option) {
      * @description 是否仅比较要素的外包矩形，来判定是否与几何约束图形有交集
      * @default false
      */
-    this.CompareRectOnly = (options.CompareRectOnly !== undefined && (typeof (options.CompareRectOnly) === "boolean")) ? options.CompareRectOnly : false;
+    this.CompareRectOnly = options.CompareRectOnly !== undefined && typeof options.CompareRectOnly === 'boolean' ? options.CompareRectOnly : false;
 
     /**
      * @private
@@ -41,7 +42,8 @@ var QueryFeatureRule = function (option) {
      * @description  是否将要素的可见性计算在内
      * @default false
      */
-    this.EnableDisplayCondition = (options.EnableDisplayCondition !== undefined && (typeof (options.EnableDisplayCondition) === "boolean")) ? options.EnableDisplayCondition : false;
+    this.EnableDisplayCondition =
+        options.EnableDisplayCondition !== undefined && typeof options.EnableDisplayCondition === 'boolean' ? options.EnableDisplayCondition : false;
 
     /**
      * @private
@@ -50,7 +52,7 @@ var QueryFeatureRule = function (option) {
      * @description 是否完全包含
      * @default false
      */
-    this.MustInside = (options.MustInside !== undefined && (typeof (options.MustInside) === "boolean")) ? options.MustInside : false;
+    this.MustInside = options.MustInside !== undefined && typeof options.MustInside === 'boolean' ? options.MustInside : false;
 
     /**
      * @private
@@ -59,7 +61,7 @@ var QueryFeatureRule = function (option) {
      * @description 是否相交
      * @default false
      */
-    this.Intersect = (options.Intersect !== undefined && (typeof (options.Intersect) === "boolean")) ? options.Intersect : false;
+    this.Intersect = options.Intersect !== undefined && typeof options.Intersect === 'boolean' ? options.Intersect : false;
 };
 /**
  * @description 获取此类的json形式的字符串
@@ -69,5 +71,5 @@ var QueryFeatureRule = function (option) {
 QueryFeatureRule.prototype.toJSON = function () {
     return toJSON(this);
 };
-export {QueryFeatureRule};
+export { QueryFeatureRule };
 Zondy.Service.QueryFeatureRule = QueryFeatureRule;

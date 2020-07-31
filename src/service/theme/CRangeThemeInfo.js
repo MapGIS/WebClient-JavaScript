@@ -8,7 +8,8 @@ import {
 /**
  * 分段专题图信息对象构造函数
  * @class module:专题图服务.CRangeThemeInfo
- * @classdesc Zondy.Object.Theme.CRangeThemeInfo 分段专题图信息对象构造函数
+ * @classdesc 分段专题图信息对象构造函数
+ * @description Zondy.Object.Theme.CRangeThemeInfo 
  * @extends CThemeInfo
  * @param {Object} opt_options 属性键值对
  * @param {String} [StartValue = ""] 开始值

@@ -17,7 +17,8 @@ import {
 /**
  * 统计专题图
  * @class module:专题图服务.CChartTheme
- * @classdesc Zondy.Object.Theme.CChartTheme 统计专题图
+ * @classdesc 统计专题图
+ * @description Zondy.Object.Theme.CChartTheme 
  * @extends CTheme
  * @param {Object} opt_options 属性键值对。
  * @param {Number} [opt_options.ChartType = CChartType.Bar] 统计图类型 {@link Zondy.Object.Theme.CChartType}

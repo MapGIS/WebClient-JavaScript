@@ -5,7 +5,8 @@ import {
 /**
  * 图形信息枚举
  * @class module:专题图服务.CAllOtherDataItemInfoSource
- * @classdesc Zondy.Object.Theme.CAllOtherDataItemInfoSource 图形信息枚举
+ * @classdesc 图形信息枚举
+ * @description Zondy.Object.Theme.CAllOtherDataItemInfoSource
  * @param DefaultThemeInfo 缺省的专题图形信息
  * @param DataItemIntrinsicInfo 数据项的固有图形信息
  */

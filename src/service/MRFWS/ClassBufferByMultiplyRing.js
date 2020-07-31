@@ -8,7 +8,8 @@ import {
 /**
  * 类缓冲分析（多圈）
  * @class module:分析服务.ClassBufferByMultiplyRing
- * @classdesc Zondy.Service.ClassBufferByMultiplyRing 类缓冲分析（多圈）
+ * @classdesc  类缓冲分析（多圈）
+ * @description Zondy.Service.ClassBufferByMultiplyRing
  * @extends Zondy.Service.ClassBufferBase
  * @param {Object} option 属性键值对
  * @param {String} [option.flowID = 600232] 矢量图层多圈缓冲区分析的工作流ID

@@ -11,7 +11,8 @@ import {
 /**
  * 投影服务基类
  * @class module:分析服务.ProjectByLayer
- * @classdesc Zondy.Service.ProjectByLayer 投影服务基类
+ * @classdesc 投影服务基类
+ * @description Zondy.Service.ProjectByLayer
  * @extends Zondy.Service.ProjectBase
  * @param {Object} project 属性键值对
  * @param {Number} [project.projTypeID = 23] 投影类型 0地理坐标系，1UTM，2兰伯特等角圆锥投影坐标系

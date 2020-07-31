@@ -4,7 +4,8 @@
 /**
  * 文件夹信息属性
  * @class module:专题图服务.FolderInfoAttribute
- * @classdesc Zondy.Object.Theme.FolderInfoAttribute 文件夹信息属性
+ * @classdesc 文件夹信息属性
+ * @description Zondy.Object.Theme.FolderInfoAttribute 
  * @param {String} [n = null] 名称
  * @param {String} [v = null] 值
  */

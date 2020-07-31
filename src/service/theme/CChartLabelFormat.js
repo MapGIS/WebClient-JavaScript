@@ -5,7 +5,8 @@
 /**
  * 统计图形标签枚举
  * @class module:专题图服务.CChartLabelFormat
- * @classdesc Zondy.Object.Theme.CChartLabelFormat 统计图形标签枚举
+ * @classdesc 统计图形标签枚举
+ * @description Zondy.Object.Theme.CChartLabelFormat 
  * @param Unknown 未知类型
  * @param Value 实际值
  * @param Percent 百分比

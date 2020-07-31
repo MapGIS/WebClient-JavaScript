@@ -4,7 +4,8 @@ import {MapType}  from  "../common/EnumComm";
 /**
  * 地图图片服务
  * @class module:地图服务.GetMapImageService
- * @classdesc Zondy.Service.GetMapImageService图层图片服务
+ * @classdesc 图层图片服务
+ * @description Zondy.Service.GetMapImageService
  * @extends  Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对
  * @param {String} [option.mapName= null] 地图名称

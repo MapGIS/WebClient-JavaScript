@@ -1,12 +1,13 @@
-﻿import {Zondy} from '../common/Base';
-import {extend} from "../common/Util";
-import {QueryFeatureStruct} from "./QueryFeatureStruct";
-import {QueryFeatureRule} from "./QueryFeatureRule";
+﻿import { Zondy } from '../common/Base';
+import { extend } from '../common/Util';
+import { QueryFeatureStruct } from './QueryFeatureStruct';
+import { QueryFeatureRule } from './QueryFeatureRule';
 
 /**
  * @author 基础平台/研究院 陈琪
  * @class module:要素服务.QueryParameterBase
- * @classdesc  Zondy.Service.QueryParameterBase 矢量地图参数查询基类
+ * @classdesc  矢量地图参数查询基类
+ * @description Zondy.Service.QueryParameterBase
  * @param option - {Object} 属性键值对。
  * @param {Zondy.Object.Tangram} [option.geometry=null] 用于查询的几何描述
  * @param {String} [option.where=null] 条件查询的SQL语句,如果为空，则表示为单一的几何查询；如果取值，表示为几何和条件混合查询
@@ -27,44 +28,43 @@ import {QueryFeatureRule} from "./QueryFeatureRule";
  */
 
 class QueryParameterBase {
-	constructor(option) {
+    constructor(option) {
+        var options = option ? option : {};
+        extend(this, options);
 
-		var options = option ? option : {};
-		extend(this, options);
+        this.geometry = options.geometry !== undefined ? options.geometry : null;
 
-		this.geometry = options.geometry !== undefined ? options.geometry : null;
+        this.where = options.where !== undefined ? options.where : null;
 
-		this.where = options.where !== undefined ? options.where : null;
+        this.rule = options.rule !== undefined ? options.rule : new QueryFeatureRule();
 
-		this.rule = options.rule !== undefined ? options.rule : new QueryFeatureRule();
+        this.objectIds = options.objectIds !== undefined ? options.objectIds : null;
 
-		this.objectIds = options.objectIds !== undefined ? options.objectIds : null;
+        this.pageIndex = options.pageIndex !== undefined ? options.pageIndex : 0;
 
-		this.pageIndex = options.pageIndex !== undefined ? options.pageIndex : 0;
+        this.recordNumber = options.recordNumber !== undefined ? options.recordNumber : 20;
 
-		this.recordNumber = options.recordNumber !== undefined ? options.recordNumber : 20;
+        this.resultFormat = options.resultFormat !== undefined ? options.resultFormat : 'json';
 
-		this.resultFormat = options.resultFormat !== undefined ? options.resultFormat : "json";
+        this.struct = options.struct !== undefined ? options.struct : new QueryFeatureStruct();
 
-		this.struct = options.struct !== undefined ? options.struct : new QueryFeatureStruct();
+        this.orderField = options.orderField !== undefined ? options.orderField : null;
 
-		this.orderField = options.orderField !== undefined ? options.orderField : null;
+        this.rtnLabel = options.rtnLabel !== undefined ? options.rtnLabel : false;
 
-		this.rtnLabel = options.rtnLabel !== undefined ? options.rtnLabel : false;
+        this.fields = options.fields || '';
 
-		this.fields = options.fields || "";
+        this.coordPrecision = options.coordPrecision || options.coordPrecision === 0 ? options.coordPrecision : 2;
 
-		this.coordPrecision = options.coordPrecision || options.coordPrecision === 0 ? options.coordPrecision : 2;
+        this.isAsc = options.isAsc !== undefined ? options.isAsc : false;
 
-		this.isAsc = options.isAsc !== undefined ? options.isAsc : false;
+        this.cursorType = options.cursorType !== undefined ? options.cursorType : 'forward';
 
-		this.cursorType = options.cursorType !== undefined ? options.cursorType : "forward";
+        this.proj = options.proj || null;
 
-		this.proj = options.proj || null;
-
-		this.guid = options.guid || "__readonly_user__";
-	}
+        this.guid = options.guid || '__readonly_user__';
+    }
 }
 
-export {QueryParameterBase};
+export { QueryParameterBase };
 Zondy.Service.QueryParameterBase = QueryParameterBase;

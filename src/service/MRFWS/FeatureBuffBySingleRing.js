@@ -8,7 +8,8 @@ import {
 /**
  * 要素缓冲分析（单圈）
  * @class module:分析服务.FeatureBuffBySingleRing
- * @classdesc Zondy.Service.FeatureBuffBySingleRing 要素缓冲分析（单圈）
+ * @classdesc 要素缓冲分析（单圈）
+ * @description Zondy.Service.FeatureBuffBySingleRing
  * @extends Zondy.Service.FeatureBuffBase
  * @param {Object} option 属性键值对
  * @param {Number} [option.leftRad = 0.001] 缓冲分析左半径

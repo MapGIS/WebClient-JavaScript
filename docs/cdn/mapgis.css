@@ -34,10 +34,10 @@ body.small-header .top-nav {
     width  : fit-content !important;
 } */
 
-/* .mapgis-webclient-logo {
-    margin-left: 79px;
-    height     : 38px !important;
-} */
+.mapgis-webclient-logo {
+    /* margin-left: 79px; */
+    height: 38px !important;
+}
 
 .logo {
     float  : left !important;
@@ -46,4 +46,188 @@ body.small-header .top-nav {
 
 #main>.core {
     padding: 6px !important;
+}
+
+
+.content h1,
+.content header.page-title h1 {
+    font-family: "TT Norms Medium", sans-serif;
+    font-size  : 17px;
+    font-weight: bold;
+    margin     : 8px 0;
+}
+
+
+h1 {
+    font-size: 20px !important;
+}
+
+h2 {
+    font-size: 18px !important;
+}
+
+h3 {
+    font-size: 16px !important;
+}
+
+h4 {
+    font-size: 14px !important;
+}
+
+h5 {
+    font-size: 12px !important;
+}
+
+.content header p {
+    font-size: 14px;
+}
+
+.member>.name .code-name {
+    font-size: 14px;
+}
+
+.member>.description p {
+    font-size: 14px;
+    margin   : 25px 0;
+}
+
+.table {
+    font-size: 12px;
+}
+
+table.params td.name code,
+table.props td.name code {
+    background: transparent;
+    padding   : 0;
+    font-size : 12px;
+    color     : #211D1A;
+}
+
+table.params thead th,
+table.props thead th {
+    font-weight: bold;
+    padding    : 6px 12px;
+}
+
+table.params td,
+table.props td {
+    padding: 6px 12px;
+}
+
+body {
+    font-size: 12px;
+}
+
+.button {
+    transition   : all 0.2s;
+    border-radius: 4px;
+    padding      : 8px 24px;
+    height       : 30px;
+    border-color : #4268F6;
+    font-size    : 12px;
+    color        : #4268F6;
+}
+
+#main>.core>.content {
+    background: #fff;
+    padding   : 20px;
+}
+
+.tag-source span {
+    display: inline-block;
+    padding: 6px 14px;
+}
+
+.method-parameter {
+    font-size: 14px;
+}
+
+.details dt {
+    font-size   : 14px;
+    border-left : 2px solid #008DDF;
+    padding-left: 16px;
+}
+
+.top-nav .menu .navigation .link:hover:not(.no-hover) {
+    border-bottom: 2px solid #33dbe8;
+}
+
+.vertical-section {
+    border-top: 1px dashed #252d45;
+}
+
+.page-title {
+    margin-bottom : 12px;
+    padding-bottom: 12px;
+    border-bottom : 1px dashed #252d45;
+}
+
+.page-title-name {
+    margin-left: 12px;
+    font-size  : 18px;
+}
+
+.page-title-kind {
+    font-weight: bold;
+    font-size  : 18px !important;
+}
+
+.sidebar a {
+    font-size: 10px;
+}
+
+.sidebar::-webkit-scrollbar {
+    width : 4px;
+    height: 1px;
+
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    border-radius     : 4px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background        : rgba(144, 147, 153, .5);
+}
+
+.sidebar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius     : 4px;
+    background        : transparent;
+}
+
+.core::-webkit-scrollbar {
+    width : 4px;
+    height: 1px;
+}
+
+.core::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background   : rgba(144, 147, 153, .5);
+}
+
+.core::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background   : transparent;
+}
+
+.side-nav::-webkit-scrollbar {
+    width : 4px;
+    height: 1px;
+}
+
+.side-nav::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background   : rgba(144, 147, 153, .5);
+}
+
+.side-nav::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background   : transparent;
+}
+
+.module-list-info {
+    display: flex !important;
+}
+
+.module-summary .module-classdesc {
+    margin-left: 20px !important;
 }

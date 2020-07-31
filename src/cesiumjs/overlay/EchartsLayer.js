@@ -15,8 +15,8 @@ var echartsIdIndex = 0;
 /**
  * @author 基础平台/创新中心 潘卓然
  * @class module:客户端可视化.EchartsLayer
- * @classdesc CesiumZondy.Overlayer.EchartsLayer
- * @description cesium的echars 4.0的实现。请详细参考echarts源码
+ * @classdesc Echarts图表图层
+ * @description cesium的echars 4.0的实现。请详细参考echarts源码,CesiumZondy.Overlayer.EchartsLayer
  * @see http://echarts.baidu.com/api.html#echarts
  * @example 这里唯一要注意的是我们中地数码的ceisum的右键事件不是放大缩小而是旋转视角
  * option = {

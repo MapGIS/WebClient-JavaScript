@@ -8,7 +8,8 @@ import {
 /**
  * 投影服务基类
  * @class module:分析服务.ProjectBase
- * @classdesc Zondy.Service.ProjectBase 投影服务基类
+ * @classdesc 投影服务基类
+ * @description Zondy.Service.ProjectBase 
  * @extends Zondy.Service.AnalysisBase
  * @param {Object} option 属性键值对
  * @param {String} [option.clsName = null] 需转换的要素类地址

@@ -7,7 +7,8 @@ import {
 /**
  * 专题图对象（基类）
  * @class module:专题图服务.CTheme
- * @classdesc Zondy.Object.Theme.CTheme 专题图对象（基类）
+ * @classdesc 专题图对象（基类）
+ * @description Zondy.Object.Theme.CTheme 
  * @param {Object} opt_options 属性键值对
  * @param {String} [opt_options.Name = null] 专题图名称
  * @param {Boolean} [opt_options.IsBaseTheme = true] 是否为单值专题图

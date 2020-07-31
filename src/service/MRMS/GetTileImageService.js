@@ -3,7 +3,8 @@ import {MapServiceBase}  from  "./MapServiceBase";
 /**
  * 地图图片服务
  * @class module:地图服务.GetTileImageService
- * @classdesc Zondy.Service.GetTileImageService 瓦片图片服务
+ * @classdesc 瓦片图片服务
+ * @description Zondy.Service.GetTileImageService 
  * @extends  Zondy.Service.MapServiceBase
  * @param {Object} option 属性键值对
  * @param {String} [option.hdfName= null] 地图名称

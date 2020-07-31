@@ -17,7 +17,8 @@ import {
 /**
  * 空间分析服务基类
  * @class module:分析服务.AnalysisBase
- * @classdesc Zondy.Service.AnalysisBase 空间分析服务基类
+ * @classdesc 空间分析服务基类
+ * @description Zondy.Service.AnalysisBase
  * @extends Zondy.Service.ServiceBase
  * @param {Object} option 属性键值对,拓展属性
  * @param {Number} [option.flowID] 工作流ID号

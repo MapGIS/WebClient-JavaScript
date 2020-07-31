@@ -17,7 +17,8 @@ import {
 /**
  * 专题图信息(基类)
  * @class module:专题图服务.CThemeInfo
- * @classdesc Zondy.Object.Theme.CThemeInfo 专题图信息(基类)
+ * @classdesc 专题图信息(基类)
+ * @description Zondy.Object.Theme.CThemeInfo 
  * @param {Object} opt_options 属性键值对
  * @param {String} [opt_options.Caption = null] 名称
  * @param {Boolean} [opt_options.IsVisible = true] 可见标志

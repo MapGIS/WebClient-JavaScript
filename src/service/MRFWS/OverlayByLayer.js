@@ -8,7 +8,8 @@ import {
 /**
  * 图层叠加
  * @class module:分析服务.OverlayByLayer
- * @classdesc Zondy.Service.OverlayByLayer 图层叠加
+ * @classdesc 图层叠加
+ * @description Zondy.Service.OverlayByLayer 
  * @extends Zondy.Service.OverlayBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo2 = null] 设置叠加图层URL

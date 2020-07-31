@@ -1,0 +1,11 @@
+{
+  "name": "@mapgis/webclient-es6-service",
+  "version": "1.0.0",
+  "description": "中地数码基于ES6语法针对igserver的服务封装",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mapgis",
+  "license": "Apache2"
+}

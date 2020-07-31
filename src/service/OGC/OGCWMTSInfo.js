@@ -6,7 +6,8 @@ import axios
 /**
  * @author 基础平台/产品2部 龚跃健
  * @class module:OGC服务.OGCWMTSInfo
- * @classdesc Zondy.OGC.OGCWMTSInfo 获取OGC WMTS 信息类
+ * @classdesc  OGC-WMTS信息类
+ * @description Zondy.OGC.OGCWMTSInfo 获取OGC WMTS 信息类
  * @extends  Zondy.Service.ServiceBase
  * @param option - {Object} 属性字段
  * @param {String} [option.ip = "localhost"] 必须。服务器ip。(getWMTSInfo,getFeatureInfo)

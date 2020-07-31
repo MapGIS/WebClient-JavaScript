@@ -8,7 +8,8 @@ import {
 /**
  * 单值专题图信息
  * @class module:专题图服务.CUniqueThemeInfo
- * @classdesc Zondy.Object.Theme.CUniqueThemeInfo 单值专题图信息
+ * @classdesc 单值专题图信息
+ * @description Zondy.Object.Theme.CUniqueThemeInfo 
  * @extends CThemeInfo
  * @param {Object} opt_options 属性键值对
  */
