@@ -87,7 +87,7 @@ export const Gallerys = [
     icon: "./static/assets/gallery/oblique.png",
     title: "倾斜摄影",
     subtitle: "无缝对接主流三维数据，高效展示大雁塔的倾斜摄影",
-    index: "/demo/cesium/mapgis/mapgis-oblique",
+    index: "/demo/cesium/m3d/m3d-oblique",
   },
   {
     icon: "./static/assets/gallery/dem.png",
@@ -122,7 +122,7 @@ export const Gallerys = [
   {
     icon: "./static/assets/gallery/chinadata.png",
     title: "海量矢量数据",
-    subtitle: "数据量的高效渲染，大比例尺地物",
+    subtitle: "千万级别数据量的高效渲染，大比例尺地物",
     index: "/demo/mapboxgl/client-view/vectortile/lightstyle",
   },
 ];

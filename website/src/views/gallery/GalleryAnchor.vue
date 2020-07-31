@@ -6,7 +6,7 @@
       :color="getColor(item.anchor)"
       :class="{'active': isActive(item.anchor)}"
     >
-      {{item.name}}
+      <span @click="handleClick(item.anchor)">{{item.name}}</span>
     </el-timeline-item>
   </el-timeline>
 </template>
@@ -32,6 +32,15 @@ export default {
     getColor (key) {
       if (this.isActive(key)) return '#33dbe8'
       else return ''
+    },
+    handleClick (key) {
+      let href = window.location.href.split("#");
+      let localte = `#${key}`;
+
+      if (href.length >= 2) {
+        let newHref = href[0] + "#" + href[1] + localte;
+        window.location.href = newHref;
+      }
     }
   },
 }

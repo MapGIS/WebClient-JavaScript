@@ -12,6 +12,7 @@
         >
           <el-tag
             v-if="secondname"
+            type="info"
             effect="light"
           >{{ secondname }}</el-tag>
           <el-divider

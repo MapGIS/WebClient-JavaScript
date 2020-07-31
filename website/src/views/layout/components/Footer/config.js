@@ -14,7 +14,7 @@ export const CommonUrls = [
       [
         "https://github.com/MapGIS/WebClient-JavaScript",
         "https://gitee.com/mapgis_10",
-        "./docs/cesium.index.html",
+        "./docs/cesium/index.html",
         "/gallery/cesium",
       ],
     ]

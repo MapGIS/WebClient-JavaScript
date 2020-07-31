@@ -108,7 +108,8 @@ export default {
       heightHash: [],
       scrollActive: [],
       modeChange: false,
-      heightChange: false
+      heightChange: false,
+      scrolling: false
     };
   },
   watch: {
@@ -167,6 +168,7 @@ export default {
         if (!elm) return;
 
         setTimeout(() => {
+          self.scrolling = true;
           self.componentScrollBox.scrollTop = elm.offsetTop - 40;
           self.$forceUpdate();
         }, 100);
@@ -271,7 +273,7 @@ export default {
     this.componentScrollBox = this.componentScrollBar.$el.querySelector(
       ".el-scrollbar__wrap"
     );
-    this.throttledScrollHandler = throttle(300, this.handleScroll);
+    this.throttledScrollHandler = throttle(1000, this.handleScroll);
     this.componentScrollBox.addEventListener(
       "scroll",
       this.throttledScrollHandler
@@ -320,8 +322,8 @@ export default {
     // float: right;
     width: 120px;
     padding: 16px 20px;
-    background: #f4f7fb;
-    border-left: solid 1px #e6e6e6;
+    /* background: #f4f7fb;
+    border-left: solid 1px #e6e6e6; */
     border-radius: 0px;
 
     -webkit-box-sizing: unset;

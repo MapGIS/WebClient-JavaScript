@@ -22,24 +22,36 @@
           v-for="(l, j) in link"
           :key="j"
         >
-          <a
+          <div
+            class="header-menu-link-text"
             v-if="isLink(menu.routes[i][j])"
-            :href="menu.routes[i][j]"
-            target="_blank"
           >
-            <span :class="{'light-subtitle': light}">{{l}}</span>
-          </a>
-          <a
+            <a
+              class="header-menu-link-text"
+              :href="menu.routes[i][j]"
+              target="_blank"
+            >
+              <span :class="{'light-subtitle': light}">{{l}}</span>
+            </a>
+          </div>
+          <div
+            class="header-menu-link-text"
             v-else-if="isDocs(menu.routes[i][j])"
-            :href="menu.routes[i][j]"
           >
-            <span :class="{'light-subtitle': light}">{{l}}</span>
-          </a>
+            <a
+              class="header-menu-link-text"
+              :href="menu.routes[i][j]"
+            >
+              <span :class="{'light-subtitle': light}">{{l}}</span>
+            </a>
+          </div>
           <router-link
             v-else
             :to="menu.routes[i][j]"
           >
-            <span :class="{'light-subtitle': light}">{{l}}</span>
+            <div class="header-menu-link-text">
+              <span :class="{'light-subtitle': light}">{{l}}</span>
+            </div>
           </router-link>
         </div>
       </div>
@@ -55,7 +67,7 @@ export default {
   props: {
     icon: {
       type: String,
-    },  
+    },
     title: {
       type: String,
     },
@@ -159,6 +171,11 @@ export default {
       rgba(71, 148, 250, 1),
       rgba(49, 225, 230, 1)
     );
+  }
+  .header-menu-link-text {
+    width: 160px;
+    height: 30px;
+    display: block;
   }
 }
 

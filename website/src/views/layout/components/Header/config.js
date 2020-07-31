@@ -57,7 +57,7 @@ export const Headers = [
             "MapGIS地图服务",
             "场景" /* "IGServer-X", "IGServer-S" */,
           ],
-          ["三维空间分析", "轨迹模拟", "图形绘制", "工具", "查询"],
+          ["三维空间分析", "轨迹模拟", "图形绘制", "工具" /* "查询" */],
           [
             "客户端可视化",
             "客户端-Echarts",
@@ -79,7 +79,7 @@ export const Headers = [
             "/gallery/cesium#track",
             "/gallery/cesium#drawGraphic",
             "/gallery/cesium#measure",
-            "/gallery/cesium#query",
+            /* "/gallery/cesium#query", */
           ],
           [
             "/gallery/cesium#clientView-heatmap",
@@ -92,12 +92,27 @@ export const Headers = [
       },
       {
         title: "开发API",
-        links: [["向导"], ["客户端可视化", "客户端渲染"], ["Cesium", "TurfJs"]],
-        routes: [
-          ["./docs/cesium/index.html"],
+        links: [
+          ["客户端数据服务", "客户端可视化", "客户端渲染"],
           [
+            "客户端事件管理",
+            "客户端公共方法",
+            "客户端视图管理",
+            "客户端可视化分析",
+          ],
+          ["Cesium", "TurfJs"],
+        ],
+        routes: [
+          [
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E6%2595%25B0%25E6%258D%25AE%25E6%259C%258D%25E5%258A%25A1.html",
             "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html",
             "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E6%25B8%25B2%25E6%259F%2593.html",
+          ],
+          [
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E4%25BA%258B%25E4%25BB%25B6%25E7%25AE%25A1%25E7%2590%2586.html",
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%2585%25AC%25E5%2585%25B1%25E6%2596%25B9%25E6%25B3%2595.html",
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E8%25A7%2586%25E5%259B%25BE%25E7%25AE%25A1%25E7%2590%2586.html",
+            "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596%25E5%2588%2586%25E6%259E%2590.html",
           ],
           ["https://cesium.com/docs/cesiumjs-ref-doc/", "http://turfjs.org/"],
         ],
