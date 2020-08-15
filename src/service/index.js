@@ -204,25 +204,14 @@ export const Extend = {
     SlopLineParam
 };
 
-import {
-    G3DMapDoc,
-    G3DService
-} from "./G3D";
+import { G3DMapDoc, G3DService } from './G3D';
 
 export const G3D = {
     G3DMapDoc,
     G3DService
-}
+};
 
-import {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-} from './baseserver';
+import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat } from './baseserver';
 
 export const BaseServer = {
     CommonServiceBase,
@@ -234,15 +223,7 @@ export const BaseServer = {
     JSONFormat
 };
 
-import {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer,
-    SystomInfo
-} from './MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer, SystomInfo } from './MRCS';
 
 export const MRCS = {
     ColorInfo,
@@ -360,14 +341,7 @@ export const MRGS = {
     TopAnalysis
 };
 
-import {
-    GetDocImageService,
-    GetLayerImageService,
-    GetMapImageService,
-    GetMapInfoService,
-    GetTileImageService,
-    MapServiceBase
-} from './MRMS';
+import { GetDocImageService, GetLayerImageService, GetMapImageService, GetMapInfoService, GetTileImageService, MapServiceBase } from './MRMS';
 
 export const MRMS = {
     GetDocImageService,
@@ -440,12 +414,7 @@ export const Info = {
     ThemesInfo
 };
 
-import {
-    WMSCapabilities,
-    WMTSCapabilities,
-    OGCWMTSInfo,
-    OGCWMSInfo
-} from './OGC';
+import { WMSCapabilities, WMTSCapabilities, OGCWMTSInfo, OGCWMSInfo } from './OGC';
 
 export const OGC = {
     WMSCapabilities,
@@ -454,8 +423,17 @@ export const OGC = {
     OGCWMSInfo
 };
 
+import { EsCatlogType, EsCatlogName, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore';
+
+export const DataStore = {
+    EsCatlogType,
+    EsCatlogName,
+    EsCatlogService,
+    EsTableService,
+    EsSpaceTimeQueryByAgg
+};
 
 export default {
     MRFS,
-    MRFWS,
-}
+    MRFWS
+};
