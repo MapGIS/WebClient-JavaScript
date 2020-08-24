@@ -131,6 +131,7 @@ export default class EchartsLayer {
 
         this.initDevicePixelRatio();
 
+        this.visible = true;
         this.canvas = this._createCanvas();
         this.postRenderTime = 0;
         this.postRenderFrame = options.postRenderFrame || 30;
@@ -252,10 +253,12 @@ export default class EchartsLayer {
     }
 
     _visible() {
+        this.visible = true;
         this.canvas.style.visibility = "visible";
     }
 
     _unvisible() {
+        this.visible = false;
         this.canvas.style.visibility = "hidden";
     }
 
@@ -277,7 +280,7 @@ export default class EchartsLayer {
                 var viewportRoot = api.getZr().painter.getViewportRoot()
                 var coordSys = mapModel.coordinateSystem
                 var moveHandler = function (type, target) {
-                    if (rendering  || !self.map) {
+                    if (rendering  || !self.map || !self.visible) {
                         return
                     }
                     self._unvisible();
@@ -298,7 +301,7 @@ export default class EchartsLayer {
                 }
 
                 var moveEndHandler = function (type, target) {
-                    if (rendering || !self.map) {
+                    if (rendering || !self.map || !self.visible) {
                         return
                     }
                     var offsetEl = self.map.canvas;

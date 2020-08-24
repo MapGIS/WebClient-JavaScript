@@ -17,6 +17,8 @@ CesiumZondy.Manager = CesiumZondy.Manager || {};
 
 CesiumZondy.UI = CesiumZondy.UI || {};
 
+CesiumZondy.Query = CesiumZondy.Query || {};
+
 CesiumZondy.GeoSpark = CesiumZondy.GeoSpark || {};
 CesiumZondy.ElasticSearch = CesiumZondy.ElasticSearch || {};
 CesiumZondy.Overlayer = CesiumZondy.Overlayer || {};

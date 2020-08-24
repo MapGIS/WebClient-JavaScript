@@ -82,7 +82,7 @@ export default class M3DLayer extends BaseLayer {
      * @param {Boolean} [optionsParam.showBoundingVolume = false] 是否显示包围盒
      * @param {Number} [optionsParam.maximumScreenSpaceError = 16] 用于控制模型显示细节  值较大将会渲染更少的贴图,进而可以提高性能,而较低的值将提高视觉质量
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileset.html}
-     * @returns [Array<MapGISM3DSet>] 返回m3d图层对象数组,长度为图层对象个数
+     * @returns {Array<MapGISM3DSet>} 返回m3d图层对象数组,长度为图层对象个数
      * @example
      * function callBackfunction(layer){
      * console.log(layer)
@@ -225,7 +225,7 @@ export default class M3DLayer extends BaseLayer {
      * @function module:客户端数据服务.M3DLayer.prototype.setM3dLayerMovement
      * @param {MapGISM3DSet} layer m3d图层对象
      * @param {Cartesian3} direction 移动方向
-     * @param {Number}} distance 移动距离
+     * @param {Number} distance 移动距离
      * @example
      *  let tilelayer = m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D',{});
      *  let dir = new Cesium.Cartesian3(0.0, 1.0, 1.0); 分别表示xyz方向

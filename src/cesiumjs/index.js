@@ -9,4 +9,4 @@ export * from './layer';
 export * from './overlay';
 export * from './provider';
 
-// export * from './render';
+export * from './render';

@@ -19,7 +19,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * 添加谷歌服务地址
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendGoogleMap
      * @param {Object} optionsParam 预留扩展参数
-     * @param {String} optionsParam.ptype 类型：矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’
+     * @param {String} optionsParam.ptype 类型：矢量'm@207000000' 影像's@130' 栅格't@130,r@207000000' 道路'h@207000000'
      * @returns 瓦片层对象 可用于操作移除
      * @example
      * let tilelayer = thirdLayer.appendGoogleMap({ptype:'m@207000000'});
@@ -33,7 +33,7 @@ export default class ThirdPartyLayer extends BaseLayer {
         if (offset) {
             offsetLabel = '&gl=cn';
         }
-        let _url = `http://mt{s}.google.cn/vt/{type}&hl=zh-CN${offsetLabel}&x={x}&y={y}&z={z}&s=Galileo`;
+        let _url = `http://mt{s}.google.cn/vt/lyrs={type}&hl=zh-CN${offsetLabel}&x={x}&y={y}&z={z}&s=Galileo`;
         _url = _url.replace('{type}', options.ptype);
         const googleMap = this.viewer.imageryLayers.addImageryProvider(
             new Cesium.GoogleMapProvider({
@@ -48,11 +48,12 @@ export default class ThirdPartyLayer extends BaseLayer {
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendGoogleMapExt
      * @param {Object} optionsParam 参数
      * @param {Object} optionsParam.ptype {ptype:'s'} 类型
-     * s:卫星地图
-     * h:skeleton map light
-     * m:全地图
-     * r:skeleton map dark
-     * t:地形图
+     * m：路线图
+     * t：地形图
+     * p：带标签的地形图
+     * s：卫星图
+     * y：带标签的卫星图
+     * h：标签层（路名、地名等）
      * 也可以进行组合，例如：s,r 或者 t,h
      * @returns {ImageryLayer} 瓦片层对象 可用于操作移除
      * @example
@@ -67,7 +68,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * 添加高德地图服务
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendGaodeMap
      * @param {Object} optionsParam 参数
-     * @param {String} optionsParam.ptype 地图类型：'vec', 'raod', 'img'
+     * @param {String} optionsParam.ptype 地图类型：'vec', 'road', 'img'
      * @param {Number} [optionsParam.maximumLevel = 16] 最大级别
      * @returns 瓦片层对象
      * @example
@@ -119,6 +120,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendOpenWeatherMap
      * @param {Object} optionsParam 参数
      * @param {Type} optionsParam.ptype 类型有: Pressure,Temperature,Windspeed,Clouds,Label
+     * @param {String} optionsParam.appid 授权码
      * @returns {ImageryLayer} 瓦片层对象
      * @example
      * let tilelayer = thirdLayer.appendOpenWeatherMap({ptype:'Label',appid:'b1b15e88fa797225412429c150c122a1'});
