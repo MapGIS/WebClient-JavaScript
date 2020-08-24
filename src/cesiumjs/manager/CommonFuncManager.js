@@ -19,8 +19,8 @@ function calAngleOf3Pnt(p1, p2, p3) {
  * @author 三维基础平台研发中心·冯桂英
  * @class module:客户端公共方法.CommonFuncManager
  * @category CommonFuncManager
- * @classdesc 辅助计算类
- * @description 该类实提供加密点等辅助计算函数
+ * @classdesc 通用辅助计算类
+ * @description 该类实提供例如加密点等辅助计算函数
  * @param optionsParam.viewer 场景视窗
  */
 export default class CommonFuncManager {
@@ -389,7 +389,7 @@ export default class CommonFuncManager {
      * //    ClockRange:Cesium.ClockRange.CLAMPED
      * //   };
      * //let update = commfun.rotationView('rotationAroundPos',opt) ;
-     * commfun.pauseRotationView(update);
+     * commfun.pauseRotationView();
      */
     pauseRotationView() {
         this.viewer.clock.shouldAnimate = false;
@@ -407,7 +407,7 @@ export default class CommonFuncManager {
      * //    ClockRange:Cesium.ClockRange.CLAMPED
      * //   };
      * //let update = commfun.rotationView('rotationAroundPos',opt) ;
-     * //commfun.pauseRotationView(update);
+     * //commfun.pauseRotationView();
      * commfun.startRotationAroundPos(update);
      */
     startRotationAroundPos() {
@@ -684,6 +684,37 @@ export default class CommonFuncManager {
                 callback(cartesianPositions);
             }
         });
+    }
+
+    /**
+     * 创建导航控件
+     * @function module:客户端公共方法.CommonFuncManager.prototype.createNavigationTool
+     * @param  {object} options 导航控件参数
+     * let options = {};
+     * //用于在使用重置导航重置地图视图时设置默认视图控制。接受的值是Cesium.Cartographic 和 Cesium.Rectangle
+     * options.defaultResetView = Cesium.Rectangle.fromDegrees(71, 3, 90, 14);
+     * //用于启用或禁用罗盘
+     * options.enableCompass= true;
+     * //用于启用或禁用缩放控件
+     * options.enableZoomControls= false;
+     * //用于启用或禁用距离图例
+     * options.enableDistanceLegend= false;
+     * //用于启用或禁用指南针外环
+     * options.enableCompassOuterRing= true;
+     * @returns {Object} 导航控件对象
+     * @example 
+     * let commfun = new CommonFun({viewer:viewer});
+     * let navigation = commfun.createNavigationTool({
+                enableCompass: true,
+                enableZoomControls: true,
+                enableDistanceLegend: true,
+                enableCompassOuterRing: true,
+                defaultResetView: Cesium.Rectangle.fromDegrees(110, 30, 121, 31)
+            });
+     */
+    createNavigationTool(options) {
+        this.viewer.extend(Cesium.viewerCesiumNavigationMixin, options);
+        return this.viewer.cesiumNavigation;
     }
 }
 

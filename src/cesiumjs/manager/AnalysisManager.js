@@ -191,7 +191,6 @@ export default class AnalysisManager {
     constructor(options) {
         this._viewer = Cesium.defaultValue(options.viewer, undefined);
         this._scene = this._viewer.scene;
-        this._commFun = new CommonFuncManager(options);
     }
 
     /**
@@ -335,7 +334,7 @@ export default class AnalysisManager {
         for (let j = 0; j < cartesianArr.length - 1; j += 1) {
             len += Math.sqrt((cartesianArr[j].x - cartesianArr[j + 1].x) ** 2 + (cartesianArr[j].y - cartesianArr[j + 1].y) ** 2);
         }
-        const pnts = this._commFun.linearInterpolate3D(cartesianArr, len / 300);
+        const pnts = CommonFuncManager.linearInterpolate3D(cartesianArr, len / 300);
 
         let cartographicsArr = this._viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(cartesianArr);
         cartographicsArr = cartographicsArr.concat(this._viewer.scene.globe.ellipsoid.cartesianArrayToCartographicArray(pnts));
@@ -556,20 +555,20 @@ export default class AnalysisManager {
      * @function module:客户端可视化分析.AnalysisManager.prototype.createDynamicCutting
      * @param {Object} tileset 图层集
      * @param {Array} planes 平面集
-     * @param {Object} optionsParam 动态剖切参数
-     * @param {Color} [optionsParam.color] 材质
-     * @param {Boolean} [optionsParam.interaction] 交互
+     * @param {Object} options 动态剖切参数
+     * @param {Color} [options.color] 材质
+     * @param {Boolean} [options.interaction] 交互
      */
-    createDynamicCutting(tilesets, planes, optionsParam) {
+    createDynamicCutting(tilesets, planes, options) {
         if (!Cesium.defined(tilesets) && tilesets.length > 0) {
             return undefined;
         }
         let material = Cesium.Color.WHITE.withAlpha(0.02);
         let interaction = false;
-        const options = Cesium.defaultValue(optionsParam, {});
+        const optionsParam = Cesium.defaultValue(options, {});
 
-        material = Cesium.defaultValue(options.color, material);
-        interaction = Cesium.defaultValue(options.interaction, false);
+        material = Cesium.defaultValue(optionsParam.color, material);
+        interaction = Cesium.defaultValue(optionsParam.interaction, false);
 
         const that = this;
         const cutPlanes = [];
@@ -693,19 +692,19 @@ export default class AnalysisManager {
      * @param {Array} planeArray 用于卷帘分析的两个面
      * @param {Number} distance 平面一的距离
      * @param {Number} distance1 平面二的距离
-     * @param {Object} optionsParam 剖切面材质参数
-     * @param {Color} [optionsParam.color] 剖切一的颜色
-     * @param {Color} [optionsParam.color1] 剖切二的颜色
+     * @param {Object} options 剖切面材质参数
+     * @param {Color} [options.color] 剖切一的颜色
+     * @param {Color} [options.color1] 剖切二的颜色
      * @example
      * 调用方法
      * analysisManager.createRollershutters([tileset],distance,distance2);
      */
-    createRollershutters(tileset, planeArray, distance, distance1, optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createRollershutters(tileset, planeArray, distance, distance1, options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const plane = Cesium.defaultValue(planeArray[0], new Cesium.ClippingPlane(new Cesium.Cartesian3(1, 0, 0), -200.0));
         const plane1 = Cesium.defaultValue(planeArray[1], new Cesium.ClippingPlane(new Cesium.Cartesian3(-1, 0, 0), -200.0));
         const dynaCut = this.createDynamicCutting(tileset, [plane], {
-            color: Cesium.defaultValue(options.color, new Cesium.Color(1.0, 1.0, 1.0, 0.3))
+            color: Cesium.defaultValue(optionsParam.color, new Cesium.Color(1.0, 1.0, 1.0, 0.3))
         });
         const planetEntity = dynaCut.planes[0];
         planetEntity.plane.plane = new Cesium.CallbackProperty(() => {
@@ -713,7 +712,7 @@ export default class AnalysisManager {
             return Cesium.Plane.transform(plane, tileset[0].modelMatrix, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
         }, false);
         const dynaCut1 = this.createDynamicCutting(tileset, [plane1], {
-            color: Cesium.defaultValue(options.color1, new Cesium.Color(1.0, 1.0, 1.0, 0.3))
+            color: Cesium.defaultValue(optionsParam.color1, new Cesium.Color(1.0, 1.0, 1.0, 0.3))
         });
         const planetEntity1 = dynaCut1.planes[0];
         planetEntity1.plane.plane = new Cesium.CallbackProperty(() => {
@@ -726,31 +725,31 @@ export default class AnalysisManager {
      * @function module:客户端可视化分析.AnalysisManager.prototype.startCustomDisplay
      * @param {Array<layer>} layerList 图层列表
      * @param {Array<id>} idList id列表
-     * @param {Object} optionsParam 扩展属性
-     * @param {Color} [optionsParam.color = new Cesium.Color(1.0,0,0,0.5)] 高亮颜色
-     * @param {Cesium3DTileColorBlendMode} [optionsParam.colorBlendMode =  Cesium.Cesium3DTileColorBlendMode.HIGHLIGHT] 高亮模式
-     * @param {Number} [optionsParam.colorBlendAmount =  0.5] 混合系数
-     * @param {Boolean} [optionsParam.applyForLayer =  false] 是否应用至图层
-     * @param {Color} [optionsParam.negate = true] 是否取反 ——意思是除了id列表中的要素应用color
-     * @param {Color} [optionsParam.negateColor = new Cesium.Color.WHITE] 取反的颜色  只有在negate=true 的时候才起作用
-     * @param {String} [optionsParam.style='EdgeHighlight'] 高亮模式//'EdgeHighlight'高亮+描边   'Edge'//描边
-     * @param {Color} [optionsParam.edgeColor=new Cesium.Color(0, 0, 1,1.0)] //描边颜色 默认红色
+     * @param {Object} options 扩展属性
+     * @param {Color} [options.color = new Cesium.Color(1.0,0,0,0.5)] 高亮颜色
+     * @param {Cesium3DTileColorBlendMode} [options.colorBlendMode =  Cesium.Cesium3DTileColorBlendMode.HIGHLIGHT] 高亮模式
+     * @param {Number} [options.colorBlendAmount =  0.5] 混合系数
+     * @param {Boolean} [options.applyForLayer =  false] 是否应用至图层
+     * @param {Color} [options.negate = true] 是否取反 ——意思是除了id列表中的要素应用color
+     * @param {Color} [options.negateColor = new Cesium.Color.WHITE] 取反的颜色  只有在negate=true 的时候才起作用
+     * @param {String} [options.style='EdgeHighlight'] 高亮模式//'EdgeHighlight'高亮+描边   'Edge'//描边
+     * @param {Color} [options.edgeColor=new Cesium.Color(0, 0, 1,1.0)] //描边颜色 默认红色
      *
      */
-    startCustomDisplay(layerList, idList, optionsParam) {
+    startCustomDisplay(layerList, idList, options) {
         if (!Cesium.defined(layerList) || !Cesium.defined(idList)) {
             return;
         }
-        const options = Cesium.defaultValue(optionsParam, {});
+        const optionsParam = Cesium.defaultValue(options, {});
         const that = this;
-        let colorUse = Cesium.defaultValue(options.color, new Cesium.Color(1, 0, 0, 0.5));
-        const edgeColorUse = Cesium.defaultValue(options.edgeColor, new Cesium.Color(1, 0, 0, 1.0));
-        const negate = Cesium.defaultValue(options.negate, false);
-        const negateColor = Cesium.defaultValue(options.negateColor, Cesium.Color.WHITE);
-        const applyForLayer = Cesium.defaultValue(options.applyForLayer, false);
-        const style = Cesium.defaultValue(options.style, '');
-        const colorBlendMode = Cesium.defaultValue(options.colorBlendMode, Cesium.Cesium3DTileColorBlendMode.HIGHLIGHT);
-        const colorBlendAmount = Cesium.defaultValue(options.colorBlendAmount, 0.5);
+        let colorUse = Cesium.defaultValue(optionsParam.color, new Cesium.Color(1, 0, 0, 0.5));
+        const edgeColorUse = Cesium.defaultValue(optionsParam.edgeColor, new Cesium.Color(1, 0, 0, 1.0));
+        const negate = Cesium.defaultValue(optionsParam.negate, false);
+        const negateColor = Cesium.defaultValue(optionsParam.negateColor, Cesium.Color.WHITE);
+        const applyForLayer = Cesium.defaultValue(optionsParam.applyForLayer, false);
+        const style = Cesium.defaultValue(optionsParam.style, '');
+        const colorBlendMode = Cesium.defaultValue(optionsParam.colorBlendMode, Cesium.Cesium3DTileColorBlendMode.HIGHLIGHT);
+        const colorBlendAmount = Cesium.defaultValue(optionsParam.colorBlendAmount, 0.5);
         if (style === 'Edge' && !Cesium.defined(this._edgeDetectionStageCD)) {
             this._edgeDetectionStageCD = Cesium.PostProcessStageLibrary.createEdgeDetectionStage();
             this._edgeDetectionStageCD.uniforms.color = edgeColorUse; // Color.BLUE;

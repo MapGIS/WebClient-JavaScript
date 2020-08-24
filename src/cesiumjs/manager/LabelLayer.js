@@ -19,8 +19,8 @@ export default class LabelLayer extends BaseLayer {
     /**
      * 添加文字标签
      * @function module:客户端可视化.LabelLayer.prototype.appendLabel
-     * @param {Number} lat 经度
-     * @param {Number} lon 纬度
+     * @param {Number} lon 经度
+     * @param {Number} lat 纬度
      * @param {Number} height 高程
      * @param {String} lText 标签内容
      * @param {Object} optionsParam 参数
@@ -42,7 +42,7 @@ export default class LabelLayer extends BaseLayer {
      *      verticalOrigin:Cesium.VerticalOrigin.BOTTOM,
      *      pixelOffset:new Cesium.Cartesian2(0, -9)});
      */
-    appendLabel(lat, lon, height, lText, optionsParam) {
+    appendLabel(lon, lat, height, lText, optionsParam) {
         const options = Cesium.defaultValue(optionsParam, Cesium.defaultValue.EMPTY_OBJECT);
         const lFont = Cesium.defaultValue(options.font, '14pt monospace');
         const lFillColor = Cesium.defaultValue(options.fillColor, Cesium.Color.WHITE);
@@ -61,7 +61,7 @@ export default class LabelLayer extends BaseLayer {
 
         const para = {
             name: '标签',
-            position: Cesium.Cartesian3.fromDegrees(lat, lon, height),
+            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             label: {
                 // 文字标签
                 text: lText,
@@ -90,13 +90,13 @@ export default class LabelLayer extends BaseLayer {
     /**
      * 添加图片标签
      * @function module:客户端可视化.LabelLayer.prototype.appendBillboard
-     * @param {Number} lat 经度
-     * @param {Number} lon 纬度
+     * @param {Number} lon 经度
+     * @param {Number} lat 纬度
      * @param {Number} height 高度
      * @param {String} name  名称
-     * @param {String} bImageUrl 图片地址
-     * @param {Number} bWidth 图片宽度
-     * @param {Number} bHeight 图片高度
+     * @param {String} imageUrl 图片地址
+     * @param {Number} imageWidth 图片宽度
+     * @param {Number} imageHeight 图片高度
      * @param {Object} optionsParam 扩展参数
      * @param {String} [optionsParam.description] 描述信息
      * @returns {Entity}  添加的公告板对象   移除通过removeEntity(entity)
@@ -108,7 +108,7 @@ export default class LabelLayer extends BaseLayer {
      *    };
      *  let billBoard = labelLayer.appendBillboard(113.2, 31, 200, 'name','http://localhost:8088/car.png', 64, 64,options);
      */
-    appendBillboard(lat, lon, height, name, bImageUrl, bWidth, bHeight, optionsParam) {
+    appendBillboard(lon, lat, height, name, imageUrl, imageWidth, imageHeight, optionsParam) {
         const options = Cesium.defaultValue(optionsParam, {});
         const lScaleByDistance = Cesium.defaultValue(options.scaleByDistance, new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5));
         const lTransparentByDistance = Cesium.defaultValue(options.transparentByDistance, new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0));
@@ -116,12 +116,12 @@ export default class LabelLayer extends BaseLayer {
 
         const para = {
             name,
-            position: Cesium.Cartesian3.fromDegrees(lat, lon, height),
+            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             billboard: {
                 // 图标
-                image: bImageUrl,
-                width: bWidth,
-                height: bHeight,
+                image: imageUrl,
+                width: imageWidth,
+                height: imageHeight,
                 heightReference: lHeightReference,
                 // 随远近缩放
                 pixelOffsetScaleByDistance: lScaleByDistance, // new NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
@@ -151,8 +151,8 @@ export default class LabelLayer extends BaseLayer {
      * @param {String} iconUrl    图标路径
      * @param {Number} iconWidth  图标宽度
      * @param {Number} iconHeight 图标高度
-     * @param {Number} farDist    最远显示距离
-     * @param {Number} nearDist   最近显示距离
+     * @param {Number} farDist    最远显示距离,相机到注记的距离大于该值 注记不显示
+     * @param {Number} nearDist   最近显示距离,相机到注记的距离小于该值 注记不显示
      * @param {String} txtPos     图片位置 'center','top','bottom'
      * @param {String} attribute  其他属性信息
      * @returns {Entity} labelIcon  图标注记对象 移除通过removeEntity(entity)

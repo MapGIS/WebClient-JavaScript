@@ -7,8 +7,8 @@ import CommonFuncManager from './CommonFuncManager';
  * @author 三维基础平台研发中心·冯桂英
  * @class module:客户端可视化.EntityController
  * @category EntityController
- * @classdesc 实体绘制控制器类
- * @description 该类实现了实体数据的绘制与删除功能
+ * @classdesc 几何绘制控制类
+ * @description 该类实现了几何数据的绘制与删除功能
  * @param optionsParam.viewer viewer 视图
  */
 export default class EntityController extends BaseLayer {
@@ -28,16 +28,16 @@ export default class EntityController extends BaseLayer {
     /**
      * 添加点
      * @function module:客户端可视化.EntityController.prototype.appendPoint
-     * @param  {Number} lat 经度
-     * @param  {Number} lon 纬度
+     * @param  {Number} lon 经度
+     * @param  {Number} lat 纬度
      * @param  {Number} height 高程
      * @param  {String} name 名称
      * @param  {Number} pixelSize 像素大小
-     * @param  {Color}  color (webGlobe.getColor(1,0,0,1))颜色
+     * @param  {Color}  color 颜色
      * @param  {Color}  outlineColor 外边线颜色
      * @param  {Number} outlineWidth 边线宽度
      * @param  {String} description 属性描述信息
-     * @returns {Entity}    返回点对象 移除通过removeEntity(entity)
+     * @returns {Entity} 返回点对象 移除通过removeEntity(entity)
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let color1 = new Cesium.Color(1, 0, 0, 1);
@@ -47,13 +47,13 @@ export default class EntityController extends BaseLayer {
      * viewer.flyTo(point);
      *
      */
-    appendPoint(lat, lon, height, name, pixelSize, color, outlineColor, outlineWidth, description) {
+    appendPoint(lon, lat, height, name, pixelSize, color, outlineColor, outlineWidth, description) {
         if (undefined === this.viewer) {
             return undefined;
         }
         const point = this.viewer.entities.add({
             name,
-            position: Cesium.Cartesian3.fromDegrees(lat, lon, height),
+            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             point: {
                 // 点
                 pixelSize,
@@ -69,27 +69,35 @@ export default class EntityController extends BaseLayer {
     /**
      * 通用添加点
      * @function module:客户端可视化.EntityController.prototype.appendPointComm
-     * @param  {Number} lat 经度
-     * @param  {Number} lon 纬度
+     * @param  {Number} lon 经度
+     * @param  {Number} lat 纬度
      * @param  {Number} height 高程
      * @param  {String} name 名称
      * @param  {String} description 属性描述信息
      * @param  {Object} options entity参数信息对象
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/PointGraphics.html } 参数信息
+     * @returns {Entity} 返回点对象
      * @example
      * let entityController = new EntityController({viewer:viewer});
-     * let entity = entityController.appendPointComm(115.2, 31, 200,'点','通用点',Cesium.Color.BLUE,{outlineColor:Cesium.Color.WHITE,outlineWidth:1});
-     * viewer.flyTo(entity);
+       let entity = entityController.appendPointComm(115.2, 31, 200, '点', '通用点', {
+                scaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
+                translucencyByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
+                pixelSize: 16, 
+                outlineColor: Cesium.Color.RED,
+                outlineWidth: 3,
+                color:Cesium.Color.BLUE
+            }); 
+        viewer.flyTo(entity);
      */
-    appendPointComm(lat, lon, height, name, description, options) {
+    appendPointComm(lon, lat, height, name, description, options) {
         const param = {
             name,
-            position: Cesium.Cartesian3.fromDegrees(lat, lon, height),
+            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
             point: new Cesium.PointGraphics(),
             description
         };
         if (Cesium.defined(options)) {
-            Object.extend(param, options);
+            Object.extend(param.point, options);
         }
         const point = this.viewer.entities.add(param);
         return point;
@@ -99,6 +107,7 @@ export default class EntityController extends BaseLayer {
      * 添加
      * @function module:客户端可视化.EntityController.prototype.appendGraphics
      * @param {Object} options 包含entity中相关选项设置
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Entity.html }
      * @returns {Entity} 返回点对象 移除通过removeEntity(entity)
      *{
      *    id:
@@ -122,17 +131,19 @@ export default class EntityController extends BaseLayer {
     }
 
     /**
-     * 画多边形区
+     * 添加多边形区
      * @function module:客户端可视化.EntityController.prototype.appendPolygon
      * @param {String} name  名称
      * @param {Array} points  点数组 顺序是逆时针
      * @param {Color} fillColorParam  区填充色 默认白色半透明
      * @param {Color} outlineColorParam  外框线颜色 默认红色半透明
+     * @param {Boolean} threeDimension 是否传入三维点 传入三维点则按照三维点解析
      * @param {Object} options 参数
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/PolygonGraphics.html }
      * @returns {Entity} 绘制的多边形区对象 移除通过removeEntity(entity)
      * @example
      * let entityController = new EntityController({viewer:viewer});
+     * //不指定高度 添加平面区
      * let arryPoint =[ -115.0,37.0,
                   -115.0,32.0,
                   -107.0, 33.0,
@@ -140,32 +151,38 @@ export default class EntityController extends BaseLayer {
                   -102.0,35.0];
      * let fillColor = new Cesium.Color(1, 0, 0, 1);
      * let outlineColor = new Cesium.Color(1, 1, 0, 1);
-     * let entity = entityController.appendPolygon('1',arryPoint,fillColor,outlineColor);
+     * let entity = entityController.appendPolygon('1',arryPoint,fillColor,outlineColor,false);
      * viewer.flyTo(entity);
+     * //指定高度 添加立体区
+     * let arryPointOut = [121.1550, 23.8902, 1500, 121.1668, 23.8800, 2600, 121.1836, 23.8902, 3700, 121.1696, 23.91, 4800];
+     * let outlineColor = new Cesium.Color(1, 0, 0, 1);
+     * let entity = entityController.appendPolygon('1', arryPointOut, Cesium.Color.BLUE, outlineColor, true);
      */
-    appendPolygon(name, points, fillColorParam, outlineColorParam, options) {
+    appendPolygon(name, points, fillColorParam, outlineColorParam, threeDimension, options) {
         const fillColor = Cesium.defaultValue(fillColorParam, Cesium.Color.WHITE.withAlpha(0.5));
         const outlineColor = Cesium.defaultValue(outlineColorParam, Cesium.Color.RED.withAlpha(0.5));
-        let outlineWidth = 20;
-        let height = 0;
+        let outlineWidth = 2;
+        let posArr;
         if (Cesium.defined(options)) {
             outlineWidth = Cesium.defaultValue(options.outlineWidth, 20);
-            height = Cesium.defaultValue(options.height, 0);
+        }
+        if (threeDimension) {
+            posArr = Cesium.Cartesian3.fromDegreesArrayHeights(points);
+        } else {
+            posArr = Cesium.Cartesian3.fromDegreesArray(points);
         }
         const para = {
             name,
             polygon: {
-                hierarchy: Cesium.Cartesian3.fromDegreesArray(points),
-                extrudedHeight: 0,
+                hierarchy: posArr,
                 material: fillColor,
                 outline: true,
                 outlineColor,
-                outlineWidth,
-                height
+                outlineWidth
             }
         };
         if (Cesium.defined(options)) {
-            Object.extend(para, options);
+            Object.extend(para.polygon, options);
         }
         const polygon = this.viewer.entities.add(para);
         return polygon;
@@ -173,12 +190,13 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 添加带洞多边形（二维）
-     * @function module:客户端公共方法.EntityController.prototype.appendHolePolygon
+     * @function module:客户端可视化.EntityController.prototype.appendHolePolygon
      * @param {String} name 名称
      * @param {Array} latLonsOut 外圈坐标:[x1,y1,x2,y2,x3,y3]
      * @param {Array} latLonsIn 内圈Array<[x1,y1,x2,y2,x3,y3]>
      * @param {Object} options 参数对象
      * @param {Color} [options.material] 填充颜色 new Cesium.Color(0, 0, 1, 1)
+     * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/PolygonGraphics.html }
      * @returns {Entity} 绘制的多边形区对象 移除通过removeEntity(entity)
      * @example
      * let entityController = new EntityController({viewer:viewer});
@@ -222,7 +240,7 @@ export default class EntityController extends BaseLayer {
      * @param {Array} latLonsIn 内圈点
      * @param {Number} step 插值步长
      * @param {Object} options 可扩展参数
-     * @param {Function} callback 回调函数
+     * @param {Function} callback 回调函数 返回绘制对象 通过removeEntity移除
      * @example
      *  let entityController = new EntityController({viewer:viewer});
      *  let latLon_out = [121.1550, 23.8902, 121.1668, 23.8800, 121.1836, 23.8902, 121.1696, 23.91];
@@ -311,13 +329,14 @@ export default class EntityController extends BaseLayer {
     }
 
     /**
-     * 根据给定点画线
-     * @function module:客户端公共方法.EntityController.prototype.appendLine
+     * 根据给定点画线 可绘制贴地形线
+     * @function module:客户端可视化.EntityController.prototype.appendLine
      * @param  {String} name 名称
      * @param  {Array} pointsArray 点数组
      * @param  {Number} width 线的宽度
      * @param  {Color} color 线颜色(默认为蓝色)
      * @param  {Boolean} isHeight 设置是否识别带高度的坐标
+     * @param  {Boolean} clampToGround 设置是否贴地形
      * @param  {Object} options 包含的附加属性
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/PolylineGraphics.html }
      * @returns {Entity} 绘制的线 移除通过removeEntity(entity)
@@ -330,7 +349,15 @@ export default class EntityController extends BaseLayer {
      *             107.0, 28.0,
      *              108.0, 29.0];
      *  let entity = entityController.appendLine('testPtn', array, 2, color, false);
-     * //带高程 并且isHeight设置为true
+     * //不带高度 贴地线
+     *  let entityController = new EntityController({viewer:viewer});
+     *  let color = new Cesium.Color(1, 1, 0, 1);
+     *  let arrayp =[104.0, 28.0,
+     *              106.0, 27.0,
+     *             107.0, 28.0,
+     *              108.0, 29.0];
+     *  let entity = entityController.appendLine('testPtn', array, 2, color, false，true);
+     * //带高程 isHeight设置为true
      *  let arrayp = [104.0, 28.0,1000,
      *               106.0, 27.0,1000,
      *               107.0, 28.0,1000,
@@ -339,10 +366,10 @@ export default class EntityController extends BaseLayer {
      *  let entity = entityController.appendLine('testPtn', array, 2, color, true);
      *  viewer.zoomTo(entity);
      */
-    appendLine(name, pointsArray, width, colorParam, isGround, options) {
+    appendLine(name, pointsArray, width, colorParam, isHeight, clampToGround, options) {
         const color = Cesium.defaultValue(colorParam, Cesium.Color.BLUE);
         let posArr = null;
-        if (Cesium.defined(isGround) && isGround) {
+        if (Cesium.defined(isHeight) && isHeight) {
             posArr = Cesium.Cartesian3.fromDegreesArrayHeights(pointsArray);
         } else {
             posArr = Cesium.Cartesian3.fromDegreesArray(pointsArray);
@@ -352,7 +379,8 @@ export default class EntityController extends BaseLayer {
             polyline: {
                 positions: posArr,
                 width,
-                material: color
+                material: color,
+                clampToGround
             }
         };
         if (Cesium.defined(options)) {
@@ -363,14 +391,15 @@ export default class EntityController extends BaseLayer {
     }
 
     /**
-     * 根据给定点绘制贴地线(可编辑)
-     * @function module:客户端公共方法.EntityController.prototype.appendLineOnTerrain
+     * 根据给定点绘制贴地线(可编辑) 通过去地形实现的贴地
+     * @function module:客户端可视化.EntityController.prototype.appendLineOnTerrain
      * @param {String} name 名称
      * @param {Array} pointsArray 点数组
      * @param {Number} step 离散步长
      * @param {Number} level 地形级别
-     * @param {Function} callback 回调函数
-     * @returns {Entity} 绘制的线 移除通过removeEntity(entity)
+     * @param {Function} callback 回调函数 返回结果对象 通过removePrimitive移除
+     * @param {Object} options 信息参数
+     * @see {@link }
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let array = [120.3, 23.0, 121.8, 23.0];
@@ -409,20 +438,21 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 绘制贴地球线
-     * @function module:客户端公共方法.EntityController.prototype.appendGroundLine
+     * @function module:客户端可视化.EntityController.prototype.appendGroundLine
      * @param {Array} pnts 点序列
      * @param {Color} color 线颜色
-     * @returns {Object} primitive对象
+     * @param {Number} width 宽度参数
+     * @returns {Object} primitive对象 通过removePrimitive移除
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let pnts = [-115.0, 37.0, -107.0, 33.0];
      * let color = new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5);
-     * let primitive = entityController.appendGroundLine(pnts,color);
+     * let primitive = entityController.appendGroundLine(pnts,color,10);
      */
-    appendGroundLine(pnts, color) {
+    appendGroundLine(pnts, color, width) {
         const corridor = new Cesium.CorridorGeometry({
             positions: Cesium.Cartesian3.fromDegreesArray(pnts),
-            width: 10,
+            width,
             cornerType: Cesium.CornerType.MITERED
         });
         const lineInstance = new Cesium.GeometryInstance({
@@ -441,12 +471,13 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 根据给定点画贴地多边形
-     * @function module:客户端公共方法.EntityController.prototype.appendGroundPolygon
-     * @param  {Array} outPnts   外圈坐标数组（经纬度）
+     * @function module:客户端可视化.EntityController.prototype.appendGroundPolygon
+     * @param  {Array} outPnts 外圈坐标数组（经纬度）
      * @param  {Array} innerPnts <Array<>> inerPnts 内圈坐标数组（经纬度）
-     * @param  {Color} color     填充颜色(默认不指定时为蓝色) 通过getColor(red, green, blue, alpha)
-     * @param  {Options} 扩展参数
+     * @param  {Color} color 填充颜色(默认不指定时为蓝色)
+     * @param  {Object} options 信息参数
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/GroundPrimitive.html }
+     * @returns {Object} 绘制对象 通过removePrimitive移除
      * @example
      * let entityController = new EntityController({viewer:viewer});
      * let latLon_out = [121.1550, 23.8902, 121.1668, 23.8800, 121.1836, 23.8902, 121.1696, 23.91];
@@ -490,7 +521,7 @@ export default class EntityController extends BaseLayer {
 
     /**
      * 添加带视频的几何实体
-     * @function module:客户端公共方法.EntityController.prototype.appendEntityWithVideo
+     * @function module:客户端可视化.EntityController.prototype.appendEntityWithVideo
      * @param  {String} videoContainID 视频（video）的dom元素id
      * @param  {PolygonGraphics} geomGraphicParam 几何图形
      * @returns {Entity} 返回添加成功的几何实体

@@ -1,28 +1,5 @@
 import { CesiumZondy } from '../core/Base';
 
-function computeModelMatrix(entity, time) {
-    const position = Cesium.Property.getValueOrUndefined(entity.position, time, new Cesium.Cartesian3());
-    if (!Cesium.defined(position)) {
-        return undefined;
-    }
-    const orientation = Cesium.Property.getValueOrUndefined(entity.orientation, time, new Cesium.Quaternion());
-    let modelMatrix;
-    if (!Cesium.defined(orientation)) {
-        modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(position, undefined, new Cesium.Matrix4());
-    } else {
-        modelMatrix = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromQuaternion(orientation, new Cesium.Matrix3()), position, new Cesium.Matrix4());
-    }
-    return modelMatrix;
-}
-
-function computeEmitterModelMatrix() {
-    const hpr = Cesium.HeadingPitchRoll.fromDegrees(0.0, 0.0, 0.0, new Cesium.HeadingPitchRoll());
-    const trs = new Cesium.TranslationRotationScale();
-    trs.translation = Cesium.Cartesian3.fromElements(3.0, 3.0, 1.0, new Cesium.Cartesian3());
-    trs.rotation = Cesium.Quaternion.fromHeadingPitchRoll(hpr, new Cesium.Quaternion());
-    return Cesium.Matrix4.fromTranslationRotationScale(trs, new Cesium.Matrix4());
-}
-
 /**
  * @author 三维基础平台研发中心·周凌风
  * @class module:客户端可视化分析.AdvancedAnalysisManager
@@ -60,20 +37,20 @@ export default class AdvancedAnalysisManager {
     /**
      * 创建动画漫游实例
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createAnimation
-     * @param {Object} optionsParam 动画漫游参数
-     * @param {Number} [optionsParam.exHeight] 附加高程
-     * @param {Boolean} [optionsParam.isLoop] 是否循环
-     * @param {Object} optionsParam.modelUrl 模型url
-     * @param {Function} [optionsParam.callback] 完成动漫漫游后的回调函数
+     * @param {Object} options 动画漫游参数
+     * @param {Number} [options.exHeight] 附加高程
+     * @param {Boolean} [options.isLoop] 是否循环
+     * @param {Object} options.modelUrl 模型url
+     * @param {Function} [options.callback] 完成动漫漫游后的回调函数
      * @returns {Object} animation 返回动画漫游实例
      */
-    createAnimation(optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createAnimation(options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const animation = new Cesium.AnimationAnalyse(this.viewer, {
-            exHeight: Cesium.defaultValue(options.exHeight, 0.8),
-            isLoop: Cesium.defaultValue(options.isLoop, false),
-            modelUrl: options.modelUrl,
-            complete: Cesium.defaultValue(options.callback, () => {})
+            exHeight: Cesium.defaultValue(optionsParam.exHeight, 0.8),
+            isLoop: Cesium.defaultValue(optionsParam.isLoop, false),
+            modelUrl: optionsParam.modelUrl,
+            complete: Cesium.defaultValue(optionsParam.callback, () => {})
         });
         return animation;
     }
@@ -84,22 +61,22 @@ export default class AdvancedAnalysisManager {
      * @param {Number} dataType 针对地形进行填挖方分析
      * @example
      * dataType=0.0 : 地形
-     * @param {Object} optionsParam 填挖方参数
-     * @param {Number} optionsParam.xPaneNum x方向采样点个数
-     * @param {Number} optionsParam.yPaneNum y方向采样点个数
-     * @param {Number} optionsParam.Height   设定的填挖规整高度
-     * @param {callback} optionsParam.callback 返回结果的回调函数
+     * @param {Object} options 填挖方参数
+     * @param {Number} options.xPaneNum x方向采样点个数
+     * @param {Number} options.yPaneNum y方向采样点个数
+     * @param {Number} options.height   设定的填挖规整高度
+     * @param {callback} options.callback 返回结果的回调函数
      * @returns {Object} cutFill 返回填挖方实例
      */
-    createCutFill(dataType, optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createCutFill(dataType, options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const { viewer } = this;
         const cutFill = new Cesium.CutFillAnalyzeC(viewer, {
-            callBack: options.callback
+            callBack: optionsParam.callback
         });
-        cutFill.xPaneNum = options.xPaneNum;
-        cutFill.yPaneNum = options.yPaneNum;
-        cutFill.Height = options.Height;
+        cutFill.xPaneNum = optionsParam.xPaneNum;
+        cutFill.yPaneNum = optionsParam.yPaneNum;
+        cutFill.height = optionsParam.height;
         cutFill.dataType = Cesium.defaultValue(dataType, 0.0);
         return cutFill;
     }
@@ -121,38 +98,38 @@ export default class AdvancedAnalysisManager {
     /**
      * 创建洪水分析实例
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFlood
-     * @param {Object} optionsParam 洪水分析参数
-     * @param {Number} [optionsParam.minHeight] 最低洪水水位高度
-     * @param {Number} [optionsParam.maxHeight] 最高洪水水位高度
-     * @param {Number} [optionsParam.floodSpeed] 洪水上涨速度
+     * @param {Object} options 洪水分析参数
+     * @param {Number} [options.minHeight] 最低洪水水位高度
+     * @param {Number} [options.maxHeight] 最高洪水水位高度
+     * @param {Number} [options.floodSpeed] 洪水上涨速度
      * @returns {Object} flood 返回洪水实例
      */
-    createFlood(optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createFlood(options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const flood = new Cesium.FloodAnalysis(this.scene);
-        flood.minHeight = Cesium.defaultValue(options.minHeight, 0);
-        flood.maxHeight = Cesium.defaultValue(options.maxHeight, 100);
-        flood.floodSpeed = Cesium.defaultValue(options.floodSpeed, 20);
+        flood.minHeight = Cesium.defaultValue(optionsParam.minHeight, 0);
+        flood.maxHeight = Cesium.defaultValue(optionsParam.maxHeight, 100);
+        flood.floodSpeed = Cesium.defaultValue(optionsParam.floodSpeed, 20);
         return flood;
     }
 
     /**
      * 创建动态航班实例
-     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createPlague
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createDynamicPolyline
      * @param {Object} posStart 轨迹线起点
      * @param {Array} posEnds 轨迹线终点
-     * @param {Object} optionsParam 动态航班参数
-     * @param {Boolean} [optionsParam.isAdd] 是否已添加航班线
+     * @param {Object} options 动态航班参数
+     * @param {Boolean} [options.isAdd] 是否已添加航班线
      * @returns {Object} plague 返回动态航班实例
      */
-    createPlague(posStart, posEnds, optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createDynamicPolyline(posStart, posEnds, options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         let plague;
         if (posStart !== undefined && posEnds !== undefined) {
-            plague = new Cesium.Plague(this.viewer, {
+            plague = new Cesium.DynamicPolyline(this.viewer, {
                 center: posStart,
                 cities: posEnds,
-                isAdd: Cesium.defaultValue(options.isAdd, false)
+                isAdd: Cesium.defaultValue(optionsParam.isAdd, false)
             });
             plague.setVisible('add');
         } else {
@@ -165,20 +142,20 @@ export default class AdvancedAnalysisManager {
      * 模型压平
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createModelFlatten
      * @param {Object} tileset 图层信息
-     * @param {Object} optionsParam 模型压平参数
-     * @param {Boolean} optionsParam.isFlatten 是否执行模型压平
-     * @param {Number} optionsParam.height 压平到指定高度
-     * @param {Number} optionsParam.arrayLength 压平区域顶点数组长度
-     * @param {Array} optionsParam.array 压平区域顶点数组
+     * @param {Object} options 模型压平参数
+     * @param {Boolean} options.isFlatten 是否执行模型压平
+     * @param {Number} options.height 压平到指定高度
+     * @param {Number} options.arrayLength 压平区域顶点数组长度
+     * @param {Array} options.array 压平区域顶点数组
      * @returns {Object} tileset 返回图层信息
      */
-    createModelFlatten(tileset, optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createModelFlatten(tileset, options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const tilesetObject = tileset;
-        tilesetObject.u_isFlatten = Cesium.defaultValue(options.isFlatten, true);
-        tilesetObject.u_height = Cesium.defaultValue(options.height, 0.0);
-        tilesetObject.u_arrayLength = Cesium.defaultValue(options.arrayLength, 0.0);
-        tilesetObject.u_positionArray = Cesium.defaultValue(options.array, []);
+        tilesetObject.u_isFlatten = Cesium.defaultValue(optionsParam.isFlatten, true);
+        tilesetObject.u_height = Cesium.defaultValue(optionsParam.height, 0.0);
+        tilesetObject.u_arrayLength = Cesium.defaultValue(optionsParam.arrayLength, 0.0);
+        tilesetObject.u_positionArray = Cesium.defaultValue(optionsParam.array, []);
         this.scene.requestRender();
         return tilesetObject;
     }
@@ -308,22 +285,22 @@ export default class AdvancedAnalysisManager {
      * @param {Matrix4} transform 数据矩阵
      * @example tileset.root.transform
      * @param {Array} posArray 执行限高分析边界，坐标为模型坐标点，点个数大于2
-     * @param {Object} optionsParam 限高分析参数
-     * @param {Color} [optionsParam.limitedColor] 限高区域颜色
-     * @param {Number} [optionsParam.blendTransparency] 限高颜色混合比例0-1
+     * @param {Object} options 限高分析参数
+     * @param {Color} [options.limitedColor] 限高区域颜色
+     * @param {Number} [options.blendTransparency] 限高颜色混合比例0-1
      * @returns {Object} heightLimited 限高分析实例
      * @example 使用方法
      * 添加：globe.addSceneEffect(heightLimited)
      * 移除：globe.removeSceneEffect(heightLimited)
      */
-    createHeightLimited(height, transform, posArray, optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createHeightLimited(height, transform, posArray, options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const heightLimited = new Cesium.HeightLimited(this.viewer, {
             height: Cesium.defaultValue(height, 0),
             transform,
             posArray,
-            limitedColor: Cesium.defaultValue(options.limitedColor, new Cesium.Color(1, 0, 0, 0.5)),
-            blendTransparency: Cesium.defaultValue(options.blendTransparency, 0.8)
+            limitedColor: Cesium.defaultValue(optionsParam.limitedColor, new Cesium.Color(1, 0, 0, 0.5)),
+            blendTransparency: Cesium.defaultValue(optionsParam.blendTransparency, 0.8)
         });
         return heightLimited;
     }
@@ -394,14 +371,15 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} rain 返回下雨特效实例
      */
     createRain(options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const collection = this.viewer.scene.postProcessStages;
         const rain = Cesium.PostProcessStageLibrary.createRainStage();
         collection.add(rain);
-        this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(options.hueShift, -0.8);
-        this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(options.saturationShift, -0.7);
-        this.scene.skyAtmosphere.brightnessShift = Cesium.defaultValue(options.brightnessShift, -0.33);
-        this.scene.fog.density = Cesium.defaultValue(options.density, 0.001);
-        this.scene.fog.minimumBrightness = Cesium.defaultValue(options.minimumBrightness, 0.8);
+        this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(optionsParam.hueShift, -0.8);
+        this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(optionsParam.saturationShift, -0.7);
+        this.scene.skyAtmosphere.brightnessShift = Cesium.defaultValue(optionsParam.brightnessShift, -0.33);
+        this.scene.fog.density = Cesium.defaultValue(optionsParam.density, 0.001);
+        this.scene.fog.minimumBrightness = Cesium.defaultValue(optionsParam.minimumBrightness, 0.8);
         return rain;
     }
 
@@ -417,93 +395,121 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} snow 返回下雪特效实例
      */
     createSnow(options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const collection = this.viewer.scene.postProcessStages;
         const snow = Cesium.PostProcessStageLibrary.createSnowStage();
         collection.add(snow);
-        this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(options.hueShift, -0.8);
-        this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(options.saturationShift, -0.7);
-        this.scene.skyAtmosphere.brightnessShift = Cesium.defaultValue(options.brightnessShift, -0.33);
-        this.scene.fog.density = Cesium.defaultValue(options.density, 0.001);
-        this.scene.fog.minimumBrightness = Cesium.defaultValue(options.minimumBrightness, 0.8);
+        this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(optionsParam.hueShift, -0.8);
+        this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(optionsParam.saturationShift, -0.7);
+        this.scene.skyAtmosphere.brightnessShift = Cesium.defaultValue(optionsParam.brightnessShift, -0.33);
+        this.scene.fog.density = Cesium.defaultValue(optionsParam.density, 0.001);
+        this.scene.fog.minimumBrightness = Cesium.defaultValue(optionsParam.minimumBrightness, 0.8);
         return snow;
     }
 
     /**
      * 创建雾特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFog
-     * @param {Object} optionsParam 雾特效参数
-     * @param {Number} [optionsParam.alpha] 雾特效透明度
+     * @param {Object} options 雾特效参数
+     * @param {Number} [options.alpha] 雾特效透明度
      * @returns {Object} fog 返回雾特效实例
      */
-    createFog(optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createFog(options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const collection = this.viewer.scene.postProcessStages;
-        const fog = Cesium.PostProcessStageLibrary.createFogStage(Cesium.defaultValue(options.alpha, 0.1));
+        const fog = Cesium.PostProcessStageLibrary.createFogStage(Cesium.defaultValue(optionsParam.alpha, 0.1));
         collection.add(fog);
         return fog;
     }
 
     /**
+     * 移除特效，雨、雪、雾通用
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeStage
+     * @param {Object} stage 雨、雪、雾特效实例
+     */
+    removeStage(stage) {
+        this.viewer.scene.postProcessStages.remove(stage);
+    }
+
+    /**
      * 烟雾粒子特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createParticle
-     * @param {Object} optionsParam 烟雾粒子特效参数
-     * @param {String} optionsParam.imageUrl 粒子url
-     * @param {String} optionsParam.modelUrl 模型url
-     * @param {Date} [optionsParam.startTime] 开始时间
-     * @param {Number} [optionsParam.duration] 持续周期
+     * @param {Object} options 烟雾粒子特效参数
+     * @param {String} options.imageUrl 粒子url
+     * @param {String} options.modelUrl 模型url
+     * @param {Date} [options.startTime] 开始时间
+     * @param {Number} [options.duration] 持续周期
+     * @param {Cartesian3} [options.positionStart] 起点坐标
+     * @param {Cartesian3} [options.positionEnd] 终点坐标
      */
-    createParticle(optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
+    createParticle(options) {
+        const optionsParam = Cesium.defaultValue(options, {});
         const particleSystem = new Cesium.ParticleC(this.viewer, {
-            imageUrl: options.imageUrl,
-            modelUrl: options.modelUrl,
-            startTime: Cesium.defaultValue(options.startTime, new Date(2015, 2, 25, 16)),
-            duration: Cesium.defaultValue(options.duration, 120)
+            imageUrl: optionsParam.imageUrl,
+            modelUrl: optionsParam.modelUrl,
+            startTime: Cesium.defaultValue(optionsParam.startTime, new Cesium.Date(2015, 2, 25, 16)),
+            duration: Cesium.defaultValue(optionsParam.duration, 120),
+            positionStart: Cesium.defaultValue(optionsParam.positionStart, Cesium.Cartesian3.fromDegrees(-75.15787310614596, 39.97862668312678)),
+            positionEnd: Cesium.defaultValue(optionsParam.positionEnd, Cesium.Cartesian3.fromDegrees(-75.1633691390455, 39.95355089912078))
         });
-
+        particleSystem.start();
         return particleSystem;
+    }
+
+    /**
+     * 移除烟雾粒子特效
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeParticle
+     * @param {Object} particle 烟雾粒子特效实例
+     */
+    removeParticle(particle) {
+        particle.remove();
+        this.scene.requestRender();
     }
 
     /**
      * 火焰特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFire
-     * @param {String} modelUrl 模型url,可使用gltf格式模型
-     * @param {Array} position 模型位置，position[0]：经度，position[1]：纬度，position[2]：高度
+     * @param {String} modelUrl 模型url
      * @param {String} imageUrl 火焰图片url
-     * @param {Object} optionsParam 火焰特效参数
-     * @param {Number} [optionsParam.minimumPixelSize] 模型最小像素尺寸
-     * @param {Number} [optionsParam.startScale] 起始规模
-     * @param {Number} [optionsParam.endScale] 终止规模
-     * @param {Number} [optionsParam.particleLife] 粒子生命
-     * @param {Number} [optionsParam.speed] 速度
-     * @param {Cartesian2} [optionsParam.imageSize] 图像尺寸
-     * @param {Number} [optionsParam.emissionRate] 排放率
-     * @param {Number} [optionsParam.lifetime] 持续时间
+     * @param {Array<Number>} position 模型位置，position[0]：经度，position[1]：纬度，position[2]：高度
+     * @param {Object} options 火焰特效参数
+     * @param {Number} [options.minimumPixelSize] 模型最小像素尺寸
+     * @param {Number} [options.startScale] 起始规模
+     * @param {Number} [options.endScale] 终止规模
+     * @param {Number} [options.particleLife] 粒子生命
+     * @param {Number} [options.speed] 速度
+     * @param {Cartesian2} [options.imageSize] 图像尺寸
+     * @param {Number} [options.emissionRate] 排放率
+     * @param {Number} [options.lifetime] 持续时间
+     * @returns {Object} result 返回火焰特效中火焰粒子与模型entity
      */
-    createFire(modelUrl, position, imageUrl, optionsParam) {
-        const options = Cesium.defaultValue(optionsParam, {});
-        const entity = this.viewer.entities.add({
-            model: {
-                uri: modelUrl,
-                minimumPixelSize: Cesium.defaultValue(options.minimumPixelSize, 64)
-            },
-            position: Cesium.Cartesian3.fromDegrees(position[0], position[1], position[2])
+    createFire(modelUrl, imageUrl, position, options) {
+        this.viewer.clock.shouldAnimate = true;
+        const optionsParam = Cesium.defaultValue(options, {});
+        const fire = new Cesium.Fire(this.viewer, {
+            modelUrl,
+            imageUrl,
+            position,
+            startScale: Cesium.defaultValue(optionsParam.startScale, 1.0),
+            endScale: Cesium.defaultValue(optionsParam.endScale, 4.0),
+            particleLife: Cesium.defaultValue(optionsParam.particleLife, 1.0),
+            speed: Cesium.defaultValue(optionsParam.speed, 5.0),
+            imageSize: Cesium.defaultValue(optionsParam.imageSize, new Cesium.Cartesian2(20, 20)),
+            emissionRate: Cesium.defaultValue(optionsParam.emissionRate, 5.0),
+            lifetime: Cesium.defaultValue(optionsParam.lifetime, 16.0)
         });
-        this.viewer.trackedEntity = entity;
-        this.scene.primitives.add(
-            new Cesium.ParticleSystem({
-                image: imageUrl,
-                startScale: Cesium.defaultValue(options.startScale, 1.0),
-                endScale: Cesium.defaultValue(options.endScale, 4.0),
-                particleLife: Cesium.defaultValue(options.particleLife, 1.0),
-                speed: Cesium.defaultValue(options.speed, 5.0),
-                imageSize: Cesium.defaultValue(options.imageSize, new Cesium.Cartesian2(20, 20)),
-                emissionRate: Cesium.defaultValue(options.emissionRate, 5.0),
-                lifetime: Cesium.defaultValue(options.lifetime, 16.0),
-                modelMatrix: computeModelMatrix(entity, Cesium.JulianDate.now()),
-                emitterModelMatrix: computeEmitterModelMatrix()
-            })
-        );
+        fire.start();
+        return fire;
+    }
+
+    /**
+     * 移除火焰特效
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeFire
+     * @param {Object} fire 火焰特效实例
+     */
+    removeFire(fire) {
+        fire.remove();
+        this.scene.requestRender();
     }
 }
 

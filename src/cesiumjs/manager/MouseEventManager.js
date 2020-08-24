@@ -40,9 +40,8 @@ export default class MouseEventManager {
      * @function module:客户端事件管理.MouseEventManager.prototype.registerMouseEvent
      * @param {String} eventType 事件类型
      * @param {Function} callbackFun 回调函数
-     * @param {Object} handler 回调函数
      * @returns {Handler} eventHandler 事件句柄
-     * * @example
+     * @example
      * registerMouseEvent('LEFT_CLICK',function (movement) {});
      * LEFT_CLICK  鼠标左键
      * RIGHT_CLICK 鼠标右键

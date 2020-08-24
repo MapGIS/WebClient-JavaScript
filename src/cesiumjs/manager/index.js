@@ -14,8 +14,8 @@ import LabelLayer from './LabelLayer';
 /**
  *  客户端公共方法
  */
+import CommonDataManager from './CommonDataManager';
 import CommonFuncManager from './CommonFuncManager';
-import CesiumFuncManager from './CesiumFuncManager';
 
 /**
  * 客户端事件管理
@@ -30,8 +30,8 @@ import SceneManager from './SceneManager';
 export {
     AnalysisManager,
     AdvancedAnalysisManager,
+    CommonDataManager,
     CommonFuncManager,
-    CesiumFuncManager,
     EntityController,
     LabelLayer,
     MouseEventManager,

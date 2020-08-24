@@ -3,13 +3,13 @@ import LayerManager from '../layer/LayerManager';
 
 /**
  * @author 三维基础平台研发中心·冯桂英
- * @class module:客户端公共方法.CesiumFuncManager
- * @category CesiumFuncManager
- * @classdesc 实体绘制控制器类
- * @description 该类实现了实体数据的绘制与删除功能
+ * @class module:客户端公共方法.CommonDataManager
+ * @category CommonDataManager
+ * @classdesc 通用数据管理类
+ * @description 该类实现了通用数据的添加与删除功能
  * @param option.viewer 视图
  */
-export default class CesiumFuncManager extends LayerManager {
+export default class CommonDataManager extends LayerManager {
     constructor(optionsParam) {
         const options = optionsParam;
         super(options);
@@ -17,7 +17,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 通过地址添加图片，包括本地图片和网络图片
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendImageByUrl
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendImageByUrl
      * @param {String} url 图片地址
      * @param {Number} west 西经
      * @param {Number} south 南纬
@@ -25,7 +25,7 @@ export default class CesiumFuncManager extends LayerManager {
      * @param {Number} north 北纬
      * @param {Object} options 扩展参数
      * @example
-     * let cesiumFun = new CesiumFuncManager({viewer:viewer});
+     * let cesiumFun = new CommonDataManager({viewer:viewer});
      * let singleImage = cesiumFun.appendImageByUrl('.../../../../../../../../static/libs/Cesium/MapGIS/image/2.5D2.png',110,20,114,30);
      */
     appendImageByUrl(url, west, south, east, north, options) {
@@ -42,7 +42,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      *移除添加的图片
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.removeImage
+     * @function module:客户端公共方法.CommonDataManager.prototype.removeImage
      * @param {Object} imageryLayer 添加的图片对象
      * @param {Boolean} isDestroy  是否销毁图片对象
      */
@@ -54,7 +54,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 通过路径添加3DTile数据
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.append3DTile
+     * @function module:客户端公共方法.CommonDataManager.prototype.append3DTile
      * @param {String} url 路径
      * @param {Function} onsuccess 成功回调
      * @param {Object} options 扩展参数
@@ -88,7 +88,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      *移除3dTile对象
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.remove3DTile
+     * @function module:客户端公共方法.CommonDataManager.prototype.remove3DTile
      * @param {Object} tileset 3dTile对象
      */
     remove3DTile(tileset) {
@@ -97,14 +97,14 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 添加模型（gltf文件）
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendModel
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendModel
      * @param {Number} id 模型id
      * @param {String} url 模型url路径
      * @param {Number} lon 模型所在经度
      * @param {Number} lat 模型坐在纬度
      * @param {Number} height 高度
      * @param {Number} scale 缩放比
-     * @param {Option} 包含以下参数
+     * @param {Object} options 包含以下参数
      * @param {Color} [options.color] 颜色 
      * @param {ColorBlendMode} [options.colorBlendMode] 颜色混合模式 Cesium.ColorBlendMode.MIX
      * @param {Number} [options.colorBlendAmount] 颜色混合程度
@@ -142,7 +142,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 批量添加模型
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendModels
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendModels
      * @param {String} modelsString 模型组织
      * @param {Function} successCall 成功后的回调
      * @returns {Object} 模型层对象
@@ -160,7 +160,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 通过文件批量添加模型
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendModels
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendModels
      * @param  {String} filePath 模型组织文件
      * @param {Function} successCall 成功后的回调
      * @returns {Object} 模型层对象
@@ -178,7 +178,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 加载Kml、kmz数据
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendKml
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendKml
      * @param {String} url 路径
      * @param {Object} options 参数
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/KmlDataSource.html }
@@ -207,7 +207,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 添加czml文件
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendCZML
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendCZML
      * @param {String} url 文件地址
      * @param {Function} successCall 成功后的回调
      * @returns {CzmlDataSource} czml 对象
@@ -227,7 +227,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 添加GeoJson文件
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.appendGeoJson
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendGeoJson
      * @param {String} url 文件地址
      * @returns {GeoJsonDataSource} 数据对象
      * @example
@@ -254,7 +254,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 移除模型
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.removeModel
+     * @function module:客户端公共方法.CommonDataManager.prototype.removeModel
      * @param {Model} model 模型对象
      */
     removeModel(model) {
@@ -264,7 +264,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 移除通过appendModelsByFile()和appendModels()添加的模型
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.removeModels
+     * @function module:客户端公共方法.CommonDataManager.prototype.removeModels
      * @param  {DataSource} models 模型组织
      */
     removeModels(models) {
@@ -273,7 +273,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 移除数据对象
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.removeDataSource
+     * @function module:客户端公共方法.CommonDataManager.prototype.removeDataSource
      * @param {DataSource} datasource 模型组织
      * @param {Boolean} isDestroy 是否销毁
      */
@@ -287,7 +287,7 @@ export default class CesiumFuncManager extends LayerManager {
 
     /**
      * 删除所有数据源：与以上几个接口配合使用
-     * @function module:客户端公共方法.CesiumFuncManager.prototype.removeAllDataSource
+     * @function module:客户端公共方法.CommonDataManager.prototype.removeAllDataSource
      * @param {Boolean} isDestroy 是否销毁
      */
     removeAllDataSource(isDestroy = false) {
@@ -295,4 +295,4 @@ export default class CesiumFuncManager extends LayerManager {
     }
 }
 
-CesiumZondy.Layer.CesiumFuncManager = CesiumFuncManager;
+CesiumZondy.Manager.CommonDataManager = CommonDataManager;

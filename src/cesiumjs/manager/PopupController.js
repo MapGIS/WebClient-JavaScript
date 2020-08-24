@@ -58,7 +58,7 @@ export default class PopupController extends BaseLayer {
      * @param {Cartesian3} position  popup的位置（地图单位）
      * @param {Array} offset [x,y]偏移值，像素单位
      * @param {Function} closeCallback popup的close按钮点击回调函数
-     * @param {Object} options 参数
+     * @param {Object} options 扩展参数
      * @param {Number} [options.scaleByDistance=cameraHeight] options.scaleByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
      * 基于距摄像机距离指定广告牌比例
      * @param {Number} [options.translucencyByDistance=cameraHeight] options.translucencyByDistance = new Cesium.NearFarScalar(1.5e2, 1.5, 8.0e6, 0.0)
@@ -253,9 +253,9 @@ export default class PopupController extends BaseLayer {
      * 删除PopuP
      * @function module:客户端可视化.PopupController.prototype.removePopup
      * @param {String} popID popup的div id 添加popup返回值
-     * @param {Object} popup 所有者
-     * @param {Options} 扩展参数
-     * @param {Options} options.removeDiv = false 是否移除div
+     * @param {Object} popupOwner 所有者
+     * @param {Object} options 扩展参数
+     * @param {Boolean} options.removeDiv = false 是否移除div
      * @example
      *   popupControl.removePopup(popup, null, { removeDiv: false });
      */
@@ -268,7 +268,7 @@ export default class PopupController extends BaseLayer {
         while (popDiv.hasChildNodes()) {
             popDiv.removeChild(popDiv.firstChild);
         }
-        let removeDiv = true;
+        let removeDiv = false;
         if (Cesium.defined(options.removeDiv)) {
             removeDiv = options.removeDiv;
         }

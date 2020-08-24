@@ -49,13 +49,25 @@ export default class SceneManager {
     }
 
     /**
+     * 开启抗锯齿
+     * @function module:客户端视图管理.SceneManager.prototype.antiAliasing
+     */
+    antiAliasing() {
+        if (Cesium.FeatureDetection.supportsImageRenderingPixelated()) {
+            this.viewer.resolutionScale = window.devicePixelRatio;
+        }
+        this.viewer.scene.fxaa = true;
+        this.viewer.scene.postProcessStages.fxaa.enabled = true;
+    }
+
+    /**
      * 显示经纬度 高程 视角高度
      * @function module:客户端视图管理.SceneManager.prototype.showPosition
      * @param {Element|String} elementId 要显示的div的id
-     * @param {Object} optionsParam 附加属性
-     * @param {Boolean} [optionsParam.showHpr = false] 显示
-     * @param {Boolean}[optionsParam.showSelectTileInfo = false] 显示当前鼠标所在位置拾取到的级别
-     * @param {Boolean}[optionsParam.showViewLevelInfo = false] 显示视图级别
+     * @param {Object} options 附加属性
+     * @param {Boolean} [options.showHpr = false] 显示
+     * @param {Boolean}[options.showSelectTileInfo = false] 显示当前鼠标所在位置拾取到的级别
+     * @param {Boolean}[options.showViewLevelInfo = false] 显示视图级别
      * @example
      * webGlobe.showPosition('', {
      * showHpr: true,
@@ -65,13 +77,13 @@ export default class SceneManager {
      * @returns {Element} element 状态栏的element
      * @  deprecated 该接口即将弃用 请用show替换
      */
-    showPosition(elementId, optionsParam) {
+    showPosition(elementId, options) {
         const that = this;
         let elementIdValue = elementId;
-        const options = Cesium.defaultValue(optionsParam, {});
-        const showHpr = Cesium.defaultValue(options.showHpr, false);
-        const showSelectTileInfo = Cesium.defaultValue(options.showSelectTileInfo, false);
-        const showViewLevelInfo = Cesium.defaultValue(options.showViewLevelInfo, false);
+        const optionsParam = Cesium.defaultValue(options, {});
+        const showHpr = Cesium.defaultValue(optionsParam.showHpr, false);
+        const showSelectTileInfo = Cesium.defaultValue(optionsParam.showSelectTileInfo, false);
+        const showViewLevelInfo = Cesium.defaultValue(optionsParam.showViewLevelInfo, false);
         let viewLevel = 0;
         let longitudeString = null;
         let latitudeString = null;
@@ -201,7 +213,7 @@ export default class SceneManager {
             orientation: {
                 heading: Cesium.Math.toRadians(0),
                 pitch: Cesium.Math.toRadians(-90),
-                roll: Cesium.Math.toRadians(0) // 0
+                roll: Cesium.Math.toRadians(0)
             }
         });
     }
@@ -211,7 +223,7 @@ export default class SceneManager {
      * @function module:客户端视图管理.SceneManager.prototype.flyToEx
      * @param  {Number} lon 经度
      * @param  {Number} lon 纬度
-     * @param  {Object} [options] 跳转持续时间
+     * @param  {Object} [options] 其他参数
      * @param  {Number} [options.height] 视角高度
      * @param  {Number} [options.duration] 持续时间
      * @param  {Number} [options.heading] 方位角
@@ -282,10 +294,12 @@ export default class SceneManager {
      */
     setView(lon, lat, height, curHeading, curPitch, curRoll) {
         this.viewer.camera.setView({
-            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
-            heading: Cesium.Math.toRadians(curHeading),
-            pitch: Cesium.Math.toRadians(curPitch),
-            roll: Cesium.Math.toRadians(curRoll)
+            destination: Cesium.Cartesian3.fromDegrees(lon, lat, height),
+            orientation: {
+                heading: Cesium.Math.toRadians(curHeading),
+                pitch: Cesium.Math.toRadians(curPitch),
+                roll: Cesium.Math.toRadians(curRoll)
+            }
         });
     }
 
@@ -357,7 +371,7 @@ export default class SceneManager {
     }
 
     /**
-     * 放大
+     * 视距放大，物体缩小
      * @function module:客户端视图管理.SceneManager.prototype.zoomOut
      */
     zoomOut() {
@@ -366,7 +380,7 @@ export default class SceneManager {
     }
 
     /**
-     * 缩小
+     * 视距缩小，物体放大
      * @function module:客户端视图管理.SceneManager.prototype.zoomIn
      */
     zoomIn() {
@@ -377,7 +391,7 @@ export default class SceneManager {
     /**
      * 修改场景的天空盒
      * @function module:客户端视图管理.SceneManager.prototype.changeSkyBox
-     * @param  {SkyBox} skybox 天空和对象
+     * @param {SkyBox} skybox 天空盒对象
      * @example
      * let skybox = new Cesium.SkyBox({
      *     sources : {
@@ -403,16 +417,19 @@ export default class SceneManager {
      * @function module:客户端视图管理.SceneManager.prototype.flyToFeatureById
      * @param {Array<layer>} layerList 图层列表
      * @param {Array<id>} id ID列表
-     * @param {Object} [optionsParam] 其他参数
+     * @param {Object} [options] 其他参数
+     * @param {Number} [options.heading] 相机参数heading
+     * @param {Number} [options.pitch] 相机参数pitch
+     * @param {Number} [options.range] 相机参数range
+     * @param {Object} [options.offset] 相机偏移量，通过HeadingPitchRange控制三个变量heading, pitch, range
      */
-    flyToFeatureById(layerList, id, optionsParam) {
+    flyToFeatureById(layerList, id, options) {
         if (!Cesium.defined(layerList)) {
             return;
         }
-        const options = Cesium.defaultValue(optionsParam, {});
+        const optionsParam = Cesium.defaultValue(options, {});
         const that = this;
         let first = true;
-
         function flyToF(feature) {
             const maxPoint = feature.getProperty('maxPoint');
             const minPoint = feature.getProperty('minPoint');
@@ -421,13 +438,13 @@ export default class SceneManager {
             const { transform } = feature.tileset.root;
             max = Cesium.Matrix4.multiplyByPoint(transform, max, max);
             min = Cesium.Matrix4.multiplyByPoint(transform, min, min);
-            const heading = Cesium.Math.toRadians(0);
-            const pitch = Cesium.Math.toRadians(0);
-            const range = Cesium.defaultValue(options.range, 0.0);
+            const heading = Cesium.defaultValue(optionsParam.heading, Cesium.Math.toRadians(0));
+            const pitch = Cesium.defaultValue(optionsParam.pitch, Cesium.Math.toRadians(0));
+            const range = Cesium.defaultValue(optionsParam.range, 0.0);
             let boundingSphere = new Cesium.BoundingSphere();
             boundingSphere = Cesium.BoundingSphere.fromCornerPoints(min, max, boundingSphere);
             that.viewer.camera.flyToBoundingSphere(boundingSphere, {
-                offset: Cesium.defaultValue(options.offset, new Cesium.HeadingPitchRange(heading, pitch, range))
+                offset: Cesium.defaultValue(optionsParam.offset, new Cesium.HeadingPitchRange(heading, pitch, range))
             });
             for (let i = 0; i < layerList.length; i += 1) {
                 const tileset = layerList[i];
