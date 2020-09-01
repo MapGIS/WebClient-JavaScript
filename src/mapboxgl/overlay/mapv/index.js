@@ -1,5 +1,1 @@
-export {
-  MapvBaseLayer
-}
-from './MapvBaseLayer';
-
+export { MapvBaseLayer } from './MapvBaseLayer';

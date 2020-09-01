@@ -183,7 +183,7 @@
         if (members && members.length && members.forEach) {
     ?>
         <div class='vertical-section'>
-            <h1>Members</h1>
+            <h1>成员变量</h1>
             <div class="members">
             <?js members.forEach(function(p) { ?>
                 <div class="member"><?js= self.partial('members.tmpl', p) ?></div>
@@ -211,7 +211,7 @@
         if (typedefs && typedefs.length && typedefs.forEach) {
     ?>
         <div class='vertical-section'>
-            <h1>Type Definitions</h1>
+            <h1>类型定义</h1>
             <div class="members">
             <?js typedefs.forEach(function(e) {
                 if (e.signature) {

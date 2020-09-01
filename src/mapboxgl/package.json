@@ -1,17 +1,23 @@
 {
-  "name": "@mapgis/webclient-mapboxgl-plugin",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/webclient-mapboxgl-plugin.min.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "zondy",
-    "service",
-    "&",
-    "mapboxgl"
-  ],
-  "author": "zondy",
-  "license": "ISC"
+    "name": "@mapgis/webclient-es6-mapboxgl",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/webclient-mapboxgl-plugin.min.js",
+    "module": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "zondy",
+        "service",
+        "&",
+        "mapboxgl"
+    ],
+    "author": "zondy",
+    "license": "ISC",
+    "dependencies": {
+        "@mapgis/mapbox-gl": "^1.9.4",
+        "echarts": "^4.8.0",
+        "mapv": "^2.0.56"
+    }
 }

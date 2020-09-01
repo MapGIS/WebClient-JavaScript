@@ -93,6 +93,7 @@ export class EchartsLayer {
         this.mapContainer.appendChild(this.canvas);
         this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
         this.chart = echarts.init(this.canvas);
+        this.visible = true;
 
         this.initEcharts();
         this._resizeCanvas();
@@ -177,6 +178,7 @@ export class EchartsLayer {
     }
 
     addTo(map) {
+        const vm = this;
         echarts.extendComponentView({
             type: 'mapboxgl',
 
@@ -188,7 +190,7 @@ export class EchartsLayer {
                 var viewportRoot = api.getZr().painter.getViewportRoot()
                 var coordSys = mapModel.coordinateSystem
                 var moveHandler = function (type, target) {
-                    if (rendering) {
+                    if (rendering || !vm.visible) {
                         return
                     }
                     // var offsetEl = viewportRoot.parentNode.parentNode.parentNode
@@ -207,7 +209,7 @@ export class EchartsLayer {
                 }
 
                 function zoomEndHandler() {
-                    if (rendering) {
+                    if (rendering || !vm.visible) {
                         return
                     }
                     api.dispatchAction({
@@ -248,10 +250,12 @@ export class EchartsLayer {
     }
 
     _visible() {
+        this.visible = true;
         this.canvas.style.visibility = "visible";
     }
 
     _unvisible() {
+        this.visible = false;
         this.canvas.style.visibility = "hidden";
     }
 

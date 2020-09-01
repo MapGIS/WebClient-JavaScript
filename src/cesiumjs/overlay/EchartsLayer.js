@@ -12,7 +12,7 @@ import {
 
 var echartsIdIndex = 0;
 
-/**
+/** 
  * @author 基础平台/创新中心 潘卓然
  * @class module:客户端可视化.EchartsLayer
  * @classdesc Echarts图表图层
@@ -125,6 +125,9 @@ export default class EchartsLayer {
 
         this.handler = undefined;
         this.moveEndEvent = undefined;
+        this.postEvent = undefined;
+        this.postStartEvent = undefined;
+        this.postEndEvent = undefined;
 
         this.layerId = options.layerId || ("echarts" + echartsIdIndex++);
         this.layerClass = options.layerClass || "echartlayerdefaultclass";
@@ -301,9 +304,11 @@ export default class EchartsLayer {
                 }
 
                 var moveEndHandler = function (type, target) {
-                    if (rendering || !self.map || !self.visible) {
+                    if (rendering || !self.map) {
                         return
                     }
+
+                    self._visible();
                     var offsetEl = self.map.canvas;
 
                     var mapOffset = [-parseInt(offsetEl.style.left, 10) || 0, -parseInt(offsetEl.style.top, 10) || 0]
@@ -316,7 +321,6 @@ export default class EchartsLayer {
                     api.dispatchAction({
                         type: 'CesiumRoma'
                     })
-                    self._visible();
                 }
 
                 self.moveEndEvent = moveEndHandler;
@@ -335,22 +339,41 @@ export default class EchartsLayer {
                     if (rendering) {
                         return
                     }
+                    self._visible();
                     api.dispatchAction({
                         type: 'CesiumRoma'
                     })
                 }
+
+                var postHandle = function () {
+                    // self.moveEndEvent();
+                    zoomEndHandler();
+                }
+
+                var postStartHandle = function () {
+                    self.scene.postRender.addEventListener(postHandle);
+                    // self._visible();
+                }
+
+                self.postStartEvent = postStartHandle.bind(self);
+            
+                var postEndHandle = function () {
+                    self.scene.postRender.removeEventListener(postHandle);
+                    self.resize();
+                    self._visible();
+                }
+
+                self.postEndEvent = postEndHandle.bind(self);             
 
                 self.handler = new Cesium.ScreenSpaceEventHandler(self.scene.canvas);
                 
                 if (self.initStats == false) {
                     self.initStats = true;    
                     if (self.options.postRender) {
-                        self.map.scene.postRender.addEventListener(function () {
-                            self.postRenderTime++
-                            if (self.postRenderTime % self.postRenderFrame === 0) self.moveEndEvent();
-                        });
+                        self.scene.camera.moveStart.addEventListener(self.postStartEvent, self);
+                        self.scene.camera.moveEnd.addEventListener(self.postEndEvent, self);
                     } else {
-                        self.handler.setInputAction(zoomStartHandler, Cesium.ScreenSpaceEventType.WHEEL);
+                        // self.handler.setInputAction(zoomStartHandler, Cesium.ScreenSpaceEventType.WHEEL);
                         self.handler.setInputAction(moveHandler, Cesium.ScreenSpaceEventType.LEFT_DOWN);
                         self.handler.setInputAction(moveEndHandler, Cesium.ScreenSpaceEventType.LEFT_UP);
                         self.handler.setInputAction(moveHandler, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
@@ -423,23 +446,16 @@ export default class EchartsLayer {
      */
     remove() {
         var self = this;
-        /*         this.map._listeners.move.forEach(function (element) {
-                    if (element.name === 'moveHandler') {
-                        self.map.off('move', element);
-                    }
-                });
-                this.map._listeners.move.forEach(function (element) {
-                    if (element.name === 'zoomEndHandler') {
-                        self.map.off('zoomend', element);
-                    }
-                }); */
-
         this.chart.clear();
-
-        this.map.scene.camera.moveEnd.removeEventListener(function(){
-            self.moveEndEvent();
-        });
-        this.handler.destroy();
+        if (self.options.postRender) {
+            this.scene.camera.moveStart.removeEventListener(this.postStartEvent, this);
+            this.scene.camera.moveEnd.removeEventListener(this.postEndEvent, this);
+        } else {
+            this.map.scene.camera.moveEnd.removeEventListener(function(){
+                self.moveEndEvent();
+            });
+            this.handler.destroy();    
+        }
 
         if (this.canvas.parentElement)
             this.canvas.parentElement.removeChild(this.canvas);

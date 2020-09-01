@@ -1,4 +1,1 @@
-export {
-    MapCoordSys
-}
-from './MapCoordSys';
+export { MapCoordSys } from './MapCoordSys';

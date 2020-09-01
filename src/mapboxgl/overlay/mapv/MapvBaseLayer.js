@@ -1,7 +1,4 @@
-import {
-    baiduMapLayer,
-    DataSet
-} from "mapv";
+import { baiduMapLayer, DataSet } from 'mapv';
 import mapboxgl from '@mapgis/mapbox-gl';
 
 var BaseLayer = baiduMapLayer ? baiduMapLayer.__proto__ : Function;
@@ -93,9 +90,7 @@ export class MapvBaseLayer extends BaseLayer {
         super.mousemoveEvent(pixel, e);
     }
 
-    addAnimatorEvent() {
-
-    }
+    addAnimatorEvent() {}
 
     animatorMovestartEvent() {
         var animationOptions = this.options.animation;
@@ -140,9 +135,7 @@ export class MapvBaseLayer extends BaseLayer {
         return this.canvasLayer.canvas.getContext(this.context);
     }
 
-
     init(options) {
-
         var self = this;
 
         self.options = options;
@@ -193,13 +186,13 @@ export class MapvBaseLayer extends BaseLayer {
             context.clear(context.COLOR_BUFFER_BIT);
         }
 
-        if (self.options.minZoom && map.getZoom() < self.options.minZoom || self.options.maxZoom && map.getZoom() > self.options.maxZoom) {
+        if ((self.options.minZoom && map.getZoom() < self.options.minZoom) || (self.options.maxZoom && map.getZoom() > self.options.maxZoom)) {
             return;
         }
 
         var dataGetOptions = {
             transferCoordinate: function (coordinate) {
-                var point = map.project((new mapboxgl.LngLat(coordinate[0], coordinate[1])));
+                var point = map.project(new mapboxgl.LngLat(coordinate[0], coordinate[1]));
                 return [point.x, point.y];
             }
         };
@@ -207,12 +200,12 @@ export class MapvBaseLayer extends BaseLayer {
         if (time !== undefined) {
             dataGetOptions.filter = function (item) {
                 var trails = animationOptions.trails || 10;
-                if (time && item.time > (time - trails) && item.time < time) {
+                if (time && item.time > time - trails && item.time < time) {
                     return true;
                 } else {
                     return false;
                 }
-            }
+            };
         }
 
         var data = self.dataSet.get(dataGetOptions);
@@ -244,7 +237,6 @@ export class MapvBaseLayer extends BaseLayer {
         super.update({
             options: options
         });
-
     }
 
     addData(data, options) {
@@ -268,7 +260,7 @@ export class MapvBaseLayer extends BaseLayer {
         }
         var newData = this.dataSet.get({
             filter: function (data) {
-                return (filter != null && typeof filter === "function") ? !filter(data) : true;
+                return filter != null && typeof filter === 'function' ? !filter(data) : true;
             }
         });
         this.dataSet.set(newData);
@@ -284,7 +276,6 @@ export class MapvBaseLayer extends BaseLayer {
         });
     }
 
-
     draw() {
         this.canvasLayer.draw();
     }
@@ -293,5 +284,4 @@ export class MapvBaseLayer extends BaseLayer {
     clear(context) {
         context && context.clearRect && context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     }
-
 }

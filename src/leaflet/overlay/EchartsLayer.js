@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L from 'leaflet';
 import echarts from 'echarts';
 
 import '../core/Base';
@@ -77,7 +77,6 @@ import MapCoordSys from './echart/MapCoordSys';
     };
  */
 export var EchartsLayer = L.Layer.extend({
-
     map: null, //传入的leaflet地图
     chart: null,
     options: null,
@@ -86,9 +85,10 @@ export var EchartsLayer = L.Layer.extend({
     initialize: function (map, options) {
         this.map = map;
         this.options = options;
-        this.layerId = options.layerId || "echartlayerdefaultid";
-        this.layerClass = options.classId || "echartlayerdefaultclass";
+        this.layerId = options.layerId || 'echartlayerdefaultid';
+        this.layerClass = options.classId || 'echartlayerdefaultclass';
 
+        this.visible = true;
         this.initDevicePixelRatio();
         this.initOptions(this.options);
         this.initEcharts();
@@ -102,12 +102,12 @@ export var EchartsLayer = L.Layer.extend({
 
     initOptions: function (options) {
         if (options) {
-            if(options.leaflet){
+            if (options.leaflet) {
                 return;
             }
             this.options.leaflet = {
                 roam: true
-            }
+            };
         }
     },
 
@@ -124,7 +124,8 @@ export var EchartsLayer = L.Layer.extend({
             }
         });
 
-        echarts.registerAction({
+        echarts.registerAction(
+            {
                 type: 'LeafletRoma',
                 event: 'LeafletRoma',
                 update: 'updateLayout'
@@ -143,14 +144,17 @@ export var EchartsLayer = L.Layer.extend({
     },
 
     _visible: function () {
-        this.canvas.style.visibility = "visible";
+        this.visible = true;
+        this.canvas.style.visibility = 'visible';
     },
 
     _unvisible: function () {
-        this.canvas.style.visibility = "hidden";
+        this.visible = false;
+        this.canvas.style.visibility = 'hidden';
     },
 
     onAdd: function (map) {
+        const vm = this;
         this.map = map;
         this.canvas = this._createCanvas();
         map.getPanes().overlayPane.appendChild(this.canvas);
@@ -164,9 +168,9 @@ export var EchartsLayer = L.Layer.extend({
             let size = e.newSize;
             self.canvas.style.width = size.x + 'px';
             self.canvas.style.height = size.y + 'px';
-            self.chart.resize()
-        })
-        map.on("zoomstart", function () {
+            self.chart.resize();
+        });
+        map.on('zoomstart', function () {
             self._unvisible();
         });
 
@@ -182,12 +186,12 @@ export var EchartsLayer = L.Layer.extend({
                 var coordSys = mapModel.coordinateSystem;
 
                 var moveHandler = function () {
-                    if (rendering) {
+                    if (rendering || !vm.visible) {
                         return;
                     }
                     var topleft = leafletMap.getBounds().getNorthWest();
                     var offset = leafletMap.latLngToLayerPoint(topleft);
-                    var mapOffset = [parseInt(offset.x, 10) || 0, parseInt(offset.y, 10) || 0]
+                    var mapOffset = [parseInt(offset.x, 10) || 0, parseInt(offset.y, 10) || 0];
                     viewportRoot.style.left = mapOffset[0] + 'px';
                     viewportRoot.style.top = mapOffset[1] + 'px';
                     coordSys.setMapOffset(mapOffset);
@@ -195,11 +199,11 @@ export var EchartsLayer = L.Layer.extend({
 
                     api.dispatchAction({
                         type: 'LeafletRoma'
-                    })
+                    });
                 };
 
                 var zoomEndHandler = function () {
-                    if (rendering) {
+                    if (rendering || !vm.visible) {
                         return;
                     }
 
@@ -210,8 +214,8 @@ export var EchartsLayer = L.Layer.extend({
                     self._visible();
                 };
 
-                leafletMap.off('move', this._oldMoveHandler)
-                leafletMap.off('zoomend', this._oldZoomEndHandler)
+                leafletMap.off('move', this._oldMoveHandler);
+                leafletMap.off('zoomend', this._oldZoomEndHandler);
                 // FIXME
                 // Moveend may be triggered by centerAndZoom method when creating coordSys next time
                 // leafletMap.off('moveend', this._oldMoveHandler)
@@ -221,7 +225,7 @@ export var EchartsLayer = L.Layer.extend({
                 this._oldMoveHandler = moveHandler;
                 this._oldZoomEndHandler = zoomEndHandler;
 
-                var roam = mapModel.get('roam')
+                var roam = mapModel.get('roam');
                 if (roam && roam !== 'scale') {
                     // todo 允许拖拽
                 } else {
@@ -247,8 +251,8 @@ export var EchartsLayer = L.Layer.extend({
         var canvas = document.createElement('div');
         canvas.id = this.layerId;
         //canvas.style.position = 'absolute';
-        canvas.style.top = "0px";
-        canvas.style.left = "0px";
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
         canvas.height = this.map.getSize().y + 'px';
         canvas.width = this.map.getSize().x + 'px';
         canvas.style.height = this.map.getSize().y + 'px';
@@ -271,8 +275,8 @@ export var EchartsLayer = L.Layer.extend({
             var map = self.map;
 
             //canvas.style.position = 'absolute';
-            canvas.style.top = "0px";
-            canvas.style.left = "0px";
+            canvas.style.top = '0px';
+            canvas.style.left = '0px';
             canvas.height = this.map.getSize().y + 'px';
             canvas.width = this.map.getSize().x + 'px';
             canvas.style.height = this.map.getSize().y + 'px';
@@ -307,8 +311,8 @@ export var EchartsLayer = L.Layer.extend({
         var map = this.map;
 
         //canvas.style.position = 'absolute';
-        canvas.style.top = "0px";
-        canvas.style.left = "0px";
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
         canvas.height = this.map.getSize().y + 'px';
         canvas.width = this.map.getSize().x + 'px';
         canvas.style.height = this.map.getSize().y + 'px';
@@ -317,13 +321,13 @@ export var EchartsLayer = L.Layer.extend({
         this.chart.resize();
     },
 
-     /**
+    /**
      * @function L.zondy.EchartsLayer.prototype.update
      * @param {*} option echarts.option
      * @see https://www.echartsjs.com/zh/tutorial.html#异步数据加载和更新
      * @description ECharts 由数据驱动，数据的改变驱动图表展现的改变，因此动态数据的实现也变得异常简单。所有数据的更新都通过 setOption实现，你只需要定时获取数据，setOption 填入数据，而不用考虑数据到底产生了那些变化，ECharts 会找到两组数据之间的差异然后通过合适的动画去表现数据的变化。
      */
-    update: function(option) {
+    update: function (option) {
         this.chart.setOption(option);
     }
 });

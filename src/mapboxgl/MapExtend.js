@@ -6,7 +6,7 @@
 export var MapExtend = function () {
 
 	window.mapboxgl.Map.prototype.overlayLayersManager = {};
-	window.mapboxgl.Map.prototype.addLayerBak = window.mapboxgl.Map.prototype.addLayer;
+	// window.mapboxgl.Map.prototype.addLayerBak = window.mapboxgl.Map.prototype.addLayerBak;
 	window.mapboxgl.Map.prototype.addLayer = function (layer, before) {
 		if (layer.source || layer.type === 'custom' || layer.type === "background") {
 			this.addLayerBak(layer, before);
