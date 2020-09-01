@@ -423,11 +423,12 @@ export const OGC = {
     OGCWMSInfo
 };
 
-import { EsCatlogType, EsCatlogName, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore';
+import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore';
 
 export const DataStore = {
     EsCatlogType,
     EsCatlogName,
+    EsGeoHashType,
     EsCatlogService,
     EsTableService,
     EsSpaceTimeQueryByAgg

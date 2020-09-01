@@ -212,25 +212,14 @@ export const Extend = {
     SlopLineParam
 };
 
-import {
-    G3DMapDoc,
-    G3DService
-} from "../../service/G3D";
+import { G3DMapDoc, G3DService } from '../../service/G3D';
 
 export const G3D = {
     G3DMapDoc,
     G3DService
-}
+};
 
-import {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-} from '../../service/baseserver';
+import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat } from '../../service/baseserver';
 
 export const BaseServer = {
     CommonServiceBase,
@@ -242,15 +231,7 @@ export const BaseServer = {
     JSONFormat
 };
 
-import {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer,
-    SystomInfo
-} from '../../service/MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer, SystomInfo } from '../../service/MRCS';
 
 export const MRCS = {
     ColorInfo,
@@ -448,12 +429,7 @@ export const Info = {
     ThemesInfo
 };
 
-import {
-    WMSCapabilities,
-    WMTSCapabilities,
-    OGCWMTSInfo,
-    OGCWMSInfo
-} from '../../service/OGC';
+import { WMSCapabilities, WMTSCapabilities, OGCWMTSInfo, OGCWMSInfo } from '../../service/OGC';
 
 export const OGC = {
     WMSCapabilities,
@@ -462,8 +438,13 @@ export const OGC = {
     OGCWMSInfo
 };
 
+import { SpaceTimeQueryByAgg } from '../../service/datastore';
+
+export const DataStore = {
+    SpaceTimeQueryByAgg
+};
 
 export default {
     MRFS,
-    MRFWS,
-}
+    MRFWS
+};

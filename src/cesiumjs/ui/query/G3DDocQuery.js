@@ -1,4 +1,5 @@
 import { CesiumZondy } from '../../core/Base';
+import axios from 'axios';
 
 /**
  * @author IGServer-邬俊惠
@@ -166,12 +167,23 @@ export class G3DDocQuery {
         var postData = null;
         if (type && type.toLowerCase() === 'post') {
             postData = querystring;
+            axios.post(url, postData)
+                .then(res => {
+                    successCallback && successCallback(res.data, res, o.layerIndex);
+                })
+                .catch(error=>{
+                    errorCallback && errorCallback(error);
+                });
         } else {
             url = url + "?" + querystring;
+            axios.get(url)
+                .then(res => {
+                    successCallback && successCallback(res.data, res, o.layerIndex);
+                })
+                .catch(error=>{
+                    errorCallback && errorCallback(error);
+                });
         }
-        Util.corsAjax(url, type, postData, function (res, code) {
-            successCallback && successCallback(res, code, o.layerIndex);
-        }, errorCallback, 'json', this.proxy);
     }    
 }
 

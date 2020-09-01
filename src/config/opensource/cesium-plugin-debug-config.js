@@ -1,6 +1,8 @@
 var webpack = require('webpack');
 var path = require('path');
+const BuildInfo = require('./version/version.js')
 // const CopywebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var packageName = "webclient-cesium-plugins";
 var banner = `
@@ -70,6 +72,17 @@ module.exports = {
         new webpack.DefinePlugin({
             // Define relative base path in cesium for loading assets
             CESIUM_BASE_URL: JSON.stringify('')
-        })
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'webclient-cesium-plugins.html',
+            template: 'src/config/opensource/version/version.html',
+            inject: false,//不插入生成的js 仅用于版本声明
+            minify: {
+              removeComments: false,
+              collapseWhitespace: true,
+              removeAttributeQuotes: true
+            },
+            buildInfo: BuildInfo
+          })
     ]
 };

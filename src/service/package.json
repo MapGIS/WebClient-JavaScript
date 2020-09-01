@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "mapgis",
-  "license": "Apache2"
+  "license": "Apache2",
+  "dependencies": {
+    "qs": "^6.9.4"
+  }
 }

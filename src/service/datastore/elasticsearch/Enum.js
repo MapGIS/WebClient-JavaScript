@@ -26,6 +26,22 @@ let EsCatlogName = {
     Addredd: '地址库'
 };
 
-export { EsCatlogType, EsCatlogName };
+/**
+ * ElasticSearch-GeoHash聚合返回类型
+ * @author 基础平台-潘卓然
+ * @description ElasticSearch-GeoHash聚合返回类型
+ * @readonly
+ * @enum {String}
+ */
+let EsGeoHashType = {
+    /**点类型 */
+    Point: 0,
+    /**区类型 */
+    Polygon: 1
+};
+
+export { EsCatlogType, EsCatlogName, EsGeoHashType };
+
 Zondy.Enum.EsCatlogType = EsCatlogType;
 Zondy.Enum.EsCatlogName = EsCatlogName;
+Zondy.Enum.EsGeoHashType = EsGeoHashType;

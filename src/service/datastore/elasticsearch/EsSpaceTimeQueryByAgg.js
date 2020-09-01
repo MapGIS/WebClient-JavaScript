@@ -73,6 +73,7 @@ export default class EsSpaceTimeQueryByAgg extends DataStoreService {
          * @type {String}
          * @description 空间状态
          * @default null
+         * @example polygon:29.843798,121.58775;29.843746,121.586464;29.845467,121.5646
          */
         this.spatialCondition = options.spatialCondition !== undefined ? options.spatialCondition : null;
 
@@ -89,6 +90,7 @@ export default class EsSpaceTimeQueryByAgg extends DataStoreService {
          * @type {String}
          * @description 时间状态
          * @default null
+         * @example 1351737960000,1351738020000
          */
         this.timeCondition = options.timeCondition !== undefined ? options.timeCondition : null;
 

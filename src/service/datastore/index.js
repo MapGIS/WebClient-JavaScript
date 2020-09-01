@@ -1,3 +1,3 @@
-import { EsCatlogType, EsCatlogName, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './elasticsearch';
+import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './elasticsearch';
 
-export { EsCatlogType, EsCatlogName, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg };
+export { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg };

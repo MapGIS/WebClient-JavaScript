@@ -1,0 +1,14 @@
+.mapgis-header .mapgis-webclient-header .mapgis-webclient-text {
+    width         : -webkit-fit-content;
+    width         : -moz-fit-content;
+    width         : fit-content;
+    height        : 24px;
+    margin-left   : 13px;
+    color         : #fff;
+    line-height   : 24px;
+    font-size     : 22px;
+    font-weight   : 700;
+    font-style    : italic;
+    font-stretch  : normal;
+    letter-spacing: 1.5px;
+}

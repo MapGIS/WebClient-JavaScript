@@ -120,22 +120,24 @@ export default class AdvancedAnalysisManager {
      * @param {Array} posEnds 轨迹线终点
      * @param {Object} options 动态航班参数
      * @param {Boolean} [options.isAdd] 是否已添加航班线
-     * @returns {Object} plague 返回动态航班实例
+     * @param {Color} [options.color] 轨迹线混合颜色，基调为红色
+     * @param {Number} [options.duration] 周期时间,单位毫秒
+     * @returns {Object} dynamicPolyline 返回动态航班实例
      */
     createDynamicPolyline(posStart, posEnds, options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        let plague;
+        let dynamicPolyline;
         if (posStart !== undefined && posEnds !== undefined) {
-            plague = new Cesium.DynamicPolyline(this.viewer, {
-                center: posStart,
-                cities: posEnds,
-                isAdd: Cesium.defaultValue(optionsParam.isAdd, false)
+            dynamicPolyline = new Cesium.DynamicPolyline(this.viewer, posStart, posEnds, {
+                isAdd: Cesium.defaultValue(optionsParam.isAdd, false),
+                color: Cesium.defaultValue(optionsParam.color, Cesium.Color.ORANGE),
+                duration: 3000
             });
-            plague.setVisible('add');
+            dynamicPolyline.setVisible('add');
         } else {
             return undefined;
         }
-        return plague;
+        return dynamicPolyline;
     }
 
     /**
@@ -432,9 +434,9 @@ export default class AdvancedAnalysisManager {
     }
 
     /**
-     * 烟雾粒子特效
+     * 动态粒子特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createParticle
-     * @param {Object} options 烟雾粒子特效参数
+     * @param {Object} options 动态粒子特效参数
      * @param {String} options.imageUrl 粒子url
      * @param {String} options.modelUrl 模型url
      * @param {Date} [options.startTime] 开始时间
@@ -447,7 +449,7 @@ export default class AdvancedAnalysisManager {
         const particleSystem = new Cesium.ParticleC(this.viewer, {
             imageUrl: optionsParam.imageUrl,
             modelUrl: optionsParam.modelUrl,
-            startTime: Cesium.defaultValue(optionsParam.startTime, new Cesium.Date(2015, 2, 25, 16)),
+            startTime: Cesium.defaultValue(optionsParam.startTime, new Date(2015, 2, 25, 16)),
             duration: Cesium.defaultValue(optionsParam.duration, 120),
             positionStart: Cesium.defaultValue(optionsParam.positionStart, Cesium.Cartesian3.fromDegrees(-75.15787310614596, 39.97862668312678)),
             positionEnd: Cesium.defaultValue(optionsParam.positionEnd, Cesium.Cartesian3.fromDegrees(-75.1633691390455, 39.95355089912078))
@@ -457,9 +459,9 @@ export default class AdvancedAnalysisManager {
     }
 
     /**
-     * 移除烟雾粒子特效
+     * 移除动态粒子特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeParticle
-     * @param {Object} particle 烟雾粒子特效实例
+     * @param {Object} particle 动态粒子特效实例
      */
     removeParticle(particle) {
         particle.remove();
@@ -467,12 +469,12 @@ export default class AdvancedAnalysisManager {
     }
 
     /**
-     * 火焰特效
+     * 火焰或烟雾粒子特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFire
-     * @param {String} modelUrl 模型url
-     * @param {String} imageUrl 火焰图片url
+     * @param {String} imageUrl 粒子特效图片url
      * @param {Array<Number>} position 模型位置，position[0]：经度，position[1]：纬度，position[2]：高度
-     * @param {Object} options 火焰特效参数
+     * @param {Object} options 粒子特效参数
+     * @param {String} [options.modelUrl] 模型url
      * @param {Number} [options.minimumPixelSize] 模型最小像素尺寸
      * @param {Number} [options.startScale] 起始规模
      * @param {Number} [options.endScale] 终止规模
@@ -481,15 +483,14 @@ export default class AdvancedAnalysisManager {
      * @param {Cartesian2} [options.imageSize] 图像尺寸
      * @param {Number} [options.emissionRate] 排放率
      * @param {Number} [options.lifetime] 持续时间
-     * @returns {Object} result 返回火焰特效中火焰粒子与模型entity
+     * @returns {Object} result 返回粒子特效实例
      */
-    createFire(modelUrl, imageUrl, position, options) {
+    createFire(imageUrl, position, options) {
         this.viewer.clock.shouldAnimate = true;
         const optionsParam = Cesium.defaultValue(options, {});
-        const fire = new Cesium.Fire(this.viewer, {
-            modelUrl,
-            imageUrl,
-            position,
+        const fire = new Cesium.Fire(this.viewer, imageUrl, position, {
+            modelUrl: optionsParam.modelUrl,
+            minimumPixelSize: Cesium.defaultValue(optionsParam.minimumPixelSize, 64.0),
             startScale: Cesium.defaultValue(optionsParam.startScale, 1.0),
             endScale: Cesium.defaultValue(optionsParam.endScale, 4.0),
             particleLife: Cesium.defaultValue(optionsParam.particleLife, 1.0),

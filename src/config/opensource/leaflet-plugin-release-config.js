@@ -3,6 +3,8 @@ var path = require('path');
 
 var HappyPack = require('happypack');//多线程loader 加快编译速度
 const uglify = require('uglifyjs-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+const BuildInfo = require('./version/version.js')
 var os = require('os');
 var happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
 
@@ -62,6 +64,17 @@ module.exports = {
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             }
-        })
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'webclient-leaflet-plugin.min.html',
+            template: 'src/config/opensource/version/version.html',
+            inject: false,//不插入生成的js 仅用于版本声明
+            minify: {
+              removeComments: false,
+              collapseWhitespace: true,
+              removeAttributeQuotes: true
+            },
+            buildInfo: BuildInfo
+          })
     ]
 }
