@@ -57,7 +57,7 @@ export const Headers = [
             "MapGIS地图服务",
             "场景" /* "IGServer-X", "IGServer-S" */,
           ],
-          ["三维空间分析", "轨迹模拟", "图形绘制", "工具" /* "查询" */],
+          ["三维空间分析", "轨迹模拟", "图形绘制", "工具", "查询"],
           [
             "客户端可视化",
             "客户端-Echarts",
@@ -79,7 +79,7 @@ export const Headers = [
             "/gallery/cesium#track",
             "/gallery/cesium#drawGraphic",
             "/gallery/cesium#measure",
-            /* "/gallery/cesium#query", */
+            "/gallery/cesium#query",
           ],
           [
             "/gallery/cesium#clientView-heatmap",
@@ -114,7 +114,7 @@ export const Headers = [
             "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E8%25A7%2586%25E5%259B%25BE%25E7%25AE%25A1%25E7%2590%2586.html",
             "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596%25E5%2588%2586%25E6%259E%2590.html",
           ],
-          ["https://cesium.com/docs/cesiumjs-ref-doc/", "http://turfjs.org/"],
+          ["/docs/other/mapgis-cesium/index.html", "http://turfjs.org/"],
         ],
       },
     ],
@@ -346,7 +346,7 @@ export const SubHeader = [
             routes: [
               ["./docs/cesium/index.html", "igserverx", "igservers"],
               ["clientview", "http://turfjs.org/", "elasticsearch"],
-              ["https://cesium.com/docs/cesiumjs-ref-doc/"],
+              ["/docs/other/mapgis-cesium/index.html"],
             ],
           },
         ],
