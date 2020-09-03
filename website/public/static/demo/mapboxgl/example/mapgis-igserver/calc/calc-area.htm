@@ -13,6 +13,7 @@
         var markerlatLng;
         var draw;
         var popup;
+        var { protocol, ip, port } = window.webclient;
 
         /**地图初始化
          */
@@ -28,8 +29,8 @@
 
             //瓦片地图
             new mapboxgl.Zondy.Map.MapTileLayer('北京市', {
-                ip: 'develop.smaryun.com',
-                port: '6163',
+                ip: `${ip}`,
+                port: `${port}`,
                 zoomOffset: 1
             }).addToMap(map);
 
@@ -92,9 +93,9 @@
             //初始化面积测量服务
             var calArea = new Zondy.Service.CalArea(dots, {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163"
+                port: `${port}`
             });
             //建议普通用户采用此类直接获取MapGIS GDB已经提供的空间参考系
             var gdbInfo = new Zondy.Object.CGDBInfo({

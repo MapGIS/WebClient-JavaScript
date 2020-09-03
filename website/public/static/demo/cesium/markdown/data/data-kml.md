@@ -1,4 +1,4 @@
-## 添加KML
+## KML数据加载
 
 ### 示例功能
 
@@ -11,7 +11,7 @@ KML（Keyhole Markup Language，Keyhole标记语言）是由Google旗下的Keyho
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Manager.LayerManager`类提供的`appendKml()`方法，实现KML数据的加载。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Manager.CommonDataManager`类提供的`appendKml()`方法，实现KML数据的加载；对应可通过`removeDataSource()`方法移除。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -21,26 +21,41 @@ KML（Keyhole Markup Language，Keyhole标记语言）是由Google旗下的Keyho
 
 2. 创建三维视图Div容器，构造三维场景控件WebSceneControl，构造并设置鼠标位置信息显示控件，加载Google地图作为底图显示；
 
-3. 添加模型：首先构造`CesiumZondy.Manager.LayerManager`图层管理对象，然后调用`appendKml()`方法，传入KML文件地址，即可实现数据的加载，在此以本地文件为例；
+3. 添加KML数据：首先构造`CesiumZondy.Manager.CommonDataManager`通用数据管理对象，然后调用`appendKml()`方法，传入KML文件地址，即可实现KML数据的加载，在此以本地文件为例；
 
     ``` javascript
-    //创建图层管理对象
-    var layerManager = new CesiumZondy.Manager.LayerManager({
-        viewer: webGlobe.viewer
+    //构造通用数据管理对象
+    var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
+         viewer: webGlobe.viewer
     });
     //添加KML数据
-    var datasource = layerManager.appendKml("./static/data/kml/bikeRide_wuhan.kml");
+    datasource = commonDataManager.appendKml("./static/data/kml/bikeRide_wuhan.kml");
     ```
 
 ### 关键接口
 
 #### 1.【三维场景控件】WebSceneControl
 
-#### 2.【图层管理类】CesiumZondy.Manager.LayerManager
+#### 2.【通用数据管理类】CesiumZondy.Manager.CommonDataManager
 
-##### （1）`appendKml(url, options)`：加载kml、kmz数据
+##### （1）`appendKml(url, options) → {KmlDataSource}`：加载KML、KMZ数据，返回KML数据对象（KmlDataSource）
 
 |参数名|类 型|说 明|
 |-|-|-|
-|url|String|文件地址|
-|options|String||
+|url|String|数据文件地址，本地数据路径设置如“./static/data/kml/bikeRide_wuhan.kml”，网络数据路径设置如“http://{域名或IP}/xxx.kml”|
+|options|Object|可选扩展参数|
+
+##### (2) `removeDataSource(datasource, isDestroy)` 移除数据对象
+> `removeDataSource` 方法主要参数
+
+|参数名|类型|说明|
+|-|-|-|
+|datasource|DataSource|数据对象|
+|isDestroy|Boolean|是否销毁|
+
+##### (3) `removeAllDataSource(isDestroy)` 移除所有数据对象
+> `removeAllDataSource` 方法主要参数
+
+|参数名|类型|说明|
+|-|-|-|
+|isDestroy|Boolean|是否销毁|

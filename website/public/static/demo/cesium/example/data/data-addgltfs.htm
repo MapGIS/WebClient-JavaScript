@@ -15,7 +15,7 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         var modelSource = [];
 
         //加载三维场景
@@ -30,14 +30,21 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //添加Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
-            sceneManager.flyToEx(119.96326524779111, 40.07955462004772, {
-                height: 81144,
-                heading: -55,
-                pitch: -20,
+            sceneManager.flyToEx(118.04234916552755, 42.6372939021426, {
+                height: 80,
+                heading: -103,
+                pitch: -4,
                 roll: 0
             });
 
@@ -47,6 +54,9 @@
 
         //添加模型
         function add() {
+            //开启动画：如果模型自带动画，需开启此参数
+            webGlobe.viewer.clock.shouldAnimate = true;
+
             //多个模型
             var models = [
                 {
@@ -61,34 +71,35 @@
                     "name": "风机1",
                     //模型要添加的坐标位置
                     "position": {
-                        "cartographicDegrees": [117.9298, 40.3828, 0]
+                        "cartographicDegrees": [118.0385, 42.6374, -5]
                     },
                     //模型文件参数
                     "model": {
                         //模型文件的路径
                         "gltf": "./static/data/model/donghua.gltf",
                         //模型的比例
-                        "scale": 20000,
+                        "scale": 50,
                         //模型最小显示的像素
                         "minimumPixelSize": 16
                     },
                     //描述
                     "description": "这是1号风机"
                 },
-                { //模型的ID
+                {
+                    //模型的ID
                     "id": "aerogenerator2",
                     //模型的名字
                     "name": "风机2",
                     //模型要添加的坐标位置
                     "position": {
-                        "cartographicDegrees": [117.9298, 41.3828, 0]
+                        "cartographicDegrees": [118.0356, 42.6354, -5]
                     },
                     //模型文件参数
                     "model": {
                         //模型文件的路径
                         "gltf": "./static/data/model/donghua.gltf",
                         //模型的比例
-                        "scale": 20000,
+                        "scale": 50,
                         //模型最小显示的像素
                         "minimumPixelSize": 16
                     },
@@ -102,14 +113,14 @@
                     "name": "风机3",
                     //模型要添加的坐标位置
                     "position": {
-                        "cartographicDegrees": [117.9298, 42.3828, 0]
+                        "cartographicDegrees": [118.0329, 42.6333, -5]
                     },
                     //模型文件参数
                     "model": {
                         //模型文件的路径
                         "gltf": "./static/data/model/donghua.gltf",
                         //模型的比例
-                        "scale": 20000,
+                        "scale": 50,
                         //模型最小显示的像素
                         "minimumPixelSize": 16
                     },
@@ -117,15 +128,13 @@
                     "description": "这是3号风机"
                 }
             ];
-            
-            //创建图层管理对象
-            var layerManager = new CesiumZondy.Manager.LayerManager({
+
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
                 viewer: webGlobe.viewer
             });
             //添加多个模型
-            modelSource = layerManager.appendModels(models);
-            //跳转到模型处
-            webGlobe.viewer.zoomTo(modelSource);
+            modelSource = commonDataManager.appendModels(models);
         }
     </script>
 </head>

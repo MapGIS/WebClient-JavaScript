@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>客户端等级符号专题图</title>
     <!--引入leaflet样式表-->
-    <link href="../../3rdLib/leaflet.css" rel="stylesheet" type="text/css"/>
+    <link href="../../3rdLib/leaflet.css" rel="stylesheet" type="text/css" />
     <!--引入当前页面样式表-->
-    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <link href="./style.css" rel="stylesheet" type="text/css" />
     <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
     <script src="./static/libs/include-leaflet-local.js"></script>
     <style>
@@ -19,8 +20,9 @@
         "use strict";
         //定义地图文档图层和地图、专题图图层
         var mapDocLayer, map, themeLayer;
-        var ip = 'develop.smaryun.com';
-        var port = '6163';
+        var { protocol, ip, port } = window.webclient;
+        var ip = `${ip}`;
+        var port = `${port}`;
         var docName = 'Hubei4326';
 
         /** 初始化地图显示*/
@@ -39,8 +41,8 @@
                 maxZoom: 15,
                 //最小级数
                 minZoom: 0
-            }).setView([(29.0125822276524 + 33.2932017737021) / 2,(108.34341 + 116.150939561213)
-            / 2], 6);
+            }).setView([(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
+                / 2], 6);
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer(docName, {
                 //IP地址
@@ -91,7 +93,7 @@
         function gradeQuerySuccess(data) {
             if (data != null) {
                 themeLayer =
-                    Zondy.Map.rankSymbolThemeLayer("ThemeLayer", 'Circle', {calGravity: true});
+                    Zondy.Map.rankSymbolThemeLayer("ThemeLayer", 'Circle', { calGravity: true });
                 themeLayer.themeField = "GDP2016";
                 // 配置图表参数
                 themeLayer.symbolSetting = {
@@ -102,7 +104,7 @@
                     //圆最小半径 默认0
                     minR: 5,
                     // 圆形样式
-                    circleStyle: {fillOpacity: 0.8},
+                    circleStyle: { fillOpacity: 0.8 },
                     // 符号专题图填充颜色
                     fillColor: "#00FF7F",
                     // 专题图hover 样式
@@ -150,7 +152,7 @@
                 contentHTML += "</div>";
 
                 var tempPoint = map.mouseEventToLatLng(e.event);
-                popup = L.tooltip({direction: 'top'})
+                popup = L.tooltip({ direction: 'top' })
                     .setContent(contentHTML)
                     .setLatLng([tempPoint.lat, tempPoint.lng])
                     .addTo(map);
@@ -176,17 +178,19 @@
         }
     </script>
 </head>
+
 <body onload="init();">
-<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
-    <br/>
-    <span>正在操作，请稍候</span>
-</div>
-<div class="ToolLib">
-    <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()"/>
-    <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()"/>
-</div>
-<div id="leaf_map" style="width: 100%; height:95%;">
-</div>
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在操作，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
+        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    </div>
+    <div id="leaf_map" style="width: 100%; height:95%;">
+    </div>
 </body>
+
 </html>

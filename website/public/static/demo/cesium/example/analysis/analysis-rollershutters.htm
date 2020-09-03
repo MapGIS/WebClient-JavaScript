@@ -41,7 +41,7 @@
                     webGlobe.viewer.scene.globe.enableTransparent = true;
                     webGlobe.viewer.scene.globe.transparent = 0.0;
                     webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(0, 0, 0, 0.00001);
-                    //开启深度检测
+                    //开启地形深度检测
                     webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
                     //初始化视图功能管理类
                     var sceneManager = new CesiumZondy.Manager.SceneManager({
@@ -58,15 +58,16 @@
                     var m3dLayer = new CesiumZondy.Layer.M3DLayer({
                         viewer: webGlobe.viewer
                     });
+                    var { protocol, ip, port } = window.webclient;
                     drilllayer = m3dLayer.append(
-                        "http://develop.smaryun.com:6163/igs/rest/g3d/钻孔_2_钻孔模型s", {
-                            autoReset: false
-                        }
+                        `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔_2_钻孔模型s`, {
+                        autoReset: false
+                    }
                     );
                     //加载M3D地图文档（服务地址，配置参数）
-                    landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/钻孔分层点_Sur_000_Ent', {
+                    landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/钻孔分层点_Sur_000_Ent`, {
                         autoReset: false,
-                        loaded: function(layer) {
+                        loaded: function (layer) {
                             DynamicCutting();
                         }
                     });
@@ -78,16 +79,16 @@
             webGlobe.deleteDynamicCutting(dynaCut);
             //进行剖切分析的面，向右切
             var plane = new Cesium.ClippingPlane(new Cesium.Cartesian3(1, 0, 0), -200.0)
-                //进行剖切分析的面，向左切
+            //进行剖切分析的面，向左切
             var plane1 = new Cesium.ClippingPlane(new Cesium.Cartesian3(-1, 0, 0), -200.0)
-                //创建剖切
+            //创建剖切
             dynaCut = webGlobe.createDynamicCutting(landscapeLayer, [plane], {
                 color: new Cesium.Color(1.0, 1.00, 1.0, 0.3)
             });
             //获取剖切切面
             planetEntity = dynaCut.planes[0];
             //设置切面回调函数
-            planetEntity.plane.plane = new Cesium.CallbackProperty(function(date) {
+            planetEntity.plane.plane = new Cesium.CallbackProperty(function (date) {
                 //设置剖切面距离
                 plane.distance = distance;
                 return Cesium.Plane.transform(plane, landscapeLayer[0].modelMatrix, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
@@ -99,7 +100,7 @@
             //获取剖切切面
             planetEntity1 = dynaCut1.planes[0];
             //设置切面回调函数
-            planetEntity1.plane.plane = new Cesium.CallbackProperty(function(date) {
+            planetEntity1.plane.plane = new Cesium.CallbackProperty(function (date) {
                 //设置剖切面距离
                 plane1.distance = distance1;
                 return Cesium.Plane.transform(plane1, drilllayer[0].modelMatrix, new Cesium.ClippingPlane(Cesium.Cartesian3.UNIT_X, 0.0));
@@ -117,7 +118,10 @@
 
     <div id="GlobeView">
         <div class="message" style="left: 10px;">
-            <span><font>卷帘距离：</font><input type="range" id="range" min="-4000" max="1000" value="500" oninput="change()" /></span>
+            <span>
+                <font>卷帘距离：</font><input type="range" id="range" min="-4000" max="1000" value="500"
+                    oninput="change()" />
+            </span>
         </div>
     </div>
 </body>

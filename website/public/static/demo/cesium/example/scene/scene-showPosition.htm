@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8' />
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>鼠标位置信息</title>
+    <title>常用控件</title>
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <!-- Cesium脚本库文件引用 -->
@@ -25,6 +25,18 @@
             });
             //显示鼠标位置控件
             sceneManager.showPosition("coordinateDiv");
+
+            //初始化通用功能管理类
+            var commFun = new CesiumZondy.Manager.CommonFuncManager({
+                viewer: webGlobe.viewer
+            });
+            //显示导航控件（罗盘、场景导航、比例尺）
+            var navigation = commFun.createNavigationTool({
+                enableCompass: true,
+                enableZoomControls: true,
+                enableDistanceLegend: true,
+                enableCompassOuterRing: true
+            });
         }
     </script>
 </head>

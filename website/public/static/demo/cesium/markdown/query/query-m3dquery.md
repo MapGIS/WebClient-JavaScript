@@ -2,117 +2,79 @@
 
 ### 示例功能
 
-本示例实现在三维场景中展示M3D地质体数据，并实现单体查询功能。
+本示例实现在三维场景中展示M3D模型数据，并实现单体查询功能。
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendPoint()`方法，实现点实体的添加绘制。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为：`Cesium.WebSceneControl.Scene`类的`pick()`方法来选取要素，`CesiumZondy.Manager.AnalysisManager`类的`startCustomDisplay()`方法来实现模型高亮。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
 ### 实现步骤
 
-1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库；
+1. 引用开发库：本示例引用local本地【include-cesium-local.js】开发库，完成此步骤后才可调用三维WebGL的功能；
 
-2. 创建三维视图容器，构造三维场景控件，构造并设置鼠标位置显示控件；
+2. 创建三维视图Div容器，构造三维场景控件WebSceneControl，构造并设置鼠标位置信息显示控件，加载Google地图作为底图显示；
 
-3. 加载地图：加载Google地图作为底图显示，并添加M3D地质体数据；
-
-    ``` javascript
-    //加载Google地图
-    webGlobe.appendGoogleMap('m@207000000');
-
-    //定义三维瓦片类
-    var layersList;
-    //加载M3D地质体数据
-    layersList = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {});
-    ```
-
-4. 注册鼠标点击事件：调用`registerMouseEvent()`方法注册鼠标单击事件，在单击事件方法中高亮选中的层体，并获取其信息展示在界面中；
+3. 加载M3D模型数据：例如M3D建筑粗模数据；
 
     ``` javascript
-    //注册鼠标单击事件
-    webGlobe.registerMouseEvent('LEFT_CLICK', leftClick);
-    
-    //获取视图和场景，备后续使用
-    viewer = webGlobe.viewer;
-    scene = webGlobe.scene;
-    ```
-
-    ``` javascript
-    //弹出信息
-    var infobox = new Cesium.Entity('infobox');
-    //鼠标单击方法
-    function leftClick(movement) {
-        //模型高亮
-        highlightPicking(movement);
-        if (!enablePicking) {
-            return;
+    //构造M3D模型层管理对象（视图）
+    var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+        viewer: webGlobe.viewer
+    });
+    //加载M3D地图文档（服务地址，配置参数）
+    var layerList = m3dLayer.append(
+        'http://develop.smaryun.com:6163/igs/rest/g3d/buildings1',
+        {
+            maximumScreenSpaceError: 1
         }
-        var feature = current.feature;
-        //显示拾取的模型相关信息
-        if (Cesium.defined(feature)) {
-            var str = '拾取到的属性，这里可以根据拾取到的id取到属性后再赋值';
-            //移除弹出信息框
-            viewer.entities.remove(infobox);
-            var properties = feature.primitive.properties;
-            infobox.name = feature.getProperty('name');
-            /*弹出信息框代码*/
-            var entity = viewer.entities.add(infobox);
-            viewer.selectedEntity = infobox;
-            feature.setProperty('clicked', true);
-        }
-    }
+    );
     ```
 
-    模型高亮实现方法；
+4. 注册鼠标点击事件：构造`CesiumZondy.Manager.MouseEventManager`对象，调用`registerMouseEvent()`方法注册鼠标左键单击事件，在事件方法中选取要素，然后构造`CesiumZondy.Manager.AnalysisManager`对象，调用其`startCustomDisplay()`方法实现高亮；
 
     ``` javascript
-    //单体化模型信息对象
-    var current = {
-        feature: undefined,
-        originalColor: new Cesium.Color()
-    }
+    //构造鼠标事件管理对象
+    var mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+        viewer: webGlobe.viewer
+    });
+    //注册鼠标左键单击事件
+    mouseEventManager.registerMouseEvent('LEFT_CLICK', highlightPicking);
+    ```
 
-    //高亮的颜色
-    var HIGHLIGHT_COLOR = new Cesium.Color(1.0, 0.0, 0.0, 0.4);
-    //是否拾取
-    var enablePicking = true;
-    /*模型高亮*/
+    鼠标左键单击事件方法：实现高亮；
+
+    ``` javascript
+    /*鼠标左键单击事件回调：模型高亮*/
     function highlightPicking(movement) {
-        if (enablePicking) {
-            //获取鼠标点击位置
-            var pickedFeature = scene.pick(movement.position);
-            //判断current对象中要素有值，该值和鼠标点击位置不相同
-            if (Cesium.defined(current.feature) && (current.feature !== pickedFeature)) {
-                layerList = [current.feature.tileset];
-                var title = current.feature.getProperty('name');
-                var values = title.split('_');
-                var vlueNumber = parseInt(values[2]);
-                var idList = [vlueNumber];
-                //结束闪烁
-                webGlobe.stopCustomDisplay(layerList);
-                current.feature = undefined;
-            }
-            //判断点击位置是否有值，该值和鼠标点击位置不相同
-            if (Cesium.defined(pickedFeature) && (pickedFeature !== current.feature)) {
-                current.feature = pickedFeature;
-                //设置高亮颜色
-                Cesium.Color.clone(pickedFeature.color, current.originalColor);
-                layerList = [current.feature.tileset];
-                var title = current.feature.getProperty('name');
-                var values = title.split('_');
-                var vlueNumber = parseInt(values[2]);
-                var idList = [vlueNumber];
-                var options = {
-                    color: new Cesium.Color(1, 0, 0, 0.2)
-                }
-                //结束闪烁
-                webGlobe.stopCustomDisplay(layerList);
-                //开始闪烁查找到的模型
-                webGlobe.startCustomDisplay(layerList, idList, options);
-            }
+        //根据鼠标点击位置选择对象
+        var pickedFeature = webGlobe.scene.pick(movement.position);
+
+        //获取要素的瓦片集
+        var currentLayer = [pickedFeature.tileset];
+        //获取名称属性
+        var title = pickedFeature.getProperty('name');
+        //采用_分割
+        var values = title.split('_');
+        //获取数组中第三个数值，即为要素的ID
+        var vlueNumber = parseInt(values[2]);
+        //构建数组
+        var idList = [vlueNumber];
+        //构建参数：设置颜色
+        var options = {
+            //高亮颜色
+            color: new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 1),
+            //高亮模式：REPLACE为替换
+            colorBlendMode: Cesium.Cesium3DTileColorBlendMode.REPLACE
         }
+
+        //构造分析功能管理对象
+        var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+            viewer: webGlobe.viewer
+        });
+        //开始闪烁查找到的模型
+        analysisManager.startCustomDisplay(currentLayer, idList, options);
     }
     ```
 
@@ -120,7 +82,9 @@
 
 #### 1.【三维场景控件】WebSceneControl
 
-##### （1）`registerMouseEvent(eventType, callbackFun, handler)`：注册鼠标事件
+#### 2.【鼠标事件管理类】MouseEventManager
+
+##### （1）`registerMouseEvent(eventType, callbackFun, handler) → {Handler}`：注册鼠标事件
 
 > `registerMouseEvent`方法主要参数
 
@@ -130,15 +94,17 @@
 |callbackFun|function|回调函数|
 |handler|Object|事件句柄|
 
-##### （2）`startCustomDisplay(layerList, idList, options)`：高亮显示
+#### 3.【分析功能管理类】AnalysisManager
+
+##### （1）`startCustomDisplay(layerList, idList, options)`：高亮显示
 
 > `startCustomDisplay`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
-|layerList|Array.<layer>|图层列表|
-|idList|Array.<id>|id列表|
-|options|Object|扩展属性|
+|layerList|Array.\<layer>|图层列表|
+|idList|Array.\<id>|id列表|
+|optionsParam|Object|扩展属性|
 
 > `options`属性主要参数
 
@@ -153,4 +119,4 @@
 |style|String|'EdgeHighlight'|（可选）高亮模式//'EdgeHighlight'高亮+描边 'Edge'//描边|
 |edgeColor|Color|new Cesium.Color(0, 0, 1,1.0)|（可选）默认红色|
 
-##### （3）`stopCustomDisplay()`：停止全部高亮
+##### （2）`stopCustomDisplay()`：停止全部高亮

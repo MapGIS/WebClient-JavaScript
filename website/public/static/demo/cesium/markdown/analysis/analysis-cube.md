@@ -19,7 +19,7 @@
 var webGlobe = new Cesium.WebSceneControl('GlobeView', {
     terrainExaggeration: 1,
 });
-//添加Google影像地图
+//添加Google地图
 webGlobe.appendGoogleMapExt({
     ptype: 's@130'
 });

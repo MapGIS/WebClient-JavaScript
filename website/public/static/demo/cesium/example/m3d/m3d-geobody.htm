@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义图层类
-        var geobodylayer = undefined;
+        var geobodyLayerArr;
 
         //加载三维场景
         function init() {
@@ -31,22 +31,34 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //是否显示场景球
             webGlobe.viewer.scene.globe.show = false;
             //大气显示
             webGlobe.viewer.scene.skyAtmosphere.show = false;
             //透明度
             webGlobe.viewer.scene.globe.enableTransparent = true;
-            webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(1, 1, 1, 0.001);
-            //开启深度检测
+            webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(255 / 255, 255 / 255, 255 / 255, 0.001);
+            //开启地形深度检测
             webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+
+            // 亮度设置
+            var stages = webGlobe.viewer.scene.postProcessStages;
+            webGlobe.viewer.scene.brightness = webGlobe.viewer.scene.brightness || stages.add(Cesium.PostProcessStageLibrary.createBrightnessStage());
+            webGlobe.viewer.scene.brightness.enabled = true;
+            webGlobe.viewer.scene.brightness.uniforms.brightness = Number(1.3);
+
+            // 修改场景时间
+            var utc = Cesium.JulianDate.fromDate(new Date("2020/7/04 24:00:00"));
+            webGlobe.viewer.clock.currentTime = Cesium.JulianDate.addHours(utc, 0, new Cesium.JulianDate());
 
             //构造M3D模型层管理对象（视图）
             var m3dLayer = new CesiumZondy.Layer.M3DLayer({
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            geobodylayer = m3dLayer.append(
-                "http://develop.smaryun.com:6163/igs/rest/g3d/钻孔分层点_Sur_000_Ent",
+            var { protocol, ip, port } = window.webclient;
+            geobodyLayerArr = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔分层点_Sur_000_Ent`,
                 {
                     autoReset: true,
                     loaded: function (layer) {

@@ -6,84 +6,73 @@
 
 ### 示例实现：
 
-本示例需要使用include-cesium-local.js开发库实现，初始化 `Cesium.CircleScanEffect()` 动态圆对象后通过Cesium三维球控件 `Cesium.WebSceneControl()` 的`addSceneEffect()`方法添加动态圆显示。
+本示例需要使用include-cesium-local.js开发库实现，初始化 `Cesium.CircleScanEffect()` 动态圆对象，然后通过分析功能管理类`CesiumZondy.Manager.AnalysisManager` 的`addSceneEffect()`方法添加动态圆显示；`removeSceneEffect()`方法移除动态圆显示。
 
 ### 实现步骤：
 
 1. <font color=red>引用开发库</font>：本示例引用local本地【include-cesium-local.js】开发库, 完成此步后方可正常使用所有三维WebGL的功能；
 
-2. <font color=red>创建三维地图容器并加载三维球控件</font>：创建 `id='GlobeView'` 的div作为三维视图的容器，并设置其样式，初始化Cesium三维球控件 `Cesium.WebSceneControl()` ，完成此步后可在三维场景中加载三维球控件；
+2. <font color=red>创建三维地图容器加载三维球控件,并加载底图;</font>：创建 `id='GlobeView'` 的div作为三维视图的容器，并设置其样式，初始化Cesium三维球控件 `Cesium.WebSceneControl()` ，并调用`appendGoogleMapExt()` 方法加载Google地图作为底图显示；
+
+3. <font color=red>跳转定位</font>：调用Cesium三维球场景视图管理类 `CesiumZondy.Manager.SceneManager` 的 `flyTo()` 方法定位到指定点；
 
 ``` Javascript
-//构造三维视图类（视图容器div的id，三维视图设置参数）
-var webGlobe = new Cesium.WebSceneControl('GlobeView', {
-    terrainExaggeration: 1,
-}); 
+//初始化视图功能管理类
+var sceneManager = new CesiumZondy.Manager.SceneManager({
+    viewer: webGlobe.viewer
+});
+//定位跳转
+sceneManager.flyTo(114.06, 22.54, 20000, 2);
 ```
 
-``` html
-<div id='GlobeView'></div>
-```
-
-3. <font color=red>加载数据</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `appendGoogleMap()` 方法加载副歌地图数据；
+5. <font color=red>创建动态圆</font>:初始化动态圆对象 `Cesium.CircleScanEffect()`，注意使用动态圆功能`必须开启深度检测` ； 
 
 ``` Javascript
-webGlobe.appendGoogleMap('m@207000000');
+//开启地形深度检测（必须）
+webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+//初始化动态圆对象
+var scanEffect = new Cesium.CircleScanEffect(webGlobe.viewer, {
+    center: Cesium.Cartesian3.fromDegrees(114.06, 22.54, 20),
+    maxRadius: 5000,
+    scanColor: new Cesium.Color(1, 0, 0, 1),
+    duration: 8000
+});
 ```
 
-4. <font color=red>跳转定位</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的 `flyTo()` 方法定位到指定点；
+6. <font color=red>添加/移除动态圆</font>：调用Cesium三维球分析功能管理类`CesiumZondy.Manager.AnalysisManager` 的`addSceneEffect()`方法添加动态圆显示，相应可调用`removeSceneEffect()`方法移除。
 
 ``` Javascript
- webGlobe.flyTo(114.06, 22.54, 20000, 2);
-```
+//初始化分析功能管理类
+var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+    viewer: webGlobe.viewer
+});
+//添加添加场景特效-动态圆
+analysisManager.addSceneEffect(scanEffect);
 
-5. <font color=red>创建动态圆</font>:初始化动态圆对象 `Cesium.CircleScanEffect()` ； 
-
-``` Javascript
-//创建动态圆
- var scanEffect = new Cesium.CircleScanEffect(webGlobe.viewer, {
-     center: Cesium.Cartesian3.fromDegrees(114.06, 22.54, 20),
-     maxRadius: 15000,
-     scanColor: new Cesium.Color(1, 0, 0, 1),
-     duration: 8000
- });
-```
-
-6. <font color=red>添加动态圆</font>：调用Cesium三维球控件 `Cesium.WebSceneControl()` 的`addSceneEffect()`方法添加动态圆显示；
-
-``` Javascript
-//添加动态圆
-webGlobe.addSceneEffect(scanEffect);
+//通过removeSceneEffect()移除场景特效
+//analysisManager.removeSceneEffect(scanEffect);
 ```
 
 ### 关键接口
 
-#### 1. `Cesium.WebSceneControl(elementId, options)` : 三维视图的主要类
+#### 1.【三维场景控件】 `CesiumZondy.WebSceneControl` 
 
-##### (1) `appendGoogleMap(type)` 添加地图文档
+#### 2.【实体绘制控制器类】 CesiumZondy.Manager.CommonDataManager，添加点appendPoint()
 
-> `appendGoogleMap` 方法主要参数
+#### 3.【动态圆对象类】 Cesium.CircleScanEffect，Cesium原生类
 
-|参数名|类型|说明|
-|-|-|-|
-|type|String|地图类型 矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’|
+#### 4.【分析功能管理类】 CesiumZondy.Manager.AnalysisManager
 
-##### (2) `flyTo(lon, lat, height, duration)` 跳转到
-> `flyTo` 方法主要参数
-
-|参数名|类型|说明|
-|-|-|-|
-|lon|Number|经度|
-|lat|Number|纬度|
-|height|Number|视角高度|
-|duration|Number|跳转持续时间|
-
-
-##### (3) `addSceneEffect()` 添加场景特效
+##### (1) `addSceneEffect(effect)` 添加场景特效
 > `addSceneEffect` 方法主要参数
 
 |参数名|类型|说明|
 |-|-|-|
-|url|String|事件类型 LEFT_CLICK RIGHT_CLICK MOUSE_MOVE LEFT_DOUBLE_CLICK RIGHT_DOUBLE_CLICK WHEEL(鼠标滚轮)|
+|effect|Object|场景特效实例，如动态圆场景特效Cesium.CircleScanEffect对象|
 
-#### 2. Cesium.CircleScanEffect():
+##### (2) `removeSceneEffect(effect)` 移除场景特效
+> `removeSceneEffect` 方法主要参数
+
+|参数名|类型|说明|
+|-|-|-|
+|effect|Object|场景特效实例，如动态圆场景特效Cesium.CircleScanEffect对象|

@@ -19,41 +19,48 @@
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
             webGlobe = new Cesium.WebSceneControl('GlobeView', {});
-            //添加天地图
-            webGlobe.appendTDTuMap({
-                //天地图经纬度数据
-                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
-                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
-                token: "9c157e9585486c02edf817d2ecbc7752",
-                //地图类型 'vec'矢量 'img'影像 'ter'地形
-                type: "img"
-            });
-
-            var options = {
-                tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
-                //瓦片初始级的列数 默认为2
-                colNum: 2,
-                //瓦片初始级的行数 默认为2
-                rowNum: 1,
-                //瓦片最大显示级数 默认为19
-                maxLevel: 19,
-                // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
-                //如瓦片裁的不是256,则需设置下面两个参数
-                tileWidth: 256,
-                tileHeight: 256
-            };
-            //初始化瓦片服务管理类,实现瓦片图层相关操作
-            var tilelayer = new CesiumZondy.Layer.TilesLayer({
-                viewer: webGlobe.viewer
-            });
-            //添加MapGISIGServer发布的瓦片
-            tilelayer.appendMapGISTile('http://develop.smaryun.com:6163/igs/rest/mrms/tile/北京市', options);
             //初始化视图功能管理类
             var sceneManager = new CesiumZondy.Manager.SceneManager({
                 viewer: webGlobe.viewer
             });
             //视图跳转
             sceneManager.flyTo(116.348, 40.236, 300000, 2);
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //初始化瓦片服务管理类,实现瓦片图层相关操作
+            var tilelayer = new CesiumZondy.Layer.TilesLayer({
+                viewer: webGlobe.viewer
+            });
+            //参数
+            var options = {
+                tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+                //瓦片初始级的列数 默认为2
+                colNum: 2,
+                //瓦片初始级的行数 默认为1
+                rowNum: 1,
+                //瓦片最大显示级数 默认为19
+                maxLevel: 19,
+                //如瓦片裁的不是256,则需设置下面两个参数
+                //瓦片宽度
+                tileWidth: 256,
+                //瓦片高度
+                tileHeight: 256
+                // proxy: '/ZDproxy.ashx' //如不存在跨域可不设置
+            };
+            //添加MapGISIGServer发布的瓦片
+            var { protocol, ip, port } = window.webclient;
+            tilelayer.appendMapGISTile(`${protocol}://${ip}:${port}/igs/rest/mrms/tile/北京市`, options);
         }
 
         /*屏幕截图*/
@@ -62,8 +69,26 @@
             var commonFuncManager = new CesiumZondy.Manager.CommonFuncManager({
                 viewer: webGlobe.viewer
             });
-            //当前屏幕图片输出
+            //当前屏幕图片输出为一个图片文件
             commonFuncManager.outputImageFile("图片.png");
+        }
+        /*打印图片*/
+        function outputImageObj() {
+            //常用功能管理类
+            var comm = new CesiumZondy.Manager.CommonFuncManager({
+                viewer: webGlobe.viewer
+            });
+            //当前屏幕输出为一个图片对象
+            var res = comm.outputImageObj();
+            //下载打印此图片对象为png
+            res.downloadPng("image.png");
+            //可输出如下其他格式
+            //res.toImg();
+            //res.toBase64();
+            //res.downloadPng(name);
+            //res.toCanvas();
+            //res.toJpeg();
+            //res.toPng();
         }
     </script>
 </head>
@@ -72,6 +97,7 @@
     <div id="GlobeView">
         <div class="message">
             <button id="outputImage" onclick="outputImage()">屏幕截图</button>
+            <button id="outputImageObj" onclick="outputImageObj()">打印图片</button>
         </div>
     </div>
 </body>

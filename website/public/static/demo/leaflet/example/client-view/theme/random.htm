@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>客户端随机专题图</title>
     <!--引入leaflet样式表-->
-    <link href="../../3rdLib/leaflet.css" rel="stylesheet" type="text/css"/>
+    <link href="../../3rdLib/leaflet.css" rel="stylesheet" type="text/css" />
     <!--引入当前页面样式表-->
-    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <link href="./style.css" rel="stylesheet" type="text/css" />
     <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
     <script src="./static/libs/include-leaflet-local.js"></script>
     <style>
@@ -63,8 +64,9 @@
         "use strict";
         //定义地图文档图层和地图、专题图图层
         var mapDocLayer, map, themeLayer;
-        var ip = 'develop.smaryun.com';
-        var port = '6163';
+        var { protocol, ip, port } = window.webclient;
+        var ip = `${ip}`;
+        var port = `${port}`;
         var docName = 'Hubei4326';
         var legendView, infoView;
 
@@ -84,8 +86,8 @@
                 maxZoom: 15,
                 //最小级数
                 minZoom: 4
-            }).setView([(29.0125822276524 + 33.2932017737021) / 2,(108.34341 + 116.150939561213)
-            / 2], 6);
+            }).setView([(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
+                / 2], 6);
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer(docName, {
                 //IP地址
@@ -180,7 +182,7 @@
 
         /** 初始化属性记录视图*/
         function initInfoView_Range() {
-            infoView = L.control({position: 'bottomright'});
+            infoView = L.control({ position: 'bottomright' });
             infoView.onAdd = function () {
                 this._div = L.DomUtil.create('div', 'panel panel-primary infoPane');
                 this._div.style.width = '272px';
@@ -250,17 +252,19 @@
         }
     </script>
 </head>
+
 <body onload="init();">
-<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
-    <br/>
-    <span>正在操作，请稍候</span>
-</div>
-<div class="ToolLib">
-    <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()"/>
-    <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()"/>
-</div>
-<div id="leaf_map" style="width: 100%; height:95%;">
-</div>
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在操作，请稍候</span>
+    </div>
+    <div class="ToolLib">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
+        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    </div>
+    <div id="leaf_map" style="width: 100%; height:95%;">
+    </div>
 </body>
+
 </html>

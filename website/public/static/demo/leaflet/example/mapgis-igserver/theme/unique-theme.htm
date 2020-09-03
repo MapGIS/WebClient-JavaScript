@@ -23,6 +23,7 @@
         var themesInfoArr = null;
         //地图文档guid
         var guid;
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -51,9 +52,9 @@
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer("Hubei4326", {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163",
+                port: `${port}`,
                 //只显示一个图层,不平铺显示
                 noWrap: true,
                 //添加guid
@@ -62,9 +63,9 @@
             //初始化专题图服务类
             ThemeOper = new Zondy.Service.ThemeOper(guid);
             //设置ip地址
-            ThemeOper.ip = "develop.smaryun.com";
+            ThemeOper.ip = `${ip}`;
             //设置端口号
-            ThemeOper.port = "6163";
+            ThemeOper.port = `${port}`;
         }
 
         /** 设置专题图参数*/

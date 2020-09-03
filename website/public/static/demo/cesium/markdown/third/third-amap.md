@@ -6,7 +6,7 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendGaodeMap()`方法，以此来加载高德地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.ThirdPartyLayer`类提供的`appendGaodeMap()`方法，以此来加载高德地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -25,11 +25,18 @@
    var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
    ```
 
-4. 加载数据：调用`appendGaodeMap()`方法加载高德地图，配置不同参数可加载不同类型地图，如矢量：'vec'、影像：'img'、道路：'raod'。
+4. 加载数据：创建第三方数据图层类`CesiumZondy.Layer.ThirdPartyLayer`的对象，调用`appendGaodeMap()`方法加载高德地图，配置不同参数可加载不同类型地图，如矢量：'vec'、影像：'img'、道路：'road'。
 
     ``` javascript
-    //添加高德地图
-    webGlobe.appendGaodeMap({type:'vec'});
+    //构造第三方图层对象
+    var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+    });
+    //加载高德地图
+    var amapLayer = thirdPartyLayer.appendGaodeMap({
+        //地图类型：矢量：'vec'、影像：'img'、道路：'road'
+        ptype: 'vec'
+    });
     ```
 
 ### 关键接口
@@ -56,17 +63,18 @@
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendGaodeMap(options)`：添加高德地图服务
+#### 2.【第三方数据图层类】CesiumZondy.Layer.ThirdPartyLayer
+##### （1）`appendGaodeMap(optionsParam) → {ImageryLayer}`：添加高德地图服务，返回瓦片层对象（ImageryLayer），可用于操作移除
 
 > `appendGaodeMap`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
-|options|Object|附加属性|
+|optionsParam|Object|附加属性|
 
-> `options`属性主要参数
+> `optionsParam`属性主要参数
 
 |参数名|类 型|默认值|说 明|
 |-|-|-|-|
-|type|String|'vec'|（可选）矢量：'vec'、影像：'img'、道路：'raod'|
+|ptype|String|'vec'|（可选）矢量：'vec'、影像：'img'、道路：'road'|
 |maximumLevel|Number|16|（可选）|

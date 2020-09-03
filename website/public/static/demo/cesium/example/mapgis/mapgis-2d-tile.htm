@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义图层对象
-        var layer = undefined;
+        var layer;
 
         //加载地图
         function init() {
@@ -31,14 +31,18 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //添加天地图
-            webGlobe.appendTDTuMap({
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            thirdPartyLayer.appendTDTuMap({
                 //天地图经纬度数据
                 url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                 //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                 token: "9c157e9585486c02edf817d2ecbc7752",
                 //地图类型 'vec'矢量 'img'影像 'ter'地形
-                type: "img"
+                ptype: "img"
             });
 
             //构造瓦片图层管理对象（视图）
@@ -62,8 +66,9 @@
                 // proxy: '/ZDproxy.ashx' //如不存在跨域可不设置
             };
             //添加MapGIS IGServer发布的二维瓦片服务
+            var { protocol, ip, port } = window.webclient;
             layer = tilelayer.appendMapGISTile(
-                'http://develop.smaryun.com:6163/igs/rest/mrms/tile/北京市',
+                `${protocol}://${ip}:${port}/igs/rest/mrms/tile/北京市`,
                 options
             );
 

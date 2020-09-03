@@ -42,6 +42,7 @@ Web Map Service（网络地图服务），简称WMS，由开放地理信息联�
         "http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WMSServer",
         //图层名
         "北京市,绿地_1,水域_3,大学,学校,动物园",
+        //附加属性
         {}
     );
     ```

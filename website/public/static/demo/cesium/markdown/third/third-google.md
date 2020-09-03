@@ -6,7 +6,7 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendGoogleMapExt()`方法，以此来加载谷歌地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.ThirdPartyLayer`类提供的`appendGoogleMapExt()`方法或者`appendGoogleMap()`方法，以此来加载谷歌地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -25,12 +25,16 @@
    var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
    ```
 
-4. 加载数据：调用`appendGoogleMapExt()`方法加载Google地图，为`ptype`属性配置不同参数可加载不同类型地图，如加载矢量可传入：‘m@207000000’、影像：‘s@130’、栅格：‘t@130’、道路：‘h@207000000’。
+4. 加载数据：创建第三方数据图层类`CesiumZondy.Layer.ThirdPartyLayer`的对象，在此调用`appendGoogleMapExt()`方法加载Google地图，为`ptype`属性配置不同参数可加载不同类型地图，如加载矢量可传入：‘m@207000000’、影像：‘s@130’、栅格：‘t@130’、道路：‘h@207000000’。
 
     ``` javascript
-    //添加Google地图
-    webGlobe.appendGoogleMapExt({
-        ptype: 'm@207000000'
+    //构造第三方图层对象
+    var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+    });
+    var googleLayer = thirdPartyLayer.appendGoogleMapExt({
+        //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+        ptype: 'r'
     });
     ```
 
@@ -58,10 +62,30 @@
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendGoogleMapExt(options)`：添加Google地图服务
+
+#### 2.【第三方数据图层类】CesiumZondy.Layer.ThirdPartyLayer
+
+##### （1）`appendGoogleMapExt(optionsParam) → {ImageryLayer}`：添加google地图服务(扩展)，返回瓦片层对象（ImageryLayer），可用于操作移除
 
 > `appendGoogleMapExt`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
-|options|Object|{ptype:'s'}|
+|optionsParam|Object|可扩展参数|
+
+> `optionsParam`属性主要参数
+|参数名|类 型|说 明|
+|-|-|-|
+|ptype|string|（可选）地图类型： s-卫星影像地图、 h-道路地图、 m-全地图（含矢量与道路）、r-矢量地图、t-地形图；也可以进行组合，例如：s,r 或者 t,h|
+
+##### （2）`appendGoogleMap(optionsParam) → {ImageryLayer}`：添加Google地图服务，返回瓦片层对象（ImageryLayer），可用于操作移除
+> `appendGoogleMap`方法主要参数
+
+|参数名|类 型|说 明|
+|-|-|-|
+|optionsParam|Object|预留可扩展参数|
+
+> `optionsParam`属性主要参数
+|参数名|类 型|说 明|
+|-|-|-|
+|ptype|string|（必选）地图类型：矢量‘m@207000000’ 、影像‘s@130’ 、栅格‘t@130,r@207000000、道路‘h@207000000’|

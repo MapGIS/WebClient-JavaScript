@@ -15,9 +15,7 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义三维瓦片类
-        var tileset;
+        var webGlobe;
         var model;
 
         //加载三维场景
@@ -32,14 +30,21 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //添加Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
-            sceneManager.flyToEx(117.99916434470754, 40.33939916567365, {
-                height: 5000,
-                heading: -50,
-                pitch: -15,
+            sceneManager.flyToEx(114.3953898546926, 30.501275790358093, {
+                height: 370,
+                heading: -27,
+                pitch: -25,
                 roll: 0
             });
 
@@ -49,25 +54,24 @@
 
         //添加GLTF模型
         function add() {
-            //创建图层管理对象
-            var layerManager = new CesiumZondy.Manager.LayerManager({
+            //开启动画：如果模型自带动画，需开启此参数
+            webGlobe.viewer.clock.shouldAnimate = true;
+
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
                 viewer: webGlobe.viewer
             });
 
             //添加模型（gltf文件）
-            model = layerManager.appendModel(
+            model = commonDataManager.appendModel(
                 //模型id
                 'model',
-                //模型url路径
-                './static/data/model/donghua.gltf',
-                //模型所在经度
-                117.9298,
-                //模型所在纬度
-                40.3828,
-                //高度
-                0,
+                //模型文件URL路径
+                './static/data/model/WuRenJi/WuRenJi.gltf',
+                //模型经度、纬度、高度
+                114.3938, 30.5045, 200,
                 //缩放比
-                2000
+                200
             );
         }
     </script>

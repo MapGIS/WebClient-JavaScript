@@ -1,4 +1,4 @@
-## 添加GLTF
+## GLTF数据加载
 
 ### 示例功能
 
@@ -11,7 +11,7 @@ GLTF（GL Transmission Format），即图形语言交换格式，是一种三维
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Manager.LayerManager`类提供的`appendModel()`方法，实现GLTF模型数据的加载。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Manager.CommonDataManager`类提供的`appendModel()`方法，实现GLTF模型数据的加载。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -21,28 +21,27 @@ GLTF（GL Transmission Format），即图形语言交换格式，是一种三维
 
 2. 创建三维视图Div容器，构造三维场景控件WebSceneControl，构造并设置鼠标位置信息显示控件，加载Google地图作为底图显示；
 
-3. 添加模型：首先构造`CesiumZondy.Manager.LayerManager`图层管理对象，然后调用`appendModel()`方法，并设置模型id、URL路径、模型所在经纬度、模型高度、缩放比参数信息，即可实现GLTF模型的加载。
+3. 添加模型：首先构造`CesiumZondy.Manager.CommonDataManager`通用数据管理对象，然后调用`appendModel()`方法，并设置模型id、模型文件URL路径、模型所在经纬度、高度、缩放比参数信息，即可实现GLTF模型的加载。如果模型自带动画，需要设置`webGlobe.viewer.clock.shouldAnimate`参数为true来开启动画。
 
     ``` javascript
-    //创建图层管理对象
-    var layerManager = new CesiumZondy.Manager.LayerManager({
+    //构造通用数据管理对象
+    var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
         viewer: webGlobe.viewer
     });
 
+    //开启动画：如果模型自带动画，需开启此参数
+    webGlobe.viewer.clock.shouldAnimate = true;
+
     //添加模型（gltf文件）
-    var model = layerManager.appendModel(
+    var model = commonDataManager.appendModel(
         //模型id
         'model',
-        //模型url路径
-        './static/data/model/donghua.gltf',
-        //模型所在经度
-        117.9298,
-        //模型所在纬度
-        40.3828,
-        //高度
-        0,
+        //模型文件URL路径
+        './static/data/model/WuRenJi/WuRenJi.gltf',
+        //模型经度、纬度、高度
+        114.3938, 30.5045, 200,
         //缩放比
-        2000
+        200
     );
     ```
 
@@ -50,9 +49,9 @@ GLTF（GL Transmission Format），即图形语言交换格式，是一种三维
 
 #### 1.【三维场景控件】WebSceneControl
 
-#### 2.【图层管理类】CesiumZondy.Manager.LayerManager
+#### 2.【通用数据管理类】CesiumZondy.Manager.CommonDataManager
 
-##### （1）`appendModel(id, url, lon, lat, height, scale)`：添加模型（gltf文件）
+##### （1）`appendModel(id, url, lon, lat, height, scale) → {Object}`：添加模型（gltf文件）
 
 |参数名|类 型|说 明|
 |-|-|-|
@@ -62,3 +61,12 @@ GLTF（GL Transmission Format），即图形语言交换格式，是一种三维
 |lat|Number|模型坐在纬度|
 |height|Number|高度|
 |scale|Number|缩放比|
+|options|Object|附加参数|
+
+> `options`属性主要参数
+
+|参数名|类 型|说 明|
+|-|-|-|
+|color|Color|颜色|
+|colorBlendMode|ColorBlendMode|颜色混合模式 Cesium.ColorBlendMode.MIX|
+|colorBlendAmount|Number|颜色混合程度|

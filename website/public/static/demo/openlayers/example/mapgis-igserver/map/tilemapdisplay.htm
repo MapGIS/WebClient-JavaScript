@@ -14,9 +14,10 @@
             var name = "MapGIS IGS TileLayer";
             //瓦片地图的名称
             var TileName = "WorldJWTile";
+            var { protocol, ip, port } = window.webclient;
             TileLayer = new Zondy.Map.TileLayer(name, TileName, {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             map = new ol.Map({
                 //目标DIV

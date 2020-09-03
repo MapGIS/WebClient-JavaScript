@@ -15,8 +15,8 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        var polygon;
+        var webGlobe;
+        var groundPolygon;
 
         //加载三维场景
         function init() {
@@ -30,15 +30,14 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //添加谷歌矢量地图地图（矢量‘m@207000000’ 影像‘s@130’ 栅格‘t@130,r@207000000 道路‘h@207000000’)
-            webGlobe.appendGoogleMap('m@207000000');
-
-            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
-            sceneManager.flyToEx(114.40608773750783, 30.476922693690902, {
-                height: 1303.233185789504,
-                heading: 0.04063306919502985,
-                pitch: -90,
-                roll: 0
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
             });
 
             //添加贴地多边形
@@ -47,28 +46,32 @@
 
         //添加贴地多边形
         function add() {
-            //构造实体绘制控制器对象
-            var entityController = new CesiumZondy.Layer.EntityController({
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
                 viewer: webGlobe.viewer
             });
 
             //坐标点数组（经纬度）
-            var latLon_out = [114.40328987990017, 30.479789358042233,
-                114.40255973680176, 30.473707285934392,
-                114.40905754990294, 30.473938016458956,
-                114.40971219770601, 30.479196348500707,
-                114.40328987990017, 30.479789358042233];
+            var point_out = [
+                70, 0,
+                150, 0,
+                150, 60,
+                70, 60,
+                70, 0
+            ];
             //填充颜色
-            var color = new Cesium.ColorGeometryInstanceAttribute(1, 1, 0, 0.5);
+            var color = new Cesium.ColorGeometryInstanceAttribute(255 / 255, 255 / 255, 0 / 255, 0.5);
 
             //根据给定点画贴地多边形
-            polygon = webGlobe.appendGroundPolygon(
+            groundPolygon = webGlobe.appendGroundPolygon(
                 //外圈坐标数组（经纬度）
-                latLon_out,
+                point_out,
                 //内圈坐标数组（经纬度）
                 null,
                 //填充颜色
-                color
+                color,
+                //附加属性
+                {}
             );
         }
     </script>

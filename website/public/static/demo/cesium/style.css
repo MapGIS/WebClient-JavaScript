@@ -15,7 +15,8 @@
 
 .message {
     position: absolute;
-    top: 16px;
+    top: 10px;
+    left: 10px;
     height: auto;
     width: auto;
     background-color: rgba(255, 255, 255, 0.3);
@@ -46,7 +47,6 @@
 }
 
 .message input {
-    float: right;
     width: 125px;
     height: 14px;
     margin-left: 5px;
@@ -66,6 +66,12 @@
     font-size: 12px;
     font-family: "微软雅黑";
     border: 1px solid #dddddd;
+    border-radius: 5px;
+}
+
+.message button:hover{
+    background-color: #1D9ED7;
+    color: white;
 }
 
 .message select {
@@ -77,4 +83,5 @@
     color: #000000;
     background-color: #f4f7fb;
     outline: none;
+    border-radius: 5px;
 }

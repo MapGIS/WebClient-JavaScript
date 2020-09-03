@@ -7,112 +7,124 @@
     <title>通视分析</title>
     <!--引入第三方的jquery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #GlobeView {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-    </style>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
         'use strict';
         //定义三维视图的主要类
         var webGlobe;
         var viewer;
         //定义三维瓦片类
-        var tileset;
-        //定义鼠标事件类
-        var handler;
+        var landscapeLayer;
         //定义通视分析类
         var visiblity;
-        //定义通视分析状态
-        var visiblityAction;
         //定义是否正在执行通视分析
-        var visiblitying;
+        var visiblitying = false;
         //加载三维视图
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', { terrainExaggeration: 1 });
-            webGlobe.showPosition();
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1
+            });
             viewer = webGlobe.viewer;
-            var scene = webGlobe.scene;
-            if (viewer) {
-                if (webGlobe) {
-                    //加载谷歌矢量底图
-                    webGlobe.appendGoogleMap('m@207000000');
-                    //加载IGS发布的M3D缓存地图文档
-                    tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {});
-                }
-            }
-        }
+            if (webGlobe) {
+                //构造第三方图层对象
+                var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                    viewer: webGlobe.viewer
+                });
+                //添加Google地图
+                thirdPartyLayer.appendGoogleMapExt({
+                    //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                    ptype: 's'
+                });
 
-        /*通视分析*/
-        function startVisiblity() {
-            //初始化通视分析类
-            visiblity = new Cesium.VisiblityAnalysis();
-            //添加通视分析显示
-            viewer.scene.VisualAnalysisManager.add(visiblity);
-            //设置通视分析状态为true
-            visiblityAction = true;
-            //设置正在通视分析为false
-            visiblitying = false;
-            //注册鼠标左键点击事件
-            function left(movement) {
-                //判断是否初始化过通视分析类
-                if (visiblity) {
-                    //判断通视分析状态
-                    if (visiblityAction) {
-                        //获取鼠标点击位置
-                        var cartesian = viewer.getCartesian3Position(movement.position, cartesian);
-                        //第一个点
-                        if (cartesian != undefined && !visiblitying) {
-                            //设置通视分析观察点
-                            visiblity.viewPosition = cartesian;
-                        } else {
-                            //设置通视分析结果点
-                            visiblity.targetPosition = cartesian;
-                            //设置通视分析状态为false
-                            visiblityAction = false;
+                //初始化视图功能管理类
+                var sceneManager = new CesiumZondy.Manager.SceneManager({
+                    viewer: webGlobe.viewer
+                });
+                //视点跳转
+                sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                    height: 100.85856618500283,
+                    heading: -45.4940479913348135,
+                    pitch: -15,
+                    roll: 0
+                });
+                //构造M3D模型层管理对象
+                var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载M3D地图文档（服务地址，配置参数）
+                var { protocol, ip, port } = window.webclient;
+                landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
+                    autoReset: false,
+                    loaded: function (layer) {
+                        //初始化高级分析功能管理类
+                        var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                            viewer: viewer
+                        });
+                        //初始化通视分析类
+                        visiblity = advancedAnalysisManager.createVisibilityAnalysis();
+                        //注册鼠标左键点击事件
+                        function left(movement) {
+                            if (!visiblitying) {
+                                //移除通视分析结果
+                                viewer.scene.VisualAnalysisManager.remove(visiblity);
+                                visiblity = advancedAnalysisManager.createVisibilityAnalysis();
+                            }
+                            //判断是否初始化过通视分析类
+                            if (visiblity) {
+                                //获取鼠标点击位置
+                                var cartesian = viewer.getCartesian3Position(movement.position, cartesian);
+                                //第一个点
+                                if (cartesian != undefined && !visiblitying) {
+                                    //设置通视分析观察点
+                                    visiblity.viewPosition = cartesian;
+                                    //设置为正在通视分析
+                                    visiblitying = true;
+                                } else {
+                                    //设置通视分析结果点
+                                    visiblity.targetPosition = cartesian;
+                                    //设置为正在通视分析
+                                    visiblitying = false;
+                                }
+
+                            }
                         }
-                        //设置为正在通视分析
-                        visiblitying = true;
+                        //鼠标右键结束
+                        function right(movement) {
+                            //判断是否正在通视分析
+                            if (visiblitying) {
+                                //获取鼠标位置
+                                var cartesian = viewer.getCartesian3Position(movement.position, cartesian);
+                                if (cartesian !== undefined) {
+                                    //设置通视分析结果点
+                                    visiblity.targetPosition = cartesian;
+                                }
+                            }
+                            //设置不在通视分析
+                            visiblitying = false;
+                        }
+                        //鼠标移动事件
+                        function move(movement) {
+                            //判断是否正在通视分析
+                            if (visiblitying) {
+                                //获取鼠标位置
+                                var cartesian = viewer.getCartesian3Position(movement.endPosition, cartesian);
+                                if (cartesian) {
+                                    //设置通视分析结果点
+                                    visiblity.targetPosition = cartesian;
+                                }
+                            }
+                        }
+                        //注册事件
+                        webGlobe.registerMouseEvent('LEFT_CLICK', left);
+                        webGlobe.registerMouseEvent('RIGHT_CLICK', right);
+                        webGlobe.registerMouseEvent('MOUSE_MOVE', move);
                     }
-                }
-
+                })
             }
-            //鼠标右键结束
-            function right(movement) {
-                //判断是否正在通视分析
-                if (visiblitying) {
-                    //获取鼠标位置
-                    var cartesian = viewer.getCartesian3Position(movement.position, cartesian);
-                    if (cartesian !== undefined) {
-                        //设置通视分析结果点
-                        visiblity.targetPosition = cartesian;
-                    }
-                }
-                //设置通视分析状态为false
-                visiblityAction = false;
-                //设置不在通视分析
-                visiblitying = false;
-            }
-            //鼠标移动事件
-            function move(movement) {
-                //判断是否正在通视分析
-                if (visiblitying) {
-                    //获取鼠标位置
-                    var cartesian = viewer.getCartesian3Position(movement.endPosition, cartesian);
-                    if (cartesian) {
-                        //设置通视分析结果点
-                        visiblity.targetPosition = cartesian;
-                    }
-                }
-            }
-            //注册事件
-            webGlobe.registerMouseEvent('LEFT_CLICK', left);
-            webGlobe.registerMouseEvent('RIGHT_CLICK', right);
-            webGlobe.registerMouseEvent('MOUSE_MOVE', move);
         }
 
         /*移除通视分析*/
@@ -129,16 +141,15 @@
     </script>
 
 </head>
+
 <body onload="init()">
-    <div class="ToolLib">
-        <button class="ButtonLib" id="startVisiblity" onclick="startVisiblity()">通视分析</button>
-        <button class="ButtonLib" id="remove" onclick="stopVisiblity()">移除</button>
+    <div id="GlobeView">
+        <div class="message">
+            <span>鼠标左键选择起点</span>
+            <br />
+            <span>右键选择结束点并执行通视分析</span>
+        </div>
     </div>
-    <div style="position:absolute;left:10px;top:40px;z-index:1000000;color:aliceblue">
-        <span>鼠标左键选择起点</span>
-        <br />
-        <span>右键选择结束点并执行通视分析</span>
-    </div>
-    <div id="GlobeView"></div>
 </body>
+
 </html>

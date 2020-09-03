@@ -15,10 +15,7 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义三维瓦片类
-        var tileset;
-        var point1, point2, point3, point4;
+        var webGlobe;
 
         //加载三维场景
         function init() {
@@ -32,11 +29,18 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //加载Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 'm'
+            });
 
             //视点跳转（经度，纬度，视角高度，跳转持续时间）
-            webGlobe.flyTo(114.28930528613337, 30.546849344910772, 10000, 1);
+            sceneManager.flyTo(114.28930528613337, 30.546849344910772, 10000, 1);
 
             //添加点
             add();
@@ -44,24 +48,43 @@
 
         //添加点
         function add() {
-            //构造实体绘制控制器对象
-            var entityController = new CesiumZondy.Layer.EntityController({
+            //定义点对象
+            var point1, point2, point3, point4;
+
+            //填充颜色
+            var fillColor = new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 1);
+            //边线颜色
+            var outLineColor = new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1);
+
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
                 viewer: webGlobe.viewer
             });
-
-            //添加点实体：经度、纬度、高程、名称、像素大小、颜色、外边线颜色、边线宽度
+            //添加点实体：经度、纬度、高程、名称、大小（像素单位）、颜色、外边线颜色、边线宽度
             point1 = entityController.appendPoint(
-                114.30252625376454,
-                30.544631482624357,
-                20,
+                114.30252625376454, 30.544631482624357, 20,
                 '黄鹤楼',
                 12,
-                webGlobe.getColor(1, 1, 0, 1),
-                webGlobe.getColor(1, 0, 0, 1),
-                2);
-            point2 = entityController.appendPoint(114.31626066824627, 30.52940417011761, 0, '武昌火车站', 12, webGlobe.getColor(1, 1, 0, 1), webGlobe.getColor(1, 0, 0, 1), 2);
-            point3 = entityController.appendPoint(114.24160138541689, 30.54074917505938, 0, '动物园', 12, webGlobe.getColor(1, 1, 0, 1), webGlobe.getColor(1, 0, 0, 1), 2);
-            point4 = entityController.appendPoint(114.28478689925817, 30.555691346035022, 0, '晴川阁', 12, webGlobe.getColor(1, 1, 0, 1), webGlobe.getColor(1, 0, 0, 1), 2);
+                fillColor,
+                outLineColor,
+                2
+            );
+            point2 = entityController.appendPoint(114.31626066824627, 30.52940417011761, 0, '武昌火车站', 12, fillColor, outLineColor, 2);
+            point3 = entityController.appendPoint(114.24160138541689, 30.54074917505938, 0, '动物园', 12, fillColor, outLineColor, 2);
+            //方法二：添加点通用方法，对接Cesium原生，可设置更多属性
+            point4 = entityController.appendPointComm(
+                //经度、纬度、高程
+                114.28478689925817, 30.555691346035022, 0,
+                //名称、描述
+                '晴川阁', "晴川阁景点",
+                //附加属性：像素大小、颜色、外边线颜色、边线宽度
+                {
+                    pixelSize: 12,
+                    color: fillColor,
+                    outlineColor: outLineColor,
+                    outlineWidth: 2
+                }
+            );
         }
     </script>
 </head>

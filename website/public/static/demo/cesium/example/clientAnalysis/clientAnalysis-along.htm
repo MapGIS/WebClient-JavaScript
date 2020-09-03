@@ -9,19 +9,8 @@
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
   <!--Cesium脚本库文件引用-->
   <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    #GlobeView {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+  <!--当前示例页面样式表引用-->
+  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
 </head>
 
 <body>
@@ -93,8 +82,17 @@
       });
       //获取三维场景视图对象
       map = webGlobe.viewer;
-      //加载谷歌地图
-      webGlobe.appendGoogleMap('m@207000000');
+
+      //构造第三方图层对象
+      var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+      });
+      //添加Google地图
+      thirdPartyLayer.appendGoogleMapExt({
+        //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+        ptype: 'm'
+      });
+
       //经纬度坐标转世界坐标
       var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
       //场景定位跳转

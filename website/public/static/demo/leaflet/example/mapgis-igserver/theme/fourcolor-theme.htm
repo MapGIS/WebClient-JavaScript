@@ -23,6 +23,7 @@
         var themesInfoArr;
         //地图文档guid
         var guid;
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -52,9 +53,9 @@
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer("武汉市区行政区", {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163",
+                port: `${port}`,
                 //图层显示设置
                 noWrap: true,
                 //文档guid
@@ -91,9 +92,9 @@
             //给指定地图文档指定图层添加专题图
             ThemeOper = new Zondy.Service.ThemeOper(guid);
             //设置ip地址
-            ThemeOper.ip = "develop.smaryun.com";
+            ThemeOper.ip = `${ip}`;
             //设置端口号
-            ThemeOper.port = "6163";
+            ThemeOper.port = `${port}`;
             //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
             ThemeOper.addThemesInfo("武汉市区行政区", "0/0", themesInfoArr, onUniqueTheme);
         }

@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义图层类
-        var tilelayer = undefined;
+        var tilelayer;
         
         //加载三维场景
         function init() {
@@ -52,8 +52,9 @@
                 // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
             };
             //添加MapGIS IGServer发布的瓦片地图服务
+            var { protocol, ip, port } = window.webclient;
             tilelayer = layer.appendMapGISTile(
-                "http://develop.smaryun.com:6163/igs/rest/mrms/tile/250DEM",
+                `${protocol}://${ip}:${port}/igs/rest/mrms/tile/250DEM`,
                 options
             );
         }

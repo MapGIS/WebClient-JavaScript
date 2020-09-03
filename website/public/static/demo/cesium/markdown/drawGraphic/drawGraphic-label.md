@@ -16,7 +16,7 @@
 
 2. 创建三维视图Div容器，构造三维场景控件WebSceneControl，构造并设置鼠标位置信息显示控件，加载Google地图作为底图显示；
 
-3. 添加文本标注：首先构造`CesiumZondy.Manager.LabelLayer`注记图层管理对象，调用`appendLabel()`方法可实现文本标注的添加，需要设置基本必要信息，如：文本标注的经纬度、高程、文本内容；还可设置样式信息，如：字体、颜色、样式、标签位置等信息。
+3. 添加文本标注：首先构造`CesiumZondy.Manager.LabelLayer`注记图层管理对象，调用`appendLabel()`方法可实现文本标注的添加，需要设置基本必要信息，如：文本标注的经纬度、高程、文本内容；还可设置各项样式信息：字体、颜色、样式、标签位置等。
 
     ``` javascript
     //构造注记图层管理对象
@@ -25,13 +25,9 @@
     });
 
     //添加文字标注
-    var label = labelLayer.appendLabel(
-        //经度
-        114.39920,
-        //纬度
-        30.50620,
-        //高程
-        0,
+    label = labelLayer.appendLabel(
+        //经度、纬度、高程
+        114.39920, 30.50620, 0,
         //文本内容
         '光谷广场',
         {
@@ -39,14 +35,16 @@
             font: '20pt 楷体',
             //文本颜色
             fillColor: Cesium.Color.YELLOW,
-            //样式
+            //文本样式，FILL：只填充；OUTLINE：只显示轮廓；FILL_AND_OUTLINE：填充颜色并显示轮廓
             style: Cesium.LabelStyle.FILL_AND_OUTLINE,
             //边线颜色
             outlineColor: Cesium.Color.RED,
             //边线宽度
             outlineWidth: 2,
-            //标签垂直位置
-            verticalOrigin: Cesium.VerticalOrigin.CENTER
+            //文本垂直方向与坐标点的相对位置：LEFT、CENTER、RIGHT
+            verticalOrigin: Cesium.VerticalOrigin.CENTER,
+            //文本水平方向与坐标点的相对位置：LEFT、CENTER、RIGHT
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER
         }
     );
     ```
@@ -57,7 +55,7 @@
 
 #### 2.【注记图层管理类】CesiumZondy.Manager.LabelLayer
 
-##### （1）`appendLabel(lat, lon, height, lText, options)`：添加文字标签
+##### （1）`appendLabel(lat, lon, height, lText, optionsParam) → {Entity}`：添加文字标签，返回标签对象（Entity）
 
 > `appendLabel`方法主要参数
 
@@ -67,7 +65,7 @@
 |lon|Number|纬度|
 |height|Number|高程|
 |lText|String|标签内容|
-|options|Object|附加属性|
+|optionsParam|Object|附加属性|
 
 > `options`属性主要参数
 

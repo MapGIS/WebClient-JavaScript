@@ -23,9 +23,10 @@
 <body>
   <div id="map"></div>
   <script>
+    var { protocol, ip, port } = window.webclient;
     var map = new mapboxgl.Map({
       container: 'map', // 绑定div
-      style: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/浅色-墨卡托.json',
+      style: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/浅色-墨卡托.json`,
       center: [106.563777, 29.578285],
       zoom: 3
     });

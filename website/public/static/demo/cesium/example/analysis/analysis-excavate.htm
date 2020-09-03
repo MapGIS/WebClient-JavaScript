@@ -50,27 +50,28 @@
             var m3dLayer = new CesiumZondy.Layer.M3DLayer({
                 viewer: webGlobe.viewer
             });
+            var { protocol, ip, port } = window.webclient;
             var drilllayer = m3dLayer.append(
-                "http://develop.smaryun.com:6163/igs/rest/g3d/钻孔_2_钻孔模型s", {
-                    autoReset: false,
-                }
+                `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔_2_钻孔模型s`, {
+                autoReset: false,
+            }
             );
             //加载M3D地图文档（服务地址，配置参数）
-            landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/钻孔分层点_Sur_000_Ent', {
+            landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/钻孔分层点_Sur_000_Ent`, {
                 autoReset: false,
                 maximumScreenSpaceError: 8,
-                loaded: function(layer) {
+                loaded: function (layer) {
                     //清除开挖
                     if (dynaCut) {
                         webGlobe.deleteDynamicCutting(dynaCut);
                     }
                     //开挖面设置,这五个面分别表示前后左右，底面，其中底面用于控制开挖深度
                     var planes = [
-                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.5, 0.0, 0.0), -1500.0),
-                        new Cesium.ClippingPlane(new Cesium.Cartesian3(-0.5, 0.0, 0.0), -1500.0),
-                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, 0.5, 0.0), -1500.0),
-                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, -0.5, 0.0), -1500.0),
-                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, 0.0, -1), 0.0)
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(1, 0.0, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(-1, 0.0, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, 1, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, -1, 0.0), -1500.0),
+                        new Cesium.ClippingPlane(new Cesium.Cartesian3(0.0, 0.0, -1), -1000.0)
                     ];
                     //初始化分析功能管理类
                     var analysisManager = new CesiumZondy.Manager.AnalysisManager({
@@ -79,7 +80,7 @@
                     //创建开挖分析实例
                     dynaCut = analysisManager.createExcavateAnalysis({
                         //图层信息
-                        tileSet: landscapeLayer[0],
+                        tileset: landscapeLayer[0],
                         //开挖面的形状
                         planes: planes,
                         //裁剪面材质
@@ -91,13 +92,13 @@
                         //裁减法线方向，默认值为 false
                         unionClippingRegions: false,
                         //开挖坐标
-                        longitude: 113.0402,
-                        latitude: 30.0264,
+                        longitude: 113.0451,
+                        latitude: 30.0262,
                         height: 0
                     });
                     //analysisManager.startDynamicExcavate(dynaCut.planes[0], distance, planes, landscapeLayer[0].modelMatrix)
                     // 设置开挖的动态效果
-                    dynaCut.planes[0].plane.plane = new Cesium.CallbackProperty(function(date) {
+                    dynaCut.planes[0].plane.plane = new Cesium.CallbackProperty(function (date) {
                         console.log(planes);
                         for (var i = 0; i < planes.length; i++) {
                             if (i === planes.length - 1) {
@@ -120,7 +121,9 @@
 <body onload="init()">
     <div id="GlobeView">
         <div class="message" style="left: 10px;">
-            <span><font>开挖深度：</font><input type="range" id="range" min="-500" max="50" value="0" oninput="change()" /></span>
+            <span>
+                <font>开挖深度：</font><input type="range" id="range" min="-500" max="50" value="0" oninput="change()" />
+            </span>
         </div>
     </div>
 </body>

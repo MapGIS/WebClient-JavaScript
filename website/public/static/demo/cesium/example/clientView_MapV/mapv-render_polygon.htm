@@ -2,33 +2,28 @@
 <html>
 
 <head>
-  <meta charset='utf-8' />
+  <meta charset="utf-8" />
   <title>区数据渲染</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
   <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    #GlobeView {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+  <!--引用示例页面样式表-->
+  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
 </head>
 
 <body>
-  <div id='GlobeView'></div>
+  <div id="GlobeView"></div>
   <script>
-    var webGlobe = new Cesium.WebSceneControl('GlobeView', {
+    var webGlobe = new Cesium.WebSceneControl("GlobeView", {
       terrainExaggeration: 1,
     });
-    webGlobe.appendGoogleMap('m@207000000');
+    var blueImage = new Cesium.UrlTemplateImageryProvider({
+      url:
+        "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      maximumLevel: 12,
+    });
+    webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
 
     var map = webGlobe.viewer;
 
@@ -38,31 +33,29 @@
     function initMap() {
       var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
       map.scene.camera.setView({
-        destination: center
+        destination: center,
       });
-
     }
 
     function initMapv() {
-      $.get('./static/data/mapv/beijing-village.json', function (data) {
+      $.get("./static/data/mapv/beijing-village.json", function (data) {
         // 构建对应的dataset
         var dataSet = new mapv.DataSet(data);
         // 设置对应的参数
         // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var options = {
-          context: '2d',
-          fillStyle: 'rgba(255, 80, 53, 0.8)',
-          strokeStyle: 'rgba(250, 255, 53, 0.8)',
+          context: "2d",
+          fillStyle: "rgba(255, 80, 53, 0.8)",
+          strokeStyle: "rgba(250, 255, 53, 0.8)",
           size: 3,
           lineWidth: 1,
-          draw: 'simple'
+          draw: "simple",
         };
         // 声明cesium的mapv图层并将其显示到三维球上
         new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
       });
     }
   </script>
-
 </body>
 
 </html>

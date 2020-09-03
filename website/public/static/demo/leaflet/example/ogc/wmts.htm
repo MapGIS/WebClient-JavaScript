@@ -33,12 +33,13 @@
             }).setView([(30.708764095603 + 30.4539323507469) / 2, (114.500706988372 +
             114.125602229914) / 2], 2);
 
+            var { protocol, ip, port } = window.webclient;
             //wmts服务
             var layer3 = new Zondy.Map.MapWMTSLayer({
                 //IGServer所在ip地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //IGServer请求端口号
-                port: "6163",
+                port: `${port}`,
                 tilematrixSet: "EPSG:4326_WhMapTileOld_dpi96_GB",
                 //wmts服务名称
                 layer: 'WhMapTileWMTS',

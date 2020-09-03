@@ -36,10 +36,11 @@
             }).setView([(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213) /
                 2
             ], 0);
+            var { protocol, ip, port } = window.webclient;
             var token = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA'
             var gl = L.mapboxGL({
                 accessToken: token,
-                style: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/浅色样式.json'
+                style: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/浅色样式.json`
             }).addTo(map);
         }
     </script>

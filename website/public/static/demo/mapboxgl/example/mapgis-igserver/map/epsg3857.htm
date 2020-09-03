@@ -18,12 +18,13 @@
             });
             var navigationControl = new mapboxgl.NavigationControl();
             map.addControl(navigationControl, 'top-left');
+            var { protocol, ip, port } = window.webclient;
             var docLayer = new mapboxgl.Zondy.Map.MapDocLayer("HubeiMark3857", {
                 layerID:'mapgis-doc-3857',
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163",
+                port: `${port}`,
                 //只显示一个图层,不平铺显示
                 noWrap: true
             });

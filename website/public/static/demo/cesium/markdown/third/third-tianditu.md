@@ -6,7 +6,7 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendTDTuMap()`方法，以此来加载天地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.ThirdPartyLayer`类提供的`appendTDTuMap()`方法，以此来加载天地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -25,7 +25,7 @@
    var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
    ```
 
-4. 加载数据：调用`appendTDTuMap()`方法，需配置url、token、type参数，可实现矢量、影像、地形数据的加载；
+4. 加载数据：创建第三方数据图层类`CesiumZondy.Layer.ThirdPartyLayer`的对象，调用`appendTDTuMap()`方法，需配置url或type（二选一设置即可）、token参数，可实现矢量、影像、地形数据的加载；
 
     （1） url地址：可参考提供的URL示例
     
@@ -35,17 +35,21 @@
 
     （2） token：请前往天地图官网申请自己的开发token，示例自带token仅做功能演示；
 
-    （3） type类型：可传入'vec'、'img'、'ter'，分别代表矢量、影像、地形地图。
+    （3） type类型：可传入'vec'、'img'、'ter'等，分别代表矢量、影像、地形地图，具体请查看天地图官网。
 
     ``` javascript
-    //添加天地图
-    webGlobe.appendTDTuMap({
-        //天地图经纬度数据
-        url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+    //构造第三方图层对象
+    var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+    });
+    //加载天地图
+    var tdtLayer = thirdPartyLayer.appendTDTuMap({
+        //天地图经纬度数据url,注意url与ptype设置其中一个即可
+        //url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
         //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
         token: "9c157e9585486c02edf817d2ecbc7752",
-        //地图类型 'vec'矢量 'img'影像 'ter'地形
-        type: "vec"
+        //地图类型，如'vec'矢量 'img'影像 'ter'地形
+        ptype: "vec"
     });
     ```
 
@@ -73,10 +77,23 @@
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendTDTuMap()`：添加天地图(经纬度)
+#### 2.【第三方数据图层类】CesiumZondy.Layer.ThirdPartyLayer
+##### （1）`appendTDTuMap(optionsParam) → {ImageryLayer}`：添加天地图(经纬度)，返回瓦片层对象（ImageryLayer）
 
 > `appendTDTuMap`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
-||||
+|optionsParam|Object|附加属性|
+
+
+> `optionsParam`属性主要参数
+
+|参数名|类 型|默认值|说 明|
+|-|-|-|-|
+|url|String||（与ptype必选一个）地图数据url地址，具体请查看天地图官网|
+|ptype|String||（与url必选一个）地图类型，矢量-'vec'、影像-'img'、地形-'ter'，具体请查看天地图官网|
+|token|String||（必选）开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）|
+
+
+

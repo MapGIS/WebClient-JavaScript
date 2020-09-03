@@ -17,6 +17,7 @@
         //定义地图文档图层和地图
         var mapDocLayer, map;
         var drawLayer;
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -31,8 +32,8 @@
             });
             //初始化地图文档图层对象
             mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             //将地图文档图层加载到地图中
             map.addLayer(mapDocLayer);
@@ -118,9 +119,9 @@
             //实例化地图文档查询服务对象
             var queryService = new Zondy.Service.QueryDocFeature(queryParam, "Hubei4326", 1, {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163"
+                port: `${port}`
             });
             //执行查询操作，querySuccess为成功回调，queryError为失败回调
             queryService.query(querySuccess, queryError);

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>屏幕坐标转换计算</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维视图的主要类
+        var webGlobe;
+        var commonFuncManager;
+        var mouseEventManager;
+
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //地图类型：s-卫星影像地图、 h-道路地图、 m-全地图（含矢量与道路）、r-矢量地图、t-地形图
+                ptype: 's'
+            });
+
+            //构造地形图层管理类
+            var terrain = new CesiumZondy.Layer.TerrainLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载三维地形地图文档（服务地址，配置参数）
+            var { protocol, ip, port } = window.webclient;
+            var terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
+
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //视点跳转
+            sceneManager.flyToEx(120.9819, 23.5307, {
+                height: 9161,
+                heading: 30,
+                pitch: -10,
+                roll: 0
+            });
+
+            //初始化通用功能管理类
+            commonFuncManager = new CesiumZondy.Manager.CommonFuncManager({
+                viewer: webGlobe.viewer
+            });
+            //初始化鼠标事件管理类
+            mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        /*屏幕坐标转为笛卡尔坐标*/
+        function toCartesian() {
+            mouseEventManager.unRegisterMouseEvent("LEFT_CLICK");
+            mouseEventManager.registerMouseEvent("LEFT_CLICK", leftToCartesian);
+            function leftToCartesian(movement) {
+                //输出屏幕坐标点
+                document.getElementById("screenPositionX").value = "x:" + movement.position.x;
+                document.getElementById("screenPositionY").value = "y:" + movement.position.y;
+
+                //将鼠标左键点击的屏幕坐标转为笛卡尔坐标
+                var position = commonFuncManager.screenPositionToCartesian(movement.position);
+                //console.log(position);
+                //输出笛卡尔坐标点
+                document.getElementById("toPositionX").value = "x:" + position.x;
+                document.getElementById("toPositionY").value = "y:" + position.y;
+                document.getElementById("heightFromDegrees").value = "——";
+            }
+        }
+
+        /*屏幕坐标转为经纬度坐标*/
+        function toCartographic() {
+            mouseEventManager.unRegisterMouseEvent("LEFT_CLICK");
+            mouseEventManager.registerMouseEvent("LEFT_CLICK", leftToCartographic);
+            function leftToCartographic(movement) {
+                //输出屏幕坐标点
+                document.getElementById("screenPositionX").value = "x:" + movement.position.x;
+                document.getElementById("screenPositionY").value = "y:" + movement.position.y;
+
+                //将鼠标左键点击的屏幕坐标转为经纬度坐标
+                //var position = commonFuncManager.screenPositionToCartographic(movement.position);
+                //console.log(position);
+                var result = commonFuncManager.screenPositionToCartographic(movement.position);
+                let lng = Cesium.Math.toDegrees(result.longitude);//转为经度值
+                let lat = Cesium.Math.toDegrees(result.latitude);//转为纬度值
+                //输出经纬度坐标点
+                document.getElementById("toPositionX").value = "x:" + lng;
+                document.getElementById("toPositionY").value = "y:" + lat;
+                document.getElementById("heightFromDegrees").value = "——";
+            }
+        }
+
+        /*根据经纬度计算高度值*/
+        function toHeightFromDegrees() {
+            mouseEventManager.unRegisterMouseEvent("LEFT_CLICK");
+            mouseEventManager.registerMouseEvent("LEFT_CLICK", leftToHeightFromDegrees);
+            function leftToHeightFromDegrees(movement) {
+                //输出屏幕坐标点
+                document.getElementById("screenPositionX").value = "x:" + movement.position.x;
+                document.getElementById("screenPositionY").value = "y:" + movement.position.y;
+                //屏幕坐标转笛卡尔坐标
+                var cartesian = webGlobe.viewer.getCartesian3Position(movement.position, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+
+                //根据鼠标左键单击点经纬度计算其高度值
+                var height = commonFuncManager.getHeightFromDegrees(lng, lat);
+                //alert(height);
+                //输出高度值
+                document.getElementById("heightFromDegrees").value = height;
+                document.getElementById("toPositionX").value = "——";
+                document.getElementById("toPositionY").value = "——";
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message">
+            <button id="toCartesian" onclick="toCartesian()">转笛卡尔坐标</button>
+            <button id="toCartographic" onclick="toCartographic()">转经纬度坐标</button>
+            <button id="toHeightFromDegrees" onclick="toHeightFromDegrees()">计算高度</button>
+        </div>
+        <div class="message" style="top: 50px;">
+            <font>操作：先单击功能按钮，然后鼠标左键单击</font>
+        </div>
+        <div class="message" style="left: unset; right: 10px;">
+            <p>屏幕坐标转换计算</p>
+            <span>
+                <font>屏幕坐标值:</font>
+                <input type="text" id="screenPositionX" value="0">
+                <input type="text" id="screenPositionY" value="0">
+            </span></br>
+            <span>
+                <font>转换坐标值:</font>
+                <input type="text" id="toPositionX" value="0">
+                <input type="text" id="toPositionY" value="0">
+            </span></br>
+            <span>
+                <font>高度值:</font><input type="text" id="heightFromDegrees" value="0">
+            </span>
+            </br>
+            </br>
+        </div>
+    </div>
+</body>
+
+</html>

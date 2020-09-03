@@ -15,14 +15,21 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义M3D图层对象
-        var underpipeLayer = undefined;
+        var underpipeLayerArr;
 
         //加载三维场景
         function init() {
             //构造三维视图对象（视图容器div的id，三维视图设置参数）
             webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //开启地形深度检测
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+            //设置球体初始透明度
+            webGlobe.viewer.scene.globe.transparent = 50 / 100;
+            //开启地下模式
+            webGlobe.viewer.scene.globe.undergroundMode = true;
 
             //构造视图功能管理对象（视图）
             var sceneManager = new CesiumZondy.Manager.SceneManager({
@@ -36,14 +43,45 @@
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            underpipeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain', {});
+            var { protocol, ip, port } = window.webclient;
+            underpipeLayerArr = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/UnderPipe`, {});
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(108.95818720644677, 34.21849146233197, {
+                height: 10,
+                heading: 33,
+                pitch: -20,
+                roll: 0
+            });
+        }
+
+        function change() {
+            //获取拖动条值
+            var transparent = document.getElementById("trans").value;
+            //修改场景球透明度
+            webGlobe.viewer.scene.globe.transparent = transparent / 100;
         }
     </script>
 </head>
 
 <body onload="init()">
-    <!--三维场景容器-->
-    <div id='GlobeView'></div>
+    <!-- 三维场景容器 -->
+    <div id='GlobeView'>
+        <div class="message">
+            <!-- 拖动条 -->
+            透明度：<input id="trans" type="range" min="0" max="100" step="1" value="50" onmousemove="change()">
+        </div>
+    </div>
     <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>

@@ -11,6 +11,7 @@
         //定义地图文档图层和地图
         var mapDocLayer, map;
         var drawnItems, markerlatLng;
+        var { protocol, ip, port } = window.webclient;
 
         /**显示地图*/
         function init() {
@@ -33,9 +34,9 @@
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer("Hubei4326", {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163",
+                port: `${port}`,
                 //只显示一个图层,不平铺显示
                 noWrap: true
             }).addTo(map);
@@ -76,9 +77,9 @@
             //初始化长度测量服务
             var calLength = new Zondy.Service.CalArea(dots, {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163"
+                port: `${port}`
             });
             //建议普通用户采用此类直接获取MapGIS GDB已经提供的空间参考系
             var gdbInfo = new Zondy.Object.CGDBInfo({

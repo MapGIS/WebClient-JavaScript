@@ -12,11 +12,11 @@
             background-repeat: no-repeat;
             background-size: 60%;
         }
-    
+
         .mapboxgl-ctrl-icon.mapboxgl-ctrl-add {
             background-image: url('data:image/svg+xml;utf8,<svg t="1594093104250" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4905"><path d="M789.994 771.154L459.266 670.616l295.152-343.032-380.88 318.478L64.28 553.82l896.008-427.218-170.294 644.552z m-341.168 127.42v-177.38l108.868 30.812-108.868 146.568z" p-id="4906"></path></svg>');
         }
-    
+
         .mapboxgl-ctrl-icon.mapboxgl-ctrl-update {
             background-image: url('data:image/svg+xml;utf8,<svg t="1594090532673" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1150"><path d="M512 269.922592l0 121.038704 161.384597-161.384597L512 68.191078l0 121.038704c-178.330548 0-322.770218 144.43967-322.770218 322.770218 0 63.343677 18.559705 122.047684 50.02944 171.874509l58.905598-58.905598c-17.953907-33.689287-28.242228-72.018244-28.242228-112.969934C269.922592 378.251833 378.251833 269.922592 512 269.922592zM784.740778 340.124468l-58.905598 58.905598c17.953907 33.689287 28.242228 72.018244 28.242228 112.969934 0 133.748167-108.329241 242.077408-242.077408 242.077408L512 633.038704 350.614379 794.423301l161.384597 161.384597L511.998977 834.770218c178.330548 0 322.770218-144.43967 322.770218-322.770218C834.770218 448.656323 816.210513 389.952316 784.740778 340.124468z" p-id="1151"></path></svg>');
             background-position: 50% 50%;
@@ -35,6 +35,7 @@
         var resultBaseUrl = "gdbp://MapGisLocal/ClientTheme/ds/SpatialAnalysis/sfcls/";
         // 定义矢量图层guid
         var guid;
+        var { protocol, ip, port } = window.webclient;
 
         /** 地图初始化函数
          */
@@ -54,9 +55,9 @@
             // 创建矢量图层
             vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省市级区划1", "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/clipcircle"], {
                 // IGServer所在ip地址
-                ip: 'develop.smaryun.com',
+                ip: `${ip}`,
                 // IGServer请求端口号
-                port: '6163',
+                port: `${port}`,
                 //添加guid
                 guid: guid
             });
@@ -83,9 +84,9 @@
             //实例化Zondy.Service.ClipByCircle类
             var clipParam = new Zondy.Service.ClipByCircle({
                 //IGServer所在ip地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //IGServer请求端口号
-                port: "6163",
+                port: `${port}`,
                 //设置圆心坐标
                 center: lonLat2Mercator(112.69, 31).x + "," + lonLat2Mercator(112.69, 31).y,
                 //设置圆半径长度
@@ -121,9 +122,9 @@
                     //将结果图层添加到地图视图中显示
                     resultLayer = new mapboxgl.Zondy.Map.MapVectorLayer(encodeURIComponent(resultBaseUrl + resultLayerUrl), {
                         //IGServer所在ip地址
-                        ip: "develop.smaryun.com",
+                        ip: `${ip}`,
                         //IGServer请求端口号
-                        port: "6163",
+                        port: `${port}`,
                         //图层guid
                         guid: (new Date()).getTime().toString()
                     });

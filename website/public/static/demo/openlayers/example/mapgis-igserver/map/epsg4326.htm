@@ -20,10 +20,11 @@
                     projection: "EPSG:4326"
                 })
             });
+            var { protocol, ip, port } = window.webclient;
             //初始化地图文档图层对象
             mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             //将地图文档图层加载到地图中
             map.addLayer(mapDocLayer);

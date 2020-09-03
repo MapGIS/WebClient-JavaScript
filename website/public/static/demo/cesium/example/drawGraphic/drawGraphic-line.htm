@@ -15,7 +15,7 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         var line;
 
         //加载三维场景
@@ -30,8 +30,15 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //加载Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 'm'
+            });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             sceneManager.flyToEx(114.40031449725147, 30.502857738644277, {
@@ -47,13 +54,14 @@
 
         //添加立体线
         function add() {
-            //构造实体绘制控制器对象
-            var entityController = new CesiumZondy.Layer.EntityController({
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
                 viewer: webGlobe.viewer
             });
 
-            //点数组
-            var arrayp = [114.3984603010489, 30.506836857208143, 90,
+            //点数组(x,y,z)
+            var pointArr = [
+                114.3984603010489, 30.506836857208143, 90,
                 114.39820581466965, 30.50638419163618, 0,
                 114.39817448017338, 30.505889144282214, 50,
                 114.39852815502066, 30.505386116825118, 0,
@@ -64,13 +72,21 @@
                 114.3984603010489, 30.506836857208143, 90
             ];
 
-            //根据给定点画线（名称、点数组、线的宽度、线颜色、是否包含高程、附加属性）
+            //绘制立体线实体
             line = entityController.appendLine(
-                '不贴地线',
-                arrayp,
+                //名称
+                '立体线',
+                //点数组
+                pointArr,
+                //线宽
                 2,
-                new Cesium.Color(1, 0, 0, 1),
+                //线颜色
+                new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1),
+                //是否识别带高度的坐标（如果为true即代表立体线）
                 true,
+                //是否贴地形
+                false,
+                //附加属性
                 {}
             );
         }

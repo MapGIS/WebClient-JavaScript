@@ -22,13 +22,26 @@
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
             webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
             //构造M3D模型层管理对象
+            var { protocol, ip, port } = window.webclient;
             var m3dLayer = new CesiumZondy.Layer.M3DLayer({ viewer: webGlobe.viewer });
             //加载M3D地图文档（服务地址，配置参数）
-            landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
+            landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
                 autoReset: false,
                 maximumScreenSpaceError: 8
             });
+
             //初始化视图功能管理类
             var sceneManager = new CesiumZondy.Manager.SceneManager({ viewer: webGlobe.viewer });
             //视点跳转
@@ -38,6 +51,7 @@
                 pitch: -15,
                 roll: 0
             });
+            
             //调用距离测量函数
             lengthMeasure();
         }

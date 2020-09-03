@@ -59,6 +59,7 @@
         var measureTooltipElement;//测量提示框div
         var measureTooltip;//测量提示框
         var sketch;//绘制标志
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -73,8 +74,8 @@
             });
             //初始化地图文档图层对象
             mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             //将地图文档图层加载到地图中
             map.addLayer(mapDocLayer);
@@ -225,9 +226,9 @@
             //初始化长度测量服务
             var calLength = new Zondy.Service.CalArea(dots, {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163"
+                port: `${port}`
             });
             //建议普通用户采用此类直接获取MapGIS GDB已经提供的空间参考系
             var gdbInfo = new Zondy.Object.CGDBInfo({

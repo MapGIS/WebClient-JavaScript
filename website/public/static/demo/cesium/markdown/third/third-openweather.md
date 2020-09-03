@@ -6,7 +6,7 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendOpenWeatherMap()`方法，以此来加载OpenWeather地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.ThirdPartyLayer`类提供的`appendOpenWeatherMap()`方法，以此来加载OpenWeather地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -25,11 +25,18 @@
    var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
    ```
 
-4. 加载数据：调用`appendOpenWeatherMap()`方法加载OpenWeather地图。
+4. 加载数据：创建第三方数据图层类`CesiumZondy.Layer.ThirdPartyLayer`的对象，调用`appendOpenWeatherMap()`方法加载OpenWeather地图。
 
     ``` javascript
+    //构造第三方图层对象
+    var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+    });
     //加载OpenWeather地图
-    webGlobe.appendOpenWeatherMap(false);
+    var owLayer = thirdPartyLayer.appendOpenWeatherMap({
+        ptype:'Label',
+        appid:'b1b15e88fa797225412429c150c122a1'
+    });
     ```
 
 ### 关键接口
@@ -56,6 +63,19 @@
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendOpenWeatherMap()`：添加OpenWeather服务
+#### 2.【第三方数据图层类】CesiumZondy.Layer.ThirdPartyLayer
+##### （1）`appendOpenWeatherMap(optionsParam) → {ImageryLayer}`：添加OpenWeather服务（免费的天气预报云图），返回瓦片层对象（ImageryLayer）
 
-免费的天气预报云图
+> `appendOpenWeatherMap`方法主要参数
+
+|参数名|类 型|说 明|
+|-|-|-|
+|optionsParam|Object|附加属性|
+
+> `optionsParam`属性主要参数
+
+|参数名|类 型|默认值|说 明|
+|-|-|-|-|
+
+|ptype|String||（必选）云图类型，如Pressure,Temperature,Windspeed,Clouds,Label，具体请查看OpenWeather官网|
+|appid|String||（必选）授权id （请到OpenWeather官网申请授权）|

@@ -4,26 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>谷歌地图显示</title>
+  <title>热力图-空气质量</title>
   <!--引入第三方的jquery脚本库-->
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
   <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
-  <style type="text/css">
-    #LayerSelect {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      height: 20px;
-    }
-
-    #GlobeView {
-      position: absolute;
-      left: 10px;
-      top: 30px;
-      width: 100%;
-      height: 96%;
-    }
-  </style>
+  <!--当前示例页面样式表引用-->
+  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
   <script>
     var webGlobe, map;
     //定义图层类
@@ -38,8 +24,13 @@
       //显示鼠标位置控件
       webGlobe.showPosition("coordinate_location");
       map = webGlobe.viewer;
-
-      webGlobe.appendGoogleMap("m@207000000");
+      var blueImage = new Cesium.UrlTemplateImageryProvider({
+        url:
+          "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+        tilingScheme: new Cesium.WebMercatorTilingScheme(),
+        maximumLevel: 8,
+      });
+      webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
 
       initData();
       initEcharts();
@@ -73,7 +64,8 @@
           sublink: "http://www.pm25.in",
           left: "center",
         },
-        cesium: {    // 热力图必须设置改属性
+        cesium: {
+          // 热力图必须设置改属性
           roam: false,
         },
         postRender: false,
@@ -93,8 +85,8 @@
           {
             name: "热力图",
             type: "heatmap",
-            coordinateSystem: "cesium",   // 设置cesium坐标系
-            data: convertData(data),      // 转换数据
+            coordinateSystem: "cesium", // 设置cesium坐标系
+            data: convertData(data), // 转换数据
             pointSize: 5,
             blurSize: 6,
           },

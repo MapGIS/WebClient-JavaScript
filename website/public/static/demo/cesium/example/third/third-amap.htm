@@ -15,9 +15,11 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义图层对象
-        var amapLayer = undefined;
+        var webGlobe;
+        //定义第三方图层对象
+        var thirdPartyLayer;
+        //定义高德图层对象
+        var amapLayer;
 
         //加载地图
         function init() {
@@ -31,10 +33,14 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //加载高德地图
-            amapLayer = webGlobe.appendGaodeMap({
-                //地图类型：矢量：'vec'、影像：'img'、道路：'raod'
-                type: 'vec'
+            amapLayer = thirdPartyLayer.appendGaodeMap({
+                //地图类型：矢量：'vec'、影像：'img'、道路：'road'
+                ptype: 'vec'
             });
         }
 
@@ -43,18 +49,23 @@
             var layer = document.getElementById("LayerSelect").value;
             //首先移除图层
             if (amapLayer) {
-                webGlobe.removeImageryLayer(amapLayer);
+                thirdPartyLayer.removeImageLayer(amapLayer);
             }
             //根据选择添加地图
             if (layer == 'vec') {
-                amapLayer = webGlobe.appendGaodeMap({
-                    //地图类型：矢量：'vec'、影像：'img'、道路：'raod'
-                    type: 'vec'
+                amapLayer = thirdPartyLayer.appendGaodeMap({
+                    //地图类型：矢量：'vec'、影像：'img'、道路：'road'
+                    ptype: 'vec'
                 });
             } else if (layer == 'img') {
-                amapLayer = webGlobe.appendGaodeMap({
-                    //地图类型：矢量：'vec'、影像：'img'、道路：'raod'
-                    type: 'img'
+                amapLayer = thirdPartyLayer.appendGaodeMap({
+                    //地图类型：矢量：'vec'、影像：'img'、道路：'road'
+                    ptype: 'img'
+                });
+            } else if (layer == 'raod') {
+                amapLayer = thirdPartyLayer.appendGaodeMap({
+                    //地图类型：矢量：'vec'、影像：'img'、道路：'road'
+                    ptype: 'road'
                 });
             }
         }
@@ -64,10 +75,11 @@
 <body onload="init()">
     <!--三维场景容器-->
     <div id='GlobeView'>
-        <div class="message" style="top: 10px; left: 10px;">
+        <div class="message">
             <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
                 <option value="vec">矢量地图</option>
                 <option value="img">影像地图</option>
+                <option value="raod">道路地图</option>
             </select>
         </div>
     </div>

@@ -19,6 +19,7 @@
         var themesInfoArr;
         //地图文档guid
         var guid;
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -35,8 +36,8 @@
             });
             //初始化地图文档图层对象
             mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "Hubei4326", {
-                ip: "develop.smaryun.com",
-                port: "6163",
+                ip: `${ip}`,
+                port: `${port}`,
                 //文档guid
                 guid: guid
             });
@@ -90,9 +91,9 @@
             //给指定地图文档指定图层添加专题图
             ThemeOper = new Zondy.Service.ThemeOper(guid);
             //设置ip地址
-            ThemeOper.ip = "develop.smaryun.com";
+            ThemeOper.ip = `${ip}`;
             //设置端口号
-            ThemeOper.port = "6163";
+            ThemeOper.port = `${port}`;
             //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
             ThemeOper.addThemesInfo("Hubei4326", "2/0", themesInfoArr, onUniqueTheme);
         }

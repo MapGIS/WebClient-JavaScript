@@ -10,22 +10,17 @@
     <script src="./static/libs/include-cesium-local.js"></script>
     <!--引用示例页面样式表-->
     <link rel="stylesheet" href="./static/demo/cesium/style.css" />
-    <style type='text/css'>
-        .ToolLib {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-    </style>
     <script>
         //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         var model;
         // 视图模型
         var viewModel;
+        //定义鼠标事件管理对象
+        var mouseEventManager;
 
         //加载三维场景
         function init() {
@@ -39,17 +34,55 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //添加模型（gltf文件）：appendModel(模型id, 模型url路径,模型所在经度 ,模型所在纬度, 高度, 缩放比)
-            model = webGlobe.appendModel('model', './static/data/model/donghua.gltf', 117.9298, 40.3828, 0, 2000);
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
 
-            //视点跳转（经度，纬度，视角高度，跳转持续时间）
-            webGlobe.flyTo(117.9298, 40.3828, 50000, 2);
+            //开启动画：如果模型自带动画，需开启此参数
+            webGlobe.viewer.clock.shouldAnimate = true;
+            //开启地形深度检测
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
 
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
+                viewer: webGlobe.viewer
+            });
+            //添加模型（gltf文件）
+            model = commonDataManager.appendModel(
+                //模型id
+                'model',
+                //模型url路径
+                './static/data/model/donghua.gltf',
+                //模型经度、纬度、高度
+                118.0385, 42.6374, -5,
+                //缩放比
+                50
+            );
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(118.04150811201862, 42.63625979889753, {
+                height: 80,
+                heading: -63,
+                pitch: -6,
+                roll: 0
+            });
+
+            //移动模型
             movelModel();
         }
 
         /*移动模型*/
         function movelModel() {
+            //构造鼠标事件管理对象
+            mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+                viewer: webGlobe.viewer
+            });
             if (viewModel) {
                 if (Cesium.defined(viewModel)) {
                     viewModel.deactivate();
@@ -61,7 +94,7 @@
                         viewModel.deactivate();
                     }
                 }
-                webGlobe.unRegisterMouseEvent('RIGHT_CLICK');
+                mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
             }
             function leftClick(movement) {
                 //选择模型
@@ -73,37 +106,45 @@
                     }
                     updateEditor(model);
                     viewModel.activate();
-                    webGlobe.registerMouseEvent('RIGHT_CLICK', rightClick);
+                    mouseEventManager.registerMouseEvent('RIGHT_CLICK', rightClick);
                 }
             }
             //注册鼠标左键单击事件
-            webGlobe.registerMouseEvent('LEFT_CLICK', leftClick);
+            mouseEventManager.registerMouseEvent('LEFT_CLICK', leftClick);
         }
 
         function updateEditor(model) {
             var transformEditor;
             if (!Cesium.defined(transformEditor)) {
-                //创建编辑器
+                //创建平移编辑器
                 transformEditor = new Cesium.TransformEditor({
                     container: webGlobe.viewer.container,
                     scene: webGlobe.viewer.scene,
                     transform: model.modelMatrix,
                     boundingSphere: model.boundingSphere
                 });
+                //获取模型视图对象
                 viewModel = transformEditor.viewModel;
             }
             else {
                 transformEditor.transform = model.modelMatrix;
                 transformEditor.boundingSphere = model.boundingSphere;
             }
+            //设置模型视图平移
             viewModel.setModeTranslation();
+            //激活平移工具
+            viewModel.activate();
         }
     </script>
 </head>
 
 <body onload="init()">
     <!--三维场景容器-->
-    <div id='GlobeView'></div>
+    <div id='GlobeView'>
+        <div class="message">
+            <label>第一步：鼠标左键点击拾取模型，会显示XYZ三条轴线；<br />第二步：延轴线方向拖动即可修改对应方向位置。</label>
+        </div>
+    </div>
     <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>

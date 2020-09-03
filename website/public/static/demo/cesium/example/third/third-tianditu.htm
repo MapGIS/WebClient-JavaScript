@@ -15,9 +15,11 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义图层对象
-        var tdtLayer = undefined;
+        var webGlobe;
+        //定义第三方图层对象
+        var thirdPartyLayer;
+        //定义天地图图层对象
+        var tdtLayer;
 
         //地图初始化函数
         function init() {
@@ -31,14 +33,18 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //加载天地图
-            tdtLayer = webGlobe.appendTDTuMap({
+            tdtLayer = thirdPartyLayer.appendTDTuMap({
                 //天地图经纬度数据
                 url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                 //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                 token: "9c157e9585486c02edf817d2ecbc7752",
                 //地图类型 'vec'矢量 'img'影像 'ter'地形
-                type: "vec"
+                ptype: "vec"
             });
         }
 
@@ -47,35 +53,35 @@
             let layer = document.getElementById("LayerSelect").value;
             //先移除图层
             if (tdtLayer) {
-                webGlobe.removeImageryLayer(tdtLayer);
+                thirdPartyLayer.removeImageLayer(tdtLayer);
             }
             //根据选择添加地图
             if (layer == 'vec') {
-                tdtLayer = webGlobe.appendTDTuMap({
+                tdtLayer = thirdPartyLayer.appendTDTuMap({
                     //天地图经纬度数据
                     url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                     //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                     token: "9c157e9585486c02edf817d2ecbc7752",
                     //地图类型 'vec'矢量 'img'影像 'ter'地形
-                    type: "vec"
+                    ptype: "vec"
                 });
             } else if (layer === 'img') {
-                tdtLayer = webGlobe.appendTDTuMap({
+                tdtLayer = thirdPartyLayer.appendTDTuMap({
                     //天地图经纬度数据
                     url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                     //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                     token: "9c157e9585486c02edf817d2ecbc7752",
                     //地图类型 'vec'矢量 'img'影像 'ter'地形
-                    type: "img"
+                    ptype: "img"
                 });
             } else if (layer === 'ter') {
-                tdtLayer = webGlobe.appendTDTuMap({
+                tdtLayer = thirdPartyLayer.appendTDTuMap({
                     //天地图经纬度数据
                     url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                     //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                     token: "9c157e9585486c02edf817d2ecbc7752",
                     //地图类型 'vec'矢量 'img'影像 'ter'地形
-                    type: "ter"
+                    ptype: "ter"
                 });
             }
         }
@@ -86,7 +92,7 @@
     <!--三维场景容器-->
     <div id='GlobeView'>
         <!-- 菜单 -->
-        <div id="menu" class="message" style="top: 10px; left: 10px;">
+        <div id="menu" class="message">
             <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
                 <option value="vec">矢量地图</option>
                 <option value="img">影像地图</option>

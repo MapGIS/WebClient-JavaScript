@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>贴地形线绘制</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //定义地形线
+        var terrainLine;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造地形层管理对象（视图）
+            var terrainLayer = new CesiumZondy.Layer.TerrainLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加三维地图文档：地形数据
+            var { protocol, ip, port } = window.webclient;
+            terrainLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(120.74423856540966, 23.111851888648294, {
+                height: 2546,
+                heading: 40,
+                pitch: -15,
+                roll: 0
+            });
+
+            //添加贴地形线
+            add();
+        }
+
+        //添加贴地形线
+        function add() {
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
+                viewer: webGlobe.viewer
+            });
+
+            //坐标位置
+            var pointArr = [
+                120.7642, 23.1537,
+                120.7688, 23.1440,
+                120.7729, 23.1356,
+                120.7776, 23.1259
+            ];
+
+            //绘制贴地形线
+            terrainLine = entityController.appendLine(
+                //名称
+                '贴地形线',
+                //点数组
+                pointArr,
+                //线宽
+                3,
+                //线颜色
+                new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1),
+                //是否识别带高度的坐标
+                false,
+                //是否贴地形
+                true,
+                //附加属性
+                {}
+            );
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'> </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

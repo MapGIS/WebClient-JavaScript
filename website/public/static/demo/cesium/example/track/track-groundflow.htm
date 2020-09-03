@@ -3,44 +3,132 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>模型漫游</title>
-    <!--引入第三方的jquery脚本库-->
+    <title>模型沿地形漫游</title>
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <!--当前示例页面样式表引用-->
+    <!--引用示例页面样式表-->
     <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
-        var webGlobe, viewer;
-        //定义三维瓦片类
-        var tileset;
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //分析功能管理对象
+        var analysisManager;
         // 模型实体
         var modelEntity;
-        //地图初始化函数
+
+        //加载三维场景
         function init() {
-            //实例化要加载的source来源对象（世界矢量地图）
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            viewer = webGlobe.viewer;
-            webGlobe.appendGoogleMap('m@207000000');
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
+            //开启地形深度检测
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+
+            //构造地形层管理对象（视图）
+            var terrainLayer = new CesiumZondy.Layer.TerrainLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加三维地图文档：地形数据
+            var { protocol, ip, port } = window.webclient;
+            terrainLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/250DEM_3D`,
+                {}
+            );
+
+            // var positionArr = [
+            //     [115.028495718, 30.200814617],
+            //     [110.795000473, 32.638540762]
+            // ];
+            // var positionArr = [
+            //     [97.2920, 30.1420],
+            //     [97.3015, 30.1649]
+            // ];
+
+            // //初始化分析功能管理类
+            // analysisManager = new CesiumZondy.Manager.AnalysisManager({
+            //     viewer: webGlobe.viewer
+            // });
+            // //模型URL地址、漫游点集、是否显示漫游路径、漫游时钟频率、漫游成功回调
+            // webGlobe.cruiseModelGround(
+            //     './static/data/model/GroundVehicle.glb',
+            //     positionArr,
+            //     true,
+            //     30,
+            //     function (entities) {
+            //         modelEntity = entities;
+            //         webGlobe.viewer.trackedEntity = entities[entities.length - 1];
+            //         webGlobe.viewer.zoomTo(entities, new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-45)));
+            //         // /*开始漫游*/
+            //         // analysisManager.startCruiseModel();
+            //     }
+            // );
+
+            // /*开始漫游*/
+            // webGlobe.startCruiseModel();
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            // sceneManager.flyToEx(114.39362878111456, 30.50652200986956, {
+            //     height: 180,
+            //     heading: -1,
+            //     pitch: -44,
+            //     roll: 0
+            // });
+
+            // webGlobe.viewer.zoomTo(
+            //     modelEntity,
+            //     new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-45))
+            // );
+        }
+
+        function manyou() {
             var positionArr = [
-                [115.028495718, 30.200814617],
-                [110.795000473, 32.638540762]
+                [97.2920, 30.1420],
+                [97.3015, 30.1649]
             ];
+
             //初始化分析功能管理类
-            var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+            analysisManager = new CesiumZondy.Manager.AnalysisManager({
                 viewer: webGlobe.viewer
             });
             //模型URL地址、漫游点集、是否显示漫游路径、漫游时钟频率、漫游成功回调
-            modelEntity = analysisManager.cruiseModelGround('./static/data/model/donghua.gltf', positionArr, true, 30, function(entities) {
-                modelEntity = entities;
-                webGlobe.viewer.trackedEntity = entities[entities.length - 1];
-                webGlobe.viewer.zoomTo(entities, new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-45)));
-                /*开始漫游*/
-                webGlobe.startCruiseModel();
-            });
+            webGlobe.cruiseModelGround(
+                './static/data/model/GroundVehicle.glb',
+                positionArr,
+                true,
+                30,
+                function (entities) {
+                    modelEntity = entities;
+                    webGlobe.viewer.trackedEntity = entities[entities.length - 1];
+                    webGlobe.viewer.zoomTo(entities, new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-45)));
+                    // /*开始漫游*/
+                    // analysisManager.startCruiseModel();
+                }
+            );
+
+            /*开始漫游*/
+            webGlobe.startCruiseModel();
         }
 
         /*停止漫游*/
@@ -53,13 +141,19 @@
             if (modelEntity) {
                 webGlobe.clearCruiseModel(modelEntity);
             }
-
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div id="GlobeView"></div>
+    <!--三维场景容器-->
+    <div id="GlobeView">
+        <button onclick="manyou()">漫游</button>
+    </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
 </body>
 
 </html>

@@ -2,110 +2,106 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>谷歌地图显示</title>
-    <!--引入第三方的jquery脚本库-->
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
-    <style type='text/css'>
-        #LayerSelect {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            height: 20px;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>路径图-渐进绘制</title>
+  <!--引入第三方的jquery脚本库-->
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <!--当前示例页面样式表引用-->
+  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+  <script>
+    var webGlobe, map;
+    //定义图层类
+    var baiduLayer = undefined;
+    //地图初始化函数
+    function init() {
+      //实例化要加载的source来源对象（世界矢量地图）
+      //构造三维视图类（视图容器div的id，三维视图设置参数）
+      webGlobe = new Cesium.WebSceneControl("GlobeView", {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition("coordinate_location");
+      map = webGlobe.viewer;
+      var blueImage = new Cesium.UrlTemplateImageryProvider({
+        url:
+          "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+        tilingScheme: new Cesium.WebMercatorTilingScheme(),
+        maximumLevel: 8,
+      });
+      webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
 
-        #GlobeView {
-            position: absolute;
-            left: 10px;
-            top: 30px;
-            width: 100%;
-            height: 96%;
-        }
-    </style>
-    <script>
-        var webGlobe, map;
-        //定义图层类
-        var baiduLayer = undefined;
-        //地图初始化函数
-        function init() {
-            //实例化要加载的source来源对象（世界矢量地图）
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
-            });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
-            map = webGlobe.viewer;
-            webGlobe.appendGoogleMap('m@207000000');
+      var center = Cesium.Cartesian3.fromDegrees(116, 40, 200000.0);
+      map.scene.camera.setView({
+        destination: center,
+      });
+      initEcharts();
+    }
 
-            var center = Cesium.Cartesian3.fromDegrees(116, 40, 200000.0);
-            map.scene.camera.setView({
-                destination: center
-            });
-            initEcharts();
-        }
+    function initEcharts() {
+      $.get("./static/data/echarts/line-bus.json", function (data) {
+        // 遍历数据并处理成对应echarts格式
+        busLines = [].concat.apply(
+          [],
+          data.map(function (busLine, idx) {
+            var prevPt;
+            var points = [];
+            for (var i = 0; i < busLine.length; i += 2) {
+              var pt = [busLine[i], busLine[i + 1]];
+              if (i > 0) {
+                pt = [prevPt[0] + pt[0], prevPt[1] + pt[1]];
+              }
+              prevPt = pt;
 
-        function initEcharts() {
-            $.get('./static/data/echarts/line-bus.json', function (data) {
-                // 遍历数据并处理成对应echarts格式
-                busLines = [].concat.apply([], data.map(function (busLine, idx) {
-                    var prevPt;
-                    var points = [];
-                    for (var i = 0; i < busLine.length; i += 2) {
-                        var pt = [busLine[i], busLine[i + 1]];
-                        if (i > 0) {
-                            pt = [
-                                prevPt[0] + pt[0],
-                                prevPt[1] + pt[1]
-                            ];
-                        }
-                        prevPt = pt;
-
-                        points.push([pt[0] / 1e4, pt[1] / 1e4]);
-                    }
-                    return {
-                        coords: points
-                    };
-                }));
-                var option = {
-                    cesium: {
-                        roam: true
-                    },
-                    postRender: false,
-                    postRenderFrame: 2,
-                    series: [{
-                        type: 'lines',
-                        coordinateSystem: 'cesium',   // 设置cesium坐标系
-                        polyline: true,
-                        data: busLines,
-                        silent: true,
-                        lineStyle: {
-                            normal: {
-                                color: '#c23531',
-                                color: 'rgb(200, 35, 45)',
-                                opacity: 0.2,
-                                width: 1
-                            }
-                        },
-                        progressiveThreshold: 500,   // 一次渲染500点
-                        progressive: 200             // 渲染频率
-                    }]
-                }
-                // 声明cesium的echarts图层并将其显示到三维球上
-                layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
-            });
-        }
-    </script>
+              points.push([pt[0] / 1e4, pt[1] / 1e4]);
+            }
+            return {
+              coords: points,
+            };
+          })
+        );
+        var option = {
+          cesium: {
+            roam: true,
+          },
+          postRender: false,
+          postRenderFrame: 2,
+          series: [
+            {
+              type: "lines",
+              coordinateSystem: "cesium", // 设置cesium坐标系
+              polyline: true,
+              data: busLines,
+              silent: true,
+              lineStyle: {
+                normal: {
+                  color: "#c23531",
+                  color: "rgb(200, 35, 45)",
+                  opacity: 0.2,
+                  width: 1,
+                },
+              },
+              progressiveThreshold: 500, // 一次渲染500点
+              progressive: 200, // 渲染频率
+            },
+          ],
+        };
+        // 声明cesium的echarts图层并将其显示到三维球上
+        layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(
+          map
+        );
+      });
+    }
+  </script>
 </head>
 
 <body onload="init()">
-    <div id='GlobeView'></div>
-    <div id="coordinateDiv" class="coordinateClass">
-        <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
-    </div>
+  <div id="GlobeView"></div>
+  <div id="coordinateDiv" class="coordinateClass">
+    <label id="coordinate_location"></label>
+    <label id="coordinate_height"></label>
+  </div>
 </body>
 
 </html>

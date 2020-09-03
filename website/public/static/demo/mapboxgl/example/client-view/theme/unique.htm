@@ -59,14 +59,14 @@
         //使用严格模式
         "use strict";
         //定义地图文档图层和地图、专题图图层
-        //定义地图文档图层和地图、专题图图层
         var mapDocLayer, map, themeLayer;
-        var ip = 'develop.smaryun.com';
-        var port = '6163';
+        var { protocol, ip, port } = window.webclient;
+        var ip = `${ip}`;
+        var port = `${port}`;
         var docName = 'Hubei3857';
         var legendView, infoView;
-        /**初始化地图显示*/
 
+        /**初始化地图显示*/
         function init() {
             //地图容器
             //实例化要加载的source来源对象（世界矢量地图）
@@ -159,32 +159,32 @@
             themeLayer.themeField = "分类索引";
             // 风格数组，设定值对应的样式
             themeLayer.styleGroups = [{
-                    value: "0",
-                    style: {
-                        fillColor: "#FF00FF"
-                    }
-                },
-                {
-                    value: "1",
-                    style: {
-                        fillColor: "#0000FF"
-                    }
-                }, {
-                    value: "2",
-                    style: {
-                        fillColor: "#238E23"
-                    }
-                }, {
-                    value: "3",
-                    style: {
-                        fillColor: "#8E236B"
-                    }
-                }, {
-                    value: "4",
-                    style: {
-                        fillColor: "#00FF7F"
-                    }
+                value: "0",
+                style: {
+                    fillColor: "#FF00FF"
                 }
+            },
+            {
+                value: "1",
+                style: {
+                    fillColor: "#0000FF"
+                }
+            }, {
+                value: "2",
+                style: {
+                    fillColor: "#238E23"
+                }
+            }, {
+                value: "3",
+                style: {
+                    fillColor: "#8E236B"
+                }
+            }, {
+                value: "4",
+                style: {
+                    fillColor: "#00FF7F"
+                }
+            }
             ];
 
             //专题图层 mousemove 事件

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>坡向分析</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
+            //构造地形图层管理类
+            var terrain = new CesiumZondy.Layer.TerrainLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载三维地形地图文档（服务地址，配置参数）
+            var { protocol, ip, port } = window.webclient;
+            var terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //视点跳转
+            sceneManager.flyToEx(120.9819, 23.5307, {
+                height: 9161,
+                heading: 30,
+                pitch: -10,
+                roll: 0
+            });
+            var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                viewer: webGlobe.viewer
+            });
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+            var aspectAna = advancedAnalysisManager.createAspectAnalysis([
+                Cesium.Color.ALICEBLUE,
+                Cesium.Color.ANTIQUEWHITE,
+                Cesium.Color.AQUA,
+                Cesium.Color.AQUAMARINE,
+                Cesium.Color.AZURE,
+                Cesium.Color.BEIGE
+            ]);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+</body>
+
+</html>

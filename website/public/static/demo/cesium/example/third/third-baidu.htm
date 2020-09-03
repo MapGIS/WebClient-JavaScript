@@ -15,9 +15,11 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义图层对象
-        var baiduLayer = undefined;
+        var webGlobe;
+        //定义第三方图层对象
+        var thirdPartyLayer;
+        //定义百度图层对象
+        var baiduLayer;
 
         //加载地图
         function init() {
@@ -31,8 +33,12 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //添加百度地图
-            baiduLayer = webGlobe.appendBaiduMap({
+            baiduLayer = thirdPartyLayer.appendBaiduMap({
                 //地图类型：瓦片：'tile'、卫星：'sate'、交通地图：'traffic'
                 ptype: 'tile'
             });
@@ -43,15 +49,15 @@
             let layer = document.getElementById("LayerSelect").value;
             //首先移除图层
             if (baiduLayer) {
-                webGlobe.removeImageryLayer(baiduLayer);
+                thirdPartyLayer.removeImageLayer(baiduLayer);
             }
             //根据选择添加地图
             if (layer == 'vector') {
-                baiduLayer = webGlobe.appendBaiduMap({
+                baiduLayer = thirdPartyLayer.appendBaiduMap({
                     ptype: 'tile'
                 });
             } else if (layer === 'raster') {
-                baiduLayer = webGlobe.appendBaiduMap({
+                baiduLayer = thirdPartyLayer.appendBaiduMap({
                     ptype: 'sate'
                 });
             }
@@ -63,7 +69,7 @@
     <!--三维场景容器-->
     <div id='GlobeView'>
         <!-- 菜单 -->
-        <div id="menu" class="message" style="top: 10px; left: 10px;">
+        <div id="menu" class="message">
             <select name="changeLayer" id="LayerSelect" onchange="changeLayer()">
                 <option value="vector">矢量地图</option>
                 <option value="raster">遥感地图</option>

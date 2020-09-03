@@ -15,7 +15,7 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         var image;
 
         //加载三维场景
@@ -30,9 +30,6 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //添加Google地图
-            webGlobe.appendGoogleMap('m@207000000');
-
             //添加图片
             add();
         }
@@ -40,12 +37,12 @@
         //添加图片
         function add() {
             //构造注记图层管理对象
-            var layerManager = new CesiumZondy.Manager.LayerManager({
+            var cesiumFuncManager = new CesiumZondy.Layer.CesiumFuncManager({
                 viewer: webGlobe.viewer
             });
 
             //添加图片
-            image = layerManager.appendImageByUrl(
+            image = cesiumFuncManager.appendImageByUrl(
                 //本地图片地址
                 './static/data/picture/world.jpg',
                 //图片显示范围（西经、南纬、东经、北纬）

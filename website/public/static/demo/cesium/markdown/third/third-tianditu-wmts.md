@@ -6,7 +6,7 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendTDTuMapByWMTS()`方法，按照WMTS服务来加载天地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.ThirdPartyLayer`类提供的`appendTDTuMapByWMTS()`方法，按照WMTS服务来加载天地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -25,11 +25,17 @@
    var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
    ```
 
-4. 加载数据：调用`appendTDTuMapByWMTS()`方法，传入数据类型参数，可实现不同类型数据的加载。
+4. 加载数据：创建第三方数据图层类`CesiumZondy.Layer.ThirdPartyLayer`的对象，调用`appendTDTuMapByWMTS()`方法，传入数据类型参数，可实现不同类型数据的加载。
 
     ``` javascript
-    //添加天地图，影像:'img'、地形：'ter'、 注记：'cta'
-    webGlobe.appendTDTuMapByWMTS('img');
+    //构造第三方图层对象
+    var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+    });
+    //通过WMTS服务方式加载天地图：如影像'img'、地形'ter'、 注记'cta'，具体请查看天地图官网:
+    var tdtLayer = thirdPartyLayer.appendTDTuMapByWMTS({
+        ptype: 'img'
+    });
     ```
 
 ### 关键接口
@@ -56,16 +62,19 @@
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendTDTuMapByWMTS()`：通过wmts服务添加天地图
+
+#### 2.【第三方数据图层类】CesiumZondy.Layer.ThirdPartyLayer
+##### （1）`appendTDTuMapByWMTS(optionsParam) → {ImageryLayer}`：通过wmts服务添加天地图，返回瓦片层对象（ImageryLayer）
 
 > `appendTDTuMapByWMTS`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
-||||
+|optionsParam|Object|附加属性|
 
-> `options`属性主要参数
+> `optionsParam`属性主要参数
 
 |参数名|类 型|默认值|说 明|
 |-|-|-|-|
-|||||
+|ptype|String||（必选）地图类型，影像-'img'、地形-'ter'、注记-'cta'，具体请查看天地图官网|
+|token|String||（必选）开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）|

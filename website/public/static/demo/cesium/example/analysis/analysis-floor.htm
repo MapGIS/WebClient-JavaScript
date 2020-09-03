@@ -29,95 +29,137 @@
             });
             viewer = webGlobe.viewer;
             if (webGlobe) {
-                //添加Google影像地图
-                webGlobe.appendGoogleMapExt({
-                    ptype: 's@130'
+                //构造第三方图层对象
+                var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                    viewer: webGlobe.viewer
                 });
+                //添加Google地图
+                thirdPartyLayer.appendGoogleMapExt({
+                    //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                    ptype: 's'
+                });
+
                 //初始化视图功能管理类
                 var sceneManager = new CesiumZondy.Manager.SceneManager({
                     viewer: webGlobe.viewer
                 });
                 //视点跳转
-                sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
-                    height: 100.85856618500283,
-                    heading: -45.4940479913348135,
-                    pitch: -15,
+                sceneManager.flyToEx(120.9819, 23.5307, {
+                    height: 9161,
+                    heading: 30,
+                    pitch: -10,
                     roll: 0
                 });
                 //构造M3D模型层管理对象
                 var m3dLayer = new CesiumZondy.Layer.M3DLayer({
                     viewer: webGlobe.viewer
                 });
-                //加载M3D地图文档（服务地址，配置参数）
-                geobodyLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
-                    autoReset: false,
-                    maximumScreenSpaceError: 8,
+                //构造地形图层管理类
+                var terrain = new CesiumZondy.Layer.TerrainLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载三维地形地图文档（服务地址，配置参数）
+                var {
+                    protocol,
+                    ip,
+                    port
+                } = window.webclient;
+                geobodyLayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {
+                    //加载M3D地图文档（服务地址，配置参数）
+                    // geobodyLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
+                    // autoReset: false,
+                    // maximumScreenSpaceError: 8,
                     loaded: function(layer) {
-                        //初始化交互式绘制控件
-                        drawElement = new Cesium.DrawElement(webGlobe.viewer);
-                        //激活交互式绘制工具
-                        drawElement.startDrawingPolygon({
-                            //绘制完成回调函数
-                            callback: function(positions) {
-                                if (flood) {
-                                    webGlobe.scene.VisualAnalysisManager.remove(flood);
-                                }
-                                var array = new Array();
-                                for (let i = 0; i < positions.length; i++) {
-                                    let point = positions[i];
-                                    let resPoint = new Cesium.Cartesian3;
-                                    let invserTran = new Cesium.Matrix4;
-                                    Cesium.Matrix4.inverse(geobodyLayer[0].root.transform, invserTran);
-                                    Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
-                                    array.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
-                                }
-                                var hight = null;
-                                for (var arraylength = 0; arraylength < array.length; arraylength++) {
-                                    hight = hight < array[arraylength].z ? array[arraylength].z : hight;
-                                }
-                                var newArray = new Array();
-                                for (var arraylength = 0; arraylength < array.length; arraylength++) {
-                                    array[arraylength].z = hight;
-                                    let point = array[arraylength];
-                                    let resPoint = new Cesium.Cartesian3;
-                                    let invserTran = new Cesium.Matrix4;
-                                    Cesium.Matrix4.multiplyByPoint(geobodyLayer[0].root.transform, point, resPoint);
-                                    newArray.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
-                                }
-                                //初始化高级分析功能管理类
-                                var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
-                                    viewer: viewer
-                                });
-                                //初始化洪水淹没分析类
-                                flood = advancedAnalysisManager.createFlood();
-                                //设置洪水淹没分析区域点集
-                                flood.dotsList = newArray;
-                                //设置洪水淹没区域最底高度
-                                flood.minHeight = Number(document.getElementById('minHeight').value <= 0 ? 0 : document.getElementById('minHeight').value);
-                                //设置洪水淹没区域最高高度
-                                flood.maxHeight = Number(document.getElementById('maxHeight').value <= 0 ? 30 : document.getElementById('maxHeight').value);
-                                //设置洪水上涨速度
-                                flood.floodSpeed = Number(document.getElementById('floodSpeed').value <= 0 ? 1 : document.getElementById('floodSpeed').value);
-                                //水纹频率 指波浪的个数
-                                flood.frequency = Number(document.getElementById('frequency').value <= 0 ? 1000 : document.getElementById('frequency').value);
-                                //水纹速度
-                                flood.animationSpeed = Number(document.getElementById('animationSpeed').value <= 0 ? 0.01 : document.getElementById('animationSpeed').value);
-                                //水波的高度
-                                flood.amplitude = Number(document.getElementById('amplitude').value <= 0 ? 10 : document.getElementById('amplitude').value);
-                                //指定水面颜色 和 透明度
-                                flood.floodColor = new Cesium.Color(0.2, 0.5, 0.4, 0.7);
-                                // 指定光线强度
-                                flood.specularIntensity = 3.0;
-                                //添加洪水淹没结果显示
-                                webGlobe.scene.VisualAnalysisManager.add(flood);
-                            }
 
-                        });
                     }
                 });
             }
         }
 
+        function add() {
+            //初始化交互式绘制控件
+            drawElement = new Cesium.DrawElement(webGlobe.viewer);
+            //激活交互式绘制工具
+            drawElement.startDrawingPolygon({
+                //绘制完成回调函数
+                callback: function(positions) {
+                    if (flood) {
+                        webGlobe.scene.VisualAnalysisManager.remove(flood);
+                    }
+                    var transform = transformEdit();
+                    var array = new Array();
+                    for (let i = 0; i < positions.length; i++) {
+                        let point = positions[i];
+                        let resPoint = new Cesium.Cartesian3;
+                        let invserTran = new Cesium.Matrix4;
+                        Cesium.Matrix4.inverse(transform, invserTran);
+                        Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
+                        array.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
+                    }
+                    var newArray = new Array();
+                    for (var arraylength = 0; arraylength < array.length; arraylength++) {
+                        array[arraylength].z = Number(document.getElementById('minHeight').value);
+                        let point = array[arraylength];
+                        let resPoint = new Cesium.Cartesian3;
+                        let invserTran = new Cesium.Matrix4;
+                        Cesium.Matrix4.multiplyByPoint(transform, point, resPoint);
+                        newArray.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
+                    }
+                    //初始化高级分析功能管理类
+                    var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                        viewer: viewer
+                    });
+                    //初始化洪水淹没分析类
+                    flood = advancedAnalysisManager.createFlood();
+                    //设置洪水淹没分析区域点集
+                    flood.dotsList = newArray;
+                    //设置洪水淹没区域最底高度
+                    flood.minHeight = Number(document.getElementById('minHeight').value <= 0 ? 0 : document.getElementById('minHeight').value);
+                    //设置洪水淹没区域最高高度
+                    flood.maxHeight = Number(document.getElementById('maxHeight').value <= 0 ? 2000 : document.getElementById('maxHeight').value);
+                    //设置洪水上涨速度
+                    flood.floodSpeed = Number(document.getElementById('floodSpeed').value <= 0 ? 1 : document.getElementById('floodSpeed').value);
+                    //水纹频率 指波浪的个数
+                    flood.frequency = Number(document.getElementById('frequency').value <= 0 ? 1000 : document.getElementById('frequency').value);
+                    //水纹速度
+                    flood.animationSpeed = Number(document.getElementById('animationSpeed').value <= 0 ? 0.01 : document.getElementById('animationSpeed').value);
+                    //水波的高度
+                    flood.amplitude = Number(document.getElementById('amplitude').value <= 0 ? 10 : document.getElementById('amplitude').value);
+                    //指定水面颜色 和 透明度
+                    flood.floodColor = new Cesium.Color(0.2, 0.5, 0.4, 0.7);
+                    // 指定光线强度
+                    flood.specularIntensity = 3.0;
+                    viewer.scene.globe.depthTestAgainstTerrain = true;
+                    //添加洪水淹没结果显示
+                    webGlobe.scene.VisualAnalysisManager.add(flood);
+                }
+            });
+        }
+
+        function transformEdit() {
+            // 经纬度定位
+            var lo = 120.9819;
+            var la = 23.5307;
+            // 修改模型高度
+            var height = 50.0;
+            // 定位方法
+            var hpr = new Cesium.Matrix3();
+            // new Cesium.HeadingPitchRoll(heading, pitch, roll)
+            // heading围绕负z轴的旋转。pitch是围绕负y轴的旋转。Roll是围绕正x轴的旋转
+            var hprObj = new Cesium.HeadingPitchRoll(Cesium.Math.PI, Cesium.Math.PI, Cesium.Math.PI);
+            hpr = Cesium.Matrix3.fromHeadingPitchRoll(hprObj, hpr);
+            // 2、平移
+            // 2.3储存平移的结果
+            var modelMatrix = Cesium.Matrix4.multiplyByTranslation(
+                // 2.1从以度为单位的经度和纬度值返回Cartesian3位置
+                // 2.2计算4x4变换矩阵
+                Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(lo, la, height)), new Cesium.Cartesian3(), new Cesium.Matrix4()
+            );
+            /// 3、应用旋转
+            // Cesium.Matrix4.multiplyByMatrix3 （矩阵，旋转，结果）
+            Cesium.Matrix4.multiplyByMatrix3(modelMatrix, hpr, modelMatrix);
+            return modelMatrix;
+        }
         /*移除洪水淹没分析*/
         function stopFloodAnalysis() {
             //判断是否已有洪水淹没分析结果
@@ -136,24 +178,49 @@
     <div id="GlobeView">
         <div class="message" style="left: 10px;">
             <p>参数</p>
-            <span>
-                <font>淹没最底高度:</font><input type="text" id="minHeight" value="0">
-            </span></br>
-            <span>
-                <font>淹没最高高度:</font><input type="text" id="maxHeight" value="30">
-            </span></br>
-            <span>
-                <font>洪水上涨速度:</font><input type="text" id="floodSpeed" value="1">
-            </span></br>
-            <span>
-                <font>波浪个数:</font><input type="text" id="frequency" value="1000">
-            </span></br>
-            <span>
-                <font>波浪速度:</font><input type="text" id="animationSpeed" value="0.01">
-            </span></br>
-            <span>
-                <font>波浪高度:</font><input type="text" id="amplitude" value="10">
-            </span></br>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>淹没最底高度</td>
+                        <td>
+                            <input type="text" id="minHeight" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>淹没最高高度</td>
+                        <td>
+                            <input type="text" id="maxHeight" value="2000">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>洪水上涨速度</td>
+                        <td>
+                            <input type="text" id="floodSpeed" value="50">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>波浪个数</td>
+                        <td>
+                            <input type="text" id="frequency" value="1000">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>波浪速度</td>
+                        <td>
+                            <input type="text" id="animationSpeed" value="0.01">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>波浪高度</td>
+                        <td>
+                            <input type="text" id="amplitude" value="10">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align: center;">
+                <button style="margin-left:auto; margin-right:auto" onclick="add()">添加洪水淹没分析</button>
+            </div>
         </div>
     </div>
 </body>

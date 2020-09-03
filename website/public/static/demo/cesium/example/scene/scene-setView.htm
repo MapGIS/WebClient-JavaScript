@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>设置当前视图范围</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //地图类型：s-卫星影像地图、 h-道路地图、 m-全地图（含矢量与道路）、r-矢量地图、t-地形图
+                ptype: 's'
+            });
+        }
+
+        function setView() {
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置当前视图范围
+            sceneManager.setView(
+                //经度
+                114.40298522106733,
+                //纬度
+                30.465568703723072,
+                //高度
+                100.85856618500283,
+                //绕垂直于地心的轴旋转的度数
+                -45.4940479913348135,
+                //绕纬度线旋转度数
+                -15,
+                //绕经度线旋转度数
+                0
+            );
+        }
+
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <div class="message">
+        <button id="setView" onclick="setView()">设置当前视图</button>
+
+    </div>
+</body>
+
+</html>

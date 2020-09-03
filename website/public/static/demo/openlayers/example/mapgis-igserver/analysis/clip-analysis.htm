@@ -13,6 +13,7 @@
         var map, vectorLayer;
         //缓存结果图层的基地址
         var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
+        var { protocol, ip, port } = window.webclient;
 
         /** 地图初始化函数*/
         function init() {
@@ -27,8 +28,8 @@
             });
             //初始化地图文档图层对象
             vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", ["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区"], {
-                ip: "develop.smaryun.com",
-                port: "6163",
+                ip: `${ip}`,
+                port: `${port}`,
                 //缓存名称
                 guid: (new Date()).getTime().toString()
             });
@@ -46,9 +47,9 @@
             //实例化Zondy.Service.ClipByCircle类
             var clipParam = new Zondy.Service.ClipByCircle({
                 //IGServer所在ip地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //IGServer请求端口号
-                port: "6163",
+                port: `${port}`,
                 //设置圆心坐标
                 center: "88.62, 47.09",
                 //设置圆半径长度
@@ -80,8 +81,8 @@
                     var resultLayerUrl = data.results[0].Value;
                     //将结果图层添加到地图视图中显示
                     var resultLayer = new Zondy.Map.GdbpLayer("MapGIS IGS ClipAnalysisResultLayer", [resultBaseUrl + resultLayerUrl], {
-                        ip: "develop.smaryun.com",
-                        port: "6163",
+                        ip: `${ip}`,
+                        port: `${port}`,
                         //缓存名称
                         guid: (new Date()).getTime().toString()
                     });

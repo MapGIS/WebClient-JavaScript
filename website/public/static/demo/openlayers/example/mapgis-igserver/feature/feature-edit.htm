@@ -18,6 +18,7 @@
         var map, vectorLayer;
         //添加要素的FID，由mapgis后台生成，前端无法传入
         var featureIds = '';
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -32,8 +33,8 @@
             });
             //初始化地图文档图层对象
             vectorLayer = new Zondy.Map.Layer("MapGIS IGS VectorLayer", ["gdbp://MapGisLocal/武汉市区/sfcls/行政区", "gdbp://MapGisLocal/武汉市区/sfcls/点编辑"], {
-                ip: "develop.smaryun.com",
-                port: "6163",
+                ip: `${ip}`,
+                port: `${port}`,
                 //添加guid，确保图层从IGS中加载，不读取缓存文件
                 guid: (new Date()).getTime().toString()
             });
@@ -90,7 +91,7 @@
             var featureSet = newFeature(3, null)
             //创建一个编辑服务类
             var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑",
-                {ip: "develop.smaryun.com", port: "6163"});
+                {ip: `${ip}`, port: `${port}`});
             //执行添加点要素功能,OnSuccess为回调函数
             editService.add(featureSet, addSuccess);
         }
@@ -132,8 +133,8 @@
             queryParam.where = "名称='市政协'";
             //实例化地图文档查询服务对象
             var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             //执行查询操作，querySuccess为查询回调函数
             //queryService.query(querySuccess);
@@ -191,8 +192,8 @@
             var featureSet = newFeature(12, fid)
             //创建一个编辑服务类
             var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑", {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             //更新所选要素，UpdateSuccess为回调函数
             editService.update(featureSet, UpdateSuccess);
@@ -222,8 +223,8 @@
             startPressBar();
             //执行删除要素操作
             var deleteService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/武汉市区/sfcls/点编辑", {
-                ip: "develop.smaryun.com",
-                port: "6163"
+                ip: `${ip}`,
+                port: `${port}`
             });
             //删除所选要素，featureIds为要素id，DeleteSuccess为回调函数
             deleteService.deletes(featureIds, deleteSuccess);

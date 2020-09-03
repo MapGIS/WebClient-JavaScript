@@ -31,10 +31,11 @@
                 })
             });
 
+            var { protocol, ip, port } = window.webclient;
             //显示瓦片图
             var tileLayer = new Zondy.Map.TileLayer("MapGIS IGS TileLayer", "武汉市区自定义比例尺", {
-                ip: "develop.smaryun.com",
-                port: "6163",
+                ip: `${ip}`,
+                port: `${port}`,
                 projection: projection,
                 maxResolution: maxResolution,
                 tileSize: 256,

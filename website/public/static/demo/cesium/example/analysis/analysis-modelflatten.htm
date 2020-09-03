@@ -22,10 +22,17 @@
             webGlobe = new Cesium.WebSceneControl('GlobeView', {
                 terrainExaggeration: 1,
             });
-            //添加Google影像地图
-            webGlobe.appendGoogleMapExt({
-                ptype: 's@130'
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
             });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
             //初始化视图功能管理类
             var sceneManager = new CesiumZondy.Manager.SceneManager({
                 viewer: webGlobe.viewer
@@ -42,10 +49,11 @@
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            landscapeLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels', {
+            var { protocol, ip, port } = window.webclient;
+            landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
                 autoReset: false,
                 maximumScreenSpaceError: 8,
-                loaded: function(layer) {
+                loaded: function (layer) {
                     ///绘制结果回调函数
                     function getDrawResult(positions) {
                         //获取绘制多边形区域的定点（这是三维的点xyz）

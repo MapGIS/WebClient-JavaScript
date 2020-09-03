@@ -16,6 +16,7 @@
         var mapDocLayer, map;
         //绘制的查询要素
         var resFeatures = L.featureGroup();
+        var { protocol, ip, port } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -38,9 +39,9 @@
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer("Hubei4326", {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163",
+                port: `${port}`,
                 //只显示一个图层,不平铺显示
                 noWrap: true
             }).addTo(map);
@@ -67,9 +68,9 @@
             //实例化地图文档查询服务对象
             var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163"
+                port: `${port}`
             });
             //执行查询操作，querySuccess为成功回调，queryError为失败回调
             queryService.query(querySuccess, queryError);

@@ -2,176 +2,195 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>谷歌地图显示</title>
-    <!--引入第三方的jquery脚本库-->
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
-    <script src="./static/data/echarts/griddata.js"></script>
-    <style type='text/css'>
-        #LayerSelect {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            height: 20px;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>自定义-网格专题</title>
+  <!--引入第三方的jquery脚本库-->
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <script src="./static/data/echarts/griddata.js"></script>
+  <!--当前示例页面样式表引用-->
+  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+  <script>
+    var COLORS = [
+      "#070093",
+      "#1c3fbf",
+      "#1482e5",
+      "#70b4eb",
+      "#b4e0f3",
+      "#ffffff",
+    ];
+    var lngExtent = [39.5, 40.6];
+    var latExtent = [115.9, 116.8];
+    var cellCount = [50, 50];
+    var cellSizeCoord = [
+      (lngExtent[1] - lngExtent[0]) / cellCount[0],
+      (latExtent[1] - latExtent[0]) / cellCount[1],
+    ];
+    var gapSize = 0;
+    var webGlobe, map;
+    //定义图层类
+    var baiduLayer = undefined;
+    //地图初始化函数
+    function init() {
+      //实例化要加载的source来源对象（世界矢量地图）
+      //构造三维视图类（视图容器div的id，三维视图设置参数）
+      webGlobe = new Cesium.WebSceneControl("GlobeView", {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition("coordinate_location");
+      map = webGlobe.viewer;
 
-        #GlobeView {
-            position: absolute;
-            left: 10px;
-            top: 30px;
-            width: 100%;
-            height: 96%;
-        }
-    </style>
-    <script>
-        var COLORS = ["#070093", "#1c3fbf", "#1482e5", "#70b4eb", "#b4e0f3", "#ffffff"];
-        var lngExtent = [39.5, 40.6];
-        var latExtent = [115.9, 116.8];
-        var cellCount = [50, 50];
-        var cellSizeCoord = [
-            (lngExtent[1] - lngExtent[0]) / cellCount[0],
-            (latExtent[1] - latExtent[0]) / cellCount[1]
-        ];
-        var gapSize = 0;
-        var webGlobe, map;
-        //定义图层类
-        var baiduLayer = undefined;
-        //地图初始化函数
-        function init() {
-            //实例化要加载的source来源对象（世界矢量地图）
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
-            });
-            //显示鼠标位置控件
-            webGlobe.showPosition('coordinate_location');
-            map = webGlobe.viewer;
+      var blueImage = new Cesium.UrlTemplateImageryProvider({
+        url:
+          "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+        tilingScheme: new Cesium.WebMercatorTilingScheme(),
+        maximumLevel: 8,
+      });
+      webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
 
-            webGlobe.appendGoogleMap('m@207000000');
+      var center = Cesium.Cartesian3.fromDegrees(116, 40, 200000.0);
+      map.scene.camera.setView({
+        destination: center,
+      });
+      initEcharts();
+    }
 
-            var center = Cesium.Cartesian3.fromDegrees(116, 40, 200000.0);
-            map.scene.camera.setView({
-                destination: center
-            });
-            initEcharts();
-        }
+    /**
+     * 根据数据的属性参数针对不同的属性附不同的值
+     **/
+    function renderItemFunc(params, api) {
+      var context = params.context;
+      var lngIndex = api.value(0);
+      var latIndex = api.value(1);
+      var coordLeftTop = [
+        +(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6),
+        +(lngExtent[0] + latIndex * cellSizeCoord[1]).toFixed(6),
+      ];
+      var pointLeftTop = getCoord(params, api, lngIndex, latIndex);
+      var pointRightBottom = getCoord(
+        params,
+        api,
+        lngIndex + 1,
+        latIndex + 1
+      );
 
-        /**
-         * 根据数据的属性参数针对不同的属性附不同的值
-         **/
-        function renderItemFunc(params, api) {
-            var context = params.context;
-            var lngIndex = api.value(0);
-            var latIndex = api.value(1);
-            var coordLeftTop = [+(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6), +(lngExtent[0] + latIndex *
-                cellSizeCoord[1]).toFixed(6)];
-            var pointLeftTop = getCoord(params, api, lngIndex, latIndex);
-            var pointRightBottom = getCoord(params, api, lngIndex + 1, latIndex + 1);
+      return {
+        type: "rect",
+        shape: {
+          x: pointLeftTop[0],
+          y: pointLeftTop[1],
+          width: pointRightBottom[0] - pointLeftTop[0],
+          height: pointRightBottom[1] - pointLeftTop[1],
+        },
+        style: api.style({
+          stroke: "rgba(0,0,0,0.1)",
+        }),
+        styleEmphasis: api.styleEmphasis(),
+      };
+    }
 
-            return {
-                type: 'rect',
-                shape: {
-                    x: pointLeftTop[0],
-                    y: pointLeftTop[1],
-                    width: pointRightBottom[0] - pointLeftTop[0],
-                    height: pointRightBottom[1] - pointLeftTop[1]
-                },
-                style: api.style({
-                    stroke: 'rgba(0,0,0,0.1)'
-                }),
-                styleEmphasis: api.styleEmphasis()
-            };
-        }
+    /**
+     * 获取数据的坐标位置
+     **/
+    function getCoord(params, api, lngIndex, latIndex) {
+      var coords = params.context.coords || (params.context.coords = []);
+      var key = lngIndex + "-" + latIndex;
 
-        /**
-         * 获取数据的坐标位置
-         **/
-        function getCoord(params, api, lngIndex, latIndex) {
-            var coords = params.context.coords || (params.context.coords = []);
-            var key = lngIndex + '-' + latIndex;
+      // bmap returns point in integer, which makes cell width unstable.
+      // So we have to use right bottom point.
+      return (
+        coords[key] ||
+        (coords[key] = api.coord([
+          +(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6),
+          +(lngExtent[0] + latIndex * cellSizeCoord[1]).toFixed(6),
+        ]))
+      );
+    }
 
-            // bmap returns point in integer, which makes cell width unstable.
-            // So we have to use right bottom point.
-            return coords[key] || (coords[key] = api.coord([+(latExtent[0] + lngIndex * cellSizeCoord[0]).toFixed(6), +
-                (lngExtent[0] + latIndex * cellSizeCoord[1]).toFixed(6)
-            ]));
-        }
-
-        function initEcharts() {
-            // options参数请参考百度echarts-options
-            // https://echarts.apache.org/zh/option.html#title
-            var option = {
-                tooltip: {},
-                visualMap: {
-                    type: 'piecewise',
-                    inverse: true,
-                    top: 10,
-                    left: 10,
-                    pieces: [{
-                        value: 0,
-                        color: COLORS[0]
-                    }, {
-                        value: 1,
-                        color: COLORS[1]
-                    }, {
-                        value: 2,
-                        color: COLORS[2]
-                    }, {
-                        value: 3,
-                        color: COLORS[3]
-                    }, {
-                        value: 4,
-                        color: COLORS[4]
-                    }, {
-                        value: 5,
-                        color: COLORS[5]
-                    }],
-                    borderColor: '#ccc',
-                    borderWidth: 1,
-                    backgroundColor: '#eee',
-                    dimension: 2,
-                    inRange: {
-                        color: COLORS,
-                        opacity: 0.8
-                    }
-                },
-                cesium: {
-                    roam: true
-                },
-                postRender: false,
-                geo: {
-                    geoIndex: 0
-                },
-                series: [{
-                    type: 'custom',
-                    coordinateSystem: 'cesium',   // 设置cesium坐标系
-                    data: griddata,
-                    renderItem: renderItemFunc,
-                    animation: false,
-                    itemStyle: {
-                        emphasis: {
-                            color: 'yellow'
-                        }
-                    },
-                    encode: {
-                        tooltip: 2
-                    }
-                }]
-            };
-            // 声明cesium的echarts图层并将其显示到三维球上
-            layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
-        }
-    </script>
+    function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
+      var option = {
+        tooltip: {},
+        visualMap: {
+          type: "piecewise",
+          inverse: true,
+          top: 10,
+          left: 10,
+          pieces: [
+            {
+              value: 0,
+              color: COLORS[0],
+            },
+            {
+              value: 1,
+              color: COLORS[1],
+            },
+            {
+              value: 2,
+              color: COLORS[2],
+            },
+            {
+              value: 3,
+              color: COLORS[3],
+            },
+            {
+              value: 4,
+              color: COLORS[4],
+            },
+            {
+              value: 5,
+              color: COLORS[5],
+            },
+          ],
+          borderColor: "#ccc",
+          borderWidth: 1,
+          backgroundColor: "#eee",
+          dimension: 2,
+          inRange: {
+            color: COLORS,
+            opacity: 0.8,
+          },
+        },
+        cesium: {
+          roam: true,
+        },
+        postRender: false,
+        geo: {
+          geoIndex: 0,
+        },
+        series: [
+          {
+            type: "custom",
+            coordinateSystem: "cesium", // 设置cesium坐标系
+            data: griddata,
+            renderItem: renderItemFunc,
+            animation: false,
+            itemStyle: {
+              emphasis: {
+                color: "yellow",
+              },
+            },
+            encode: {
+              tooltip: 2,
+            },
+          },
+        ],
+      };
+      // 声明cesium的echarts图层并将其显示到三维球上
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+    }
+  </script>
 </head>
 
 <body onload="init()">
-    <div id='GlobeView'></div>
-    <div id="coordinateDiv" class="coordinateClass">
-        <label id="coordinate_location"></label>
-        <label id="coordinate_height"></label>
-    </div>
+  <div id="GlobeView"></div>
+  <div id="coordinateDiv" class="coordinateClass">
+    <label id="coordinate_location"></label>
+    <label id="coordinate_height"></label>
+  </div>
 </body>
 
 </html>

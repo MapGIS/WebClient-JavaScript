@@ -6,6 +6,7 @@
     <script type="text/javascript">
 
         var map;
+        var { protocol, ip, port } = window.webclient;
 
         /**显示地图*/
         function init() {
@@ -16,8 +17,8 @@
         /**获取瓦片信息*/
         function getTileInfo() {
             var mapInfo = new Zondy.Catalog.TileLayer({
-                ip: "develop.smaryun.com",
-                port: "6163",
+                ip: `${ip}`,
+                port: `${port}`,
                 tileName: "武汉市区自定义比例尺"
             });
             mapInfo.getTileInfo(getSuccess);
@@ -92,9 +93,9 @@
 
             new Zondy.Map.MapTileLayer("武汉市区自定义比例尺", {
                 //IGServer所在ip地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //IGServer请求端口号
-                port: "6163",
+                port: `${port}`,
                 //设置地图不连续显示
                 noWrap: true
             }).addTo(map);

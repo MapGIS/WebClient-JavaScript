@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>谷歌地图显示</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="jquery,bootstrap" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-mapboxgl-local.js"></script>
+        <!--引入当前页面样式表-->
+        <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            #map {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            .dropdown {
+                position: absolute;
+                right: 20px;
+                top: 10px;
+                z-index: 1000;
+            }
+            .dropdown-menu {
+                min-width: 95px;
+            }
+        </style>
+        <script>
+            //使用严格模式
+            'use strict';
+            var map;
+            /** 地图初始化
+             */
+            function init() {
+                //实例化Map对象加载地图
+                map = new mapboxgl.Map({
+                    //地图容器div的id
+                    container: 'map',
+                    //设置地图样式信息
+                    style: {
+                        version: 8,
+                        name: '全球地化 Style',
+                        crs: 'EPSG:4326',
+                        sources: {
+                            全球地化: {
+                                type: 'vector',
+                                tiles: ['http://develop.smaryun.com:6163/igs/rest/mrms/tile/全球地化/{z}/{y}/{x}?type=cpbf'],
+                                minZoom: 0,
+                                maxZoom: 5,
+                                cluster: true,
+                                clusterMaxZoom: 14, // Max zoom to cluster points on
+                                clusterRadius: 50
+                            },
+                            天地图: {
+                                type: 'raster',
+                                tiles: [
+                                    'http://t6.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}&tk=f5347cab4b28410a6e8ba5143e3d5a35'
+                                ],
+                                minzoom: 0,
+                                maxzoom: 14
+                            }
+                        },
+                        sprite: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/sprite',
+                        glyphs: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf',
+                        layers: [
+                            {
+                                id: '背景',
+                                type: 'background',
+                                paint: {
+                                    'background-color': 'rgba(247, 247, 247, 1)'
+                                }
+                            },
+                            {
+                                id: '天地图',
+                                type: 'raster',
+                                source: '天地图'
+                            },
+                            {
+                                id: 'earthquakes-heat',
+                                type: 'heatmap',
+                                source: '全球地化',
+                                'source-layer': '全国地化2',
+                                maxzoom: 9,
+                                paint: {
+                                    // Increase the heatmap weight based on frequency and property magnitude
+                                    'heatmap-weight': ['interpolate', ['linear'], ['get', 'Ag'], 0, 0, 6, 1],
+                                    // Increase the heatmap color weight weight by zoom level
+                                    // heatmap-intensity is a multiplier on top of heatmap-weight
+                                    'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 9, 3],
+                                    // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+                                    // Begin color ramp at 0-stop with a 0-transparancy color
+                                    // to create a blur-like effect.
+                                    'heatmap-color': [
+                                        'interpolate',
+                                        ['linear'],
+                                        ['heatmap-density'],
+                                        0,
+                                        'rgba(33,102,172,0)',
+                                        0.2,
+                                        'rgb(103,169,207)',
+                                        0.4,
+                                        'rgb(209,229,240)',
+                                        0.6,
+                                        'rgb(253,219,199)',
+                                        0.8,
+                                        'rgb(239,138,98)',
+                                        1,
+                                        'rgb(178,24,43)'
+                                    ],
+                                    // Adjust the heatmap radius by zoom level
+                                    'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 20],
+                                    // Transition from heatmap to circle layer by zoom level
+                                    'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0]
+                                }
+                            }
+                        ],
+                        id: '全球地化-id',
+                        crs: null,
+                        path: 'F:\\Data\\GIS\\VectorTile\\全球地化'
+                    }
+                });
+            }
+            /** 图层切换
+             */
+            function changeLayer(src) {}
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="map"></div>
+    </body>
+</html>

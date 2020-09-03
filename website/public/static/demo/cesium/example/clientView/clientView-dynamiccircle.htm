@@ -20,23 +20,59 @@
             webGlobe = new Cesium.WebSceneControl('GlobeView', {
                 terrainExaggeration: 1,
             });
-            webGlobe.appendGoogleMap('m@207000000');
-            //添加点
-            webGlobe.appendPoint(114.06, 22.54, 0, '点', 7, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(1, 1, 0, 1), 2);
-            webGlobe.flyTo(114.06, 22.54, 20000, 2);
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //地图类型：s-卫星影像地图、 h-道路地图、 m-全地图（含矢量与道路）、r-矢量地图、t-地形图
+                ptype: 'm'
+            });
+
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //显示鼠标位置控件
+            sceneManager.showPosition("coordinateDiv");
+            //定位跳转
+            sceneManager.flyTo(114.06, 22.54, 20000, 2);
+
+            //构造实体绘制控制器对象
+            var entityController = new CesiumZondy.Manager.EntityController({
+                viewer: webGlobe.viewer
+            });
+            //添加点实体对象
+            var point = entityController.appendPoint(114.06, 22.54, 0, '点', 7, webGlobe.getColor(1, 0, 0, 1), webGlobe.getColor(1, 1, 0, 1), 2);
+
+            //开启深度检测（必须）
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+            //初始化动态圆对象
             var scanEffect = new Cesium.CircleScanEffect(webGlobe.viewer, {
                 center: Cesium.Cartesian3.fromDegrees(114.06, 22.54, 20),
-                maxRadius: 15000,
-                scanColor: new Cesium.Color(1, 0, 0, 1),
+                maxRadius: 5000,
+                scanColor: new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1),
                 duration: 8000
             });
-            webGlobe.addSceneEffect(scanEffect);
+
+            //初始化分析功能管理类
+            var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+                viewer: webGlobe.viewer
+            });
+            //添加添加场景特效-动态圆
+            analysisManager.addSceneEffect(scanEffect);
+
+            //通过removeSceneEffect()移除场景特效
+            //analysisManager.removeSceneEffect(scanEffect);
         }
     </script>
 </head>
 
 <body onload="init()">
     <div id="GlobeView"></div>
+    <div id="coordinateDiv" class="coordinateClass"></div>
 </body>
 
 </html>

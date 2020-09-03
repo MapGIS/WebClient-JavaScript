@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>地图文档要素查询</title>
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl,transform" src="./static/libs/include-mapboxgl-local.js"></script>
@@ -11,15 +12,15 @@
             background-repeat: no-repeat;
             background-size: 60%;
         }
-    
+
         .mapboxgl-ctrl-icon.mapboxgl-ctrl-add {
             background-image: url('data:image/svg+xml;utf8,<svg t="1594093104250" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4905"><path d="M789.994 771.154L459.266 670.616l295.152-343.032-380.88 318.478L64.28 553.82l896.008-427.218-170.294 644.552z m-341.168 127.42v-177.38l108.868 30.812-108.868 146.568z" p-id="4906"></path></svg>');
         }
-    
+
         .mapboxgl-ctrl-icon.mapboxgl-ctrl-update {
             background-image: url('data:image/svg+xml;utf8,<svg t="1594090532673" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1150"><path d="M512 269.922592l0 121.038704 161.384597-161.384597L512 68.191078l0 121.038704c-178.330548 0-322.770218 144.43967-322.770218 322.770218 0 63.343677 18.559705 122.047684 50.02944 171.874509l58.905598-58.905598c-17.953907-33.689287-28.242228-72.018244-28.242228-112.969934C269.922592 378.251833 378.251833 269.922592 512 269.922592zM784.740778 340.124468l-58.905598 58.905598c17.953907 33.689287 28.242228 72.018244 28.242228 112.969934 0 133.748167-108.329241 242.077408-242.077408 242.077408L512 633.038704 350.614379 794.423301l161.384597 161.384597L511.998977 834.770218c178.330548 0 322.770218-144.43967 322.770218-322.770218C834.770218 448.656323 816.210513 389.952316 784.740778 340.124468z" p-id="1151"></path></svg>');
         }
-    
+
         .mapboxgl-ctrl-icon.mapboxgl-ctrl-delete {
             background-image: url('data:image/svg+xml;utf8,<svg t="1594092749945" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4754"><path d="M517.59 21.609c-100.299 0-181.703 79.514-185.167 179.34H98.603c-25.979 0-47.235 21.099-47.235 47.236 0 25.98 21.099 47.237 47.236 47.237h52.117v528.416c0 99.196 67.233 180.285 150.37 180.285h423.55c82.98 0 150.37-80.616 150.37-180.285V295.737h47.236c25.98 0 47.236-21.1 47.236-47.237 0-25.98-21.099-47.236-47.236-47.236H702.441C699.449 101.124 617.888 21.61 517.59 21.61z m-96.677 179.34c3.464-51.172 45.19-90.85 96.834-90.85s93.37 39.835 96.362 90.85H420.913z m-119.98 714.842c-29.444 0-61.88-37.789-61.88-91.953V295.737h547.311V824.31c0 54.007-32.436 91.954-61.88 91.954H300.933v-0.473z m0 0" p-id="4755"></path><path d="M364.387 802.267c21.57 0 39.363-21.571 39.363-48.653V476.022c0-27.082-17.635-48.654-39.363-48.654-21.572 0-39.364 21.572-39.364 48.654v277.592c0 26.924 17.32 48.653 39.364 48.653z m142.496 0c21.571 0 39.363-21.571 39.363-48.653V476.022c0-27.082-17.635-48.654-39.363-48.654-21.571 0-39.364 21.572-39.364 48.654v277.592c0 26.924 17.793 48.653 39.364 48.653z m149.896 0c21.571 0 39.364-21.571 39.364-48.653V476.022c0-27.082-17.635-48.654-39.364-48.654-21.571 0-39.363 21.572-39.363 48.654v277.592c0 26.924 17.162 48.653 39.363 48.653z m0 0" p-id="4756"></path></svg>');
         }
@@ -29,6 +30,8 @@
         "use strict";
         //定义地图文档图层和地图
         var mapDocLayer, map;
+        var { protocol, ip, port } = window.webclient;
+
         /** 地图初始化地图
          */
         function init() {
@@ -43,9 +46,9 @@
             map.addControl(navigationControl, 'top-left');
             mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer("Hubei3857", {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163",
+                port: `${port}`,
                 //只显示一个图层,不平铺显示
                 noWrap: true
             });
@@ -145,9 +148,9 @@
             //实例化地图文档查询服务对象
             var queryService = new Zondy.Service.QueryDocFeature(queryParam, "Hubei3857", 1, {
                 //IP地址
-                ip: "develop.smaryun.com",
+                ip: `${ip}`,
                 //端口号
-                port: "6163"
+                port: `${port}`
             });
             //执行查询操作，querySuccess为成功回调，queryError为失败回调
             queryService.query(querySuccess, queryError);
@@ -244,14 +247,16 @@
         }
     </script>
 </head>
+
 <body onload="init();">
-<div id="preview"
-    style="display: none; text-align: center; padding-top: 250px; font-weight: bold;position: absolute;background: rgba(3, 3, 3, 0.1);color: #fff;float: left; width: 100%;height: 100%;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;z-index: 20000;">
-    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
-    <br/>
-    <span>正在操作，请稍候</span>
-</div>
-<div id="map" style="width: 100%; height:700px;">
-</div>
+    <div id="preview"
+        style="display: none; text-align: center; padding-top: 250px; font-weight: bold;position: absolute;background: rgba(3, 3, 3, 0.1);color: #fff;float: left; width: 100%;height: 100%;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;z-index: 20000;">
+        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在操作，请稍候</span>
+    </div>
+    <div id="map" style="width: 100%; height:700px;">
+    </div>
 </body>
+
 </html>

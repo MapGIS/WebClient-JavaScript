@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义图层类
-        var m3dlayer = undefined;
+        var geobodyLayerArr;
 
         //加载三维场景
         function init() {
@@ -37,12 +37,17 @@
             //透明度
             webGlobe.viewer.scene.globe.enableTransparent = true;
             webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(1, 1, 1, 0.001);
-            //开启深度检测
+            //开启地形深度检测
             webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
 
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
             var vm = this;
-            m3dlayer = webGlobe.append(
-                "http://develop.smaryun.com:6163/igs/rest/g3d/geobody2",
+            var { protocol, ip, port } = window.webclient;
+            geobodyLayerArr = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/geobody2`,
                 {
                     loaded: function (layer) {
                         window.setTimeout(function () {
@@ -150,10 +155,10 @@
                     //这个功能是逐层显示地质体
                     var layerIds = layerIdList[index];
 
-                    webGlobe.stopCustomDisplay(m3dlayer);
-                    webGlobe.startCustomDisplay(m3dlayer, layerIds, {
+                    webGlobe.stopCustomDisplay(geobodyLayerArr);
+                    webGlobe.startCustomDisplay(geobodyLayerArr, layerIds, {
                         colorBlendMode: Cesium.Cesium3DTileColorBlendMode.MIX,
-                        color: new Cesium.Color(1, 1, 1, 0.0),
+                        color: new Cesium.Color(255 / 255, 255 / 255, 255 / 255, 0.0),
                         //applyForLayer: true,
                         negate: true,
                     });

@@ -2,14 +2,12 @@
     "name": "cesium",
     "title": "MapGIS WebClinet-Cesium",
     "mapmode": "cesium",
-    "childs": [
-        {
+    "childs": [{
             "name": "图层M3D",
             "iconfont": "iconlayer",
             "folder": "m3d",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "景观模型",
                     "file": "m3d-landscape",
                     "diffcult": "2",
@@ -64,6 +62,14 @@
                     "detail": "",
                     "icon": "m3d-drill.png",
                     "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "地下管线",
+                    "file": "m3d-underpipe",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "m3d-underpipe.png",
+                    "update": "最后更新时间：2020-06-17"
                 }
             ]
         },
@@ -72,24 +78,7 @@
             "iconfont": "iconinternet",
             "folder": "third",
             "leaffolder": true,
-            "childs": [
-                {
-                    "name": "谷歌地图",
-                    "file": "third-google",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "third-google.png",
-                    "update": "最后更新时间：2020-06-17"
-                },
-                {
-                    "name": "高德地图",
-                    "file": "third-amap",
-                    "diffcult": "1",
-                    "detail": "",
-                    "icon": "third-amap.png",
-                    "update": "最后更新时间：2020-06-17"
-                },
-                {
+            "childs": [{
                     "name": "天地图",
                     "file": "third-tianditu",
                     "diffcult": "1",
@@ -106,11 +95,27 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
+                    "name": "谷歌地图",
+                    "file": "third-google",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "third-google.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
                     "name": "百度地图",
                     "file": "third-baidu",
                     "diffcult": "1",
                     "detail": "",
                     "icon": "third-baidu.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "高德地图",
+                    "file": "third-amap",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "third-amap.png",
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
@@ -128,8 +133,7 @@
             "iconfont": "icon_ogc",
             "folder": "ogc",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "WMS",
                     "file": "ogc-WMS",
                     "diffcult": "2",
@@ -152,8 +156,7 @@
             "iconfont": "icon_igs",
             "folder": "mapgis",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "二维地图文档服务",
                     "file": "mapgis-2d-doc",
                     "diffcult": "2",
@@ -192,6 +195,14 @@
                     "detail": "250精度的地形显示,数据来源SRTM,需要翻墙",
                     "icon": "mapgis-raster.png",
                     "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "矢量瓦片",
+                    "file": "mapgis-vectortile",
+                    "diffcult": "1",
+                    "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
+                    "icon": "mapgis-vectortile.png",
+                    "update": "最后更新时间：2019-12-16"
                 }
             ]
         },
@@ -200,8 +211,7 @@
             "iconfont": "icon_internet",
             "folder": "scene",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "场景出图",
                     "file": "scene-sceneOut",
                     "diffcult": "2",
@@ -210,7 +220,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "位置信息",
+                    "name": "常用控件",
                     "file": "scene-showPosition",
                     "diffcult": "2",
                     "detail": "",
@@ -226,35 +236,51 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "二维模式",
-                    "file": "scene-2D",
+                    "name": "场景模式",
+                    "file": "scene-sceneMode",
                     "diffcult": "2",
                     "detail": "",
-                    "icon": "scene-2D.png",
+                    "icon": "scene-sceneMode.png",
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "平面三维",
-                    "file": "scene-3Dground",
+                    "name": "地下模式",
+                    "file": "scene-undergroundMode",
                     "diffcult": "2",
                     "detail": "",
-                    "icon": "scene-3Dground.png",
-                    "update": "最后更新时间：2020-06-18"
-                },
-                {
-                    "name": "地下模式一",
-                    "file": "scene-undergroundOne",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "scene-undergroundOne.png",
+                    "icon": "scene-undergroundMode.png",
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "地下模式二",
-                    "file": "scene-undergroundTwo",
+                    "name": "场景操作",
+                    "file": "scene-operation",
                     "diffcult": "2",
                     "detail": "",
-                    "icon": "scene-undergroundTwo.png",
+                    "icon": "scene-operation.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "绕点旋转",
+                    "file": "scene-rotationView",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "scene-rotationView.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "设置当前视图范围",
+                    "file": "scene-setView",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "scene-setView.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "屏幕坐标转换计算",
+                    "file": "scene-screenPosition",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "scene-screenPosition.png",
                     "update": "最后更新时间：2020-06-17"
                 }
             ]
@@ -264,8 +290,7 @@
             "iconfont": "icon_analysis",
             "folder": "analysis",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "洪水淹没分析",
                     "file": "analysis-floor",
                     "diffcult": "1",
@@ -282,7 +307,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "视屏投放",
+                    "name": "视频投放",
                     "file": "analysis-sceneprojection",
                     "diffcult": "1",
                     "detail": "",
@@ -328,6 +353,46 @@
                     "detail": "",
                     "icon": "analysis-modelflatten.png",
                     "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "通视分析",
+                    "file": "analysis-visibility",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-visibility.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "填挖方计算",
+                    "file": "analysis-cube",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-cube.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "坡向分析",
+                    "file": "analysis-aspectAnalysis",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-aspectAnalysis.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "坡度分析",
+                    "file": "analysis-slopeAnalysis",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-slopeAnalysis.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "动画漫游",
+                    "file": "analysis-animation",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-animation.png",
+                    "update": "最后更新时间：2020-06-17"
                 }
             ]
         },
@@ -336,8 +401,7 @@
             "iconfont": "iconmap3",
             "folder": "track",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "模型漫游",
                     "file": "track-flow",
                     "diffcult": "1",
@@ -360,8 +424,7 @@
             "iconfont": "icon_features",
             "folder": "drawGraphic",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "点",
                     "file": "drawGraphic-point",
                     "diffcult": "1",
@@ -386,7 +449,31 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "贴地区",
+                    "name": "贴地形线",
+                    "file": "drawGraphic-terrainline",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "drawGraphic-terrainline.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "立体区",
+                    "file": "drawGraphic-polygon",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "drawGraphic-polygon.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "拉伸区",
+                    "file": "drawGraphic-stretchpolygon",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "drawGraphic-stretchpolygon.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "贴地球区",
                     "file": "drawGraphic-groundpolygon",
                     "diffcult": "1",
                     "detail": "",
@@ -399,6 +486,14 @@
                     "diffcult": "1",
                     "detail": "",
                     "icon": "drawGraphic-hole.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "贴地形区",
+                    "file": "drawGraphic-terrainpolygon",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "drawGraphic-terrainpolygon.png",
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
@@ -418,29 +513,44 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "图片",
-                    "file": "drawGraphic-picture",
+                    "name": "图标",
+                    "file": "drawGraphic-icon",
                     "diffcult": "1",
                     "detail": "",
-                    "icon": "drawGraphic-picture.png",
+                    "icon": "drawGraphic-icon.png",
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
                     "name": "图文标注",
-                    "file": "drawGraphic-picsymbol",
+                    "file": "drawGraphic-labelicon",
                     "diffcult": "1",
                     "detail": "",
-                    "icon": "drawGraphic-picsymbol.png",
+                    "icon": "drawGraphic-labelicon.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "气泡弹窗",
+                    "file": "drawGraphic-popup",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "drawGraphic-popup.png",
                     "update": "最后更新时间：2020-06-17"
                 }
             ]
         },
         {
-            "name": "离线数据",
+            "name": "通用数据",
             "iconfont": "icondetail",
             "folder": "data",
             "leaffolder": true,
-            "childs": [
+            "childs": [{
+                    "name": "3DTile数据",
+                    "file": "data-3Dtiles",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-3Dtiles.png",
+                    "update": "最后更新时间：2020-08-12"
+                },
                 {
                     "name": "GLTF模型",
                     "file": "data-addgltf",
@@ -458,12 +568,60 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
+                    "name": "GLTF模型移动",
+                    "file": "data-movegltf",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-movegltf.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "GeoJson数据",
+                    "file": "data-geojson",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-geojson.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
                     "name": "KML数据",
                     "file": "data-kml",
                     "diffcult": "1",
                     "detail": "",
                     "icon": "data-kml.png",
                     "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "KMZ数据",
+                    "file": "data-kmz",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-kmz.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "CZML数据",
+                    "file": "data-czml",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-czml.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "本地图片",
+                    "file": "data-outlineImage",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-outlineImage.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "网络图片",
+                    "file": "data-onlineImage",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "data-onlineImage.png",
+                    "update": "最后更新时间：2020-08-12"
                 }
             ]
         },
@@ -472,8 +630,7 @@
             "iconfont": "icon_calc",
             "folder": "measure",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "长度测量",
                     "file": "measure-length",
                     "diffcult": "1",
@@ -508,18 +665,144 @@
             ]
         },
         {
+            "name": "数据查询",
+            "iconfont": "iconsearch",
+            "folder": "query",
+            "leaffolder": true,
+            "childs": [{
+                    "name": "二维地图文档属性查询",
+                    "file": "query-2dByAtt",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-2dByAtt.png",
+                    "update": "最后更新时间：2020-08-25"
+                },
+                {
+                    "name": "二维地图文档几何查询",
+                    "file": "query-2dBygeometry",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-2dBygeometry.png",
+                    "update": "最后更新时间：2020-08-25"
+                },
+                {
+                    "name": "二维地图文档OID查询",
+                    "file": "query-2dByOID",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-2dByOID.png",
+                    "update": "最后更新时间：2020-08-25"
+                },
+                {
+                    "name": "三维模型数据属性查询",
+                    "file": "query-attquery",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-attquery.png",
+                    "update": "最后更新时间：2020-08-25"
+                },
+                {
+                    "name": "三维模型数据几何查询",
+                    "file": "query-geomquery",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-geomquery.png",
+                    "update": "最后更新时间：2020-08-25"
+                },
+                {
+                    "name": "三维模型数据OID查询",
+                    "file": "query-oidquery",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-oidquery.png",
+                    "update": "最后更新时间：2020-08-25"
+                },
+                {
+                    "name": "M3D数据单体查询",
+                    "file": "query-m3dquery",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-m3dquery.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "M3D数据交互编辑",
+                    "file": "query-m3deditor",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "query-m3deditor.png",
+                    "update": "最后更新时间：2020-06-17"
+                }
+            ]
+        },
+        {
             "name": "客户端可视化",
             "iconfont": "icon_clientview",
             "folder": "clientView",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "热力图",
                     "file": "clientView-heatmap",
                     "diffcult": "1",
                     "detail": "",
                     "icon": "clientView-heatmap.png",
                     "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "动态圆",
+                    "file": "clientView-dynamiccircle",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-dynamiccircle.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "雷达扫描圆",
+                    "file": "clientView-radarscanning",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-radarscanning.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "粒子特效-降雨",
+                    "file": "clientView-rain",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-rain.png",
+                    "update": "最后更新时间：2020-08-12"
+                },
+                {
+                    "name": "粒子特效-降雪",
+                    "file": "clientView-snow",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-snow.png",
+                    "update": "最后更新时间：2020-08-12"
+                },
+                {
+                    "name": "粒子特效-雾",
+                    "file": "clientView-fog",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-fog.png",
+                    "update": "最后更新时间：2020-08-12"
+                },
+                {
+                    "name": "粒子特效-火焰",
+                    "file": "clientView-fire",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-fire.png",
+                    "update": "最后更新时间：2020-08-12"
+                },
+                {
+                    "name": "粒子特效-烟雾",
+                    "file": "clientView-smoke",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "clientView-smoke.png",
+                    "update": "最后更新时间：2020-08-12"
                 }
             ]
         },
@@ -528,9 +811,8 @@
             "iconfont": "icon_echarts",
             "folder": "clientView_Echarts",
             "leaffolder": true,
-            "childs": [
-                {
-                    "name": "热力图-主要城市PM 2.5",
+            "childs": [{
+                    "name": "热力图-空气质量",
                     "file": "echarts-heater",
                     "diffcult": "1",
                     "detail": "",
@@ -554,7 +836,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "散点图-纽约140万",
+                    "name": "散点图-纽约热力",
                     "file": "echarts-bigpoint",
                     "diffcult": "1",
                     "detail": "纽约-140万点数据",
@@ -562,7 +844,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "散点图-世界千万GPS点",
+                    "name": "散点图-世界GPS",
                     "file": "echarts-biggps",
                     "diffcult": "1",
                     "data": "数据来自：https://blog.openstreetmap.org/2012/04/01/bulk-gps-point-data/",
@@ -595,7 +877,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "路径图-中国100万道路线",
+                    "name": "路径图-中国主干",
                     "file": "echarts-bigroad",
                     "diffcult": "1",
                     "detail": "中国-100万线",
@@ -603,7 +885,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "路径图-纽约100万道路线",
+                    "name": "渐进线-纽约街道",
                     "file": "echarts-bigline",
                     "diffcult": "1",
                     "detail": "纽约-100万线数据",
@@ -611,7 +893,7 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
-                    "name": "自定义-网格专题图",
+                    "name": "自定义-网格专题",
                     "file": "echarts-grid",
                     "diffcult": "1",
                     "detail": "北京网格图",
@@ -625,8 +907,7 @@
             "iconfont": "icon_mapv",
             "folder": "clientView_MapV",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "轨迹汇聚",
                     "file": "mapv-path_converge",
                     "diffcult": "1",
@@ -729,8 +1010,7 @@
             "iconfont": "icon_clientanalysis",
             "folder": "clientAnalysis",
             "leaffolder": true,
-            "childs": [
-                {
+            "childs": [{
                     "name": "缓冲分析",
                     "file": "clientAnalysis-buffer",
                     "diffcult": "3",

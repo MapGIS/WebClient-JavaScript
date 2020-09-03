@@ -54,8 +54,9 @@
         "use strict";
         //定义地图文档图层和地图、专题图图层
         var mapDocLayer, map, themeSource, themeLayer;
-        var ip = 'develop.smaryun.com';
-        var port = '6163';
+        var { protocol, ip, port } = window.webclient;
+        var ip = `${ip}`;
+        var port = `${port}`;
         var docName = 'Hubei4326';
 
         /** 初始化地图显示*/

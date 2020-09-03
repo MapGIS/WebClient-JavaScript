@@ -3,72 +3,128 @@
 
 <head>
     <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <title>交互式移动M3D数据</title>
-    <!--引入第三方的jquery脚本库-->
+    <!--引用第三方的jQuery脚本库-->
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
     <script src="./static/libs/include-cesium-local.js"></script>
-    <!--当前示例页面样式表引用-->
+    <!--引用示例页面样式表-->
     <link rel="stylesheet" href="./static/demo/cesium/style.css" />
     <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
         var webGlobe;
         //定义三维瓦片类
-        var tileset;
+        var modelLayers;
         // 视图模型
         var viewModel;
-        //地图初始化函数
+        //定义鼠标事件管理对象
+        var mouseEventManager;
+
+        //加载三维场景
         function init() {
-            //实例化要加载的source来源对象（世界矢量地图）
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
             });
-            webGlobe.appendGoogleMap('m@207000000');
-            //加载IGS发布的M3D缓存地图文档
-            tileset = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/M3D', {});
-        }
-        /*移动模型*/
-        function movelModel() {
-            function leftClick(movement) {
-                //选择模型
-                createEditor(tileset);
-                viewModel.setModeTranslation();
-                viewModel.activate();
-            }
-            //注册鼠标左键单击事件
-            webGlobe.registerMouseEvent('LEFT_CLICK', leftClick);
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //开启地形深度检测
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            var { protocol, ip, port } = window.webclient;
+            modelLayers = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔分层点_Sur_000_Ent`,
+                {
+                    maximumScreenSpaceError: 1
+                }
+            );
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(113.15093599393954, 29.914165584257123, {
+                height: 6155,
+                heading: -40,
+                pitch: -23,
+                roll: 0
+            });
+
+            //移动模型
+            movelModel();
         }
 
-        function createEditor(tileset) {
+        function movelModel() {
+            //构造鼠标事件管理对象
+            mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+                viewer: webGlobe.viewer
+            });
+            //注册鼠标左键单击事件
+            mouseEventManager.registerMouseEvent('LEFT_CLICK', leftClick);
+        }
+
+        /*移动模型*/
+        function leftClick(movement) {
             if (Cesium.defined(viewModel)) {
                 return;
             }
+            //创建平移编辑器
             var transformEditor = new Cesium.TransformEditor({
                 container: webGlobe.viewer.container,
                 scene: webGlobe.viewer.scene,
-                transform: tileset[0]._root.transform,
-                boundingSphere: tileset[0].boundingSphere
+                transform: modelLayers[0]._root.transform,
+                boundingSphere: modelLayers[0].boundingSphere
             });
+            //获取模型视图对象
             viewModel = transformEditor.viewModel;
+            //设置模型视图平移
+            viewModel.setModeTranslation();
+            //激活工具
+            viewModel.activate();
+
+            //注册鼠标右键单击事件
+            mouseEventManager.registerMouseEvent('RIGHT_CLICK', rightClick);
         }
 
-        /*停止移动*/
-        function stopMovelModel() {
+        function rightClick(movement) {
             if (Cesium.defined(viewModel)) {
+                //停用工具
                 viewModel.deactivate();
+                //销毁
                 viewModel.destroy();
                 viewModel = undefined;
             }
+            //注销鼠标右键单击事件
+            mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
         }
     </script>
 </head>
 
 <body onload="init()">
-    <div id='GlobeView'>
-        <div class="message">
-            <button id="movel" onclick="movelModel()">移动模型</button>
-            <button id="stopMovel" onclick="stopMovelModel()">停止移动</button>
-        </div>
+    <!--三维场景容器-->
+    <div id='GlobeView'> </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
     </div>
 </body>
 

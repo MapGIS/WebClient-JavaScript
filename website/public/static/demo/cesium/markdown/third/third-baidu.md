@@ -6,7 +6,7 @@
 
 ### 示例实现
 
-本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`WebSceneControl`类提供的`appendBaiduMap()`方法，以此来加载百度地图。
+本示例需要使用【include-cesium-local.js】开发库实现，关键接口为`CesiumZondy.Layer.ThirdPartyLayer`类提供的`appendBaiduMap()`方法，以此来加载百度地图。
 
 > 开发库使用请参见*首页-概述-原生JS调用*内容。
 
@@ -25,11 +25,16 @@
    var webGlobe = new Cesium.WebSceneControl('GlobeView', {});
    ```
 
-4. 加载数据：调用`appendBaiduMap()`方法，配置不同参数可加载不同类型地图，包括：瓦片（ptype:'tile'）、卫星（ptype:'sate'）和交通地图（ptype:'traffic'）。
+4. 加载数据：创建第三方数据图层类`CesiumZondy.Layer.ThirdPartyLayer`的对象，调用`appendBaiduMap()`方法，配置不同参数可加载不同类型地图，包括：瓦片（ptype:'tile'）、卫星（ptype:'sate'）和交通地图（ptype:'traffic'）。
 
     ``` javascript
+    //构造第三方图层对象
+    var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+        viewer: webGlobe.viewer
+    });
     //添加百度地图
-    webGlobe.appendBaiduMap({
+    var baiduLayer = thirdPartyLayer.appendBaiduMap({
+        //地图类型：瓦片：'tile'、卫星：'sate'、交通地图：'traffic'
         ptype: 'tile'
     });
     ```
@@ -58,10 +63,18 @@
 |fullscreenButton|Boolean|true|（可选）是否创建全屏控制按钮|
 |vrButton|Boolean|false|（可选）是否创建VR按钮|
 
-##### （2）`appendBaiduMap(options)`：添加百度地图服务
+#### 2.【第三方数据图层类】CesiumZondy.Layer.ThirdPartyLayer
+##### （1）`appendBaiduMap(optionsParam) → {ImageryLayer}`：添加百度地图服务，返回瓦片层对象（ImageryLayer），可用于操作移除
+
 
 > `appendBaiduMap`方法主要参数
 
 |参数名|类 型|说 明|
 |-|-|-|
-|options|object|提供ptype='tile'和ptype='sate'、 'traffic'三种百度地图（瓦片和卫星、交通）|
+|optionsParam|Object|附加属性|
+
+> `optionsParam`属性主要参数
+
+|参数名|类 型|默认值|说 明|
+|-|-|-|-|
+|ptype|String|'vec'|（必选）地图类型，提供瓦片-'tile'、卫星-'sate'、 交通-'traffic'三种百度地图|

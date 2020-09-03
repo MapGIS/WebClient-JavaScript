@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>场景操作</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var sceneManager;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //初始化视图功能管理类
+            sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        function zoomin() {
+            sceneManager.zoomIn();//放大
+        }
+
+        function zoomout() {
+            sceneManager.zoomOut();//缩小
+        }
+
+        function gohome() {
+            sceneManager.goHome();//复位
+        }
+
+        function start() {
+            sceneManager.openRotation();//开启自转
+        }
+
+        function stop() {
+            sceneManager.closeRotation();//关闭自转
+        }
+
+        function change() {
+            var skybox = new Cesium.SkyBox({
+                sources: {
+                    positiveX: './static/libs/cdn/Cesium/Assets/Textures/SkyBox2/front.jpg',
+                    negativeX: './static/libs/cdn/Cesium/Assets/Textures/SkyBox2/back.jpg',
+                    positiveY: './static/libs/cdn/Cesium/Assets/Textures/SkyBox2/left.jpg',
+                    negativeY: './static/libs/cdn/Cesium/Assets/Textures/SkyBox2/right.jpg',
+                    positiveZ: './static/libs/cdn/Cesium/Assets/Textures/SkyBox2/top.jpg',
+                    negativeZ: './static/libs/cdn/Cesium/Assets/Textures/SkyBox2/bottom.jpg'
+                }
+            });
+            sceneManager.changeSkyBox(skybox);
+        }
+
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message">
+            <button id="zoomin" onclick="zoomin()">放大</button>
+            <button id="zoomout" onclick="zoomout()">缩小</button>
+            <button id="goHome" onclick="gohome()">复位</button>
+            <button id="openRotation" onclick="start()">开启自转</button>
+            <button id="closeRotation" onclick="stop()">关闭自转</button>
+            <button id="change" onclick="change()">修改天空盒</button>
+        </div>
+    </div>
+</body>
+
+</html>

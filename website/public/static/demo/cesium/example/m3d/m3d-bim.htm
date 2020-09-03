@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义M3D图层对象
-        var bimLayer = undefined;
+        var bimLayerArr;
 
         //加载三维场景
         function init() {
@@ -36,7 +36,8 @@
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            bimLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/school', {
+            var { protocol, ip, port } = window.webclient;
+            bimLayerArr = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/school`, {
                 //模型细节显示控制参数：较大值可提高渲染性能，较低值可提高视觉质量
                 maximumScreenSpaceError: 8
             });

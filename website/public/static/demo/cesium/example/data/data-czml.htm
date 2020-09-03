@@ -15,9 +15,7 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义三维瓦片类
-        var tileset;
+        var webGlobe;
         var datasource;
 
         //加载三维场景
@@ -32,8 +30,23 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //添加Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(118.04270724880529, 42.63750947318966, {
+                height: 195,
+                heading: -101,
+                pitch: -17,
+                roll: 0
+            });
 
             //添加CZML
             add();
@@ -41,15 +54,23 @@
 
         //添加CZML
         function add() {
+            //开启动画：如果模型自带动画，需开启此参数
+            webGlobe.viewer.clock.shouldAnimate = true;
+
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
+                viewer: webGlobe.viewer
+            });
             //添加CZML数据
-            datasource = webGlobe.appendCZML('./static/data/czml/fengji.czml',
+            datasource = commonDataManager.appendCZML(
+                //CZML文件地址
+                './static/data/czml/fengji.czml',
+                //成功回调
                 function (entities) {
                     //判断是否添加成功
-                    var enti = entities.getById('aerogenerator3');
+                    var enti = entities.getById('aerogenerator10');
                     if (enti == undefined) {
                         alert('失败');
-                    } else {
-                        webGlobe.viewer.trackedEntity = enti;
                     }
                 }
             );

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>自转与复位</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var SceneManager;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            SceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        function start() {
+            SceneManager.openRotation();
+        }
+
+        function stop() {
+            SceneManager.closeRotation();
+        }
+
+        function gohome() {
+            SceneManager.goHome();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message">
+            <button id="openRotation" onclick="start()">开启自转</button>
+            <button id="closeRotation" onclick="stop()">关闭自转</button>
+            <button id="goHome" onclick="gohome()">复位</button>
+        </div>
+    </div>
+</body>
+
+</html>

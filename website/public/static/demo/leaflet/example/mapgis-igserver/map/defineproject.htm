@@ -39,12 +39,13 @@
                 worldCopyJump: false,
             });
 
+        var { protocol, ip, port } = window.webclient;
         //创建地图文档图层
         var mapDocLayer = new Zondy.Map.MapTileLayer("高斯坐标", {
             //IP地址
-            ip: "develop.smaryun.com",
+            ip: `${ip}`,
             //端口号
-            port: "6163",
+            port: `${port}`,
             //只显示一个图层,不平铺显示
             noWrap: true
         }).addTo(map);

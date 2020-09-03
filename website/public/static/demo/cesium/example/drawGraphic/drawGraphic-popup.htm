@@ -15,10 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
-        //定义三维瓦片类
-        var tileset;
+        var webGlobe;
         var popup;
+        var popupController;
 
         //加载三维场景
         function init() {
@@ -32,11 +31,16 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
             //添加Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 'm'
+            });
 
-            //初始化视图功能管理类
-            var sceneManager = new CesiumZondy.Manager.SceneManager({ viewer: webGlobe.viewer });
             //视点跳转
             sceneManager.flyToEx(114.30182411077577, 30.531049970088603, {
                 height: 1632.9864145259676,
@@ -51,27 +55,31 @@
 
         //添加气泡弹窗
         function add() {
-            //构造实体绘制控制器对象
-            var popupController = new CesiumZondy.Manager.PopupController({
+            //构造气泡弹窗控制对象
+            popupController = new CesiumZondy.Manager.PopupController({
                 viewer: webGlobe.viewer
             });
 
-            //popup的位置
+            //位置
             var postion = Cesium.Cartesian3.fromDegrees(114.30252372618706, 30.544641875459394);
+
             //添加PopUP
-            popup = popupController.appendPopUp(
-                //容器的div id
+            popup = popupController.appendPopup(
+                //容器div的id
                 'popup',
                 //文本
                 '<center>黄鹤楼</center>位于湖北省武汉市长江南岸的武昌蛇山之巅',
                 //坐标位置
                 postion,
-                //偏移
+                //偏移量
                 [0, 0],
-                //popup的close按钮点击回调函数
-                popupController.removePopUp);
-            //刷新
-            popupController.refreshPopUps();
+                //弹窗的关闭按钮点击回调函数
+                function () {
+                    popupController.removePopup(popup, 'popup', {});
+                }
+            );
+            //气泡更新：随地图操作即时更新位置
+            popupController.refreshPopups();
         }
     </script>
 </head>

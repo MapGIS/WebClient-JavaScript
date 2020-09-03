@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义M3D图层对象
-        var osgbLayer = undefined;
+        var osgbLayer;
         
         //加载三维场景
         function init() {
@@ -34,12 +34,13 @@
             //添加Google地图
             webGlobe.appendGoogleMap('m@207000000');
 
-            osgbLayer = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/DYT', {});
+            var { protocol, ip, port } = window.webclient;
+            osgbLayer = webGlobe.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DYT`, {});
 
             //跳转到数据范围
             osgbLayer.readyPromise.then(function () {
                 //3D瓦片数据的空间外包球
-                var boundingSphere = tileset.boundingSphere;
+                var boundingSphere = osgbLayer.boundingSphere;
                 //重新设置三维视图的的3D空间外包球
                 webGlobe.viewer.camera.viewBoundingSphere(boundingSphere,
                     new Cesium.HeadingPitchRange(0.0, -0.5, boundingSphere.radius));

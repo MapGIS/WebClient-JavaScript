@@ -1,12 +1,13 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>客户端统计专题图</title>
     <!--引入leaflet样式表-->
-    <link href="../../3rdLib/leaflet.css" rel="stylesheet" type="text/css"/>
+    <link href="../../3rdLib/leaflet.css" rel="stylesheet" type="text/css" />
     <!--引入当前页面样式表-->
-    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <link href="./style.css" rel="stylesheet" type="text/css" />
     <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
     <script src="./static/libs/include-leaflet-local.js"></script>
     <style>
@@ -107,8 +108,9 @@
         "use strict";
         //定义地图文档图层和地图、专题图图层
         var mapDocLayer, map, themeLayer;
-        var ip = 'develop.smaryun.com';
-        var port = '6163';
+        var { protocol, ip, port } = window.webclient;
+        var ip = `${ip}`;
+        var port = `${port}`;
         var docName = 'Hubei4326';
 
         /** 初始化地图显示*/
@@ -128,7 +130,7 @@
                 //最小级数
                 minZoom: 0
             }).setView([(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
-            / 2], 6);
+                / 2], 6);
             //创建地图文档图层
             mapDocLayer = new Zondy.Map.MapDocLayer(docName, {
                 //IP地址
@@ -143,7 +145,7 @@
 
         /** 初始化统计图图标*/
         function initGraphicToolBar() {
-            var toolbar = L.control({position: 'topright'});
+            var toolbar = L.control({ position: 'topright' });
             toolbar.onAdd = function () {
                 var me = this;
                 me._div = L.DomUtil.create('div', 'editPane');
@@ -214,7 +216,7 @@
                 axisYTick: 4,
                 axisYLabels: ["2800", "2240", "1680", "1120", "560", "0"],
                 axisXLabels: ["13年", "14年", "15年", "16年"],
-                backgroundStyle: {fillColor: "#d1eeee", fillOpacity: 0},
+                backgroundStyle: { fillColor: "#d1eeee", fillOpacity: 0 },
                 backgroundRadius: [5, 5, 5, 5],
                 useXReferenceLine: true,
                 pointStyle: {
@@ -237,18 +239,18 @@
                 width: 240,
                 height: 100,
                 codomain: [0, 2800],       // 允许图表展示的值域范围，此范围外的数据将不制作图表
-                sectorStyle: {fillOpacity: 0.8},      // 柱状图中柱条的（表示字段值的图形）样式
+                sectorStyle: { fillOpacity: 0.8 },      // 柱状图中柱条的（表示字段值的图形）样式
                 sectorStyleByFields: [
-                    {fillColor: "#FFB980"},
-                    {fillColor: "#5AB1EF"},
-                    {fillColor: "#B6A2DE"},
-                    {fillColor: "#2EC7C9"},
-                    {fillColor: "#D87A80"}],
-                sectorHoverStyle: {fillOpacity: 1},
+                    { fillColor: "#FFB980" },
+                    { fillColor: "#5AB1EF" },
+                    { fillColor: "#B6A2DE" },
+                    { fillColor: "#2EC7C9" },
+                    { fillColor: "#D87A80" }],
+                sectorHoverStyle: { fillOpacity: 1 },
                 xShapeBlank: [10, 10, 10],      // 水平方向上的空白间距参数
                 axisYLabels: ["2800", "2240", "1680", "1120", "560", "0"],
                 axisXLabels: ["13年", "14年", "15年", "16年"],
-                backgroundStyle: {fillColor: "#CCE8CF"},        // 背景样式
+                backgroundStyle: { fillColor: "#CCE8CF" },        // 背景样式
                 backgroundRadius: [5, 5, 5, 5],        // 背景框圆角参数
             };
 
@@ -323,8 +325,8 @@
         function createBarThemeLayer(data) {
             statisticsData = data;
             var chartsSettingForBar = chartsSettingForBarAddBar3DCommon;
-            chartsSettingForBar.barStyle = {fillOpacity: 0.7};      // 柱状图中柱条的（表示字段值的图形）样式
-            chartsSettingForBar.barHoverStyle = {fillOpacity: 1};      //  柱条 hover 样式
+            chartsSettingForBar.barStyle = { fillOpacity: 0.7 };      // 柱状图中柱条的（表示字段值的图形）样式
+            chartsSettingForBar.barHoverStyle = { fillOpacity: 1 };      //  柱条 hover 样式
             //阴影样式
             chartsSettingForBar.barShadowStyle = {
                 shadowBlur: 8,
@@ -359,14 +361,14 @@
                 strokeOpacity: 0.4
             };
             // 3d 柱条正面样式（3d 柱条的侧面和顶面会以 3d 柱条正面样式为默认样式）
-            chartsSettingForBar3D.barFaceStyle = {stroke: true};
+            chartsSettingForBar3D.barFaceStyle = { stroke: true };
             // 按字段设置 3d 柱条正面样式
             chartsSettingForBar3D.barFaceStyleByFields = [
-                {fillColor: "#FFB980"},
-                {fillColor: "#5AB1EF"},
-                {fillColor: "#B6A2DE"},
-                {fillColor: "#2EC7C9"},
-                {fillColor: "#D87A80"}];
+                { fillColor: "#FFB980" },
+                { fillColor: "#5AB1EF" },
+                { fillColor: "#B6A2DE" },
+                { fillColor: "#2EC7C9" },
+                { fillColor: "#D87A80" }];
             // 3d 柱条正面 hover 样式（3d 柱条的侧面和顶面 hover 会以 3d 柱条正面 hover 样式为默认 hover 样式）
             chartsSettingForBar3D.barFaceHoverStyle = {
                 stroke: true,
@@ -476,7 +478,7 @@
                 contentHTML += "</div>";
 
                 var tempPoint = map.mouseEventToLatLng(e.event);
-                popup = L.tooltip({direction: 'top'})
+                popup = L.tooltip({ direction: 'top' })
                     .setContent(contentHTML)
                     .setLatLng([tempPoint.lat, tempPoint.lng])
                     .addTo(map);
@@ -546,13 +548,15 @@
         }
     </script>
 </head>
+
 <body onload="init();">
-<div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-    <img src="./static/assets/graphic-image/39-1.gif" alt=''/><br/>
-    <br/>
-    <span>正在操作，请稍候</span>
-</div>
-<div id="leaf_map" style="width: 100%; height:95%;">
-</div>
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在操作，请稍候</span>
+    </div>
+    <div id="leaf_map" style="width: 100%; height:95%;">
+    </div>
 </body>
+
 </html>

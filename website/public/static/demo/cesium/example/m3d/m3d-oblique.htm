@@ -15,9 +15,9 @@
         'use strict';
 
         //定义三维场景控件对象
-        var webGlobe = undefined;
+        var webGlobe;
         //定义M3D图层对象
-        var obliqueLayer = undefined;
+        var obliqueLayerArr;
 
         //加载三维场景
         function init() {
@@ -31,9 +31,14 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //添加Google影像地图
-            webGlobe.appendGoogleMapExt({
-                ptype: 's@130'
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //添加Google地图
+            thirdPartyLayer.appendGoogleMapExt({
+                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
+                ptype: 's'
             });
 
             //构造M3D模型层管理对象（视图）
@@ -41,7 +46,8 @@
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            obliqueLayer = m3dLayer.append('http://develop.smaryun.com:6163/igs/rest/g3d/DaYanTa', {});
+            var { protocol, ip, port } = window.webclient;
+            obliqueLayerArr = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DaYanTa`, {});
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             sceneManager.flyToEx(108.96044700955785, 34.21796237686321, {
