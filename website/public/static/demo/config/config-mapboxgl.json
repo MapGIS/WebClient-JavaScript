@@ -716,42 +716,50 @@
             ]
         },
         {
-            "name": "地质调查",
-            "iconfont": "iconsearch",
-            "folder": "search",
-            "leaffolder": true,
+            "name": "行业特色",
+            "iconfont": "iconeye",
+            "folder": "industry",
+            "leaffolder": false,
             "childs": [
                 {
-                    "name": "100万地质点",
-                    "file": "point100",
-                    "diffcult": "5",
-                    "detail": "",
-                    "icon": "point100.png",
-                    "update": "最后更新时间：2019-11-07"
-                },
-                {
-                  "name": "100万地质点",
-                  "file": "point100_symbol",
-                  "diffcult": "5",
-                  "detail": "",
-                  "icon": "point100_symbol.png",
-                  "update": "最后更新时间：2019-11-07"
-              },
-                {
-                    "name": "100万地质点聚类",
-                    "file": "point100_cluster",
-                    "diffcult": "5",
-                    "detail": "",
-                    "icon": "point100_cluster.png",
-                    "update": "最后更新时间：2019-11-07"
-                },
-                {
-                    "name": "100万地质点热力",
-                    "file": "point100_heater",
-                    "diffcult": "5",
-                    "detail": "",
-                    "icon": "point100_heater.png",
-                    "update": "最后更新时间：2019-11-07"
+                    "name": "地质调查",
+                    "iconfont": "iconsearch",
+                    "folder": "search",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "100万地质点",
+                            "file": "point100",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100.png",
+                            "update": "最后更新时间：2019-11-07"
+                        },
+                        {
+                            "name": "100万地质点",
+                            "file": "point100_symbol",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100_symbol.png",
+                            "update": "最后更新时间：2019-11-07"
+                        },
+                        {
+                            "name": "100万地质点聚类",
+                            "file": "point100_cluster",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100_cluster.png",
+                            "update": "最后更新时间：2019-11-07"
+                        },
+                        {
+                            "name": "100万地质点热力",
+                            "file": "point100_heater",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100_heater.png",
+                            "update": "最后更新时间：2019-11-07"
+                        }
+                    ]
                 }
             ]
         }
