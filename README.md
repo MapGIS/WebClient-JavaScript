@@ -1,4 +1,4 @@
-# MapGIS Client for Javascript
+# MapGIS Client for JavaScript
 
 [![npm version][npm-img]][npm-url]
 [![apache licensed](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=flat-square)](https://github.com/MapGIS/WebClient-JavaScript/blob/master/LICENSE)
@@ -6,45 +6,46 @@
 [npm-img]: https://img.shields.io/badge/npm-10.5.0-brightgreen
 [npm-url]: https://www.npmjs.com/package/@mapgis/webclient
 
-MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openlayers、Leaflet、MapBox、Cesium,等框架ECharts、MapV、D3等可视化库，在传统WebGIS开发基础之上，增强大数据、实时流数据的高效可视化表达和分析，为用户带来全新开发体验。
+MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openlayers、Leaflet、MapBox、Cesium等框架，ECharts、MapV、D3等可视化库，在传统WebGIS开发基础之上，增强大数据、实时流数据的高效可视化表达和分析，为用户带来全新开发体验。
 
 <img alt="MapGIS" src="website/public/static/assets/logo/framework.png">
 
 ## 目录
 
-- [开始](#目录)
-  - [司马云](#司马云)
-  - [github](#github)
-  - [特性](#特性)
-  - [示例](#示例)
-- [深入了解](#深入了解)
-  - [代码结构](#代码结构)
-  - [编译](#编译)
-  - [问题](#问题)
-  - [依赖](#依赖)
-- [资源](#资源)
-  - [在线资源](#在线资源)
-  - [在线服务](#在线服务)
-- [团队](#团队)
-- [证书](#证书)
+- [一、开始](#目录)
+  - [1、司马云](#1、司马云)
+  - [2、GitHub](#2、GitHub)
+  - [3、特性](#3、特性)
+  - [4、示例](#4、示例)
+- [二、深入了解](#二、深入了解)
+  - [1、代码结构](#1、代码结构)
+  - [2、编译](#2、编译)
+  - [3、问题](#3、问题)
+  - [4、依赖](#4、依赖)
+- [三、资源](#三、资源)
+  - [1、在线资源](#1、在线资源)
+  - [2、在线服务](#2、在线服务)
+- [四、团队](#四、团队)
+- [五、证书](#五、证书)
 
-### 司马云
-[MapGIS Client for Javascript](http://develop.smaryun.com:8899/)
+## 一、开始
+
+### 1、司马云
+[MapGIS Client for JavaScript](http://develop.smaryun.com:8899/)
 
 > 本脚本所有的示例都在对应的演示站点有详细的说明教程
 
-### github
-1. github是初始模板，物理上整合了leaflet,mapboxgl,cesium,openlayers, zondyclient等多个脚本，仅做技术验证&选型
-1. 司马云在逻辑上重构设计webclient-javascript，整合统一igserver,datastore,d3,mapv,echarts主流开源技术，基础平台长期维护
-1. 更多详情请查看司马云 www.smaryun.com
+### 2、GitHub
+1. GitHub是初始模板，物理上整合了leaflet,mapboxgl,cesium,openlayers, zondyclient等多个脚本，仅做技术验证&选型
+2. 司马云在逻辑上重构设计webclient-javascript，整合统一igserver,datastore,d3,mapv,echarts主流开源技术，基础平台长期维护
+3. 更多详情请查看司马云 www.smaryun.com
 
-### 特性
+### 3、特性
 |四大地图引擎|融合热门前端可视化技术|多样化开发方式|
 |:---|:---|:---|
 |<img alt="MapGIS" src="website/public/static/assets/bane/sub11.png">|<img alt="MapGIS" src="website/public/static/assets/bane/sub22.png">|<img alt="MapGIS" src="website/public/static/assets/bane/sub33.png">|
 
-
-### 示例
+### 4、示例
 <p align="center">
     <a href="">
         <img src="website/public/static/assets/gallery/m3d-bim.png" height="150" />
@@ -88,8 +89,8 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
     </a>&nbsp;    
 </p>
 
-## 深入了解
-### 代码结构
+## 二、深入了解
+### 1、代码结构
 ``` text
  |-- WebClient-JavaSript
    |-- docs                         -- JsDoc文档生成模块
@@ -110,47 +111,60 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
       |-- src                       -- 示例网页的vue代码
 ```
 
-### 编译
-0. 安装依赖
+### 2、运行示例网站
+
+1. 进入示例网站对应的目录
+
+    ``` sh
+    cd website
+    ```
+
+2. 安装依赖
+
     ``` sh
     npm install
     ```
 
-1. 地图引擎编译
+3. 运行网页
+
+    ``` sh
+    npm start
+    ```  
+
+### 3、编译
+
+如果您需修改源码，可自行编译打包生成OpenLayers、Leaflet、MapBoxGL、Cesium的地图引擎库、API文档。
+
+1. 安装依赖
+    ``` sh
+    npm install
+    ```
+
+2. 地图引擎编译
     ``` sh
     npm run mapbox-debug           #编译调式版本 服务与开源地图脚本一起编译打包
     npm run mapbox-release         #编译生产版本 服务与开源地图脚本一起编译打包
     npm run mapbox-plugin-debug    #编译调式版本 服务与开源地图脚本独立编译打包
-    npm run mapbox-plugin-release  #编译调式版本 服务与开源地图脚本独立编译打包
+    npm run mapbox-plugin-release  #编译生产版本 服务与开源地图脚本独立编译打包
     ```
 
-2. 单独服务编译
+3. 单独服务编译
     ``` sh
     npm run service-debug          #单独编译服务调试版本
     npm run service-release        #单独编译服务生产版本
     ```
 
-### 运行示例网页
-1. 进入对应的目录
+4. API文档生成
     ``` sh
-    cd website
+    build-docs-leaflet             #生成API参考文档
     ```
 
-1. 安装依赖  
-    ``` sh
-    npm install
-    ```
-1. 运行网页  
-    ``` sh
-    npm start
-    ```  
-
-### 问题
+### 3、问题
 
 * [判断多边形自相交?](https://github.com/MapGIS/WebClient-JavaScript/issues/18)
 * [后台空间分析出错误?](https://github.com/MapGIS/WebClient-JavaScript/issues/5)
 
-### 依赖
+### 4、依赖
 
 * leaflet [1.0+ ~ 1.5.1-](https://leafletjs.com/2019/05/08/leaflet-1.5.1.html) ([CDN链接](https://unpkg.com/leaflet@1.5.1/dist/leaflet.js))
   *  [Leaflet](http://leafletjs.com) version 1.0以上 1.5.1以下
@@ -161,16 +175,15 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 * cesium 
   *  [mapgis司马云pro版本-cesium]()
 
+## 三、资源
 
-## 资源
-
-### 在线资源
+### 1、在线资源
 [资源中心-云开发世界](http://www.smaryun.com/dev/resource_center.html#/type27/tag184/page1)
 
-### 在线服务
+### 2、在线服务
 [问答社区-云听](http://www.smaryun.com/cloudlisten/index.php)
 
-### 团队
+### 四、团队
 
 * 协议格式
   * `M3D` [M3D三维部门]()
@@ -180,7 +193,7 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 * 前端  
   * `技术支持` [技术支持部]()
 
-### 证书
+### 五、证书
 
 Copyright &copy; 2020-2024 MapGIS
 

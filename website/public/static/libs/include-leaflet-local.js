@@ -5,7 +5,7 @@
   for (var i = 0; i < s.length; i++) {
     var src = s[i].getAttribute('src');
     if (src) {
-      var m  = src.match(r);
+      var m = src.match(r);
       if (m) {
         targetUrl = src;
         targetScript = s[i];
@@ -33,7 +33,7 @@
     return false;
   }
 
-  function getInitPath(){
+  function getInitPath() {
     //"./static/libs/include-leaflet-local-local.js" ==> "./static/libs/"
     var loadPath = targetUrl.split("/include-leaflet-local");
     return loadPath[0];
@@ -255,6 +255,11 @@
   }
 
   load();
+  window.webclient = {
+    ip: "develop.smaryun.com",
+    port: 6163,
+    protocol: "http",
+  };
   window.isLocal = false;
   window.server = document.location.toString().match(/file:\/\//) ? "http://localhost:8899" : 'http://' + document.location.host;
 })();
