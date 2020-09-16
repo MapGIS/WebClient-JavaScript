@@ -418,6 +418,7 @@ export default class SceneManager {
      * @param {Array<layer>} layerList 图层列表
      * @param {Array<id>} id ID列表
      * @param {Object} [options] 其他参数
+     * @param {Color} [options.colorHighlight] 跳转后指定ID对应的特定要素的高亮颜色
      * @param {Number} [options.heading] 相机参数heading
      * @param {Number} [options.pitch] 相机参数pitch
      * @param {Number} [options.range] 相机参数range
@@ -430,6 +431,7 @@ export default class SceneManager {
         const optionsParam = Cesium.defaultValue(options, {});
         const that = this;
         let first = true;
+        const colorHighlight = Cesium.defaultValue(optionsParam.colorHighlight, undefined);
         function flyToF(feature) {
             const maxPoint = feature.getProperty('maxPoint');
             const minPoint = feature.getProperty('minPoint');
@@ -446,24 +448,23 @@ export default class SceneManager {
             that.viewer.camera.flyToBoundingSphere(boundingSphere, {
                 offset: Cesium.defaultValue(optionsParam.offset, new Cesium.HeadingPitchRange(heading, pitch, range))
             });
-            for (let i = 0; i < layerList.length; i += 1) {
-                const tileset = layerList[i];
-                tileset.style = undefined;
-                tileset.styleEngine.justSelect(false, true);
-            }
             first = false;
         }
 
         function evaluateColorCallBack(feature) {
+            const featureSpec = feature;
             if (first) {
-                const title = feature.getProperty('name');
+                const title = featureSpec.getProperty('name');
                 const values = title.split('_');
                 const vlueNumber = parseInt(values[2], 10);
                 if (vlueNumber === id && first) {
-                    flyToF(feature);
+                    flyToF(featureSpec);
+                    if (colorHighlight !== undefined) {
+                        featureSpec.color = colorHighlight.clone();
+                    }
                 }
             }
-            return feature.color;
+            return featureSpec.color;
         }
 
         for (let i = 0; i < layerList.length; i += 1) {

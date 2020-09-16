@@ -81,15 +81,16 @@ export default class PopupController extends BaseLayer {
         if (containDiv === null || containDiv === undefined) {
             containDiv = document.createElement('div');
             containDiv.id = 'popup';
+            document.body.appendChild(containDiv);
         }
         const randID = CommonFuncManager.generateRandom();
         const rootContentDiv = document.createElement('div');
         rootContentDiv.setAttribute('id', `popup_${randID}`);
-        rootContentDiv.setAttribute('class', 'leaflet-popup');
+        rootContentDiv.setAttribute('class', 'cesium-popup');
         rootContentDiv.setAttribute('style', 'top:5px;left:0;');
         const closeDiv = document.createElement('a');
-        closeDiv.setAttribute('class', 'leaflet-popup-close-button');
-        closeDiv.setAttribute('href', '#');
+        closeDiv.setAttribute('class', 'cesium-popup-close-button');
+        // closeDiv.setAttribute('href', '#');
         closeDiv.innerHTML = '×';
         const webControl = this;
         if (typeof closeCallback === 'function') {
@@ -100,18 +101,18 @@ export default class PopupController extends BaseLayer {
         rootContentDiv.appendChild(closeDiv);
 
         const contentDiv = document.createElement('div');
-        contentDiv.setAttribute('class', 'leaflet-popup-content-wrapper');
+        contentDiv.setAttribute('class', 'cesium-popup-content-wrapper');
         const contentLinkDiv = document.createElement('div');
-        contentLinkDiv.setAttribute('class', 'leaflet-popup-content');
+        contentLinkDiv.setAttribute('class', 'cesium-popup-content');
         contentLinkDiv.setAttribute('style', 'max-width: 300px;');
         contentLinkDiv.innerHTML = content;
         contentDiv.appendChild(contentLinkDiv);
         rootContentDiv.appendChild(contentDiv);
 
         const tipContainDiv = document.createElement('div');
-        tipContainDiv.setAttribute('class', 'leaflet-popup-tip-container');
+        tipContainDiv.setAttribute('class', 'cesium-popup-tip-container');
         const tipDiv = document.createElement('div');
-        tipDiv.setAttribute('class', 'leaflet-popup-tip');
+        tipDiv.setAttribute('class', 'cesium-popup-tip');
         tipContainDiv.appendChild(tipDiv);
         rootContentDiv.appendChild(tipContainDiv);
 
@@ -262,16 +263,14 @@ export default class PopupController extends BaseLayer {
     removePopup(popID, popupOwner, options) {
         const owner = Cesium.defaultValue(popupOwner, this);
         const popDiv = document.getElementById(popID);
+        const op = Cesium.defaultValue(options, {});
         if (popDiv === null || popDiv === undefined) {
             return;
         }
         while (popDiv.hasChildNodes()) {
             popDiv.removeChild(popDiv.firstChild);
         }
-        let removeDiv = false;
-        if (Cesium.defined(options.removeDiv)) {
-            removeDiv = options.removeDiv;
-        }
+        const removeDiv = Cesium.defaultValue(op.removeDiv, false);
         if (removeDiv && popDiv.parentNode !== null) {
             popDiv.parentNode.removeChild(popDiv);
         }
