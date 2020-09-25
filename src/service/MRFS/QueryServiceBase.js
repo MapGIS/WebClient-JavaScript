@@ -130,8 +130,11 @@ class QueryServiceBase extends ServiceBase {
         }
         if (way.toUpperCase() === 'GET') {
             fullRestUrl += '?' + this.queryParam.getParameterURL();
-            // 必须encodeURI,避免url中出现特殊字符导致请求出错
-            fullRestUrl = encodeURI(fullRestUrl);
+            // @date 20181022 邬俊惠 必须encodeURI,避免url中出现特殊字符导致请求出错
+            // @date 20200925 潘卓然 这里由于原来的 fullRestUrl = this.getFullUrl(); 是encode的，
+            // 导致上面的this.queryParam.getParameterURL()这部分没有编码，因此原来是在后面加了下面一行来确保编码
+            // 但是由于.NET能够处理2次encode的问题，JAVA不能处理所以统一换成了1次encode，后面不需要放开这段代码
+            // fullRestUrl = encodeURI(fullRestUrl);
         } else {
             dataObject = this.queryParam.getParameterObject();
         }

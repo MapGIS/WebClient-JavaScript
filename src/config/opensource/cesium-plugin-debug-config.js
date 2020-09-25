@@ -4,7 +4,7 @@ const BuildInfo = require('./version/version.js')
 // const CopywebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var packageName = "webclient-cesium-plugins";
+var packageName = "webclient-cesium-plugin";
 var banner = `
     datastore-cesium.(www.smaryun.com)
     Copyright© 2000-2018 MapGis

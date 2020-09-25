@@ -3,7 +3,7 @@ var path = require('path');
 const BuildInfo = require('./version/version.js')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var packageName = "webclient-cesium-plugins.min";
+var packageName = "webclient-cesium-plugin.min";
 var banner = `
     datastore-cesium.(www.smaryun.com)
     Copyright© 2000-2018 MapGis
