@@ -21,29 +21,29 @@ export class DataStoreService extends ServiceBase {
         delete this.params.port;
         delete this.params.domain;
         delete this.params.baseUrl;
-        delete this.params.networkProtocol;
+        delete this.params.protocol;
         delete this.params.partUrl;
     }
 
     /**
-     * @function module:DataStore服务.DataStoreService.prototype.getBaseUrl
+     * @function module:DataStore.DataStoreService.prototype.getBaseUrl
      * @description 获取基地址url
      */
     getBaseUrl() {
         let url = '';
-        const { baseUrl, ip, port, domain, networkProtocol } = this;
+        const { baseUrl, ip, port, domain, protocol } = this;
         if (baseUrl) {
             url = baseUrl;
         } else if (domain) {
             url = domain;
-        } else if (networkProtocol && ip && port) {
-            url = `${networkProtocol}://${ip}:${port}`;
+        } else if (protocol && ip && port) {
+            url = `${protocol}://${ip}:${port}`;
         }
         return url;
     }
 
     /**
-     * @function module:DataStore服务.DataStoreService.prototype.getFullUrl
+     * @function module:DataStore.DataStoreService.prototype.getFullUrl
      * @description 获取完整的url地址
      * @param {String}
      * @param {Object}
@@ -57,7 +57,7 @@ export class DataStoreService extends ServiceBase {
 
     /**
      * @description 向服务器发送GET请求
-     * @function module:DataStore服务.DataStoreService.prototype.get
+     * @function module:DataStore.DataStoreService.prototype.get
      * @param  {String} url 完整的请求地址。
      * @param  {Function} onSuccess 查询成功回调函数。
      * @param {Function} onError 查询失败回调函数。
@@ -76,7 +76,7 @@ export class DataStoreService extends ServiceBase {
 
     /**
      * @description 向服务器发送POST请求
-     * @function module:DataStore服务.DataStoreService.prototype.post
+     * @function module:DataStore.DataStoreService.prototype.post
      * @param  {String} url 完整的请求地址。
      * @param  {Function} onSuccess 查询成功回调函数。
      * @param {Function} onError 查询失败回调函数。
