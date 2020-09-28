@@ -1,7 +1,10 @@
 /**
  * @module PostGIS
  */
-import { PostgisQueryParameter } from './PostgisQueryParameter';
+import { PostgisCatlogService } from './PostgisCatlogService';
+import { PostgisCustomQueryService } from './PostgisCustomQueryService';
 import { PostgisQueryService } from './PostgisQueryService';
+import { PostgisTableService } from './PostgisTableService';
+import { PostgisVectorTileService } from './PostgisVectorTileService';
 
-export { PostgisQueryParameter, PostgisQueryService };
+export { PostgisCatlogService, PostgisCustomQueryService, PostgisQueryService, PostgisTableService, PostgisVectorTileService };
