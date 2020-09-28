@@ -6,8 +6,18 @@ import { DataStoreService } from '../ServiceBase';
  * @class module:PostGIS.PostgisCatlogService
  * @param {PostgisQueryParameter} option 查询条件
  * @param {String} [option.path] 库名称
- * @param {Boolean} [option.classify = true] 类别，地址库、时空库等
+ * @param {String} [option.classify] 类别，地址库、时空库、数据集等
  * @param {String} [option.keyWords] 关键字
+ * @example
+ * let param = {
+        networkProtocol: 'http',
+        ip: '192.168.96.101',
+        port: 9091,
+        path: 'bigdata03',
+        classify: '数据集',
+        keyWords: 'big'
+    };
+    let catlog = new Zondy.DataStore.PostGIS.PostgisCatlogService(param);
  */
 export class PostgisCatlogService extends DataStoreService {
     constructor(option) {
@@ -26,6 +36,7 @@ export class PostgisCatlogService extends DataStoreService {
         /**
          * @member module:PostGIS.PostgisCatlogService.prototype.classify
          * @description 类别，地址库、时空库等
+         * @enum datasets
          */
         this.classify = option.classify;
         /**

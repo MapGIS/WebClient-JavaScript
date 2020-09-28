@@ -16,7 +16,7 @@ export class PostgisQueryService extends DataStoreService {
          * @member module:PostGIS.PostgisQueryService.prototype.serviceUrl
          * @description 服务地址
          */
-        this.serviceUrl = '/datastore/rest/dataset/pg/query';
+        this.serviceUrl = '/datastore/rest/dataset/pg/query/';
         /**
          * @member module:PostGIS.PostgisQueryService.prototype.path
          * @description 库名称/工作空间
@@ -105,11 +105,34 @@ export class PostgisQueryService extends DataStoreService {
      * @param {Function} onError 查询失败回调函数。
      */
     query(onSuccess, onError) {
-        let { serviceUrl, path, option } = this;
-        serviceUrl += path;  
+        let { serviceUrl, path, option, geometry, geoFormat } = this;
+        serviceUrl += path;
         let url = this.getFullUrl(serviceUrl, option);
         this.get(url, onSuccess, onError);
     }
+
+    /**
+     * @description 通过wkt查询数据
+     * @param {String} wkt
+     */
+    queryByWkt(wkt) {}
+
+    /**
+     * @description 通过geojson查询数据
+     * @param {String} geojson
+     */
+    queryByGeojson(geojson) {}
+
+    /**
+     * @description 通过circle查询数据
+     * @param {String} circle 格式: x坐标,y坐标,半径
+     */
+    queryByCircle(circle) {}
+    /**
+     * @description 通过rect查询数据
+     * @param {String} rect 格式: xmin,ymin,xmax,ymax
+     */
+    queryByRect(rect) {}
 }
 
 export default PostgisQueryService;

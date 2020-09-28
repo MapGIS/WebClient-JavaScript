@@ -7,6 +7,15 @@ import { DataStoreService } from '../ServiceBase';
  * @param {PostgisQueryParameter} option 查询条件
  * @param {String} option.path 库名称/工作空间
  * @param {String} option.tableNames 表名，多个用逗号分隔，如：X431102TDXZ2005GDLTB,dltb2005
+ * @example 
+ * let param = {
+        networkProtocol: 'http',
+        ip: '192.168.96.101',
+        port: 9091,
+        path: 'bigdata03/bigdata03',
+        tableNames: 'mpf24091'
+    };
+    let catlog = new Zondy.DataStore.PostGIS.PostgisTableService(param);
  */
 export class PostgisTableService extends DataStoreService {
     constructor(option) {
@@ -36,9 +45,7 @@ export class PostgisTableService extends DataStoreService {
      */
     fixOption(option) {
         this.option = {
-            tableNames: option.tableNames,
-            pageSize: option.pageSize,
-            pageNo: option.pageNo
+            tableNames: option.tableNames
         };
     }
 
@@ -50,7 +57,7 @@ export class PostgisTableService extends DataStoreService {
      */
     query(onSuccess, onError) {
         let { serviceUrl, path, option } = this;
-        serviceUrl += path;  
+        serviceUrl += path;
         let url = this.getFullUrl(serviceUrl, option);
         this.get(url, onSuccess, onError);
     }
