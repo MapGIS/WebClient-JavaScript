@@ -19,7 +19,7 @@ export class PostgisVectorTileService extends DataStoreService {
          * @member module:PostGIS.PostgisVectorTileService.prototype.serviceUrl
          * @description 服务地址
          */
-        this.serviceUrl = '/datastore/rest/dataset/pg/query/';
+        this.serviceUrl = '/datastore/rest/dataset/pg/vectortile/';
         /**
          * @member module:PostGIS.PostgisVectorTileService.prototype.path
          * @description 库名称
@@ -62,6 +62,18 @@ export class PostgisVectorTileService extends DataStoreService {
     }
 
     /**
+     * @function module:PostGIS.PostgisVectorTileService.prototype.getWmtsUrl
+     * @description 获取实时矢量瓦片的WMTS的实时WMTS接口
+     */
+    getWmtsUrl() {
+        let { serviceUrl, path, option } = this;
+        serviceUrl += path;
+        let url = this.getFullUrl(serviceUrl, option);
+        url = decodeURI(url);
+        return url;
+    }
+
+    /**
      * @description 查询函数，向服务器发送请求,返回地名地址格式数据
      * @function module:PostGIS.PostgisVectorTileService.prototype.query
      * @param  {Function} onSuccess 查询成功回调函数。
@@ -69,7 +81,7 @@ export class PostgisVectorTileService extends DataStoreService {
      */
     query(onSuccess, onError) {
         let { serviceUrl, path, option } = this;
-        serviceUrl += path;        
+        serviceUrl += path;
         let url = this.getFullUrl(serviceUrl, option);
         this.get(url, onSuccess, onError);
     }

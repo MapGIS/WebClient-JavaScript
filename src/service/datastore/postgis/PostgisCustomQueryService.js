@@ -16,7 +16,7 @@ export class PostgisCustomQueryService extends DataStoreService {
          * @member module:PostGIS.PostgisCustomQueryService.prototype.serviceUrl
          * @description 服务地址
          */
-        this.serviceUrl = '/datastore/rest/dataset/pg/query';
+        this.serviceUrl = '/datastore/rest/dataset/pg/executequery/';
         /**
          * @member module:PostGIS.PostgisCustomQueryService.prototype.path
          * @description 库名称

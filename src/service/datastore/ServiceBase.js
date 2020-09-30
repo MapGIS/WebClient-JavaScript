@@ -21,7 +21,7 @@ export class DataStoreService extends ServiceBase {
         delete this.params.port;
         delete this.params.domain;
         delete this.params.baseUrl;
-        delete this.params.protocol;
+        delete this.params.networkProtocol;
         delete this.params.partUrl;
     }
 
@@ -31,13 +31,13 @@ export class DataStoreService extends ServiceBase {
      */
     getBaseUrl() {
         let url = '';
-        const { baseUrl, ip, port, domain, protocol } = this;
+        const { baseUrl, ip, port, domain, networkProtocol } = this;
         if (baseUrl) {
             url = baseUrl;
         } else if (domain) {
             url = domain;
-        } else if (protocol && ip && port) {
-            url = `${protocol}://${ip}:${port}`;
+        } else if (networkProtocol && ip && port) {
+            url = `${networkProtocol}://${ip}:${port}`;
         }
         return url;
     }

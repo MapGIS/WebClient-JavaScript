@@ -19,7 +19,8 @@ export class PostgisQueryService extends DataStoreService {
         this.serviceUrl = '/datastore/rest/dataset/pg/query/';
         /**
          * @member module:PostGIS.PostgisQueryService.prototype.path
-         * @description 库名称/工作空间
+         * @description 库名称/工作空间/表名称
+         * @see 映射平台的pglink/hdf/layer
          */
         this.path = option.path;
         /**
@@ -49,17 +50,19 @@ export class PostgisQueryService extends DataStoreService {
         /**
          * @member module:PostGIS.PostgisQueryService.prototype.fields
          * @description 统计计算中用于分组字段名列表，用逗号分隔
+         * @see 该属性与segments冲突,不能同时存在
          */
         this.fields = option.fields;
-
         /**
          * @member module:PostGIS.PostgisQueryService.prototype.segments
          * @description 分段分组条件，如["银行<1000","银行 between 1000 and 4000"]
+         * @see 该属性与fields冲突,不能同时存在
          */
         this.segments = option.segments;
         /**
          * @member module:PostGIS.PostgisQueryService.prototype.statisticFields
          * @description Json格式，[field] 方法类型：count,min,max,mean,sum,variance(方差),stddev(标准差）
+         * @see 激活属性统计信息后，由于一些特定的统计聚类函数，几何字段会丢失
          */
         this.statisticFields = option.statisticFields;
         /**

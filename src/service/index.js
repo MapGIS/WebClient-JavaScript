@@ -250,7 +250,8 @@ import {
     QueryLayerFeature,
     QueryParameter,
     QueryParameterBase,
-    QueryServiceBase
+    QueryServiceBase,
+    QueryUnifyParameter
 } from './MRFS';
 
 export const MRFS = {
@@ -268,7 +269,8 @@ export const MRFS = {
     QueryLayerFeature,
     QueryParameter,
     QueryParameterBase,
-    QueryServiceBase
+    QueryServiceBase,
+    QueryUnifyParameter
 };
 
 import {
@@ -423,7 +425,31 @@ export const OGC = {
     OGCWMSInfo
 };
 
-import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore';
+import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore/elasticsearch';
+import {
+    PostgisCatlogService,
+    PostgisCustomQueryService,
+    PostgisQueryService,
+    PostgisTableService,
+    PostgisVectorTileService
+} from './datastore/postgis';
+
+export const ElasticSearch = {
+    EsCatlogType,
+    EsCatlogName,
+    EsGeoHashType,
+    EsCatlogService,
+    EsTableService,
+    EsSpaceTimeQueryByAgg
+};
+
+export const PostGIS = {
+    PostgisCatlogService,
+    PostgisCustomQueryService,
+    PostgisQueryService,
+    PostgisTableService,
+    PostgisVectorTileService
+};
 
 export const DataStore = {
     EsCatlogType,
