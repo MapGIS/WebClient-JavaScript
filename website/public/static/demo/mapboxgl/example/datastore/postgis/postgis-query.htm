@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>查询统计</title>
+        <script include="mapboxgl,draw,turf" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style>
+            #map {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            .mapboxgl-popup {
+                max-width: fit-content !important;
+            }
+            .table-popup-wrapper {
+                width: fit-content;
+            }
+            .map-draw-control {
+                z-index: 2000;
+                display: flex;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+            }
+            .map-text-control {
+                z-index: 2000;
+                display: flex;
+                position: absolute;
+                top: 60px;
+                left: 20px;
+            }
+            .map-draw-button {
+                float: left;
+                width: fit-content;
+                height: 32px;
+                line-height: 32px;
+                background: #ffffff;
+                padding: 0 12px;
+                border-right: 1px dashed #666666;
+            }
+            .map-draw-button:first-child {
+                border-bottom-left-radius: 4px;
+                border-top-left-radius: 4px;
+            }
+            .map-draw-button:last-child {
+                border-bottom-right-radius: 4px;
+                border-top-right-radius: 4px;
+                border-right: 0px solid #666666;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="map"></div>
+        <div class="map-draw-control">
+            <div class="map-draw-button" onclick="changeDraw('circle')">单点查</div>
+            <div class="map-draw-button" onclick="changeDraw('rect')">拉框查询</div>
+            <div class="map-draw-button" onclick="changeDraw('geojson')">多边形查询</div>
+        </div>
+        <div class="map-text-control">
+            <input
+                type="text"
+                value="POLYGON((121.588439 31.050109, 121.782073 30.991058, 121.867218 31.048736, 121.674957 31.124267, 121.588439 31.050109))"
+                id="wkt"
+            />
+            <div class="map-draw-button" onclick="changeDraw('wkt')">WKT查询</div>
+        </div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+
+            var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+            var vecsrc = {
+                //来源类型为栅格瓦片
+                type: 'raster',
+                tiles: [
+                    //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                    'http://t' +
+                        Math.round(Math.random() * 7) +
+                        '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                        '&TILECOL=' +
+                        '{x}' +
+                        '&TILEROW=' +
+                        '{y}' +
+                        '&TILEMATRIX=' +
+                        '{z}' +
+                        '&tk=' +
+                        tiandituKey
+                ],
+                //栅格瓦片的分辨率
+                tileSize: 256
+            };
+            var cvasrc = {
+                //来源类型为栅格瓦片
+                type: 'raster',
+                tiles: [
+                    //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                    'http://t' +
+                        Math.round(Math.random() * 7) +
+                        '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                        '&TILECOL=' +
+                        '{x}' +
+                        '&TILEROW=' +
+                        '{y}' +
+                        '&TILEMATRIX=' +
+                        '{z}' +
+                        '&tk=' +
+                        tiandituKey
+                ],
+                //栅格瓦片的分辨率
+                tileSize: 256
+            };
+            var popup = new mapboxgl.Popup({ closeOnClick: false });
+            var map = new mapboxgl.Map({
+                container: 'map',
+                crs: 'EPSG:4326', //经纬度一定要设置crs参数
+                maxBounds: [
+                    [-180, -90],
+                    [180, 90]
+                ],
+                style: {
+                    //设置版本号，一定要设置
+                    version: 8,
+                    //添加来源
+                    sources: {
+                        vecsrc: vecsrc,
+                        cvasrc: cvasrc
+                    },
+                    //设置加载并显示来源的图层信息
+                    layers: [
+                        {
+                            //图层id，要保证唯一性
+                            id: 'vecsrc',
+                            //图层类型
+                            type: 'raster',
+                            //连接图层来源
+                            source: 'vecsrc',
+                            //图层最小缩放级数
+                            minzoom: 0,
+                            //图层最大缩放级数
+                            maxzoom: 22
+                        },
+                        {
+                            //图层id，要保证唯一性
+                            id: 'cvasrc',
+                            //图层类型
+                            type: 'raster',
+                            //连接图层来源
+                            source: 'cvasrc',
+                            //图层最小缩放级数
+                            minzoom: 0,
+                            //图层最大缩放级数
+                            maxzoom: 22
+                        }
+                    ]
+                },
+                zoom: 10,
+                pitch: 45,
+                center: [121.4693, 31.12307]
+            });
+
+            var mode = undefined;
+            var modes = MapboxDraw.modes;
+            modes.draw_rectangle = DrawRectangle.default;
+            //modes.draw_circle = CircleMode
+            var draw = new MapboxDraw({
+                displayControlsDefault: false,
+                controls: {},
+                modes: modes
+            });
+            map.addControl(draw, 'top-left'); //绘制工具
+            map.on('draw.create', function (geojson) {
+                var feature = geojson.features[0];
+                // draw.deleteAll();
+                query(feature, mode);
+            });
+
+            var sourceId = 'query-source';
+            var layerId = 'select_layer';
+            map.on('mouseenter', layerId, function (e) {
+                map.getCanvas().style.cursor = 'pointer';
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var result = e.features[0].properties;
+                var html = '<div class="table-popup-wrapper">' + makeHtml(result) + '</div>';
+                popup.setLngLat(coordinates).setHTML(html).addTo(map);
+            });
+            map.on('mouseleave', layerId, function () {
+                map.getCanvas().style.cursor = '';
+                popup.remove();
+            });
+
+            function fixGeometry(feature, geoFormat) {
+                var geomstr = '';
+                if (geoFormat === 'wkt') {
+                    geomstr = feature;
+                } else {
+                    var geojson = feature;
+                    var coord = feature.geometry.coordinates;
+                    if (geoFormat === 'circle') {
+                        var radio = 0.5;
+                        geomstr = coord[0] + ',' + coord[1] + ',' + radio;
+                    } else if (geoFormat === 'rect') {
+                        var bbox = turf.bbox(geojson);
+                        geomstr = bbox.join(',');
+                    } else if (geoFormat === 'geojson') {
+                        geomstr = JSON.stringify(feature);
+                    }
+                }
+                return geomstr;
+            }
+
+            function query(geometry, geoFormat) {
+                var param = {
+                    networkProtocol: 'http',
+                    ip: '192.168.96.101',
+                    port: 9091,
+                    path: 'bigdata03/bigdata03/mpf24091', // 这里的最后一个mpf24091是mapgis平台中的图层名
+                    geometry: this.fixGeometry(geometry, geoFormat),
+                    geoFormat: geoFormat,
+                    sref: 'EPSG:4326', // 动态投影参数，将查询条件动态投影成数据坐标系
+                    // filter: 'lat > 30.05',
+
+                    // 该属性与segments冲突,不能同时存在
+                    // fields: 'mpoid,lat',
+                    // 该属性与fields冲突,不能同时存在
+                    // segments: '["lat<31","lat between 31.05 and 31.15","lat between 31.15 and 31.25"]',
+                    // 激活属性统计信息后，由于一些特定的统计聚类函数，几何字段会丢失
+                    // statisticFields: '[{"field":"mpoid","statisticTypes":["min","max"]},{"field":"lat","statisticTypes":["count"]}]',
+
+                    includeProperites: true,
+                    includeGeometry: true,
+                    pageSize: 100,
+                    pageNo: 1
+                };
+
+                var catlog = new Zondy.DataStore.PostGIS.PostgisQueryService(param);
+                catlog.query(success, fail);
+            }
+
+            function success(res) {
+                var geojson = res;
+                if (map.getLayer(layerId)) map.removeLayer(layerId);
+                if (map.getSource(sourceId)) map.removeSource(sourceId);
+                map.addSource(sourceId, {
+                    type: 'geojson',
+                    data: geojson
+                });
+                map.addLayer({
+                    id: layerId,
+                    type: 'circle',
+                    source: sourceId,
+                    paint: {
+                        'circle-radius': 8,
+                        'circle-color': '#B42222',
+                        'circle-stroke-width': 2,
+                        'circle-stroke-color': '#ffffff'
+                    },
+                    filter: ['==', '$type', 'Point']
+                });
+            }
+
+            function fail(error) {
+                console.log('fail', error);
+            }
+
+            function changeDraw(drawmode) {
+                mode = drawmode;
+                if (!draw) return;
+                draw.deleteAll();
+                if (mode === 'point') {
+                } else if (mode === 'circle') {
+                    draw.changeMode('draw_point');
+                    // draw.changeMode('draw_circle', { initialRadiusInKm: 0.5 });
+                } else if (mode === 'rect') {
+                    draw.changeMode('draw_rectangle');
+                } else if (mode === 'geojson') {
+                    draw.changeMode('draw_polygon');
+                } else if (mode === 'wkt') {
+                    var wktdom = document.getElementById('wkt');
+                    var wkt = wktdom.value;
+                    query(wkt, mode);
+                }
+            }
+
+            function makeHtml(result) {
+                var html = '<div><table border="1"><tr><th>属性</th><th>值</th></tr>';
+                var keys = Object.keys(result);
+                // 显示非对象属性
+                keys.forEach((key) => {
+                    if (typeof result[key] != 'object' || result[key] == undefined) {
+                        html += `<tr>
+                                              <td>${key}</td>
+                                              <td>${result[key]}</td>
+                                            </tr>`;
+                    }
+                });
+                // 显示对象属性
+                keys.forEach((key) => {
+                    if (result[key] && typeof result[key] == 'object') {
+                        html += `<th colspan="2">${key}</th>`;
+                        html += '<tr><th>属性</th><th>值</th></tr>';
+                        var object = result[key];
+                        var fields = Object.keys(object);
+                        fields.forEach((f) => {
+                            var item;
+                            if (object[f] && typeof object[f] === 'object') {
+                                item = makeHtml(object[f]);
+                            } else {
+                                item = object[f];
+                            }
+                            html += `<tr>
+                                              <td>${f}</td>
+                                              <td>${item}</td>
+                                            </tr>`;
+                        });
+                    }
+                });
+
+                html += '</table></div>';
+                return html;
+            }
+        </script>
+    </body>
+</html>

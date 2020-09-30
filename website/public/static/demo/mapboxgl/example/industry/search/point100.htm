@@ -46,11 +46,15 @@
                 map = new mapboxgl.Map({
                     //地图容器div的id
                     container: 'map',
+                    crs: 'EPSG:4326',
+                    maxBounds: [
+                        [-179, -89],
+                        [179, 89]
+                    ],
                     //设置地图样式信息
                     style: {
                         version: 8,
                         name: '全球地化 Style',
-                        crs: 'EPSG:4326',
                         sources: {
                             全球地化: {
                                 type: 'vector',
