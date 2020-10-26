@@ -86,11 +86,13 @@ export default {
   created () {
     const headers = isMobile() ? MobileSubHeader : SubHeader;
     headers.forEach((h) => {
-      this.activeTabs[h.title] = h.active.toLowerCase();
+      this.activeTabs[h.title] = h.active ? h.active.toLowerCase() : undefined;
     });
   },
   mounted () {
-    this.activeMenu = this.$route.params.mapmode.toLowerCase();
+    let mapmode = this.$route.params.mapmode;
+    let active = mapmode ? mapmode.toLowerCase() : undefined;
+    this.activeMenu = active;
   },
   watch: {
     '$route' (to, from) {

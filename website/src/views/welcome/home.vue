@@ -94,7 +94,7 @@
             class="el-icon-star-on"
             style="color:#666666"
           ></i></el-divider>
-        <el-row gutter="20">
+        <el-row :gutter="20">
           <el-col
             v-for="g in gallyers"
             :key="g.title"

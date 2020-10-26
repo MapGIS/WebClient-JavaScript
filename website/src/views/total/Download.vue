@@ -126,11 +126,11 @@ export default {
       version: [
         {
           name: 'Cesium运行时版本',
-          plugin: 'webclient-cesium-plugins.min'
+          plugin: 'webclient-cesium-plugin.min'
         },
         {
           name: 'Cesium调试时版本',
-          plugin: 'webclient-cesium-plugins'
+          plugin: 'webclient-cesium-plugin'
         },
         {
           name: 'MapboxGL运行时版本',

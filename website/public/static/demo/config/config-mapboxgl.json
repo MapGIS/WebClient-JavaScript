@@ -692,6 +692,30 @@
             ]
         },
         {
+            "name": "IGServer-X-内网",
+            "iconfont": "icon_igs",
+            "folder": "igserver-x",
+            "leaffolder": false,
+            "childs": [
+                {
+                    "name": "矢量大数据",
+                    "iconfont": "iconapachespark",
+                    "folder": "vector",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "数据目录",
+                            "file": "spark-buffer",
+                            "diffcult": "3",
+                            "detail": "",
+                            "icon": "spark-buffer.png",
+                            "update": "最后更新时间：2020-10-01"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "DataStore-内网",
             "iconfont": "iconESfuwuElasticsearch",
             "folder": "datastore",
@@ -814,6 +838,30 @@
                             "detail": "",
                             "icon": "point100_heater.png",
                             "update": "最后更新时间：2019-11-07"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Vue组件",
+            "iconfont": "iconvue",
+            "folder": "vue",
+            "leaffolder": false,
+            "childs": [
+                {
+                    "name": "控制组件",
+                    "iconfont": "iconhand_draw",
+                    "folder": "control",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "绘制组件",
+                            "file": "draw",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "draw.png",
+                            "update": "最后更新时间：2020-10-26"
                         }
                     ]
                 }

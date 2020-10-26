@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-测量</title>
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #map {
+                height: 100vh;
+                width: 100vw;
+            }
+            #toolbar-wrapper1 {
+                position: absolute;
+                z-index: 9999;
+                display: inline-flex;
+                overflow-x: hidden;
+                overflow-y: visible;
+                top: 20px;
+                left: 20px;
+            }
+            #toolbar-wrapper2 {
+                position: absolute;
+                z-index: 9999;
+                display: inline-flex;
+                overflow-x: hidden;
+                overflow-y: visible;
+                top: 80px;
+                left: 20px;
+            }
+            .toolbar-item {
+                background: #ffffff;
+                border: 1px dashed #666666;
+                text-align: center;
+                font-size: 20px;
+                line-height: 20px;
+                height: fit-content;
+                padding: 6px 16px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapbox-map
+                id="map"
+                v-bind:access-token="accessToken"
+                v-bind:map-style="mapStyle"
+                v-bind:zoom="mapZoom"
+                v-bind:center="outerCenter"
+                v-bind:crs="mapCrs"
+            >
+                <mapbox-igs-tdt-layer
+                    v-bind:layer="layer"
+                    v-bind:layer-id="layerId"
+                    v-bind:source-id="sourceId"
+                    v-bind:baseURL="baseURL"
+                    v-bind:token="token"
+                    :crs="mapCrs"
+                >
+                </mapbox-igs-tdt-layer>
+                <mapbox-base-draw
+                    class="custom-draw-wrapper"
+                    position="top-left"
+                    v-bind:controls="controls"
+                    v-on:added="handleAdded1"
+                    v-on:draw-create="handleCreate1"
+                    ref="drawref1"
+                >
+                    <div id="toolbar-wrapper1">
+                        <div class="toolbar-item" v-on:click="togglePoint1">画点</div>
+                        <div class="toolbar-item" v-on:click="togglePolyline1">画线</div>
+                        <div class="toolbar-item" v-on:click="togglePolygon1">画区</div>
+                        <div class="toolbar-item" v-on:click="toggleDelete1">删除</div>
+                    </div>
+                </mapbox-base-draw>
+                <mapbox-base-draw
+                    class="custom-draw-wrapper"
+                    position="top-left"
+                    v-bind:controls="controls"
+                    v-on:added="handleAdded2"
+                    v-on:draw-create="handleCreate2"
+                    ref="drawref2"
+                >
+                    <div id="toolbar-wrapper2">
+                        <div class="toolbar-item" v-on:click="toggleQueryPoint2">点查询</div>
+                        <div class="toolbar-item" v-on:click="toggleQueryPolygon2">区查询</div>
+                    </div>
+                </mapbox-base-draw>
+            </mapbox-map>
+        </div>
+        <script>
+            let draw = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA', // 使用mapbox样式需要的秘钥
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {},
+                            //设置加载并显示来源的图层信息
+                            layers: []
+                        }, // 地图样式
+                        mapZoom: 3, // 地图初始化级数
+                        outerCenter: [130, 30], // 地图显示中心
+                        mapCrs: 'EPSG:4326',
+
+                        layerId: 'igsLayer_layerId',
+                        sourceId: 'igsLayer_sourceId',
+                        layer: {}, // 图层配置信息
+                        baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
+                        token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
+                        controls: {
+                            point: false,
+                            line_string: false,
+                            polygon: false,
+                            trash: false,
+                            combine_features: false,
+                            uncombine_features: false
+                        },
+                        mode: undefined
+                    };
+                },
+                methods: {
+                    enableDrawer1() {
+                        const component = this.$refs.drawref1;
+                        if (component) {
+                            component.enableDrawer();
+                        }
+                    },
+                    enableDrawer2() {
+                        const component = this.$refs.drawref2;
+                        if (component) {
+                            component.enableDrawer();
+                        }
+                    },
+                    handleAdded1(e, data) {
+                        let { drawer, map } = e;
+                        this.drawer1 = drawer;
+                    },
+                    handleAdded2(e, data) {
+                        let { drawer, map } = e;
+                        this.drawer2 = drawer;
+                    },
+                    handleCreate1(e) {
+                        console.log('create', e);
+                        this.drawer1 && this.drawer1.deleteAll();
+                    },
+                    handleCreate2(e) {
+                        console.log('create', e);
+                        this.drawer2 && this.drawer2.deleteAll();
+                    },
+                    togglePoint1(e) {
+                        this.enableDrawer1();
+                        this.drawer1 && this.drawer1.changeMode('draw_point');
+                    },
+                    togglePolyline1() {
+                        this.enableDrawer1();
+                        this.drawer1 && this.drawer1.changeMode('draw_line_string');
+                    },
+                    togglePolygon1() {
+                        this.enableDrawer1();
+                        this.mode = 'QueryByPolygon';
+                        this.drawer1 && this.drawer1.changeMode('draw_polygon');
+                    },
+                    toggleDelete1() {
+                        this.drawer1 && this.drawer1.deleteAll();
+                    },
+                    toggleQueryPoint2() {
+                        this.enableDrawer2();
+                        this.drawer2 && this.drawer2.changeMode('draw_point');
+                    },
+                    toggleQueryPolygon2() {
+                        this.enableDrawer2();
+                        this.drawer2 && this.drawer2.changeMode('draw_polygon');
+                    },
+                    toggleDelete2() {
+                        this.drawer2 && this.drawer2.deleteAll();
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

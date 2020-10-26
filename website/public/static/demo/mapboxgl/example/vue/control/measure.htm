@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-测量</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #main {
+                margin: 0 0;
+                width: 100%;
+                height: 100vh;
+            }
+            #map {
+                height: 100vh;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="main">
+            <mapbox-map id="map" 
+                :access-token="accessToken" 
+                :map-style="mapStyle" 
+                :zoom="mapZoom" 
+                :center="outerCenter" 
+                :crs="mapCrs">
+                <mapbox-igs-tdt-layer 
+                    :layer="layer" 
+                    :layer-id="layerId" 
+                    :source-id="sourceId" 
+                    :baseURL="baseURL" 
+                    :token="token" 
+                    :crs="mapCrs">
+                </mapbox-igs-tdt-layer>
+            </mapbox-map>
+        </div>
+        <script>
+            new Vue({
+                el: '#main',
+                data() {
+                    return {
+                        accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA', // 使用mapbox样式需要的秘钥
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {},
+                            //设置加载并显示来源的图层信息
+                            layers: []
+                        }, // 地图样式
+                        mapZoom: 3, // 地图初始化级数
+                        outerCenter: [130, 30], // 地图显示中心
+                        mapCrs: 'EPSG:4326',
+
+                        layerId: 'igsLayer_layerId',
+                        sourceId: 'igsLayer_sourceId',
+                        layer: {}, // 图层配置信息
+                        baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
+                        token: '2ddaabf906d4b5418aed0078e1657029' // 请求天地图的key值
+                    };
+                }
+            });
+        </script>
+    </body>
+</html>
