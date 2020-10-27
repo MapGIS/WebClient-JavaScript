@@ -1,0 +1,10 @@
+node_modules
+vendor
+npm-debug.log
+.gobble-build
+gobblefile.js
+aux
+.gobble
+.gobble-build
+yarn.lock
+demo

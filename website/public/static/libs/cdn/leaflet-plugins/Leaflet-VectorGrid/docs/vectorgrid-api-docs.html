@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet.VectorGrid API reference</title>
+	<meta charset="utf-8">
+
+<!-- 	<link rel="stylesheet" href="http://www.leafletjs.com/docs/css/normalize.css" /> -->
+	<link rel="stylesheet" href="main.css" />
+	<script src="https://unpkg.com/highlight"></script>
+<!-- 	<link rel="stylesheet" href="http://www.leafletjs.com/docs/highlight/styles/github-gist.css" /> -->
+<!-- 	<link rel="stylesheet" href="http://www.leafletjs.com/docs/leaflet.css" /> -->
+	<script src="leaflet.js"></script>
+</head>
+<body class='api-page'>
+	<div class='container'>
+
+	<h2>Leaflet.VectorGrid API reference</h2>
+	<div id="toc" class="clearfix">
+		<div class="toc-col map-col">
+			<ul>
+				<li><a href="#vectorgrid">VectorGrid</a></li>
+				<li><a href="#vectorgrid-slicer">VectorGrid.Slicer</a></li>
+				<li><a href="#vectorgrid-protobuf">VectorGrid.Protobuf</a></li>
+			</ul>
+		</div>
+		<div class="toc-col map-col">
+			<ul>
+				<li><a href="#styling-vectorgrids">Styling VectorGrids</a></li>
+				<li><a href="#updating-styles">Updating Styles</a></li>
+				<li><a href="#interactivity">Interactivity</a></li>
+				<li><a href="#svg-vs-canvas">SVG vs <code>&lt;canvas&gt;</code></a></li>
+			</ul>
+		</div>
+	</div>
+
+	<h2 id='vectorgrid-slicer'>VectorGrid.Slicer</h2><p>A <a href="#vectorgrid"><code>VectorGrid</code></a> for slicing up big GeoJSON or TopoJSON documents in vector
+tiles, leveraging <a href="https://github.com/mapbox/geojson-vt"><code>geojson-vt</code></a>.</p>
+
+<section>
+<h3 id='vectorgrid-slicer-example'>Usage example</h3>
+
+<section >
+
+
+
+
+
+<pre><code>var geoJsonDocument = {
+    type: &#39;FeatureCollection&#39;,
+    features: [ ... ]
+};
+L.vectorGrid.slicer(geoJsonDocument, {
+    vectorTileLayerStyles: {
+        sliced: { ... }
+    }
+}).addTo(map);
+</code></pre><p><a href="#vectorgrid-slicer"><code>VectorGrid.Slicer</code></a> can also handle <a href="https://github.com/mbostock/topojson">TopoJSON</a> transparently:</p>
+<pre><code class="lang-js">var layer = L.vectorGrid.slicer(topojson, options);
+</code></pre>
+<p>The TopoJSON format <a href="https://github.com/mbostock/topojson-specification/blob/master/README.md#215-objects">implicitly groups features into &quot;objects&quot;</a>.
+These will be transformed into vector tile layer names when styling (the
+<code>vectorTileLayerName</code> option is ignored when using TopoJSON).</p>
+
+
+
+</section>
+
+
+</section><section>
+<h3 id='vectorgrid-slicer-option'>Options</h3>
+
+<section >
+
+
+
+<div class='section-comments'>Additionally to these options, <a href="#vectorgrid-slicer"><code>VectorGrid.Slicer</code></a> can take in any
+of the <a href="https://github.com/mapbox/geojson-vt#options"><code>geojson-vt</code> options</a>.</div>
+
+<table><thead>
+	<tr>
+		<th>Option</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='vectorgrid-slicer-vectortilelayername'>
+		<td><code><b>vectorTileLayerName</b></code></td>
+		<td><code>String</code>
+		<td><code>&#x27;sliced&#x27;</code></td>
+		<td>Vector tiles contain a set of <em>data layers</em>, and those data layers
+contain features. Thus, the slicer creates one data layer, with
+the name given in this option. This is important for symbolizing the data.</td>
+	</tr>
+</tbody></table>
+
+</section>
+
+
+</section><h2 id='vectorgrid'>VectorGrid</h2><p>A <a href="#vectorgrid"><code>VectorGrid</code></a> is a generic, abstract class for displaying tiled vector data.
+it provides facilities for symbolizing and rendering the data in the vector
+tiles, but lacks the functionality to fetch the vector tiles from wherever
+they are.
+Extends Leaflet&#39;s <code>L.GridLayer</code>.</p>
+
+<section>
+<h3 id='vectorgrid-option'>Options</h3>
+
+<section >
+
+
+
+
+<table><thead>
+	<tr>
+		<th>Option</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='vectorgrid-rendererfactory'>
+		<td><code><b>rendererFactory</b></code></td>
+		<td><code></code>
+		<td><code>L.svg.tile</code></td>
+		<td>A factory method which will be used to instantiate the per-tile renderers.</td>
+	</tr>
+	<tr id='vectorgrid-vectortilelayerstyles'>
+		<td><code><b>vectorTileLayerStyles</b></code></td>
+		<td><code>Object</code>
+		<td><code>{}</code></td>
+		<td>A data structure holding initial symbolizer definitions for the vector features.</td>
+	</tr>
+	<tr id='vectorgrid-interactive'>
+		<td><code><b>interactive</b></code></td>
+		<td><code>Boolean</code>
+		<td><code>false</code></td>
+		<td>Whether this <a href="#vectorgrid"><code>VectorGrid</code></a> fires <code>Interactive Layer</code> events.</td>
+	</tr>
+	<tr id='vectorgrid-getfeatureid'>
+		<td><code><b>getFeatureId</b></code></td>
+		<td><code>Function</code>
+		<td><code>undefined</code></td>
+		<td>A function that, given a vector feature, returns an unique identifier for it, e.g.
+<code>function(feat) { return feat.properties.uniqueIdField; }</code>.
+Must be defined for <code>setFeatureStyle</code> to work.</td>
+	</tr>
+</tbody></table>
+
+</section>
+
+
+</section><section>
+<h3 id='vectorgrid-method'>Methods</h3>
+
+<section >
+
+
+
+
+<table><thead>
+	<tr>
+		<th>Method</th>
+		<th>Returns</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='vectorgrid-setfeaturestyle'>
+		<td><code><b>setFeatureStyle</b>(<nobr>&lt;Number&gt;</nobr> <i>id</i>, <nobr>&lt;L.Path Options&gt;</nobr> <i>layerStyle</i>)</nobr></code></td>
+		<td><code>this</code></td>
+		<td><p>Given the unique ID for a vector features (as per the <code>getFeatureId</code> option),
+re-symbolizes that feature across all tiles it appears in.
+Reverts the effects of a previous <code>setFeatureStyle</code> call.</p>
+</td>
+	</tr>
+	<tr id='vectorgrid-getdatalayernames'>
+		<td><code><b>getDataLayerNames</b>()</nobr></code></td>
+		<td><code>Array</code></td>
+		<td><p>Returns an array of strings, with all the known names of data layers in
+the vector tiles displayed. Useful for introspection.</p>
+</td>
+	</tr>
+</tbody></table>
+
+</section><section class='collapsable'>
+
+<h4 id='vectorgrid-extension-methods'>Extension methods</h4>
+
+<div class='section-comments'>Classes inheriting from <a href="#vectorgrid"><code>VectorGrid</code></a> <strong>must</strong> define the <code>_getVectorTilePromise</code> private method.</div>
+
+<table><thead>
+	<tr>
+		<th>Method</th>
+		<th>Returns</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='vectorgrid-getvectortilepromise'>
+		<td><code><b>getVectorTilePromise</b>(<nobr>&lt;Object&gt;</nobr> <i>coords</i>)</nobr></code></td>
+		<td><code>Promise</code></td>
+		<td><p>Given a <code>coords</code> object in the form of <code>{x: Number, y: Number, z: Number}</code>,
+this function must return a <code>Promise</code> for a vector tile.</p>
+</td>
+	</tr>
+</tbody></table>
+
+</section>
+
+
+</section><h2 id='fillsymbolizer'>FillSymbolizer</h2><p>A symbolizer for filled areas. Applies only to polygon features.</p>
+
+<h2 id='vectorgrid-protobuf'>VectorGrid.Protobuf</h2><p>A <a href="#vectorgrid"><code>VectorGrid</code></a> for vector tiles fetched from the internet.
+Tiles are supposed to be protobufs (AKA &quot;protobuffer&quot; or &quot;Protocol Buffers&quot;),
+containing data which complies with the
+<a href="https://github.com/mapbox/vector-tile-spec/tree/master/2.1">MapBox Vector Tile Specification</a>.
+This is the format used by:</p>
+<ul>
+<li>Mapbox Vector Tiles</li>
+<li>Mapzen Vector Tiles</li>
+<li>ESRI Vector Tiles</li>
+<li><a href="https://openmaptiles.com/hosting/">OpenMapTiles hosted Vector Tiles</a></li>
+</ul>
+
+<section>
+<h3 id='vectorgrid-protobuf-example'>Usage example</h3>
+
+<section >
+
+
+
+
+
+<p>You must initialize a <a href="#vectorgrid-protobuf"><code>VectorGrid.Protobuf</code></a> with a URL template, just like in
+<code>L.TileLayer</code>s. The difference is that the template must point to vector tiles
+(usually <code>.pbf</code> or <code>.mvt</code>) instead of raster (<code>.png</code> or <code>.jpg</code>) tiles, and that
+you should define the styling for all the features.
+<br><br>
+For OpenMapTiles, with a key from <a href="https://openmaptiles.org/docs/host/use-cdn/">https://openmaptiles.org/docs/host/use-cdn/</a>,
+initialization looks like this:</p>
+<pre><code>L.vectorGrid.protobuf(&quot;https://free-{s}.tilehosting.com/data/v3/{z}/{x}/{y}.pbf.pict?key={key}&quot;, {
+    vectorTileLayerStyles: { ... },
+    subdomains: &quot;0123&quot;,
+    key: &#39;abcdefghi01234567890&#39;,
+    maxNativeZoom: 14
+}).addTo(map);
+</code></pre><p>And for Mapbox vector tiles, it looks like this:</p>
+<pre><code>L.vectorGrid.protobuf(&quot;https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={token}&quot;, {
+    vectorTileLayerStyles: { ... },
+    subdomains: &quot;abcd&quot;,
+    token: &quot;pk.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTS.TUVWXTZ0123456789abcde&quot;
+}).addTo(map);
+</code></pre>
+
+
+</section>
+
+
+</section><section>
+<h3 id='vectorgrid-protobuf-factory'>Creation</h3>
+
+<section >
+
+
+
+
+<table><thead>
+	<tr>
+		<th>Factory</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='vectorgrid-protobuf-l-vectorgrid-protobuf'>
+		<td><code><b>L.vectorGrid.protobuf</b>(<nobr>&lt;String&gt;</nobr> <i>url</i>, <i>options</i>)</nobr></code></td>
+		<td>Instantiates a new protobuf VectorGrid with the given URL template and options</td>
+	</tr>
+</tbody></table>
+
+</section>
+
+
+</section><section>
+<h3 id='vectorgrid-protobuf-option'>Options</h3>
+
+<section >
+
+
+
+<div class='section-comments'>As with <code>L.TileLayer</code>, the URL template might contain a reference to
+any option (see the example above and note the <code>{key}</code> or <code>token</code> in the URL
+template, and the corresponding option).</div>
+
+<table><thead>
+	<tr>
+		<th>Option</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='vectorgrid-protobuf-subdomains'>
+		<td><code><b>subdomains</b></code></td>
+		<td><code>String</code>
+		<td><code>&#x27;abc&#x27;</code></td>
+		<td>Akin to the <code>subdomains</code> option for <code>L.TileLayer</code>.</td>
+	</tr>
+</tbody></table>
+
+</section>
+
+
+</section><h2 id='linesymbolizer'>LineSymbolizer</h2><p>A symbolizer for lines. Can be applied to line and polygon features.</p>
+
+<h2 id='pointsymbolizer'>PointSymbolizer</h2><p>A symbolizer for points.</p>
+
+<h2 id='symbolizer'>Symbolizer</h2><p>The abstract Symbolizer class is mostly equivalent in concept to a <code>L.Path</code> - it&#39;s an interface for
+polylines, polygons and circles. But instead of representing leaflet Layers,
+it represents things that have to be drawn inside a vector tile.</p>
+
+<section>
+<h3 id='symbolizer-method'>Methods</h3>
+
+<section >
+
+
+
+
+<table><thead>
+	<tr>
+		<th>Method</th>
+		<th>Returns</th>
+		<th>Description</th>
+	</tr>
+	</thead><tbody>
+	<tr id='symbolizer-initialize'>
+		<td><code><b>initialize</b>(<nobr>&lt;GeoJSON&gt;</nobr> <i>feature</i>, <nobr>&lt;Number&gt;</nobr> <i>pxPerExtent</i>)</nobr></code></td>
+		<td><code></code></td>
+		<td><p>Initializes a new Line Symbolizer given a GeoJSON feature and the
+pixel-to-coordinate-units ratio. Internal use only.</p>
+</td>
+	</tr>
+	<tr id='symbolizer-render'>
+		<td><code><b>render</b>(<i>renderer</i>, <i>style</i>)</nobr></code></td>
+		<td><code></code></td>
+		<td><p>Renders this symbolizer in the given tiled renderer, with the given
+<code>L.Path</code> options.  Internal use only.
+Updates the <code>L.Path</code> options used to style this symbolizer, and re-renders it.
+Internal use only.</p>
+</td>
+	</tr>
+</tbody></table>
+
+</section>
+
+
+</section><h2 id='styling-vectorgrids'>Styling VectorGrids</h2><p>Vector tiles have a concept of &quot;layer&quot; different from the Leaflet concept of &quot;layer&quot;.
+<br>
+In Leaflet, a &quot;layer&quot; is something that can be atomically added or removed from the map. In vector tiles, a &quot;layer&quot; is a named set of features (points, lines or polygons) which share a common theme.
+<br>
+A vector tile layer¹ can have several layers². In the <code>mapbox-streets-v6</code> vector tiles layer¹ above, there are named layers² like <code>admin</code>, <code>water</code> or <code>roads</code>.
+<br>
+(¹ In Leaflet)
+<br>
+(² Groups of themed features)
+<br>
+Styling is done via per-layer² sets of <code>L.Path</code> options in the <code>vectorTileLayerStyles</code> layer¹ option:</p>
+<pre><code class="lang-js">var vectorTileOptions = {
+    vectorTileLayerStyles: {
+        // A plain set of L.Path options.
+        landuse: {
+            weight: 0,
+            fillColor: &#39;#9bc2c4&#39;,
+            fillOpacity: 1,
+            fill: true
+        },
+        // A function for styling features dynamically, depending on their
+        // properties and the map&#39;s zoom level
+        admin: function(properties, zoom) {
+            var level = properties.admin_level;
+            var weight = 1;
+            if (level == 2) {weight = 4;}
+            return {
+                weight: weight,
+                color: &#39;#cf52d3&#39;,
+                dashArray: &#39;2, 6&#39;,
+                fillOpacity: 0
+            }
+        },
+        // A function for styling features dynamically, depending on their
+        // properties, the map&#39;s zoom level, and the layer's geometry
+        // dimension (point, line, polygon)
+        water: function(properties, zoom, geometryDimension) {
+	    if (geometryDimension === 1) {   // point
+	        return ({
+                    radius: 5,
+                    color: &#39;#cf52d3&#39;,
+                });
+	    }
+	    
+	    if (geometryDimension === 2) {   // line
+                 return ({
+                    weight: 1,
+                    color: &#39;#cf52d3&#39;,
+                    dashArray: &#39;2, 6&#39;,
+                    fillOpacity: 0
+                });
+	    }
+	    
+	    if (geometryDimension === 3) {   // polygon
+	         return ({
+                    weight: 1,
+                    fillColor: &#39;#9bc2c4&#39;,
+                    fillOpacity: 1,
+                    fill: true
+                });
+	    }
+        },
+        // An &#39;icon&#39; option means that a L.Icon will be used
+        place: {
+            icon: new L.Icon.Default()
+        },
+        road: []
+    }
+};
+var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions).addTo(map);
+</code></pre>
+<p>A layer² style can be either:</p>
+<ul>
+<li>A set of <code>L.Path</code> options</li>
+<li>An array of sets of <code>L.Path</code> options</li>
+<li>A function that returns a set of <code>L.Path</code> options</li>
+<li>A function that returns an array of sets of <code>L.Path</code> options for point, line, and polygon styles respectively
+<br>
+Layers² with no style specified will use the default <code>L.Path</code> options.
+<br>
+Polylines and polygons can be styled exactly like normal Leaflet <code>L.Path</code>s, points can be styled like polygons using <code>L.CircleMarker</code>s or <code>L.Icon</code>s.</li>
+</ul>
+
+<h2 id='updating-styles'>Updating Styles</h2><p>In some cases it can be desirable to change the style of a feature on screen, for example for highlighting when a feature is clicked.
+<br>
+To do this, VectorGrid needs to know how to identify a feature. This is done through the <code>getFeatureId</code> option, which should be set to a function
+that returns an id given a feature as argument. For example:</p>
+<pre><code class="lang-js">var vectorGrid = L.vectorGrid.slicer(url, {
+    ...
+    getFeatureId: function(f) {
+        return f.properties.osm_id;
+    }
+}
+</code></pre>
+<p>Note that features with the same id will be treated as one when changing style, this happens normally when for example a polygon spans more than one tile.
+<br>
+To update the style of a feature, use <code>setFeatureStyle</code>:</p>
+<pre><code class="lang-js">vectorGrid.setFeatureStyle(id, style);
+</code></pre>
+<p>The styling follows the same rules as described above, it accepts a single style, an array, or a function that returns styling.
+<br>
+To revert the style to the layer&#39;s default, use the <code>resetFeatureStyle</code> method:</p>
+<pre><code class="lang-js">vectorGrid.resetFeatureStyle(id);
+</code></pre>
+
+<h2 id='interactivity'>Interactivity</h2><p>You can enable interacting (click, mouseover, etc.) with layer features if you pass the option <code>interactive: true</code>; you can then add listeners to the VectorGrid layer. When
+an event fires, it will include the <code>layer</code> property, containing information about the feature.</p>
+
+<h2 id='svg-vs-canvas'>SVG vs canvas</h2><p>Leaflet.VectorGrid is able to render vector tiles with both SVG and <code>&lt;canvas&gt;</code>, in the same way that vanilla Leaflet can use SVG and <code>&lt;canvas&gt;</code> to draw lines and polygons.
+<br>
+To switch between the two, use the <code>rendererFactory</code> option for any <code>L.VectorGrid</code> layer, e.g.:</p>
+<pre><code class="lang-js">var sliced = L.vectorGrid.slicer(geojson, {
+    rendererFactory: L.svg.tile,
+    attribution: &#39;Something&#39;,
+    vectorTileLayerStyles: { ... }
+});
+var pbf = L.vectorGrid.protobuf(url, {
+    rendererFactory: L.canvas.tile,
+    attribution: &#39;Something&#39;,
+    vectorTileLayerStyles: { ... }
+});
+</code></pre>
+<p>Internally, Leaflet.VectorGrid uses two classes named <code>L.SVG.Tile</code> and <code>L.Canvas.Tile</code>, with factory methods <code>L.svg.tile</code> and <code>L.canvas.tile</code> - a <code>L.VectorGrid</code> needs to be passed one of those factory methods.</p>
+
+
+
+	<div class="footer">
+		<p>© 2016-2017 Iván Sánchez Ortega, Per Liedman.</p>
+	</div>
+
+	</div>
+
+<!-- 	<script src="http://leafletjs.com/docs/js/docs.js"></script> -->
+	<script>
+	hljs.configure({tabReplace: '    '});
+	hljs.initHighlightingOnLoad();
+
+	var elems = document.querySelectorAll('h2, h3, h4, tr');
+
+	for (var i = 0, len = elems.length; i < len; i++) {
+		var el = elems[i];
+
+		if (el.id) {
+			var anchor = document.createElement('a');
+			anchor.setAttribute('anchor', el.id);
+			if (!el.children.length) {
+				// For headers, insert the anchor before.
+				el.parentNode.insertBefore(anchor, el);
+			} else {
+				// For table rows, insert the anchor inside the first <td>
+				el.querySelector('td').appendChild(anchor);
+
+				// Clicking on the row (meaning "the link icon on the ::before)
+				// jumps to the item
+				el.parentNode.onclick = function(hash){
+					return function(ev) {
+						if (ev.offsetX < 0) {
+							window.location.hash = '#' + ev.target.parentNode.id;
+						}
+					};
+				}(el.id);
+			}
+		}
+	}
+
+	elems = document.querySelectorAll('div.accordion');
+	for (var i = 0, len = elems.length; i < len; i++) {
+		var el = elems[i];
+
+		el.querySelector('label').addEventListener('click', function(c){
+			return function() {
+				if (c.className === 'accordion expanded') {
+					c.className = 'accordion collapsed';
+				} else {
+					c.className = 'accordion expanded';
+				}
+			};
+		}(el));
+
+// 		el.className = 'accordion collapsed';
+// 		el.querySelector('.accordion-content').style.display = 'none';
+	}
+
+</script>
+<style>
+
+	h2 {
+		margin-top: 2em;
+	}
+
+	h3 {
+		margin-top: 1em;
+		margin-bottom: .5em;
+	}
+
+	div.accordion {
+		width: 100%;
+/* 		overflow: hidden; */
+	}
+
+	div.accordion-overflow {
+		width: 100%;
+		overflow: hidden;
+	}
+
+	label,
+	section > h4 {
+		display: block;
+		font-weight: 500;
+		margin: 1em 0 0.25em;
+	}
+
+	label {
+		cursor: pointer;
+	}
+
+	div.accordion > div.accordion-overflow > div.accordion-content {
+		max-height: 0;
+		display: none;
+	}
+
+	div.accordion.collapsed > div.accordion-overflow > div.accordion-content {
+		animation-duration: 0.4s;
+		animation-name: collapse;
+/* 		height: 0; */
+		max-height: 0;
+		display: block;
+		overflow: hidden;
+	}
+
+	div.accordion.expanded > div.accordion-overflow > div.accordion-content {
+		animation-duration: 0.4s;
+		animation-name: expand;
+/* 		height: auto; */
+		max-height: none;
+		display: block;
+	}
+
+	@keyframes collapse {
+		0% { max-height: 100vh; }
+		100% { max-height: 0; }
+	}
+
+	@keyframes expand {
+		0% { max-height: 0; }
+		100% { max-height: 100vh; }
+	}
+
+/*	div.accordion > div.accordion-content {
+		transition: max-height 0.4s ease-out 0s;
+	}*/
+
+	div.accordion.expanded > label > span.expander {
+		transform: rotate(90deg);
+	}
+
+	div.accordion > label > span.expander {
+		transition: transform 0.4s ease-out 0s;
+		display: inline-block;
+		font-size: 12px;
+	}
+
+
+	table {
+		margin-bottom: 0;
+	}
+
+/* 	Markdown renders some spurious <p>s inside the table cells */
+	td > p {
+		margin:0;
+	}
+
+/* 	This just looks bad (with the current grey headers for sections which Vlad doesn't really like, so might have to change this) */
+	section.collapsable > div.section-comments > p {
+		margin:0;
+	}
+
+	div.section-comments {
+		margin-bottom: 0.25em;
+	}
+
+/*	section.collapsable div.section-comments {
+		margin: 1em;
+		font-size: 12px;
+	}*/
+
+	section.collapsable pre {
+		margin:0;
+	}
+
+	section {
+		margin-left: 0.5em;
+	}
+
+	section h4, section.collapsable h4 {
+		margin-left: -0.5em;
+	}
+
+
+
+</style>
+</body></html>
