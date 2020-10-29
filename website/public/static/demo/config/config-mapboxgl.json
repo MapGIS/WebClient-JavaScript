@@ -832,14 +832,6 @@
                     "leaffolder": true,
                     "childs": [
                         {
-                            "name": "量算组件",
-                            "file": "measure",
-                            "diffcult": "2",
-                            "detail": "",
-                            "icon": "measure.png",
-                            "update": "最后更新时间：2020-10-27"
-                        },
-                        {
                             "name": "绘制组件",
                             "file": "draw",
                             "diffcult": "2",
