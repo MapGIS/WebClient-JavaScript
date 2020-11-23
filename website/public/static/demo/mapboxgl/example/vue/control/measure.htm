@@ -50,7 +50,9 @@
                 :map-style="mapStyle" 
                 :zoom="mapZoom" 
                 :center="outerCenter" 
-                :crs="mapCrs">
+                :crs="mapCrs"
+                v-on:load="handleMapLoad"
+                >
                 <mapbox-igs-tdt-layer 
                     :layer="layer" 
                     :layer-id="layerId" 
@@ -124,16 +126,37 @@
                             component.enableMeasure();
                         }
                     },
+                    handleMapLoad(payload) {
+                        this.map  = payload.map;
+                    },
                     handleAdded(e, data) {
+                        const vm = this;
                         let { measure, map } = e;
                         this.measure = measure;
+                        vm.map.on('draw.selectionchange', (e) => {
+                            const { features, points } = e;
+                            const hasLine = (features && (features.length > 0));
+                            const hasPoints = (points && (points.length > 0));
+                            if (hasLine && ! hasPoints) {
+                                // line clicked
+                                if (vm.measure.getMode() !== 'direct_select') {
+                                    vm.measure.changeMode('direct_select', { featureId: features[0].id });
+                                }
+                            } else if (hasLine && hasPoints) {
+                                // line vertex clicked
+                            } else if (! hasLine && ! hasPoints) {
+                                // deselected
+                            }
+                        });
                     },
                     handleCreate(e) {
                         // this.measure && this.measure.deleteAll();
                         console.log('绘制结果', e);
+                        this.disableDrag();
                     },
                     handleMeasure(e) {
                         console.log('测量结果', e);
+                        this.disableDrag();
                         const {center, perimeter, area} = e;
                         const coords = center.geometry.coordinates;
                         this.coordinates = coords;
@@ -151,6 +174,25 @@
                         this.coordinates = [];
                         this.measureMode = "measure-area";
                         this.measure && this.measure.changeMode('draw_polygon');
+                    },
+                    disableDrag() {
+                        const vm = this;
+                        vm.map.on('draw.selectionchange', (e) => {
+                            const { features, points } = e;
+                            const hasLine = (features && (features.length > 0));
+                            const hasPoints = (points && (points.length > 0));
+                            if (hasLine && ! hasPoints) {
+                                // line clicked
+                                if (vm.measure.getMode() !== 'direct_select') {
+                                    vm.measure.changeMode('simple_select', { featureIds: [] })
+                                    // vm.measure.changeMode('direct_select', { featureId: features[0].id });
+                                }
+                            } else if (hasLine && hasPoints) {
+                                // line vertex clicked
+                            } else if (! hasLine && ! hasPoints) {
+                                // deselected
+                            }
+                        });
                     }
                 }
             });
