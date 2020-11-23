@@ -26,31 +26,50 @@
             class="header-menu-link-text"
             v-if="isLink(menu.routes[i][j])"
           >
-            <a
-              class="header-menu-link-text"
-              :href="menu.routes[i][j]"
-              target="_blank"
+            <el-badge
+              type="success"
+              :value="menu.hightlights[i][j] ? hint : ''"
+              class="menu-badge"
             >
-              <span :class="{'light-subtitle': light}">{{l}}</span>
-            </a>
+              <a
+                class="header-menu-link-text"
+                :href="menu.routes[i][j]"
+                target="_blank"
+              >
+                <span :class="{'light-subtitle': light}">{{l}}</span>
+              </a>
+            </el-badge>
           </div>
           <div
             class="header-menu-link-text"
             v-else-if="isDocs(menu.routes[i][j])"
           >
-            <a
-              class="header-menu-link-text"
-              :href="menu.routes[i][j]"
+            <el-badge
+              type="success"
+              :value="menu.hightlights[i][j] ? hint : ''"
+              class="menu-badge"
             >
-              <span :class="{'light-subtitle': light}">{{l}}</span>
-            </a>
+              <a
+                class="header-menu-link-text"
+                :href="menu.routes[i][j]"
+              >
+                <span :class="{'light-subtitle': light}">{{l}}</span>
+              </a>
+            </el-badge>
           </div>
           <router-link
             v-else
             :to="menu.routes[i][j]"
           >
             <div class="header-menu-link-text">
-              <span :class="{'light-subtitle': light}">{{l}}</span>
+              <el-badge
+                type="success"
+                :value="menu.hightlights[i][j] ? hint : ''"
+                class="menu-badge"
+              >
+
+                <span :class="{'light-subtitle': light}">{{l}}</span>
+              </el-badge>
             </div>
           </router-link>
         </div>
@@ -90,6 +109,7 @@ export default {
   data () {
     return {
       mobile: isMobile(),
+      hint: '新'
     };
   },
   methods: {
@@ -111,77 +131,77 @@ export default {
 
 <style lang="scss">
 .header-menu-wrapper {
-  display: flex;
-  width: fit-content;
-
-  .el-divider--horizontal {
-    display: block;
-    height: 1px;
-    width: 100%;
-    margin: 16px 0;
-  }
-  .header-menu-col {
-    margin: 19px 30px;
+    display: flex;
     width: fit-content;
-    height: fit-content;
-    span {
-      margin-left: 10px;
-      width: 60px;
-      height: 14px;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      color: rgba(102, 102, 102, 1);
-      line-height: 30px;
+    .menu-badge {
+        /*  padding-top: -30px !important;
+    padding-right: -30px !important;
+    margin-right: -30px !important; */
     }
-  }
-  .strong {
-    font-weight: bold !important;
-  }
-  .light-title {
-    color: #ffffff !important;
-  }
-  .light-subtitle {
-    color: #ffffff88 !important;
-  }
-  .header-menu-links {
-    display: inherit;
-    float: left;
-    height: fit-content;
-  }
-  .header-menu-link {
-    width: 160px;
-    height: 30px;
-    span {
-      margin-left: 10px;
-      width: 61px;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 500;
-      color: rgba(0, 0, 0, 1);
-      line-height: 30px;
+    .el-divider--horizontal {
+        display: block;
+        height: 1px;
+        width: 100%;
+        margin: 16px 0;
     }
-  }
-  .header-menu-link:hover {
-    width: 160px;
-    height: 30px;
-    // border-radius: 4px;
-    background: linear-gradient(
-      90deg,
-      rgba(71, 148, 250, 1),
-      rgba(49, 225, 230, 1)
-    );
-  }
-  .header-menu-link-text {
-    width: 160px;
-    height: 30px;
-    display: block;
-  }
+    .header-menu-col {
+        margin: 19px 30px;
+        width: fit-content;
+        height: fit-content;
+        span {
+            margin-left: 10px;
+            width: 60px;
+            height: 14px;
+            font-size: 14px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            line-height: 30px;
+        }
+    }
+    .strong {
+        font-weight: bold !important;
+    }
+    .light-title {
+        color: #ffffff !important;
+    }
+    .light-subtitle {
+        color: #ffffff88 !important;
+    }
+    .header-menu-links {
+        display: inherit;
+        float: left;
+        height: fit-content;
+    }
+    .header-menu-link {
+        width: 160px;
+        height: 30px;
+        span {
+            margin-left: 10px;
+            width: 61px;
+            font-size: 14px;
+            font-family: Microsoft YaHei;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 1);
+            line-height: 30px;
+        }
+    }
+    .header-menu-link:hover {
+        width: 160px;
+        height: 30px;
+        // border-radius: 4px;
+        background: linear-gradient(90deg, rgba(71, 148, 250, 1), rgba(49, 225, 230, 1));
+    }
+    .header-menu-link-text {
+        width: 160px;
+        height: 30px;
+        display: block;
+    }
 }
 
 .header-menu-wrapper-mobile {
-  .header-menu-link {
-    width: 120px !important;
-  }
+    .header-menu-link {
+        width: 120px !important;
+    }
 }
 </style>

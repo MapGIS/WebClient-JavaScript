@@ -35,6 +35,11 @@
                 height: 100vh;
                 width: 100%;
             }
+            .label{
+                color: #3BB2D0;
+                font-size: 16px;
+                font-weight: bold;
+            }
         </style>
     </head>
 
@@ -56,17 +61,22 @@
                 </mapbox-igs-tdt-layer>
                 <mapbox-base-measure
                     class="custom-measure-wrapper"
-                    position="top-left"
-                    v-bind:controls="controls"
+                    :measure-mode="measureMode"
                     v-on:added="handleAdded"
-                    v-on:draw-create="handleCreate"
-                    v-bind:measureMode="measureMode"
+                    v-on:measurecreate="handleCreate"
+                    v-on:measureresult="handleMeasure"
                     ref="measureref"
                 >
                     <div id="toolbar-wrapper">
                         <div class="toolbar-item" v-on:click="toggleQueryLength">长度</div>
                         <div class="toolbar-item" v-on:click="toggleQueryArea">面积</div>
                     </div>
+                    <mapbox-marker color="#ff0000" :coordinates="coordinates" v-if="coordinates.length > 0">
+                        <div slot="marker" class="label">
+                            <div>面积：{{ area }}</div>
+                            <div>周长：{{ perimeter }}</div>    
+                        </div>
+                    </mapbox-marker>
                 </mapbox-base-draw>
             </mapbox-map>
         </div>
@@ -101,7 +111,10 @@
                             combine_features: false,
                             uncombine_features: false
                         },
-                        measureMode: undefined
+                        measureMode: undefined,
+                        coordinates: [],
+                        area: 0,
+                        perimeter: 0
                     };
                 },
                 methods: {
@@ -116,15 +129,26 @@
                         this.measure = measure;
                     },
                     handleCreate(e) {
-                        this.measure && this.measure.deleteAll();
+                        // this.measure && this.measure.deleteAll();
+                        console.log('绘制结果', e);
+                    },
+                    handleMeasure(e) {
+                        console.log('测量结果', e);
+                        const {center, perimeter, area} = e;
+                        const coords = center.geometry.coordinates;
+                        this.coordinates = coords;
+                        this.area = area || '无';
+                        this.perimeter = perimeter;
                     },
                     toggleQueryLength(e) {
                         this.enableMeasure();
+                        this.coordinates = [];
                         this.measureMode = "measure-length";
                         this.measure && this.measure.changeMode('draw_line_string');
                     },
                     toggleQueryArea(e) {
                         this.enableMeasure();
+                        this.coordinates = [];
                         this.measureMode = "measure-area";
                         this.measure && this.measure.changeMode('draw_polygon');
                     }

@@ -838,6 +838,14 @@
                             "detail": "",
                             "icon": "draw.png",
                             "update": "最后更新时间：2020-10-26"
+                        },
+                        {
+                            "name": "测量组件",
+                            "file": "measure",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "measure.png",
+                            "update": "最后更新时间：2020-11-23"
                         }
                     ]
                 }

@@ -65,7 +65,7 @@
                     position="top-left"
                     v-bind:controls="controls"
                     v-on:added="handleAdded1"
-                    v-on:draw-create="handleCreate1"
+                    v-on:drawcreate="handleCreate1"
                     ref="drawref1"
                 >
                     <div id="toolbar-wrapper1">
@@ -80,7 +80,7 @@
                     position="top-left"
                     v-bind:controls="controls"
                     v-on:added="handleAdded2"
-                    v-on:draw-create="handleCreate2"
+                    v-on:drawcreate="handleCreate2"
                     ref="drawref2"
                 >
                     <div id="toolbar-wrapper2">
@@ -147,7 +147,7 @@
                     },
                     handleCreate1(e) {
                         console.log('create', e);
-                        this.drawer1 && this.drawer1.deleteAll();
+                        // this.drawer1 && this.drawer1.deleteAll();
                     },
                     handleCreate2(e) {
                         console.log('create', e);
