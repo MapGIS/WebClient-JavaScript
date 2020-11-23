@@ -1,7 +1,0 @@
-node_modules
-vendor
-npm-debug.log
-.gobble-build
-.gobble
-.gobble-build
-.gobble-watch

@@ -18,6 +18,7 @@ import axios from 'axios';
  * @param {String} option.style 样式json文件路径或者MVT-JSON对象，当为url时等于styleUrl；当为vectortilejson等于vectortilejson
  * @param {String} [option.styleUrl] 样式json文件路径,有styleUrl就可以直接读取styleUrl里的信息;不然就是加载中地发布的矢量瓦片，使用ip，port和layerName先拼接styleUrl路径再进行查询。
  * @param {String} [option.vectortilejson] 矢量瓦片json对象,直接取json对象，不需要再去请求。
+ * @param {Cesium.TilingScheme} [option.tilingScheme] 矢量瓦片瓦片切分规则：经纬度还是墨卡托
  * @param {String} [option.token] 第三方需要的token，比如mapbox
  * @param {String} [option.show=true] 是否可见
  * @example 
@@ -47,6 +48,7 @@ export class VectorTileLayer {
         this.threadId = options.threadId || Math.random() * 10000;
         this.show = options.show;
         this.style = options.style;
+        this.tilingScheme = options.tilingScheme;
         this.provider = null;
 
         this.initDevicePixelRatio();
@@ -80,20 +82,6 @@ export class VectorTileLayer {
 
         this.innnerZoomStart = this.zoomStartEvent.bind(this);
         this.innnerZoomEnd = this.zoomEndEvent.bind(this);
-
-        /* var handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
-        //handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-        handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.WHEEL);
-
-        handler.setInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
-        handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.LEFT_UP);
-        handler.setInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
-        handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.RIGHT_UP);
-
-        viewer.scene.camera.move.addEventListener(function () {
-            //获取当前相机高度
-            this.innerMoveEnd();
-        }) */
     }
 
     /**
@@ -160,7 +148,8 @@ export class VectorTileLayer {
                 style: vectortileStyle,
                 opacity: this.opacity,
                 threadId: this.threadId,
-                show: this.show
+                show: this.show,
+                tilingScheme: this.tilingScheme
             });
             this.provider = this.viewer.imageryLayers.addImageryProvider(vectortile);
             this.provider.show = this.show;

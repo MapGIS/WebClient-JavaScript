@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<title>地层分析</title>
+	<!--引用第三方的jQuery脚本库-->
+	<script include="jquery" src="./static/libs/include-lib-local.js"></script>
+	<!--引用Cesium脚本库文件-->
+	<script src="./static/libs/include-cesium-local.js"></script>
+	<!--引用示例页面样式表-->
+	<link rel="stylesheet" href="./static/demo/cesium/style.css" />
+	<script>
+		//在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+		"use strict";
+
+		//定义三维场景控件对象
+		var webGlobe;
+		//定义M3D图层对象
+		var vectortileLayer;
+		var chinaLayer;
+
+		//地图初始化函数
+		function init() {
+			//构造三维视图类（视图容器div的id，三维视图设置参数）
+			webGlobe = new Cesium.WebSceneControl("GlobeView", {});
+
+			//设置鼠标位置信息（经纬度、高程、视角高度）展示控件
+			webGlobe.showPosition("coordinate_location");
+			webGlobe.viewer.imageryLayers.removeAll();
+			webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(255 / 255, 255 / 255, 255 / 255, 1.0);
+
+			var blueImage = new Cesium.UrlTemplateImageryProvider({
+				url: "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+				tilingScheme: new Cesium.WebMercatorTilingScheme(),
+				maximumLevel: 12,
+			});
+			webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
+			loopMvt();
+		}
+
+		function loopMvt(index) {
+			var { protocol, ip, port } = window.webclient;
+			//构造矢量瓦片图层对象
+			vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+				//视图
+				webGlobe.viewer,
+				{
+					//样式json文件路径
+					styleUrl: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/蓝色-墨卡托.json`,
+					//第三方需要的token
+					token: "",
+					//是否可见
+					show: true,
+				}
+			);
+
+			window.setTimeout(() => {
+				//构造矢量瓦片图层对象
+				chinaLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+					//视图
+					webGlobe.viewer,
+					{
+						//样式json文件路径
+						styleUrl: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/中国行政区.json`,
+						//第三方需要的token
+						token: "",
+						//是否可见
+						show: true,
+					}
+				);
+				console.warn("chinaLayer", chinaLayer);
+			}, 2000);
+		}
+	</script>
+</head>
+
+<body onload="init()">
+	<div id="GlobeView"></div>
+	<!--坐标容器-->
+	<div id="coordinateDiv" class="coordinateClass">
+		<label id="coordinate_location"></label>
+		<label id="coordinate_height"></label>
+	</div>
+</body>
+
+</html>

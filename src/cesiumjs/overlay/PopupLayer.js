@@ -1,7 +1,7 @@
-import { CesiumZondy } from "../core/Base";
+import { CesiumZondy } from '../core/Base';
 
-import { updataPopupPosition } from "./popup/popup";
-import Cesium from "../../../node_modules/cesium/Source/Cesium";
+import { updataPopupPosition } from './popup/popup';
+import Cesium from '../../../node_modules/cesium/Source/Cesium';
 
 var popupsIdIndex = 0;
 
@@ -56,192 +56,180 @@ var popupsIdIndex = 0;
       });
  */
 export default class PopupLayer {
-  constructor(map, position, options, container) {
-    this.map = map;
-    this.scene = map.scene;
+    constructor(map, position, options, container) {
+        this.map = map;
+        this.scene = map.scene;
 
-    this.position = position;
-    this.options = options;
-    this.container = container;
+        this.position = position;
+        this.options = options;
+        this.container = container;
 
-    this.popupId = options.popupId || "cesium-popup-id-" + popupsIdIndex++;
-    this.popupClass = options.popupClass || "cesium-popup";
-    this.popupContentId =
-      options.popupContentId || "cesium-popup-content-id-" + popupsIdIndex++;
+        this.popupId = options.popupId || 'cesium-popup-id-' + popupsIdIndex++;
+        this.popupClass = options.popupClass || 'cesium-popup';
+        this.popupContentId = options.popupContentId || 'cesium-popup-content-id-' + popupsIdIndex++;
 
-    this.options.postRender = this.options.postRender === undefined ? true : this.options.postRender;
+        this.options.postRender = this.options.postRender === undefined ? true : this.options.postRender;
 
-    this.scene = map.scene;
-    this.camera = map.camera;
-    this.isShow = true;
+        this.scene = map.scene;
+        this.camera = map.camera;
+        this.isShow = true;
 
-    this.handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
+        this.handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
 
-    this.infoDiv = null;
-    // this.px_position = null;
-    if (position.entity) {
-      this.cartesian = position.entity.position._value;
+        this.infoDiv = null;
+        // this.px_position = null;
+        if (position.entity) {
+            this.cartesian = position.entity.position._value;
+        }
+
+        this.cartesian =
+            this.cartesian ||
+            this.position.cartesian ||
+            Cesium.Cartesian3.fromDegrees(this.position.longitude, this.position.latitude, this.position.height);
+
+        let parents = document.getElementsByClassName('cesium-widget');
+        parent = parents.length > 0 ? parents[0] : map.container;
+        this.parent = parent;
+
+        // this.initDevicePixelRatio();
+        this.showClose = options.showClose === undefined ? true : options.showClose;
+        this.popup = this._createPopup();
+
+        this.moveStart = this.eventMoveStart.bind(this);
+        this.moveEnd = this.eventMoveEnd.bind(this);
+        this.movement = this.movement.bind(this);
+        this.update = this.update.bind(this);
+
+        this.bindEvent();
+
+        return this;
     }
 
-    this.cartesian =
-      this.cartesian ||
-      this.position.cartesian ||
-      Cesium.Cartesian3.fromDegrees(
-        this.position.longitude,
-        this.position.latitude,
-        this.position.height
-      );
-
-    let parents = document.getElementsByClassName('cesium-widget');
-    parent = parents.length > 0 ? parents[0] : map.container;
-    this.parent = parent;
-
-    // this.initDevicePixelRatio();
-    this.showClose = options.showClose === undefined ? true : options.showClose;
-    this.popup = this._createPopup();
-
-    this.moveStart = this.eventMoveStart.bind(this);
-    this.moveEnd = this.eventMoveEnd.bind(this);
-    this.movement = this.movement.bind(this);
-    this.update = this.update.bind(this);
-
-    this.bindEvent();
-
-    return this;
-  }
-
-  _createPopup() {
-    const self = this;
-    this.hide = this.hide.bind(this);
-    let infoDiv = window.document.createElement("div");
-    infoDiv.id = this.popupId;
-    infoDiv.style.display = "none";
-    infoDiv.innerHTML =
-      '<div id="' +
-      this.popupContentId +
-      '" class="cesium-popup">' +
-      // '<a class="cesium-popup-close-button" href="javascript:void(0)" onClick="function remove(){self.remove()}">×</a>' +
-      '<div class="cesium-popup-content-wrapper">' +
-      this.container +
-      "</div>" +
-      '<div class="cesium-popup-tip-container">' +
-      '<div class="cesium-popup-tip" />' +
-      "</div>" +
-      "</div>";
-    let close = window.document.createElement("div");
-    close.className = "cesium-popup-close-button";
-    close.addEventListener("click", () => self.hide());
-    close.innerText = "x";
-    this.parent.appendChild(infoDiv);
-    window.document.getElementById(this.popupId).style.display = "block";
-    if (this.showClose) {
-      window.document.getElementById(this.popupContentId).appendChild(close);
+    _createPopup() {
+        const self = this;
+        this.hide = this.hide.bind(this);
+        let infoDiv = window.document.createElement('div');
+        infoDiv.id = this.popupId;
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML =
+            '<div id="' +
+            this.popupContentId +
+            '" class="cesium-popup">' +
+            // '<a class="cesium-popup-close-button" href="javascript:void(0)" onClick="function remove(){self.remove()}">×</a>' +
+            '<div class="cesium-popup-content-wrapper">' +
+            this.container +
+            '</div>' +
+            '<div class="cesium-popup-tip-container">' +
+            '<div class="cesium-popup-tip" />' +
+            '</div>' +
+            '</div>';
+        let close = window.document.createElement('div');
+        close.className = 'cesium-popup-close-button';
+        close.addEventListener('click', () => self.hide());
+        close.innerText = 'x';
+        this.parent.appendChild(infoDiv);
+        // window.document.getElementById(this.popupId).style.display = 'block';
+        if (this.showClose) {
+            window.document.getElementById(this.popupContentId).appendChild(close);
+        }
+        this.infoDiv = infoDiv;
     }
-    this.infoDiv = infoDiv;
-  }
 
-  bindEvent() {
-    let self = this;
-    this.handler.setInputAction(
-      this.movement,
-      Cesium.ScreenSpaceEventType.LEFT_CLICK
-    );
+    bindEvent() {
+        let self = this;
+        this.handler.setInputAction(this.movement, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    if (this.options.postRender) {
-      this.map.scene.postRender.addEventListener(() => self.update());
-    } else {
-      this.map.camera.changed.addEventListener(() => self.update());
-      this.handler.setInputAction(
-        this.moveStart,
-        Cesium.ScreenSpaceEventType.LEFT_DOWN
-      );
-      this.handler.setInputAction(
-        this.moveEnd,
-        Cesium.ScreenSpaceEventType.LEFT_UP
-      );
-      this.map.scene.camera.moveEnd.addEventListener(() => self.update());
+        if (this.options.postRender) {
+            this.map.scene.postRender.addEventListener(() => self.update());
+        } else {
+            this.map.camera.changed.addEventListener(() => self.update());
+            this.handler.setInputAction(this.moveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
+            this.handler.setInputAction(this.moveEnd, Cesium.ScreenSpaceEventType.LEFT_UP);
+            this.map.scene.camera.moveEnd.addEventListener(() => self.update());
+        }
     }
-  }
 
-  unbindEvent() {
-    let self = this;
-    if (this.options.postRender) {
-      this.map.scene.postRender.removeEventListener(() => self.update());
-    } else {
-      this.map.camera.changed.removeEventListener(() => self.update());
-      this.map.scene.camera.moveEnd.removeEventListener(() => self.update());
-      this.handler.destroy();
+    unbindEvent() {
+        let self = this;
+        if (this.options.postRender) {
+            this.map.scene.postRender.removeEventListener(() => self.update());
+        } else {
+            this.map.camera.changed.removeEventListener(() => self.update());
+            this.map.scene.camera.moveEnd.removeEventListener(() => self.update());
+            this.handler.destroy();
+        }
     }
-  }
 
-  movement(movement) {
-    var pickedPrimitive = this.map.scene.pick(movement.position);
-    var pickedEntity = Cesium.defined(pickedPrimitive)
-      ? pickedPrimitive.id
-      : undefined;
-    if (
-      Cesium.defined(
-        pickedEntity
-      ) /* && Cesium.defined(pickedEntity.billboard) */
-    ) {
-      if( this.position && this.position.entity ){
-        pickedPrimitive.id === this.position.entity.id;
-        this.show();
-      }
+    movement(movement) {
+        var pickedPrimitive = this.map.scene.pick(movement.position);
+        var pickedEntity = Cesium.defined(pickedPrimitive) ? pickedPrimitive.id : undefined;
+        if (Cesium.defined(pickedEntity) /* && Cesium.defined(pickedEntity.billboard) */) {
+            if (this.position && this.position.entity) {
+                pickedPrimitive.id === this.position.entity.id;
+                this.show();
+            }
+        }
     }
-  }
 
-  eventMoveStart(movement) {
-    this.hide();
-  }
-
-  eventMoveEnd() {
-    this.update();
-  }
-
-  update() {
-    if (this.cartesian && this.isShow) {
-      updataPopupPosition(
-        this.map,
-        this.cartesian,
-        this.popupId,
-        this.popupContentId,
-        this.options
-      );
+    eventMoveStart(movement) {
+        this.hide();
     }
-  }
 
-  /**
-   * 显示图层
-   * @function module:客户端可视化.PopupLayer.prototype.show
-   */
-  show() {
-    this.isShow = true;
-    window.document.getElementById(this.popupId).style.display = "block";
-  }
+    eventMoveEnd() {
+        this.update();
+    }
 
-  /**
-   * 隐藏图层
-   * @function module:客户端可视化.PopupLayer.prototype.hide
-   */
-  hide() {
-    this.isShow = false;
-    window.document.getElementById(this.popupId).style.display = "none";
-  }
+    update() {
+        if (this.cartesian && this.isShow) {
+            updataPopupPosition(this.map, this.cartesian, this.popupId, this.popupContentId, this.options);
+        }
+    }
 
-  /**
-   * 删除图层
-   * @function module:客户端可视化.PopupLayer.prototype.remove
-   */
-  remove() {
-    this.unbindEvent();
-    this.parent.removeChild(this.infoDiv);
-    /* var self = this;
+    /**
+     * 显示图层
+     * @function module:客户端可视化.PopupLayer.prototype.show
+     */
+    show() {
+        this.isShow = true;
+        let node = window.document.getElementById(this.popupId);
+        if (node && node.style) {
+            node.style.display = 'block';
+        }
+    }
+
+    /**
+     * 隐藏图层
+     * @function module:客户端可视化.PopupLayer.prototype.hide
+     */
+    hide() {
+        this.isShow = false;
+        let node = window.document.getElementById(this.popupId);
+        if (node && node.style) {
+            node.style.display = 'none';
+        }
+    }
+
+    /**
+     * 删除图层
+     * @function module:客户端可视化.PopupLayer.prototype.remove
+     */
+    remove() {
+        this.unbindEvent();
+        let node = window.document.getElementById(this.popupId);
+        if (node) {
+            if (node.parentNode) {
+                node.parentNode.removeChild(node);
+            } else {
+                node.remove();
+            }
+        }
+        // this.parent.removeChild(this.infoDiv);
+        /* var self = this;
     if (this.canvas.parentElement)
       this.canvas.parentElement.removeChild(this.canvas);
     this.map = undefined; */
-    return this;
-  }
+        return this;
+    }
 }
 
 CesiumZondy.Overlayer.PopupLayer = PopupLayer;

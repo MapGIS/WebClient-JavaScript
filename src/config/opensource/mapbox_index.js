@@ -2,35 +2,15 @@
 //var mapboxgl = window.mapboxgl = window.mapboxgl || require('@mapgis/mapbox-gl.js');
 // var mapboxgl = window.mapboxgl = window.mapboxgl ||require('mapbox-gl');
 
-import { MapExtend } from '../../mapboxgl/MapExtend'
+import { MapExtend } from '../../mapboxgl/MapExtend';
 
-export { MapExtend }
+export { MapExtend };
 
-import {
-    mapboxgl,
-    MapDocLayer,
-    MapTileLayer,
-    MapWmsLayer,
-    MapWMTSLayer,
-    MapVectorLayer,
-    ArcGISLayer,
-    TDTLayer
-} from '../../mapboxgl/layer';
+import { mapboxgl, MapDocLayer, MapTileLayer, MapWmsLayer, MapWMTSLayer, MapVectorLayer, ArcGISLayer, TDTLayer } from '../../mapboxgl/layer';
 
-export {
-    mapboxgl,
-    MapDocLayer,
-    MapTileLayer,
-    MapWmsLayer,
-    MapWMTSLayer,
-    MapVectorLayer,
-    ArcGISLayer,
-    TDTLayer
-};
+export { mapboxgl, MapDocLayer, MapTileLayer, MapWmsLayer, MapWMTSLayer, MapVectorLayer, ArcGISLayer, TDTLayer };
 
-import {
-    ServiceBase
-} from '../../service/ServiceBase';
+import { ServiceBase } from '../../service/ServiceBase';
 
 import {
     AnyLine,
@@ -135,24 +115,9 @@ import {
     SlopLineParam
 } from '../../service/extend';
 
-import {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-} from '../../service/baseserver';
+import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat } from '../../service/baseserver';
 
-import {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer
-} from '../../service/MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer } from '../../service/MRCS';
 
 import {
     EditDocFeature,
@@ -247,10 +212,7 @@ import {
     ThemesInfo
 } from '../../service/theme';
 
-export {
-    ServiceBase
-};
-
+export { ServiceBase };
 
 export {
     AnyLine,
@@ -343,33 +305,9 @@ export {
     merge,
     mixin
 };
-export {
-    ContourNoteParam,
-    ContourParam,
-    ContourZValue,
-    ContourRegionInfo,
-    MeshingParam,
-    NetAnalyse,
-    NetAnalysisExtent,
-    SlopLineParam
-};
-export {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-};
-export {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer
-};
+export { ContourNoteParam, ContourParam, ContourZValue, ContourRegionInfo, MeshingParam, NetAnalyse, NetAnalysisExtent, SlopLineParam };
+export { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat };
+export { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer };
 export {
     EditDocFeature,
     EditLayerFeature,
@@ -420,14 +358,7 @@ export {
     Smooth,
     TopAnalysis
 };
-export {
-    GetDocImageService,
-    GetLayerImageService,
-    GetMapImageService,
-    GetMapInfoService,
-    GetTileImageService,
-    MapServiceBase
-};
+export { GetDocImageService, GetLayerImageService, GetMapImageService, GetMapInfoService, GetTileImageService, MapServiceBase };
 export {
     CAllOtherDataItemInfoSource,
     CAnnInfo,
@@ -461,18 +392,25 @@ export {
 
 // 大数据相关
 import {
+    PostgisCatlogService,
+    PostgisCustomQueryService,
+    PostgisQueryService,
+    PostgisTableService,
+    PostgisVectorTileService
+} from '../../service/datastore/postgis';
+
+export { PostgisCatlogService, PostgisCustomQueryService, PostgisQueryService, PostgisTableService, PostgisVectorTileService };
+
+import {
     EchartsLayer,
     MapvLayer,
-    DeckglLayer,
+    DeckglLayer
     /* StreamLayer */
-} from '../../mapboxgl/overlay/index.js'
+} from '../../mapboxgl/overlay/index.js';
 
 export {
     EchartsLayer,
     MapvLayer,
-    DeckglLayer,
+    DeckglLayer
     /* StreamLayer */
-}
-
-
-
+};

@@ -33,12 +33,10 @@ export default function VectorTileProvider(Cesium, options) {
     this._styleFun = options.style ? options.style : createMapboxStreetsV6Style();
     this._key = Cesium.defaultValue(options.key, "");
     this._url = Cesium.defaultValue(options.url, "https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.vector.pbf?access_token={k}");
-
-    //if(options.style && )
-
-    var sw = this._tilingScheme._rectangleSouthwestInMeters;
-    var ne = this._tilingScheme._rectangleNortheastInMeters;
-    var mapExtent = [sw.x, sw.y, ne.x, ne.y];
+    
+    // var sw = this._tilingScheme._rectangleSouthwestInMeters;
+    // var ne = this._tilingScheme._rectangleNortheastInMeters;
+    // var mapExtent = [sw.x, sw.y, ne.x, ne.y];
     this._resolutions = MapGisCesiumResolution;
     //this._resolutions = ol.tilegrid.resolutionsFromExtent(mapExtent, 22, this._tileWidth);
 
@@ -184,6 +182,10 @@ export default function VectorTileProvider(Cesium, options) {
   };
 
   MVTProvider.prototype.requestImage = function (x, y, level, request) {
+    if (this._tilingScheme._rectangleSouthwestInMeters == undefined) {
+      level = level + 1;
+    }
+    
     let self = this;
     var isSend = this._tileSends.has({ x: x, y: y, z: level, id: this.options.threadId });
     this._tileSends.push({ x: x, y: y, z: level, id: this.options.threadId });

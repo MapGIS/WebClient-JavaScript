@@ -8,6 +8,8 @@
 /docs/openlayers/
 /docs/cesium/
 
+/src/service/node_modules/
+
 /src/leaflet/theme/
 /src/mapboxgl/theme/
 /src/openlayers/theme/
@@ -20,8 +22,10 @@
 /website/public/docs/mapboxgl/
 /website/public/docs/openlayers/
 /website/public/docs/cesium/
+/website/public/static/data/
 /website/public/static/data/deckgl/
 /website/public/static/data/echarts/gps/
 /website/public/static/data/echarts/line/
 /website/public/static/data/echarts/point/
 /website/public/static/data/echarts/road/
+/website/public/static/libs/cdn

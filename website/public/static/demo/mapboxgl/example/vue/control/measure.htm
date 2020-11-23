@@ -12,6 +12,25 @@
                 width: 100%;
                 height: 100vh;
             }
+            #toolbar-wrapper {
+                position: absolute;
+                z-index: 9999;
+                display: inline-flex;
+                overflow-x: hidden;
+                overflow-y: visible;
+                top: 20px;
+                left: 20px;
+            }
+            .toolbar-item {
+                background: #ffffff;
+                border: 1px dashed #666666;
+                text-align: center;
+                font-size: 20px;
+                line-height: 20px;
+                height: fit-content;
+                padding: 6px 16px;
+                cursor: pointer;
+            }
             #map {
                 height: 100vh;
                 width: 100%;
@@ -20,7 +39,7 @@
     </head>
 
     <body>
-        <div id="main">
+        <div id="app">
             <mapbox-map id="map" 
                 :access-token="accessToken" 
                 :map-style="mapStyle" 
@@ -35,11 +54,25 @@
                     :token="token" 
                     :crs="mapCrs">
                 </mapbox-igs-tdt-layer>
+                <mapbox-base-measure
+                    class="custom-measure-wrapper"
+                    position="top-left"
+                    v-bind:controls="controls"
+                    v-on:added="handleAdded"
+                    v-on:draw-create="handleCreate"
+                    v-bind:measureMode="measureMode"
+                    ref="measureref"
+                >
+                    <div id="toolbar-wrapper">
+                        <div class="toolbar-item" v-on:click="toggleQueryLength">长度</div>
+                        <div class="toolbar-item" v-on:click="toggleQueryArea">面积</div>
+                    </div>
+                </mapbox-base-draw>
             </mapbox-map>
         </div>
         <script>
             new Vue({
-                el: '#main',
+                el: '#app',
                 data() {
                     return {
                         accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA', // 使用mapbox样式需要的秘钥
@@ -59,8 +92,42 @@
                         sourceId: 'igsLayer_sourceId',
                         layer: {}, // 图层配置信息
                         baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
-                        token: '2ddaabf906d4b5418aed0078e1657029' // 请求天地图的key值
+                        token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
+                        controls: {
+                            point: false,
+                            line_string: false,
+                            polygon: false,
+                            trash: false,
+                            combine_features: false,
+                            uncombine_features: false
+                        },
+                        measureMode: undefined
                     };
+                },
+                methods: {
+                    enableMeasure() {
+                        const component = this.$refs.measureref;
+                        if (component) {
+                            component.enableMeasure();
+                        }
+                    },
+                    handleAdded(e, data) {
+                        let { measure, map } = e;
+                        this.measure = measure;
+                    },
+                    handleCreate(e) {
+                        this.measure && this.measure.deleteAll();
+                    },
+                    toggleQueryLength(e) {
+                        this.enableMeasure();
+                        this.measureMode = "measure-length";
+                        this.measure && this.measure.changeMode('draw_line_string');
+                    },
+                    toggleQueryArea(e) {
+                        this.enableMeasure();
+                        this.measureMode = "measure-area";
+                        this.measure && this.measure.changeMode('draw_polygon');
+                    }
                 }
             });
         </script>

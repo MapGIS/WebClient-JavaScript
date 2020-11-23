@@ -84,7 +84,7 @@ class QueryDocFeature extends QueryServiceBase {
          * @type {Number}
          * @description 图层索引
          */
-        this.layerIndex = layerIndex;
+        this.layerIndex = layerIndex == undefined ? -1 : layerIndex;
 
         /**
          * @member Zondy.Service.QueryDocFeature.prototype.mapIndex

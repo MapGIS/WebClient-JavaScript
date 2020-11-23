@@ -195,14 +195,38 @@
                     "detail": "250精度的地形显示,数据来源SRTM,需要翻墙",
                     "icon": "mapgis-raster.png",
                     "update": "最后更新时间：2020-06-17"
-                },
+                }
+            ]
+        },
+        {
+            "name": "矢量瓦片",
+            "iconfont": "icon_igs",
+            "folder": "vectortile",
+            "leaffolder": true,
+            "childs": [
                 {
-                    "name": "矢量瓦片",
-                    "file": "mapgis-vectortile",
+                    "name": "矢量瓦片-3857",
+                    "file": "mapgis-vectortile-3857",
                     "diffcult": "1",
                     "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
-                    "icon": "mapgis-vectortile.png",
-                    "update": "最后更新时间：2019-12-16"
+                    "icon": "mapgis-vectortile-3857.png",
+                    "update": "最后更新时间：2020-10-12"
+                },    
+                {
+                    "name": "矢量瓦片-4326",
+                    "file": "mapgis-vectortile-4326",
+                    "diffcult": "1",
+                    "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
+                    "icon": "mapgis-vectortile-4326.png",
+                    "update": "最后更新时间：2020-10-12"
+                },
+                {
+                    "name": "矢量瓦片-行业符号",
+                    "file": "mapgis-vectortile-symbol",
+                    "diffcult": "1",
+                    "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
+                    "icon": "mapgis-vectortile-symbol.png",
+                    "update": "最后更新时间：2020-10-12"
                 }
             ]
         },

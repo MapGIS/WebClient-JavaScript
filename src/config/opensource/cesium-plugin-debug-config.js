@@ -74,7 +74,7 @@ module.exports = {
             CESIUM_BASE_URL: JSON.stringify('')
         }),
         new HtmlWebpackPlugin({
-            filename: 'webclient-cesium-plugins.html',
+            filename: 'webclient-cesium-plugin.html',
             template: 'src/config/opensource/version/version.html',
             inject: false,//不插入生成的js 仅用于版本声明
             minify: {

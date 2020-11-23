@@ -46,4 +46,7 @@ Zondy.DataStore.PostGIS = Zondy.DataStore.PostGIS || {};
 Zondy.DataStore.Hbase = Zondy.DataStore.Hbase || {};
 Zondy.DataStore.MongoDB = Zondy.DataStore.MongoDB || {};
 
+Zondy.IGServerX = Zondy.IGServerX || {};
+Zondy.IGServerX.Vector = Zondy.IGServerX.Vector || {};
+
 export { Zondy };
