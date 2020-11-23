@@ -88,7 +88,23 @@
         effect="plain"
         type="info"
       >
-        npm install @mapgis/webclient
+        npm install @mapgis/webclient-es6-service
+      </el-tag>
+      <p />
+      <el-tag
+        class="download-tag"
+        effect="plain"
+        type="info"
+      >
+        npm install @mapgis/webclient-vue-mapboxgl
+      </el-tag>
+      <p />
+      <el-tag
+        class="download-tag"
+        effect="plain"
+        type="info"
+      >
+        npm install @mapgis/webclient-vue-cesium
       </el-tag>
     </el-row>
     <br />

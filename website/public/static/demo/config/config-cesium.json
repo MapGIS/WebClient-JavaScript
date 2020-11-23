@@ -2,12 +2,14 @@
     "name": "cesium",
     "title": "MapGIS WebClinet-Cesium",
     "mapmode": "cesium",
-    "childs": [{
+    "childs": [
+        {
             "name": "图层M3D",
             "iconfont": "iconlayer",
             "folder": "m3d",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "景观模型",
                     "file": "m3d-landscape",
                     "diffcult": "2",
@@ -78,7 +80,8 @@
             "iconfont": "iconinternet",
             "folder": "third",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "天地图",
                     "file": "third-tianditu",
                     "diffcult": "1",
@@ -133,7 +136,8 @@
             "iconfont": "icon_ogc",
             "folder": "ogc",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "WMS",
                     "file": "ogc-WMS",
                     "diffcult": "2",
@@ -156,7 +160,8 @@
             "iconfont": "icon_igs",
             "folder": "mapgis",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "二维地图文档服务",
                     "file": "mapgis-2d-doc",
                     "diffcult": "2",
@@ -211,7 +216,7 @@
                     "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
                     "icon": "mapgis-vectortile-3857.png",
                     "update": "最后更新时间：2020-10-12"
-                },    
+                },
                 {
                     "name": "矢量瓦片-4326",
                     "file": "mapgis-vectortile-4326",
@@ -235,7 +240,8 @@
             "iconfont": "icon_internet",
             "folder": "scene",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "场景出图",
                     "file": "scene-sceneOut",
                     "diffcult": "2",
@@ -314,7 +320,8 @@
             "iconfont": "icon_analysis",
             "folder": "analysis",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "洪水淹没分析",
                     "file": "analysis-floor",
                     "diffcult": "1",
@@ -425,7 +432,8 @@
             "iconfont": "iconmap3",
             "folder": "track",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "模型漫游",
                     "file": "track-flow",
                     "diffcult": "1",
@@ -448,7 +456,8 @@
             "iconfont": "icon_features",
             "folder": "drawGraphic",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "点",
                     "file": "drawGraphic-point",
                     "diffcult": "1",
@@ -567,7 +576,8 @@
             "iconfont": "icondetail",
             "folder": "data",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "3DTile数据",
                     "file": "data-3Dtiles",
                     "diffcult": "1",
@@ -654,7 +664,8 @@
             "iconfont": "icon_calc",
             "folder": "measure",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "长度测量",
                     "file": "measure-length",
                     "diffcult": "1",
@@ -693,7 +704,8 @@
             "iconfont": "iconsearch",
             "folder": "query",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "二维地图文档属性查询",
                     "file": "query-2dByAtt",
                     "diffcult": "1",
@@ -764,7 +776,8 @@
             "iconfont": "icon_clientview",
             "folder": "clientView",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "热力图",
                     "file": "clientView-heatmap",
                     "diffcult": "1",
@@ -835,7 +848,8 @@
             "iconfont": "icon_echarts",
             "folder": "clientView_Echarts",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "热力图-空气质量",
                     "file": "echarts-heater",
                     "diffcult": "1",
@@ -931,7 +945,8 @@
             "iconfont": "icon_mapv",
             "folder": "clientView_MapV",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "轨迹汇聚",
                     "file": "mapv-path_converge",
                     "diffcult": "1",
@@ -1034,7 +1049,8 @@
             "iconfont": "icon_clientanalysis",
             "folder": "clientAnalysis",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "缓冲分析",
                     "file": "clientAnalysis-buffer",
                     "diffcult": "3",
@@ -1089,6 +1105,38 @@
                     "detail": "",
                     "icon": "clientAnalysis-intersect.png",
                     "update": "最后更新时间：2020-06-17"
+                }
+            ]
+        },
+        {
+            "name": "Vue组件",
+            "iconfont": "iconvue",
+            "folder": "vue",
+            "leaffolder": false,
+            "childs": [
+                {
+                    "name": "栅格瓦片",
+                    "iconfont": "iconhand_draw",
+                    "folder": "raster",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "地图文档",
+                            "file": "document",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "document.png",
+                            "update": "最后更新时间：2020-11-23"
+                        },
+                        {
+                            "name": "瓦片服务",
+                            "file": "tile",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "tile.png",
+                            "update": "最后更新时间：2020-11-23"
+                        }
+                    ]
                 }
             ]
         }

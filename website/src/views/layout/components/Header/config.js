@@ -32,12 +32,12 @@ export const Headers = [
                 hightlights: [
                     [false, false, false, false, false],
                     [false, false, false, false, false],
-                    [false, false, false, false]
+                    [false, false, false, false, true]
                 ],
                 links: [
                     ['图层M3D', '互联网地图', 'OGC服务', 'MapGIS地图服务', '场景' /* "IGServer-X", "IGServer-S" */],
                     ['三维空间分析', '轨迹模拟', '图形绘制', '工具', '查询'],
-                    ['客户端可视化', '客户端-Echarts', '客户端-MapV', '客户端空间分析']
+                    ['客户端可视化', '客户端-Echarts', '客户端-MapV', '客户端空间分析', 'Vue']
                 ],
                 routes: [
                     ['/gallery/cesium#m3d', '/gallery/cesium#third', '/gallery/cesium#ogc', '/gallery/cesium#mapgis', '/gallery/cesium#scene'],
@@ -52,8 +52,8 @@ export const Headers = [
                         '/gallery/cesium#clientView-heatmap',
                         '/gallery/cesium#clientView_Echarts',
                         '/gallery/cesium#clientView_MapV',
-                        '/gallery/cesium#clientAnalysis'
-                        /* "/gallery/cesium#globe", */
+                        '/gallery/cesium#clientAnalysis',
+                        '/gallery/cesium#vue#raster'
                     ]
                 ]
             },

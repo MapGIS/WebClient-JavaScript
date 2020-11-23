@@ -93,6 +93,11 @@
     if (!inArray(excludes, "plugins")) {
       inputScript(httpUrl + "/cdn/zondyclient/webclient-cesium-plugin.min.js");
     }
+    if (inArray(includes, 'vue')) {
+      inputCSS(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.css');
+      inputScript(httpUrl + '/cdn/vue/2.6/vue.js');
+      inputScript(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.umd.js');
+  }
   }
 
   load();
