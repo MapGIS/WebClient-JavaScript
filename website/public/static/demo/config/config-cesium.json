@@ -224,14 +224,6 @@
                     "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
                     "icon": "mapgis-vectortile-4326.png",
                     "update": "最后更新时间：2020-10-12"
-                },
-                {
-                    "name": "矢量瓦片-行业符号",
-                    "file": "mapgis-vectortile-symbol",
-                    "diffcult": "1",
-                    "detail": "加载MapGIS-IgServer上传的矢量瓦片样式",
-                    "icon": "mapgis-vectortile-symbol.png",
-                    "update": "最后更新时间：2020-10-12"
                 }
             ]
         },
@@ -1134,6 +1126,22 @@
                             "diffcult": "2",
                             "detail": "",
                             "icon": "tile.png",
+                            "update": "最后更新时间：2020-11-23"
+                        },
+                        {
+                            "name": "通用瓦片",
+                            "file": "raster",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "raster.png",
+                            "update": "最后更新时间：2020-11-23"
+                        },
+                        {
+                            "name": "WMTS瓦片",
+                            "file": "wmts",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "wmts.png",
                             "update": "最后更新时间：2020-11-23"
                         }
                     ]
