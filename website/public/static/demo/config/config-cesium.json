@@ -1143,6 +1143,14 @@
                             "detail": "",
                             "icon": "wmts.png",
                             "update": "最后更新时间：2020-11-23"
+                        },
+                        {
+                            "name": "地形瓦片",
+                            "file": "dem",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "dem.png",
+                            "update": "最后更新时间：2020-11-23"
                         }
                     ]
                 },
@@ -1166,6 +1174,30 @@
                             "diffcult": "2",
                             "detail": "",
                             "icon": "link.png",
+                            "update": "最后更新时间：2020-11-24"
+                        }
+                    ]
+                },
+                {
+                    "name": "模型组件",
+                    "iconfont": "icon_features",
+                    "folder": "model",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "IGServer-M3d",
+                            "file": "igsm3d",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "igsm3d.png",
+                            "update": "最后更新时间：2020-11-24"
+                        },
+                        {
+                            "name": "开源-3DTile",
+                            "file": "tileset",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "tileset.png",
                             "update": "最后更新时间：2020-11-24"
                         }
                     ]

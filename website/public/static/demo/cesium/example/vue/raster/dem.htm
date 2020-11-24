@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-Dem</title>
+        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            #app {
+                height: 100vh;
+                width: 100vw;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <cesium-web-globe
+                v-bind:ref="webgloberef"
+                v-bind:animation="false"
+                v-bind:timeline="false"
+                v-on:load="handleLoad"
+                libPath="./static/libs/cdn/cesium/Cesium.js"
+                pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+            >
+                <cesium-terrain-provider v-bind:url="demurl"></cesium-terrain-provider>
+                <cesium-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></cesium-ogc-wmts-layer>
+            </cesium-web-globe>
+        </div>
+        <script>
+            Cesium.Ion.defaultAccessToken =
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiM2Q0ZGMxYy1iZGZkLTQ4OWItODlhMy1iOWNkMDE0M2U3YWEiLCJpZCI6NTEzNSwiaWF0IjoxNjA2MjE0OTkyfQ.2aktNrUASlLsPwSFtkgKBTQLJTAnOTyjgKDRQmnafiE';
+            let draw = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        webgloberef: 'webgloberef' + Math.random(),
+                        demurl: new Cesium.IonResource.fromAssetId(1),
+                        url:
+                            'http://t0.tianditu.com/DataServer?T=img_c' +
+                            '&L={TileMatrix}&Y={TileRow}&X={TileCol}' +
+                            '&tk=9c157e9585486c02edf817d2ecbc7752',
+                        options: {
+                            tilingScheme: 'EPSG:4490',
+                            tileMatrixLabels: [
+                                '1',
+                                '2',
+                                '3',
+                                '4',
+                                '5',
+                                '6',
+                                '7',
+                                '8',
+                                '9',
+                                '10',
+                                '11',
+                                '12',
+                                '13',
+                                '14',
+                                '15',
+                                '16',
+                                '17',
+                                '18',
+                                '19',
+                                '20'
+                            ]
+                        }
+                    };
+                },
+                methods: {
+                    handleLoad(e) {
+                        const { component } = e;
+                        const { webGlobe } = component;
+                        webGlobe.viewer.camera.setView({
+                            direction: { x: 0.4680575394156845, y: -0.8267033643312148, z: 0.31222377744109403 },
+                            position: { x: -674271.5790185562, y: 5530042.656916835, z: 3232882.3357299212 }
+                        });
+                        //构造视图功能管理对象（视图）
+                        var sceneManager = new CesiumZondy.Manager.SceneManager({
+                            viewer: webGlobe.viewer
+                        });
+                        //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+                        sceneManager.flyToEx(94.73761648879076, 29.44177452960854, {
+                            height: 5900,
+                            heading: 60,
+                            pitch: -16,
+                            roll: 0
+                        });
+                        console.log('地图加初始化完毕！', webGlobe.viewer.camera);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
