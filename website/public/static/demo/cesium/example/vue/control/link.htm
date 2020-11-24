@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-Link</title>
+        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            #app {
+                height: 100vh;
+                width: 100vw;
+                display: inline-flex;
+            }
+            .item {
+                position: absolute;
+                height: 50%;
+                width: 50%;
+            }
+            .top-left {
+                top: 0px;
+                left: 0px;
+            }
+            .top-right {
+                top: 0px;
+                right: 0px;
+            }
+            .bottom-left {
+                bottom: 0px;
+                left: 0px;
+            }
+            .bottom-right {
+                bottom: 0px;
+                right: 0px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <div class="item top-left">
+                <cesium-web-globe
+                    v-bind:ref="webgloberef1"
+                    v-bind:animation="false"
+                    v-bind:timeline="false"
+                    v-on:load="handleLoad"
+                    libPath="./static/libs/cdn/cesium/Cesium.js"
+                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                >
+                    <cesium-raster-layer v-bind:url="url1"> </cesium-raster-layer>
+                    <cesium-link v-bind:enable="link"></cesium-link>
+                </cesium-web-globe>
+            </div>
+            <div class="item top-right">
+                <cesium-web-globe
+                    v-bind:ref="webgloberef2"
+                    v-bind:animation="false"
+                    v-bind:timeline="false"
+                    v-on:load="handleLoad"
+                    libPath="./static/libs/cdn/cesium/Cesium.js"
+                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                >
+                    <cesium-raster-layer v-bind:url="url2"> </cesium-raster-layer>
+                    <cesium-link v-bind:enable="link"></cesium-link>
+                </cesium-web-globe>
+            </div>
+            <div class="item bottom-left">
+                <cesium-web-globe
+                    v-bind:ref="webgloberef3"
+                    v-bind:animation="false"
+                    v-bind:timeline="false"
+                    v-on:load="handleLoad"
+                    libPath="./static/libs/cdn/cesium/Cesium.js"
+                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                >
+                    <cesium-raster-layer v-bind:url="url3"> </cesium-raster-layer>
+                    <cesium-link v-bind:enable="link"></cesium-link>
+                </cesium-web-globe>
+            </div>
+            <div class="item bottom-right">
+                <cesium-web-globe
+                    v-bind:ref="webgloberef4"
+                    v-bind:animation="false"
+                    v-bind:timeline="false"
+                    v-on:load="handleLoad"
+                    libPath="./static/libs/cdn/cesium/Cesium.js"
+                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                >
+                    <cesium-ogc-wmts-layer v-bind:url="url4" v-bind:options="wmtsoptions"></cesium-ogc-wmts-layer>
+                    <cesium-link v-bind:enable="link"></cesium-link>
+                </cesium-web-globe>
+            </div>
+        </div>
+        <script>
+            let draw = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        webgloberef1: 'webgloberef' + Math.random(),
+                        webgloberef2: 'webgloberef' + Math.random(),
+                        link: true,
+                        url1: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                        url2: 'http://mt0.google.cn/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}',
+                        url3: 'http://online0.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20170908',
+                        url4: 'http://t0.tianditu.com/DataServer?T=vec_c&L={TileMatrix}&Y={TileRow}&X={TileCol}&tk=9c157e9585486c02edf817d2ecbc7752',
+                        wmtsoptions: {
+                            tilingScheme: 'EPSG:4490',
+                            tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+                        }
+                    };
+                },
+                methods: {
+                    handleLoad(e) {
+                        console.log('地图加初始化完毕！', e);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1145,6 +1145,30 @@
                             "update": "最后更新时间：2020-11-23"
                         }
                     ]
+                },
+                {
+                    "name": "交互组件",
+                    "iconfont": "icon_features",
+                    "folder": "control",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "Popup",
+                            "file": "popup",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "popup.png",
+                            "update": "最后更新时间：2020-11-24"
+                        },
+                        {
+                            "name": "多屏联动",
+                            "file": "link",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "link.png",
+                            "update": "最后更新时间：2020-11-24"
+                        }
+                    ]
                 }
             ]
         }

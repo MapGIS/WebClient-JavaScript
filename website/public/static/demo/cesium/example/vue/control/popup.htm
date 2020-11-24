@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-Popup</title>
+        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            #app {
+                height: 100vh;
+                width: 100vw;
+            }
+            .cesium-popup-content-wrapper {
+                text-align: left;
+                padding: 10px;
+                overflow-y: auto;
+                font-size: 1.2em;
+                z-index: 9999;
+                border: 1px solid #666666;
+                box-shadow: 0px 0px 20px rgba(12, 28, 33, 0.6);
+                -moz-box-shadow: 0px 0px 20px rgba(12, 28, 33, 0.6);
+                -webkit-box-shadow: 0px 0px 20px rgba(12, 28, 33, 0.6);
+                border-radius: 3px 3px 3px 3px;
+                background: rgba(12, 28, 33, 0.6);
+                background-size: 50% 50%;
+                background-repeat: no-repeat;
+            }
+            .cesium-popup-tip {
+                background: #666666;
+                -webkit-box-shadow: 0 3px 14px rgba(12, 28, 33, 0.6);
+                box-shadow: 0 3px 14px rgba(12, 28, 33, 0.6);
+                width: 17px;
+                height: 17px;
+                padding: 1px;
+                margin: -10px auto 0;
+                -webkit-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+            .cesium-popup-content-wrapper {
+                color: #ffffff;
+            }
+            .cesium-custom-popup-content {
+                height: 200px;
+                background: #ffffff;
+                opacity: 0.7;
+                color: #000000;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <cesium-web-globe
+                v-bind:ref="webgloberef"
+                v-bind:animation="false"
+                v-bind:timeline="false"
+                v-on:load="handleLoad"
+                libPath="./static/libs/cdn/cesium/Cesium.js"
+                pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+            >
+                <cesium-raster-layer v-bind:url="url"> </cesium-raster-layer>
+                <cesium-popup v-bind:position="position" container="<div>空</div>" :options="popupoptions">
+                    <div>
+                        Vue槽-实现任何自定义样式
+                        <div class="cesium-custom-popup-content">请在此处自定义内部内容</div>
+                    </div>
+                </cesium-popup>
+            </cesium-web-globe>
+        </div>
+        <script>
+            let draw = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        webgloberef: 'webgloberef' + Math.random(),
+                        url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                        position: {
+                            longitude: 110,
+                            latitude: 30,
+                            height: 300
+                        },
+                        popupoptions: {}
+                    };
+                },
+                methods: {
+                    handleLoad(e) {
+                        console.log('地图加初始化完毕！', e);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
