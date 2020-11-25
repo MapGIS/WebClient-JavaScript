@@ -201,7 +201,7 @@ export default class SceneManager {
      * 跳转到
      * @function module:客户端视图管理.SceneManager.prototype.flyTo
      * @param  {Number} lon 经度
-     * @param  {Number} lon 纬度
+     * @param  {Number} lat 纬度
      * @param  {Number} heightParam  视角高度
      * @param  {Number} duration 跳转持续时间
      */

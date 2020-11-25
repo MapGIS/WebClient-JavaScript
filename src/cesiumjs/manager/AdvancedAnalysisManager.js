@@ -98,15 +98,16 @@ export default class AdvancedAnalysisManager {
     /**
      * 创建洪水分析实例
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFlood
+     * @param {Array<Cartesian3>} dotsList 指定区域多边形顶点坐标数组
      * @param {Object} options 洪水分析参数
      * @param {Number} [options.minHeight] 最低洪水水位高度
      * @param {Number} [options.maxHeight] 最高洪水水位高度
      * @param {Number} [options.floodSpeed] 洪水上涨速度
      * @returns {Object} flood 返回洪水实例
      */
-    createFlood(options) {
+    createFlood(dotsList, options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        const flood = new Cesium.FloodAnalysis(this.scene);
+        const flood = new Cesium.FloodAnalysis(this.scene, dotsList);
         flood.minHeight = Cesium.defaultValue(optionsParam.minHeight, 0);
         flood.maxHeight = Cesium.defaultValue(optionsParam.maxHeight, 100);
         flood.floodSpeed = Cesium.defaultValue(optionsParam.floodSpeed, 20);
@@ -435,7 +436,7 @@ export default class AdvancedAnalysisManager {
 
     /**
      * 动态粒子特效
-     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createParticle
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createRoamParticle
      * @param {Object} options 动态粒子特效参数
      * @param {String} options.imageUrl 粒子url
      * @param {String} options.modelUrl 模型url
@@ -443,10 +444,11 @@ export default class AdvancedAnalysisManager {
      * @param {Number} [options.duration] 持续周期
      * @param {Cartesian3} [options.positionStart] 起点坐标
      * @param {Cartesian3} [options.positionEnd] 终点坐标
+     * @returns {Object} roamParticle 返回粒子特效实例
      */
-    createParticle(options) {
+    createRoamParticle(options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        const particleSystem = new Cesium.ParticleC(this.viewer, {
+        const roamParticle = new Cesium.RoamParticle(this.viewer, {
             imageUrl: optionsParam.imageUrl,
             modelUrl: optionsParam.modelUrl,
             startTime: Cesium.defaultValue(optionsParam.startTime, new Date(2015, 2, 25, 16)),
@@ -454,62 +456,86 @@ export default class AdvancedAnalysisManager {
             positionStart: Cesium.defaultValue(optionsParam.positionStart, Cesium.Cartesian3.fromDegrees(-75.15787310614596, 39.97862668312678)),
             positionEnd: Cesium.defaultValue(optionsParam.positionEnd, Cesium.Cartesian3.fromDegrees(-75.1633691390455, 39.95355089912078))
         });
-        particleSystem.start();
-        return particleSystem;
+        roamParticle.start();
+        return roamParticle;
     }
 
     /**
      * 移除动态粒子特效
-     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeParticle
-     * @param {Object} particle 动态粒子特效实例
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeRoamParticle
+     * @param {Object} roamParticle 动态粒子特效实例
      */
-    removeParticle(particle) {
-        particle.remove();
+    removeRoamParticle(roamParticle) {
+        roamParticle.remove();
         this.scene.requestRender();
     }
 
     /**
-     * 火焰或烟雾粒子特效
-     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFire
-     * @param {String} imageUrl 粒子特效图片url
-     * @param {Array<Number>} position 模型位置，position[0]：经度，position[1]：纬度，position[2]：高度
-     * @param {Object} options 粒子特效参数
-     * @param {String} [options.modelUrl] 模型url
-     * @param {Number} [options.minimumPixelSize] 模型最小像素尺寸
-     * @param {Number} [options.startScale] 起始规模
-     * @param {Number} [options.endScale] 终止规模
-     * @param {Number} [options.particleLife] 粒子生命
-     * @param {Number} [options.speed] 速度
-     * @param {Cartesian2} [options.imageSize] 图像尺寸
+     * 固定位置粒子特效，可通过更改image与附加参数来实现火焰、喷泉、烟雾等粒子特效
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createStableParticle
+     * @param {String} imageUrl 粒子url
+     * @param {Cartesian3} position 粒子特效位置
+     * @param {Object} options 特效粒子参数
+     * @param {String} options.modelUrl 模型url
+     * @param {Number} [options.minimumPixelSize] 最小像素尺寸
+     * @param {Color} [options.startColor] 开始的颜色
+     * @param {Color} [options.endColor] 结束的颜色
+     * @param {Number} [options.startScale] 起始尺寸
+     * @param {Number} [options.endScale] 结束尺寸
+     * @param {Number} [options.minimumParticleLife] 最小粒子周期
+     * @param {Number} [options.maximumParticleLife] 最大粒子周期
+     * @param {Number} [options.minimumSpeed] 最小速率
+     * @param {Number} [options.maximumSpeed] 最大速率
+     * @param {Cartesian2} [options.imageSize] 粒子图像大小
      * @param {Number} [options.emissionRate] 排放率
-     * @param {Number} [options.lifetime] 持续时间
-     * @returns {Object} result 返回粒子特效实例
+     * @param {Number} [options.minimumImageSize] 最小Image尺寸
+     * @param {Number} [options.maximumImageSize] 最大Image尺寸
+     * @param {Number} [options.lifetime] 单个粒子生命周期
+     * @param {Object} [options.emitter] 粒子发射器类型
+     * @param {Number} [options.gravity] 粒子重力
+     * @param {Number} [options.viewHeight] 用于控制粒子特效在0到该值范围内可见，范围外不可见，当值为-1时，默认全部可见
+     * @param {Number} [options.heading] 俯仰角
+     * @param {Number} [options.pitch] 偏航角
+     * @param {Number} [options.roll] 翻滚角
+     * @returns {Object} stableParticle 返回粒子特效实例
      */
-    createFire(imageUrl, position, options) {
+    createStableParticle(imageUrl, position, options) {
         this.viewer.clock.shouldAnimate = true;
         const optionsParam = Cesium.defaultValue(options, {});
-        const fire = new Cesium.Fire(this.viewer, imageUrl, position, {
+        const stableParticle = new Cesium.StableParticle(this.viewer, imageUrl, position, {
             modelUrl: optionsParam.modelUrl,
             minimumPixelSize: Cesium.defaultValue(optionsParam.minimumPixelSize, 64.0),
+            startColor: Cesium.defaultValue(optionsParam.startColor, Cesium.Color.LIGHTSEAGREEN.withAlpha(0.7)),
+            endColor: Cesium.defaultValue(optionsParam.endColor, Cesium.Color.WHITE.withAlpha(0.0)),
             startScale: Cesium.defaultValue(optionsParam.startScale, 1.0),
             endScale: Cesium.defaultValue(optionsParam.endScale, 4.0),
-            particleLife: Cesium.defaultValue(optionsParam.particleLife, 1.0),
-            speed: Cesium.defaultValue(optionsParam.speed, 5.0),
-            imageSize: Cesium.defaultValue(optionsParam.imageSize, new Cesium.Cartesian2(20, 20)),
+            minimumParticleLife: Cesium.defaultValue(optionsParam.minimumParticleLife, 1.2),
+            maximumParticleLife: Cesium.defaultValue(optionsParam.maximumParticleLife, 1.2),
+            minimumSpeed: Cesium.defaultValue(optionsParam.minimumSpeed, 1.0),
+            maximumSpeed: Cesium.defaultValue(optionsParam.maximumSpeed, 4.0),
+            imageSize: Cesium.defaultValue(optionsParam.imageSize, new Cesium.Cartesian2(25.0, 25.0)),
             emissionRate: Cesium.defaultValue(optionsParam.emissionRate, 5.0),
-            lifetime: Cesium.defaultValue(optionsParam.lifetime, 16.0)
+            minimumImageSize: Cesium.defaultValue(optionsParam.minimumImageSize, new Cesium.Cartesian2(25.0, 25.0)),
+            maximumImageSize: Cesium.defaultValue(optionsParam.maximumImageSize, new Cesium.Cartesian2(25.0, 25.0)),
+            lifetime: Cesium.defaultValue(optionsParam.lifetime, 16.0),
+            emitter: Cesium.defaultValue(optionsParam.emitter, new Cesium.ConeEmitter(Cesium.Math.toRadians(5.0))),
+            gravity: Cesium.defaultValue(optionsParam.gravity, 0.0),
+            viewHeight: Cesium.defaultValue(optionsParam.viewHeight, -1),
+            heading: Cesium.defaultValue(optionsParam.heading, 0.0),
+            pitch: Cesium.defaultValue(optionsParam.pitch, 0.0),
+            roll: Cesium.defaultValue(optionsParam.roll, 0.0)
         });
-        fire.start();
-        return fire;
+        stableParticle.start();
+        return stableParticle;
     }
 
     /**
      * 移除火焰特效
-     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeFire
-     * @param {Object} fire 火焰特效实例
+     * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeStableParticle
+     * @param {Object} stableParticle 火焰特效实例
      */
-    removeFire(fire) {
-        fire.remove();
+    removeStableParticle(stableParticle) {
+        stableParticle.remove();
         this.scene.requestRender();
     }
 }
