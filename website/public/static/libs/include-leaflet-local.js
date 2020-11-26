@@ -74,7 +74,7 @@
     if (inArray(includes, 'vectortile')) {
       // inputScript(httpUrl + "/cdn/leaflet-plugins/Leaflet-VectorGrid/dist/Leaflet.VectorGrid.min.js");
       inputCSS(httpUrl + "/cdn/mapboxgl/mapbox-gl.css");
-      inputScript(httpUrl + "/cdn/mapboxgl/mapbox-gl-dev.js");
+      inputScript(httpUrl + "/cdn/mapboxgl/mapbox-gl.js");
       inputScript(httpUrl + "/cdn/leaflet-plugins/mapbox-gl-leaflet/leaflet-mapbox-gl.js");
     }
     if (inArray(includes, 'mvt')) {
