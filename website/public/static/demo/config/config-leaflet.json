@@ -372,7 +372,7 @@
         {
           "name": "客户端专题图",
           "iconfont": "icontheme",
-          "folder": "theme",
+          "folder": "clienttheme",
           "leaffolder": true,
           "childs": [
             {
