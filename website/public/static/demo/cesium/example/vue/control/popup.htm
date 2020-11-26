@@ -40,7 +40,7 @@
                 color: #ffffff;
             }
             .cesium-custom-popup-content {
-                height: 200px;
+                height: 150px;
                 background: #ffffff;
                 opacity: 0.7;
                 color: #000000;
@@ -59,7 +59,12 @@
                 pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
             >
                 <cesium-raster-layer v-bind:url="url"> </cesium-raster-layer>
-                <cesium-popup v-bind:position="position" container="<div>空</div>" :options="popupoptions">
+                <cesium-popup
+                    v-bind:position="position"
+                    container="<div>空网页内容实现</div>"
+                    v-bind:options="popupoptions"
+                    v-on:load="handlePopupLoad"
+                >
                     <div>
                         Vue槽-实现任何自定义样式
                         <div class="cesium-custom-popup-content">请在此处自定义内部内容</div>
@@ -68,7 +73,7 @@
             </cesium-web-globe>
         </div>
         <script>
-            let draw = new Vue({
+            new Vue({
                 el: '#app',
                 data() {
                     return {
@@ -82,9 +87,29 @@
                         popupoptions: {}
                     };
                 },
+                mounted() {
+                    console.log('mounted');
+                },
                 methods: {
                     handleLoad(e) {
                         console.log('地图加初始化完毕！', e);
+                    },
+                    handleClick(e) {
+                        console.log('点击事件', e);
+                    },
+                    bindEvent() {
+                        let popup,
+                            popups = document.getElementsByClassName('cesium-custom-popup-content');
+                        console.log('popups', popups);
+                        if (popups.length > 0) {
+                            popup = popups[0];
+                            popup.addEventListener('click', this.handleClick.bind(this));
+                            console.log('popup', popup);
+                        }
+                    },
+                    handlePopupLoad(e) {
+                        console.log('Popup初始化完毕！', e);
+                        this.bindEvent();
                     }
                 }
             });
