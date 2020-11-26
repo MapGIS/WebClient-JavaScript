@@ -1,45 +1,58 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>加载OGC的WMS图层</title>
+        <script src="./static/libs/include-leaflet-local.js"></script>
+        <script type="text/javascript">
+            /**显示地图
+             */
+            function init() {
+                'use strict';
+                //地图容器
+                var map = L.map('leaf_map', {
+                    //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                    crs: L.CRS.EPSG4326,
+                    //显示中心
+                    center: [40.20, 116.39],
+                    //最小显示等级
+                    minZoom: 1,
+                    //最大显示等级
+                    maxZoom: 15,
+                    //当前显示等级
+                    zoom: 8,
+                    //限制显示地理范围
+                    maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+                });
+                var { protocol, ip, port } = window.webclient;
+                // 天地图
+                var layer1 = new Zondy.Map.TDTLayer({
+                    //图层类型
+                    layerType: 'img',
+                    //最小显示等级
+                    minZoom: 0,
+                    //最大显示等级
+                    maxZoom: 15,
+                    //key
+                    token: '4c27d6e0e8a90715b23a989d42272fd8',
+                    //设置地图不连续显示
+                    noWrap: true
+                }).addTo(map);
+                //wms服务
+                var Layer = L.tileLayer
+                    .wms(`${protocol}://${ip}:${port}/igs/rest/ogc/doc/北京市/WMSServer?`, {
+                        //图层名称
+                        layers:
+                            '北京市,绿地_1,绿地_2,绿地_3,绿地_4,水域_3,水域_2,水域_1,大学,学校,动物园,高尔夫,观光胜地,果园,住宅用地,医院,商业用地,建筑物,铁路_1,铁路_2,铁路_3,主干道,主干道,高速公路_1,高速公路_1_9-10,三级道路_链接,三级道路,二级道路_链接,二级道路,一级道路_链接,一级道路,主干道_链接,主干道,主干道,高速公路_链接,高速公路_2,高速公路_2,三级道路_链接,三级道路,二级道路_链接,二级道路,一级道路_链接,一级道路,地铁,主干道_链接,主干道,主干道,高速公路_链接,高速公路_2,高速公路_2,地铁站POI,山顶,果园poi,汽车站点POI,大学poi,学校poi,中小学POI,幼儿园POI,医院POI,口腔医院POI,派出所POI,检察院POI,银行POI,邮局POI,体育馆POI,纪念碑POI,博物馆POI,名胜古迹点,动物园poi,观光胜地poi,主题公园POI,宾馆POI,百货店POI,便利店POI,书店POI,快餐POI,咖啡馆POI,电影院POI,高尔夫poi,村庄点,市镇点,区县点,首都点',
+                        //wms版本号
+                        version: '1.1.1'
+                    })
+                    .addTo(map);
+            }
+        </script>
+    </head>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>加载OGC的WMS图层</title>
-    <script src="./static/libs/include-leaflet-local.js"></script>
-    <script type="text/javascript">
-        /**显示地图
-        */
-        function init() {
-            "use strict";
-            //地图容器
-            var map = L.map('leaf_map', {
-                //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
-                crs: L.CRS.EPSG4326,
-                //显示中心
-                center: [0, 0],
-                //最小显示等级
-                minZoom: 1,
-                //最大显示等级
-                maxZoom: 15,
-                //当前显示等级
-                zoom: 2,
-                //限制显示地理范围
-                maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
-            });
-            var { protocol, ip, port } = window.webclient;
-            //wms服务
-            var Layer = L.tileLayer.wms(`${protocol}://${ip}:${port}/igs/rest/ogc/layer/WorldJWLayer/WMSServer`, {
-                //图层名称
-                layers: '世界政区',
-                //wms版本号
-                version: '1.3.0'
-            }).addTo(map);
-        }
-    </script>
-</head>
-
-<body onload="init()">
-    <div id="leaf_map" style="width: 100%; height:700px;">
-    </div>
-</body>
-
+    <body onload="init()">
+        <div id="leaf_map" style="width: 100%; height: 700px"></div>
+    </body>
 </html>

@@ -1107,7 +1107,7 @@
             "leaffolder": false,
             "childs": [
                 {
-                    "name": "栅格瓦片",
+                    "name": "Vue-栅格",
                     "iconfont": "iconhand_draw",
                     "folder": "raster",
                     "leaffolder": true,
@@ -1155,7 +1155,7 @@
                     ]
                 },
                 {
-                    "name": "交互组件",
+                    "name": "Vue-交互",
                     "iconfont": "icon_features",
                     "folder": "control",
                     "leaffolder": true,
@@ -1179,7 +1179,7 @@
                     ]
                 },
                 {
-                    "name": "模型组件",
+                    "name": "Vue-模型",
                     "iconfont": "icon_features",
                     "folder": "model",
                     "leaffolder": true,

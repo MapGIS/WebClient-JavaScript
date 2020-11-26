@@ -32,6 +32,19 @@
                 bottom: 0px;
                 right: 0px;
             }
+            .control {
+                position: absolute;
+                z-index: 9999;
+                background: #ffffff;
+                top: 47.2vh;
+                left: 47.5vw;
+                width: 5vw;
+                height: 5vh;
+                border-radius: 12px;
+            }
+            .active {
+                background: #41b883;
+            }
         </style>
     </head>
 
@@ -60,7 +73,7 @@
                     pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
                 >
                     <cesium-raster-layer v-bind:url="url2"> </cesium-raster-layer>
-                    <cesium-link v-bind:enable="link"></cesium-link>
+                    <!-- <cesium-link v-bind:enable="link"></cesium-link> -->
                 </cesium-web-globe>
             </div>
             <div class="item bottom-left">
@@ -73,7 +86,7 @@
                     pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
                 >
                     <cesium-raster-layer v-bind:url="url3"> </cesium-raster-layer>
-                    <cesium-link v-bind:enable="link"></cesium-link>
+                    <!-- <cesium-link v-bind:enable="link"></cesium-link> -->
                 </cesium-web-globe>
             </div>
             <div class="item bottom-right">
@@ -86,17 +99,20 @@
                     pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
                 >
                     <cesium-ogc-wmts-layer v-bind:url="url4" v-bind:options="wmtsoptions"></cesium-ogc-wmts-layer>
-                    <cesium-link v-bind:enable="link"></cesium-link>
+                    <!-- <cesium-link v-bind:enable="link"></cesium-link> -->
                 </cesium-web-globe>
             </div>
+            <div v-bind:class="{'control': true, active: link}" v-on:click="changeMode"></div>
         </div>
         <script>
             let draw = new Vue({
                 el: '#app',
                 data() {
                     return {
-                        webgloberef1: 'webgloberef' + Math.random(),
-                        webgloberef2: 'webgloberef' + Math.random(),
+                        webgloberef1: 'webgloberef1',
+                        webgloberef2: 'webgloberef2',
+                        webgloberef3: 'webgloberef3',
+                        webgloberef4: 'webgloberef4',
                         link: true,
                         url1: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
                         url2: 'http://mt0.google.cn/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}',
@@ -111,6 +127,9 @@
                 methods: {
                     handleLoad(e) {
                         console.log('地图加初始化完毕！', e);
+                    },
+                    changeMode() {
+                        this.link = !this.link;
                     }
                 }
             });
