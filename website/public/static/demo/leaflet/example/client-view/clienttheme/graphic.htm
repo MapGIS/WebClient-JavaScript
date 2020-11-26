@@ -345,6 +345,7 @@
             themeLayerOptions.calGravity = true;
             //themeLayerOptions.fitZoom = 8;
             themeLayer = Zondy.Map.graphThemeLayer("BarLayer", "Bar", themeLayerOptions).addTo(map);
+            console.log('data', data);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
             themeLayer.on("mouseout", closeInfoWin);

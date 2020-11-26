@@ -136,7 +136,9 @@ class QueryServiceBase extends ServiceBase {
             // 但是由于.NET能够处理2次encode的问题，JAVA不能处理所以统一换成了1次encode，后面不需要放开这段代码
             // fullRestUrl = encodeURI(fullRestUrl);
         } else {
-            dataObject = encodeURI(this.queryParam.getParameterObject());
+            // dataObject = encodeURI(this.queryParam.getParameterObject());
+            // @date 20201126 潘卓然 encodeURI移动到restQuery中处理，实际情况按照具体的NET/Java版本分析
+            dataObject = this.queryParam.getParameterObject();
         }
         this.restQuery(fullRestUrl, dataObject, onSuccess, way, onError, this.queryParam.resultFormat.toLowerCase());
     }

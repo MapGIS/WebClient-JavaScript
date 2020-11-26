@@ -189,7 +189,8 @@
             var queryService = new Zondy.Service.QueryDocFeature(queryParam, docName, 1, {
                 ip: ip,
                 port: port,
-                requestType: 'POST'
+                requestType: 'POST',
+                queryParam: {}
             });
 
             //执行查询操作，querySuccess为查询回调函数
