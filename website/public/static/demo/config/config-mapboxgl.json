@@ -283,6 +283,30 @@
             ]
         },
         {
+            "name": "ArcGIS MapServer",
+            "iconfont": "iconserver1",
+            "folder": "arcgis-mapserver",
+            "leaffolder": false,
+            "childs": [
+                {
+                    "name": "OGC",
+                    "iconfont": "iconmap",
+                    "folder": "arcgisogc",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "WMS",
+                            "file": "wms",
+                            "diffcult": "2",
+                            "detail": "ogc-wms服务",
+                            "icon": "wms.png",
+                            "update": "最后更新时间：2020-11-27"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "客户端可视化",
             "iconfont": "iconeye",
             "folder": "client-view",
@@ -826,7 +850,55 @@
             "leaffolder": false,
             "childs": [
                 {
-                    "name": "控制组件",
+                    "name": "Vue-栅格",
+                    "iconfont": "iconhand_draw",
+                    "folder": "raster",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "地图文档",
+                            "file": "document",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "document.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "瓦片服务",
+                            "file": "tile",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "tile.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "通用瓦片",
+                            "file": "raster",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "raster.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "WMTS瓦片",
+                            "file": "wmts",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "wmts.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "WMS转置BBox",
+                            "file": "reversebbox",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "reversebbox.png",
+                            "update": "最后更新时间：2020-11-27"
+                        }
+                    ]
+                },
+                {
+                    "name": "Vue-交互",
                     "iconfont": "iconhand_draw",
                     "folder": "control",
                     "leaffolder": true,
