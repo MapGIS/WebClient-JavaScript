@@ -252,6 +252,7 @@ export const SubHeader = [
                     {
                         title: '开发文档',
                         links: [['产品简介', '环境配置', '服务配置', '快速入门']],
+                        hightlights: [[false, false, false, false]],
                         routes: [['sdkinfo', 'skdeve', 'sdkservice', 'sdkquiker']]
                     },
                     {
@@ -260,6 +261,11 @@ export const SubHeader = [
                             ['图层M3D', '互联网地图', 'OGC服务', 'MapGIS地图服务', '场景' /* "IGServer-X", "IGServer-S" */],
                             ['三维控件分析', '轨迹模拟', '图形绘制', '工具', '查询'],
                             ['客户端可视化', '客户端-Echarts', '客户端-MapV', '客户端空间分析', '国际化']
+                        ],
+                        hightlights: [
+                            [false, false, false, false, false],
+                            [false, false, false, false, false],
+                            [false, false, false, false, false],
                         ],
                         routes: [
                             [
@@ -288,6 +294,7 @@ export const SubHeader = [
                     {
                         title: '开发API',
                         links: [['IGServer', 'IGServer-X', 'IGServer-S'], ['客户端可视化', '客户端空间分析', 'ElasticSearch'], ['开源Cesium-API']],
+                        hightlights: [[false,false,false],[false,false,false],[false]],
                         routes: [
                             ['./docs/cesium/index.html', 'igserverx', 'igservers'],
                             ['clientview', 'http://turfjs.org/', 'elasticsearch'],
@@ -302,6 +309,7 @@ export const SubHeader = [
                     {
                         title: '开发文档',
                         links: [['产品简介', '环境配置', '服务配置', '快速入门']],
+                        hightlights: [[false, false, false, false]],
                         routes: [['sdkinfo', 'skdeve', 'sdkservice', 'sdkquiker']]
                     },
                     {
@@ -310,6 +318,11 @@ export const SubHeader = [
                             ['互联网地图', 'OGC服务'],
                             ['地图', '要素', '量算', '专题图', '空间分析'],
                             ['客户端可视化', '客户端空间分析', 'ElasticSearch']
+                        ],
+                        hightlights: [
+                            [false, false],
+                            [false, false, false, false, false],
+                            [false, false, false],
                         ],
                         routes: [
                             ['/gallery/mapboxgl#internet', '/gallery/mapboxgl#ogc'],
@@ -326,6 +339,11 @@ export const SubHeader = [
                     {
                         title: '开发API',
                         links: [['地图服务', 'OGC服务'], ['目录服务', '要素服务', '量算服务', '专题图服务', '分析服务'], ['客户端可视化']],
+                        hightlights: [
+                            [false, false],
+                            [false, false, false, false, false],
+                            [false],
+                        ],
                         routes: [
                             [
                                 './docs/mapboxgl/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
@@ -349,6 +367,7 @@ export const SubHeader = [
                     {
                         title: '开发文档',
                         links: [['产品简介', '环境配置', '服务配置', '快速入门']],
+                        hightlights: [[false, false, false, false]],
                         routes: [['sdkinfo', 'skdeve', 'sdkservice', 'sdkquiker']]
                     },
                     {
@@ -357,6 +376,11 @@ export const SubHeader = [
                             ['互联网地图', 'OGC服务'],
                             ['地图', '要素', '量算', '专题图', '空间分析'],
                             ['客户端可视化', '客户端空间分析', 'ElasticSearch']
+                        ],
+                        hightlights: [
+                            [false, false],
+                            [false, false, false, false, false],
+                            [false, false, false],
                         ],
                         routes: [
                             ['/gallery/leaflet#internet', '/gallery/leaflet#ogc'],
@@ -373,6 +397,11 @@ export const SubHeader = [
                     {
                         title: '开发API',
                         links: [['地图服务', 'OGC服务'], ['目录服务', '要素服务', '量算服务', '专题图服务', '分析服务'], ['客户端可视化']],
+                        hightlights: [
+                            [false, false],
+                            [false, false, false, false, false],
+                            [false, false],
+                        ],
                         routes: [
                             [
                                 './docs/leaflet/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
@@ -396,6 +425,7 @@ export const SubHeader = [
                     {
                         title: '开发文档',
                         links: [['产品简介', '环境配置', '服务配置', '快速入门']],
+                        hightlights: [[false, false, false, false]],
                         routes: [['sdkinfo', 'skdeve', 'sdkservice', 'sdkquiker']]
                     },
                     {
@@ -404,6 +434,11 @@ export const SubHeader = [
                             ['互联网地图', 'OGC服务'],
                             ['地图', '要素', '量算', '专题图', '空间分析'],
                             ['客户端可视化', '客户端空间分析']
+                        ],
+                        hightlights: [
+                            [false, false],
+                            [false, false, false, false, false],
+                            [false, false],
                         ],
                         routes: [
                             ['/gallery/openlayers#internet', '/gallery/openlayers#ogc'],
@@ -420,6 +455,11 @@ export const SubHeader = [
                     {
                         title: '开发API',
                         links: [['地图服务', 'OGC服务'], ['目录服务', '要素服务', '量算服务', '专题图服务', '分析服务'], ['客户端可视化']],
+                        hightlights: [
+                            [false, false],
+                            [false, false, false, false, false],
+                            [false, false],
+                        ],
                         routes: [
                             [
                                 './docs/openlayers/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
@@ -451,11 +491,13 @@ export const MobileHeadersOrigin = [
             {
                 title: '概述',
                 links: [['详细服务', '插件列表', '调用方式', '四大引擎选择', '下载']],
+                hightlighs: [[false, false, false, false, true]],
                 routes: [['/total/detail', '/total/plugins', '/total/use', '/total/select', '/total/download']]
             },
             {
                 title: '协议',
                 links: [['epsg', 'ogc', 'geojson', 'socket']],
+                hightlighs: [[false, false, false, false]],
                 routes: [['/standard/epsg', '/standard/ogc', '/standard/geojson', '/standard/socket']]
             }
         ]
@@ -473,6 +515,7 @@ export const MobileSubHeader = [
                     {
                         title: '概述',
                         links: [['核心服务', '详细服务', '调用方式', '四大引擎选择', '下载']],
+                        hightlights: [[false, false, false, false, true]],
                         routes: [['/total/core', '/total/detail', '/total/use', '/total/select', '/total/download']]
                     }
                 ]
@@ -483,6 +526,7 @@ export const MobileSubHeader = [
                     {
                         title: '插件详情',
                         links: [['插件列表', '详细图表', '插件标签', '提交bug', '其他']],
+                        hightlights: [[false, false, false, false, false]],
                         routes: [['/total/plugins', '/total/detailChart', '/total/pluginTags', '/total/bugCommit', '/total/other']]
                     }
                 ]
@@ -499,7 +543,8 @@ export const MobileSubHeader = [
                     {
                         title: '常用链接',
                         links: [['演示示例', 'API文档']],
-                        routes: [['/gallery/cesium', './docs/cesium/index.html']]
+                        hightlights: [[true, false]],
+                        routes: [['/gallery/cesium', './docs/cesium/index.html']],
                     }
                 ]
             },
@@ -509,6 +554,7 @@ export const MobileSubHeader = [
                     {
                         title: '常用链接',
                         links: [['演示示例', 'API文档']],
+                        hightlights: [[true, false]],
                         routes: [['/gallery/mapboxgl', './docs/mapboxgl/index.html']]
                     }
                 ]
@@ -519,6 +565,7 @@ export const MobileSubHeader = [
                     {
                         title: '常用链接',
                         links: [['演示示例', 'API文档']],
+                        hightlights: [[false, false]],
                         routes: [['/gallery/openlayers', './docs/openlayers/index.html']]
                     }
                 ]
@@ -529,6 +576,7 @@ export const MobileSubHeader = [
                     {
                         title: '常用链接',
                         links: [['演示示例', 'API文档']],
+                        hightlights: [[false, false]],
                         routes: [['/gallery/leaflet', './docs/leaflet/index.html']]
                     }
                 ]

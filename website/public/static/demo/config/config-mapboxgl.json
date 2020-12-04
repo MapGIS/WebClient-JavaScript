@@ -289,7 +289,7 @@
             "leaffolder": false,
             "childs": [
                 {
-                    "name": "OGC",
+                    "name": "ARCGIS-OGC",
                     "iconfont": "iconmap",
                     "folder": "arcgisogc",
                     "leaffolder": true,
@@ -816,7 +816,7 @@
                             "update": "最后更新时间：2019-11-07"
                         },
                         {
-                            "name": "100万地质点",
+                            "name": "100万地质点-符号",
                             "file": "point100_symbol",
                             "diffcult": "5",
                             "detail": "",
@@ -918,6 +918,14 @@
                             "detail": "",
                             "icon": "measure.png",
                             "update": "最后更新时间：2020-11-23"
+                        },
+                        {
+                            "name": "卷帘组件",
+                            "file": "compare",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "compare.png",
+                            "update": "最后更新时间：2020-11-27"
                         }
                     ]
                 }
