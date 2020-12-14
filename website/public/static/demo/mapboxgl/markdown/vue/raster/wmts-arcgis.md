@@ -11,7 +11,7 @@
       1. ``` sh
             https://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/WMTS/?layer=Demographics_USA_Population_Density&style=default&tilematrixset=default028mm&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix=5&TileCol=9&TileRow=12
          ``` 
-      3. 预览图片如下 ![wmts-no-cors](wmts-no-cors.png)
+      3. 预览图片如下 ![wmts-no-cors](static/demo/mapboxgl/markdown/vue/raster/wmts-no-cors.png)
    
 2.  深圳信息中心的OGC-WMTS的做了跨域限制，只有在特定白名单的网址访问才能成功访问,`不要再问为什么报什么404 cors  400的问题了，都是一个本质原因`
     1. [深圳-WMTS测试ARCGIS-WMTS](http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/WMTS/1.0.0/WMTSCapabilities.xml) [深圳内网才能真正看到-用左边的网测在公网测试是一样的](http://suplicmap.pnr.sz/tilemap_1/rest/services/SZMAP/SZMAP_BASEMAP_ZW2K/MapServer/WMTS/1.0.0/WMTSCapabilities.xml)
@@ -21,7 +21,7 @@
        http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/WMTS/?layer=10wanZH&style=default&tilematrixset=default&Service=WMTS&
        ```
       1. Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix=3&TileCol=2&TileRow=1
-      2. 发现无法预览图片如下 ![wmts-no-cors](wmts-cors.png)
+      2. 发现无法预览图片如下 ![wmts-no-cors](static/demo/mapboxgl/markdown/vue/raster/wmts-cors.png)
       
 
 > 难道你去和深圳信息中心的沟通让人家放开吗? 想想都不现实， 怎么处理呢?
@@ -35,7 +35,7 @@ http://219.142.81.85/arcgis/rest/services/10wanZH/`MapServer/tile`/5/10/46?blank
 
 1. 按照MapServer/tile 打开该链接 
     1. http://219.142.81.85/arcgis/rest/services/10wanZH/`MapServer/tile`/5/10/46?blankTile=false
-    2. 预览如下所示 ![mapserver-tile](mapserver-tile.png)
+    2. 预览如下所示 ![mapserver-tile](static/demo/mapboxgl/markdown/vue/raster/mapserver-tile.png)
 
 
 2. 特别注意，使用了 Mapserver/tile的方式替代KVP后，由于不同版本的arcgis的4326的初始级不同 可能为0 可能为1，因此需要针对不同版本设置不同的zoom-offset / zoomOffset, `深圳信息中心`使用的是`10.6.1`，因此此处应该是 offset为-1
