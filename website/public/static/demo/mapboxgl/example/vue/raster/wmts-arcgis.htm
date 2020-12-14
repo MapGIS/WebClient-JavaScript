@@ -47,15 +47,29 @@
         <div id="app">
             <mapbox-map
                 id="map"
-                :access-token="accessToken"
-                :map-style="mapStyle"
-                :zoom="mapZoom"
-                :center="outerCenter"
-                :crs="mapCrs"
+                v-bind:access-token="accessToken"
+                v-bind:map-style="mapStyle"
+                v-bind:zoom="mapZoom"
+                v-bind:center="outerCenter"
+                v-bind:crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-ogc-wmts-layer :layer="layerTdt" :layer-id="layerTdtId" :source-id="sourceTdtId" :url="tdturl"> </mapbox-ogc-wmts-layer>
-                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapbox-ogc-wmts-layer>
+                <mapbox-igs-tdt-layer
+                    v-bind:layer="layer"
+                    v-bind:layer-id="layerId"
+                    v-bind:source-id="sourceId"
+                    v-bind:baseURL="baseURL"
+                    v-bind:token="token"
+                >
+                </mapbox-igs-tdt-layer>
+                <mapbox-ogc-wmts-layer 
+                    v-bind:layer="layerWmts" 
+                    v-bind:layer-id="layerWmtsId" 
+                    v-bind:source-id="sourceWmtsId" 
+                    v-bind:url="wmtsurl"
+                    v-bind:zoom-offset="offset"
+                >
+                </mapbox-ogc-wmts-layer>
             </mapbox-map>
         </div>
         <script>
@@ -70,23 +84,23 @@
                             //添加来源
                             sources: {},
                             //设置加载并显示来源的图层信息
-                            layers: []
+                            layers: [],
                         }, // 地图样式
-                        mapZoom: 1, // 地图初始化级数
-                        outerCenter: [116.39, 40.2], // 地图显示中心
-                        mapCrs: 'EPSG:3857',
+                        mapZoom: 4, // 地图初始化级数
+                        outerCenter: [116.39, 40.20], // 地图显示中心
+                        mapCrs: 'EPSG:4326',
 
-                        layerTdtId: 'igsLayer_layerId',
-                        sourceTdtId: 'igsLayer_sourceId',
-                        layerTdt: {}, // 图层配置信息
-                        tdturl: 'http://t0.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}&tk=2ddaabf906d4b5418aed0078e1657029',
+                        layerId: 'igsLayer_layerId',
+                        sourceId: 'igsLayer_sourceId',
+                        layer: {}, // 图层配置信息
+                        baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
+                        token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
 
                         layerWmts: {},
                         layerWmtsId: 'ogcwmts_layerId',
                         sourceWmtsId: 'ogcwmts_sourceId',
-
-                        wmtsurl:
-                            'https://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/WMTS/?layer=Demographics_USA_Population_Density&style=default&tilematrixset=default028mm&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}'
+                        wmtsurl: 'http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/tile/{z}/{y}/{x}',
+                        offset: -1,  //这里一定不能去掉
                     };
                 },
                 methods: {

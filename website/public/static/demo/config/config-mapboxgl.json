@@ -888,6 +888,14 @@
                             "update": "最后更新时间：2020-11-27"
                         },
                         {
+                            "name": "WMTS-深圳",
+                            "file": "wmts-arcgis",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "wmts-arcgis.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
                             "name": "WMS转置BBox",
                             "file": "reversebbox",
                             "diffcult": "2",
