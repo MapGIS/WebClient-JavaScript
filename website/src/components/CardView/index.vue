@@ -12,12 +12,13 @@
         >
           <img
             lazy
-            :src="imgUrl"
+            v-lazy="imgUrl"
             class="card-image"
           />
-           <!-- <el-image
+          <!-- <el-image
             lazy
             :src="imgUrl"
+            :scroll-container="webclientScrollContainer"
             class="card-image"
           >
             <div
@@ -42,6 +43,7 @@ export default {
   components: {},
   data () {
     return {
+      webclientScrollContainer: "el-scrollbar__wrap",
       lazyImg: true,
       nullImg: "./static/assets/components/CardGroup/null-img.png",
       nullUser: "./static/assets/user/admin-big.png",
@@ -123,68 +125,69 @@ export default {
 
 <style lang="scss">
 .gallery-card-div {
-  margin: 4px;
-  display: flex;
-  .card-image {
-    height: 256px;
-    width: 256px;
-    /* min-height: 256px;
+    margin: 4px;
+    display: flex;
+    .card-image {
+        height: 256px;
+        width: 256px;
+        /* min-height: 256px;
     min-width: 256px; */
-  }
-  .el-card__header {
-    padding: 0px 0px;
-    border-bottom: 1px solid #ebeef5;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-  .el-card {
-    background: transparent;
-  }
-  .el-card__body {
-    background: transparent;
-  }
-  .gallery-card-wrapper {
-    .box-card-header {
-      position: relative;
-      margin-top: 0px;
-      margin-left: 0px;
-      margin-right: 0px;
-      height: 100%;
-      /* width: calc( 20vw - 60px); */
-      img {
-        height: 100%;
-        width: 100%;
-        transition: all 0.2s linear;
-        &:hover {
-          transform: scale(1.1, 1.1);
-          /* filter: contrast(130%); */
+    }
+    .el-card__header {
+        padding: 0px 0px;
+        border-bottom: 1px solid #ebeef5;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .el-card {
+        background: transparent;
+    }
+    .el-card__body {
+        background: transparent;
+    }
+    .gallery-card-wrapper {
+        .box-card-header {
+            position: relative;
+            margin-top: 0px;
+            margin-left: 0px;
+            margin-right: 0px;
+            height: 100%;
+            /* width: calc( 20vw - 60px); */
+            img {
+                height: 100%;
+                width: 100%;
+                transition: all 0.2s linear;
+                &:hover {
+                    transform: scale(1.1, 1.1);
+                    /* filter: contrast(130%); */
+                }
+            }
+            .title {
+                font-size: 18px;
+            }
         }
-      }
-      .title {
-        font-size: 18px;
-      }
+        .card-content {
+            // width: calc( (100vw - 550px) / 4);
+            /* width: 250px; */
+            span {
+                color: #888;
+            }
+        }
+        span {
+            font-size: 14px;
+        }
     }
-    .card-content {
-      // width: calc( (100vw - 550px) / 4);
-      /* width: 250px; */
-      span {
-        color: #888;
-      }
-    }
-    span {
-      font-size: 14px;
-    }
-  }
 }
 .gallery-card-wrapper:hover {
-  border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    rgba(71, 148, 250, 1),
-    rgba(49, 225, 230, 1)
-  );
-  .title {
-    color: #ffffff;
-  }
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(71, 148, 250, 1), rgba(49, 225, 230, 1));
+    .title {
+        color: #ffffff;
+    }
+    .el-icon-picture-outline {
+        height: 256px;
+        width: 256px;
+        background: #888;
+    }
 }
 </style>

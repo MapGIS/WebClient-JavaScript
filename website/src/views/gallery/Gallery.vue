@@ -51,9 +51,10 @@
           </div>
           <el-scrollbar
             ref="componentScrollBar"
+            id="webclient-scroll-container"
             :class="{'gallery-scroll-content': true, 'gallery-scroll-content-mobile': mobile}"
-            wrapStyle="overflow-x: hidden;"
-            viewStyle="overflow-x: hidden;display:inline-grid;"
+            wrapStyle="overflow: auto;"
+            viewStyle="overflow: auto; display:inline-grid;"
           >
             <el-backtop></el-backtop>
             <gallery-card
