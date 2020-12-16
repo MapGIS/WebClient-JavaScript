@@ -134,6 +134,14 @@
               "detail": "自定义比例尺",
               "icon": "definescale.png",
               "update": "最后更新时间：2019-11-07"
+            },
+            {
+              "name": "GDBP矢量图层",
+              "file": "gdbplayer",
+              "diffcult": "4",
+              "detail": "矢量图层",
+              "icon": "gdbplayer.png",
+              "update": "最后更新时间：2020-12-16"
             }
           ]
         },

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>矢量图层显示</title>
+    <!--引入当前页面样式表-->
+    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //定义地图文档图层和地图
+        var VecLayer, map;
+
+        /** 初始化地图显示*/
+        function init() {
+            //地图范围
+            var extent = [634883.45517486, 3423051.6221381, 643377, 3431937.8];
+            //投影坐标系
+            var projection = new ol.proj.Projection({ units: ol.proj.Units.METERS, extent: extent });
+            //中心点
+            var center = ol.extent.getCenter(extent);
+            //图层显示名称
+            var name = "MapGIS IGS VecLayer";
+            //要显示的图层的gdbps地址
+            var gdbps = ["gdbp://MapGisLocal/sample/ds/地图综合/sfcls/水系"];
+            //创建一个图层
+            VecLayer = new Zondy.Map.GdbpLayer(name, gdbps, {
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                extent:extent,
+                mapstyUri: 'mapstyUri',
+                mapstyOption: 'mapstyOption'
+            });
+            console.log('VecLayer', VecLayer);
+            //创建一个地图容器
+            map = new ol.Map({
+                //目标DIV
+                target: 'mapCon',
+                //添加图层到地图容器中
+                layers: [VecLayer],
+                view: new ol.View({
+                    center: center,
+                    projection: projection,
+                    zoom: 2
+                })
+            });
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="mapCon" style="width: 100%; height: 95%; position: absolute;">
+</div>
+</body>
+</html>
