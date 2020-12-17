@@ -289,11 +289,51 @@
             "leaffolder": false,
             "childs": [
                 {
-                    "name": "ARCGIS-OGC",
+                    "name": "ArcGIS-MapServer",
+                    "iconfont": "iconmap",
+                    "folder": "arcgismapserver",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "瓦片图层",
+                            "file": "tiles",
+                            "diffcult": "2",
+                            "detail": "瓦片图层服务",
+                            "icon": "tiles.png",
+                            "update": "最后更新时间：2020-12-17"
+                        },
+                        {
+                            "name": "要素图层",
+                            "file": "featurelayer",
+                            "diffcult": "2",
+                            "detail": "要素图层服务",
+                            "icon": "featurelayer.png",
+                            "update": "最后更新时间：2020-12-17"
+                        },
+                        {
+                            "name": "图例图层",
+                            "file": "legend",
+                            "diffcult": "2",
+                            "detail": "图例服务",
+                            "icon": "legend.png",
+                            "update": "最后更新时间：2020-12-17"
+                        }
+                    ]
+                },
+                {
+                    "name": "ArcGIS-OGC",
                     "iconfont": "iconmap",
                     "folder": "arcgisogc",
                     "leaffolder": true,
                     "childs": [
+                        {
+                            "name": "WMTS",
+                            "file": "wmts",
+                            "diffcult": "2",
+                            "detail": "arcgis-ogc-wmts服务",
+                            "icon": "wmts.png",
+                            "update": "最后更新时间：2020-12-17"
+                        },
                         {
                             "name": "WMS",
                             "file": "wms",
@@ -301,6 +341,14 @@
                             "detail": "ogc-wms服务",
                             "icon": "wms.png",
                             "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "WMS-调序",
+                            "file": "wmsreverse",
+                            "diffcult": "2",
+                            "detail": "ogc-wms服务",
+                            "icon": "wms.png",
+                            "update": "最后更新时间：2020-12-17"
                         }
                     ]
                 }

@@ -85,11 +85,6 @@
     if (inArray(includes, "elasticsearch")) {
       inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
     }
-    if (inArray(includes, "vectortile")) {
-      inputScript(
-        httpUrl + "/cdn/zondyclient/webclient-cesium-vectortile-plugin.min.js"
-      );
-    }
     if (!inArray(excludes, "plugins")) {
       inputScript(httpUrl + "/cdn/zondyclient/webclient-cesium-plugin.min.js");
     }

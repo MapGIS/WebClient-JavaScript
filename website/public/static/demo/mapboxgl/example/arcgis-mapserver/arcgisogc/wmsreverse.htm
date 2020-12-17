@@ -90,11 +90,11 @@
           source: {
             type: "raster",
             tiles: [
-              `http://http://219.142.81.85/arcgis/services/20wanHT/MapServer/WMSServer?` +
+              `http://219.142.81.85/arcgis/services/10wanZH/MapServer/WMSServer?` +
               "service=WMS" +
               "&request=GetMap" +
               "&layers=" +
-              "0,2,4,10,11,12" +
+              "0,1,2,3,5,7,9,11" +
               "&styles=" +
               "&format=image/png" +
               "&transparent=true" +
@@ -102,7 +102,8 @@
               "&height=512" +
               "&width=512" +
               "&crs=EPSG:4326" +
-              "&bbox={bbox}"
+              "&bbox={bbox}" + 
+              "&reversebbox=true"  // 部分arcgis需要转置bbox的顺序
             ],
             tileSize: 512,
           },

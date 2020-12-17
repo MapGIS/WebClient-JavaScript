@@ -93,17 +93,17 @@ export const Headers = [
             {
                 title: '开发示例',
                 hightlights: [
-                    [false, false],
+                    [false, false, true],
                     [false, false, false, false, false],
                     [false, false, true, true, true]
                 ],
                 links: [
-                    ['互联网地图', 'OGC服务'],
+                    ['互联网地图', 'OGC服务', 'ArcGIS服务'],
                     ['地图', '要素', '量算', '专题图', '空间分析'],
                     ['客户端可视化', '客户端空间分析', 'DataStore', '行业特色', 'Vue']
                 ],
                 routes: [
-                    ['/gallery/mapboxgl#internet', '/gallery/mapboxgl#ogc'],
+                    ['/gallery/mapboxgl#internet', '/gallery/mapboxgl#ogc', '/gallery/mapboxgl#arcgis-mapserver#arcgismapserver'],
                     [
                         '/gallery/mapboxgl#mapgis-igserver#map',
                         '/gallery/mapboxgl#mapgis-igserver#feature',
