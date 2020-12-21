@@ -142,6 +142,14 @@
               "detail": "矢量图层",
               "icon": "gdbplayer.png",
               "update": "最后更新时间：2020-12-16"
+            },
+            {
+              "name": "ShapeFile矢量图层",
+              "file": "shapefilelayer",
+              "diffcult": "4",
+              "detail": "矢量图层",
+              "icon": "shapefilelayer.png",
+              "update": "最后更新时间：2020-12-16"
             }
           ]
         },

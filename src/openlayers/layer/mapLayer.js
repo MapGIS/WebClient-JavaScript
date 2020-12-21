@@ -168,6 +168,18 @@ var MapLayerTileSource = function (opt_options) {
      */
     //this.tileUrlFunction = options.tileUrlFunction !== undefined ? options.tileUrlFunction :this.tileUrlFunctionExtend;
 
+    /**
+     * @type {string}
+     * @description ShapeFile的服务器shp文件路径
+     */
+    this.mapstyUri = options.mapstyUri;
+
+    /**
+     * @type {Object}
+     * @description ShapeFile的服务器样式文件xml路径
+     */
+    this.mapstyOption = options.mapstyOption;
+
     //this.url_ = "http://" + this.ip + ":" + this.port + "/igs/rest/mrms/layers";
     if (this.domain === '') {
         this.url_ = this.networkProtocol + "://" + this.ip + ":" + this.port + "/igs/rest/mrms/layers";
@@ -218,7 +230,9 @@ MapLayerTileSource.prototype.tileUrlFunctionExtend = function (tileCoord, pixelR
     var params = {
         'f': this.f,
         'rlt': this.rlt,
-        'guid': this.guid
+        'guid': this.guid,
+        'mapstyUri': '',
+        'mapstyOption': {}
     };
 
     if (this.gdbps != null && this.gdbps != "") {
@@ -253,6 +267,8 @@ MapLayerTileSource.prototype.tileUrlFunctionExtend = function (tileCoord, pixelR
     params['w'] = this.tileSize;
     params['h'] = this.tileSize;
     params['bbox'] = bbox.join(',');
+    params['mapstyUri'] = this.mapstyUri;
+    params['mapstyOption'] = JSON.stringify(this.mapstyOption);
     return appendParams(this.url_, params);
 };
 
