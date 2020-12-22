@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-地图文档-M3D</title>
+        <title>Vue-地图瓦片</title>
         <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
@@ -23,8 +23,10 @@
                 libPath="./static/libs/cdn/cesium/Cesium.js"
                 pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
             >
-                <cesium-3d-tileset v-bind:url="url"> </cesium-3d-tileset>
-                <cesium-ogc-wmts-layer v-bind:url="tiandidu" v-bind:options="tiandiduoptions"></cesium-ogc-wmts-layer>
+                <cesium-vectortile-layer 
+                    v-bind:style-url="styleUrl"
+                >
+                </cesium-vectortile-layer>
             </cesium-web-globe>
         </div>
         <script>
@@ -33,15 +35,10 @@
                 data() {
                     return {
                         webgloberef: 'webgloberef' + Math.random(),
-                        url: './static/data/3DTile/Tileset/tileset.json',
-                        tiandidu:
-                            'http://t0.tianditu.com/DataServer?T=vec_c' +
-                            '&L={TileMatrix}&Y={TileRow}&X={TileCol}' +
-                            '&tk=9c157e9585486c02edf817d2ecbc7752',
-                        tiandiduoptions: {
-                            tilingScheme: 'EPSG:4490',
-                            tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-                        }
+                        ip: 'develop.smaryun.com',
+                        port: '6163',
+                        protocol: 'http',
+                        styleUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/蓝色-墨卡托.json'
                     };
                 },
                 methods: {

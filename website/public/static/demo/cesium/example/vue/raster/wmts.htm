@@ -21,7 +21,7 @@
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
                 libPath="./static/libs/cdn/cesium/Cesium.js"
-                pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
             >
                 <cesium-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></cesium-ogc-wmts-layer>
             </cesium-web-globe>

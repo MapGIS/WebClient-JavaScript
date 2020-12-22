@@ -1155,6 +1155,22 @@
                     ]
                 },
                 {
+                    "name": "Vue-矢量瓦片",
+                    "iconfont": "icon_features",
+                    "folder": "vvectortile",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "矢量瓦片",
+                            "file": "vectortile",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "vectortile.png",
+                            "update": "最后更新时间：2020-12-22"
+                        }
+                    ]
+                },
+                {
                     "name": "Vue-交互",
                     "iconfont": "icon_features",
                     "folder": "control",
