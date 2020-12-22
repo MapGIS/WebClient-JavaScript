@@ -42,7 +42,7 @@
         >
           <el-button
             size="mini"
-            @click="handleFullscreen"
+            @click="full"
           >
             <IconFont
               v-if="fullscreen"
@@ -103,6 +103,7 @@
                 :value="code"
                 :options="cmOptions"
                 @input="onCmCodeChange"
+                @ready="onCmReady"
               ></codemirror>
             </div>
           </el-row>
@@ -203,7 +204,8 @@ import "@/styles/markdown.css";
 import "@/styles/prism.css";
 // import "@/styles/codemirror.css";
 
-import { getHtml, getMarkdown } from "@/api/demo";
+// import { getHtml, getMarkdown } from "@/api/demo";
+import axios from 'axios';
 import IconFont from "@/components/IconFont/iconfront";
 
 export default {
@@ -223,8 +225,6 @@ export default {
       split: isMobile() ? "vertical" : "horizontal",
       mobile: isMobile(),
       loading: true,
-      curRouter: "unknow",
-      oldRouter: "unknow",
       active: "code",
       code: "const a = 10",
       newCode: "const b = 10",
@@ -317,16 +317,16 @@ export default {
       }
       return mapMode;
     },
+    full () {
+      const full = !this.fullscreen;
+      this.$emit('handleFullscreen', full);
+      this.resetSize(full);
+    },
     run () {
       this.oldCode = this.code;
       this.code = this.newCode;
       this.loading = true;
       this.resetCase(this.code);
-    },
-    handleFullscreen () {
-      const full = !this.fullscreen;
-      this.$emit('handleFullscreen', full);
-      this.resetSize(full);
     },
     reset () {
       this.loading = true;
@@ -369,19 +369,19 @@ export default {
       // var helpUrl = this.getHelpUrl(mode, file, first, second);
 
       new Promise((resolve, reject) => {
-        getHtml(url)
+        axios.get(url)
           .then(response => {
-            self.instanseObject = self.code = response;
+            self.instanseObject = self.code = response.data;
             self.resetCase(code || self.code);
-            resolve(response);
+            resolve(response.data);
           })
           .catch(error => {
             reject(error);
             self.instanseObject = self.code = "网络请求出错，请检查网络！";
           });
-        getMarkdown(apiUrl)
+        axios.get(apiUrl)
           .then(response => {
-            self.markdown = response;
+            self.markdown = response.data;
           }).catch(() => {
             window.console.warn('暂无该示例的markdown说明，后续持续补充......');
           })
@@ -429,17 +429,11 @@ export default {
       }
     },
     onCmReady () {
-      // this.reset();
+      this.reset();
     },
     onCmFocus () { },
     onCmCodeChange (newCode) {
       this.newCode = newCode;
-
-      if (this.curRouter != this.oldRouter) {
-        /*  this.resetSize();
-        this.resetHtml(undefined, undefined, undefined, undefined, newCode);
-        this.curRouter = this.oldRouter; */
-      }
     },
     markdownRendered () {
       this.$nextTick(() => {
@@ -459,14 +453,10 @@ export default {
   },
   mounted () {
     let vm = this;
-    // self.reset();
     vm.markdownScrollbal = vm.$refs.markdownScrollbal;
     vm.markdownScrollBox = vm.markdownScrollbal.$el.querySelector(
       ".el-scrollbar__wrap"
     );
-    setTimeout(() => {
-      vm.reset();
-    }, 500);
     window.onresize = function temp () {
       vm.resetSize(vm.fullscreen);
     };
