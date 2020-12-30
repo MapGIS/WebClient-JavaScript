@@ -38,6 +38,20 @@
     >
     </el-table-column>
     <el-table-column
+      label="近期同步更新"
+      prop="recent"
+      width="120"
+    >
+      <template slot-scope="scope">
+        <el-tag
+          :type="scope.row.recent ? 'success' : 'info'"
+          effect="dark"
+        >
+          {{ scope.row.recent ? '是' : '否' }}
+        </el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column
       sortable
       prop="version"
       label="当前使用版本/最新版本"
@@ -47,7 +61,7 @@
       sortable
       prop="licesen"
       label="证书"
-      width="200"
+      width="170"
     >
     </el-table-column>
   </el-table>

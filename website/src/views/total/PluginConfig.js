@@ -235,8 +235,9 @@ export const MapboxGL = [
     name: "mapbox-gl-compare",
     func: "为mapboxgl提供卷帘对比功能",
     dev: "无版本要求",
-    update: "2017/3/1",
-    version: "v0.1.0",
+    update: "2020/3/14",
+    recent: true,
+    version: "v0.4.0",
     licesen: "ISC License",
   },
   {
