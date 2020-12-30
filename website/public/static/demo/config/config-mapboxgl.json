@@ -1006,6 +1006,14 @@
                             "detail": "",
                             "icon": "compare.png",
                             "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "卷帘组件-纵轴",
+                            "file": "compare-hori",
+                            "diffcult": "1",
+                            "detail": "卷帘组件-纵轴",
+                            "icon": "compare-hori.png",
+                            "update": "最后更新时间：2020-12-30"
                         }
                     ]
                 }
