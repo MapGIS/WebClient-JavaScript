@@ -52,6 +52,30 @@
             ]
         },
         {
+            "name": "控件",
+            "iconfont": "iconcontrol1",
+            "folder": "control",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "卷帘组件",
+                    "file": "compare",
+                    "diffcult": "1",
+                    "detail": "卷帘组件",
+                    "icon": "compare.png",
+                    "update": "最后更新时间：2020-12-30"
+                },
+                {
+                    "name": "卷帘组件-纵轴",
+                    "file": "compare-hori",
+                    "diffcult": "1",
+                    "detail": "卷帘组件-纵轴",
+                    "icon": "compare-hori.png",
+                    "update": "最后更新时间：2020-12-30"
+                }
+            ]
+        },
+        {
             "name": "OGC",
             "iconfont": "iconstandard1",
             "folder": "ogc",
@@ -899,8 +923,8 @@
             "childs": [
                 {
                     "name": "Vue-栅格",
-                    "iconfont": "iconhand_draw",
-                    "folder": "raster",
+                    "iconfont": "iconraster",
+                    "folder": "vue-raster",
                     "leaffolder": true,
                     "childs": [
                         {
@@ -956,7 +980,7 @@
                 {
                     "name": "Vue-交互",
                     "iconfont": "iconhand_draw",
-                    "folder": "control",
+                    "folder": "vue-control",
                     "leaffolder": true,
                     "childs": [
                         {
