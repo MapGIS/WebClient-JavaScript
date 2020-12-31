@@ -108,6 +108,12 @@ export const Headers = [
         icon: 'iconmapbox',
         menus: [
             {
+                title: '常见问题',
+                hightlights: [[true]],
+                links: [['OGC-WMTS']],
+                routes: [['/helper/mapboxgl#ogc#wmts#WMTS']]
+            },
+            {
                 title: '开发示例',
                 hightlights: [
                     [false, false, true, false, false, false, false, false, false, false, true, true],
