@@ -67,7 +67,6 @@
                 :value="menu.hightlights[i][j] ? hint : ''"
                 class="menu-badge"
               >
-
                 <span :class="{'light-subtitle': light}">{{l}}</span>
               </el-badge>
             </div>
@@ -115,6 +114,12 @@ export default {
   methods: {
     isLink (link) {
       if (link.indexOf('http') >= 0) {
+        return true;
+      }
+      return false;
+    },
+    isRoute (link) {
+      if (link.indexOf('helper') >= 0) {
         return true;
       }
       return false;

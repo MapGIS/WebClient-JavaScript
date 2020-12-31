@@ -150,7 +150,7 @@ import { codemirror } from "vue-codemirror";
 
 import VueMarkdown from "vue-markdown";
 import Prism from "prismjs";
-import "prismjs/themes/prism-okaidia.css";  // theme
+import "prismjs/themes/prism-coy.css";  // theme
 import 'prismjs/components/prism-javascript';  // language
 
 import "codemirror/lib/codemirror.css";

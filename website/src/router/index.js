@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import LayoutThree from "@/views/layout/LayoutThree";
 import LayoutTwo from "@/views/layout/LayoutTwo";
 
+import Helper from '../views/helper/Helper';
 import Gallery from "../views/gallery/Gallery";
 import ShowCase from "../views/demo/ShowCase";
 
@@ -106,6 +107,11 @@ export const routes = [
         component: () => import("@/views/standard/Geojson"),
       },
     ],
+  },
+  {
+    path: "/helper/:case",
+    component: Helper,
+    name: "helper-views",
   },
   {
     path: "/gallery/:mapmode",
