@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>插值</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <script include="compare" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div id="fpsmap" class="map"></div>
+        </div>
+        <script>
+            var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+            var map = new mapboxgl.Map({
+                crs: 'EPSG:4326', //经纬度一定要设置crs参数
+                maxBounds: [
+                    [-180, -90],
+                    [180, 90]
+                ],
+                zoom: 3,
+                container: 'fpsmap',
+                style: {
+                    version: 8,
+                    sources: {
+                        'tianditu-4326-vector': {
+                            //来源类型为栅格瓦片
+                            type: 'raster',
+                            tiles: [
+                                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                                'http://t' +
+                                    Math.round(Math.random() * 7) +
+                                    '.tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                                    '&TILECOL=' +
+                                    '{x}' +
+                                    '&TILEROW=' +
+                                    '{y}' +
+                                    '&TILEMATRIX=' +
+                                    '{z}' +
+                                    '&tk=' +
+                                    tiandituKey
+                            ],
+                            //栅格瓦片的分辨率
+                            tileSize: 256
+                        },
+                        'tianditu-4326-symbol': {
+                            //来源类型为栅格瓦片
+                            type: 'raster',
+                            tiles: [
+                                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                                'http://t' +
+                                    Math.round(Math.random() * 7) +
+                                    '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                                    '&TILECOL=' +
+                                    '{x}' +
+                                    '&TILEROW=' +
+                                    '{y}' +
+                                    '&TILEMATRIX=' +
+                                    '{z}' +
+                                    '&tk=' +
+                                    tiandituKey
+                            ],
+                            //栅格瓦片的分辨率
+                            tileSize: 256
+                        }
+                    },
+                    layers: [
+                        {
+                            id: 'tianditu-4326-vector',
+                            type: 'raster',
+                            source: 'tianditu-4326-vector',
+                            minzoom: 0,
+                            maxzoom: 22
+                        },
+                        {
+                            id: 'tianditu-4326-symbol',
+                            type: 'raster',
+                            source: 'tianditu-4326-symbol',
+                            minzoom: 0,
+                            maxzoom: 22
+                        }
+                    ]
+                },
+                center: [116.35, 30.92]
+            });
+
+            let fps = new mapboxgl.FpsControl(/* { graphHeight: 40, background: '#1890ff', color: '#ffffff' } */);
+            map.addControl(fps);
+        </script>
+    </body>
+</html>

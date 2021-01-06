@@ -72,6 +72,14 @@
                     "detail": "卷帘组件-纵轴",
                     "icon": "compare-hori.png",
                     "update": "最后更新时间：2020-12-30"
+                },
+                {
+                    "name": "FPS组件",
+                    "file": "fps-control",
+                    "diffcult": "1",
+                    "detail": "卷帘组件-纵轴",
+                    "icon": "fps-control.png",
+                    "update": "最后更新时间：2021-01-06"
                 }
             ]
         },
@@ -384,6 +392,22 @@
             "folder": "client-view",
             "leaffolder": false,
             "childs": [
+                {
+                    "name": "通用可视化",
+                    "iconfont": "iconapp_mw_cluster",
+                    "folder": "common",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "聚类",
+                            "file": "cluster",
+                            "diffcult": "1",
+                            "detail": "GeoJSON格式的聚类分析",
+                            "icon": "cluster.png",
+                            "update": "最后更新时间：2021-01-05"
+                        }
+                    ]
+                },
                 {
                     "name": "矢量瓦片",
                     "iconfont": "icontile_hover",
@@ -1014,6 +1038,14 @@
                             "detail": "卷帘组件-纵轴",
                             "icon": "compare-hori.png",
                             "update": "最后更新时间：2020-12-30"
+                        },
+                        {
+                            "name": "FPS组件",
+                            "file": "fps",
+                            "diffcult": "1",
+                            "detail": "FPS组件",
+                            "icon": "fps.png",
+                            "update": "最后更新时间：2021-01-06"
                         }
                     ]
                 }
