@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>聚类显示</title>
-        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script include="jquery,papaparse" src="./static/libs/include-lib-local.js"></script>
         <script include="" src="./static/libs/include-mapboxgl-local.js"></script>
         <style>
             body {
@@ -26,6 +26,7 @@
             var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
             var map = new mapboxgl.Map({
                 container: 'map',
+                crs: 'EPSG:4326',
                 style: {
                     version: 8,
                     sources: {
@@ -36,8 +37,8 @@
                                 //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
                                 'http://t' +
                                     Math.round(Math.random() * 7) +
-                                    '.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
-                                    '&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles' +
+                                    '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+                                    '&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
                                     '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}' +
                                     '&tk=' +
                                     tiandituKey
@@ -62,14 +63,48 @@
             });
 
             map.on('load', () => {
-                $.get('./../static/data/geojson/china-city.geojson', (data) => {
-                    addCluster(data);
+                $.get('../../static/data/geojson/chinaEarthquake.csv', function (response) {
+                    var dataObj = Papa.parse(response, {
+                        skipEmptyLines: true,
+                        header: true
+                    });
+
+                    var data = dataObj.data;
+
+                    var geojson = {
+                        type: 'FeatureCollection',
+                        features: []
+                    };
+
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var date = new Date(item.date);
+                        var year = date.getFullYear();
+
+                        //2w+地震数据
+                        if (year > 2000 && year < 2015) {
+                            var feature = {
+                                type: 'feature',
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: []
+                                },
+                                properties: {
+                                    value: parseFloat(item.level)
+                                }
+                            };
+                            feature.geometry.coordinates = [parseFloat(item.X), parseFloat(item.Y)];
+
+                            geojson.features.push(feature);
+                        }
+                    }
+                    addCluster(geojson);
                 });
             });
 
             function addCluster(geojson) {
                 // map.add
-                map.addSource('clusterdata', {
+                map.addSource('earthquakes', {
                     type: 'geojson',
                     data: geojson,
                     cluster: true,
@@ -78,27 +113,40 @@
                 });
 
                 map.addLayer({
-                    id: `clusters-layer`,
+                    id: 'clusters',
                     type: 'circle',
-                    source: 'clusterdata',
-                    filter: ['has', 'name'],
+                    source: 'earthquakes',
+                    filter: ['has', 'point_count'],
                     paint: {
-                        'circle-color': '#51bbd6',
-                        'circle-radius': 20,
-                        'circle-stroke-width': 5, //轮廓线宽度
-                        'circle-stroke-color': '#FFFFFF' //轮廓线颜色
+                        'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
+                        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+                        'circle-stroke-color': '#FFFFFF',
+                        'circle-stroke-width': 5
                     }
                 });
 
                 map.addLayer({
                     id: 'cluster-count',
                     type: 'symbol',
-                    source: 'clusterdata',
-                    filter: ['has', 'name'],
+                    source: 'earthquakes',
+                    filter: ['has', 'point_count'],
                     layout: {
-                        'text-field': '{name}',
+                        'text-field': '{point_count_abbreviated}',
                         'text-font': ['宋体', '宋体'],
                         'text-size': 12
+                    }
+                });
+
+                map.addLayer({
+                    id: 'unclustered-point',
+                    type: 'circle',
+                    source: 'earthquakes',
+                    filter: ['!', ['has', 'point_count']],
+                    paint: {
+                        'circle-color': '#11b4da',
+                        'circle-radius': 4,
+                        'circle-stroke-width': 1,
+                        'circle-stroke-color': '#fff'
                     }
                 });
             }
