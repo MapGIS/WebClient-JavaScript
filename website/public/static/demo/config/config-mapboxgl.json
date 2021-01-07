@@ -1008,12 +1008,28 @@
                     "leaffolder": true,
                     "childs": [
                         {
+                            "name": "Maker组件",
+                            "file": "marker",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "marker.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "Popup组件",
+                            "file": "popup",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "popup.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
                             "name": "绘制组件",
                             "file": "draw",
                             "diffcult": "2",
                             "detail": "",
                             "icon": "draw.png",
-                            "update": "最后更新时间：2020-10-26"
+                            "update": "最后更新时间：2020-11-23"
                         },
                         {
                             "name": "测量组件",
@@ -1046,6 +1062,46 @@
                             "detail": "FPS组件",
                             "icon": "fps.png",
                             "update": "最后更新时间：2021-01-06"
+                        },
+                        {
+                            "name": "导航组件",
+                            "file": "navigation",
+                            "diffcult": "1",
+                            "detail": "导航组件",
+                            "icon": "navigation.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "属性组件",
+                            "file": "attribution",
+                            "diffcult": "1",
+                            "detail": "属性组件",
+                            "icon": "attribution.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "全屏组件",
+                            "file": "fullscreen",
+                            "diffcult": "1",
+                            "detail": "导航组件",
+                            "icon": "fullscreen.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "地址组件",
+                            "file": "geolocate",
+                            "diffcult": "1",
+                            "detail": "地址组件",
+                            "icon": "geolocate.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "比例尺组件",
+                            "file": "scale",
+                            "diffcult": "1",
+                            "detail": "比例尺组件",
+                            "icon": "scale.png",
+                            "update": "最后更新时间：2021-01-07"
                         }
                     ]
                 }

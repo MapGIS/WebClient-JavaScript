@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-FPS</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #main {
+                margin: 0 0;
+                width: 100%;
+                height: 100vh;
+            }
+            #map {
+                height: 100vh;
+                width: 100%;
+            }
+            .custom {
+                background: #ffffff;
+                padding: 6px;
+                border: 3px solid #ccc;
+                border-radius: 3px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapbox-map
+                id="map"
+                v-bind:access-token="accessToken"
+                v-bind:map-style="mapStyle"
+                v-bind:zoom="mapZoom"
+                v-bind:center="outerCenter"
+                v-bind:crs="mapCrs"
+                v-on:load="handleMapLoad"
+            >
+                <mapbox-ogc-wmts-layer v-bind:layer="layerWmts" v-bind:layer-id="layerWmtsId" v-bind:source-id="sourceWmtsId" v-bind:url="wmtsurl">
+                </mapbox-ogc-wmts-layer>
+                <mapbox-raster-layer
+                    v-bind:layer="layerRaster"
+                    v-bind:layer-id="layerRasterId"
+                    v-bind:source="sourceRaster"
+                    v-bind:source-id="sourceRasterId"
+                >
+                </mapbox-raster-layer>
+                <mapbox-marker :coordinates="coordinates1" :color="color1" :offset="offset"></mapbox-marker>
+                <mapbox-marker :coordinates="coordinates2" :color="color2"> </mapbox-marker>
+                <mapbox-marker :coordinates="coordinates3" :color="color3">
+                    <div slot="marker" class="custom">内部自定义槽</div>
+                </mapbox-marker>
+            </mapbox-map>
+        </div>
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {},
+                            //设置加载并显示来源的图层信息
+                            layers: []
+                        }, // 地图样式
+                        mapZoom: 3, // 地图初始化级数
+                        outerCenter: [116.39, 40.2], // 地图显示中心
+                        mapCrs: 'EPSG:4326',
+
+                        layerWmts: {},
+                        layerWmtsId: 'ogcwmts_layerId',
+                        sourceWmtsId: 'ogcwmts_sourceId',
+                        wmtsurl: 'http://t0.tianditu.com/DataServer?T=vec_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+
+                        layerRaster: {},
+                        sourceRaster: {
+                            type: 'raster',
+                            tiles: ['http://t0.tianditu.com/DataServer?T=cia_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752']
+                        },
+                        layerRasterId: 'raster_layerId',
+                        sourceRasterId: 'raster_sourceId',
+
+                        color1: '#F3F5F7',
+                        color2: '#52B883',
+                        color3: '#37495E',
+                        offset: [20, 20],
+                        coordinates1: [110, 30],
+                        coordinates2: [90, 40],
+                        coordinates3: [120, 50]
+                    };
+                },
+                methods: {
+                    handleMapLoad(payload) {
+                        this.map = payload.map;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

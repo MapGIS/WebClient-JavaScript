@@ -27,6 +27,7 @@
             var map = new mapboxgl.Map({
                 container: 'map',
                 crs: 'EPSG:4326',
+                maxBounds: [[-180, -90], [180, 90]],
                 style: {
                     version: 8,
                     sources: {
