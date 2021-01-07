@@ -63,18 +63,33 @@ export default {
   },
   methods: {
     getCurrentKind () {
+      // let anchors = location.href.split("#");
+      // if (!anchors || anchors.length < 2) return;
+
+      // let file = anchors[anchors.length - 1];
+      // let mode = this.getMapMode();
+      // let first, second;
+      // if (anchors.length <= 4) {
+      //   first = anchors[anchors.length - 2];
+      //   second = undefined;
+      // } else {
+      //   first = anchors[anchors.length - 3];
+      //   second = anchors[anchors.length - 2];
+      // }
+
       let anchors = location.href.split("#");
       if (!anchors || anchors.length < 2) return;
 
-      let file = anchors[anchors.length - 1];
+      let hrefs = anchors[1].split("/").slice(2);
       let mode = this.getMapMode();
+      let file = hrefs[hrefs.length - 1];
       let first, second;
-      if (anchors.length <= 4) {
-        first = anchors[anchors.length - 2];
-        second = undefined;
-      } else {
-        first = anchors[anchors.length - 3];
-        second = anchors[anchors.length - 2];
+      if (hrefs.length <= 3) {
+        first = hrefs[hrefs.length - 2];
+         second = undefined;
+       } else {
+         first = hrefs[hrefs.length - 3];
+        second = hrefs[hrefs.length - 2];
       }
 
       this.resetHtml(mode, file, first, second);

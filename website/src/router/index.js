@@ -109,7 +109,12 @@ export const routes = [
     ],
   },
   {
-    path: "/helper/:case",
+    path: "/helper/:mapmode/:first/:file",
+    component: Helper,
+    name: "helper-views",
+  },
+  {
+    path: "/helper/:mapmode/:first/:second/:file",
     component: Helper,
     name: "helper-views",
   },

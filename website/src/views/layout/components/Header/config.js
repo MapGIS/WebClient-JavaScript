@@ -31,7 +31,7 @@ export const Headers = [
                 title: '常见问题',
                 hightlights: [[true]],
                 links: [['OGC-WMTS']],
-                routes: [['/helper/cesium#ogc#wmts#WMTS']]
+                routes: [['/helper/cesium/ogc/wmts/WMTS']]
             },
             {
                 title: '开发示例',
@@ -109,15 +109,19 @@ export const Headers = [
         menus: [
             {
                 title: '常见问题',
-                hightlights: [[true]],
-                links: [['OGC-WMTS']],
-                routes: [['/helper/mapboxgl#ogc#wmts#WMTS']]
+                hightlights: [[true, true, true]],
+                links: [['OGC-WMTS', '矢量瓦片-介绍','矢量瓦片-几何&符号']],
+                routes: [
+                    ['/helper/mapboxgl/ogc/wmts/WMTS',
+                     '/helper/mapboxgl/vectortile/index',
+                     '/helper/mapboxgl/vectortile/style']
+                ]
             },
             {
                 title: '开发示例',
                 hightlights: [
                     [false, false, true, false, false, false, false, false, false, false, true, true],
-                    [true, true]
+                    [true, false, false, true]
                 ],
                 links: [
                     [
@@ -134,7 +138,7 @@ export const Headers = [
                         'DataStore',
                         '行业特色'
                     ],
-                    ['Vue-栅格', 'Vue-交互']
+                    ['Vue-图层', 'Vue-栅格', 'Vue-OGC', 'Vue-交互']
                 ],
                 routes: [
                     [
@@ -151,7 +155,12 @@ export const Headers = [
                         '/gallery/mapboxgl#datastore#elasticsearch',
                         '/gallery/mapboxgl#industry#search'
                     ],
-                    ['/gallery/mapboxgl#vue#vue-raster', '/gallery/mapboxgl#vue#vue-control']
+                    [
+                        '/gallery/mapboxgl#vue#vue-layer',
+                        '/gallery/mapboxgl#vue#vue-raster',
+                        '/gallery/mapboxgl#vue#vue-ogc',
+                        '/gallery/mapboxgl#vue#vue-control'
+                    ]
                 ]
             },
             {
