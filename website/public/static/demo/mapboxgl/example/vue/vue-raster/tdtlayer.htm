@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-测量</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style type="text/css">
+      #map {
+          height: 100vh;
+          width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <mapbox-map
+        id="map"
+        :access-token="accessToken"
+        :map-style="mapStyle"
+        :zoom="mapZoom"
+        :center="outerCenter"
+        :crs="mapCrs"
+        v-on:load="handleMapLoad"
+        >
+        <mapbox-igs-tdt-layer
+          :layer="tianditu1Layer"
+          :layer-id="tianditu1LayerId"
+          :source-id="tianditu1SourceId"
+          :url="tianditu1Url"
+          >
+        </mapbox-igs-tdt-layer>
+        <mapbox-igs-tdt-layer
+          :layer="tianditu2Layer"
+          :layer-id="tianditu2LayerId"
+          :source-id="tianditu2SourceId"
+          :url="tianditu2Url"
+          >
+        </mapbox-igs-tdt-layer>
+      </mapbox-map>
+    </div>
+    <script>
+      var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+      new Vue({
+          el: '#app',
+          data() {
+              return {
+                  mapStyle: {
+                      //设置版本号，一定要设置
+                      version: 8,
+                      //添加来源
+                      sources: {},
+                      //设置加载并显示来源的图层信息
+                      layers: [],
+                  }, // 地图样式
+                  mapZoom: 2, // 地图初始化级数
+                  outerCenter: [116.39, 40.20], // 地图显示中心
+                  mapCrs: 'EPSG:4326',
+
+                  tianditu1Layer: {},
+                  tianditu1LayerId: 'tianditu_layer_id_1',
+                  tianditu1SourceId: 'tianditu_source_id_1',
+                  tianditu1Url:  'http://t' +
+                      Math.round(Math.random() * 7) +
+                      '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+                      '&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                      '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}' +
+                      '&tk=' +  tiandituKey,
+
+                  tianditu2Layer: {},
+                  tianditu2LayerId: 'tianditu_layer_id_2',
+                  tianditu2SourceId: 'tianditu_source_id_2',
+                  tianditu2Url:  'http://t' +
+                      Math.round(Math.random() * 7) +
+                      '.tianditu.gov.cn/cia_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+                      '&LAYER=cia&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                      '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}' +
+                      '&tk=' +  tiandituKey
+              };
+          },
+          methods: {
+              enableMeasure() {
+                  const component = this.$refs.measureref;
+                  if (component) {
+                      component.enableMeasure();
+                  }
+              },
+              handleMapLoad(payload) {
+                  this.map = payload.map;
+              }
+          }
+      });
+    </script>
+  </body>
+</html>

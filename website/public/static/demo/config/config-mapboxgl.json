@@ -946,6 +946,54 @@
             "leaffolder": false,
             "childs": [
                 {
+                    "name": "Vue-图层",
+                    "iconfont": "icon_layers",
+                    "folder": "vue-layer",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "GeoJSON图层",
+                            "file": "geojsonlayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "geojsonlayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "图像图层",
+                            "file": "imagelayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "imagelayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "画布图层",
+                            "file": "canvaslayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "canvaslayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "视频图层",
+                            "file": "videolayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "videolayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "栅格图层",
+                            "file": "rasterlayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "rasterlayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        }
+                    ]
+                },
+                {
                     "name": "Vue-栅格",
                     "iconfont": "iconraster",
                     "folder": "vue-raster",
@@ -975,6 +1023,38 @@
                             "icon": "raster.png",
                             "update": "最后更新时间：2020-11-27"
                         },
+                        {
+                            "name": "ArcGIS图层",
+                            "file": "arcgislayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "arcgislayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "Google图层",
+                            "file": "googlelayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "googlelayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "天地图图层",
+                            "file": "tdtlayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "tdtlayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        }
+                    ]
+                },
+                {
+                    "name": "Vue-OGC",
+                    "iconfont": "icon_ogc",
+                    "folder": "vue-ogc",
+                    "leaffolder": true,
+                    "childs": [
                         {
                             "name": "WMTS瓦片",
                             "file": "wmts",

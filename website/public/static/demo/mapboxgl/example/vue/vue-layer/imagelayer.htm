@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-GeoJSON</title>
+    <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style type="text/css">
+      #main {
+          margin: 0 0;
+          width: 100%;
+          height: 100vh;
+      }
+      #map {
+          height: 100vh;
+          width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <mapbox-map
+        id="map"
+        :access-token="accessToken"
+        :map-style="mapStyle"
+        :zoom="mapZoom"
+        :center="outerCenter"
+        :crs="mapCrs"
+        v-on:load="handleMapLoad"
+        >
+        <mapbox-ogc-wmts-layer
+          :layer="layerWmts"
+          :layer-id="layerWmtsId"
+          :source-id="sourceWmtsId"
+          :url="wmtsurl">
+        </mapbox-ogc-wmts-layer>
+        <mapbox-image-layer :source-id="imageSourceId" :source="imageSource" :layer-id="imageLayerId" :layer="imageLayer">
+        </mapbox-image-layer>
+      </mapbox-map>
+    </div>
+    <script>
+      new Vue({
+          el: '#app',
+          data() {
+              return {
+                  mapStyle: {
+                      version: 8,
+                      sources: {},
+                      layers: []
+                  },
+                  mapZoom: 5,
+                  outerCenter: [116.3, 40.5],
+                  mapCrs: 'EPSG:4326',
+
+                  layerWmts: {},
+                  layerWmtsId: 'ogcwmts_layerId',
+                  sourceWmtsId: 'ogcwmts_sourceId',
+                  wmtsurl: 'http://t0.tianditu.com/DataServer?T=vec_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+
+                  imageSourceId: 'imagesourceid',
+                  imageSource: {
+                      type: 'image',
+                      url: '../../static/data/picture/imagelayer.png',
+                      coordinates: [
+                          [108.7381, 45.6339],
+                          [126.0011, 45.6339],
+                          [126.0011, 34.2583],
+                          [108.7381, 34.2583]
+                      ]
+                  },
+                  imageLayerId: 'imagelayerid',
+                  imageLayer: {
+                      'source': 'imagesourceid',
+                      'type': 'raster',
+                      'paint': { 'raster-opacity': 0.85 }
+                  }
+              };
+          },
+          methods: {
+              handleMapLoad(payload) {
+                  this.map = payload.map;
+              }
+          }
+      });
+    </script>
+  </body>
+</html>

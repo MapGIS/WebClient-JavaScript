@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-GeoJSON</title>
+    <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style type="text/css">
+      #main {
+          margin: 0 0;
+          width: 100%;
+          height: 100vh;
+      }
+      #map {
+          height: 100vh;
+          width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <mapbox-map
+        id="map"
+        :access-token="accessToken"
+        :map-style="mapStyle"
+        :zoom="mapZoom"
+        :center="outerCenter"
+        :crs="mapCrs"
+        v-on:load="handleMapLoad"
+        >
+        <mapbox-ogc-wmts-layer
+          :layer="layerWmts"
+          :layer-id="layerWmtsId"
+          :source-id="sourceWmtsId"
+          :url="wmtsurl">
+        </mapbox-ogc-wmts-layer>
+</mapbox-raster-layer>
+<mapbox-video-layer
+  :source="videoSource"
+  :source-id="videoSourceId"
+  :layer="videoLayer"
+  :layer-id="videoLayerId">
+</mapbox-video-layer>
+</mapbox-map>
+</div>
+<script>
+  new Vue({
+      el: '#app',
+      data() {
+          return {
+              mapStyle: {
+                  version: 8,
+                  sources: {},
+                  layers: []
+              },
+              mapZoom: 17,
+              outerCenter: [-122.514426, 37.562984],
+              mapCrs: 'EPSG:3857',
+
+              layerWmts: {},
+              layerWmtsId: 'ogcwmts_layerId',
+              sourceWmtsId: 'ogcwmts_sourceId',
+              wmtsurl: "http://mt2.google.cn/vt/lyrs=y&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}",
+
+              videoSourceId: "videosource",
+              videoSource: {
+                  'type': 'video',
+                  'urls': [
+                      '../../static/data/video/drone.mp4',
+                      '../../static/data/video/drone.webm'
+                  ],
+                  'coordinates': [
+                      [-122.51596391201019, 37.56238816766053],
+                      [-122.51467645168304, 37.56410183312965],
+                      [-122.51309394836426, 37.563391708549425],
+                      [-122.51423120498657, 37.56161849366671]
+                  ]
+              },
+              videoLayerId: 'videoid',
+              videoLayer: {
+                  "type": "raster",
+                  "source": "videosource", //必须和上面的videosource一致
+              }
+          };
+      },
+      methods: {
+          handleMapLoad(payload) {
+              this.map = payload.map;
+          }
+      }
+  });
+</script>
+</body>
+</html>

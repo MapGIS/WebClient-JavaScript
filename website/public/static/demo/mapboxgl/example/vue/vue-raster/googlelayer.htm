@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-测量</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #map {
+                height: 100vh;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapbox-map
+                id="map"
+                :access-token="accessToken"
+                :map-style="mapStyle"
+                :zoom="mapZoom"
+                :center="outerCenter"
+                :crs="mapCrs"
+                v-on:load="handleMapLoad"
+            >
+                <mapbox-google-layer
+                    :layer="googleLayer"
+                    :layer-id="googleLayerId"
+                    :source-id="googleSourceId"
+                    :url="googleUrl"
+                >
+                </mapbox-google-layer>
+            </mapbox-map>
+        </div>
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {},
+                            //设置加载并显示来源的图层信息
+                            layers: [],
+                        }, // 地图样式
+                        mapZoom: 2, // 地图初始化级数
+                        outerCenter: [116.39, 40.20], // 地图显示中心
+                        mapCrs: 'EPSG:3857',
+
+                        googleLayer: {},
+                        googleLayerId: 'ogcwmts_layer_id',
+                        googleSourceId: 'google_source_id',
+                        googleUrl: "http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}",
+                    };
+                },
+                methods: {
+                    enableMeasure() {
+                        const component = this.$refs.measureref;
+                        if (component) {
+                            component.enableMeasure();
+                        }
+                    },
+                    handleMapLoad(payload) {
+                        this.map = payload.map;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

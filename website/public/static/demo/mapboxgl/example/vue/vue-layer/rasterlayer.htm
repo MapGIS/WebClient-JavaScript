@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-GeoJSON</title>
+    <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style type="text/css">
+      #main {
+          margin: 0 0;
+          width: 100%;
+          height: 100vh;
+      }
+      #map {
+          height: 100vh;
+          width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <mapbox-map
+        id="map"
+        :access-token="accessToken"
+        :map-style="mapStyle"
+        :zoom="mapZoom"
+        :center="outerCenter"
+        :crs="mapCrs"
+        v-on:load="handleMapLoad"
+        >
+        <mapbox-raster-layer
+          :layer="raster1Layer"
+          :layer-id="raster1LayerId"
+          :source-id="raster1SourceId"
+          :source="raster1Source">
+        </mapbox-raster-layer>
+        <mapbox-raster-layer
+          :layer="raster2Layer"
+          :layer-id="raster2LayerId"
+          :source-id="raster2SourceId"
+          :source="raster2Source">
+        </mapbox-raster-layer>
+      </mapbox-map>
+    </div>
+    <script>
+      new Vue({
+          el: '#app',
+          data() {
+              return {
+                  mapStyle: {
+                      version: 8,
+                      sources: {},
+                      layers: []
+                  },
+                  mapZoom: 3,
+                  outerCenter: [110, 30],
+                  mapCrs: 'EPSG:4326',
+
+                  raster1SourceId: 'ogcwmts_sourceId_1',
+                  raster1Source:{
+                      type: 'raster',
+                      tiles: ['http://t0.tianditu.com/DataServer?T=vec_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752']
+                  },
+                  raster1LayerId: 'ogcwmts_layerId_1',
+                  raster1Layer: {
+                      'source': 'ogcwmts_sourceId_1',
+                      'type': 'raster',
+                  },
+                  raster2SourceId: 'ogcwmts_sourceId_2',
+                  raster2Source:{
+                      type: 'raster',
+                      tiles: ['http://t0.tianditu.com/DataServer?T=cia_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752']
+                  },
+                  raster2LayerId: 'ogcwmts_layerId_2',
+                  raster2Layer: {
+                      'source': 'ogcwmts_sourceId_2',
+                      'type': 'raster',
+                  }
+              };
+          },
+          methods: {
+              handleMapLoad(payload) {
+                  this.map = payload.map;
+              }
+          }
+      });
+    </script>
+  </body>
+</html>
