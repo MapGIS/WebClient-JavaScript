@@ -946,6 +946,54 @@
             "leaffolder": false,
             "childs": [
                 {
+                    "name": "Vue-矢量",
+                    "iconfont": "iconvectordraw",
+                    "folder": "vue-vector",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "点",
+                            "file": "circle",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "circle.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "线",
+                            "file": "line",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "line.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "区",
+                            "file": "fill",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "fill.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "面",
+                            "file": "fill-extrusion",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "fill-extrusion.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "注记",
+                            "file": "symbol",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "symbol.png",
+                            "update": "最后更新时间：2021-01-08"
+                        }
+                    ]
+                },
+                {
                     "name": "Vue-图层",
                     "iconfont": "icon_layers",
                     "folder": "vue-layer",
