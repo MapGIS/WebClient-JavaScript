@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-线</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #main {
+                margin: 0 0;
+                width: 100%;
+                height: 100vh;
+            }
+            #map {
+                height: 100vh;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapbox-map
+                id="map"
+                :access-token="accessToken"
+                :map-style="mapStyle"
+                :zoom="mapZoom"
+                :center="outerCenter"
+                :crs="mapCrs"
+                v-on:load="handleMapLoad"
+            >
+                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapbox-ogc-wmts-layer>
+                <mapbox-vector-layer :layer="layerVector" :layer-id="layerVectorId" :source="sourceVector" :source-id="sourceVectorId">
+                </mapbox-vector-layer>
+            </mapbox-map>
+        </div>
+        <script>
+            var Lines = {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '光谷大道'
+                        },
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: [
+                                [114.42277908325195, 30.522490923860307],
+                                [114.41831588745116, 30.508293960387878],
+                                [114.41471099853514, 30.47560348875447],
+                                [114.41402435302734, 30.46643043369801]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '雄楚大道高架'
+                        },
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: [
+                                [114.44818496704102, 30.488325973138874],
+                                [114.41350936889648, 30.498680255963365],
+                                [114.38587188720703, 30.500750980290693],
+                                [114.3621826171875, 30.517315187761888]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '地铁二号线'
+                        },
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: [
+                                [114.38947677612305, 30.50858975160729],
+                                [114.31703567504881, 30.538755728448898]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '铁路线'
+                        },
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: [
+                                [114.44827079772948, 30.50696288876576],
+                                [114.42887306213377, 30.498162567993706],
+                                [114.42200660705566, 30.47464183804516],
+                                [114.39188003540039, 30.47094309295698]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: {
+                            version: 8, //设置版本号，一定要设置
+                            sources: {}, //添加来源
+                            layers: [], //设置加载并显示来源的图层信息
+                            //特别注意，这里是字体库，下面的sprite才是样式库
+                            glyphs: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf',
+                            //特别注意，这里是真正的图片样式库
+                            sprite: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/sprite'
+                        }, // 地图样式
+                        mapZoom: 11, // 地图初始化级数
+                        outerCenter: [114.39960479736327, 30.495722001885323], // 地图显示中心
+                        mapCrs: 'EPSG:4326',
+
+                        layerWmts: {},
+                        layerWmtsId: 'ogcwmts_layer_id',
+                        sourceWmtsId: 'ogcwmts_source_id',
+                        wmtsurl: 'http://t0.tianditu.com/DataServer?T=img_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+
+                        sourceVectorId: 'vector_source_id',
+                        layerVectorId: 'vector_layer_id',
+                        sourceVector: {
+                            type: 'geojson',
+                            data: Lines
+                        },
+                        layerVector: {
+                            type: 'line',
+                            source: 'vector_source_id', //必须和上面的vector_source_id一致
+                            layout: {
+                                'line-cap': 'square', //butt 尖头，round 圆头，square平头
+                                'line-join': 'miter', //bevel平拐，round 圆拐，miter棱拐
+                                'line-miter-limit': 2, //棱拐的限制，一般用不上
+                                'line-round-limit': 1.05, //圆拐的限制，一般用不上
+                                visibility: 'visible' //是否可见  visible / none
+                            },
+                            paint: {
+                                'line-width': 6, //宽度
+                                'line-color': '#009688', //颜色
+                                'line-opacity': 1.0, //透明度
+                                'line-gap-width': 4, //线的沟宽，如果有一条线会变成2条线，中间有条沟
+                                'line-offset': 0, //尽量少用，如果这个值相对大的话在拐角处很容易变形变胖
+                                //"line-dasharray": [1,1],//实线、虚线的组合，可以表示铁路线等
+                                'line-blur': 2 //模糊度，和宽度配合使用，当宽度20，模糊度10时，出现边线模糊的效果，该值要小于线宽度
+                                // "line-pattern": "picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+                                //"line-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+                            }
+                        }
+                    };
+                },
+                methods: {
+                    handleMapLoad(payload) {
+                        let map = payload.map;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-面</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #main {
+                margin: 0 0;
+                width: 100%;
+                height: 100vh;
+            }
+            #map {
+                height: 100vh;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapbox-map
+                id="map"
+                :access-token="accessToken"
+                :map-style="mapStyle"
+                :zoom="mapZoom"
+                :pitch="45"
+                :bearing="-40"
+                :center="outerCenter"
+                :crs="mapCrs"
+                v-on:load="handleMapLoad"
+            >
+                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapbox-ogc-wmts-layer>
+                <mapbox-vector-layer :layer="layerVector" :layer-id="layerVectorId" :source="sourceVector" :source-id="sourceVectorId">
+                </mapbox-vector-layer>
+            </mapbox-map>
+        </div>
+        <script>
+            var GeoPolygons = {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '副楼1',
+                            height: 20
+                        },
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [
+                                [
+                                    [114.398295879364, 30.46672635218658],
+                                    [114.3991756439209, 30.46672635218658],
+                                    [114.3991756439209, 30.467244207378176],
+                                    [114.398295879364, 30.467244207378176],
+                                    [114.398295879364, 30.46672635218658]
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '副楼2',
+                            height: 20
+                        },
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [
+                                [
+                                    [114.39840316772461, 30.465912574179665],
+                                    [114.39919710159302, 30.465912574179665],
+                                    [114.39919710159302, 30.46639344382371],
+                                    [114.39840316772461, 30.46639344382371],
+                                    [114.39840316772461, 30.465912574179665]
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '主楼',
+                            height: 40
+                        },
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [
+                                [
+                                    [114.39793109893797, 30.46852033877593],
+                                    [114.39796328544617, 30.46755861811546],
+                                    [114.39929366111755, 30.4675863601906],
+                                    [114.39939022064209, 30.465588910582497],
+                                    [114.4001841545105, 30.46560740567415],
+                                    [114.40006613731383, 30.467706575758285],
+                                    [114.39999103546143, 30.46823367303407],
+                                    [114.40098881721497, 30.468289156791897],
+                                    [114.40091371536253, 30.46898270109769],
+                                    [114.39789891242981, 30.468807003674],
+                                    [114.39793109893797, 30.46852033877593]
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '会议室',
+                            height: 15
+                        },
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [
+                                [
+                                    [114.40005540847778, 30.46815507098972],
+                                    [114.40011709928513, 30.467646467992992],
+                                    [114.40014123916626, 30.46742221946438],
+                                    [114.4004014134407, 30.46743609052238],
+                                    [114.40066426992416, 30.46752625235114],
+                                    [114.40081715583801, 30.467681145554398],
+                                    [114.40092980861664, 30.467886898831548],
+                                    [114.40095126628876, 30.46820824296784],
+                                    [114.40005540847778, 30.46815507098972]
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        type: 'Feature',
+                        properties: {
+                            name: '边界区',
+                            height: 5
+                        },
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [
+                                [
+                                    [114.39653635025024, 30.46945430840451],
+                                    [114.39637541770935, 30.464414465069698],
+                                    [114.40151453018188, 30.465366969208556],
+                                    [114.40260887145996, 30.46664312520253],
+                                    [114.40298438072205, 30.469740970553463],
+                                    [114.39653635025024, 30.46945430840451]
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: {
+                            version: 8, //设置版本号，一定要设置
+                            sources: {}, //添加来源
+                            layers: [], //设置加载并显示来源的图层信息
+                            //特别注意，这里是字体库，下面的sprite才是样式库
+                            glyphs: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf',
+                            //特别注意，这里是真正的图片样式库
+                            sprite: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/sprite'
+                        }, // 地图样式
+                        mapZoom: 16, // 地图初始化级数
+                        outerCenter: [114.39958333969115, 30.467706575758285], // 地图显示中心
+                        mapCrs: 'EPSG:4326',
+
+                        layerWmts: {},
+                        layerWmtsId: 'ogcwmts_layer_id',
+                        sourceWmtsId: 'ogcwmts_source_id',
+                        wmtsurl: 'http://t0.tianditu.com/DataServer?T=img_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+
+                        sourceVectorId: 'vector_source_id',
+                        layerVectorId: 'vector_layer_id',
+                        sourceVector: {
+                            type: 'geojson',
+                            data: GeoPolygons
+                        },
+                        layerVector: {
+                            type: 'fill-extrusion',
+                            source: 'vector_source_id', //必须和上面的vector_source_id一致
+                            paint: {
+                                'fill-extrusion-height': ['get', 'height'], //也可以直接传递固定值
+                                'fill-extrusion-color': '#009688', //颜色
+                                'fill-extrusion-opacity': 0.9 //透明度
+                            }
+                        }
+                    };
+                },
+                methods: {
+                    handleMapLoad(payload) {
+                        let map = payload.map;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
