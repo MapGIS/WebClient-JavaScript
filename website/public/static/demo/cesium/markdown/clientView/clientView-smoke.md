@@ -28,7 +28,7 @@
             let imageUrl1 = './static/data/effect/fire1.png';
             let imageUrl2 = './static/data/effect/smoke1.png';          
             //添加烟雾粒子特效
-            fireObj = advancedAnalysisManager.createFire(imageUrl1, position,{
+            fireObj = advancedAnalysisManager.createStableParticle(imageUrl1, position,{
                 emissionRate:3,
                 startScale:1,
                 endScale:3

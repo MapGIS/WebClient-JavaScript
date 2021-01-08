@@ -27,7 +27,7 @@
             //火焰图片url
             let imageUrl = './static/data/effect/fire.png';
             //添加火焰粒子特效
-            fireObj = advancedAnalysisManager.createFire(imageUrl, position);
+            fireObj = advancedAnalysisManager.createStableParticle(imageUrl, position);
 
 ```
 ``` Javascript

@@ -41,8 +41,8 @@
             });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
-            sceneManager.flyToEx(118.04270724880529, 42.63750947318966, {
-                height: 195,
+            sceneManager.flyToEx(117.9361, 40.3829, {
+                height: 300,
                 heading: -101,
                 pitch: -17,
                 roll: 0
@@ -66,7 +66,7 @@
                 //CZML文件地址
                 './static/data/czml/fengji.czml',
                 //成功回调
-                function (entities) {
+                function(entities) {
                     //判断是否添加成功
                     var enti = entities.getById('aerogenerator10');
                     if (enti == undefined) {

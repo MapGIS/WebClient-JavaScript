@@ -35,7 +35,11 @@
                 viewer: webGlobe.viewer
             });
             //加载三维地形地图文档（服务地址，配置参数）
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             var terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
             //初始化视图功能管理类
             var sceneManager = new CesiumZondy.Manager.SceneManager({

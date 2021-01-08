@@ -33,7 +33,7 @@ webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
 //初始化动态圆对象
 var scanEffect = new Cesium.CircleScanEffect(webGlobe.viewer, {
     center: Cesium.Cartesian3.fromDegrees(114.06, 22.54, 20),
-    maxRadius: 5000,
+    radius: 5000,
     scanColor: new Cesium.Color(1, 0, 0, 1),
     duration: 8000
 });

@@ -56,10 +56,14 @@
                     viewer: webGlobe.viewer
                 });
                 //加载M3D地图文档（服务地址，配置参数）
-                var { protocol, ip, port } = window.webclient;
+                var {
+                    protocol,
+                    ip,
+                    port
+                } = window.webclient;
                 landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
                     autoReset: false,
-                    loaded: function (layer) {
+                    loaded: function(layer) {
                         //初始化高级分析功能管理类
                         var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
                             viewer: viewer
@@ -84,10 +88,12 @@
                                     //设置为正在通视分析
                                     visiblitying = true;
                                 } else {
-                                    //设置通视分析结果点
-                                    visiblity.targetPosition = cartesian;
-                                    //设置为正在通视分析
-                                    visiblitying = false;
+                                    if (visiblitying) {
+                                        //设置通视分析结果点
+                                        visiblity.targetPosition = cartesian;
+                                        //设置为正在通视分析
+                                        visiblitying = false;
+                                    }
                                 }
 
                             }

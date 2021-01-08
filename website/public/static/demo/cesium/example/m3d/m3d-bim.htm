@@ -36,14 +36,18 @@
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             bimLayerArr = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/school`, {
                 //模型细节显示控制参数：较大值可提高渲染性能，较低值可提高视觉质量
                 maximumScreenSpaceError: 8
             });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
-            sceneManager.flyToEx(-83.00080692049974, 30.0012794196354, {
+            sceneManager.flyToEx(112.9991, 33.0015, {
                 height: 19,
                 heading: 140,
                 pitch: 0,
