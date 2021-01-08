@@ -371,9 +371,16 @@ export default {
       new Promise((resolve, reject) => {
         axios.get(url)
           .then(response => {
-            self.instanseObject = self.code = response.data;
-            self.resetCase(code || self.code);
-            resolve(response.data);
+            let data = response.data;
+            if (typeof data === 'string') {
+              if (data.indexOf('http://192.168.10.245:89/cookie/flashcookie.swf') >= 0) {
+                self.resetHtml(mode, file, first, second, code);
+              } else {
+                self.instanseObject = self.code = response.data;
+                self.resetCase(code || self.code);
+                resolve(response.data);
+              }
+            }
           })
           .catch(error => {
             reject(error);
@@ -466,91 +473,91 @@ export default {
 
 <style lang="less" scope>
 .splitpanes__pane {
-  background-color: #ffffff !important;
+    background-color: #ffffff !important;
 }
 .webclient-showcase-mobile {
-  .element-scroll-content {
-    height: calc(100vh - 45vh - 150px) !important;
-    overflow-x: hidden;
-  }
+    .element-scroll-content {
+        height: calc(100vh - 45vh - 150px) !important;
+        overflow-x: hidden;
+    }
 }
 .webclient-showcase {
-  .showcase-exit-fullscreen {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 9999;
-  }
-  .webclient-showcase-content {
-    height: 100%;
-  }
-  .toolbar-showcase-group {
-    position: absolute;
-    margin-top: 5px;
-    margin-right: 6px;
-    z-index: 100;
-    right: 10px;
-  }
-  .CodeMirror-focused .cm-matchhighlight {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
-    background-position: bottom;
-    background-repeat: repeat-x;
-  }
-  .cm-matchhighlight {
-    background-color: lightgreen;
-  }
-  .CodeMirror-selection-highlight-scrollbar {
-    background-color: green;
-  }
+    .showcase-exit-fullscreen {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 9999;
+    }
+    .webclient-showcase-content {
+        height: 100%;
+    }
+    .toolbar-showcase-group {
+        position: absolute;
+        margin-top: 5px;
+        margin-right: 6px;
+        z-index: 100;
+        right: 10px;
+    }
+    .CodeMirror-focused .cm-matchhighlight {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
+        background-position: bottom;
+        background-repeat: repeat-x;
+    }
+    .cm-matchhighlight {
+        background-color: lightgreen;
+    }
+    .CodeMirror-selection-highlight-scrollbar {
+        background-color: green;
+    }
 
-  .editor-codemirror-wraper {
-    height: calc(100vh - 235px);
-  }
+    .editor-codemirror-wraper {
+        height: calc(100vh - 235px);
+    }
 
-  .iframemobile {
-    height: 100%;
-  }
+    .iframemobile {
+        height: 100%;
+    }
 
-  .editer-codemirror-content {
-    height: 100%;
-  }
+    .editer-codemirror-content {
+        height: 100%;
+    }
 
-  .select-group {
-    margin: 5px;
-  }
+    .select-group {
+        margin: 5px;
+    }
 
-  /* #api-scroll {
+    /* #api-scroll {
   height: 700px;
   overflow: auto;
   font-size: 14px;
 }*/
 
-  #showcase {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-  }
+    #showcase {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
 
-  .splitpanes__pane {
-    justify-content: center;
-    align-items: center;
-  }
+    .splitpanes__pane {
+        justify-content: center;
+        align-items: center;
+    }
 
-  /* .splitpanes__pane span {
+    /* .splitpanes__pane span {
   font-family: Helvetica, Arial, sans-serif;
   color: #fff;
   font-size: 5em;
   opacity: 0.6;
 } */
 
-  .element-scroll-content {
-    height: calc(100vh - 300px);
-    overflow-x: hidden;
-  }
-  .editer-tabs-wrapper {
-    /* .el-tabs__item {
+    .element-scroll-content {
+        height: calc(100vh - 300px);
+        overflow-x: hidden;
+    }
+    .editer-tabs-wrapper {
+        /* .el-tabs__item {
       padding: 0 20px;
       height: 30px;
       -webkit-box-sizing: border-box;
@@ -563,6 +570,6 @@ export default {
       color: #303133;
       position: relative;
     } */
-  }
+    }
 }
 </style>
