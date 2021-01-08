@@ -37,8 +37,7 @@
             });
             //显示鼠标位置控件
             sceneManager.showPosition("coordinateDiv");
-            //定位跳转
-            sceneManager.flyTo(114.06, 22.54, 20000, 2);
+
 
             //构造实体绘制控制器对象
             var entityController = new CesiumZondy.Manager.EntityController({
@@ -52,7 +51,7 @@
             //初始化动态圆对象
             var scanEffect = new Cesium.CircleScanEffect(webGlobe.viewer, {
                 center: Cesium.Cartesian3.fromDegrees(114.06, 22.54, 20),
-                maxRadius: 5000,
+                radius: 5000,
                 scanColor: new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1),
                 duration: 8000
             });
@@ -63,7 +62,8 @@
             });
             //添加添加场景特效-动态圆
             analysisManager.addSceneEffect(scanEffect);
-
+            //定位跳转
+            sceneManager.flyTo(114.06, 22.54, 20000, 2);
             //通过removeSceneEffect()移除场景特效
             //analysisManager.removeSceneEffect(scanEffect);
         }

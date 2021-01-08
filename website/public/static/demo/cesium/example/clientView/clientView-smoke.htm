@@ -15,7 +15,7 @@
         //定义三维视图的主要类
         var webGlobe;
         //火焰烟雾粒子
-        var fireObj,smokeObj;
+        var fireObj, smokeObj;
         //地图初始化函数
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
@@ -44,7 +44,11 @@
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             var landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
                 //是否自动定位到数据位置
                 autoReset: false,
@@ -62,23 +66,25 @@
 
 
             //初始化高级分析功能管理类
-            var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({ viewer: webGlobe.viewer });
+            var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                viewer: webGlobe.viewer
+            });
             //粒子发射位置点
             let position = [114.40103, 30.4679, 12];
             //火焰与烟雾图片url
             let imageUrl1 = './static/data/effect/fire1.png';
-            let imageUrl2 = './static/data/effect/smoke1.png';          
+            let imageUrl2 = './static/data/effect/smoke1.png';
             //添加烟雾粒子特效
-            fireObj = advancedAnalysisManager.createFire(imageUrl1, position,{
-                emissionRate:3,
-                startScale:1,
-                endScale:3
+            fireObj = advancedAnalysisManager.createStableParticle(imageUrl1, position, {
+                emissionRate: 3,
+                startScale: 1,
+                endScale: 3
             });
             //添加烟雾粒子特效
-            smokeObj = advancedAnalysisManager.createFire(imageUrl2, position,{
-                emissionRate:35,
-                startScale:5,
-                endScale:8
+            smokeObj = advancedAnalysisManager.createStableParticle(imageUrl2, position, {
+                emissionRate: 35,
+                startScale: 5,
+                endScale: 8
             });
 
             var viewer = webGlobe.viewer;
@@ -91,11 +97,11 @@
             //火焰烟雾特效初始参数
             var viewModel = {
                 emissionRate: 35.0, //排放率
-                particleLife: 1.2,//粒子生命
+                particleLife: 1.2, //粒子生命
                 speed: 2.0, //速度
-                startScale: 5.0,  //起始规模
-                endScale: 8.0,  //终止规模
-                particleSize: 25.0  //图像尺寸
+                startScale: 5.0, //起始规模
+                endScale: 8.0, //终止规模
+                particleSize: 25.0 //图像尺寸
             };
             //火焰烟雾参数设置绑定UI
             Cesium.knockout.track(viewModel);
@@ -104,7 +110,7 @@
 
             function subscribeParameter(name) {
                 Cesium.knockout.getObservable(viewModel, name).subscribe(
-                    function (newValue) {
+                    function(newValue) {
                         if (name === 'emissionRate') {
                             //排放率
                             smokeObj.emissionRate = parseFloat(newValue);
@@ -151,8 +157,8 @@
 
 <body onload="init()">
     <div id="GlobeView"></div>
-       <!--位置信息容器-->
-       <div id="coordinateDiv" class="coordinateClass">
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>
     </div>
     <div class="message" id="toolbar" style="left: 10px; ">
@@ -161,8 +167,7 @@
                 <tr>
                     <td>排放率(emissionRate)</td>
                     <td>
-                        <input type="range" min="0.0" max="100.0" step="1"
-                            data-bind="value: emissionRate, valueUpdate: 'input'">
+                        <input type="range" min="0.0" max="100.0" step="1" data-bind="value: emissionRate, valueUpdate: 'input'">
                         <input type="text" size="5" data-bind="value: emissionRate">
                     </td>
                 </tr>
@@ -170,8 +175,7 @@
                 <tr>
                     <td>图像尺寸(imageSize)</td>
                     <td>
-                        <input type="range" min="2" max="60.0" step="1"
-                            data-bind="value: particleSize, valueUpdate: 'input'">
+                        <input type="range" min="2" max="60.0" step="1" data-bind="value: particleSize, valueUpdate: 'input'">
                         <input type="text" size="5" data-bind="value: particleSize">
                     </td>
                 </tr>
@@ -179,8 +183,7 @@
                 <tr>
                     <td>粒子生命(particleLife)</td>
                     <td>
-                        <input type="range" min="0.1" max="30.0" step="1"
-                            data-bind="value: particleLife, valueUpdate: 'input'">
+                        <input type="range" min="0.1" max="30.0" step="1" data-bind="value: particleLife, valueUpdate: 'input'">
                         <input type="text" size="5" data-bind="value: particleLife">
                     </td>
                 </tr>
@@ -189,8 +192,7 @@
                 <tr>
                     <td>速度(speed)</td>
                     <td>
-                        <input type="range" min="0.0" max="30.0" step="1"
-                            data-bind="value: speed, valueUpdate: 'input'">
+                        <input type="range" min="0.0" max="30.0" step="1" data-bind="value: speed, valueUpdate: 'input'">
                         <input type="text" size="5" data-bind="value: speed">
                     </td>
                 </tr>
@@ -198,8 +200,7 @@
                 <tr>
                     <td>起始规模(startScale)</td>
                     <td>
-                        <input type="range" min="0.0" max="10.0" step="1"
-                            data-bind="value: startScale, valueUpdate: 'input'">
+                        <input type="range" min="0.0" max="10.0" step="1" data-bind="value: startScale, valueUpdate: 'input'">
                         <input type="text" size="5" data-bind="value: startScale">
                     </td>
                 </tr>
@@ -207,8 +208,7 @@
                 <tr>
                     <td>终止规模(endScale)</td>
                     <td>
-                        <input type="range" min="0.0" max="10.0" step="1"
-                            data-bind="value: endScale, valueUpdate: 'input'">
+                        <input type="range" min="0.0" max="10.0" step="1" data-bind="value: endScale, valueUpdate: 'input'">
                         <input type="text" size="5" data-bind="value: endScale">
                     </td>
                 </tr>

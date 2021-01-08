@@ -50,34 +50,7 @@ var drawPolygon = new Cesium.DrawPolygonTool(webGlobe.viewer, getDrawResult);
 drawPolygon.activeTool();
 ```
 
-6. <font color=red>统一高度</font>：将交互式选取的点的高度统一；
-
-``` Javascript
-var array = new Array();
-for (let i = 0; i < e.points.length; i++) {
-    let point = e.points[i];
-    let resPoint = new Cesium.Cartesian3;
-    let invserTran = new Cesium.Matrix4;
-    Cesium.Matrix4.inverse(tileset[0].root.transform, invserTran);
-    Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
-    array.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
-}
-var hight = null;
-for (var arraylength = 0; arraylength < array.length; arraylength++) {
-    hight = hight < array[arraylength].z ? array[arraylength].z : hight;
-}
-var newArray = new Array();
-for (var arraylength = 0; arraylength < array.length; arraylength++) {
-    array[arraylength].z = hight;
-    let point = array[arraylength];
-    let resPoint = new Cesium.Cartesian3;
-    let invserTran = new Cesium.Matrix4;
-    Cesium.Matrix4.multiplyByPoint(tileset[0].root.transform, point, resPoint);
-    newArray.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
-}
-```
-
-7. <font color=red>创建洪水淹没分析</font>：初始化高级分析功能管理类 `CesiumZondy.Manager.AdvancedAnalysisManager()` 对象，调用高级分析功能管理类的 `createFlood()` 方法创建洪水淹没分析示例；
+6. <font color=red>创建洪水淹没分析</font>：初始化高级分析功能管理类 `CesiumZondy.Manager.AdvancedAnalysisManager()` 对象，调用高级分析功能管理类的 `createFlood()` 方法创建洪水淹没分析示例；
 
 ``` Javascript
 //初始化高级分析功能管理类
@@ -85,28 +58,26 @@ var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
     viewer: viewer
 });
 //初始化洪水淹没分析类
-flood = advancedAnalysisManager.createFlood();
-//设置洪水淹没分析区域点集
-flood.dotsList = newArray;
-//设置洪水淹没区域最底高度
-flood.minHeight = Number(document.getElementById('minHeight').value <= 0 ? 0 : document.getElementById('minHeight').value);
-//设置洪水淹没区域最高高度
-flood.maxHeight = Number(document.getElementById('maxHeight').value <= 0 ? 30 : document.getElementById('maxHeight').value);
-//设置洪水上涨速度
-flood.floodSpeed = Number(document.getElementById('floodSpeed').value <= 0 ? 1 : document.getElementById('floodSpeed').value);
+flood = advancedAnalysisManager.createFlood(positions, {
+    //设置洪水淹没区域动画最低高度
+    minHeight: Number(document.getElementById('minHeight').value <= 0 ? 0 : document.getElementById('minHeight').value), //设置洪水淹没
+    //设置洪水淹没区域最高高度
+    maxHeight: Number(document.getElementById('maxHeight').value <= 0 ? 2000 : document.getElementById('maxHeight').value),
+    //设置洪水上涨速度
+    floodSpeed: Number(document.getElementById('floodSpeed').value <= 0 ? 1 : document.getElementById('floodSpeed').value),
+});
+flood.floodColor = new Cesium.Color(1, 1, 0.4, 0.7);
 //水纹频率 指波浪的个数
-flood.frequency = Number(document.getElementById('frequency').value <= 0 ? 1000 : document.getElementById('frequency').value);
+flood.frequency = 100;
 //水纹速度
-flood.animationSpeed = Number(document.getElementById('animationSpeed').value <= 0 ? 0.01 : document.getElementById('animationSpeed').value);
+flood.animationSpeed = 0.01;
 //水波的高度
-flood.amplitude = Number(document.getElementById('amplitude').value <= 0 ? 10 : document.getElementById('amplitude').value);
-//指定水面颜色 和 透明度
-flood.floodColor = new Cesium.Color(0.2, 0.5, 0.4, 0.7);
+flood.amplitude = 10;
 // 指定光线强度
 flood.specularIntensity = 3.0;
 ```
 
-8. <font color=red>洪水淹没结果显示</font>：将结果显示到三维球控件上
+7. <font color=red>洪水淹没结果显示</font>：将结果显示到三维球控件上
 
 ``` Javascript
 //添加洪水淹没结果显示
