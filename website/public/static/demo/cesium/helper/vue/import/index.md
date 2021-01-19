@@ -8,7 +8,9 @@
 webclient-vue-cesium 支持一层封装，除了本身需要安装以外，你还需要拷贝@mapgis/cesium
 
 ## 源问题
-如果使用`淘宝源`，则导致下载的@mapgis/cesium很容易是1.0.0或者较低的版本，目前最新的公网版本是 [NPM-Verison](https://www.npmjs.com/package/@mapgis/cesium?activeTab=versions)
+如果使用`淘宝源`，则导致下载的@mapgis/cesium很容易是1.0.0或者较低的版本.通过npm的淘宝镜像源下载的@mapgis/cesium库存在版本偏差问题，例如当前最新版本为1.59.0，使用淘宝镜像源下载的最新的版本只有1.0.0，可以关掉淘宝镜再行下载。
+目前最新的公网版本是 [NPM-Verison](https://www.npmjs.com/package/@mapgis/cesium?activeTab=versions)
+![代码结构](./static/demo/cesium/helper/vue/import/version.png)
 
 ```bash
 # 不同时安装@mapgis/cesium的原因在于这个对外的是非高级版本，事业部一般全内部使用高级版本开发

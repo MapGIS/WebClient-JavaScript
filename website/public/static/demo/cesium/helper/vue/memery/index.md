@@ -5,8 +5,11 @@
 ## 表现
 
 ```sh
-JVM Out Of Memery
+// JVM Out Of Memery
+使用最新的@mapgis/webclient-vue-cesium组件库时，可能会遇到内存不足而导致编译失败的问题，可以在package.json文件中添加启动命令行"node --max_old_space_size=8196 ./node_modules/@vue/cli-service/bin/vue-cli-service serve"，增加编译允许的最大内存，编译运行时使用该命令行，如下所示编译时使用npm run dev-memery命令
 ```
+> 由于内存不够可能导致一些特殊的情况，在调用一些正常的功能的时候报错如下：经排查是@mapgis/webclient-vue-cesium组件库版本的问题，我使用的版本为1.0.4，更新到目前最新的版本1.0.6后，报错解决，igserver瓦片正常加载。
+![错误](./static/demo/cesium/helper/vue/memery/error.png)
 
 ## 解决方式
 
