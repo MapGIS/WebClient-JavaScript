@@ -29,9 +29,9 @@ export const Headers = [
         menus: [
             {
                 title: '常见问题',
-                hightlights: [[true]],
-                links: [['OGC-WMTS']],
-                routes: [['/helper/cesium/ogc/wmts/WMTS']]
+                hightlights: [[false, true, true, true]],
+                links: [['OGC-WMTS', 'Vue-基本引入', 'Vue-内存溢出', 'Vue-路由切换']],
+                routes: [['/helper/cesium/ogc/wmts/WMTS', '/helper/cesium/vue/import/index', '/helper/cesium/vue/memery/index', '/helper/cesium/vue/route/index']]
             },
             {
                 title: '开发示例',
