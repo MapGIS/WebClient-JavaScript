@@ -6,7 +6,10 @@
       :color="getColor(item.anchor)"
       :class="{'active': isActive(item.anchor)}"
     >
-      <span @click="handleClick(item.anchor)">{{item.name}}</span>
+      <span @click="handleClick(item.anchor)"
+            :class="{'active': isActive(item.anchor), 'anchor-text': true}"
+      >{{item.name}}
+      </span>
     </el-timeline-item>
   </el-timeline>
 </template>
@@ -48,15 +51,15 @@ export default {
 <style lang="scss">
 .gallery-fix-anchors {
   .active {
-    color: #33dbe8;
+    color: #33dbe8 !important;
     .el-timeline-item__content {
       color: #33dbe8;
     }
   }
   .el-timeline-item__node--normal {
     left: -1px;
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
   }
   .el-timeline-item__node {
     border: 2px solid #ffffff;
@@ -64,8 +67,13 @@ export default {
   .el-timeline-item__content {
     color: #303133;
     font-size: 12px;
-    // max-width: 96px;
-  }
+// max-width: 96px;
 }
+.anchor-text {
+color: #303133;
+// font-weight: bold;
+}
+}
+
 </style>
 

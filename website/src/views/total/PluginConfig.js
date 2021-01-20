@@ -324,7 +324,7 @@ export const Cesium = [
 export const Tags = {
   Leaflet: {
     view: {
-      styleObject: 'border-radius: 6px; background-color: #99FFCC',
+      styleObject: 'border-radius: 6px;',
       list: [
         { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
         { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
@@ -332,7 +332,7 @@ export const Tags = {
       ],
     },
     format: {
-      styleObject: 'border-radius: 6px; background:	#00FFFF',
+      styleObject: 'border-radius: 6px; background:#DDDDDD',
       list:[
         { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
         { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
@@ -345,14 +345,14 @@ export const Tags = {
       ],
     },
     render: {
-      styleObject: 'border-radius: 6px; background:	#FFE4C4',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list:[
         { name: 'vectortile', info: '不支持行业符号的矢量瓦片，支持4326／3857.' },
         { name: 'mvt', info: '支持行业符号的矢量瓦片，支持3857.' }
       ],
     },
     common: {
-      styleObject: 'border-radius: 6px; background: #00CCFF',
+      styleObject: 'border-radius: 6px; background: #DDDDDD',
       list:[
           { name: 'cluster/heater', info: '官方聚类图/热力图.' },
           { name: 'colors-marker /animate-marker/ realmove-marker', info: '注记的各种动画，颜色，样式.' },
@@ -360,7 +360,7 @@ export const Tags = {
       ],
     },
     control: {
-      styleObject: 'border-radius: 6px; background: #f6def6',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list:[
         { name: 'measure/ measurement/ pathdrag/ snake', info: '测量/拖拽/移动等操作.' },
         { name: 'editable/draw/ boundarycanvas', info: '编辑，绘制，地图裁剪等操作.' },
@@ -371,7 +371,7 @@ export const Tags = {
   },
   Mapbox: {
     view: {
-      styleObject: 'border-radius: 6px; background: #99FFCC',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list: [
         { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
         { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
@@ -379,7 +379,7 @@ export const Tags = {
       ],
     },
     format: {
-      styleObject: 'border-radius: 6px; background:	#00FFFF',
+      styleObject: 'border-radius: 6px; background:	#DDDDDD',
       list:[
         { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
         { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
@@ -392,7 +392,7 @@ export const Tags = {
       ],
     },
     common: {
-      styleObject: 'border-radius: 6px; background: #00CCFF',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list:[
           { name: 'compare', info: '卷帘左右对比功能.' },
           { name: 'languager', info: '地图注记语言支持.' },
@@ -404,7 +404,7 @@ export const Tags = {
   },
   Openlayers: {
     view: {
-      styleObject: 'border-radius: 6px; background: #99FFCC',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list: [
         { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
         { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
@@ -412,7 +412,7 @@ export const Tags = {
       ],
     },
     format: {
-      styleObject: 'border-radius: 6px; background:	#00FFFF',
+      styleObject: 'border-radius: 6px; background:	#DDDDDD',
       list:[
         { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
         { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
@@ -425,7 +425,7 @@ export const Tags = {
       ],
     },
     render: {
-      styleObject: 'border-radius: 6px; background:	#FFE4C4',
+      styleObject: 'border-radius: 6px; background:	#FFFFFF',
       list:[
         { name: 'vectortile', info: '不支持行业符号的矢量瓦片，支持4326／3857.' }
       ],
@@ -433,7 +433,7 @@ export const Tags = {
   },
   Cesium: {
     view: {
-      styleObject: 'border-radius: 6px; background: #99FFCC',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list: [
         { name: 'd3', info: '著名的可视化框架，专门用于处理复杂的严谨的数据可视化.' },
         { name: 'mapv', info: '地图可视化，用于处理常见的LBS的地图可视化.' },
@@ -441,7 +441,7 @@ export const Tags = {
       ],
     },
     format: {
-      styleObject: 'border-radius: 6px; background:	#00FFFF',
+      styleObject: 'border-radius: 6px; background:	#DDDDDD',
       list:[
         { name: 'json', info: '用于json的格式解析与序列化/反序列化.' },
         { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
@@ -454,7 +454,7 @@ export const Tags = {
   },
   Lib: {
     view: {
-      styleObject: 'border-radius: 6px; background: #99FFCC',
+      styleObject: 'border-radius: 6px; background: #FFFFFF',
       list: [
         { name: 'jquery', info: '著名的js框架，专门用于处理简单的网络封装于DOM的操作.版本1.12.4.' },
         { name: 'jquery-easyui', info: 'jquery配套的ui库.' },
@@ -462,7 +462,7 @@ export const Tags = {
       ],
     },
     format: {
-      styleObject: 'border-radius: 6px; background:	#00FFFF',
+      styleObject: 'border-radius: 6px; background:	#DDDDDD',
       list:[
         { name: 'proj4', info: '地图投影，用于坐标的投影变换.' },
         { name: 'geohash', info: 'geohash地理坐标转换.' },
@@ -471,7 +471,7 @@ export const Tags = {
       ],
     },
     render: {
-      styleObject: 'border-radius: 6px; background:	#FFE4C4',
+      styleObject: 'border-radius: 6px; background:	#FFFFFF',
       list:[
         { name: 'colorpicker', info: '颜色获取按钮，点击选择颜色.' },
         { name: 'lazyload', info: '图片懒加载.' },

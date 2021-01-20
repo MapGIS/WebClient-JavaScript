@@ -5,12 +5,12 @@
       <el-table-column
         prop="id"
         label="EPSG编号"
-        width="100">
+        :width="mobile ? 90 : 100">
       </el-table-column>
       <el-table-column
         prop="name"
         label="名称"
-        width="200">
+        :width="mobile ? 80 : 280">
       </el-table-column>
       <el-table-column
         prop="proj"
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { isMobile } from "@/utils/mobile";
 export default {
   components: {},
   props: {
@@ -27,6 +28,7 @@ export default {
   },
   data() {
     return {
+       mobile: isMobile()
     };
   }
 };

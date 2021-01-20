@@ -2,7 +2,7 @@
   <div class="website-bug-commit">
     <h1>提交BUG说明</h1>
     <el-row type="flex" justify="center">
-      <el-col :span="mobile ? 23 : 12">
+      <el-col :span="mobile ? 22 : 12">
         <h3>{{subQuestion.title}}</h3>
         <div class="tip">
           <p>
@@ -132,6 +132,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .website-bug-commit {
+  margin: 30px 0px;
   h1 {
     font-size: 30px;
     text-align: center;

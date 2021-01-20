@@ -1,28 +1,33 @@
 <template>
-  <div>
+  <div class="webclient-epsg-wrapper">
+    <el-row type="flex" justify="center">
+      <el-col :span="mobile? 22 : 18">
+         <el-link type="primary" href="http://epsg.io/" target="_blank">EPSG官方网址</el-link>
+      </el-col>
+    </el-row>
     <el-row type="flex" justify="center" class="banner">
-      <el-col :span="18">
+      <el-col :span="mobile? 22 : 18">
         <el-tabs type="border-card" tab-position="top" style="height: 100%;">
+          <el-tab-pane label="高斯大地坐标系_中国2000">
+            <OgcTable :tableData="gauss_china2000" />
+          </el-tab-pane>
           <el-tab-pane label="高斯大地坐标系_西安80">
             <OgcTable :tableData="gauss_xian80" />
           </el-tab-pane>
           <el-tab-pane label="高斯大地坐标系_北京54">
             <OgcTable :tableData="gauss_beijing54" />
           </el-tab-pane>
-          <el-tab-pane label="高斯大地坐标系_中国2000">
-            <OgcTable :tableData="gauss_china2000" />
-          </el-tab-pane>
           <el-tab-pane label="Web墨卡托_WGS1984">
             <OgcTable :tableData="web_mecarot" />
+          </el-tab-pane>
+          <el-tab-pane label="中国2000国家大地坐标系_度">
+            <OgcTable :tableData="lonlat_china2000" />
           </el-tab-pane>
           <el-tab-pane label="地理坐标系(西安)_度">
             <OgcTable :tableData="lonlat_xian80" />
           </el-tab-pane>
           <el-tab-pane label="地理坐标系(北京)_度">
             <OgcTable :tableData="lonlat_beijin54" />
-          </el-tab-pane>
-          <el-tab-pane label="中国2000国家大地坐标系_度">
-            <OgcTable :tableData="lonlat_china2000" />
           </el-tab-pane>
           <el-tab-pane label="WGS1984_度">
             <OgcTable :tableData="lonlat_wgs84" />
@@ -35,6 +40,7 @@
 
 <script>
 // import treeTable from '@/components/TreeTable'
+import { isMobile } from "@/utils/mobile";
 import OgcTable from "@/components/Table/OgcTable";
 import epsg from "@/config/config-epsg";
 
@@ -44,6 +50,7 @@ export default {
   },
   data() {
     return {
+      mobile: isMobile(),
       gauss_xian80: epsg.gauss_xian80,
       gauss_beijing54: epsg.gauss_beijing54,
       gauss_china2000: epsg.gauss_china2000,
@@ -72,8 +79,11 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.banner {
-  padding-top: 20px;
-  text-align: center;
+.webclient-epsg-wrapper {
+  margin: 30px 0px;
+  .banner {
+    padding-top: 20px;
+    text-align: center;
+  }
 }
 </style>

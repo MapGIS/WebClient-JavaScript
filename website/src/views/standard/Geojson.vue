@@ -1,8 +1,15 @@
 <template>
-    <div>
+    <div class="webclient-geojson-wrapper">
+    <el-row type="flex" justify="center">
+      <el-col :span="mobile? 22 : 14">
+         <el-link type="primary" href="https://geojson.org/" target="_blank">GeoJSON官方网址</el-link>
+      </el-col>
+    </el-row>
+    <el-row type="flex" justify="center">
+      <el-col :span="mobile? 22 : 14">
+
        <el-table
           :data="tableData"
-          style="width:60%;margin:0 auto;"
        >
           <el-table-column
              label="图解"
@@ -27,14 +34,18 @@
          </template> 
          </el-table-column>
        </el-table>
+      </el-col>
+    </el-row>
     </div>
 </template>
 <script>
+import { isMobile } from "@/utils/mobile";
 import geojson   from '../../config/config-geojson'
 export default {
     data(){
         return {
-            tableData:geojson.data
+            mobile: isMobile(),
+            tableData:geojson.data,
         }
     },
     methods:{
@@ -44,3 +55,8 @@ export default {
     }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss" scoped>
+.webclient-geojson-wrapper {
+  margin: 30px 0px;
+}
+</style>

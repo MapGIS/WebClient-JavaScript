@@ -320,12 +320,10 @@ export default {
     overflow-x: hidden;
   }
   .gallery-fix-anchor {
-    // float: right;
+    overflow-x: hidden;
+    overflow-y: scroll;
     width: 120px;
     padding: 16px 20px;
-    /* background: #f4f7fb;
-    border-left: solid 1px #e6e6e6; */
-    border-radius: 0px;
 
     -webkit-box-sizing: unset;
     box-sizing: unset;
@@ -340,6 +338,22 @@ export default {
       padding-inline-start: 40px;
     }
   }
+.gallery-fix-anchor::-webkit-scrollbar {
+  width: 0px;
+}
+
+.gallery-fix-anchor::-webkit-scrollbar-track {
+   background: #f1f1f1;
+}
+
+.gallery-fix-anchor::-webkit-scrollbar-thumb {
+   background: #9093994d;
+   border-radius: inherit;
+}
+
+.gallery-fix-anchor::-webkit-scrollbar-thumb:hover {
+   background: #555;
+}
   .gallery-scroll-content {
     height: calc(100vh - 80px);
     width: calc(100vw - 220px - 120px);

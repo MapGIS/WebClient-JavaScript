@@ -17,9 +17,9 @@ export const Headers = [
             },
             {
                 title: '协议',
-                links: [['epsg', 'ogc', 'geojson', 'socket']],
-                hightlights: [[false, false, false, false]],
-                routes: [['/standard/epsg', '/standard/ogc', '/standard/geojson', '/standard/socket']]
+                links: [['epsg', 'ogc', 'geojson']],
+                hightlights: [[false, false, false]],
+                routes: [['/standard/epsg', '/standard/ogc', '/standard/geojson']]
             }
         ]
     },

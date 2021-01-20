@@ -36,7 +36,7 @@ export default {
       mobile: isMobile(),
       title: '插件标签以及说明', 
       titledetail:
-        '各个插件 include-xxx-local.lib、include-xxx-online.lib的include标签以及说明文件',
+        '各个插件 include-xxx-local.lib的include标签以及说明文件',
       tags: Tags,
       tabs: [
         {
@@ -68,6 +68,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .webclient-plugin-list {
+   margin: 30px 0px;
   .el-card {
     width: 80vw;
     display: inline-block;

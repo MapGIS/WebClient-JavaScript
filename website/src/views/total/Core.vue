@@ -1,8 +1,17 @@
 <template>
-  <div>
+  <div class="webclient-core-wrapper">
     <el-row type="flex" justify="center" class="banner">
-      <el-col :span="16">
-        <el-tabs tab-position='left' style="height: 100%;">
+      <el-col :span="mobile? 22: 18">
+      <el-image
+      class="framework-style-image"
+      :src="framework"
+      :preview-src-list="frameworks">
+      </el-image>
+     </el-col>
+    </el-row>
+    <el-row type="flex" justify="center" class="banner">
+      <el-col :span="mobile? 22: 18">
+        <el-tabs tab-position='top' style="height: 100%;">
           <el-tab-pane label="DataStore">
             <el-table :data="datastore" border stripe style="width: 100%">
               <el-table-column type="index">
@@ -58,9 +67,14 @@
 </template>
 
 <script>
+import { isMobile } from "@/utils/mobile";
+
   export default {
     data() {
       return {
+        mobile: isMobile(),
+        framework: './static/assets/logo/framework.png',
+        frameworks: ['./static/assets/logo/framework.png'],
         datastore: [{
           func: '创建大数据存储-Windows',
           detail: '创建大数据存储window版本（postgresql、ES集群、mongoDB集群）',
@@ -230,5 +244,12 @@
   .banner {
     padding-top: 20px;
     text-align: center;
+  }
+  .webclient-core-wrapper {
+     margin: 30px 0px;
+     .framework-style-image {
+         width: 100%;
+         height: fit-content;
+     }
   }
 </style>

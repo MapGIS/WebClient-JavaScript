@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="webclient-plugin-wrapper">
     <el-row
       type="flex"
       justify="center"
@@ -61,6 +61,9 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.webclient-plugin-wrapper {
+  margin: 30px 0px;
+}
 .banner {
   padding-top: 20px;
   text-align: center;

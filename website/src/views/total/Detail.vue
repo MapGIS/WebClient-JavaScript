@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="webclient-detail-panel">
     <el-row
       type="flex"
       justify="center"
@@ -80,5 +80,8 @@ export default {
 .banner {
   padding-top: 20px;
   text-align: center;
+}
+.webclient-detail-panel {
+  margin: 30px 0px;
 }
 </style>
