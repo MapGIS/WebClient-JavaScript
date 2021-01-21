@@ -3,6 +3,10 @@ import { CesiumZondy } from "../core/Base";
 
 var defaultCreditZondy = new Cesium.Credit("MapGISMap");
 
+/**
+ * @class 
+ * @param {*} options 
+ */
 export function WmtsTileProvider(options) {
   function MapGISMapImageProvider(options) {
     options = Cesium.defaultValue(options, {});
