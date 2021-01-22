@@ -21,7 +21,14 @@ import MapCoordSys from './echart/MapCoordSys';
  *    },
  *    series: [{
  *       coordinateSystem: 'leaflet',//关键地方---2
- *    }]
+ *    }],
+ *    //echarts实例初始化
+ *    echartsInitOpts:{
+ *       devicePixelRatio: 1,//设备像素比，默认取浏览器的值window.devicePixelRatio
+ *       renderer: 'canvas',//渲染器，支持 'canvas' 或者 'svg'
+ *       width:'auto' ,//可显式指定实例宽度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 map（实例容器）的宽度。
+ *       height:'auto'//可显式指定实例高度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 dom（实例容器）的高度。
+ *    },
  * };
  * 
  * @example
@@ -80,11 +87,14 @@ export var EchartsLayer = L.Layer.extend({
     map: null, //传入的leaflet地图
     chart: null,
     options: null,
+    echartsInitOpts:null,
     canvas: null,
+
 
     initialize: function (map, options) {
         this.map = map;
         this.options = options;
+        this.echartsInitOpts = options.echartsInitOpts;
         this.layerId = options.layerId || 'echartlayerdefaultid';
         this.layerClass = options.classId || 'echartlayerdefaultclass';
 
@@ -159,7 +169,8 @@ export var EchartsLayer = L.Layer.extend({
         this.canvas = this._createCanvas();
         map.getPanes().overlayPane.appendChild(this.canvas);
 
-        this.chart = echarts.init(this.canvas);
+        console.log(this.echartsInitOpts);
+        this.chart = echarts.init(this.canvas,null,this.echartsInitOpts);
 
         echarts.leafletMap = map;
 
