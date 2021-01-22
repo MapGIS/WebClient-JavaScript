@@ -109,14 +109,15 @@ export const Headers = [
         menus: [
             {
                 title: '常见问题',
-                hightlights: [[true, true, true, true, true]],
-                links: [['OGC-WMTS', 'ArcServer-WMS', 'ArcServer-要素图层', '矢量瓦片-介绍', '矢量瓦片-几何&符号']],
+                hightlights: [[true, true, true, true, true, true]],
+                links: [['OGC-WMTS', 'ArcServer-WMS', 'ArcServer-要素图层', '矢量瓦片-介绍', '矢量瓦片-离线部署', '矢量瓦片-几何&符号']],
                 routes: [
                     [
                         '/helper/mapboxgl/ogc/wmts/WMTS',
                         '/helper/mapboxgl/arcserver/wms/index',
                         '/helper/mapboxgl/arcserver/featurelayer/index',
                         '/helper/mapboxgl/vectortile/index',
+                        '/helper/mapboxgl/vectortile/deploy',
                         '/helper/mapboxgl/vectortile/style'
                     ]
                 ]
