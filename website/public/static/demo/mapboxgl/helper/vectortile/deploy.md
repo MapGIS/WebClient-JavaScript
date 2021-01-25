@@ -64,6 +64,23 @@
 1.瓦片的行列号匹配
    1. 按照 级别-行号-列号对应的瓦片地址是 {z}/{y}/{x}.pbf
    2. 按照 级别-列号-行号对应的瓦片地址是 {z}/{x}/{y}.pbf
+   此处常见的问题是 行列号错位后导致的瓦片不请求，如下图所示，第0级的时候可以看见数据，后几级发出网络请求对应的瓦片为空，导致以为是瓦片服务不正确。
+      ![MIME](../../static/demo/mapboxgl/helper/vectortile/img/colraw.png)
+      打开浏览器，发现请求的的`8/84/176`,遇见这类情况则说明是行列号不匹配导致，请结合数据修改样式中行列号规则。
+      ``` json
+      "sources": {
+         "OSM全中国": {
+         "type": "vector",
+         "tiles": [
+            "http://localhost:6163/igs/rest/mrms/tile/OSM全中国/{z}/{x}/{y}.pbf"  // 或者{z}/{y}{x}
+         ],
+         "minZoom": 0,
+         "maxZoom": 13
+         }
+      },
+      ```
+
+
 
 2.单张瓦片的MIME类型，请在MIME类型设置中设置类型为  `application/x-protobuf`
    ![MIME](../../static/demo/mapboxgl/helper/vectortile/img/mime.png)
@@ -71,7 +88,40 @@
 ## 2.2 样式服务
 样式服务目录如下：
    ![MIME](../../static/demo/mapboxgl/helper/vectortile/img/style.png)
-
+### 常见问题
+   1. 瓦片没有请求, 一般是数据源中设置了请求级别
+      ``` js
+      "sources": {
+         "OSM全中国": {
+         "type": "vector",
+         "tiles": [
+            "http://localhost:6163/igs/rest/mrms/tile/OSM全中国/{z}/{x}/{y}.pbf"  // 或者{z}/{y}{x}
+         ],
+         "minZoom": 11,    // 此处说明该数据只有11级到-13级才请求数据源， 0-10  14-20都不发请求
+         "maxZoom": 13     
+         }
+      },
+      ``` 
+   2. 瓦片有请求，但是不显示，一般是图层中设置了级别或者显示控制
+      ``` js
+      {
+         "layers": [{
+            "id": "观光胜地",
+            "source": "OSM全中国",
+            "source-layer": "观光胜地",
+            "minzoom": 11,  // 此处说明该数据只有11级到-13级才请求数据源， 0-10  14-20都不发请求
+            "maxzoom": 13,
+            "type": "fill",
+            "paint": {
+               "fill-outline-color": "rgba(221, 92, 92, 1)",
+               "fill-color": "rgba(220,175,205,1.0)"
+            },
+            "layout": {
+               "visibility": "visible"  // visible表示显示  none表示不显示
+            }
+         }]
+      }
+      ```
 ## 2.3 符号服务
 符号服务目录如下：
    ![MIME](../../static/demo/mapboxgl/helper/vectortile/img/sprites.png)
