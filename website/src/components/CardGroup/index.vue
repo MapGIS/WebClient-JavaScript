@@ -1,6 +1,6 @@
 <template>
   <div class="webclient-card-group">
-    <el-col :span="24">
+    <el-col :span="24" class="card-backgroud">
       <el-col
         :span="24"
         class="col-divider-style gallery-divider"
@@ -105,6 +105,9 @@ export default {
 
 <style lang="scss">
 .webclient-card-group {
+  .card-backgroud  {
+    background: #ffffff;
+  }
   .el-tag.el-tag--info {
     background-color: #f4f4f500;
     border-color: #e9e9eb;
