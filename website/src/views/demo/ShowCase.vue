@@ -188,6 +188,8 @@ export default {
         url = './static/demo/config/config-openlayers.json';
       } else if (mapmode === 'leaflet') {
         url = './static/demo/config/config-leaflet.json';
+      } else {
+        url = `./static/demo/config/config-${mapmode}.json`;
       }
       let res = await axios.get(url);
       this.config = res.data;

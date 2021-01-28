@@ -306,15 +306,22 @@ export default {
     },
     getMapMode () {
       var mapMode = "leaflet";
-      if (this.$route.path.indexOf("leaflet") > 0) {
-        mapMode = "leaflet";
-      } else if (this.$route.path.indexOf("openlayer") > 0) {
-        mapMode = "openlayers";
-      } else if (this.$route.path.indexOf("cesium") > 0) {
-        mapMode = "cesium";
-      } else if (this.$route.path.indexOf("mapboxgl") > 0) {
-        mapMode = "mapboxgl";
-      }
+      let path = this.$route.path;
+      let find = path.split('/demo/');
+      let mapmodes = find && find.length > 1 ?  find[1].split('/') : '';
+      if (mapmodes && mapmodes.length > 0) {
+        mapMode = mapmodes[0];
+      } else {
+        if (this.$route.path.indexOf("leaflet") > 0) {
+            mapMode = "leaflet";
+          } else if (this.$route.path.indexOf("openlayer") > 0) {
+            mapMode = "openlayers";
+          } else if (this.$route.path.indexOf("cesium") > 0) {
+            mapMode = "cesium";
+          } else if (this.$route.path.indexOf("mapboxgl") > 0) {
+            mapMode = "mapboxgl";
+          }
+        }
       return mapMode;
     },
     full () {

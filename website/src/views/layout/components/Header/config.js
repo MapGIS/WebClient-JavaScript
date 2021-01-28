@@ -75,7 +75,7 @@ export const Headers = [
                         '/gallery/cesium#clientView_MapV',
                         '/gallery/cesium#clientAnalysis'
                     ],
-                    ['/gallery/cesium#vue#raster', '/gallery/cesium#vue#vvectortile', '/gallery/cesium#vue#control', '/gallery/cesium#vue#model']
+                    ['/gallery/vue-cesium#raster', '/gallery/vue-cesium#vvectortile', '/gallery/vue-cesium#control', '/gallery/vue-cesium#model']
                 ]
             },
             {
@@ -161,10 +161,10 @@ export const Headers = [
                         '/gallery/mapboxgl#industry#search'
                     ],
                     [
-                        '/gallery/mapboxgl#vue#vue-layer',
-                        '/gallery/mapboxgl#vue#vue-raster',
-                        '/gallery/mapboxgl#vue#vue-ogc',
-                        '/gallery/mapboxgl#vue#vue-control'
+                        '/gallery/vue-mapboxgl#vue-layer',
+                        '/gallery/vue-mapboxgl#vue-raster',
+                        '/gallery/vue-mapboxgl#vue-ogc',
+                        '/gallery/vue-mapboxgl#vue-control'
                     ]
                 ]
             },
