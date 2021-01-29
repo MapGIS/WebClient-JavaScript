@@ -96,6 +96,14 @@
                     "detail": "",
                     "icon": "link.png",
                     "update": "最后更新时间：2020-11-24"
+                },
+                {
+                    "name": "绘制组件",
+                    "file": "draw",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "draw.png",
+                    "update": "最后更新时间：2021-01-28"
                 }
             ]
         },
