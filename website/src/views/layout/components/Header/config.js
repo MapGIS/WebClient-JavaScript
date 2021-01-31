@@ -24,6 +24,18 @@ export const Headers = [
         ]
     },
     {
+        title: '组件',
+        icon: 'iconapp_mw_cluster',
+        menus: [
+            {
+                title: '故事',
+                links: [['StoryBook-MapboxGL']],
+                hightlights: [[true]],
+                routes: [['/storybook/index.html']]
+            }
+        ]
+    },
+    {
         title: 'Cesium',
         icon: 'iconsatellite',
         menus: [
@@ -170,8 +182,8 @@ export const Headers = [
             },
             {
                 title: '开发API',
-                hightlights: [[false, false, false, false, false, false, false, false]],
-                links: [['地图服务', 'OGC服务', '目录服务', '要素服务', '量算服务', '专题图服务', '分析服务', '客户端可视化']],
+                hightlights: [[false, false, false, false, false, false, false, false], [false]],
+                links: [['地图服务', 'OGC服务', '目录服务', '要素服务', '量算服务', '专题图服务', '分析服务', '客户端可视化'], ['Mapbox-GL']],
                 routes: [
                     [
                         './docs/mapboxgl/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
@@ -182,7 +194,8 @@ export const Headers = [
                         './docs/mapboxgl/module-%25E4%25B8%2593%25E9%25A2%2598%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
                         './docs/mapboxgl/module-%25E5%2588%2586%25E6%259E%2590%25E6%259C%258D%25E5%258A%25A1.html',
                         './docs/mapboxgl/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html'
-                    ]
+                    ],
+                    ['https://docs.mapbox.com/mapbox-gl-js/api/']
                 ]
             }
         ]
@@ -212,8 +225,8 @@ export const Headers = [
             },
             {
                 title: '开发API',
-                links: [['地图服务', 'OGC服务', '目录服务', '要素服务', '量算服务', '专题图服务', '分析服务', '客户端可视化']],
-                hightlights: [[false, false, false, false, false, false, false, false]],
+                links: [['地图服务', 'OGC服务', '目录服务', '要素服务', '量算服务', '专题图服务', '分析服务', '客户端可视化'],['Leaflet']],
+                hightlights: [[false, false, false, false, false, false, false, false], [false]],
                 routes: [
                     [
                         './docs/leaflet/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
@@ -224,7 +237,8 @@ export const Headers = [
                         './docs/leaflet/module-%25E4%25B8%2593%25E9%25A2%2598%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
                         './docs/leaflet/module-%25E5%2588%2586%25E6%259E%2590%25E6%259C%258D%25E5%258A%25A1.html',
                         './docs/leaflet/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html'
-                    ]
+                    ],
+                    ['https://leafletjs.com/reference-1.7.1.html']
                 ]
             }
         ]
@@ -254,8 +268,8 @@ export const Headers = [
             },
             {
                 title: '开发API',
-                links: [['地图服务', 'OGC服务', '目录服务', '要素服务', '量算服务', '专题图服务', '分析服务', '客户端可视化']],
-                hightlights: [[false, false, false, false, false, false, false, false]],
+                links: [['地图服务', 'OGC服务', '目录服务', '要素服务', '量算服务', '专题图服务', '分析服务', '客户端可视化'], ['OpenLayers']],
+                hightlights: [[false, false, false, false, false, false, false, false],[false]],
                 routes: [
                     [
                         './docs/openlayers/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
@@ -266,6 +280,9 @@ export const Headers = [
                         './docs/openlayers/module-%25E4%25B8%2593%25E9%25A2%2598%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html',
                         './docs/openlayers/module-%25E5%2588%2586%25E6%259E%2590%25E6%259C%258D%25E5%258A%25A1.html',
                         './docs/openlayers/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html'
+                    ],
+                    [
+                        'https://openlayers.org/en/latest/apidoc/'
                     ]
                 ]
             }

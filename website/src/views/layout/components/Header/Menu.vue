@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     isLink (link) {
-      if (link.indexOf('http') >= 0) {
+      if (link.indexOf('http') >= 0 || link.indexOf('storybook') >= 0) {
         return true;
       }
       return false;
