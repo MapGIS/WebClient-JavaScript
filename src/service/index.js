@@ -417,12 +417,15 @@ export const Info = {
 };
 
 import { WMSCapabilities, WMTSCapabilities, OGCWMTSInfo, OGCWMSInfo } from './OGC';
+import { WMS, WFS } from './OpenGeospatialConsortium';
 
 export const OGC = {
     WMSCapabilities,
     WMTSCapabilities,
     OGCWMTSInfo,
-    OGCWMSInfo
+    OGCWMSInfo,
+    WMS,
+    WFS
 };
 
 import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore/elasticsearch';
