@@ -154,6 +154,7 @@ export var MapvLayer = L.Layer.extend({
         var map = this.map;
         map.on('movestart', this.innerMoveStartEvent);
         map.on('moveend', this.innerMoveEndEvent);
+        map.on('zoomend', this.innerMoveEndEvent);
         map.on('zoomstart', this.innnerZoomstart);
         map.on('viewreset', this.innerViewreset);
         map.on('resize ', this.innerResize);
@@ -164,6 +165,7 @@ export var MapvLayer = L.Layer.extend({
         var map = this.map;
         map.off('movestart', this.innerMoveStartEvent);
         map.off('moveend', this.innerMoveEndEvent);
+        map.on('zoomend', this.innerMoveEndEvent);
         map.off('zoomstart', this.innnerZoomstart);
         map.off('viewreset', this.innerViewreset);
         map.off('resize ', this.innerResize);

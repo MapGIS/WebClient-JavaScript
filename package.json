@@ -71,7 +71,6 @@
     "echarts": "^4.4.0",
     "html-webpack-plugin": "^4.3.0",
     "jsdoc": "^3.6.3",
-    "leaflet": "^1.5.1",
     "mapv": "^2.0.40",
     "ol": "5.3.3",
     "proj4": "2.3.15",

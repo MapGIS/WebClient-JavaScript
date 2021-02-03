@@ -105,9 +105,10 @@ MapCoordSys.create = function (ecModel, api) {
     }) */
     var coordSys;
 
-    ecModel.eachComponent('leaflet', function (leafletMapModel) {
+    ecModel.eachComponent('leaflet', function (leafletMapModel, ecModel) {
         var viewportRoot = api.getZr().painter.getViewportRoot();
-        var leafletMap = echarts.leafletMap;
+        var leafletMap = echarts.leafletMap; // ecModel.scheduler.ecInstance.leafletMap; //
+        
         if (!coordSys) {
 
             coordSys = new MapCoordSys(leafletMap, api);

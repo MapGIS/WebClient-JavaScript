@@ -98,7 +98,7 @@ export var EchartsLayer = L.Layer.extend({
         this.layerId = options.layerId || 'echartlayerdefaultid';
         this.layerClass = options.classId || 'echartlayerdefaultclass';
 
-        this.visible = true;
+        this.visible = true;        
         this.initDevicePixelRatio();
         this.initOptions(this.options);
         this.initEcharts();
@@ -167,9 +167,9 @@ export var EchartsLayer = L.Layer.extend({
         const vm = this;
         this.map = map;
         this.canvas = this._createCanvas();
-        map.getPanes().overlayPane.appendChild(this.canvas);
+        // this.map.getContainer().appendChild(this.canvas);
+        this.map.getPanes().overlayPane.appendChild(this.canvas);
 
-        console.log(this.echartsInitOpts);
         this.chart = echarts.init(this.canvas,null,this.echartsInitOpts);
 
         echarts.leafletMap = map;
@@ -214,6 +214,7 @@ export var EchartsLayer = L.Layer.extend({
                 };
 
                 var zoomEndHandler = function () {
+                    self._visible();    
                     if (rendering || !vm.visible) {
                         return;
                     }
@@ -221,16 +222,19 @@ export var EchartsLayer = L.Layer.extend({
                     api.dispatchAction({
                         type: 'LeafletRoma'
                     });
-
-                    self._visible();
                 };
 
-                leafletMap.off('move', this._oldMoveHandler);
-                leafletMap.off('zoomend', this._oldZoomEndHandler);
+                if (this._oldMoveHandler)  {
+                    leafletMap.off('move', this._oldMoveHandler);                
+                }
+                if (this._oldZoomEndHandler) {
+                    leafletMap.off('zoomend', this._oldZoomEndHandler);
+                }
+                
                 // FIXME
                 // Moveend may be triggered by centerAndZoom method when creating coordSys next time
-                // leafletMap.off('moveend', this._oldMoveHandler)
-                leafletMap.on('move', moveHandler);
+                leafletMap.on('move', moveHandler)
+                // leafletMap.on('move', moveHandler);
                 leafletMap.on('zoomend', zoomEndHandler);
                 // leafletMap.on('moveend', moveHandler)
                 this._oldMoveHandler = moveHandler;
@@ -268,7 +272,7 @@ export var EchartsLayer = L.Layer.extend({
         canvas.width = this.map.getSize().x + 'px';
         canvas.style.height = this.map.getSize().y + 'px';
         canvas.style.width = this.map.getSize().x + 'px';
-        canvas.style.zIndex = 100;
+        canvas.style.zIndex = 1000;
 
         canvas.setAttribute('id', this.layerId);
         canvas.setAttribute('class', this.layerClass);
