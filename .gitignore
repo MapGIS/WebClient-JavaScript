@@ -18,6 +18,7 @@
 /src/config/common/
 
 /website/node_modules/
+/website/public/docs/other/
 /website/public/docs/leaflet/
 /website/public/docs/mapboxgl/
 /website/public/docs/openlayers/

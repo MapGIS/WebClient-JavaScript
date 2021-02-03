@@ -10,6 +10,8 @@
     - [5、自定义配置](#5自定义配置)
   - [三、站点发布](#三站点发布)
     - [1. Windows](#1-windows)
+      - [MIME](#mime)
+      - [IIS WebConfig](#iis-webconfig)
     - [2. Linux](#2-linux)
     - [3. Node.js](#3-nodejs)
     - [4. express windows-server-2003](#4-express-windows-server-2003)
@@ -17,7 +19,7 @@
 
 ## 一、目录结构
 
-``` text
+```text
 |-- website                     -- 示例网站
   |-- express                   -- node服务，在一些wind2003等老机器上替代IIS
   |-- public                    -- 网页的公共路径
@@ -27,9 +29,9 @@
       |-- data                  -- 公共数据
       |-- demo                  -- 示例代码
         |-- cesium              -- Cesium示例
-          |-- example           -- Cesium示例代码     
+          |-- example           -- Cesium示例代码
           |-- markdown          -- Cesium示例说明
-          |-- gallery           -- Cesium示例功能效果图           
+          |-- gallery           -- Cesium示例功能效果图
         |-- config              -- 含示例目录配置文件
         |-- leaflet             -- Leaflet示例
         |-- mapboxgl            -- MapBoxGL示例
@@ -37,8 +39,10 @@
       |-- libs                  -- 引用库
   |-- src                       -- 示例网页的vue代码
 ```
-MapGIS Client for JavaScript资源站点编译后将生成dist目录，包括开发库、示例站点、API文档等，主要目录结构如下：
-``` text
+
+MapGIS Client for JavaScript 资源站点编译后将生成 dist 目录，包括开发库、示例站点、API 文档等，主要目录结构如下：
+
+```text
   |-- dist                      -- website编译后的目录
     |-- docs                    -- 各项API资源目录
     |-- static                  -- 示例目录
@@ -46,9 +50,9 @@ MapGIS Client for JavaScript资源站点编译后将生成dist目录，包括开
       |-- data                  -- 公共数据
       |-- demo                  -- 示例代码
         |-- cesium              -- Cesium示例
-          |-- example           -- Cesium示例代码     
+          |-- example           -- Cesium示例代码
           |-- markdown          -- Cesium示例说明
-          |-- gallery           -- Cesium示例功能效果图   
+          |-- gallery           -- Cesium示例功能效果图
         |-- config              -- 含示例目录配置文件
         |-- leaflet             -- Leaflet示例
         |-- mapboxgl            -- MapBoxGL示例
@@ -57,8 +61,7 @@ MapGIS Client for JavaScript资源站点编译后将生成dist目录，包括开
     |-- index.html                -- 资源站点首页
 ```
 
->司马云-产品开发包的MapGIS Client for JavaScript开发包为编译后的产品包（对应上面dist目录），可支持离线环境下部署使用，具体操作请参考本文档第三、四部分内容。在线环境推荐从开源社区上拉取。
-
+> 司马云-产品开发包的 MapGIS Client for JavaScript 开发包为编译后的产品包（对应上面 dist 目录），可支持离线环境下部署使用，具体操作请参考本文档第三、四部分内容。在线环境推荐从开源社区上拉取。
 
 ## 二、示例运行
 
@@ -102,7 +105,7 @@ yarn build
 
 ## 三、站点发布
 
-在示例站点目录执行如下命令打包，打包成功后会在website目录下生成dist文件夹，站点发布时需将此目录发布。（特别说明：司马云-产品开发包的MapGIS Client for JavaScript开发包为编译后的产品包，对应dist目录，直接发布即可）
+在示例站点目录执行如下命令打包，打包成功后会在 website 目录下生成 dist 文件夹，站点发布时需将此目录发布。（特别说明：司马云-产品开发包的 MapGIS Client for JavaScript 开发包为编译后的产品包，对应 dist 目录，直接发布即可）
 
 ```
 npm run build
@@ -112,7 +115,64 @@ yarn build
 
 ### 1. Windows
 
-> 对于Windows 2008 后（包括 2008）的版本，直接使用 IIS 将 website/dist 目录发布到 IIS 服务中即可正常使用。
+> 对于 Windows 2008 后（包括 2008）的版本，直接使用 IIS 将 website/dist 目录发布到 IIS 服务中即可正常使用。
+
+#### MIME
+
+| 后缀     | 类型                                 |
+| :------- | :----------------------------------- |
+| .md      | application/markdown                 |
+| .b3dm    | application/octet-stream             |
+| .b3im    | application/octet-stream             |
+| .geojson | application/json                     |
+| pbf      | application/x-protobuf               |
+| .czml    | application/json                     |
+| .gltf    | model/gltf+json                      |
+| .kml     | application/vnd.google-earth.kml+xml |
+| .kmz     | application/vnd.google-earth.kmz     |
+| .webp    | image/webp                           |
+| .wasm    | application/wasm                     |
+| .m3d     | application/octet-stream             |
+| .csv     | text/csv                             |
+| .dbf     | application/octet-stream             |
+| .shp     | application/octet-stream             |
+
+#### IIS WebConfig
+
+> 为了解决 jsdoc 在 window 下的`IIS请求筛选模块被配置为拒绝包含双重转义序列的请求`，需要设置以下安全策略
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <httpProtocol>
+            <customHeaders>
+                <add name="Access-Control-Allow-Origin" value="*" />
+            </customHeaders>
+        </httpProtocol>
+        <staticContent>
+            <mimeMap fileExtension=".czml" mimeType="application/json" />
+            <mimeMap fileExtension=".glsl" mimeType="text/plain" />
+            <mimeMap fileExtension=".m3d" mimeType="application/octet-stream" />
+            <mimeMap fileExtension=".mcj" mimeType="application/octet-stream" />
+            <mimeMap fileExtension=".gltf" mimeType="model/gltf+json" />
+            <mimeMap fileExtension=".bgltf" mimeType="model/gltf-binary" />
+            <mimeMap fileExtension=".glb" mimeType="application/json" />
+            <mimeMap fileExtension=".models" mimeType="application/json" />
+            <mimeMap fileExtension=".topojson" mimeType="application/json" />
+            <mimeMap fileExtension=".kml" mimeType="application/vnd.google-earth.kml+xml" />
+            <mimeMap fileExtension=".kmz" mimeType="application/vnd.google-earth.kmz" />
+            <mimeMap fileExtension=".terrain" mimeType="application/vnd.quantized-mesh" />
+            <mimeMap fileExtension=".ktx" mimeType="image/ktx" />
+            <mimeMap fileExtension=".webp" mimeType="image/webp" />
+            <mimeMap fileExtension=".wasm" mimeType="application/wasm" />
+        </staticContent>
+	    <security>
+		    <requestFiltering allowDoubleEscaping="true"/>
+	    </security>
+    </system.webServer>
+</configuration>
+```
 
 ### 2. Linux
 
@@ -122,7 +182,7 @@ yarn build
 
 > 请使用 http-server 来预览网页
 
-需在website目录中配置http-server环境：
+需在 website 目录中配置 http-server 环境：
 
 ```
 npm install -g http-server
@@ -183,9 +243,9 @@ express 后台运行发布
 ```js
 // public/static/libs/include-xxx-local.js
 window.webclient = {
-  ip: 'develop.smaryun.com',
-  port: 6163,
-  protocol: 'http'
+    ip: 'develop.smaryun.com',
+    port: 6163,
+    protocol: 'http'
 };
 ```
 

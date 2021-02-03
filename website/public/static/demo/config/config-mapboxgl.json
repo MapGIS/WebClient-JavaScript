@@ -409,62 +409,6 @@
                     ]
                 },
                 {
-                    "name": "客户端专题图",
-                    "iconfont": "icontheme",
-                    "folder": "clienttheme",
-                    "leaffolder": true,
-                    "childs": [
-                      {
-                        "name": "单值",
-                        "file": "unique",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "unique.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "分段",
-                        "file": "range",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "range.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "随机",
-                        "file": "random",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "random.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "统一",
-                        "file": "simple",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "simple.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "等级符号",
-                        "file": "grade-symbol",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "grade-symbol.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "统计",
-                        "file": "graphic",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "graphic.png",
-                        "update": "最后更新时间："
-                      }
-                    ]
-                  },
-                {
                     "name": "矢量瓦片",
                     "iconfont": "icontile_hover",
                     "folder": "vectortile",
