@@ -130,7 +130,8 @@ export default class PopupLayer {
         this.parent.appendChild(infoDiv);
         // window.document.getElementById(this.popupId).style.display = 'block';
         if (this.showClose) {
-            window.document.getElementById(this.popupContentId).appendChild(close);
+            let parent = window.document.getElementById(this.popupContentId);
+            parent && parent.appendChild(close);
         }
         this.infoDiv = infoDiv;
     }
@@ -138,6 +139,9 @@ export default class PopupLayer {
     bindEvent() {
         let self = this;
         this.handler.setInputAction(this.movement, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        if (!this.map) {
+            return;
+        }
 
         if (this.options.postRender) {
             this.map.scene.postRender.addEventListener(() => self.update());
@@ -151,6 +155,10 @@ export default class PopupLayer {
 
     unbindEvent() {
         let self = this;
+        if (!this.map) {
+            return;
+        }
+
         if (this.options.postRender) {
             this.map.scene.postRender.removeEventListener(() => self.update());
         } else {
@@ -223,11 +231,6 @@ export default class PopupLayer {
                 node.remove();
             }
         }
-        // this.parent.removeChild(this.infoDiv);
-        /* var self = this;
-    if (this.canvas.parentElement)
-      this.canvas.parentElement.removeChild(this.canvas);
-    this.map = undefined; */
         return this;
     }
 }
