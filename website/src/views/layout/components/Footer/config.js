@@ -13,7 +13,7 @@ export const CommonUrls = [
       ],
       [
         "https://github.com/MapGIS/WebClient-JavaScript",
-        "https://gitee.com/mapgis_10",
+        "https://gitee.com/osmapgis/WebClient-JavaScript",
         "./docs/cesium/index.html",
         "/gallery/cesium",
       ],

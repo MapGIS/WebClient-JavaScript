@@ -17,7 +17,8 @@
     "include": ["src/cesiumjs/"],
     "exclude": [
       "src/cesiumjs/overlay/echarts/",
-      "src/cesiumjs/overlay/mapv/"
+      "src/cesiumjs/overlay/mapv/",
+      "src/cesiumjs/ui/draw/"
     ]
   },
   "plugins": ["plugins/markdown"],
