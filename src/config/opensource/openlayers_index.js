@@ -1080,6 +1080,31 @@ export {
 };
 
 import {
+	GeoFeatureThemeLayer,
+	ThemeLayer,
+	RangeThemeLayer,
+	UniqueThemeLayer,
+	GraphThemeLayer,
+	graphThemeLayer,
+	RandomThemeLayer,
+	SimpleThemeLayer,
+	RankSymbolThemeLayer,
+	ThemeStyle
+} from '../../openlayers/theme';
+export {
+	GeoFeatureThemeLayer,
+	ThemeLayer,
+	RangeThemeLayer,
+	UniqueThemeLayer,
+	GraphThemeLayer,
+	graphThemeLayer,
+	RandomThemeLayer,
+	SimpleThemeLayer,
+	RankSymbolThemeLayer,
+	ThemeStyle
+};
+
+import {
     /* MapvLayer, */
     MapvSource
 } from '../../openlayers/overlay/index'

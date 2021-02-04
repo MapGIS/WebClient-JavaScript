@@ -16,6 +16,35 @@ export default class ThirdPartyLayer extends BaseLayer {
     }
 
     /**
+     * 添加OSM服务地址
+     * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendOsmMap
+     * @param {Object} optionsParam 预留扩展参数
+     * @returns 瓦片层对象 可用于操作移除
+     * @example
+     * let tilelayer = thirdLayer.appendOsmMap();
+     */
+    appendOsmMap(optionsParam) {
+        const options = Cesium.defaultValue(optionsParam, {});
+        this._isHistoryImage = Cesium.defaultValue(options.isHistoryImage, false);
+        this._imageVersion = Cesium.defaultValue(options.imageVersion, '0');
+        const offset = Cesium.defaultValue(options.Offset, false);
+        let offsetLabel = '';
+        if (offset) {
+            offsetLabel = '&gl=cn';
+        }
+        let url = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
+        const osmMap = this.viewer.imageryLayers.addImageryProvider(
+            new Cesium.UrlTemplateImageryProvider({
+                url,
+                credit: new Cesium.Credit('OSM地图服务'),
+                subdomains: ['a', 'b', 'c'],
+                tilingScheme: new Cesium.WebMercatorTilingScheme()
+            })
+        );
+        return osmMap;
+    }
+
+    /**
      * 添加谷歌服务地址
      * @function module:客户端数据服务.ThirdPartyLayer.prototype.appendGoogleMap
      * @param {Object} optionsParam 预留扩展参数
