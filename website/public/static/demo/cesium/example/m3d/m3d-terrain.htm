@@ -31,9 +31,7 @@
             webGlobe.showPosition('coordinate_location');
 
             //添加Google影像地图
-            webGlobe.appendGoogleMapExt({
-                ptype: 's@130'
-            });
+            webGlobe.appendOsmMap();
 
             //加载M3D地图文档（服务地址，配置参数）
             terrainlayer = webGlobe.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain', {});

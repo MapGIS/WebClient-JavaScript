@@ -39,10 +39,7 @@
                         viewer: webGlobe.viewer
                     });
                     //添加Google地图
-                    thirdPartyLayer.appendGoogleMapExt({
-                        //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
-                        ptype: 'm'
-                    });
+                    thirdPartyLayer.appendOsmMap()
                     //加载IGS发布的M3D缓存地图文档
                     var { protocol, ip, port } = window.webclient;
                     tileset = webGlobe.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ModelM3D`, {});

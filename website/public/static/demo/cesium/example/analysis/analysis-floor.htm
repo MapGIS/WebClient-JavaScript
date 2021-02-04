@@ -34,10 +34,7 @@
                     viewer: webGlobe.viewer
                 });
                 //添加Google地图
-                thirdPartyLayer.appendGoogleMapExt({
-                    //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
-                    ptype: 's'
-                });
+                thirdPartyLayer.appendOsmMap();
 
                 //初始化视图功能管理类
                 var sceneManager = new CesiumZondy.Manager.SceneManager({

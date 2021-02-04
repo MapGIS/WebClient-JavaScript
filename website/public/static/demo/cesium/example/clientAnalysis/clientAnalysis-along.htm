@@ -88,10 +88,7 @@
         viewer: webGlobe.viewer
       });
       //添加Google地图
-      thirdPartyLayer.appendGoogleMapExt({
-        //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
-        ptype: 'm'
-      });
+      thirdPartyLayer.appendOsmMap();
 
       //经纬度坐标转世界坐标
       var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);

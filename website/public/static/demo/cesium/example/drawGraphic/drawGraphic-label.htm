@@ -35,10 +35,7 @@
                 viewer: webGlobe.viewer
             });
             //添加Google地图
-            thirdPartyLayer.appendGoogleMapExt({
-                //m-全地图（含矢量与道路）、r-矢量地图、h-道路地图、s-卫星影像地图、t-地形图
-                ptype: 'm'
-            });
+            thirdPartyLayer.appendOsmMap();
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             sceneManager.flyToEx(114.39919170144876, 30.5061826301631, {
