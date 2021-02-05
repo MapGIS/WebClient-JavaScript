@@ -40,6 +40,26 @@ path/to/statics/cesium/webclient-cesium-plugins.min.js
 
 > 如果在浏览器中 访问 `http://localhost:xxxx/path/to/statics/cesium/Cesium.js` 成功则说明整个 Cesium 的环境准备已经完毕。
 
+## 引入
+
+### 全局引入
+在main.js中实现以下代码
+``` javascript
+import VueCesium from '@mapgis/webclient-vue-cesium';
+vue.use(VueCesium);
+```
+
+### 局部引入
+``` javascript
+import { CesiumWebGlobe } from '@mapgis/webclient-vue-cesium';
+
+export default {
+  components: {
+    CesiumWebGlobe
+  },
+}
+```
+
 ## 开发结构
 
 > 强烈建议使用前了解基本的cesium引导[Cesium - 向导](https://cesium.com/docs/) 以及 cesium 的开发方式[cesium - API](https://cesium.com/docs/cesiumjs-ref-doc/)
@@ -76,7 +96,7 @@ path/to/statics/cesium/webclient-cesium-plugin.min.js
 </style>
 
 <script>
-import { CesiumWebGlobe } from '@mapgis/webclient-vue-cesium";
+import { CesiumWebGlobe } from '@mapgis/webclient-vue-cesium';
 
 export default {
   components: {

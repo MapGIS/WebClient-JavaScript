@@ -1,0 +1,19 @@
+[
+    {
+        "title": "首页",
+        "menus": [
+            {
+                "title": "概述",
+                "links": [["详细服务", "插件列表", "调用方式", "四大引擎选择", "下载"]],
+                "hightlighs": [[false, false, false, false, true]],
+                "routes": [["/total/detail", "/total/plugins", "/total/use", "/total/select", "/total/download"]]
+            },
+            {
+                "title": "协议",
+                "links": [["epsg", "ogc", "geojson", "socket"]],
+                "hightlighs": [[false, false, false, false]],
+                "routes": [["/standard/epsg", "/standard/ogc", "/standard/geojson", "/standard/socket"]]
+            }
+        ]
+    }
+]
