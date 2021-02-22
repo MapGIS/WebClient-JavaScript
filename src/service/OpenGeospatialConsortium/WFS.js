@@ -82,7 +82,7 @@ class WFS extends OGCService {
             this.featureTypes.forEach((f, i) => {
                 if (i == 0) {
                     crs = f['DefaultSRS'];
-                    name = `${f['Name']},`;
+                    name = `${f['Name']}`;
                 }
             });
             this.layers = this.featureTypes.map((f) => f['Name']);
@@ -133,7 +133,20 @@ class WFS extends OGCService {
         let data = res.data;
         let obj = xml.getTraversalObj(data, {});
         let json = xml.convertToJson(obj, {});
-        return json;
+
+        let result = {
+            geojson: undefined,
+            xml: json
+        };
+        let geojson;
+        switch (version) {
+            case '1.1.0':
+                geojson = convert
+                break;
+            case '2.0.0':
+                break;
+        }
+        return result;
     }
 }
 export { WFS };

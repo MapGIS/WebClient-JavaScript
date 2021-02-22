@@ -34,31 +34,31 @@
 
     <body>
         <div id="app">
-            <cesium-web-globe
-                v-bind:ref="webgloberef"
+            <mapgis-web-scene
+                v-bind:ref="websceneref"
                 v-bind:animation="false"
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
                 libPath="./static/libs/cdn/cesium/Cesium.js"
                 pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
             >
-                <cesium-raster-layer v-bind:url="url"> </cesium-raster-layer>
-                <cesium-base-draw ref="drawref" v-on:load="handleDrawLoad" v-on:drawcreate="handleCreate">
+                <mapgis-3d-rastertile-layer v-bind:url="url"> </mapgis-3d-rastertile-layer>
+                <mapgis-3d-draw ref="drawref" v-on:load="handleDrawLoad" v-on:drawcreate="handleCreate">
                     <div id="toolbar-wrapper">
                         <div class="toolbar-item" v-on:click="togglePoint">画点</div>
                         <div class="toolbar-item" v-on:click="togglePolyline">画线</div>
                         <div class="toolbar-item" v-on:click="togglePolygon">画区</div>
                         <div class="toolbar-item" v-on:click="toggleDelete">删除</div>
                     </div>
-                </cesium-base-draw>
-            </cesium-web-globe>
+                </mapgis-3d-draw>
+            </mapgis-web-globe>
         </div>
         <script>
             new Vue({
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
+                        websceneref: 'websceneref' + Math.random(),
                         url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}'
                     };
                 },

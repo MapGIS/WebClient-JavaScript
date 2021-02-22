@@ -50,34 +50,29 @@
 
     <body>
         <div id="app">
-            <cesium-web-globe
-                v-bind:ref="webgloberef"
-                v-bind:animation="false"
-                v-bind:timeline="false"
+            <mapgis-web-scene
+                :ref="websceneref"
+                :animation="false"
+                :timeline="false"
                 v-on:load="handleLoad"
                 libPath="./static/libs/cdn/cesium/Cesium.js"
-                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
+                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <cesium-raster-layer v-bind:url="url"> </cesium-raster-layer>
-                <cesium-popup
-                    v-bind:position="position"
-                    container="<div>空网页内容实现</div>"
-                    v-bind:options="popupoptions"
-                    v-on:load="handlePopupLoad"
-                >
+                <mapgis-3d-rastertile-layer :url="url" />
+                <mapgis-3d-popup :position="position" v-on:load="bindEvent">
                     <div>
                         Vue槽-实现任何自定义样式
                         <div class="cesium-custom-popup-content">请在此处自定义内部内容</div>
                     </div>
-                </cesium-popup>
-            </cesium-web-globe>
+                </mapgis-3d-popup>
+            </mapgis-web-scene>
         </div>
         <script>
             new Vue({
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
+                        websceneref: 'websceneref' + Math.random(),
                         url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
                         position: {
                             longitude: 110,

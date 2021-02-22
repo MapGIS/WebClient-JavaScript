@@ -51,7 +51,7 @@
     <body>
         <div id="app">
             <div class="item top-left">
-                <cesium-web-globe
+                <mapgis-web-scene
                     v-bind:ref="webgloberef1"
                     v-bind:animation="false"
                     v-bind:timeline="false"
@@ -59,12 +59,12 @@
                     libPath="./static/libs/cdn/cesium/Cesium.js"
                     pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
                 >
-                    <cesium-raster-layer v-bind:url="url1"> </cesium-raster-layer>
-                    <cesium-link v-bind:enable="link"></cesium-link>
-                </cesium-web-globe>
+                    <mapgis-3d-rastertile-layer v-bind:url="url1"> </mapgis-3d-rastertile-layer>
+                    <mapgis-3d-link v-bind:enable="link"></mapgis-3d-link>
+                </mapgis-web-scene>
             </div>
             <div class="item top-right">
-                <cesium-web-globe
+                <mapgis-web-scene
                     v-bind:ref="webgloberef2"
                     v-bind:animation="false"
                     v-bind:timeline="false"
@@ -72,12 +72,12 @@
                     libPath="./static/libs/cdn/cesium/Cesium.js"
                     pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
                 >
-                    <cesium-raster-layer v-bind:url="url2"> </cesium-raster-layer>
-                    <!-- <cesium-link v-bind:enable="link"></cesium-link> -->
-                </cesium-web-globe>
+                    <mapgis-3d-rastertile-layer v-bind:url="url2"> </mapgis-3d-rastertile-layer>
+                    <mapgis-3d-link v-bind:enable="link"></mapgis-3d-link>
+                </mapgis-web-scene>
             </div>
             <div class="item bottom-left">
-                <cesium-web-globe
+                <mapgis-web-scene
                     v-bind:ref="webgloberef3"
                     v-bind:animation="false"
                     v-bind:timeline="false"
@@ -85,12 +85,11 @@
                     libPath="./static/libs/cdn/cesium/Cesium.js"
                     pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
                 >
-                    <cesium-raster-layer v-bind:url="url3"> </cesium-raster-layer>
-                    <!-- <cesium-link v-bind:enable="link"></cesium-link> -->
-                </cesium-web-globe>
+                    <mapgis-3d-rastertile-layer v-bind:url="url3"> </mapgis-3d-rastertile-layer>
+                </mapgis-web-scene>
             </div>
             <div class="item bottom-right">
-                <cesium-web-globe
+                <mapgis-web-scene
                     v-bind:ref="webgloberef4"
                     v-bind:animation="false"
                     v-bind:timeline="false"
@@ -98,9 +97,8 @@
                     libPath="./static/libs/cdn/cesium/Cesium.js"
                     pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
                 >
-                    <cesium-ogc-wmts-layer v-bind:url="url4" v-bind:options="wmtsoptions"></cesium-ogc-wmts-layer>
-                    <!-- <cesium-link v-bind:enable="link"></cesium-link> -->
-                </cesium-web-globe>
+                    <mapgis-3d-ogc-wmts-layer v-bind:url="url4" v-bind:options="wmtsoptions" />
+                </mapgis-web-scene>
             </div>
             <div v-bind:class="{'control': true, active: link}" v-on:click="changeMode"></div>
         </div>
@@ -115,7 +113,7 @@
                         webgloberef4: 'webgloberef4',
                         link: true,
                         url1: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
-                        url2: 'http://mt0.google.cn/vt/lyrs=m&hl=zh-CN&x={x}&y={y}&z={z}',
+                        url2: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
                         url3: 'http://online0.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20170908',
                         url4: 'http://t0.tianditu.com/DataServer?T=vec_c&L={TileMatrix}&Y={TileRow}&X={TileCol}&tk=9c157e9585486c02edf817d2ecbc7752',
                         wmtsoptions: {

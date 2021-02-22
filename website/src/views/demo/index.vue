@@ -200,7 +200,7 @@ import "codemirror/theme/paraiso-light.css";
 import "codemirror/theme/monokai.css";
 import "codemirror/theme/cobalt.css";
 
-import "@/styles/markdown.css";
+// import "@/styles/markdown.css";
 import "@/styles/prism.css";
 // import "@/styles/codemirror.css";
 
@@ -479,6 +479,8 @@ export default {
 </script>
 
 <style lang="less" scope>
+// @import '../../styles/markdown.css';
+
 .splitpanes__pane {
     background-color: #ffffff !important;
 }
