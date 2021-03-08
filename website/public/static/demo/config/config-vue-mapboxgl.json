@@ -290,6 +290,22 @@
                     "update": "最后更新时间：2021-01-07"
                 }
             ]
+        },
+        {
+            "name": "Vue-事件",
+            "iconfont": "icon_ogc",
+            "folder": "vue-event",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "图层事件",
+                    "file": "event-layer",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "event-layer.png",
+                    "update": "最后更新时间：2021-03-08"
+                }
+            ]
         }
     ]
 }

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-测量</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #main {
+                margin: 0 0;
+                width: 100%;
+                height: 100vh;
+            }
+            #toolbar-wrapper {
+                position: absolute;
+                z-index: 9999;
+                display: inline-flex;
+                overflow-x: hidden;
+                overflow-y: visible;
+                top: 20px;
+                left: 20px;
+            }
+            .toolbar-item {
+                background: #ffffff;
+                border: 1px dashed #666666;
+                text-align: center;
+                font-size: 20px;
+                line-height: 20px;
+                height: fit-content;
+                padding: 6px 16px;
+                cursor: pointer;
+            }
+            #map {
+                height: 100vh;
+                width: 100%;
+            }
+            .label {
+                color: #3bb2d0;
+                font-size: 16px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapbox-map
+                id="map"
+                :access-token="accessToken"
+                :map-style="mapStyle"
+                :zoom="mapZoom"
+                :center="outerCenter"
+                :crs="mapCrs"
+                v-on:load="handleMapLoad"
+            >
+                <mapbox-ogc-wmts-layer 
+                    :layer="layerWmts" 
+                    :layer-id="layerWmtsId" 
+                    :source-id="sourceWmtsId" 
+                    :url="wmtsurl"
+                >
+                </mapbox-ogc-wmts-layer>
+                <mapbox-raster-layer
+                    :layer="layerRaster"
+                    :layer-id="layerRasterId"
+                    :source="sourceRaster"
+                    :source-id="sourceRasterId"
+                >
+                </mapbox-raster-layer>
+                <mapbox-geojson-layer
+                    :source="geojsonSource"
+                    :source-id="geojsonSourceId"
+                    :layer="fillLayer"
+                    :layer-id="fillLayerId">
+                </mapbox-geojson-layer>
+            </mapbox-map>
+        </div>
+        <script>
+            var geojson = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[114.28939819335936,30.594183452544694]}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[114.34776306152344,30.623436511269382],[114.32510375976562,30.63909360759635],[114.30673599243164,30.634958017061198],[114.29180145263672,30.629640569460406],[114.28339004516601,30.627424880048103],[114.26467895507812,30.620777507443577],[114.24613952636719,30.616050209185243],[114.23566818237304,30.61073172273802]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[114.33454513549805,30.479893814659587],[114.38587188720703,30.479893814659587],[114.38587188720703,30.504596494227247],[114.33454513549805,30.504596494227247],[114.33454513549805,30.479893814659587]]]}}]};
+
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {},
+                            //设置加载并显示来源的图层信息
+                            layers: [],
+                        }, // 地图样式
+                        mapZoom: 11,
+                        outerCenter: [114.3, 30.5],
+                        mapCrs: 'EPSG:4326',
+
+                        layerWmts: {},
+                        layerWmtsId: 'ogcwmts_layerId',
+                        sourceWmtsId: 'ogcwmts_sourceId',
+                        wmtsurl: 'http://t0.tianditu.com/DataServer?T=img_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+
+                        layerRaster: {},
+                        sourceRaster: {
+                            type: 'raster',
+                            tiles: ['http://t0.tianditu.com/DataServer?T=cia_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752']
+                        },
+                        layerRasterId: 'raster_layerId',
+                        sourceRasterId: 'raster_sourceId',
+
+                        geojsonSourceId: "geojsonCollections",
+                        geojsonSource: {
+                            type: 'geojson',
+                            data: geojson
+                        },
+                        fillLayerId: 'fillid',
+                        fillLayer: {
+                            "type": "fill",
+                            "source": "geojsonCollections", //必须和上面的geojsonCollections一致
+                            "filter": ["==", "$type", "Polygon"], //关键点：$type是固定语法，类型是Point、LineString、Polygon
+                            "layout": {
+                                "visibility": "visible" //是否可见  visible / none
+                            },
+                            "paint": {
+                                "fill-antialias": true, //抗锯齿，true表示针对边界缝隙进行填充
+                                "fill-color": "#FFFFFF", //颜色
+                                "fill-opacity": 0.8, //透明度
+                                "fill-outline-color": "#52B883", //边线颜色，没错,确实没有边线宽度这个选项
+                                //"fill-pattern":"picture_name", //线的拉伸图片类型，一定要与对应的样式库的图片名字一一对应
+                                //"fill-translate": [0,0] //表示显示位置基于原始位置上,再按照屏幕坐标进行偏移,这个应该绝大部分都用不上
+                            }
+                        }
+                    };
+                },
+                methods: {
+                    enableMeasure() {
+                        const component = this.$refs.measureref;
+                        if (component) {
+                            component.enableMeasure();
+                        }
+                    },
+                    handleMapLoad(payload) {
+                        this.map = payload.map;
+                        console.log("地图对象", this.map);
+                        this.map.on('click', function(event){
+                            console.log('地图被点击了', event);
+                        })
+                        this.map.on('click', "raster_layerId", function(event){
+                            console.log('栅格图层无法获取点击事件', event);
+                        });
+                        this.map.on('click', "fillid", function(event){
+                            console.log('矢量图层被点击了', event);
+                            alert('矢量图层被点击了', event);
+                        });
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
