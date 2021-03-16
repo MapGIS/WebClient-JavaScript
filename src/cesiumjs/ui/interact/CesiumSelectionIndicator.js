@@ -1,7 +1,7 @@
 import {CesiumZondy} from '../../core/Base'; 
-import Cesium from '../../../../node_modules/cesium/Source/Cesium';
-var Cartesian2 = Cesium.Cartesian2;
-var DeveloperError = Cesium.DeveloperError;
+// import Cesium from '../../../../node_modules/cesium/Source/Cesium';
+// var Cartesian2 = Cesium.Cartesian2;
+// var DeveloperError = Cesium.DeveloperError;
 import defined from '../../../../node_modules/cesium/Source/Core/defined';
 import EasingFunction from '../../../../node_modules/cesium/Source/Core/EasingFunction';
 import knockout from '../../../../node_modules/cesium/Source/ThirdParty/knockout';

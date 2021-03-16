@@ -27,12 +27,12 @@ export default class ThirdPartyLayer extends BaseLayer {
         const options = Cesium.defaultValue(optionsParam, {});
         this._isHistoryImage = Cesium.defaultValue(options.isHistoryImage, false);
         this._imageVersion = Cesium.defaultValue(options.imageVersion, '0');
-        const offset = Cesium.defaultValue(options.Offset, false);
-        let offsetLabel = '';
-        if (offset) {
-            offsetLabel = '&gl=cn';
-        }
-        let url = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
+        // const offset = Cesium.defaultValue(options.Offset, false);
+        // let offsetLabel = '';
+        // if (offset) {
+        //     offsetLabel = '&gl=cn';
+        // }
+        const url = `http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`;
         const osmMap = this.viewer.imageryLayers.addImageryProvider(
             new Cesium.UrlTemplateImageryProvider({
                 url,
@@ -201,7 +201,7 @@ export default class ThirdPartyLayer extends BaseLayer {
         if (!Cesium.defined(options.token)) {
             Cesium.deprecationWarning('http://www.tianditu.gov.cn', '请到天地图官网自行申请开发token，自带token仅做功能验证随时可能失效');
         }
-        const url = 'http://t0.tianditu.com/DataServer?';
+        const url = 'http://t0.tianditu.gov.cn./DataServer?';
         const row = '_c&X={x}&Y={y}&L={l}';
         switch (options.ptype) {
             case 'vec':
@@ -253,7 +253,7 @@ export default class ThirdPartyLayer extends BaseLayer {
         const options = Cesium.defaultValue(optionsParam, {});
         const token = Cesium.defaultValue(options.token, '9c157e9585486c02edf817d2ecbc7752');
         if (Cesium.defined(options.ptype)) {
-            let url = `http://{s}.tianditu.com/{lw}/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer={layerType}&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset=w&format=tiles&tk=${token}`;
+            let url = `http://{s}.tianditu.gov.cn./{lw}/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer={layerType}&style={style}&tilerow={TileRow}&tilecol={TileCol}&tilematrixset=w&format=tiles&tk=${token}`;
             switch (options.ptype) {
                 case 'img':
                     url = url.replace('{lw}', 'img_w');
