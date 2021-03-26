@@ -35,16 +35,15 @@ import {L} from 'leaflet';
  */
 var MapWMTSLayer = window.L.TileLayer.extend({
 	options: {
-		yAxis: "down",
-		origin: [-180, 90],
 		version: '1.0.0',
-		style: 'default',
+		style: '',
 		serverName: '',//服务名
 		tilematrixSet: '',     //矩阵集名称
 		layer: '',             //图层名
 		format: 'image/png',
 		tileSize: 256,
-		attribution: "Zondy WMTS Data"
+		attribution: "Zondy WMTS Data",
+		noWrap: true
 	},
 	//var layer3 = new ZondyMapWMTSLayer("http://localhost:6163/igs/rest/ogc/WMTSServer", { tilematrixSet: "EPSG:4326_世界地图经纬度LEVEL7_028mm_GB", layer: 'World_level7_WMTS' }).addTo(mymap);
 	//
@@ -112,8 +111,10 @@ var MapWMTSLayer = window.L.TileLayer.extend({
 		// } else {
 		// 	yGrid = Math.floor(dy / (tileSize * resolution));
 		// }
+
 		var zoom = this._getZoomForUrl();
 		var url = window.L.Util.template(this._url, {s: this._getSubdomain(coords)});
+
 		var obj = {
 			version: this.options.version,
 			style: this.options.style,
@@ -123,13 +124,23 @@ var MapWMTSLayer = window.L.TileLayer.extend({
 			tilematrix: zoom,
 			tilerow: coords.y,
 			tilecol: coords.x
-			// tilematrix: coords.z,
-			// tilerow: yGrid,
-			// tilecol: xGrid
 		};
-		if (this.options.token) {
-			obj.token = this.options.token
+
+		//根据地图的不同，拼装不同的url参数
+		if(url.indexOf('tianditu') > -1){
+			obj.tilematrixSet = 'c';
+		}else if(url.indexOf('geoserver') > -1){
+			obj.tilematrix = this.options.tilematrixSet+ ':'+zoom;
 		}
+
+		if (this.options.token) {
+			if(url.indexOf('tianditu') > -1){
+				obj.tk = this.options.token
+			}else {
+				obj.token = this.options.token
+			}
+		}
+
 		return url + window.L.Util.getParamString(obj, url);
 	}
 });
