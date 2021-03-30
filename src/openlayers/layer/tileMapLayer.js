@@ -203,6 +203,76 @@ Zondy.Source.TileLayerSource = TileLayerSource;
 /// <param {string} opt_name 图层名称，无实际意义可为null.</param>
 /// <param {string} opt_hdfName 要显示的瓦片地图名称.</param>
 /// <param name="opt_options" type="Object">属性键值对</param>
+
+/**
+ * @author 基础平台/产品2部 龚跃健
+ * @class Zondy.Map.TileLayer
+ * @classdesc TileLayer显示瓦片地图
+ * @description Zondy.Map.TileLayer
+ * @param opt_name - {String} 可选项，显示瓦片地图的名称，无实际意义，可为NULL。
+ * @param opt_hdfName - {String} 必选项，瓦片地图的名称(IGServer上发布的实际名称)
+ * @param opt_options - {Object} 可选项，设置其他属性键值对对象。对象中的属性来自本类的属性。例如：{key1：value1, key2：value2 …}
+ * @param {String} [opt_options.ip = ''] 必选项，服务器ip地址，本地为“127.0.0.1”或“localhost”。
+ * @param {String} [opt_options.port = ''] 必选项，服务器端口号，默认为6163
+ * @param {ol.ProjectionLike} [opt_options.projection = ''] 必选项，瓦片地图投影信息，通过如下方法获得
+ *          //projectionExtent为图层左下角到右上角坐标范围
+ *          var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449];
+ *          var projection = new ol.proj.Projection({
+                units: ol.proj.Units.DEGREES,
+                extent: projectionExtent
+            });
+ * @param {Boolean} [opt_options.isAutoConfig = 'true'] 可选项，是否自动配置，默认为true
+ * @param {Boolean} [opt_options.cache = 'false'] 可选项，瓦片地图是否为地图文档发布动态裁图方式，默认为false
+ * @param {String} [opt_options.token = ''] 可选项，服务访问控制，如果在 MapGIS Server Manager 服务管理中开启token，须设置此项，其key值可在设置处获取。
+ * @param {Number} [opt_options.maxResolution = ''] 可选项，最大分辨率
+ * @param {Number} [opt_options.minZoom = ''] 可选项，最小分辨率
+ * @param {Number} [opt_options.maxZoom = ''] 可选项，最大分辨率
+ * @param {String} [opt_options.tileOriginType = 'leftTop'] 可选项，瓦片裁剪方式，是左上还是左下的方式，即是新瓦片裁剪的方式还是旧瓦片。一般无需设置此参数，直接由原点和中心点进行判断，只有在某些特殊的裁剪的瓦片中需要用到。例如若裁剪瓦片时以左下角为原点，方式却是新瓦片的方式则需要设置此参数为leftTop。
+ * @param {Number} [opt_options.tileSize = '256'] 可选项，地图图片大小
+ * @example
+    <script type="text/javascript">
+        function init() {
+            //瓦片投影，包含单位，坐标范围
+            var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449];
+            var projection = new ol.proj.Projection({
+                units: ol.proj.Units.DEGREES,
+                extent: projectionExtent
+            });
+            //最大分辨率，新瓦片必须设置，旧瓦片无需设置
+            var maxResolution = 0.0009655719622925324;
+            var center = [(114.12567815477894 + 114.47583026053915) / 2, (30.457571584721734 + 30.708389893334449) / 2];
+            //初始化地图容器
+            var map = new ol.Map({
+                target: 'mapCon',
+                view: new ol.View({
+                    projection: projection,
+                    extent: projectionExtent,
+                    center: center,
+                    maxZoom: 7,
+                    minZoom: 0,
+                    zoom: 1
+                })
+            });
+
+            var { protocol, ip, port } = window.webclient;
+            //显示瓦片图
+            var tileLayer = new Zondy.Map.TileLayer("MapGIS IGS TileLayer", "武汉市区自定义比例尺", {
+                ip: `${ip}`,
+                port: `${port}`,
+                projection: projection,
+                maxResolution: maxResolution,
+                tileSize: 256,
+                //瓦片裁剪方式
+                tileOriginType: 'leftTop'
+            });
+
+            //将地图文档图层加载到地图中
+            map.addLayer(tileLayer);
+        }
+    </script>
+ */
+
+
 var TileLayer_mapgis = function (opt_name, opt_hdfName, opt_options) {
     var options = opt_options ? opt_options : {};
     assign(options, { 'layerName': opt_name });
