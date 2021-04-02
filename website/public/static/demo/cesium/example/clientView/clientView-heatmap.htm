@@ -23,8 +23,15 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap();
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             appendHeatMap();
         }
@@ -41,108 +48,87 @@
                 "x": 147.1383442264,
                 "y": -41.4360048372,
                 "value": 76
-            },
-            {
+            }, {
                 "x": 108.6308,
                 "y": 32.2851,
                 "value": 80
-            },
-            {
+            }, {
                 "x": 110.6308,
                 "y": 32.2851,
                 "value": 69
-            },
-            {
+            }, {
                 "x": 115.5491,
                 "y": 33.2063,
                 "value": 90
-            },
-            {
+            }, {
                 "x": 109.8505,
                 "y": 27.6064,
                 "value": 45
-            },
-            {
+            }, {
                 "x": 119.8505,
                 "y": 27.6064,
                 "value": 45
-            },
-            {
+            }, {
                 "x": 108.6308,
                 "y": 33.2851,
                 "value": 63
-            },
-            {
+            }, {
                 "x": 110.6308,
                 "y": 35.2851,
                 "value": 69
-            },
-            {
+            }, {
                 "x": 115.5491,
                 "y": 38.2063,
                 "value": 90
-            },
-            {
+            }, {
                 "x": 109.8505,
                 "y": 30.6064,
                 "value": 45
-            },
-            {
+            }, {
                 "x": 119.8505,
                 "y": 29.6064,
                 "value": 45
-            },
-            {
+            }, {
                 "x": 115.8505,
                 "y": 68.6064,
                 "value": 66
-            },
-            {
+            }, {
                 "x": 114.8505,
                 "y": 30.6064,
                 "value": 89
-            },
-            {
+            }, {
                 "x": 115.8692,
                 "y": 29.2002,
                 "value": 99
-            },
-            {
+            }, {
                 "x": 118.8505,
                 "y": 67.6064,
                 "value": 66
-            },
-            {
+            }, {
                 "x": 117.8505,
                 "y": 27.6064,
                 "value": 40
-            },
-            {
+            }, {
                 "x": 115.8692,
                 "y": 29.2002,
                 "value": 99
-            },
-            {
+            }, {
                 "x": 113.8505,
                 "y": 27.6064,
                 "value": 79
-            },
-            {
+            }, {
                 "x": 114.8692,
                 "y": 29.2002,
                 "value": 80
-            },
-            {
+            }, {
                 "x": 116.8692,
                 "y": 28.2002,
                 "value": 89
-            },
-            {
+            }, {
                 "x": 114.8692,
                 "y": 27.2002,
                 "value": 88
-            }
-            ];
+            }];
 
             var valueMin = 0;
             var valueMax = 100;
@@ -159,7 +145,9 @@
                     '0.3': 'green',
                 }
             };
-            var analysisManager = new CesiumZondy.Manager.AnalysisManager({ viewer: webGlobe.viewer });
+            var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+                viewer: webGlobe.viewer
+            });
             //创建热力图（范围、最大值、最小值）
             var instance = analysisManager.createHeatMap(bounds, valueMin, valueMax, data, options);
             //跳转到创建的热力图实例

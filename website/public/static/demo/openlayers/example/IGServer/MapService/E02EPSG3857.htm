@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>矢量地图文档显示</title>
+        <!--引入当前页面样式表-->
+        <link href="./style.css" rel="stylesheet" type="text/css" />
+        <script src="./static/libs/include-openlayers-local.js"></script>
+        <script type="text/javascript">
+            //定义地图文档图层和地图
+            var mapDocLayer, map
+
+            /** 初始化地图显示*/
+            function init() {
+                //初始化地图容器
+                map = new ol.Map({
+                    target: 'mapCon',
+                    view: new ol.View({
+                        center: [(12060733.232006868 + 12929863.44711455) / 2, (3377247.5680546067 + 3934286.5753852259) / 2],
+                        zoom: 7,
+                    }),
+                })
+                var { protocol, ip, port } = window.webclient
+                //初始化地图文档图层对象
+                mapDocLayer = new Zondy.Map.MapDocTileLayer('MapGIS IGS MapDocLayer', 'Hubei3857', {
+                    ip: `${ip}`,
+                    port: `${port}`,
+                    projection: 'EPSG:3857',
+                })
+                //将地图文档图层加载到地图中
+                map.addLayer(mapDocLayer)
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <div id="mapCon" style="width: 100%; height: 95%; position: absolute;"></div>
+    </body>
+</html>

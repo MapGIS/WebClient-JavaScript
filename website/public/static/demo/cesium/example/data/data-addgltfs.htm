@@ -34,8 +34,15 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap()
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             sceneManager.flyToEx(118.04234916552755, 42.6372939021426, {
@@ -55,76 +62,71 @@
             webGlobe.viewer.clock.shouldAnimate = true;
 
             //多个模型
-            var models = [
-                {
-                    "id": "document",
-                    "name": "Models",
-                    "version": "1.0"
+            var models = [{
+                "id": "document",
+                "name": "Models",
+                "version": "1.0"
+            }, {
+                //模型的ID
+                "id": "aerogenerator1",
+                //模型的名字
+                "name": "风机1",
+                //模型要添加的坐标位置
+                "position": {
+                    "cartographicDegrees": [118.0385, 42.6374, -5]
                 },
-                {
-                    //模型的ID
-                    "id": "aerogenerator1",
-                    //模型的名字
-                    "name": "风机1",
-                    //模型要添加的坐标位置
-                    "position": {
-                        "cartographicDegrees": [118.0385, 42.6374, -5]
-                    },
-                    //模型文件参数
-                    "model": {
-                        //模型文件的路径
-                        "gltf": "./static/data/model/donghua.gltf",
-                        //模型的比例
-                        "scale": 50,
-                        //模型最小显示的像素
-                        "minimumPixelSize": 16
-                    },
-                    //描述
-                    "description": "这是1号风机"
+                //模型文件参数
+                "model": {
+                    //模型文件的路径
+                    "gltf": "./static/data/model/donghua.gltf",
+                    //模型的比例
+                    "scale": 50,
+                    //模型最小显示的像素
+                    "minimumPixelSize": 16
                 },
-                {
-                    //模型的ID
-                    "id": "aerogenerator2",
-                    //模型的名字
-                    "name": "风机2",
-                    //模型要添加的坐标位置
-                    "position": {
-                        "cartographicDegrees": [118.0356, 42.6354, -5]
-                    },
-                    //模型文件参数
-                    "model": {
-                        //模型文件的路径
-                        "gltf": "./static/data/model/donghua.gltf",
-                        //模型的比例
-                        "scale": 50,
-                        //模型最小显示的像素
-                        "minimumPixelSize": 16
-                    },
-                    //描述
-                    "description": "这是2号风机"
+                //描述
+                "description": "这是1号风机"
+            }, {
+                //模型的ID
+                "id": "aerogenerator2",
+                //模型的名字
+                "name": "风机2",
+                //模型要添加的坐标位置
+                "position": {
+                    "cartographicDegrees": [118.0356, 42.6354, -5]
                 },
-                {
-                    //模型的ID
-                    "id": "aerogenerator3",
-                    //模型的名字
-                    "name": "风机3",
-                    //模型要添加的坐标位置
-                    "position": {
-                        "cartographicDegrees": [118.0329, 42.6333, -5]
-                    },
-                    //模型文件参数
-                    "model": {
-                        //模型文件的路径
-                        "gltf": "./static/data/model/donghua.gltf",
-                        //模型的比例
-                        "scale": 50,
-                        //模型最小显示的像素
-                        "minimumPixelSize": 16
-                    },
-                    //描述
-                    "description": "这是3号风机"
-                }
-            ];
+                //模型文件参数
+                "model": {
+                    //模型文件的路径
+                    "gltf": "./static/data/model/donghua.gltf",
+                    //模型的比例
+                    "scale": 50,
+                    //模型最小显示的像素
+                    "minimumPixelSize": 16
+                },
+                //描述
+                "description": "这是2号风机"
+            }, {
+                //模型的ID
+                "id": "aerogenerator3",
+                //模型的名字
+                "name": "风机3",
+                //模型要添加的坐标位置
+                "position": {
+                    "cartographicDegrees": [118.0329, 42.6333, -5]
+                },
+                //模型文件参数
+                "model": {
+                    //模型文件的路径
+                    "gltf": "./static/data/model/donghua.gltf",
+                    //模型的比例
+                    "scale": 50,
+                    //模型最小显示的像素
+                    "minimumPixelSize": 16
+                },
+                //描述
+                "description": "这是3号风机"
+            }];
 
             //构造通用数据管理对象
             var commonDataManager = new CesiumZondy.Manager.CommonDataManager({

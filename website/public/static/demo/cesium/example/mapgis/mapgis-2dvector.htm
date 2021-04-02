@@ -9,26 +9,33 @@
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-cesium-local.js"></script>
     <script>
-      //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
-      "use strict";
-      //定义三维视图的主要类
-      var webGlobe;
-      //定义矢量类
-      var vecDoc;
+        //在JS脚本开发中使用严格模式，及时捕获一些可能导致编程错误的ECMAScript行为
+        "use strict";
+        //定义三维视图的主要类
+        var webGlobe;
+        //定义矢量类
+        var vecDoc;
 
         //加载三维视图
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', { terrainExaggeration: 1, infoBox: true, });
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+                infoBox: true,
+            });
 
-            //添加天地图
-            webGlobe.appendTDTuMap({
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
                 //天地图经纬度数据
                 url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                 //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                 token: "9c157e9585486c02edf817d2ecbc7752",
                 //地图类型 'vec'矢量 'img'影像 'ter'地形
-                type: "img"
+                ptype: "img"
             });
         }
 
@@ -55,46 +62,35 @@
             }
         }
         webGlobe.viewer.camera.flyTo({
-          //定位到范围中心点
-          destination: Cesium.Cartesian3.fromDegrees(116.3909, 39.9148, 500),
-          orientation: {
-            heading: Cesium.Math.toRadians(0),
-            pitch: Cesium.Math.toRadians(-90),
-            roll: 0,
-          },
+            //定位到范围中心点
+            destination: Cesium.Cartesian3.fromDegrees(116.3909, 39.9148, 500),
+            orientation: {
+                heading: Cesium.Math.toRadians(0),
+                pitch: Cesium.Math.toRadians(-90),
+                roll: 0,
+            },
         });
-      }
 
-      //添加MapGIS发布的二维矢量地图文档
-      function remove() {
-        if (vecDoc) {
-          webGlobe.removeImageryLayer(vecDoc);
+        //添加MapGIS发布的二维矢量地图文档
+        function remove() {
+            if (vecDoc) {
+                webGlobe.removeImageryLayer(vecDoc);
+            }
         }
-      }
     </script>
-<<<<<<< HEAD
-  </head>
-  <body onload="init()">
-=======
 </head>
 
 <body onload="init()">
->>>>>>> 7efb47b58434b7c3ee3a78b75e3545517d0e15df
     <div class="ToolLib">
-      <button class="ButtonLib" id="add" onclick="add()">添加数据</button>
-      <button class="ButtonLib" id="remove" onclick="remove()">删除数据</button>
+        <button class="ButtonLib" id="add" onclick="add()">添加数据</button>
+        <button class="ButtonLib" id="remove" onclick="remove()">删除数据</button>
     </div>
     <div id="GlobeView"></div>
-<<<<<<< HEAD
     <!--坐标容器-->
     <div id="coordinateDiv" class="coordinateClass">
-      <label id="coordinate_location"></label>
-      <label id="coordinate_height"></label>
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
     </div>
-  </body>
-</html>
-=======
 </body>
 
 </html>
->>>>>>> 7efb47b58434b7c3ee3a78b75e3545517d0e15df

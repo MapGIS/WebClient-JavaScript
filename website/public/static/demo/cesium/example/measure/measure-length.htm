@@ -27,12 +27,25 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap()
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //构造M3D模型层管理对象
-            var { protocol, ip, port } = window.webclient;
-            var m3dLayer = new CesiumZondy.Layer.M3DLayer({ viewer: webGlobe.viewer });
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
             //加载M3D地图文档（服务地址，配置参数）
             landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
                 autoReset: false,
@@ -40,7 +53,9 @@
             });
 
             //初始化视图功能管理类
-            var sceneManager = new CesiumZondy.Manager.SceneManager({ viewer: webGlobe.viewer });
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
             //视点跳转
             sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
                 height: 100.85856618500283,
@@ -48,7 +63,7 @@
                 pitch: -15,
                 roll: 0
             });
-            
+
             //调用距离测量函数
             lengthMeasure();
         }

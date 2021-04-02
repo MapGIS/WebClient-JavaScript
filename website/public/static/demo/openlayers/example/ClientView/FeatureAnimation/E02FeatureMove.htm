@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="turf" src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+         #layertree li > span {
+            cursor: pointer;
+            font-size: 6px;
+        }
+        #layertree ul{
+            font-family: cursive;
+            color:white;
+            margin: 0px;
+            padding-left: 20px;
+        }
+        fieldset{
+            padding-left: 6px;
+            padding-bottom: 5px;
+            padding-right: 6px;
+            border: none;
+        }
+      
+        fieldset label {
+            float:left;
+            color: white;
+            font-size: 6px;
+            font-weight: 500;
+            font-family: cursive;
+            margin: 2px 2px;
+            width: 70%;
+        }
+        fieldset input {
+            float: left;
+            margin-bottom:2px;
+            width: 10%;
+        }
+
+        input[type="range"] {
+        /*-webkit-box-shadow: 0 1px 0 0px #424242, 0 1px 0 #060607 inset, 0px 2px 10px 0px black inset, 1px 0px 2px rgba(0, 0, 0, 0.4) inset, 0 0px 1px rgba(0, 0, 0, 0.6) inset;*/
+            -webkit-appearance:none; /*去除默认样式*/
+            background-color: #ebeff4;
+            /*border-radius: 15px;*/
+            width: 70px;
+            -webkit-appearance: none;
+            height:2px;
+            padding: 0;
+            border: none;
+            margin-top: 10px
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;/*去除默认样式*/
+            cursor: default;
+            top: 0;
+            height: 10px;
+            width: 10px;
+            transform: translateY(0px);
+            /*background: none repeat scroll 0 0 #5891f5;*/
+            background: #fff;
+            border-radius: 5px;
+            border: 2px solid #006eb3;
+            /*-webkit-box-shadow: 0 -1px 1px #fc7701 inset;*/
+        }
+        .inputBtn{
+            width: 54px;
+            line-height: 17px;
+            border-radius: 4px;
+            opacity: 0.5;
+            font-family: cursive;
+            font-weight: 800;
+            background-color: transparent;
+            background-color: darkgray;
+            font-size: 6px;
+        }
+        
+    </style>
+    <script type="text/javascript">
+        var map = null;
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [110,36.6642],  //地图初始中心点
+                    maxZoom: 28,     //最大瓦片显示级数
+                    minZoom: 1,      //最小瓦片显示级数
+                    zoom: 6,         //地图初始显示级数
+                    projection:"EPSG:4326"
+                })
+            });
+            
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            map.addLayer(new ol.layer.Tile({
+                    title: "天地图影像图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        wrapX: false
+                    }),
+                    projection:"EPSG:4326"
+            }));
+            map.addLayer(new ol.layer.Tile({
+                    title: "天地图矢量注记图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        wrapX: false
+                    }),
+                    projection:"EPSG:4326"
+                })
+            );
+
+            var alongLine = {
+                type: "FeatureCollection",
+                features: [
+                    {
+                        type: "Feature",
+                        geometry: {
+                            type: "LineString",
+                            coordinates: [[101.75357574,36.63619784], [103.81134819,36.07572866],[108.9421713,34.26693809],[113.60869711,34.77730291],[116.96219053,36.68659347]],
+                        },
+                    }
+                ],
+            };
+            
+            function InterpolateLine(linGeoJson,num) {
+                var posArr = [];
+                if(linGeoJson!=null && linGeoJson.features.length>0)
+                {
+                    var coordinates = linGeoJson.features[0].geometry.coordinates;
+                    var lineDistance = 0;
+                    for(var i=0;i<coordinates.length-1;i++)
+                    {
+                        lineDistance += turf.distance(coordinates[i], coordinates[i+1], {
+                        units: "kilometers",
+                        });
+                    }
+                    var step = lineDistance / num; //用于下面的循环
+                    for (var i = 0; i < lineDistance; i += step) {
+                        //计算对应第i个插值点的位置
+                        var segment = turf.along(linGeoJson.features[0], i, {
+                            units: "kilometers",
+                        });
+                        //将插值点加入到原始数据中
+                        posArr.push(segment.geometry.coordinates);
+                    }
+                    posArr.push(coordinates[coordinates.length-1]); //补上终点
+                    return posArr;
+
+                }
+                else{
+                    return posArr;
+                }
+            }
+            var posArr = InterpolateLine(alongLine,100);
+            //将离散点构建成一条折线
+            var route = new ol.geom.LineString(posArr);
+            //获取直线的坐标
+            var routeCoords = route.getCoordinates();
+            var routeLength = routeCoords.length;
+
+            var routeFeature = new ol.Feature({
+                type: 'route',
+                geometry: route
+            });
+            var geoMarker = new ol.Feature({
+                type: 'geoMarker',
+                geometry: new ol.geom.Point(routeCoords[0])
+            });
+            var startMarker = new ol.Feature({
+                type: 'icon',
+                geometry: new ol.geom.Point(routeCoords[0])
+            });
+            var endMarker = new ol.Feature({
+                type: 'icon',
+                geometry: new ol.geom.Point(routeCoords[routeLength - 1])
+            });
+
+            var styles = {
+                'route': new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        width: 3,
+                        color: [237, 212, 0, 0.6]
+                    })
+                }),
+                'icon': new ol.style.Style({
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        scale:0.5,
+                        src: "./static/assets/olimages/stationicon.png"
+                    })
+                }),
+                'geoMarker': new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        snapToPixel: false,
+                        fill: new ol.style.Fill({ color: 'black' }),
+                        stroke: new ol.style.Stroke({
+                            color: 'white',
+                            width: 2
+                        })
+                    })
+                })
+            };
+
+            var animating = false;
+            var speed, now;
+            var speedInput = document.getElementById('speed');
+            var startButton = document.getElementById('start-animation');
+            var endButton = document.getElementById('end-animation');
+
+            var vectorLayer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [routeFeature, geoMarker, startMarker, endMarker]
+                }),
+                style: function (feature) {
+                    //如果动画是激活的就隐藏geoMarker
+                    if (animating && feature.get('type') === 'geoMarker') {
+                        return null;
+                    }
+                    return styles[feature.get('type')];
+                }
+            });
+            map.addLayer(vectorLayer);
+
+            var moveFeature = function (event) {
+                var vectorContext = event.vectorContext;
+                var frameState = event.frameState;
+
+                if (animating) {
+                    var elapsedTime = frameState.time - now;
+                    //通过增加速度，来获得lineString坐标
+                    var index = Math.round(speed * elapsedTime / 1000);
+
+                    if (index >= routeLength) {
+                        animating = false;
+                        stopAnimation();
+                        return;
+                    }
+
+                    var currentPoint = new ol.geom.Point(routeCoords[index]);
+                    var feature = new ol.Feature(currentPoint);
+                    vectorContext.drawFeature(feature, styles.geoMarker);
+                }
+                //继续动画效果
+                map.render();
+            };
+
+            function startAnimation() {
+                if (animating) {
+                    stopAnimation();
+                } else {
+                    animating = true;
+                    now = new Date().getTime();
+                    speed = speedInput.value;
+                    //隐藏geoMarker
+                    geoMarker.setStyle(null);
+                    map.on('postcompose', moveFeature);
+                    map.render();
+                }
+            }
+            /**
+            * @param 
+            */
+            function stopAnimation() {
+                //如果动画取消就开始动画
+                var coord = animating?routeCoords[0]:routeCoords[routeLength - 1] ;
+                animating = false;
+                /** @type {ol.geom.Point} */
+                (geoMarker.getGeometry()).setCoordinates(coord);
+                //移除监听
+                map.un('postcompose', moveFeature);
+            }
+            startButton.addEventListener('click', startAnimation, false);
+            endButton.addEventListener('click', stopAnimation, false);
+        }
+  
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+    </div>
+    <fieldset id="layertree" style="position: absolute;width: 180px;top: 18px;left: 50px;background-color: black;opacity: 0.65;border-radius: 10px;padding: 10px 6px;">
+        <ul>
+            <li>
+                <span>要素移动</span>
+                <fieldset id="layer0">
+                    <label style="width: 54px;line-height: 17px">速度:</label><input id="speed" type="range" min="10" max="200" step="10" value="60"/>
+                </fieldset>
+                <fieldset id="layer0">
+                    <input id="start-animation" class="inputBtn" style="margin-right: 15px" type="submit" value="运行"/>
+                    <input id="end-animation"  class="inputBtn" type="submit" value="停止"/>
+                </fieldset>
+            </li>
+        </ul>
+    </fieldset>
+</body>
+
+</html>
+

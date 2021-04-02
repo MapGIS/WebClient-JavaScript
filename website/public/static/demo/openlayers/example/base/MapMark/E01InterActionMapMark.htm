@@ -1,0 +1,610 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery,jquery-easyui" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script src="./a.js"></script>
+    <style type="text/css">
+      #mapCon {
+        width: 100%;
+        height: 95%;
+        position: absolute;
+      }
+      .ol-mouse-position {
+        top: 95%;
+        right: 8px;
+        position: absolute;
+      }
+      .ol-popup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+        filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 45px;
+        left: -50px;
+      }
+
+      .ol-popup:after,
+      .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: ' ';
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+
+      .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+      }
+
+      .ol-popup-closer:after {
+        content: '✖';
+      }
+
+      #popup-content {
+        font-size: 14px;
+        font-family: '微软雅黑';
+      }
+
+      #popup-content .markerInfo {
+        font-weight: bold;
+      }
+    </style>
+
+    <script type="text/javascript">
+      var map = null
+      var vectorSource = null
+      var vectorLayer = null
+
+      function init() {
+        var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+        //加载天地图瓦片图层数据
+        var TiandiMap_vectIGS = new Zondy.Map.TianDiTu({
+          layerType: Zondy.Enum.Map.TiandituType.VEC_IGS,
+          projection: ol.proj.get('EPSG:4326'),
+          //最小显示等级
+          minZoom: 0,
+          //最大显示等级
+          maxZoom: 15,
+          ip: 'develop.smaryun.com',
+          port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
+          //天地图key
+          token: tdk,
+          layerName: '天地图矢量',
+        })
+
+        var TiandiMap_ciaIGS = new Zondy.Map.TianDiTu({
+          layerType: Zondy.Enum.Map.TiandituType.CVA_IGS,
+          projection: ol.proj.get('EPSG:4326'),
+          minZoom: 0, //最小显示等级
+          maxZoom: 15, //最大显示等级
+          ip: 'develop.smaryun.com',
+          port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
+          //天地图key
+          token: tdk,
+          layerName: '天地图注记',
+        })
+
+        //初始化地图容器
+        map = new ol.Map({
+          target: 'mapCon', //地图容器div的ID
+          controls: ol.control.defaults({
+            attributionOptions: {
+              collapsible: true,
+            },
+          }),
+          view: new ol.View({
+            center: [116.28, 39.54],
+            zoom: 4,
+            projection: 'EPSG:4326',
+          }),
+          layers: [TiandiMap_vectIGS, TiandiMap_ciaIGS],
+        })
+
+        vectorSource = new ol.source.Vector({
+          features: [],
+        })
+        //矢量标注图层
+        vectorLayer = new ol.layer.Vector({
+          source: vectorSource,
+        })
+        map.addLayer(vectorLayer)
+
+        map.addControl(
+          new ol.control.MousePosition({
+            //坐标格式
+            coordinateFormat: ol.coordinate.createStringXY(4),
+          })
+        )
+      }
+
+      function ClearEventListen() {
+        map.un('click', onAppendImageCallback)
+        map.un('click', onAppendTxtCallback)
+        map.un('click', onAppendImgTxtCallback)
+        map.un('click', onAppendPopupCallback)
+        map.un('pointermove', onPointMoveCallback)
+      }
+
+      function AppendImage() {
+        ClearEventListen()
+        map.removeLayer(vectorLayer)
+        map.addLayer(vectorLayer)
+        map.on('click', onAppendImageCallback)
+      }
+
+      function onAppendImageCallback(evt) {
+        //鼠标单击点坐标
+        var point = evt.coordinate
+        //添加一个新的标注（矢量要素）
+        addImageLabel(point)
+      }
+
+      /**
+       * 添加一个新的标注（矢量要素）
+       * @param {ol.Coordinate} coordinate 坐标点
+       */
+      function addImageLabel(coordinate) {
+        //新建一个要素 ol.Feature
+        var newFeature = new ol.Feature({
+          //几何信息
+          geometry: new ol.geom.Point(coordinate),
+        })
+        //设置要素的样式
+        newFeature.setStyle(createImageStyle(newFeature))
+        //将新要素添加到数据源中
+        vectorSource.addFeature(newFeature)
+      }
+
+      /**
+       * 创建矢量标注样式函数,设置image为图标ol.style.Icon
+       * @param {ol.Feature} feature 要素
+       */
+      function createImageStyle(feature) {
+        return new ol.style.Style({
+          /**{olx.style.IconOptions}类型*/
+          image: new ol.style.Icon({
+            anchor: [0.5, 60],
+            anchorOrigin: 'top-right',
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'pixels',
+            offsetOrigin: 'top-right',
+            // offset:[0,10],
+            //图标缩放比例
+            // scale:0.5,
+            //透明度
+            opacity: 0.75,
+            //图标的url
+            src: './static/assets/olimages/label/blueIcon.png',
+          }),
+        })
+      }
+
+      function AppendText() {
+        ClearEventListen()
+        map.removeLayer(vectorLayer)
+        map.addLayer(vectorLayer)
+        map.on('click', onAppendTxtCallback)
+      }
+
+      function onAppendTxtCallback(evt) {
+        //鼠标单击点坐标
+        var point = evt.coordinate
+        //添加一个新的标注（矢量要素）
+        addTxtLabel(point)
+      }
+
+      /**
+       * 添加一个新的标注（文字标注）
+       * @param {ol.Coordinate} coordinate 坐标点
+       */
+      function addTxtLabel(coordinate) {
+        //新建一个要素 ol.Feature
+        var newFeature = new ol.Feature({
+          //几何信息
+          geometry: new ol.geom.Point(coordinate),
+          //名称属性
+          name: '标注点',
+        })
+        //设置要素的样式
+        newFeature.setStyle(createTxtStyle(newFeature))
+        //将新要素添加到数据源中
+        vectorSource.addFeature(newFeature)
+      }
+
+      /**
+       * 创建矢量标注样式函数,设置image为图标ol.style.Icon
+       * @param {ol.Feature} feature 要素
+       */
+      function createTxtStyle(feature) {
+        return new ol.style.Style({
+          text: new ol.style.Text({
+            //位置
+            textAlign: 'center',
+            //基准线
+            textBaseline: 'middle',
+            //文字样式
+            font: 'normal 14px 微软雅黑',
+            //文本内容
+            text: feature.get('name'),
+            //文本填充样式（即文字颜色）
+            fill: new ol.style.Fill({ color: '#aa3300' }),
+            stroke: new ol.style.Stroke({ color: '#ffcc33', width: 2 }),
+          }),
+        })
+      }
+
+      function AppendImgTxt() {
+        ClearEventListen()
+        map.removeLayer(vectorLayer)
+        map.addLayer(vectorLayer)
+        map.on('click', onAppendImgTxtCallback)
+      }
+
+      function onAppendImgTxtCallback(evt) {
+        //鼠标单击点坐标
+        var point = evt.coordinate
+        //添加一个新的标注（矢量要素）
+        addImgTxtLabel(point)
+      }
+
+      /**
+       * 添加一个新的标注（文字标注）
+       * @param {ol.Coordinate} coordinate 坐标点
+       */
+      function addImgTxtLabel(coordinate) {
+        //新建一个要素 ol.Feature
+        var newFeature = new ol.Feature({
+          //几何信息
+          geometry: new ol.geom.Point(coordinate),
+          //名称属性
+          name: '标注点',
+        })
+        //设置要素的样式
+        newFeature.setStyle(createImgTxtLabelStyle(newFeature))
+        //将新要素添加到数据源中
+        vectorSource.addFeature(newFeature)
+      }
+      /**
+       * 创建矢量标注样式函数,设置image为图标ol.style.Icon
+       * @param {ol.Feature} feature 要素
+       */
+      function createImgTxtLabelStyle(feature) {
+        return new ol.style.Style({
+          image: new ol.style.Icon(
+            /** @type {olx.style.IconOptions} */
+            ({
+              anchor: [0.5, 60],
+              anchorOrigin: 'top-right',
+              anchorXUnits: 'fraction',
+              anchorYUnits: 'pixels',
+              offsetOrigin: 'top-right',
+              // offset:[0,10],
+              //图标缩放比例
+              // scale:0.5,
+              //透明度
+              opacity: 0.75,
+              //图标的url
+              src: './static/assets/olimages/label/blueIcon.png',
+            })
+          ),
+          text: new ol.style.Text({
+            //位置
+            textAlign: 'center',
+            //基准线
+            textBaseline: 'middle',
+            //文字样式
+            font: 'normal 14px 微软雅黑',
+            //文本内容
+            text: feature.get('name'),
+            //文本填充样式（即文字颜色）
+            fill: new ol.style.Fill({ color: '#aa3300' }),
+            stroke: new ol.style.Stroke({ color: '#ffcc33', width: 2 }),
+          }),
+        })
+      }
+
+      /**
+       * 实现popup的html元素
+       */
+      var container = null
+      var content = null
+      var closer = null
+
+      /**
+       * 在地图容器中创建一个Overlay
+       */
+      var popup = null
+      var beijing = ol.proj.fromLonLat([116.28, 39.54])
+      //示例标注点北京市的信息对象
+      var featuerInfo = {
+        geo: [116.28, 39.54],
+        att: {
+          //标注信息的标题内容
+          title: '北京市(中华人民共和国首都)',
+          //标注详细信息链接
+          titleURL: 'http://www.openlayers.org/',
+          //标注内容简介
+          text: '北京（Beijing），简称京，中华人民共和国首都、直辖市，中国的政治、文化和国际交往中心……',
+          //标注的图片
+          imgURL: './static/assets/olimages/label/bj.png',
+        },
+      }
+
+      /**
+       * 动态创建popup的具体内容
+       * @param {string} title
+       */
+      function addFeatrueInfo(info) {
+        //新增a元素
+        var elementA = document.createElement('a')
+        elementA.className = 'markerInfo'
+        elementA.href = info.att.titleURL
+        //elementA.innerText = info.att.title;
+        setInnerText(elementA, info.att.title)
+        // 新建的div元素添加a子节点
+        content.appendChild(elementA)
+        //新增div元素
+        var elementDiv = document.createElement('div')
+        elementDiv.className = 'markerText'
+        //elementDiv.innerText = info.att.text;
+        setInnerText(elementDiv, info.att.text)
+        // 为content添加div子节点
+        content.appendChild(elementDiv)
+        //新增img元素
+        var elementImg = document.createElement('img')
+        elementImg.className = 'markerImg'
+        elementImg.src = info.att.imgURL
+        // 为content添加img子节点
+        content.appendChild(elementImg)
+      }
+      /**
+       * 动态设置元素文本内容（兼容）
+       */
+      function setInnerText(element, text) {
+        if (typeof element.textContent == 'string') {
+          element.textContent = text
+        } else {
+          element.innerText = text
+        }
+      }
+      function AppendPopup() {
+        ClearEventListen()
+
+        container = document.getElementById('popup')
+        content = document.getElementById('popup-content')
+        closer = document.getElementById('popup-closer')
+
+        /**
+         * 添加关闭按钮的单击事件（隐藏popup）
+         * @return {boolean} Don't follow the href.
+         */
+        closer.onclick = function() {
+          //未定义popup位置
+          popup.setPosition(undefined)
+          //失去焦点
+          closer.blur()
+          return false
+        }
+
+        if (popup == null) {
+          popup = new ol.Overlay(
+            /** @type {olx.OverlayOptions} */
+            ({
+              //要转换成overlay的HTML元素
+              element: container,
+              //当前窗口可见
+              autoPan: true,
+              //Popup放置的位置
+              positioning: 'bottom-center',
+              //是否应该停止事件传播到地图窗口
+              stopEvent: false,
+              autoPanAnimation: {
+                //当Popup超出地图边界时，为了Popup全部可见，地图移动的速度
+                duration: 250,
+              },
+            })
+          )
+        }
+        map.addOverlay(popup)
+        /**
+         * 为map添加点击事件监听，渲染弹出popup
+         */
+        map.on('click', onAppendPopupCallback)
+        /**
+         * 为map添加鼠标移动事件监听，当指向标注时改变鼠标光标状态
+         */
+        map.on('pointermove', onPointMoveCallback)
+      }
+
+      function onAppendPopupCallback(evt) {
+        //判断当前单击处是否有要素，捕获到要素时弹出popup
+        var feature = map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+          return feature
+        })
+        if (feature) {
+          //清空popup的内容容器
+          content.innerHTML = ''
+          //在popup中加载当前要素的具体信息
+          addFeatrueInfo(featuerInfo)
+          popup.setPosition(feature.getGeometry().getCoordinates())
+        }
+      }
+
+      function onPointMoveCallback(e) {
+        var pixel = map.getEventPixel(e.originalEvent)
+        var hit = map.hasFeatureAtPixel(pixel)
+        map.getTargetElement().style.cursor = hit ? 'pointer' : ''
+      }
+
+      function AppendCluster() {
+        ClearEventListen()
+        map.removeLayer(vectorLayer)
+        //此示例创建10000个要素
+        var count = 10000
+        var features = new Array(count)
+        for (var i = 0; i < count; ++i) {
+          var coordinates = [Math.random() * 360 - 180, Math.random() * 180 - 90]
+          features[i] = new ol.Feature(new ol.geom.Point(coordinates))
+        }
+        vectorSource.addFeatures(features)
+        //聚合标注数据源
+        var clusterSource = new ol.source.Cluster({
+          distance: 30,
+          source: vectorSource,
+          wrapX: false,
+        })
+        //加载聚合标注的矢量图层
+        var styleCache = {}
+        var clusters = new ol.layer.Vector({
+          source: clusterSource,
+          style: function(feature, resolution) {
+            var size = feature.get('features').length
+            var style = styleCache[size]
+            if (!style) {
+              style = [
+                new ol.style.Style({
+                  image: new ol.style.Circle({
+                    radius: 10,
+                    stroke: new ol.style.Stroke({
+                      color: '#fff',
+                    }),
+                    fill: new ol.style.Fill({
+                      color: '#3399CC',
+                    }),
+                  }),
+                  text: new ol.style.Text({
+                    text: size.toString(),
+                    fill: new ol.style.Fill({
+                      color: '#fff',
+                    }),
+                  }),
+                }),
+              ]
+              styleCache[size] = style
+            }
+            return style
+          },
+        })
+        map.addLayer(clusters)
+      }
+
+      //清空测量结果
+      function clearAll() {
+        if (vectorSource != null) {
+          vectorSource.clear()
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapCon">
+      <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup-content"></div>
+      </div>
+    </div>
+    <div id="menuContain" class="menuContain">
+      <div id="tool-container">
+        <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">地图标注</i><em></em></div>
+      </div>
+    </div>
+    <div id="menu1" class="menuStrip" style="display:none">
+      <ul class="menuItems">
+        <li onclick="AppendImage()"><span class="item1"></span><i>图片</i></li>
+        <li onclick="AppendText()"><span class="item1"></span><i>文字</i></li>
+        <li onclick="AppendImgTxt()"><span class="item1"></span><i>图文</i></li>
+        <li onclick="AppendPopup()"><span class="item1"></span><i>PopUp</i></li>
+        <li onclick="AppendCluster()"><span class="item1"></span><i>聚合</i></li>
+        <li class="divider"></li>
+        <li onclick="clearAll()"><span class="item3"></span><i>移除</i></li>
+      </ul>
+    </div>
+    <script>
+      function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain')
+        if (temDivs.length > 0) {
+          for (var i = 0; i < temDivs.length; i++) {
+            if (temDivs[i] === div) {
+              var status = div.getAttribute('status')
+              if (status == 'unactive') {
+                div.setAttribute('status', 'active')
+                var tem_spans = div.getElementsByTagName('span')
+                var tem_ems = div.getElementsByTagName('em')
+                tem_spans[0].className = 'active'
+                tem_ems[0].className = 'active'
+
+                //显示菜单项
+                DisplayMenuItem(true, menuitemFrameID)
+              } else {
+                div.setAttribute('status', 'unactive')
+                var tem_spans = div.getElementsByTagName('span')
+                var tem_ems = div.getElementsByTagName('em')
+                tem_spans[0].className = ''
+                tem_ems[0].className = ''
+
+                //隐藏菜单项
+                DisplayMenuItem(false, menuitemFrameID)
+              }
+            } else {
+              var status = temDivs[i].getAttribute('status')
+              if (status == 'active') {
+                temDivs[i].setAttribute('status', 'unactive')
+                var tem_spans = temDivs[i].getElementsByTagName('span')
+                var tem_ems = temDivs[i].getElementsByTagName('em')
+                tem_spans[0].className = ''
+                tem_ems[0].className = ''
+              }
+            }
+          }
+        }
+      }
+
+      function DisplayMenuItem(isDisplay, iframeID) {
+        var menuItemFrame = document.getElementById(iframeID)
+        if (menuItemFrame != null) {
+          if (isDisplay) {
+            var temDivs = document.getElementsByClassName('menuStrip')
+            if (temDivs.length > 0) {
+              for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] != menuItemFrame) {
+                  temDivs[i].style.display = 'none'
+                }
+              }
+            }
+            menuItemFrame.style.display = ''
+          } else {
+            menuItemFrame.style.display = 'none'
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

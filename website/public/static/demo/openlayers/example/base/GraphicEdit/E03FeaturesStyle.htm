@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <!--当前示例页面样式表引用-->
+        <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+        <script include="jquery,jquery-easyui" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-openlayers-local.js"></script>
+        <style type="text/css">
+            #mapCon {
+                width: 100%;
+                height: 95%;
+                position: absolute;
+            }
+            .ol-mouse-position {
+                top: 95%;
+                right: 8px;
+                position: absolute;
+            }
+
+            .panel-body {
+                background-color: #a99c9c1c;
+                color: #000000;
+                font-size: 8px;
+            }
+
+            .tableTxt {
+                width: 45%;
+                float: left;
+                font-size: 8px;
+                font-family: monospace;
+            }
+            input {
+                height: 10px;
+                display: block;
+                width: 50%;
+                font-size: 8px;
+            }
+            br {
+                display: inline;
+                line-height: 2px;
+            }
+            .title {
+                color: Red;
+            }
+
+            .easyui-tabs .tabs-inner {
+                padding: 20px 6px !important;
+                line-height: 16px !important;
+                height: auto !important;
+            }
+
+            .easyui-tabs .tabs-inner .tabs-title {
+                white-space: normal;
+            }
+
+            .easyui-tabs .tabs-inner .tabs-with-icon {
+                padding-left: 0px;
+            }
+
+            .easyui-tabs .tabs-inner .tabs-icon {
+                left: 5px;
+                top: 13%;
+            }
+            select {
+                font-size: 8px;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var map = null
+            var vectorPointsLayer, vectorLinesLayer, vectorPolygonsLayer
+            var pointFeature, lineFeature, polygonFeature
+            var myDom
+            function init() {
+                var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+                //加载天地图瓦片图层数据
+                var TiandiMap_vect = new ol.layer.Tile({
+                    title: '天地图矢量图层',
+                    source: new ol.source.XYZ({
+                        url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                        wrapX: false,
+                    }),
+                })
+
+                var TiandiMap_vectcia = new ol.layer.Tile({
+                    title: '天地图矢量注记图层',
+                    source: new ol.source.XYZ({
+                        url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                    }),
+                })
+
+                //绘制的几何图形要素
+                pointFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([116, 0]),
+                    name: 'Point Feature',
+                })
+                lineFeature = new ol.Feature({
+                    geometry: new ol.geom.LineString([
+                        [1e7, 1e6],
+                        [1e6, 3e6],
+                    ]),
+                    name: 'Line Feature',
+                })
+                polygonFeature = new ol.Feature({
+                    geometry: new ol.geom.Polygon([
+                        [
+                            [1e6, -1e6],
+                            [1e6, 1e6],
+                            [3e6, 1e6],
+                            [3e6, -1e6],
+                            [1e6, -1e6],
+                        ],
+                    ]),
+                    name: 'Polygon Feature',
+                })
+                //点、线、区样式对象
+                myDom = {
+                    points: {
+                        align: document.getElementById('points-text-align'),
+                        baseline: document.getElementById('points-text-baseline'),
+                        rotation: document.getElementById('points-text-rotation'),
+                        font: document.getElementById('points-text-font'),
+                        weight: document.getElementById('points-text-weight'),
+                        size: document.getElementById('points-text-size'),
+                        offsetX: document.getElementById('points-text-offset-x'),
+                        offsetY: document.getElementById('points-text-offset-y'),
+                        color: document.getElementById('points-text-color'),
+                        outlineColor: document.getElementById('points-text-outline-color'),
+                        outlineWidth: document.getElementById('points-text-outline-width'),
+                    },
+                    lines: {
+                        align: document.getElementById('lines-text-align'),
+                        baseline: document.getElementById('lines-text-baseline'),
+                        rotation: document.getElementById('lines-text-rotation'),
+                        font: document.getElementById('lines-text-font'),
+                        weight: document.getElementById('lines-text-weight'),
+                        size: document.getElementById('lines-text-size'),
+                        offsetX: document.getElementById('lines-text-offset-x'),
+                        offsetY: document.getElementById('lines-text-offset-y'),
+                        color: document.getElementById('lines-text-color'),
+                        outlineColor: document.getElementById('lines-text-outline-color'),
+                        outlineWidth: document.getElementById('lines-text-outline-width'),
+                    },
+                    polygons: {
+                        align: document.getElementById('polygons-text-align'),
+                        baseline: document.getElementById('polygons-text-baseline'),
+                        rotation: document.getElementById('polygons-text-rotation'),
+                        font: document.getElementById('polygons-text-font'),
+                        weight: document.getElementById('polygons-text-weight'),
+                        size: document.getElementById('polygons-text-size'),
+                        offsetX: document.getElementById('polygons-text-offset-x'),
+                        offsetY: document.getElementById('polygons-text-offset-y'),
+                        color: document.getElementById('polygons-text-color'),
+                        outlineColor: document.getElementById('polygons-text-outline-color'),
+                        outlineWidth: document.getElementById('polygons-text-outline-width'),
+                    },
+                }
+
+                //分别实例化点、线、区图层对象
+                vectorPointsLayer = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [pointFeature],
+                    }),
+                    // style: createPointStyleFunction()
+                })
+
+                vectorLinesLayer = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [lineFeature],
+                    }),
+                    // style: createLineStyleFunction()
+                })
+                vectorPolygonsLayer = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [polygonFeature],
+                    }),
+                    // style: createPolygonStyleFunction()
+                })
+
+                //初始化地图容器
+                map = new ol.Map({
+                    target: 'mapCon', //地图容器div的ID
+                    controls: ol.control.defaults({
+                        attributionOptions: {
+                            collapsible: true,
+                        },
+                    }),
+                    view: new ol.View({
+                        center: [0, 0], //地图初始中心点
+                        maxZoom: 28, //最大瓦片显示级数
+                        minZoom: 1, //最小瓦片显示级数
+                        zoom: 3, //地图初始显示级数
+                    }),
+                    layers: [TiandiMap_vect, TiandiMap_vectcia, vectorPointsLayer, vectorLinesLayer, vectorPolygonsLayer],
+                })
+
+                map.addControl(
+                    new ol.control.MousePosition({
+                        //坐标格式
+                        coordinateFormat: ol.coordinate.createStringXY(4),
+                    })
+                )
+            }
+
+            function updateFeatureStyle() {
+                var sTab = $('#tt').tabs('getSelected')
+                if (sTab != null) {
+                    var index = $('#tt').tabs('getTabIndex', sTab)
+                    if (index == 0) {
+                        //点样式修改
+                        vectorPointsLayer.setStyle(createPointStyleFunction(pointFeature))
+                    } else if (index == 1) {
+                        //线样式修改
+                        vectorLinesLayer.setStyle(createLineStyleFunction(lineFeature))
+                    } else {
+                        //区样式修改
+                        vectorPolygonsLayer.setStyle(createPolygonStyleFunction(polygonFeature))
+                    }
+                }
+            }
+
+            /**
+             * 创建文本样式函数
+             * @param {ol.Feature} feature 要素
+             * @param  dom 要素样式html对象
+             */
+            function createTextStyle(feature, dom) {
+                //读取当前面板设置的样式值
+                //文本位置
+                var align = dom.align.value
+                //基准线
+                var baseline = dom.baseline.value
+                //字体大小
+                var size = dom.size.value
+                //偏移量X
+                var offsetX = parseInt(dom.offsetX.value, 10)
+                //偏移量Y
+                var offsetY = parseInt(dom.offsetY.value, 10)
+                //字体粗细
+                var weight = dom.weight.value
+                //角度
+                var rotation = parseFloat(dom.rotation.value)
+                //文字样式（粗细、大小、字体）
+                var font = weight + ' ' + size + ' ' + dom.font.value
+                //字体颜色
+                var fillColor = dom.color.value
+                //外框颜色
+                var outlineColor = dom.outlineColor.value
+                //外框宽度
+                var outlineWidth = parseInt(dom.outlineWidth.value, 10)
+
+                //返回实例化的文本样式对象（ol.style.Text）
+                return new ol.style.Text({
+                    //位置
+                    textAlign: align,
+                    //基准线
+                    textBaseline: baseline,
+                    //文字样式
+                    font: font,
+                    //文本内容
+                    text: feature.get('name'),
+                    //文本填充样式（即文字颜色）
+                    fill: new ol.style.Fill({ color: fillColor }),
+                    //文本外框样式（颜色与宽度）
+                    stroke: new ol.style.Stroke({ color: outlineColor, width: outlineWidth }),
+                    //偏移量X
+                    offsetX: offsetX,
+                    //偏移量Y
+                    offsetY: offsetY,
+                    //角度
+                    rotation: rotation,
+                })
+            }
+            /**
+             * 创建点要素样式函数
+             * @param {ol.Feature} feature 点要素
+             */
+            function createPointStyleFunction() {
+                var radius = document.getElementById('points-size').value
+                var fillColor = document.getElementById('points-fill-color').value
+                var strokeColor = document.getElementById('points-stroke-color').value
+                var strokeWidth = document.getElementById('points-stroke-width').value
+
+                return function(feature, resolution) {
+                    var style = new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: radius,
+                            fill: new ol.style.Fill({ color: fillColor }),
+                            stroke: new ol.style.Stroke({ color: strokeColor, width: strokeWidth }),
+                        }),
+                        text: createTextStyle(feature, myDom.points),
+                    })
+                    return [style]
+                }
+            }
+            /**
+             * 创建线要素样式函数
+             * @param {ol.Feature} feature 线要素
+             */
+            function createLineStyleFunction() {
+                var strokeColor = document.getElementById('lines-stroke-color').value
+                var strokeWidth = document.getElementById('lines-stroke-width').value
+                return function(feature, resolution) {
+                    var style = new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: strokeColor,
+                            width: strokeWidth,
+                        }),
+                        text: createTextStyle(feature, myDom.lines),
+                    })
+                    return [style]
+                }
+            }
+            /**
+             * 创建区要素样式函数
+             * @param {ol.Feature} feature 区要素
+             */
+            function createPolygonStyleFunction() {
+                var fillColor = document.getElementById('polygons-fill-color').value
+                var strokeColor = document.getElementById('polygons-stroke-color').value
+                var strokeWidth = document.getElementById('polygons-stroke-width').value
+
+                return function(feature, resolution) {
+                    var style = new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: strokeColor,
+                            width: strokeWidth,
+                        }),
+                        fill: new ol.style.Fill({
+                            color: fillColor,
+                        }),
+                        text: createTextStyle(feature, myDom.polygons),
+                    })
+                    return [style]
+                }
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="mapCon"></div>
+        <div id="editGeomStyle" class="easyui-window" data-options="title:'要素样式',closed:false,maximizable:false,minimizable:false,closable:false,resizable:false,shadow:false" style="width: 310px; padding: 2px; left: 60px; top: 20px;">
+            <div id="tt" class="easyui-tabs" data-options="headerWidth:26,tabPosition:'left',plain:true,border:true" style="width: 100%">
+                <div title="点样式" data-options="iconCls:'icon-point'" style="padding: 5px;">
+                    <fieldset id="layer0">
+                        <legend>图形样式</legend>
+                        <label class="tableTxt">点大小:</label><input type="text" value="10" id="points-size" /><br />
+                        <label class="tableTxt">填充颜色:</label><input type="text" value="#aa3300" id="points-fill-color" /><br />
+                        <label class="tableTxt">边框样式:</label><input type="text" value="red" id="points-stroke-color" /><br />
+                        <label class="tableTxt">边框样式:</label><input type="text" value="2" id="points-stroke-width" />
+                    </fieldset>
+                    <fieldset id="layer01">
+                        <legend>文字样式</legend>
+                        <label class="tableTxt">位置: </label>
+                        <select id="points-text-align">
+                            <option value="center" selected="selected">Center</option>
+                            <option value="end">End</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                            <option value="start">Start</option>
+                        </select>
+                        <br />
+                        <label class="tableTxt">基线: </label>
+                        <select id="points-text-baseline">
+                            <option value="alphabetic">Alphabetic</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="hanging">Hanging</option>
+                            <option value="ideographic">Ideographic</option>
+                            <option value="middle" selected="selected">Middle</option>
+                            <option value="top">Top</option>
+                        </select>
+                        <br />
+                        <label class="tableTxt">旋转角度: </label>
+                        <select id="points-text-rotation">
+                            <option value="0">0°</option>
+                            <option value="0.785398164">45°</option>
+                            <option value="1.570796327">90°</option>
+                        </select>
+                        <br />
+                        <label class="tableTxt">字体: </label>
+                        <select id="points-text-font">
+                            <option value="Arial" selected="selected">Arial</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Quattrocento Sans">Quattrocento</option>
+                            <option value="Verdana">Verdana</option> </select
+                        ><br />
+                        <label class="tableTxt">字体粗细: </label>
+                        <select id="points-text-weight">
+                            <option value="bold">Bold</option>
+                            <option value="normal" selected="selected">Normal</option> </select
+                        ><br />
+                        <label class="tableTxt">字体大小: </label>
+                        <input type="text" value="12px" id="points-text-size" /><br />
+                        <label class="tableTxt">X偏移量:</label>
+                        <input type="text" value="0" id="points-text-offset-x" /><br />
+                        <label class="tableTxt">Y偏移量:</label>
+                        <input type="text" value="0" id="points-text-offset-y" /><br />
+                        <label class="tableTxt">字体颜色:</label>
+                        <input type="text" value="blue" id="points-text-color" /><br />
+                        <label class="tableTxt">文字外框颜色:</label>
+                        <input type="text" value="#ffffff" id="points-text-outline-color" /><br />
+                        <label class="tableTxt">文字外框宽度:</label>
+                        <input type="text" value="3" id="points-text-outline-width" />
+                    </fieldset>
+                </div>
+                <div title="线样式" data-options="iconCls:'icon-line'" style="padding: 5px;">
+                    <fieldset id="layer1">
+                        <legend>图形样式</legend>
+                        <label class="tableTxt">线颜色:</label><input type="text" value="green" id="lines-stroke-color" /><br />
+                        <label class="tableTxt">线宽:</label><input type="text" value="2" id="lines-stroke-width" />
+                    </fieldset>
+                    <fieldset id="layer01">
+                        <legend>文字样式</legend>
+                        <label class="tableTxt">位置:</label>
+                        <select id="lines-text-align">
+                            <option value="center" selected="selected">Center</option>
+                            <option value="end">End</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                            <option value="start">Start</option> </select
+                        ><br />
+                        <label class="tableTxt">基线:</label>
+                        <select id="lines-text-baseline">
+                            <option value="alphabetic">Alphabetic</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="hanging">Hanging</option>
+                            <option value="ideographic">Ideographic</option>
+                            <option value="middle" selected="selected">Middle</option>
+                            <option value="top">Top</option> </select
+                        ><br />
+                        <label class="tableTxt">旋转角度:</label>
+                        <select id="lines-text-rotation">
+                            <option value="0">0°</option>
+                            <option value="0.785398164">45°</option>
+                            <option value="1.570796327">90°</option> </select
+                        ><br />
+                        <label class="tableTxt">字体:</label>
+                        <select id="lines-text-font">
+                            <option value="Arial" selected="selected">Arial</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Quattrocento Sans">Quattrocento</option>
+                            <option value="Verdana">Verdana</option> </select
+                        ><br />
+                        <label class="tableTxt">字体粗细:</label>
+                        <select id="lines-text-weight">
+                            <option value="bold">Bold</option>
+                            <option value="normal" selected="selected">Normal</option> </select
+                        ><br />
+                        <label class="tableTxt">字体大小: </label><input type="text" value="12px" id="lines-text-size" /><br />
+                        <label class="tableTxt">X偏移量:</label><input type="text" value="0" id="lines-text-offset-x" /><br />
+                        <label class="tableTxt">Y偏移量:</label><input type="text" value="0" id="lines-text-offset-y" /><br />
+                        <label class="tableTxt">字体颜色:</label><input type="text" value="blue" id="lines-text-color" /><br />
+                        <label class="tableTxt">文字外框颜色:</label><input type="text" value="#ffffff" id="lines-text-outline-color" /><br />
+                        <label class="tableTxt">文字外框宽度:</label><input type="text" value="3" id="lines-text-outline-width" />
+                    </fieldset>
+                </div>
+                <div title="区样式" data-options="iconCls:'icon-polygon'" style="padding: 5px;">
+                    <fieldset id="layer2">
+                        <legend>图形样式</legend>
+                        <label class="tableTxt">填充颜色:</label>
+                        <input type="text" value="rgba(255, 255, 255, 0.5)" id="polygons-fill-color" /><br />
+                        <label class="tableTxt">边框颜色:</label>
+                        <input type="text" value="#ffcc33" id="polygons-stroke-color" /><br />
+                        <label class="tableTxt">边框宽度:</label>
+                        <input type="text" value="2" id="polygons-stroke-width" />
+                    </fieldset>
+                    <fieldset>
+                        <legend>文字样式</legend>
+                        <label class="tableTxt">位置:</label>
+                        <select id="polygons-text-align">
+                            <option value="center" selected="selected">Center</option>
+                            <option value="end">End</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                            <option value="start">Start</option> </select
+                        ><br />
+                        <label class="tableTxt">基线:</label>
+                        <select id="polygons-text-baseline">
+                            <option value="alphabetic">Alphabetic</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="hanging">Hanging</option>
+                            <option value="ideographic">Ideographic</option>
+                            <option value="middle" selected="selected">Middle</option>
+                            <option value="top">Top</option> </select
+                        ><br />
+                        <label class="tableTxt">旋转角度:</label>
+                        <select id="polygons-text-rotation">
+                            <option value="0">0°</option>
+                            <option value="0.785398164">45°</option>
+                            <option value="1.570796327">90°</option> </select
+                        ><br />
+                        <label class="tableTxt">字体:</label>
+                        <select id="polygons-text-font">
+                            <option value="Arial" selected="selected">Arial</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Quattrocento Sans">Quattrocento</option>
+                            <option value="Verdana">Verdana</option> </select
+                        ><br />
+                        <label class="tableTxt">字体粗细:</label>
+                        <select id="polygons-text-weight">
+                            <option value="bold">Bold</option>
+                            <option value="normal" selected="selected">Normal</option> </select
+                        ><br />
+                        <label class="tableTxt">字体大小:</label><input type="text" value="12px" id="polygons-text-size" /><br />
+                        <label class="tableTxt">X偏移量:</label><input type="text" value="0" id="polygons-text-offset-x" /><br />
+                        <label class="tableTxt">Y偏移量:</label><input type="text" value="0" id="polygons-text-offset-y" /><br />
+                        <label class="tableTxt">字体颜色:</label><input type="text" value="blue" id="polygons-text-color" /><br />
+                        <label class="tableTxt">文字外框颜色:</label><input type="text" value="#ffffff" id="polygons-text-outline-color" /><br />
+                        <label class="tableTxt">文字外框宽度:</label><input type="text" value="3" id="polygons-text-outline-width" />
+                    </fieldset>
+                </div>
+            </div>
+            <form action="" style="text-align: center;padding-top: 2px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateFeatureStyle()" style="width:60px">更新</a>
+            </form>
+        </div>
+    </body>
+</html>

@@ -250,7 +250,7 @@ export default {
 
   .main-scroll-content {
     overflow-y: hidden;
-    padding: 10px;
+    padding: 6px 10px;
   }
 
   .mobili-drawer-open {

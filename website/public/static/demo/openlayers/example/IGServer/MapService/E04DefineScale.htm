@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>自定义比例尺</title>
+    <!--引入当前页面样式表-->
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+      function init() {
+        //瓦片投影，包含单位，坐标范围
+        var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449]
+        var projection = new ol.proj.Projection({
+          units: ol.proj.Units.DEGREES,
+          extent: projectionExtent,
+        })
+        //最大分辨率，新瓦片必须设置，旧瓦片无需设置
+        var maxResolution = 0.0009655719622925324
+        var center = [(114.12567815477894 + 114.47583026053915) / 2, (30.457571584721734 + 30.708389893334449) / 2]
+        //初始化地图容器
+        var map = new ol.Map({
+          target: 'mapCon',
+          view: new ol.View({
+            projection: projection,
+            extent: projectionExtent,
+            center: center,
+            maxZoom: 7,
+            minZoom: 0,
+            zoom: 1,
+          }),
+        })
+
+        var { protocol, ip, port } = window.webclient
+        //显示瓦片图
+        var tileLayer = new Zondy.Map.TileLayer('MapGIS IGS TileLayer', '武汉市区自定义比例尺', {
+          ip: `${ip}`,
+          port: `${port}`,
+          projection: projection,
+          maxResolution: maxResolution,
+          tileSize: 256,
+          //瓦片裁剪方式
+          tileOriginType: 'leftTop',
+        })
+
+        //将瓦片地图图层加载到地图中
+        map.addLayer(tileLayer)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapCon" style="position: absolute; width: 100%; height: 95%;"></div>
+  </body>
+</html>

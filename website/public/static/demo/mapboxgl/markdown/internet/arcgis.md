@@ -2,11 +2,11 @@
 
 ### 示例功能
 
-本示例实现在二维视图中加载显示一个在线的ArcGIS地图服务，坐标系为`Web墨卡托`，分别为街道、影像、地形三种地图服务。
+&ensp;&ensp;&ensp;&ensp;本示例实现在二维视图中加载显示一个在线的ArcGIS地图服务，坐标系为`Web墨卡托`，分别为街道、影像、地形三种地图服务。
 
 ### 示例实现
 
-本示例需要使用include-mapboxgl-local.js开发库实现，通过关键接口`mapboxgl.Map()`加载Web墨卡托坐标系的ArcGIS地图服务数据。
+&ensp;&ensp;&ensp;&ensp;本示例需要使用【include-mapboxgl-local.js】开发库实现，通过关键接口`mapboxgl.Map()`加载Web墨卡托坐标系的ArcGIS地图服务数据。
 
 > 开发库使用请参见**首页**-**概述**-**原生JS调用**内容
 
@@ -22,99 +22,108 @@
 
 ### 实现步骤
 
-1. 引用开发库，本示例通过本地离线include-mapboxgl-local.js脚本引入开发库；
+**Step 1.<font color=red>引用开发库</font>**:
+&ensp;&ensp;&ensp;&ensp;本示例通过本地离线【include-mapboxgl-local.js】脚本引入开发库；
 
-2. 创建`id="map"`的div作为地图容器，并设置其样式；
+**Step 2. <font color=red>创建布局</font>**：
+ &ensp;&ensp;&ensp;&ensp;创建`id="map"`的div作为地图容器，并设置其样式；
 
-3. 创建数据源JSON对象，设置数据源类型、瓦片信息、分辨率等，瓦片信息中填写<a href="http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">ArcGIS地图服务url</a>；
+**Step 3. <font color=red>创建数据源JSON对象</font>**：
+ &ensp;&ensp;&ensp;&ensp;设置数据源类型、瓦片信息、分辨率等，瓦片信息中填写<a href="http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer" target="_blank">ArcGIS地图服务url</a>；
 
-   ```javascript
-   //实例化要加载的source来源对象（世界道路）
-   var streetsrc = {
-       //来源类型为栅格瓦片
-       "type": "raster",
-       'tiles': [
-       //来源请求地址，请求ArcGIS提供的世界道路瓦片地图服务
-       "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
-       ],
-       //栅格瓦片的分辨率
-       'tileSize': 256
-   };
-   ```
+* Example:
+    ```javascript
+        //实例化要加载的source来源对象（世界道路）
+        var streetsrc = {
+            //来源类型为栅格瓦片
+            "type": "raster",
+            'tiles': [
+            //来源请求地址，请求ArcGIS提供的世界道路瓦片地图服务
+            "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/" + '{z}' + "/" + '{y}' + "/" + '{x}' + ".jpg"
+            ],
+            //栅格瓦片的分辨率
+            'tileSize': 256
+        };
+    ```
    
-4. 创建地图对象，设置地图的必要参数，如坐标系、地图div容器、样式等。其中`style`属性非常重要，包含了地图数据的来源以及显示的设置（即我们常用地图引擎中的`图层+数据源+样式`）；
+**Step 4. <font color=red>创建地图对象</font>**：
+ &ensp;&ensp;&ensp;&ensp;设置地图的必要参数，如坐标系、地图div容器、样式等。其中`style`属性非常重要，包含了地图数据的来源以及显示的设置（即我们常用地图引擎中的`图层+数据源+样式`）；
 
-   ```javascript
-   //实例化Map对象加载地图
-   map = new mapboxgl.Map({
-       //地图容器div的id
-       container: 'map',
-       //设置地图样式信息
-       style: {
-           //设置版本号，一定要设置
-           "version": 8,
-           //添加来源
-           "sources": {
-               "streetsrc": streetsrc
-           },
-           //设置加载并显示来源的图层信息
-           "layers": [
-                   {
-                       //图层id，要保证唯一性
-                       "id": "streetsrc",
-                       //图层类型
-                       "type": "raster",
-                       //连接图层来源
-                       "source": "streetsrc",
-                       //图层最小缩放级数
-                       "minzoom": 0,
-                       //图层最大缩放级数
-                       "maxzoom": 22
-                   }
-           ]
-       }
-   });
-   ```
+* Example:
+    ```javascript
+        //实例化Map对象加载地图
+        map = new mapboxgl.Map({
+            //地图容器div的id
+            container: 'map',
+            //设置地图样式信息
+            style: {
+                //设置版本号，一定要设置
+                "version": 8,
+                //添加来源
+                "sources": {
+                    "streetsrc": streetsrc
+                },
+                //设置加载并显示来源的图层信息
+                "layers": [
+                    {
+                        //图层id，要保证唯一性
+                        "id": "streetsrc",
+                        //图层类型
+                        "type": "raster",
+                        //连接图层来源
+                        "source": "streetsrc",
+                        //图层最小缩放级数
+                        "minzoom": 0,
+                        //图层最大缩放级数
+                        "maxzoom": 22
+                    }
+                ]
+            }
+        });
+    ```
+**Step 5. <font color=red>注册地图加载事件</font>**：
+ &ensp;&ensp;&ensp;&ensp; 注册地图加载事件的目的，是为让暂未显示的谷歌影像、地图服务在矢量地图已经加载后再添加；
+
+* Example:
+    ```javascript
+        //注册地图加载事件
+        map.on('load', function () {
+            //添加来源，方法必须写在地图加载事件的回调函数里
+            map.addSource("imgsrc", imgsrc);
+            map.addSource("terrainsrc", terrainsrc);
+        });
+    ```
    
-5. 注册地图加载事件，目的为让暂未显示的谷歌影像、地图服务在矢量地图已经加载后再添加；
+**Step 6. <font color=red>查看地图</font>**：
+ &ensp;&ensp;&ensp;&ensp;上面的步骤完成后在浏览器中可以查看到地图，地图切换使用先移除图层后添加图层实现；
 
-   ```javascript
-   //注册地图加载事件
-   map.on('load', function () {
-       //添加来源，方法必须写在地图加载事件的回调函数里
-       map.addSource("imgsrc", imgsrc);
-       map.addSource("terrainsrc", terrainsrc);
-   });
-   ```
-   
-6. 上面的步骤完成后在浏览器中可以查看到地图，地图切换使用先移除图层后添加图层实现；
-
-   ```javascript
-   // 通过图层id移除图层
-   map.removeLayer(Layers[i].id);
-   // 添加图层
-   map.addLayer(
-       {
-           "id": "cvasrc",
-           "type": "raster",
-           //连接图层来源
-           "source": "cvasrc",
-           "minzoom": 0,
-           "maxzoom": 22
-       }
-   );
-   ```
+* Example:
+    ```javascript
+        // 通过图层id移除图层
+        map.removeLayer(Layers[i].id);
+        // 添加图层
+        map.addLayer(
+            {
+                "id": "cvasrc",
+                "type": "raster",
+                //连接图层来源
+                "source": "cvasrc",
+                "minzoom": 0,
+                "maxzoom": 22
+            }
+        );
+    ```
 
 
 ### 关键接口
 
 #### 1.【MapBox样式规范】source
 
-数据源表明地图应显示哪些数据。 使用“type”属性指定数据源的类型，该属性必须是`vector`,`raster`,`raster-dem`,`geojson`,`image`,`video`之一。 添加数据源不足以使数据显示在地图上，因为数据源不包含颜色或宽度等样式细节。 图层通过指定数据源及设置相关的样式进行可视化表达。 这样就可以用不同的方式对同一数据源进行样式设置，例如在高速公路图层中区分不同类型的道路。
+&ensp;&ensp;&ensp;&ensp;数据源表明地图应显示哪些数据。 使用“type”属性指定数据源的类型，该属性必须是`vector`,`raster`,`raster-dem`,`geojson`,`image`,`video`之一。 添加数据源不足以使数据显示在地图上，因为数据源不包含颜色或宽度等样式细节。 图层通过指定数据源及设置相关的样式进行可视化表达。 这样就可以用不同的方式对同一数据源进行样式设置，例如在高速公路图层中区分不同类型的道路。
 
-示例中使用raster类型数据源，即瓦片栅格数据源，它是由JSON对象构成。
+&ensp;&ensp;&ensp;&ensp;示例中使用raster类型数据源，即瓦片栅格数据源，它是由JSON对象构成。
 
-> `raster`类型的source属性说明
+* `raster`类型的source属性说明
 
 | 属性名      | 类型   | 默认值                          | 说明                                                         |
 | ----------- | ------ | ------------------------------- | ------------------------------------------------------------ |
@@ -127,21 +136,17 @@
 | scheme      | enum   | "xyz"                           | 影响拼贴坐标的y方向，选项："xyz",  "tms"。假设全局 - 墨卡托（又称球形墨卡托）轮廓 |
 | attribution | string | 无                              | 包含向用户显示地图时要显示的属性                             |
 
-#### 2. 【地图对象】Map
+#### 2. 【地图类】`mapboxgl.Map(options)`
 
-##### （1）`mapboxgl.Map(options)`：地图对象构造函数
+&ensp;&ensp;&ensp;&ensp;Map对象代表页面上的地图。 它开放了使您能够以编程方式更改地图的方法和属性，并在用户与地图互动时触发事件。
 
-Map对象代表页面上的地图。 它开放了使您能够以编程方式更改地图的方法和属性，并在用户与地图互动时触发事件。
-
-您可以通过指定容器和其他选项来创建地图， 然后使用`mapboxgl.Map(options)`初始化页面上的地图并返回Map对象。
-
-> `Map`主要参数
+&ensp;&ensp;&ensp;&ensp;您可以通过指定容器和其他选项来创建地图， 然后使用`mapboxgl.Map(options)`初始化页面上的地图并返回Map对象。
 
 | 参数名  | 类型   | 说明             |
 | ------- | ------ | ---------------- |
 | options | Object | 地图JSON对象参数 |
 
-> `options`属性参数说明
+* `options`属性参数说明
 
 | 参数名                       | 类型                                                         | 默认值                               | 说明                                                         |
 | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
@@ -184,18 +189,16 @@ Map对象代表页面上的地图。 它开放了使您能够以编程方式更�
 | fadeDuration                 | number                                                       | 300                                  | 控制标签冲突的淡入/淡出动画的持续时间（以毫秒为单位）。此设置会影响所有符号图层。此设置不会影响运行时样式转换或栅格瓦片交叉渐变的持续时间 |
 | crossSource<br/>Collisions   | boolean                                                      | true                                 | 如果为true，则在碰撞检测期间来自多个源的符号可能彼此冲突。如果为false，则对每个源中的符号单独运行冲突检测 |
 
-##### （2）`addLayer(layer, beforeId)`：地图添加图层方法
+##### 【method】`addLayer(layer, beforeId)`：地图添加图层方法
 
 在地图样式中添加一个Mapbox样式图层。
-
-> `addLayer`主要参数
 
 | 参数名   | 类型                                                         | 说明                                                         |
 | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | layer    | Object\|<a href="https://docs.mapbox.com/mapbox-gl-js/api/properties/#customlayerinterface" target="_blank">CustomLayerInterface</a> | 要添加的图层，它符合Mapbox样式规范的图层定义，或者不常见的是[<a href="https://docs.mapbox.com/mapbox-gl-js/api/properties/#customlayerinterface" target="_blank">CustomLayerInterface</a>](https://docs.mapbox.com/mapbox-gl-js/api/properties/#customlayerinterface) |
 | beforeId | string                                                       | 在已有的图层（beforeId）前面添加新的图层。 如果未指定此参数，则该图层将附加到layers数组的末尾。 |
 
-> `layer`属性参数说明
+* `layer`属性参数说明
 
 | 参数名              | 类型           | 说明                                                         |
 | ------------------- | -------------- | ------------------------------------------------------------ |

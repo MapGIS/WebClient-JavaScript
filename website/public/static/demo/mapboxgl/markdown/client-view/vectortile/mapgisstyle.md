@@ -2,11 +2,11 @@
 
 ### 示例功能
 
-使用MapGIS IGServer配置矢量瓦片的显示样式，配置的样式信息保存为xxx.json文件，上传文件到MapGIS IGServer服务器，客户端通过接口即可访问定制样式的矢量瓦片。本示例通过MapGIS IGServer矢量瓦片配置界面，使用`默认`矢量瓦片地图样式。
+ &ensp;&ensp;&ensp;&ensp;使用MapGIS IGServer配置矢量瓦片的显示样式，配置的样式信息保存为xxx.json文件，上传文件到MapGIS IGServer服务器，客户端通过接口即可访问定制样式的矢量瓦片。本示例通过MapGIS IGServer矢量瓦片配置界面，使用`默认`矢量瓦片地图样式。
 
 ### 示例实现
 
-本示例需要使用include-mapboxgl-local.js开发库实现，通过关键接口`mapboxgl.Map()`实现MapGIS矢量瓦片的加载。
+ &ensp;&ensp;&ensp;&ensp;本示例需要使用【include-mapboxgl-local.js】开发库实现，通过关键接口`mapboxgl.Map()`实现MapGIS矢量瓦片的加载。
 
 > 开发库使用请参见**首页**-**概述**-**原生JS调用**内容
 
@@ -72,23 +72,29 @@
 
 ### 实现步骤
 
-1. 引用开发库，本示例通过本地离线include-mapboxgl-local.js脚本引入开发库；
+**Step 1.<font color=red>引用开发库</font>**:
+&ensp;&ensp;&ensp;&ensp;本示例通过本地离线【include-mapboxgl-local.js】脚本引入开发库；
 
-2. 创建`id="map"`的div作为地图容器，并设置其样式；
+**Step 2. <font color=red>创建布局</font>**：
+ &ensp;&ensp;&ensp;&ensp;创建`id="map"`的div作为地图容器，并设置其样式；
 
-3. 创建地图对象，设置地图的必要参数，如地图div容器、缩放层级、中心点等，具体操作参考`互联网地图`目录下的`天地图墨卡托`示例；
+**Step 3. <font color=red>创建地图对象</font>**：
+ &ensp;&ensp;&ensp;&ensp;设置地图的必要参数，如地图div容器、缩放层级、中心点等，具体操作参考`互联网地图`目录下的`天地图墨卡托`示例；
 
-4. 加载矢量瓦片，通过**矢量瓦片样式URL**加载MapGIS矢量瓦片地图服务；
+**Step 4. <font color=red>加载矢量瓦片</font>**：
+ &ensp;&ensp;&ensp;&ensp;通过**矢量瓦片样式URL**加载MapGIS矢量瓦片地图服务；
 
-   ```js
-   var map = new mapboxgl.Map({
-     container: 'map', // 绑定div
-     style: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/黑暗样式.json',
-     center: [106.563777, 29.578285],
-     zoom: 3
-   });
-   map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-   ```
+* Example:
+  ```javascript
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/黑暗样式.json',
+      center: [106.563777, 29.578285],
+      zoom: 3
+    });
+    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+  ```
 
-5. 浏览矢量瓦片地图服务；
+**Step 5. <font color=red> 数据展示</font>**：
+ &ensp;&ensp;&ensp;&ensp; 浏览矢量瓦片地图服务。
 

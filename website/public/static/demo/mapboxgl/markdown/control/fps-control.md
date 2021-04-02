@@ -12,16 +12,17 @@
 | graphRight  | 绘制内容右间距 | 数值型 | 5                                    |
 | width       | 整体宽度       | 数值型 | 130                                  |
 
+
 ```javascript
-{
-    background: "rgba(0,0,0,0.9)",
-    barWidth: 4 * dpr,
-    color: "#7cf859",
-    font: "Monaco, Consolas, Courier, monospace",
-    graphHeight: 60 * dpr,
-    graphWidth: 120 * dpr,
-    graphTop: 0,
-    graphRight: 5 * dpr,
-    width: 130 * dpr,
-};
+    {
+        background: "rgba(0,0,0,0.9)",
+        barWidth: 4 * dpr,
+        color: "#7cf859",
+        font: "Monaco, Consolas, Courier, monospace",
+        graphHeight: 60 * dpr,
+        graphWidth: 120 * dpr,
+        graphTop: 0,
+        graphRight: 5 * dpr,
+        width: 130 * dpr,
+    };
 ```

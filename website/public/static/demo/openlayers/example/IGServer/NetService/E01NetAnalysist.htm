@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="turf" src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+         #layertree li > span {
+            cursor: pointer;
+            font-size: 6px;
+        }
+        #layertree ul{
+            font-family: cursive;
+            color:white;
+            margin: 0px;
+            padding-left: 20px;
+        }
+        fieldset{
+            padding-left: 6px;
+            padding-bottom: 5px;
+            padding-right: 6px;
+            border: none;
+        }
+      
+        fieldset label {
+            float:left;
+            color: white;
+            font-size: 6px;
+            font-weight: 500;
+            font-family: cursive;
+            margin: 2px 2px;
+            width: 70%;
+        }
+        fieldset input {
+            float: left;
+            margin-bottom:2px;
+            width: 20%;
+        }
+        .inputBtn{
+            width: 64px;
+            line-height: 17px;
+            border-radius: 4px;
+            opacity: 0.5;
+            font-family: cursive;
+            font-weight: 800;
+            background-color: transparent;
+            background-color: darkgray;
+            font-size: 6px;
+        }
+        
+    </style>
+    <script type="text/javascript">
+        var vectors;
+        var map, vectorLayer;
+        var startMarker = null;
+        var endMarker =  null;
+        var styles =null;
+        //地图初始化函数
+        function init() {
+            var extent = [114.42204, 38, 114.57798, 38.092545];
+            var projection = new ol.proj.Projection({ units: ol.proj.Units.DEGREES, extent: extent, code: "EPSG:4326" });
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [114.5000, 38.0359],
+                    zoom: 2,
+                    projection: projection
+                })
+            });
+
+            //初始化矢量图层对象
+            var vectorGDBLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", ["gdbp://MapGisLocal/sample/ds/网络分析/ncls/道路交通网"], {
+                //矢量图层地图服务器ip
+                ip: "develop.smaryun.com",
+                //矢量图层地图服务端口
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+            //将矢量图层加载到地图中
+            map.addLayer(vectorGDBLayer);
+
+            styles = {
+                'route': new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        width: 3,
+                        color: [220,20,60, 0.6]
+                    })
+                }),
+                'icon': new ol.style.Style({
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        scale:0.5,
+                        src: "./static/assets/olimages/stationicon.png"
+                    })
+                })
+            };
+            
+            startMarker = new ol.Feature({
+                type: 'icon',
+                geometry: new ol.geom.Point([114.44,38.06])
+            });
+            endMarker = new ol.Feature({
+                type: 'icon',
+                geometry: new ol.geom.Point([114.56,38.03])
+            });
+            var vector = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [startMarker, endMarker]
+                })
+            });
+            map.addLayer(vector);
+
+            startMarkDisp();
+            endMarkDisp();
+        };
+
+        function startAnalysis()
+        {
+            var netAnalyParam = new Zondy.Service.NetAnalysis({
+                //矢量图层地图服务器ip
+                ip: "develop.smaryun.com",
+                //矢量图层地图服务端口
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //设置网络类URL
+                netClsUrl: "gdbp://MapGisLocal/sample/ds/网络分析/ncls/道路交通网",
+                //指定感兴趣路径点坐标序列
+                flagPosStr: "114.44,38.06,114.56,38.03",
+                //分析类型：用户自定义
+                analyTp: 'UserMode',
+                //设置网络类某些属性字段为权值字段
+                weight: ",Weight1,Weight1",
+                //网络类型：1/2:节点网标/线网标
+                elementType: 2,
+                //设置网标搜索半径
+                nearDis: 0.01,
+                //设置障碍点的坐标序列
+                barrierPosStr: "",
+                outFormat: 'JSON'
+            });
+            netAnalyParam.execute(AnalysisSuccess, "POST", null, null, ()=>{});
+        }
+
+        function AnalysisSuccess(data)
+        {
+            if (data == null || data.results == null) {
+                alert("路径分析失败，请检查参数！");
+            }
+            else {
+                //轨迹坐标点
+                var dot;
+                //轨迹坐标数组
+                var pathArr = new Array();
+                if (data.results[0].Value == null) {
+                    return;
+                }
+                //返回的分析结果数据
+                var result = data.results[0].Value;
+                var resultObj = $.parseJSON(result);
+                if (resultObj == null || resultObj.Paths == null) {
+                    return;
+                }
+                //解析轨迹边坐标序列
+                var pathObj = resultObj.Paths[0];
+                var edgeNum = pathObj.Edges.length;
+                //添加经过纠偏的起点
+                if (resultObj.inputDots == null) {
+                    return;
+                }
+                if (resultObj.inputDots[0].pDot == null || resultObj.inputDots[1] == null || resultObj.inputDots[1].pDot == null) {
+                    return;
+                }
+                //路径分析的真实起点，即经过纠偏之后，线上网标或者点上网标点
+                dot = [resultObj.inputDots[0].pDot.x, resultObj.inputDots[0].pDot.y];
+                //结果描述信息
+                if (dot[0] == 114.49 && dot[1] == 38.05) {
+                    //添加起点到缓存数组
+                    pathArr.push(dot);
+                }
+                else {
+                    pathArr.push(dot);
+                }
+                //没有路径线信息时，用户直接步行到达指定地点
+                if (edgeNum == 0) {
+                    //纠偏起点与纠偏终点的距离
+                    if (resultObj.inputDots[1].pDot.x != resultObj.inputDots[0].pDot.x || resultObj.inputDots[1].pDot.y != resultObj.inputDots[0].pDot.y) {
+                        dot = [resultObj.inputDots[1].pDot.x, resultObj.inputDots[1].pDot.y];
+                        pathArr.push(dot);
+                    }
+                    //纠偏终点与输入终点的距离
+                    if (resultObj.inputDots[1].pDot.x != 114.50 || resultObj.inputDots[1].pDot.y != 38.05) {
+                        dot = [114.50, 38.05];
+                        pathArr.push(dot);
+                    }
+                }
+                else if (edgeNum == 1) {
+                    //将路径线信息存储进缓存数组
+                    if (dot[0] != pathObj.Edges[0].Dots[0].x || dot[1] != pathObj.Edges[0].Dots[0].y) {
+                        dot = [pathObj.Edges[0].Dots[0].x, pathObj.Edges[0].Dots[0].y];
+                        pathArr.push(dot);
+                    }
+                    var dotLen = pathObj.Edges[0].Dots.length;
+                    for (var m = 1; m < dotLen; m++) {
+                        dot = [pathObj.Edges[0].Dots[m].x, pathObj.Edges[0].Dots[m].y];
+                        pathArr.push(dot);
+                    } //for(j)
+                } //else if (edgeNum == 1)
+                else {//(edgeNum > 1)
+                    for (var i = 0; i < edgeNum - 1; i++) {
+                        var dotCount = pathObj.Edges[i].Dots.length;
+                        for (var k = 0; k < dotCount; k++) {
+                            if (k == 0 && i == 0) {
+                                if (dot[0] != pathObj.Edges[0].Dots[0].x || dot[1] != pathObj.Edges[0].Dots[0].y) {
+                                    dot = [pathObj.Edges[0].Dots[0].x, pathObj.Edges[0].Dots[0].y];
+                                    pathArr.push(dot);
+                                }
+                            }
+                            dot = [pathObj.Edges[i].Dots[k].x, pathObj.Edges[i].Dots[k].y];
+                            pathArr.push(dot);
+                        } //for(j)
+                    } //for(i<edgeNum-1)
+                    //添加最后一条路径信息
+                    var dotCoun = pathObj.Edges[edgeNum - 1].Dots.length;
+                    for (var n = 0; n < dotCoun; n++) {
+                        dot = [pathObj.Edges[edgeNum - 1].Dots[n].x, pathObj.Edges[edgeNum - 1].Dots[n].y];
+                        pathArr.push(dot);
+                    } //for(j)
+                } //else(edgeNum>1)
+
+                //添加经过纠偏的终点
+                if (resultObj.inputDots[1].pDot.x != dot.x || resultObj.inputDots[1].pDot.y != dot.y) {
+                    dot = [resultObj.inputDots[1].pDot.x, resultObj.inputDots[1].pDot.y];
+                    pathArr.push(dot);
+                }
+                drawPath(pathArr);
+            }
+        }
+
+        function drawPath(pathArr)
+        {
+            var route = new ol.geom.LineString(pathArr);
+            //获取直线的坐标
+            var routeCoords = route.getCoordinates();
+
+            var routeFeature = new ol.Feature({
+                type: 'route',
+                geometry: route
+            });
+
+            vectorLayer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [routeFeature]
+                }),
+                style: function (feature) {
+                    return styles[feature.get('type')];
+                }
+            });
+            map.addLayer(vectorLayer);
+        }
+        function clearPath()
+        {
+            vectorLayer.getSource().clear();
+        }
+
+        function startMarkDisp()
+        {
+        var divStart =  document.getElementById('startCheckID');
+        if(divStart.checked)
+        {
+            startMarker.setStyle(styles["icon"]);
+        }
+        else{
+            startMarker.setStyle(null);
+        }
+        }
+
+        function endMarkDisp()
+        {
+            var divEnd =  document.getElementById('endCheckID');
+            if(divEnd.checked)
+            {
+                endMarker.setStyle(styles["icon"]);
+            }
+            else{
+                endMarker.setStyle(null);
+            }
+        }
+
+
+           
+  
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+    </div>
+    <fieldset id="layertree" style="position: absolute;width: 180px;top: 18px;left: 50px;background-color: black;opacity: 0.65;border-radius: 10px;padding: 10px 6px;">
+        <ul>
+            <li>
+                <span>网络分析</span>
+                <fieldset id="layer0">
+                    <p style="display: inline-block;width: 40%; ;line-height: 17px;font-family: cursive;font-size: 6px;"><input id="startCheckID" type="checkbox" value="start"  checked="checked" onclick="startMarkDisp()"/>起点</p> 
+                    <p style="display: inline-block;width: 40%; ;line-height: 17px;font-family: cursive;font-size: 6px;"><input id="endCheckID" type="checkbox" value="end"  checked="checked" onclick="endMarkDisp()"/>终点</p> 
+                </fieldset>
+                <fieldset id="layer0">
+                    <input id="start-analysis" class="inputBtn" style="margin-right: 15px;" type="submit" value="最优路径" onclick="startAnalysis()"/>
+                    <input id="clearBtn" class="inputBtn"  type="submit" value="清空" onclick="clearPath()"/>
+                </fieldset>
+            </li>
+        </ul>
+    </fieldset>
+</body>
+
+</html>

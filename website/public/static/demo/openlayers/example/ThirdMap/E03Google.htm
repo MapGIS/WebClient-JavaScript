@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>显示谷歌地图</title>
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-openlayers-local.js"></script>
+        <style type="text/css">
+            #menu {
+                text-align: center;
+                width: 100%;
+                height: 20px;
+                padding: 5px 10px;
+                font-size: 14px;
+                font-family: '微软雅黑';
+                left: 10px;
+            }
+        </style>
+        <script type="text/javascript">
+            //地图初始化函数
+            function init() {
+                var googleMapLayer = new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        url: 'http://mt2.google.cn/vt/lyrs=m@167000000&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}&s=Galil',
+                    }),
+                })
+
+                var map = new ol.Map({
+                    layers: [googleMapLayer],
+                    view: new ol.View({
+                        center: [106.51, 29.55],
+                        projection: 'EPSG:4326',
+                        zoom: 4,
+                    }),
+                    target: 'map',
+                })
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="map" style="width: 100%; height: 90%; position: absolute;"></div>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <!--当前示例页面样式表引用-->
+        <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-openlayers-local.js"></script>
+
+        <style type="text/css">
+            #mapCon {
+                width: 100%;
+                height: 95%;
+                position: absolute;
+            }
+            label {
+                position: absolute;
+                color: white;
+                font-size: 6px;
+                font-weight: 500;
+                font-family: cursive;
+                line-height: 10px;
+                margin: 5px 5px;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var map = null
+            var TiandiMap_vect = null
+            var TiandiMap_vectcia = null
+            var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+
+            function init() {
+                //初始化地图容器
+                map = new ol.Map({
+                    target: 'mapCon', //地图容器div的ID
+                    controls: ol.control.defaults({
+                        attributionOptions: {
+                            collapsible: true,
+                        },
+                    }),
+                    view: new ol.View({
+                        center: [12000000, 4000000], //地图初始中心点
+                        maxZoom: 28, //最大瓦片显示级数
+                        minZoom: 1, //最小瓦片显示级数
+                        zoom: 6, //地图初始显示级数
+                    }),
+                })
+
+                //加载天地图瓦片图层数据
+                TiandiMap_vect = new ol.layer.Tile({
+                    title: '天地图矢量图层',
+                    source: new ol.source.XYZ({
+                        url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                        wrapX: false,
+                    }),
+                })
+
+                TiandiMap_vectcia = new ol.layer.Tile({
+                    title: '天地图矢量注记图层',
+                    source: new ol.source.XYZ({
+                        url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                    }),
+                })
+
+                map.addLayer(TiandiMap_vect)
+                map.addLayer(TiandiMap_vectcia)
+
+                updateInfo()
+                map.getView().on('propertychange', updateInfo)
+                window.addEventListener('resize', updateInfo)
+            }
+
+            function updateInfo() {
+                var view = map.getView()
+                //获取最大分辨率
+                var curResolution = view.getResolution()
+                var viewSize = map.getSize()
+                //获取地图范围
+                var ex = view.calculateExtent(viewSize)
+                var mapstr = Number(ex[0]).toFixed(0) + ',' + Number(ex[1]).toFixed(0) + ',' + Number(ex[2]).toFixed(0) + ',' + Number(ex[3]).toFixed(0)
+                var viewStr = viewSize[0] + ',' + viewSize[1]
+
+                document.getElementById('resolution').innerText = '分辨率:' + Number(curResolution).toFixed(3)
+                document.getElementById('maprange').innerText = mapstr
+                document.getElementById('viewrange').innerText = '视窗范围:' + viewStr
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="mapCon"></div>
+        <fieldset style="position: absolute;width: 200px;height: 75px;top: 18px;left: 50px;background-color: black;opacity: 0.5;border-radius: 10px;padding: 10px 6px;">
+            <label id="resolution">分辨率:</label><br />
+            <label id="viewrange">视图范围:</label><br />
+            <label>地图范围:</label><br />
+            <label id="maprange" style="margin-top:0px"></label><br />
+        </fieldset>
+    </body>
+</html>

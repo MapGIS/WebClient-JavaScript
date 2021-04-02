@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+    
+
+        /* 图层控件层样式设置 */
+        .conditionControl {
+            position: absolute;
+            bottom: 5px;
+            width: 200px;
+            height: 160px;
+            right: 10px;
+            top: 5px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+            color: #ffffff;
+            background-color: #4c4e5a;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+        #preview
+        {
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            display: none;
+            text-align: center; 
+            font-weight: bold;
+            left: 50%;
+            right: 0;
+            top:50%;
+            bottom:0;
+            margin-left: -50px;
+            margin-right: auto;
+            margin-top:-50px;
+            margin-bottom:auto;
+            z-index: 1000;
+        }
+        .hrClass{
+            width: 99%;
+            background: white;
+            height: 0.1px;
+            margin-block-start: 2px;
+            margin-block-end: 2px;
+            border-width: 0.5px;
+        }
+        .title
+        {
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+            letter-spacing: 1px;
+        }
+        .labelClass{
+            position: relative;
+            font-size: 14px;
+            margin: 10px 10px;
+            top: 5px;
+        }
+        
+        .btnClass{
+            position: absolute;
+            bottom: 5px;
+            width: 80px;
+            color: #eee;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-color: #eee;
+            border-radius: 3px;
+            background-image: none;
+            background-color: transparent;
+        }
+        .btnClass:hover{
+            cursor:pointer;
+            color: #0075C7;
+            border-color: #0075C7;
+        }
+        .btnInputClass{
+            position: absolute;
+            width: 130px;
+            margin: 4px -5px;
+            color: #eee;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-color: #eee;
+            border-radius: 3px;
+            background-image: none;
+            background-color: transparent;
+        }
+
+
+       
+    </style>
+
+    <script type="text/javascript">
+       
+        var map = null;
+        var drawLayer = null;
+        function init() {
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            //加载天地图瓦片图层数据
+            var TiandiMap_vectIGS = new Zondy.Map.TianDiTu({
+                layerType: Zondy.Enum.Map.TiandituType.VEC_IGS,
+                projection: ol.proj.get('EPSG:4326'),
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //天地图key
+                token: tdk,
+            });
+            
+            var TiandiMap_ciaIGS =new Zondy.Map.TianDiTu({
+                layerType: Zondy.Enum.Map.TiandituType.CVA_IGS,
+                projection: ol.proj.get('EPSG:4326'),
+                minZoom: 0, //最小显示等级               
+                maxZoom: 15, //最大显示等级
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //天地图key
+                token: tdk,
+            });
+
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [110, 30],
+                    zoom: 4,
+                    projection: 'EPSG:4326'
+                }),
+                layers:[TiandiMap_vectIGS,TiandiMap_ciaIGS]
+            });
+        }
+        function AttQuery() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryParameter({
+                resultFormat: "json",
+                struct: queryStruct
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber =20;
+            //设置属性条件
+            queryParam.where = document.getElementById("Conditions").value;
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryDocFeature(queryParam, "WorldJWVector", 1, {
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess, queryError);
+        }
+
+        //查询失败回调
+        function queryError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        //查询成功回调
+        function querySuccess(result) {
+            //停止进度条
+            stopPressBar();
+            //初始化Zondy.Format.PolygonJSON类
+            var format = new Zondy.Format.PolygonJSON();
+            //将MapGIS要素JSON反序列化为ol.Feature类型数组
+            var features = format.read(result);
+
+            //实例化一个矢量图层drawLayerr用于高亮显示结果
+            var drawSource = new ol.source.Vector({
+                wrapX: false
+            });
+            drawSource.addFeatures(features);
+            drawLayer = new ol.layer.Vector({
+                source: drawSource,
+                style: new ol.style.Style({
+                    //填充色
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 0, 0, 0.5)'
+                    }),
+                    //边线样式
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(255,204, 51, 1)',
+                        width: 1
+                    })
+                })
+            });
+
+            map.addLayer(drawLayer);
+            map.setView(new ol.View({
+                center: [110, 30],
+                zoom: 4,
+                projection: 'EPSG:4326'
+            }));
+        }
+
+        //清除客户端查询结果信息
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            if (drawLayer) {
+                //移除高亮显示结果图层drawLayerr
+                map.removeLayer(drawLayer);
+            }
+            else
+                return;
+        }
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById("preview").style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById("preview").style.display = "block";
+        }
+       
+      
+    </script>
+</head>
+<body onload="init()">
+    <div id="mapCon">
+        <div id="conditionControl" class="conditionControl">
+            <div class="title"><label>属性查询</label></div>
+            <HR class="hrClass">
+            <label class="labelClass">条件 :</label>
+            <input type="text" id="Conditions" name="type" class="btnInputClass" value="name='中国'"/>
+            <HR class="hrClass" style="position: absolute;top: 126px;">
+            <input type="button" class="btnClass" value="查询" onclick="AttQuery()"/>
+        </div>
+        <div id="preview">
+            <img src="static/assets/graphic-image/39-1.gif" alt='' /><br />
+            <br />
+            <span>正在查询，请稍候</span>
+        </div>
+    </div>
+ </div>
+ 
+</body>
+
+</html>

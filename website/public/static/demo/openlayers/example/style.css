@@ -1,0 +1,142 @@
+#mapCon {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.menuContain span,i,em 
+ {
+    float: left;
+    display:inline-block;
+}
+.menuContain em
+{
+    height: 20px;
+    width: 20px;
+    margin-left: 4px;
+    margin-top: -2px;
+    background-image: url("./menu/newtools_icon.png");
+    background-repeat: no-repeat;
+    background-position: -6px -6px;
+}
+.menuContain em.active
+{
+    background-position: -6px -168px;
+}
+.menuContain span
+{
+    position: relative;
+    top: -4px;
+    left: -3px;
+    height: 20px;
+    width: 20px;
+    background-image: url("./menu/newtools_icon.png");
+    background-repeat: no-repeat;
+    background-position: -40px -116px;
+      
+}
+.menuContain span.active {
+    background-position: -40px -48px;
+}
+#menuContain
+{
+	z-index:9999;
+    background-color: rgba(47, 41, 41, 0.75);
+	height:22px; 
+	position: absolute;
+	top:10px;
+	width:100px; 
+	right:100px;
+}
+.menuGroup
+{
+    position: relative;
+    margin-top: 3px;
+    color: #fff;
+    font-size: 12px;
+}
+
+#menu1 {
+   right: 100px;  	
+}
+#menu2 {
+   right: 377px;  	
+}
+#menu3 {
+   right: 257px;  	
+}
+#menu4 {
+   right: 137px;  	
+}
+.menuStrip {
+    display: block;
+    background: #fff;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    position: absolute;
+    top: 35px;
+    line-height: 10px;
+    background-color: #fff;
+    font-size: 8px;
+    color: #4c4c4c;
+    width: 100px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+} 
+.menuStrip ul{
+    display: block;
+    list-style-type: none;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+    margin:0;
+    padding:0;
+}
+.menuStrip .menuItems li {
+    box-sizing: border-box;
+    width: 100%;
+    cursor: pointer;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 9px;
+    display: list-item;
+    text-align: -webkit-match-parent;
+} 
+.menuStrip .menuItems li:hover {
+    background-color: #6389de;
+    color: #fff;
+} 
+        
+.menuStrip .menuItems span {
+    float: left;
+    height: 25px;
+    width: 25px;
+    background-image: url("./menu/newtools_icon.png");
+    background-repeat: no-repeat;
+    position: relative;
+    top: -4px;
+    left: -3px;
+}
+.menuStrip .menuItems li .item1{
+    background-position: -80px -117px;
+}
+.menuStrip .menuItems li .item2{
+    background-position: -80px -168px;
+}
+.menuStrip .menuItems li .item3{
+    background-position: -163px -117px;
+}
+.menuStrip .menuItems i {
+    float: left;
+    font-size: 10px;
+    font-style: normal;
+    height: 25px;
+    line-height: 25px;
+    display: inline-block;
+}
+.menuStrip .menuItems  .divider {
+    height: 1px;
+    margin: 1px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}

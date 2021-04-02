@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <!--当前示例页面样式表引用-->
+
+        <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-openlayers-local.js"></script>
+        <style type="text/css">
+            #mapCon {
+                width: 100%;
+                height: 95%;
+                position: absolute;
+            }
+            /* 鼠标位置控件层样式设置 */
+            #mouse-position {
+                float: left;
+                position: absolute;
+                bottom: 5px;
+                width: 200px;
+                height: 20px;
+                /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+                z-index: 2000;
+            }
+            /* 鼠标位置信息自定义样式设置 */
+            .custom-mouse-position {
+                color: rgb(0, 0, 0);
+                font-size: 16px;
+                font-family: '微软雅黑';
+            }
+
+            /*=S 自定义鹰眼样式 */
+            .ol-custom-overviewmap,
+            .ol-custom-overviewmap.ol-uncollapsible {
+                bottom: 0;
+                left: auto;
+                /* 右侧显示 */
+                right: 0;
+                /* 顶部显示 */
+                top: auto;
+            }
+            /* 鹰眼控件展开时控件外框的样式 */
+            .ol-custom-overviewmap:not(.ol-collapsed) {
+                border: 1px solid black;
+            }
+            /* 鹰眼控件中地图容器样式 */
+            .ol-custom-overviewmap .ol-overviewmap-map {
+                border: none;
+                width: 300px;
+            }
+            /* 鹰眼控件中显示当前窗口中主图区域的边框 */
+            .ol-custom-overviewmap .ol-overviewmap-box {
+                border: 2px solid red;
+            }
+            /* 鹰眼控件展开时其控件按钮图标的样式 */
+            .ol-custom-overviewmap:not(.ol-collapsed) button {
+                bottom: 1px;
+                left: auto;
+                right: 1px;
+                top: auto;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var vectorSource = null
+            var map = null
+            var TiandiMap_vect = null
+            var TiandiMap_vectcia = null
+            var TiandiMap_img = null
+            var TiandiMap_imgcia = null
+            var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+            function init() {
+                //初始化地图容器
+                map = new ol.Map({
+                    target: 'mapCon', //地图容器div的ID
+                    controls: ol.control.defaults({
+                        attributionOptions: {
+                            collapsible: true,
+                        },
+                    }),
+                    view: new ol.View({
+                        center: [12000000, 4000000], //地图初始中心点
+                        maxZoom: 28, //最大瓦片显示级数
+                        minZoom: 1, //最小瓦片显示级数
+                        zoom: 6, //地图初始显示级数
+                    }),
+                })
+
+                //加载天地图瓦片图层数据
+                TiandiMap_vect = new ol.layer.Tile({
+                    title: '天地图矢量图层',
+                    source: new ol.source.XYZ({
+                        url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                        wrapX: false,
+                    }),
+                })
+
+                TiandiMap_vectcia = new ol.layer.Tile({
+                    title: '天地图矢量注记图层',
+                    source: new ol.source.XYZ({
+                        url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                        wrapX: false,
+                    }),
+                })
+
+                map.addLayer(TiandiMap_vect)
+                map.addLayer(TiandiMap_vectcia)
+            }
+            function addZoomControl() {
+                if (map != null) {
+                    var zoom = new ol.control.Zoom()
+                    map.addControl(zoom)
+                }
+            }
+            function addZoomExtentControl() {
+                if (map != null) {
+                    var zoomToExtent = new ol.control.ZoomToExtent({
+                        extent: [813079.7791264898, 5929220.284081122, 848966.9639063801, 5936863.986909639],
+                    })
+                    map.addControl(zoomToExtent)
+                }
+            }
+
+            function addMousePositionControl() {
+                if (map != null) {
+                    var mousePositionControl = new ol.control.MousePosition({
+                        //坐标格式
+                        coordinateFormat: ol.coordinate.createStringXY(4),
+                        //地图投影坐标系（若未设置则输出为默认投影坐标系下的坐标）
+                        projection: 'EPSG:4326',
+                        //坐标信息显示样式类名，默认是'ol-mouse-position'
+                        className: 'custom-mouse-position',
+                        //显示鼠标位置信息的目标容器
+                        target: document.getElementById('mouse-position'),
+                        //未定义坐标的标记
+                        undefinedHTML: '&nbsp;',
+                    })
+                    map.addControl(mousePositionControl)
+                }
+            }
+            function addScaleControl() {
+                if (map != null) {
+                    //实例化比例尺控件（ScaleLine）
+                    var scaleLineControl = new ol.control.ScaleLine({
+                        //设置比例尺单位，degrees、imperial、us、nautical、metric（度量单位）
+                        units: 'metric',
+                    })
+                    map.addControl(scaleLineControl)
+                }
+            }
+            function addEagleViewControl() {
+                if (map != null) {
+                    TiandiMap_img = new ol.layer.Tile({
+                        name: '天地图影像图层',
+                        visible: true, //图层不可见
+                        source: new ol.source.XYZ({
+                            url: 'http://t0.tianditu.com/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                            wrapX: false,
+                        }),
+                    })
+                    TiandiMap_imgcia = new ol.layer.Tile({
+                        name: '天地图影像注记图层',
+                        visible: true, //图层不可见
+                        source: new ol.source.XYZ({
+                            url: 'http://t0.tianditu.com/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                            wrapX: false,
+                        }),
+                    })
+                    //实例化鹰眼控件（OverviewMap）,自定义样式的鹰眼控件
+                    var overviewMapControl = new ol.control.OverviewMap({
+                        //鹰眼控件样式（see in overviewmap-custom.html to see the custom CSS used）
+                        className: 'ol-overviewmap ol-custom-overviewmap',
+                        //鹰眼中加载同坐标系下不同数据源的图层
+                        layers: [TiandiMap_img, TiandiMap_imgcia],
+                        //鹰眼控件展开时功能按钮上的标识（网页的JS的字符编码）
+                        collapseLabel: '\u00BB',
+                        //鹰眼控件折叠时功能按钮上的标识（网页的JS的字符编码）
+                        label: '\u00AB',
+                        //初始为展开显示方式
+                        collapsed: false,
+                    })
+                    map.addControl(overviewMapControl)
+                }
+            }
+
+            function deleteAll() {
+                var controlArr = map.getControls().getArray()
+                for (var i = controlArr.length - 1; i >= 0; i--) {
+                    map.removeControl(controlArr[i])
+                }
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="mapCon">
+            <div id="mouse-position"></div>
+        </div>
+
+        <div id="menuContain" class="menuContain">
+            <div id="tool-container">
+                <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">地图控件</i><em></em></div>
+            </div>
+        </div>
+        <div id="menu1" class="menuStrip" style="display:none">
+            <ul class="menuItems">
+                <li onclick="addZoomControl()"><span class="item1"></span><i>导航</i></li>
+                <li onclick="addZoomExtentControl()"><span class="item1"></span><i>复位</i></li>
+                <li onclick="addMousePositionControl()"><span class="item1"></span><i>鼠标位置</i></li>
+                <li onclick="addScaleControl()"><span class="item1"></span><i>比例尺</i></li>
+                <li onclick="addEagleViewControl()"><span class="item1"></span><i>鹰眼</i></li>
+                <li class="divider"></li>
+                <li onclick="deleteAll()"><span class="item3"></span><i>移除所有</i></li>
+            </ul>
+        </div>
+        <script>
+            function switchMenuStatus(div, menuitemFrameID) {
+                var temDivs = document.getElementsByClassName('optmain')
+                if (temDivs.length > 0) {
+                    for (var i = 0; i < temDivs.length; i++) {
+                        if (temDivs[i] === div) {
+                            var status = div.getAttribute('status')
+                            if (status == 'unactive') {
+                                div.setAttribute('status', 'active')
+                                var tem_spans = div.getElementsByTagName('span')
+                                var tem_ems = div.getElementsByTagName('em')
+                                tem_spans[0].className = 'active'
+                                tem_ems[0].className = 'active'
+
+                                //显示菜单项
+                                DisplayMenuItem(true, menuitemFrameID)
+                            } else {
+                                div.setAttribute('status', 'unactive')
+                                var tem_spans = div.getElementsByTagName('span')
+                                var tem_ems = div.getElementsByTagName('em')
+                                tem_spans[0].className = ''
+                                tem_ems[0].className = ''
+
+                                //隐藏菜单项
+                                DisplayMenuItem(false, menuitemFrameID)
+                            }
+                        } else {
+                            var status = temDivs[i].getAttribute('status')
+                            if (status == 'active') {
+                                temDivs[i].setAttribute('status', 'unactive')
+                                var tem_spans = temDivs[i].getElementsByTagName('span')
+                                var tem_ems = temDivs[i].getElementsByTagName('em')
+                                tem_spans[0].className = ''
+                                tem_ems[0].className = ''
+                            }
+                        }
+                    }
+                }
+            }
+
+            function DisplayMenuItem(isDisplay, iframeID) {
+                var menuItemFrame = document.getElementById(iframeID)
+                if (menuItemFrame != null) {
+                    if (isDisplay) {
+                        var temDivs = document.getElementsByClassName('menuStrip')
+                        if (temDivs.length > 0) {
+                            for (var i = 0; i < temDivs.length; i++) {
+                                if (temDivs[i] != menuItemFrame) {
+                                    temDivs[i].style.display = 'none'
+                                }
+                            }
+                        }
+                        menuItemFrame.style.display = 'block'
+                    } else {
+                        menuItemFrame.style.display = 'none'
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>

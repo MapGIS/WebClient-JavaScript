@@ -37,15 +37,26 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap();
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //构造M3D模型层管理对象（视图）
             var m3dLayer = new CesiumZondy.Layer.M3DLayer({
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             var obliqueLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DaYanTa`, {});
 
             //实例化通用功能管理类对象
@@ -60,22 +71,25 @@
             //设置开始绕点旋转
             commfun.startRotationAroundPos(update);
         }
+
         function pauseRotationView() {
             //设置暂停绕点旋转
             update = commfun.rotationView('rotationAroundPos', opt);
             commfun.pauseRotationView(update);
 
         }
+
         function stopRotationView() {
             //设置移除绕点旋转
             update = commfun.rotationView('rotationAroundPos', opt);
             commfun.removeRotationView(update);
         }
+
         function gohome() {
             var sceneManager = new CesiumZondy.Manager.SceneManager({
                 viewer: webGlobe.viewer
             });
-            sceneManager.goHome();//复位
+            sceneManager.goHome(); //复位
         }
     </script>
 </head>

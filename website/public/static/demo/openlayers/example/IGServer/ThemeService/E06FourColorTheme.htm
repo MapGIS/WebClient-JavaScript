@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>统一专题图</title>
+    <!--导入外部样式表-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        //使用严格模式
+        "use strict";
+        //定义地图文档图层和地图
+        var mapDocLayer, map;
+        //专题图操作对象
+        var ThemeOper;
+        //专题图信息数组
+        var themesInfoArr = null;
+        //地图文档guid
+        var guid;
+        var {
+            protocol,
+            ip,
+            port
+        } = window.webclient;
+
+        /** 初始化地图显示*/
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            //初始化地图容器
+            map = new ol.Map({
+                target: "mapCon",
+                view: new ol.View({
+                    center: [(114.125678154779 + 114.475830260539) / 2, (30.7083224461318 + 30.4575715847217) / 2],
+                    zoom: 11,
+                    projection: "EPSG:4326"
+                })
+            });
+            //初始化地图文档图层对象
+            mapDocLayer = new Zondy.Map.MapDocTileLayer("MapGIS IGS MapDocLayer", "武汉市区行政区", {
+                ip: `${ip}`,
+                port: `${port}`,
+                //文档guid
+                guid: guid
+            });
+            //将地图文档图层加载到地图中
+            map.addLayer(mapDocLayer);
+            //初始化专题图服务类
+            ThemeOper = new Zondy.Service.ThemeOper(guid, null)
+                //设置ip地址
+            ThemeOper.ip = `${ip}`;
+            //设置端口号
+            ThemeOper.port = `${port}`;
+        }
+
+        /** 设置专题图默认参数*/
+        function createThemesInfoArr() {
+            var themesInfoArr = [];
+            //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
+            themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo();
+            //设置图层名层
+            themesInfoArr[0].LayerName = "行政区";
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            themesInfoArr[0].ThemeArr = [];
+            //实例化CFourColorTheme类
+            themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CFourColorTheme();
+            //专题图名称
+            themesInfoArr[0].ThemeArr[0].Name = "四色专题图";
+            //单值专题图
+            themesInfoArr[0].ThemeArr[0].IsBaseTheme = false;
+            //可见
+            themesInfoArr[0].ThemeArr[0].Visible = true;
+            themesInfoArr[0].ThemeArr[0].ClrInfo = [16, 19, 23, 27, 30];
+            return themesInfoArr;
+        }
+
+
+        /** 添加专题图*/
+        function addUniqueThemesInfo() {
+            deleteTheme();
+            themesInfoArr = createThemesInfoArr();
+            //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
+            ThemeOper.addThemesInfo("武汉市区行政区", "0/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 更新专题图*/
+        function updateTheme() {
+            themesInfoArr = createThemesInfoArr();
+            themesInfoArr[0].ThemeArr[0].ClrInfo = [Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100)];
+            //更新专题图,onUniqueTheme为回调函数
+            ThemeOper.updateThemesInfo("武汉市区行政区", "0/0", themesInfoArr, onUniqueTheme);
+        }
+
+        /** 删除专题图*/
+        function deleteTheme() {
+            if (themesInfoArr) {
+                //删除专题图,onUniqueTheme为回调函数
+                ThemeOper.removeThemesInfo("武汉市区行政区", "0/0", onUniqueTheme);
+                themesInfoArr = null;
+            }
+        }
+
+        function onUniqueTheme(flg) {
+            if (flg) {
+                //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
+                mapDocLayer.options.keepCache = false;
+                //刷新图层，实时显示专题图
+                mapDocLayer.refresh();
+                //设置为读取缓存，以加快显示效率
+                mapDocLayer.options.keepCache = true;
+            }
+        }
+    </script>
+</head>
+
+<body onload="init();">
+    <div id="mapCon" style="position: absolute;width: 100%; height:95%;">
+    </div>
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+            <div id='dataSourceMenuID' class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">专题图</i><em></em>
+            </div>
+        </div>
+    </div>
+    <div id="menu1" class="menuStrip" style='display:none'>
+        <ul class="menuItems">
+            <li onclick="addUniqueThemesInfo()"><span class="item1"></span><i>创建</i>
+            </li>
+            <li onclick="updateTheme()"><span class="item1"></span><i>更新</i>
+            </li>
+            <li class="divider"></li>
+            <li onclick="deleteTheme()"><span class="item3"></span><i>删除</i>
+            </li>
+        </ul>
+    </div>
+    <script>
+        function switchMenuStatus(div, menuitemFrameID) {
+            var temDivs = document.getElementsByClassName('optmain');
+            if (temDivs.length > 0) {
+                for (var i = 0; i < temDivs.length; i++) {
+                    if (temDivs[i] === div) {
+                        var status = div.getAttribute("status");
+                        if (status == "unactive") {
+                            div.setAttribute("status", "active");
+                            var tem_spans = div.getElementsByTagName("span");
+                            var tem_ems = div.getElementsByTagName("em");
+                            tem_spans[0].className = "active";
+                            tem_ems[0].className = "active";
+
+                            //显示菜单项
+                            DisplayMenuItem(true, menuitemFrameID);
+
+                        } else {
+                            div.setAttribute("status", "unactive");
+                            var tem_spans = div.getElementsByTagName("span");
+                            var tem_ems = div.getElementsByTagName("em");
+                            tem_spans[0].className = "";
+                            tem_ems[0].className = "";
+
+                            //隐藏菜单项
+                            DisplayMenuItem(false, menuitemFrameID);
+                        }
+                    } else {
+                        var status = temDivs[i].getAttribute("status");
+                        if (status == "active") {
+                            temDivs[i].setAttribute("status", "unactive");
+                            var tem_spans = temDivs[i].getElementsByTagName("span");
+                            var tem_ems = temDivs[i].getElementsByTagName("em");
+                            tem_spans[0].className = "";
+                            tem_ems[0].className = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        function DisplayMenuItem(isDisplay, iframeID) {
+            var menuItemFrame = document.getElementById(iframeID);
+            if (menuItemFrame != null) {
+                if (isDisplay) {
+                    var temDivs = document.getElementsByClassName('menuStrip');
+                    if (temDivs.length > 0) {
+                        for (var i = 0; i < temDivs.length; i++) {
+                            if (temDivs[i] != menuItemFrame) {
+                                temDivs[i].style.display = "none";
+                            }
+                        }
+                    }
+                    menuItemFrame.style.display = "";
+                } else {
+                    menuItemFrame.style.display = "none";
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

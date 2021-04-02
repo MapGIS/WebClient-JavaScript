@@ -1,13 +1,12 @@
 ## 彩色建筑图
 
-
 ### 示例功能
 
-在地图中可视化加载城市局部的三维彩色建筑。
+&ensp;&ensp;&ensp;&ensp;在地图中可视化加载城市局部的三维彩色建筑。
 
 ### 示例实现
 
-本示例需要使用include-mapboxgl-local.js开发库实现，通过echarts框架的关键接口`setOption()`实现彩色建筑图加载，示例通过<a target="_blank" href="https://echarts.apache.org/zh/tutorial.html#%E4%BD%BF%E7%94%A8%20ECharts%20GL%20%E5%AE%9E%E7%8E%B0%E5%9F%BA%E7%A1%80%E7%9A%84%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96">Echarts GL</a>进行数据的渲染显示。
+&ensp;&ensp;&ensp;&ensp;本示例需要使用【include-mapboxgl-local.js】开发库实现，通过echarts框架的关键接口`setOption()`实现彩色建筑图加载，示例通过<a target="_blank" href="https://echarts.apache.org/zh/tutorial.html#%E4%BD%BF%E7%94%A8%20ECharts%20GL%20%E5%AE%9E%E7%8E%B0%E5%9F%BA%E7%A1%80%E7%9A%84%E4%B8%89%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96">Echarts GL</a>进行数据的渲染显示。
 
 > 开发库使用请参见**首页**-**概述**-**原生JS调用**内容
 
@@ -27,24 +26,29 @@
 
 #### 其他问题
 
-由于百度内部维护的mapbox的版本较低，并且echart 4.0版本已经推出。对MapBox的支持重心下放，这个展示效果在echarts4.0使用存在小bug，因此本例中使用的是echarts3.0的版本。
+&ensp;&ensp;&ensp;&ensp;由于百度内部维护的mapbox的版本较低，并且echart 4.0版本已经推出。对MapBox的支持重心下放，这个展示效果在echarts4.0使用存在小bug，因此本例中使用的是echarts3.0的版本。
 
 > 衷心的希望少使用这个Echarts GL类库，这里的所有效果都可以通过原生的Mapbox开发方式实现......
 
 ### 实现步骤
 
-1. 引用开发库，本示例通过本地离线include-mapboxgl-local.js脚本引入开发库；
+**Step 1.<font color=red>引用开发库</font>**:
+&ensp;&ensp;&ensp;&ensp;本示例通过本地离线【include-mapboxgl-local.js】脚本引入开发库；
 
-2. 获取建筑数据，通过`$.getJSON()`接口获取到建筑数据，将拿到的数据处理为echarts需要的格式，并整理echarts需要的地图区域`regions`数据；
+**Step 2. <font color=red>获取建筑数据</font>**：
+ &ensp;&ensp;&ensp;&ensp;通过`$.getJSON()`接口获取到建筑数据，将拿到的数据处理为echarts需要的格式，并整理echarts需要的地图区域`regions`数据；
 
+* Example:
    ```javascript
-   $.getJSON('../../static/data/echartsgl/buildings/data.json', function(){})
+      $.getJSON('../../static/data/echartsgl/buildings/data.json', function(){})
    ```
    
    通过echarts的`registerMap()`接口将建筑数据渲染到页面中。
    
+* Example: 
    ```javascript
-   echarts.registerMap('buildings', geoJSON);
+      echarts.registerMap('buildings', geoJSON);
    ```
-   
-3. 页面展示建筑可视化效果，通过echarts的`setOption()`方法加载地图与建筑数据并设置颜色；
+
+**Step 3. <font color=red>页面展示建筑可视化效果</font>**：
+ &ensp;&ensp;&ensp;&ensp;通过echarts的`setOption()`方法加载地图与建筑数据并设置颜色。

@@ -111,6 +111,7 @@
         <el-tab-pane
           name="interface"
           id="api-scroll"
+          class="markdown-body"
         >
           <span slot="label">
             <IconFont
@@ -201,7 +202,7 @@ import "codemirror/theme/monokai.css";
 import "codemirror/theme/cobalt.css";
 
 // import "@/styles/markdown.css";
-import "@/styles/prism.css";
+//import "@/styles/prism.css";
 // import "@/styles/codemirror.css";
 
 // import { getHtml, getMarkdown } from "@/api/demo";
@@ -479,8 +480,20 @@ export default {
 </script>
 
 <style lang="less" scope>
-// @import '../../styles/markdown.css';
+@import "../../styles/markdown.css";
+@import "../../styles/prism.css";
+.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+	}
 
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
 .splitpanes__pane {
     background-color: #ffffff !important;
 }

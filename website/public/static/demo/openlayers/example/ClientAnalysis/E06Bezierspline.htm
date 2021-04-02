@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="turf" src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+      var map = null;
+      function init() {
+          //初始化地图容器
+          map = new ol.Map({
+              target: 'mapCon',     //地图容器div的ID
+              controls: ol.control.defaults({
+                  attributionOptions: ({
+                      collapsible: true
+                  })
+              }),
+              view: new ol.View({
+                  center: [19,-75],  //地图初始中心点
+                  maxZoom: 28,     //最大瓦片显示级数
+                  minZoom: 1,      //最小瓦片显示级数
+                  zoom: 7,         //地图初始显示级数
+                  projection:"EPSG:4326"
+              })
+          });
+          
+          map.addLayer(new ol.layer.Tile({
+                source: new ol.source.TileImage({
+                    url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoid2FuZ2hhaGExIiwiYSI6ImNqeHUycXF5ZDEweDQzYnBiOTcwZGoxMHAifQ.eCGuiA6erHJ7ew-Fkc7dRA'  
+                })
+          }));        
+        
+          var posArr = [[18.427501,-76.091308],[18.729501,-76.695556],[19.40443,-76.552734],[19.134789,-74.61914],[20.07657,-73.652343],[20.210656,-73.157958]];
+          var linOri = turf.lineString(posArr);
+          var linDes = turf.bezierSpline(linOri);
+
+          let oljson = new ol.format.GeoJSON();
+          var  oriFeature = oljson.readFeature(linOri);
+          oriFeature.set("type","ori");
+          var  desFeature = oljson.readFeature(linDes);
+          desFeature.set("type","des");
+          var styles = {
+              'ori': new ol.style.Style({
+                  stroke: new ol.style.Stroke({
+                      width: 2,
+                      color: [0,255,255, 0.6]
+                  })
+              }),
+              'des': new ol.style.Style({
+                  stroke: new ol.style.Stroke({
+                      width: 3,
+                      color: [255, 0, 0, 0.6]
+                  })
+              })
+          };
+          var vectorLayer = new ol.layer.Vector({
+              source: new ol.source.Vector({
+                  features: [oriFeature, desFeature]
+              }),
+              style: function (feature) {
+                  return styles[feature.get('type')];
+              }
+          });
+          map.addLayer(vectorLayer);
+      }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+    </div>
+</body>
+
+</html>
+

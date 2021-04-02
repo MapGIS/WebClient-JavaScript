@@ -2,96 +2,103 @@
 <html>
 
 <head>
-  <meta charset='utf-8' />
-  <title>Along</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-  <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
-  <!--当前示例页面样式表引用-->
-  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
 </head>
 
 <body>
 
-  <div id='GlobeView'></div>
-  <script>
-    var webGlobe, map;
-    var geojson, poly1, poly2;
+    <div id='GlobeView'></div>
+    <script>
+        var webGlobe, map;
+        var geojson, poly1, poly2;
 
-    initMap();
-    loadData();
-    interSect();
-    updateView();
+        initMap();
+        loadData();
+        interSect();
+        updateView();
 
-    function initMap() {
-      webGlobe = new Cesium.WebSceneControl('GlobeView', {
-        terrainExaggeration: 1,
-      });
+        function initMap() {
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
 
-      map = webGlobe.viewer;
+            map = webGlobe.viewer;
 
-      //构造第三方图层对象
-      var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
-        viewer: webGlobe.viewer
-      });
-      //添加Google地图
-      thirdPartyLayer.appendOsmMap();
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
-      var center = Cesium.Cartesian3.fromDegrees(45.48565, -122.801742, 500000.0);
-      map.scene.camera.setView({
-        destination: center
-      });
-    }
+            var center = Cesium.Cartesian3.fromDegrees(45.48565, -122.801742, 500000.0);
+            map.scene.camera.setView({
+                destination: center
+            });
+        }
 
-    function loadData() {
-      poly1 = turf.polygon([
-        [
-          [-122.801742, 45.48565],
-          [-122.801742, 45.60491],
-          [-122.584762, 45.60491],
-          [-122.584762, 45.48565],
-          [-122.801742, 45.48565]
-        ]
-      ]);
+        function loadData() {
+            poly1 = turf.polygon([
+                [
+                    [-122.801742, 45.48565],
+                    [-122.801742, 45.60491],
+                    [-122.584762, 45.60491],
+                    [-122.584762, 45.48565],
+                    [-122.801742, 45.48565]
+                ]
+            ]);
 
-      poly2 = turf.polygon([
-        [
-          [-122.520217, 45.535693],
-          [-122.64038, 45.553967],
-          [-122.720031, 45.526554],
-          [-122.669906, 45.507309],
-          [-122.723464, 45.446643],
-          [-122.532577, 45.408574],
-          [-122.487258, 45.477466],
-          [-122.520217, 45.535693]
-        ]
-      ]);
-    }
+            poly2 = turf.polygon([
+                [
+                    [-122.520217, 45.535693],
+                    [-122.64038, 45.553967],
+                    [-122.720031, 45.526554],
+                    [-122.669906, 45.507309],
+                    [-122.723464, 45.446643],
+                    [-122.532577, 45.408574],
+                    [-122.487258, 45.477466],
+                    [-122.520217, 45.535693]
+                ]
+            ]);
+        }
 
-    function interSect() {
-      geojson = turf.intersect(poly1, poly2);
+        function interSect() {
+            geojson = turf.intersect(poly1, poly2);
 
-    }
+        }
 
-    function updateView() {
-      var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(poly1, {
-        stroke: Cesium.Color.GRAY,
-        fill: Cesium.Color.GRAY,
-        strokeWidth: 5
-      }));
-      var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(poly2, {
-        stroke: Cesium.Color.GRAY,
-        fill: Cesium.Color.GRAY,
-        strokeWidth: 5
-      }));
-      var simpledatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(geojson, {
-        stroke: Cesium.Color.RED,
-        fill: Cesium.Color.RED,
-        strokeWidth: 5
-      }));
-      map.flyTo(routedatasource);
-    }
-  </script>
+        function updateView() {
+            var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(poly1, {
+                stroke: Cesium.Color.GRAY,
+                fill: Cesium.Color.GRAY,
+                strokeWidth: 5
+            }));
+            var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(poly2, {
+                stroke: Cesium.Color.GRAY,
+                fill: Cesium.Color.GRAY,
+                strokeWidth: 5
+            }));
+            var simpledatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(geojson, {
+                stroke: Cesium.Color.RED,
+                fill: Cesium.Color.RED,
+                strokeWidth: 5
+            }));
+            map.flyTo(routedatasource);
+        }
+    </script>
 
 </body>
 

@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        #mapCon .ol-zoom .ol-zoom-out {
+            margin-top: 204px;
+        }
+        #mapCon .ol-zoomslider {
+            background-color: transparent;
+            top: 2.3em;
+        }
+        #mapCon .ol-touch .ol-zoom .ol-zoom-out {
+            margin-top: 212px;
+        }
+        #mapCon .ol-touch .ol-zoomslider {
+            top: 2.75em;
+        }
+        #mapCon .ol-zoom-in .ol.has-tooltip:hover[role=tooltip],
+        #mapCon .ol-zoom-in .ol-has-tooltip:focus[role=tooltip] {
+            top: 3px;
+        }
+        #mapCon .ol-zoom-out .ol-has-tooltip:hover[role=tooltip],
+        #mapCon .ol-zoon-out .ol-has-out-tooltip:focus[role=tooltip] {
+            top: 232px;
+        }
+        #mapCon .ol-zoom-extent {
+            top: 280px;
+        }
+
+        /* 图层控件层样式设置 */
+        .layerControl {
+            position: absolute;
+            bottom: 5px;
+            min-width: 200px;
+            max-height: 160px;
+            right: 10px;
+            top: 5px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+            color: #ffffff;
+            background-color: #4c4e5a;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+        .layerControl .title {
+            font-weight: bold;
+            font-size: 15px;
+            margin: 10px;
+        }
+        .layerTree{
+            padding-inline-start: 15px;
+        }
+        .layerTree li {
+            list-style: none;
+            margin: 5px 10px;
+            font-size: 12px;
+        }
+        li .layer{
+            position: absolute;
+            margin-top: 0px;
+        }
+    </style>
+
+    <script type="text/javascript">
+       
+       
+        function init() {
+          
+            //影像WMS图层
+            var Img_WMS = new ol.layer.Image({
+                    name:"Image WMS",
+                    visible:false, //图层可见
+                    //数据范围
+                    //extent: [-55.120923766999944,-141.00554863899987, 70.07531036400012, 140.97762699400005],
+                    extent: [-179.23023299999997,17.831509000000036,-65.16882499999997,71.437769],
+                    source: new ol.source.ImageWMS({
+                        //WMS服务基地址
+                        url: 'https://ahocevar.com/geoserver/wms',
+                        //图层参数
+                        params: { 'LAYERS': 'usa:states' },
+                        //服务类型
+                        serverType: 'geoserver'
+                    })
+                });
+
+            var Tile_WMS= new ol.layer.Tile({
+                    name:"Tile WMS",
+                    visible:false, 
+                    extent: [-124.73142200000001,24.955967, -66.969849, 49.371735],
+                    source: new ol.source.TileWMS({
+                        //WMS服务地址
+                        url: 'https://ahocevar.com/geoserver/wms',
+                        //图层等参数
+                        params: { 'LAYERS': 'topp:states', 'TILED': true },
+                        //服务类型
+                        serverType: 'geoserver'
+                    })
+            });
+            
+            var projExtent = ol.proj.get('EPSG:4326').getExtent();
+                var startResolution = ol.extent.getWidth(projExtent) / 256;
+                var resolutions = new Array(22);
+                for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+                    resolutions[i] = startResolution / Math.pow(2, i);
+                }
+                //实例化ol.tilegrid.TileGrid对象
+            var tileGrid = new ol.tilegrid.TileGrid({
+                //数据范围
+                extent: [-141.00554863899987,-55.120923766999944,140.97762699400005, 70.07531036400012],
+                //分辨率数组
+                resolutions: resolutions,
+                //瓦片大小
+                tileSize: [512, 256]
+            });
+
+            //使用ol.layer.Tile实例化WMS图层对象，设置ol.source.TileWMS的tileGrid参数
+            var TileGrid_WMS= new ol.layer.Tile({
+                name:"512*256 Tile",
+                visible:false, 
+                source: new ol.source.TileWMS({
+                    //WMS服务地址
+                    url: 'https://ahocevar.com/geoserver/wms',
+                    //图层等参数
+                    params: { 'LAYERS': 'ne:ne_10m_admin_0_boundary_lines_land', 'TILED': true },
+                    //服务类型
+                    serverType: 'geoserver',
+                    //瓦片网格对象参数（瓦片大小为512x256）
+                    tileGrid: tileGrid
+                })
+            });
+
+             //初始化地图容器
+             var map = new ol.Map({
+                target: 'mapCon',
+                layers: [new ol.layer.Tile({
+                        name:"OSM",
+                        source: new ol.source.OSM(),
+                        opacity: 0.7
+                    }),Img_WMS,Tile_WMS,TileGrid_WMS
+                ],
+                view: new ol.View({
+                    center: [-122, 44.4],
+                    zoom: 4,
+                    projection: 'EPSG:4326'
+                })
+            });
+            //加载图层列表数据
+            loadLayersControl(map, "layerTree");
+           
+        }
+
+        //map中的图层数组
+        var layerArr = new Array();
+        //图层名称数组
+        var layerNameArr = new Array();
+        //图层可见属性数组
+        var layerVisibilityArr = new Array();
+
+        /**
+        * 加载图层列表数据
+        * @param {ol.Map} map 地图对象
+        * @param {string} id 图层列表容器ID
+        */
+        function loadLayersControl(map, id) {
+            //图层目录容器
+            var treeContent = document.getElementById(id); 
+            //获取地图中所有图层
+            var layers = map.getLayers();
+            for (var i = 0; i < layers.getLength() ; i++) {
+                //获取每个图层的名称、是否可见属性
+                layerArr[i] = layers.item(i);
+                layerNameArr[i] = layerArr[i].get('name');
+                layerVisibilityArr[i] = layerArr[i].getVisible();
+                //新增li元素，用来承载图层项
+                var elementLi = document.createElement('li');
+                // 添加子节点
+                treeContent.appendChild(elementLi); 
+                //创建复选框元素
+                var elementInput = document.createElement('input');
+                elementInput.type = "checkbox";
+                elementInput.name = "layers";
+                elementLi.appendChild(elementInput);
+                //创建label元素
+                var elementLable = document.createElement('label');
+                elementLable.className = "layer";
+                //设置图层名称
+                setInnerText(elementLable, layerNameArr[i]);
+                elementLi.appendChild(elementLable);
+                //设置图层默认显示状态
+                if (layerVisibilityArr[i]) {
+                    elementInput.checked = true;
+                }
+                //为checkbox添加变更事件
+                addChangeEvent(elementInput, layerArr[i]);  
+            }
+        }
+        /**
+        * 为checkbox元素绑定变更事件
+        * @param {input} element checkbox元素
+        * @param {ol.layer.Layer} layer 图层对象
+        */
+        function addChangeEvent(element, layer) {
+            element.onclick = function () {
+                if (element.checked) {
+                    //显示图层
+                    layer.setVisible(true);
+                }
+                else {
+                    //不显示图层
+                    layer.setVisible(false); 
+                }
+            };
+        }
+        /**
+        * 动态设置元素文本内容（兼容）
+        */
+        function setInnerText(element, text) {
+            if (typeof element.textContent == "string") {
+                element.textContent = text;
+            } else {
+                element.innerText = text;
+            }
+        }
+
+
+
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+        <div id="layerControl" class="layerControl">
+            <div class="title"><label>图层列表</label></div>
+            <ul id="layerTree" class="layerTree"></ul>
+        </div>
+    </div>
+ </div>
+ 
+</body>
+
+</html>
