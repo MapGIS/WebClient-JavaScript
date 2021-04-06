@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery,jquery-easyui" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        .ol-mouse-position {
+            top: 95%;
+            right: 8px;
+            position: absolute;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var map = null;
+        var vectorPointsLayer, vectorLinesLayer, vectorPolygonsLayer;
+        var pointFeature, lineFeature, polygonFeature;
+        var myDom;
+        function init() {    
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+                //加载天地图瓦片图层数据
+            var TiandiMap_vect = new ol.layer.Tile({
+                    title: "天地图矢量图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        wrapX: false
+                    })
+            });
+            
+            var TiandiMap_vectcia =new ol.layer.Tile({
+                    title: "天地图矢量注记图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk
+                    })
+            });
+
+            //绘制的几何图形要素
+            pointFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([116, 0]),
+                    name: 'Point Feature'
+                });
+                lineFeature = new ol.Feature({
+                    geometry: new ol.geom.LineString([[1e7, 1e6], [1e6, 3e6]]),
+                    name: 'Line Feature'
+                });
+                polygonFeature = new ol.Feature({
+                    geometry: new ol.geom.Polygon([[[1e6, -1e6], [1e6, 1e6], [3e6, 1e6], [3e6, -1e6], [1e6, -1e6]]]),
+                    name: 'Polygon Feature'
+                });
+
+                //分别实例化点、线、区图层对象
+                vectorPointsLayer = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [pointFeature]
+                    })
+                });
+
+                vectorLinesLayer = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [lineFeature]
+                    })
+                });
+                vectorPolygonsLayer = new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [polygonFeature]
+                    })
+                });
+            
+            var select = new ol.interaction.Select({
+                wrapX: false,
+            });
+
+            var modify = new ol.interaction.Modify({
+                features: select.getFeatures(),
+            });
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [0, 0],  //地图初始中心点
+                    maxZoom: 28,     //最大瓦片显示级数
+                    minZoom: 1,      //最小瓦片显示级数
+                    zoom: 3          //地图初始显示级数
+                }),
+                layers:[TiandiMap_vect,TiandiMap_vectcia,vectorPointsLayer,vectorLinesLayer,vectorPolygonsLayer]
+            });
+            
+            map.addControl(new ol.control.MousePosition({
+            //坐标格式
+            coordinateFormat: ol.coordinate.createStringXY(4)}));
+            map.addInteraction(select);
+            map.addInteraction(modify);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+    </div>
+</body>
+</html>

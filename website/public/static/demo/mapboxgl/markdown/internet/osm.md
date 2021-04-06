@@ -2,11 +2,11 @@
 
 ### 示例功能
 
-本示例实现在二维视图中加载显示一个在线的OSM地图服务，坐标系为`Web墨卡托`，数据为街道地图服务。
+&ensp;&ensp;&ensp;&ensp;本示例实现在二维视图中加载显示一个在线的OSM地图服务，坐标系为`Web墨卡托`，数据为街道地图服务。
 
 ### 示例实现
 
-本示例需要使用include-mapboxgl-local.js开发库实现，通过关键接口`mapboxgl.Map()`加载Web墨卡托坐标系的OSM地图服务数据。
+&ensp;&ensp;&ensp;&ensp;本示例需要使用【include-mapboxgl-local.js】开发库实现，通过关键接口`mapboxgl.Map()`加载Web墨卡托坐标系的OSM地图服务数据。
 
 > 开发库使用请参见**首页**-**概述**-**原生JS调用**内容
 
@@ -14,90 +14,97 @@
 
 ### 实现步骤
 
-1. 引用开发库，本示例通过本地离线include-mapboxgl-local.js脚本引入开发库；
+**Step 1.<font color=red>引用开发库</font>**:
+&ensp;&ensp;&ensp;&ensp;本示例通过本地离线【include-mapboxgl-local.js】脚本引入开发库；
 
-2. 创建`id="map"`的div作为地图容器，并设置其样式；
+**Step 2. <font color=red>创建布局</font>**：
+ &ensp;&ensp;&ensp;&ensp;创建`id="map"`的div作为地图容器，并设置其样式；
 
-3. 创建数据源JSON对象，设置数据源类型、瓦片信息、分辨率等，瓦片信息中填写<a href="https://wiki.openstreetmap.org/wiki/Tile_servers" target="_blank">OSM地图服务url</a>，`该url为公网地址`；
+**Step 3. <font color=red>创建数据源JSON对象</font>**：
+ &ensp;&ensp;&ensp;&ensp;设置数据源类型、瓦片信息、分辨率等，瓦片信息中填写<a href="https://wiki.openstreetmap.org/wiki/Tile_servers" target="_blank">OSM地图服务url</a>，`该url为公网地址`；
 
-   ```javascript
-   //实例化要加载的source来源对象
-   var osm = {
-       //来源类型为栅格瓦片
-       "type": "raster",
-       'tiles': [
-           //来源请求地址
-           "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
-       ],
-       //栅格瓦片的分辨率
-       'tileSize': 256
-   };
-   ```
+* Example:
+    ```javascript
+        //实例化要加载的source来源对象
+        var osm = {
+            //来源类型为栅格瓦片
+            "type": "raster",
+            'tiles': [
+                //来源请求地址
+                "http://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ],
+            //栅格瓦片的分辨率
+            'tileSize': 256
+        };
+    ```
    
-4. 创建地图对象，设置地图的必要参数，如坐标系、地图div容器、样式等。其中`style`属性非常重要，包含了地图数据的来源以及显示的设置（即我们常用地图引擎中的`图层+数据源+样式`）；
+**Step 4. <font color=red>创建地图对象</font>**：
+ &ensp;&ensp;&ensp;&ensp;设置地图的必要参数，如坐标系、地图div容器、样式等。其中`style`属性非常重要，包含了地图数据的来源以及显示的设置（即我们常用地图引擎中的`图层+数据源+样式`）；
 
-   ```javascript
-   var map = new mapboxgl.Map({
-       //地图容器div的id
-       container: 'map',
-       //设置地图样式信息
-       style: {
-           //设置版本号，一定要设置
-           "version": 8,
-           //添加来源
-           "sources": {
-               "osm": osm,
-               "osm1": osm
-           },
-           //设置加载并显示来源的图层信息
-           "layers": [{
-                   //图层id，要保证唯一性
-                   "id": "OSMLayer",
-                   //图层类型
-                   "type": "raster",
-                   //图层来源
-                   "source": "osm",
-                   //图层最小缩放级数
-                   "minzoom": 0,
-                   //图层最大缩放级数
-                   "maxzoom": 15
-               },
-               {
-                   //图层id，要保证唯一性
-                   "id": "OSMLayer1",
-                   //图层类型
-                   "type": "raster",
-                   //图层来源
-                   "source": "osm1",
-                   //图层最小缩放级数
-                   "minzoom": 0,
-                   //图层最大缩放级数
-                   "maxzoom": 15
-               }
+* Example:
+    ```javascript
+        var map = new mapboxgl.Map({
+            //地图容器div的id
+            container: 'map',
+            //设置地图样式信息
+            style: {
+                //设置版本号，一定要设置
+                "version": 8,
+                //添加来源
+                "sources": {
+                    "osm": osm,
+                    "osm1": osm
+                },
+                //设置加载并显示来源的图层信息
+                "layers": [{
+                        //图层id，要保证唯一性
+                        "id": "OSMLayer",
+                        //图层类型
+                        "type": "raster",
+                        //图层来源
+                        "source": "osm",
+                        //图层最小缩放级数
+                        "minzoom": 0,
+                        //图层最大缩放级数
+                        "maxzoom": 15
+                    },
+                    {
+                        //图层id，要保证唯一性
+                        "id": "OSMLayer1",
+                        //图层类型
+                        "type": "raster",
+                        //图层来源
+                        "source": "osm1",
+                        //图层最小缩放级数
+                        "minzoom": 0,
+                        //图层最大缩放级数
+                        "maxzoom": 15
+                    }
+        
+                ],
+            },
+            //地图中心点
+            center: [114.39960479736327, 30.495722001885323],
+            //地图当前缩放级数
+            zoom: 0,
+            //倾斜角度，与屏幕面的夹角（0-60）度
+            pitch: 0
+        });
+    ```
    
-           ],
-       },
-       //地图中心点
-       center: [114.39960479736327, 30.495722001885323],
-       //地图当前缩放级数
-       zoom: 0,
-       //倾斜角度，与屏幕面的夹角（0-60）度
-       pitch: 0
-   });
-   ```
-   
-6. 上面的步骤完成后在浏览器中可以查看到地图；
+**Step 5. <font color=red>查看地图</font>**：
+ &ensp;&ensp;&ensp;&ensp;上面的步骤完成后在浏览器中可以查看到地图。
 
 
 ### 关键接口
 
 #### 1.【MapBox样式规范】source
 
-数据源表明地图应显示哪些数据。 使用“type”属性指定数据源的类型，该属性必须是`vector`,`raster`,`raster-dem`,`geojson`,`image`,`video`之一。 添加数据源不足以使数据显示在地图上，因为数据源不包含颜色或宽度等样式细节。 图层通过指定数据源及设置相关的样式进行可视化表达。 这样就可以用不同的方式对同一数据源进行样式设置，例如在高速公路图层中区分不同类型的道路。
+&ensp;&ensp;&ensp;&ensp;数据源表明地图应显示哪些数据。 使用“type”属性指定数据源的类型，该属性必须是`vector`,`raster`,`raster-dem`,`geojson`,`image`,`video`之一。 添加数据源不足以使数据显示在地图上，因为数据源不包含颜色或宽度等样式细节。 图层通过指定数据源及设置相关的样式进行可视化表达。 这样就可以用不同的方式对同一数据源进行样式设置，例如在高速公路图层中区分不同类型的道路。
 
-示例中使用raster类型数据源，即瓦片栅格数据源，它是由JSON对象构成。
+&ensp;&ensp;&ensp;&ensp;示例中使用raster类型数据源，即瓦片栅格数据源，它是由JSON对象构成。
 
-> `raster`类型的source属性说明
+* `raster`类型的source属性说明
 
 | 属性名      | 类型   | 默认值                          | 说明                                                         |
 | ----------- | ------ | ------------------------------- | ------------------------------------------------------------ |
@@ -110,21 +117,17 @@
 | scheme      | enum   | "xyz"                           | 影响拼贴坐标的y方向，选项："xyz",  "tms"。假设全局 - 墨卡托（又称球形墨卡托）轮廓 |
 | attribution | string | 无                              | 包含向用户显示地图时要显示的属性                             |
 
-#### 2. 【地图对象】Map
+#### 2. 【地图类】`mapboxgl.Map(options)`
 
-##### `mapboxgl.Map(options)`：地图对象构造函数
+&ensp;&ensp;&ensp;&ensp;Map对象代表页面上的地图。 它开放了使您能够以编程方式更改地图的方法和属性，并在用户与地图互动时触发事件。
 
-Map对象代表页面上的地图。 它开放了使您能够以编程方式更改地图的方法和属性，并在用户与地图互动时触发事件。
-
-您可以通过指定容器和其他选项来创建地图， 然后使用`mapboxgl.Map(options)`初始化页面上的地图并返回Map对象。
-
-> `Map`主要参数
+&ensp;&ensp;&ensp;&ensp;您可以通过指定容器和其他选项来创建地图， 然后使用`mapboxgl.Map(options)`初始化页面上的地图并返回Map对象。
 
 | 参数名  | 类型   | 说明             |
 | ------- | ------ | ---------------- |
 | options | Object | 地图JSON对象参数 |
 
-> `options`属性参数说明
+* `options`属性参数说明
 
 | 参数名                       | 类型                                                         | 默认值                               | 说明                                                         |
 | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+
+    <style type="text/css">
+      #mapCon {
+        width: 100%;
+        height: 95%;
+        position: absolute;
+      }
+      .ol-mouse-position {
+        top: 95%;
+        right: 8px;
+        position: absolute;
+      }
+    </style>
+
+    <script type="text/javascript">
+      var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+      var mousePositionControl = null
+
+      function init() {
+        //加载天地图瓦片图层数据
+        var TiandiMap_vect = new ol.layer.Tile({
+          title: '天地图矢量图层',
+          source: new ol.source.XYZ({
+            url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+            wrapX: false,
+          }),
+        })
+
+        var TiandiMap_vectcia = new ol.layer.Tile({
+          title: '天地图矢量注记图层',
+          source: new ol.source.XYZ({
+            url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
+            wrapX: false,
+          }),
+        })
+        //初始化地图容器
+        var map = new ol.Map({
+          target: 'mapCon', //地图容器div的ID
+          controls: ol.control.defaults({
+            attributionOptions: {
+              collapsible: true,
+            },
+          }),
+          view: new ol.View({
+            center: [12000000, 4000000], //地图初始中心点
+            maxZoom: 28, //最大瓦片显示级数
+            minZoom: 1, //最小瓦片显示级数
+            zoom: 3, //地图初始显示级数
+          }),
+          layers: [TiandiMap_vect, TiandiMap_vectcia],
+        })
+
+        mousePositionControl = new ol.control.MousePosition({
+          coordinateFormat: ol.coordinate.createStringXY(4),
+          // projection: 'EPSG:3857'
+        })
+        map.addControl(mousePositionControl)
+
+        /****************
+         * 设置地图背景色*
+         *****************/
+        //获取地图容器元素
+        var div = document.getElementById('mapCon')
+        //通过style的填充背景图属性设置背景
+        div.style.backgroundImage = 'url(./static/assets/logo/mapgis_black.png)'
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapCon"></div>
+  </body>
+</html>

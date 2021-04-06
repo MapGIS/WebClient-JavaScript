@@ -1,0 +1,557 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery,jquery-easyui" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        .ol-mouse-position {
+            top: 95%;
+            right: 8px;
+            position: absolute;
+        }
+        .refreshBtn {
+            float: right;
+            margin-right: 10px;
+        }
+        .panel-body {
+            background-color: #f0e1e1;
+            color: #000000;
+            font-size: 8px;
+        }
+        .panel{
+            opacity: 0.99;
+        }
+
+        .tableTxt
+        {
+            width: 45%;
+            float: left;
+            font-size: 8px;
+            font-family: monospace;
+        }
+        input{
+            height: 10px;
+            display: block;
+            width: 50%;
+            font-size: 8px;
+        }
+        br{
+           display:inline; 
+           line-height:2px;
+        }
+        
+
+    </style>
+
+    <script type="text/javascript">
+    var map = null;
+    var vectorLayer = null;
+
+    function init() {    
+        var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+        //加载天地图瓦片图层数据
+        var TiandiMap_vectIGS = new Zondy.Map.TianDiTu({
+            layerType: Zondy.Enum.Map.TiandituType.VEC_IGS,
+            projection: ol.proj.get('EPSG:4326'),
+            //最小显示等级
+            minZoom: 0,
+            //最大显示等级
+            maxZoom: 15,
+            ip: "develop.smaryun.com",
+            port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+            //天地图key
+            token: tdk,
+            layerName:"天地图矢量"
+        });
+        
+        var TiandiMap_ciaIGS =new Zondy.Map.TianDiTu({
+            layerType: Zondy.Enum.Map.TiandituType.CVA_IGS,
+            projection: ol.proj.get('EPSG:4326'),
+            minZoom: 0, //最小显示等级               
+            maxZoom: 15, //最大显示等级
+            ip: "develop.smaryun.com",
+            port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+            //天地图key
+            token: tdk,
+            layerName:"天地图注记"
+        });
+        
+        //初始化矢量图层
+        vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", ["gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer"], {
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                isBaseLayer: true
+            });
+
+        //初始化地图容器
+        map = new ol.Map({
+            target: 'mapCon',     //地图容器div的ID
+            controls: ol.control.defaults({
+                attributionOptions: ({
+                    collapsible: true
+                })
+            }),
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 3,
+                projection: 'EPSG:4326'
+            }),
+            layers:[TiandiMap_vectIGS,TiandiMap_ciaIGS,vectorLayer]
+        });
+        
+        map.addControl(new ol.control.MousePosition({
+            //坐标格式
+            coordinateFormat: ol.coordinate.createStringXY(4)}));
+    }
+
+    function RemoveAllEventListener()
+    {
+        map.removeEventListener('click', addPntCallback);
+        map.removeEventListener('click', deletePntCallback);
+        map.removeEventListener('click', UpdatePntCallback);
+    }
+
+    /**
+     * 以下为添加点的相关接口
+     */
+    function AddPnt()
+    {
+        document.getElementById("featureInfo").style.visibility = "hidden";
+        RemoveAllEventListener();
+        map.addEventListener('click', addPntCallback);
+
+    }
+
+    function addPntCallback(e)
+    {
+        //创建一个点形状，描述点形状的几何信息
+        var gpoint = new Zondy.Object.GPoint(e.coordinate[0], e.coordinate[1]);
+        //设置当前点要素的几何信息
+        var fGeom = new Zondy.Object.FeatureGeometry({ PntGeom: [gpoint] });
+        //随机输出1~8之间的整数,作为新添加的要素的颜色号
+        var pntColor = Math.floor(Math.random() * 8 + 1);
+        //描述点要素的符号参数信息
+        var pointInfo = new Zondy.Object.CPointInfo({
+            //子图角度，取值范围为0~360。
+            Angle: 0,
+            //子图颜色（请参考MapGIS颜色库中颜色编号）
+            Color: pntColor,
+            //子图高度
+            SymHeight: 12,
+            //子图ID（请参考MapGIS符号库中线符号编号）
+            SymID: 114,
+            //子图宽度
+            SymWidth: 12
+        });
+        //设置当前点要素的图形参数信息
+        var webGraphicInfo = new Zondy.Object.WebGraphicsInfo({
+            InfoType: 1,
+            PntInfo: pointInfo
+        });
+        //设置添加点要素的属性信息
+        var attValue = ['中国', '中国', 1.0];
+        //创建一个要素
+        var feature = new Zondy.Object.Feature({
+            fGeom: fGeom,
+            GraphicInfo: webGraphicInfo,
+            AttValue: attValue
+        });
+        //设置要素为点要素
+        feature.setFType(1);
+        //创建一个要素数据集
+        var featureSet = new Zondy.Object.FeatureSet();
+        featureSet.clear();
+        //设置属性结构，根据图层属性进行设置
+        var cAttStruct = new Zondy.Object.CAttStruct({
+            FldName: ["Cname", "CNTRY_NAME", "POPULATION"],
+            FldNumber: 3,
+            FldType: ["string", "string", "double"]
+        });
+        featureSet.AttStruct = cAttStruct;
+        //添加要素到要素数据集
+        featureSet.addFeature(feature);
+        //创建一个编辑服务类
+        var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", { 
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089 
+            });
+        //执行添加点要素功能
+        editService.add(featureSet, onAddPntSuccess);
+    }
+
+    function onAddPntSuccess(data) {
+        if (data) {
+            alert("添加点要素成功！");
+            //刷新图层
+            vectorLayer.refresh();
+        } else {
+            alert("添加点要素失败！");
+        }
+    }
+
+    /**
+     * 以下为删除点的相关接口
+     */
+    function DeletePnt()
+    {
+        document.getElementById("featureInfo").style.visibility = "hidden";
+        RemoveAllEventListener();
+        map.addEventListener('click', deletePntCallback);
+    }
+
+    function deletePntCallback(e)
+    {
+        //设置查询点为鼠标点击点
+        pointObj = new Zondy.Object.Point2D(e.coordinate[0], e.coordinate[1]);
+        //查询点半径
+        pointObj.nearDis = 4;
+        //初始化查询结构对象，设置查询结构包含几何信息
+        var queryStruct = new Zondy.Service.QueryFeatureStruct();
+        //是否包含几何图形信息
+        queryStruct.IncludeGeometry = true;
+        //是否包含属性信息
+        queryStruct.IncludeAttribute = true;
+        //是否包含图形显示参数
+        queryStruct.IncludeWebGraphic = false;
+        //指定查询规则
+        var rule = new Zondy.Service.QueryFeatureRule({
+            //是否将要素的可见性计算在内
+            EnableDisplayCondition: false,
+            //是否完全包含
+            MustInside: false,
+            //是否仅比较要素的外包矩形
+            CompareRectOnly: false,
+            //是否相交
+            Intersect: true
+        });
+        //实例化查询参数对象
+        var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", {
+                geometry: pointObj,
+                resultFormat: "json",
+                rule: rule,
+                struct: queryStruct
+            });
+        //设置查询分页号
+        queryParam.pageIndex = 0;
+        //设置查询要素数目
+        queryParam.recordNumber = 20;
+        //实例化矢量图层查询服务对象
+        var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+        //执行查询操作，querySuccess为查询回调函数
+        queryService.query(querySuccess, queryError);
+    }
+
+    //查询失败回调
+    function queryError(e) {
+        alert("查询不到该图层")
+    }
+    //查询成功回调
+    function querySuccess(result) {
+        if (result.SFEleArray[0].FID != "") {
+            //删除前进行询问
+            var r = confirm("确定删除选中点？");
+            if (r == true) {
+                //删除点
+                deletePoint(result.SFEleArray[0].FID);
+            } else {
+                alert("删除失败")
+            }
+        }
+    }
+
+    //删除点要素
+    function deletePoint(featureIds) {
+        var deleteService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", { 
+                ip: "develop.smaryun.com", 
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089 
+            });
+        deleteService.deletes(featureIds, onDeleteSuccess);
+    }
+
+    //删除点要素回调函数
+    function onDeleteSuccess(rlt) {
+        if (rlt) {
+            alert("删除点要素成功！");
+            //刷新图层
+            vectorLayer.refresh();
+        } else {
+            alert("删除点要素失败！");
+        }
+    }
+
+    /**
+     * 以下为更新点的相关接口
+     */
+    function UpdatePnt()
+    {
+        document.getElementById("featureInfo").style.visibility = "visible";
+        RemoveAllEventListener();
+        map.addEventListener('click', UpdatePntCallback);
+        
+    }
+
+    function UpdatePntCallback(e)
+    {
+        //设置查询点为鼠标点击点
+        pointObj = new Zondy.Object.Point2D(e.coordinate[0], e.coordinate[1]);
+        //查询点半径
+        pointObj.nearDis = 4;
+        //初始化查询结构对象，设置查询结构包含几何信息
+        var queryStruct = new Zondy.Service.QueryFeatureStruct();
+        //是否包含几何图形信息
+        queryStruct.IncludeGeometry = true;
+        //是否包含属性信息
+        queryStruct.IncludeAttribute = true;
+        //是否包含图形显示参数
+        queryStruct.IncludeWebGraphic = true;
+        //指定查询规则
+        var rule = new Zondy.Service.QueryFeatureRule({
+            //是否将要素的可见性计算在内
+            EnableDisplayCondition: false,
+            //是否完全包含
+            MustInside: false,
+            //是否仅比较要素的外包矩形
+            CompareRectOnly: false,
+            //是否相交
+            Intersect: true
+        });
+        //实例化查询参数对象
+        var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", {
+            r: Math.random(),    
+            geometry: pointObj,
+                resultFormat: "json",
+                rule: rule,
+                struct: queryStruct
+            });
+        //设置查询分页号
+        queryParam.pageIndex = 0;
+        //设置查询要素数目
+        queryParam.recordNumber = 20;
+        //实例化矢量图层查询服务对象
+        var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+        //执行查询操作，querySuccess为查询回调函数
+        queryService.query(querySuccess_Update, queryError);
+    }
+
+    var resultPoint = null;
+    //查询成功回调
+    function querySuccess_Update(result) {
+        resultPoint = result;
+        //获取选中点要素FID
+        var PntFID = result.SFEleArray[0].FID;
+        //显示选中点要素的FID
+        document.getElementById('pointFID').value = PntFID;
+        document.getElementById('Cname').value = result.SFEleArray[0].AttValue[1];
+        document.getElementById('CNTRY_NAME').value =result.SFEleArray[0].AttValue[2];
+        document.getElementById('POPULATION').value =result.SFEleArray[0].AttValue[3];
+
+        //子图角度
+        document.getElementById('pointAngle').value = result.SFEleArray[0].GraphicInfo.PntInfo.Angle;
+        //子图颜色（请参考MapGIS颜色库中颜色编号）
+        document.getElementById('pointColor').value= result.SFEleArray[0].GraphicInfo.PntInfo.Color;
+        //子图高度
+        document.getElementById('pointSymHeight').value= result.SFEleArray[0].GraphicInfo.PntInfo.SymHeight;
+        //子图ID（请参考MapGIS符号库中线符号编号）
+        document.getElementById('pointSymID').value= result.SFEleArray[0].GraphicInfo.PntInfo.SymID;
+        //子图宽度
+        document.getElementById('pointSymWidth').value= result.SFEleArray[0].GraphicInfo.PntInfo.SymWidth;
+    } 
+
+    //点更新函数
+    function updatePoint() {
+        if(resultPoint==null)
+        {
+            return;
+        }
+        //设置添加点要素的图形参数信息
+        var pointInfo = new Zondy.Object.CPointInfo({
+            //子图角度，取值范围为0~360。
+            Angle: document.getElementById('pointAngle').value,
+            //子图颜色（请参考MapGIS颜色库中颜色编号）
+            Color: document.getElementById('pointColor').value,
+            //子图高度
+            SymHeight: document.getElementById('pointSymHeight').value,
+            //子图ID（请参考MapGIS符号库中线符号编号）
+            SymID: document.getElementById('pointSymID').value,
+            //子图宽度
+            SymWidth: document.getElementById('pointSymWidth').value
+        });
+        var graphicInfo = new Zondy.Object.WebGraphicsInfo({
+            InfoType: 1,
+            PntInfo: pointInfo
+        });
+        resultPoint.SFEleArray[0].GraphicInfo = graphicInfo;
+        //设置添加点要素的属性信息
+        resultPoint.SFEleArray[0].AttValue[1] = document.getElementById('Cname').value;
+        resultPoint.SFEleArray[0].AttValue[2] = document.getElementById('CNTRY_NAME').value
+        resultPoint.SFEleArray[0].AttValue[3] = document.getElementById('POPULATION').value
+        //创建一个编辑服务类
+        var editService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/mypntlayer", { 
+                ip: "develop.smaryun.com", 
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089 
+            });
+        editService.update(resultPoint, onPntUpdateSuccess);
+    }
+    //修改点要素回调函数
+    function onPntUpdateSuccess(data) {
+        if (data.succeed) {
+            alert("修改点要素成功！");
+            //刷新图层
+            vectorLayer.refresh();
+        } else {
+            alert("修改点要素失败！");
+        }
+    }
+
+    function clearForm()
+    {
+        document.getElementById('pointFID').value = "";
+        document.getElementById('Cname').value = "";
+        document.getElementById('CNTRY_NAME').value ="";
+        document.getElementById('POPULATION').value ="";
+        //子图角度
+        document.getElementById('pointAngle').value = "";
+        //子图颜色（请参考MapGIS颜色库中颜色编号）
+        document.getElementById('pointColor').value= "";
+        //子图高度
+        document.getElementById('pointSymHeight').value= "";
+        //子图ID（请参考MapGIS符号库中线符号编号）
+        document.getElementById('pointSymID').value= "";
+        //子图宽度
+        document.getElementById('pointSymWidth').value= "";
+    }
+
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+
+    </div>
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+            <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">交互编辑</i><em></em>
+            </div>
+        </div>
+    </div>
+    <div id="menu1" class="menuStrip" style='display:none' >
+        <ul  class="menuItems">
+            <li   onclick="AddPnt()"><span class="item1"></span><i >添加点</i>
+            </li>
+            <li  onclick="DeletePnt()"><span class="item1"></span><i >删除点</i>
+            </li>
+            <li  onclick="UpdatePnt()"><span class="item1"></span><i >更新点</i>
+            </li> 
+        </ul>
+    </div>
+    <div id="featureInfo" class="easyui-accordion" data-options="multiple:true" style="width:400px; visibility: hidden;">
+        <div title="要素信息" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:8px 10px 4px 10px;">
+            <form action="" style="width: 50%;float: left;">
+                <fieldset>
+                <legend>属性信息:</legend>
+                    <div class="tableTxt">要素ID:</div><input id="pointFID"  type="text"  readonly="readonly"  value=""><br>      
+                    <div class="tableTxt">Cname:</div><input  id="Cname"  type="text"  value=""><br>
+                    <div class="tableTxt">CNTRY_NAME:</div> <input id="CNTRY_NAME"  type="text"  value=""><br>
+                    <div class="tableTxt">POPULATION:</div> <input id="POPULATION"  type="text"  value=""><br>
+                    <div class="tableTxt" style="opacity: 0;" >kkkk</div> <input id=""  type="text"  value="" style="opacity: 0;">
+                </fieldset>
+            </form>
+            <form action="" style="width: 50%;float: left;">
+                <fieldset>
+                <legend>图形信息:</legend>
+                    <div class="tableTxt">子图角度:</div><input id="pointAngle" type="text"   value=""><br>      
+                    <div class="tableTxt">子图颜色: </div><input id="pointColor" type="text" value=""><br>
+                    <div class="tableTxt">子图高度:</div> <input id="pointSymHeight" type="text"  value=""><br>
+                    <div class="tableTxt">子图宽度:</div> <input id="pointSymWidth" type="text"  value=""><br>
+                    <div class="tableTxt">子图ID:</div> <input  id="pointSymID" type="text"  value="">
+                </fieldset>
+            </form>
+            <br>
+            <form action="" style="text-align: center;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="updatePoint()">更新</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+            </form>
+        </div>
+    </div>
+ <script>
+    function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain');
+        if (temDivs.length > 0) {
+            for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] === div) {
+                    var status = div.getAttribute("status");
+                    if (status == "unactive") {
+                        div.setAttribute("status", "active");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "active";
+                        tem_ems[0].className = "active";
+
+                        //显示菜单项
+                        DisplayMenuItem(true, menuitemFrameID);
+
+                    }
+                    else {
+                        div.setAttribute("status", "unactive");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+
+                        //隐藏菜单项
+                        DisplayMenuItem(false, menuitemFrameID);
+                    }
+                }
+                else {
+                    var status = temDivs[i].getAttribute("status");
+                    if (status == "active") {
+                        temDivs[i].setAttribute("status", "unactive");
+                        var tem_spans = temDivs[i].getElementsByTagName("span");
+                        var tem_ems = temDivs[i].getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+                    }
+                }
+            }
+        }
+    }
+
+    function DisplayMenuItem (isDisplay, iframeID) {
+        var menuItemFrame = document.getElementById(iframeID);
+        if (menuItemFrame != null) {
+            if (isDisplay) {
+                var temDivs = document.getElementsByClassName('menuStrip');
+                if (temDivs.length > 0) {
+                    for (var i = 0; i < temDivs.length; i++) {
+                        if (temDivs[i] != menuItemFrame) {
+                            temDivs[i].style.display = "none";
+                        }
+                    }   
+                }
+                menuItemFrame.style.display = "";
+            }
+            else {
+                menuItemFrame.style.display = "none";
+            }
+        }
+    };
+ </script>
+</body>
+</html>

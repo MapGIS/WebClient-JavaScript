@@ -37,8 +37,15 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap()
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //漫游轨迹点
             var positionArr = [
@@ -76,7 +83,6 @@
                 //漫游时钟频率
                 10
             );
-
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             sceneManager.flyToEx(114.39362878111456, 30.50652200986956, {
                 height: 180,
@@ -87,6 +93,11 @@
 
             /*开始漫游*/
             analysisManager.startCruiseModel();
+            for (var length = 0; length < modelEntity.length - 1; length++) {
+                modelEntity[length]._show = false;
+            }
+            modelEntity[modelEntity.length - 1]._path._material._color._value = new Cesium.Color(0.3, 0.4, 0.5, 0.8);
+            modelEntity[modelEntity.length - 1]._path._material._glowPower._value = 3;
         }
 
         /*停止漫游*/
@@ -105,7 +116,8 @@
 
 <body onload="init()">
     <!--三维场景容器-->
-    <div id="GlobeView"></div>
+    <div id="GlobeView">
+    </div>
     <!--位置信息容器-->
     <div id="coordinateDiv" class="coordinateClass">
         <label id="coordinate_location"></label>

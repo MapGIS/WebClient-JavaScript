@@ -26,10 +26,10 @@
         var sceneProaction;
         //场景投影进行状态
         var sceneProing;
+
         function init() {
             //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-            });
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
             viewer = webGlobe.viewer;
             var scene = webGlobe.scene;
             if (webGlobe) {
@@ -38,10 +38,21 @@
                     var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                         viewer: webGlobe.viewer
                     });
-                    //添加Google地图
-                    thirdPartyLayer.appendOsmMap()
+                    //加载天地图
+                    var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                        //天地图经纬度数据
+                        url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                        //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                        token: "9c157e9585486c02edf817d2ecbc7752",
+                        //地图类型 'vec'矢量 'img'影像 'ter'地形
+                        ptype: "img"
+                    });
                     //加载IGS发布的M3D缓存地图文档
-                    var { protocol, ip, port } = window.webclient;
+                    var {
+                        protocol,
+                        ip,
+                        port
+                    } = window.webclient;
                     tileset = webGlobe.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ModelM3D`, {});
                 }
             }
@@ -61,17 +72,23 @@
                     //投影类型
                     switch (proType) {
                         //图片数据
-                        case Cesium.SceneProjectorType.IMAGE: {
-                            scenePro.textureSource = './static/data/picture/world.jpg';
-                        } break;
-                        //视屏数据
-                        case Cesium.SceneProjectorType.VIDEO: {
-                            scenePro.textureSource = './static/data/client-analysis/媒体2.mp4';
-                        } break;
-                        //颜色
-                        case Cesium.SceneProjectorType.COLOR: {
-                            scenePro.textureSource = new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1);
-                        } break;
+                        case Cesium.SceneProjectorType.IMAGE:
+                            {
+                                scenePro.textureSource = './static/data/picture/world.jpg';
+                            }
+                            break;
+                            //视屏数据
+                        case Cesium.SceneProjectorType.VIDEO:
+                            {
+                                scenePro.textureSource = './static/data/client-analysis/媒体2.mp4';
+                            }
+                            break;
+                            //颜色
+                        case Cesium.SceneProjectorType.COLOR:
+                            {
+                                scenePro.textureSource = new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1);
+                            }
+                            break;
 
                     }
 
@@ -154,13 +171,14 @@
         }
 
         function updateViewPosition() {
-            webGlobe.registerMouseEvent('LEFT_CLICK', function (movement) {
+            webGlobe.registerMouseEvent('LEFT_CLICK', function(movement) {
                 var cartesian = viewer.scene.pickPosition(movement.position);
                 scenePro.viewPosition = cartesian;
             });
         }
+
         function updateTargetPosition() {
-            webGlobe.registerMouseEvent('LEFT_CLICK', function (movement) {
+            webGlobe.registerMouseEvent('LEFT_CLICK', function(movement) {
                 var cartesian = viewer.scene.pickPosition(movement.position);
                 scenePro.targetPosition = cartesian;
             });

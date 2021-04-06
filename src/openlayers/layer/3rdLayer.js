@@ -695,9 +695,60 @@ Zondy.Source.TiandituMapSource = TiandituMapSource;
  * 显示天地图的功能服务
  * @class Zondy.Map.TianDiTu
  * @classdesc 显示天地图的功能服务构造函数
- *
- * @param {Object} option 属性键值对
- * @param {Zondy.Source.TiandituMapSource} [option.source = null] openlayer的地图source
+ * @description Zondy.Map.TianDiTu
+ * @param option - {Object}  必选项，设置其他属性键值对对象。对象中的属性来自本类的属性。例如：{key1：value1, key2：value2 …}
+ * @param {String} [option.token = ''] 必选项，天地图token，一定要去天地图网站申请。
+ * @param {String} [option.layerType = ''] 必选项，图层类型。类型有：vec（天地图矢量数据）；img（
+ 天地图影像数据）；cva（天地图矢量注记数据）；cia（天地图影像注记数据）；vec_igs（天地图矢量数据(通过IGS)）；
+ img_igs（天地图影像数据(通过IGS)）；cva_igs（天地图矢量注记数据(通过IGS)）；cia_igs（天地图影像注记数据(通过IGS)）
+ * @param {Number[]} [option.extent = ''] 可选项，图层范围，如：[-180, -90, 180, 90]。
+ * @param {Number[]} [option.origin = ''] 可选项，地图原点。默认左下角。
+ * @param {Number} [option.minZoom = ''] 可选项，瓦片最小级数。
+ * @param {Number} [option.maxZoom = ''] 可选项，瓦片最大级数。
+ * @param {Number} [option.tileSize = ''] 可选项，地图图片大小。
+ * @param {Number} [option.noWrap = ''] 可选项，地图是否连续显示。
+ * @example
+    var map;
+    var tiandituLayer;
+    //地图初始化函数
+    function init() {
+        map = new ol.Map({
+            target: 'mapCon',
+            view: new ol.View({
+                projection: ol.proj.get('EPSG:4326'),
+                center: [110, 30],
+                maxZoom: 14,
+                minZoom: 1,
+                zoom: 4
+            })
+        });
+        tiandituLayer = new Zondy.Map.TianDiTu({
+            //图层类型
+            layerType: 'vec',
+            //最小显示等级
+            minZoom: 0,
+            //最大显示等级
+            maxZoom: 15,
+            //key
+            token: "4c27d6e0e8a90715b23a989d42272fd8",
+            //设置地图不连续显示
+            noWrap: true
+        });
+        map.addLayer(tiandituLayer
+        var tiandituLayer2 = new Zondy.Map.TianDiTu({
+            //图层类型
+            layerType: 'cva',
+            //最小显示等级
+            minZoom: 0,
+            //最大显示等级
+            maxZoom: 15,
+            //key
+            token: "4c27d6e0e8a90715b23a989d42272fd8",
+            //设置地图不连续显示
+            noWrap: true
+        });
+        map.addLayer(tiandituLayer2);
+    }
  */
 var TianDiTu = function (option) {
     var options = option !== undefined ? option : {};
@@ -1369,10 +1420,11 @@ var OpenStreetMapSource = function (option) {
      * @type {Number}
      * @description 最大分辨率,新瓦片必须指定
      * @default null
-     */xResolution = null;
+     */
+    this.maxResolution = null;
 
     //根据投影获取地图范围
-    var tileProjection = options.projection !== undefined ? options.projection : ol_proj.get('EPSG:3857');
+    var tileProjection = options.projection !== undefined ? options.projxResolutionection : ol_proj.get('EPSG:3857');
 
     /**
      * @member Zondy.Source.OpenStreetMapSource.prototype.tileExtent

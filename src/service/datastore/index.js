@@ -1,9 +1,9 @@
 /**
  * @module DataStore
  */
-import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './elasticsearch';
+import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg } from './elasticsearch';
 
-export { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg };
+export { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg };
 
 import { PostgisCatlogService, PostgisCustomQueryService, PostgisQueryService, PostgisTableService, PostgisVectorTileService } from './postgis';
 

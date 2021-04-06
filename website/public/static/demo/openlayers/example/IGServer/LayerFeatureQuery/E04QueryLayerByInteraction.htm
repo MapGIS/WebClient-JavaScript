@@ -1,0 +1,565 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+    
+
+        /* 图层控件层样式设置 */
+        .layerControl {
+            position: absolute;
+            bottom: 5px;
+            width: 200px;
+            height: 160px;
+            right: 10px;
+            top: 5px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+            color: #ffffff;
+            background-color: #4c4e5a;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+        #preview
+        {
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            display: none;
+            text-align: center; 
+            font-weight: bold;
+            left: 50%;
+            right: 0;
+            top:50%;
+            bottom:0;
+            margin-left: -50px;
+            margin-right: auto;
+            margin-top:-50px;
+            margin-bottom:auto;
+            z-index: 1000;
+        }
+        .hrClass{
+            width: 99%;
+            background: white;
+            height: 0.1px;
+            margin-block-start: 2px;
+            margin-block-end: 2px;
+            border-width: 0.5px;
+        }
+        .title
+        {
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+            letter-spacing: 1px;
+        }
+        .labelClass{
+            position: relative;
+            font-size: 14px;
+            margin: 10px 10px;
+            top: 5px;
+        }
+        
+        .btnClass{
+            position: absolute;
+            bottom: 5px;
+            width: 80px;
+            color: #eee;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-color: #eee;
+            border-radius: 3px;
+            background-image: none;
+            background-color: transparent;
+        }
+        .btnClass:hover{
+            cursor:pointer;
+            color: #0075C7;
+            border-color: #0075C7;
+        }
+        .btnInputClass{
+            position: absolute;
+            width: 130px;
+            margin: 4px -5px;
+            color: #eee;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-color: #eee;
+            border-radius: 3px;
+            background-image: none;
+            background-color: transparent;
+        }
+
+
+       
+    </style>
+
+    <script type="text/javascript">
+       
+        var map = null;
+        var drawLayer = null;
+        var drawSource = null;
+        var interActionLayer = null;
+        var interActionSource = null;
+        var drawTool = null;
+        function init() {
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            //加载天地图瓦片图层数据
+            var TiandiMap_vectIGS = new Zondy.Map.TianDiTu({
+                layerType: Zondy.Enum.Map.TiandituType.VEC_IGS,
+                projection: ol.proj.get('EPSG:4326'),
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //天地图key
+                token: tdk,
+            });
+            
+            var TiandiMap_ciaIGS =new Zondy.Map.TianDiTu({
+                layerType: Zondy.Enum.Map.TiandituType.CVA_IGS,
+                projection: ol.proj.get('EPSG:4326'),
+                minZoom: 0, //最小显示等级               
+                maxZoom: 15, //最大显示等级
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //天地图key
+                token: tdk,
+            });
+
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [110, 30],
+                    zoom: 4,
+                    projection: 'EPSG:4326'
+                }),
+                layers:[TiandiMap_vectIGS,TiandiMap_ciaIGS]
+            });
+
+            //添加绘制图层
+            drawSource = new ol.source.Vector({
+                wrapX: false
+            });
+            drawLayer = new ol.layer.Vector({
+                source: drawSource,
+                style: new ol.style.Style({
+                    //填充色
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 0, 0, 0.5)'
+                    }),
+                    //边线样式
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(255,204, 51, 1)',
+                        width: 1
+                    })
+                })
+            });
+            map.addLayer(drawLayer);
+
+            //实例化一个矢量图层作为交互绘制层
+            interActionSource = new ol.source.Vector({ wrapX: false });
+            interActionLayer = new ol.layer.Vector({
+                source: interActionSource,
+                style: new ol.style.Style({
+                    //填充色
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    //边线样式
+                    stroke: new ol.style.Stroke({
+                        color: '#ffcc33',
+                        width: 2
+                    })
+                })
+            });
+            //将交互绘制层添加到地图容器中
+            map.addLayer(interActionLayer);
+        }
+     
+        function GeomQuery(geomZD)
+        {
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //指定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                //是否将要素的可见性计算在内
+                EnableDisplayCondition: false,
+                //是否完全包含
+                MustInside: false,
+                //是否仅比较要素的外包矩形
+                CompareRectOnly: false,
+                //是否相交
+                Intersect: true
+            });
+            //实例化查询参数对象
+            // var queryParam = new Zondy.Service.QueryParameter({
+            //     r: Math.random(),
+            //     geometry: geomZD,
+            //     resultFormat: "json",
+            //     struct: queryStruct,
+            //     rule: rule
+            // });
+
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区", {
+                r: Math.random(),
+                geometry: geomZD,
+                resultFormat: "json",
+                rule: rule,
+                struct: queryStruct
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 20;
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam,{
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess, queryError);
+        }
+      
+        function pntQuery()
+        {
+            clearA();
+            if(drawTool!=null)
+            {
+                map.removeInteraction(drawTool);
+            } 
+
+            //实例化交互绘制类对象并添加到地图容器中
+            drawTool = new ol.interaction.Draw({
+                type: 'Point',
+                //绘制层数据源
+                source: interActionSource
+            });
+            map.addInteraction(drawTool);
+            //点击查询的回调函数
+            drawTool.on('drawend', drawToolCallback_Point);
+        }
+
+        function drawToolCallback_Point(feature)
+        {
+            //显示进度条
+            startPressBar();
+            //创建一个用于查询的点
+            var geomObj = new Zondy.Object.Point2D();
+            geomObj.setByOL(feature.feature.values_.geometry);
+            //设置点的查询半径
+            geomObj.nearDis = 0.1;
+            GeomQuery(geomObj);
+        }
+
+       
+        function polygonQuery()
+        {   
+            clearA();   
+            if(drawTool!=null)
+            {
+                map.removeInteraction(drawTool);
+            } 
+            //实例化交互绘制类对象并添加到地图容器中
+            drawTool = new ol.interaction.Draw({
+                type: 'Polygon',
+                //绘制层数据源
+                source: interActionSource
+            });
+            map.addInteraction(drawTool);
+            //点击查询的回调函数
+            drawTool.on('drawend', drawToolCallback_Polygon);
+        }
+
+        function drawToolCallback_Polygon(feature)
+        {
+             //显示进度条
+             startPressBar();
+
+             //创建一个用于查询的区
+            var geomObj = new Zondy.Object.Polygon();
+            geomObj.setByOL(feature.feature.values_.geometry);
+            GeomQuery(geomObj);
+        }
+
+        function geometryFunction(coordinates, geometry) {
+            if (!geometry) {
+                //多边形
+                geometry = new ol.geom.Polygon(null);
+            }
+            var start = coordinates[0];
+            var end = coordinates[1];
+            geometry.setCoordinates([
+                [start, [start[0], end[1]], end, [end[0], start[1]], start]
+            ]);
+            return geometry;
+        };
+
+        function squareQuery()
+        {
+            clearA();
+            if(drawTool!=null)
+            {
+                map.removeInteraction(drawTool);
+            } 
+            //实例化交互绘制类对象并添加到地图容器中
+            drawTool = new ol.interaction.Draw({
+                type: 'LineString',
+                //绘制层数据源
+                source: interActionSource,
+                geometryFunction: geometryFunction,
+                //最大点数
+                maxPoints: 2
+            });
+            map.addInteraction(drawTool);
+            //点击查询的回调函数
+            drawTool.on('drawend', drawToolCallback_Square);
+        }
+
+        function drawToolCallback_Square(feature)
+        {
+             //显示进度条
+             startPressBar();
+            //创建一个用于查询的区
+            var geomObj = new Zondy.Object.Polygon();
+            geomObj.setByOL(feature.feature.values_.geometry);
+            GeomQuery(geomObj);
+        }
+
+        function circleQuery()
+        {
+            clearA();
+            if(drawTool!=null)
+            {
+                map.removeInteraction(drawTool);
+            } 
+            //实例化交互绘制类对象并添加到地图容器中
+            drawTool = new ol.interaction.Draw({
+                type: 'Circle',
+                //绘制层数据源
+                source: interActionSource
+            });
+            map.addInteraction(drawTool);
+            //点击查询的回调函数
+            drawTool.on('drawend', drawToolCallback_Circle);
+        }
+        
+        function drawToolCallback_Circle(feature)
+        {
+            //显示进度条
+            startPressBar();
+            //创建一个用于查询的圆
+            var geomObj = new Zondy.Object.Circle();
+            geomObj.setByOL(feature.feature.values_.geometry);
+            GeomQuery(geomObj);
+        }
+
+        function deleteAll()
+        {
+           if(drawTool!=null)
+           {
+             map.removeInteraction(drawTool);
+           } 
+           if(drawSource!=null)
+           {
+             drawSource.clear();
+           }
+           if(interActionSource!=null)
+           {
+             interActionSource.clear();
+           }
+        }
+
+        //查询失败回调
+        function queryError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        //查询成功回调
+        function querySuccess(result) {
+            //停止进度条
+            stopPressBar();
+            //初始化Zondy.Format.PolygonJSON类
+            var format = new Zondy.Format.PolygonJSON();
+            //将MapGIS要素JSON反序列化为ol.Feature类型数组
+            var features = format.read(result);
+
+            //添加要素到绘制图层          
+            drawSource.addFeatures(features);
+            map.setView(new ol.View({
+                center: [110, 30],
+                zoom: 4,
+                projection: 'EPSG:4326'
+            }));
+        }
+
+        //清除客户端查询结果信息
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            if (drawSource) {
+                //移除高亮显示结果图层drawLayerr
+                drawSource.clear();
+            }
+            if(interActionSource)
+            {
+                interActionSource.clear();
+            }
+        }
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById("preview").style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById("preview").style.display = "block";
+        }
+       
+      
+    </script>
+</head>
+<body onload="init()">
+    <div id="mapCon">
+        <div id="preview">
+            <img src="static/assets/graphic-image/39-1.gif" alt='' /><br />
+            <br />
+            <span>正在查询，请稍候</span>
+        </div>
+    </div>
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+             <span></span><i class="menuGroup">交互查询</i><em></em>
+         </div>
+      
+        </div>
+    </div>
+    <div id="menu1" class="menuStrip" style='display:none' >
+        <ul  class="menuItems">
+            <li   onclick="pntQuery()"><span class="item1"></span><i >点</i>
+            </li>
+            <li   onclick="circleQuery()"><span class="item1"></span><i >圆</i>
+            </li>
+            <li   onclick="polygonQuery()"><span class="item1"></span><i >多边形</i>
+            </li>
+            <li   onclick="squareQuery()"><span class="item1"></span><i >拉框</i>
+            </li>
+
+            <li class="divider"></li>
+            <li  onclick="deleteAll()"><span class="item3"></span><i>清空</i>
+            </li>
+        </ul>
+    </div>
+
+ <script>
+    function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain');
+        if (temDivs.length > 0) {
+            for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] === div) {
+                    var status = div.getAttribute("status");
+                    if (status == "unactive") {
+                        div.setAttribute("status", "active");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "active";
+                        tem_ems[0].className = "active";
+
+                        //显示菜单项
+                        DisplayMenuItem(true, menuitemFrameID);
+
+                    }
+                    else {
+                        div.setAttribute("status", "unactive");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+
+                        //隐藏菜单项
+                        DisplayMenuItem(false, menuitemFrameID);
+                    }
+                }
+                else {
+                    var status = temDivs[i].getAttribute("status");
+                    if (status == "active") {
+                        temDivs[i].setAttribute("status", "unactive");
+                        var tem_spans = temDivs[i].getElementsByTagName("span");
+                        var tem_ems = temDivs[i].getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+                    }
+                }
+            }
+        }
+    }
+
+    function DisplayMenuItem (isDisplay, iframeID) {
+        var menuItemFrame = document.getElementById(iframeID);
+        if (menuItemFrame != null) {
+            if (isDisplay) {
+                var temDivs = document.getElementsByClassName('menuStrip');
+                if (temDivs.length > 0) {
+                    for (var i = 0; i < temDivs.length; i++) {
+                        if (temDivs[i] != menuItemFrame) {
+                            temDivs[i].style.display = "none";
+                        }
+                    }   
+                }
+                menuItemFrame.style.display = "";
+            }
+            else {
+                menuItemFrame.style.display = "none";
+            }
+        }
+    };
+ </script>
+</body>
+
+</html>

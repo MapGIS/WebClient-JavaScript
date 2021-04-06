@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var vectorSource=null;
+        function init() {
+            //初始化地图容器
+            var map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [12000000, 4000000],  //地图初始中心点
+                    maxZoom: 28,     //最大瓦片显示级数
+                    minZoom: 1,      //最小瓦片显示级数
+                    zoom: 3          //地图初始显示级数
+                })
+            });
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            //加载天地图瓦片图层数据
+            map.addLayer(new ol.layer.Tile({
+                    title: "天地图矢量图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        wrapX: false
+                    })
+            }));
+            map.addLayer(new ol.layer.Tile({
+                    title: "天地图矢量注记图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk
+                    })
+                })
+            );
+             //实例化一个矢量图层Vector作为绘制层
+            vectorSource = new ol.source.Vector();
+             //创建一个图层
+            var vectorLayer = new ol.layer.Vector({
+                source: vectorSource
+            });
+            //将绘制层添加到地图容器中
+            map.addLayer(vectorLayer);
+        }
+
+        function addGeomPoint()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+            //创建一个点
+            var point = new ol.Feature({
+                geometry: new ol.geom.Point([11505912.0, 4011415.0])
+            });
+            //设置点1的样式信息
+            point.setStyle(new ol.style.Style({
+                //填充色
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                //边线颜色
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 2
+                }),
+                //形状
+                image: new ol.style.Circle({
+                    radius: 17,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+            vectorSource.addFeatures([point]);
+
+        }
+
+        function addGeomLine()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+             //创建一个线
+            var line = new ol.Feature({
+                geometry: new ol.geom.LineString([[8208725.0, 3835304.0], [16055444.0, 4578883.0]])
+            });
+
+            //设置线的样式
+            line.setStyle(new ol.style.Style({
+                //填充色
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                //边线颜色
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 5
+                }),
+                //形状
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+            vectorSource.addFeatures([line]);
+            
+        }
+
+        function addGeomCircle()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+             //创建一个圆
+            var circle = new ol.Feature({
+                geometry: new ol.geom.Circle([9871995.0, 4344069.0], 1000000)
+            });
+
+            circle.setStyle(new ol.style.Style({
+                //填充色
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.5)'
+                }),
+                //边线颜色
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 6
+                }),
+                //形状
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+            vectorSource.addFeatures([circle]);
+            
+        }
+
+        function addGeomRect()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+             //根据范围获取多边形
+            var rectangle = new ol.Feature({
+                geometry: new ol.geom.Polygon.fromExtent([8208725.0, 2035304.0, 12841418.0, 4068487.0])
+            });
+
+            rectangle.setStyle(new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(33,33,33,0.5)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 4
+                }),
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+            vectorSource.addFeatures([rectangle]);
+            
+        }
+
+        function addGeomSquare()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+              //根据圆获取多边形
+            var square = new ol.Feature({
+                geometry: new ol.geom.Polygon.fromCircle(new ol.geom.Circle([9871995.0, 4344069.0], 1000000), 4, 150)
+            });
+
+            square.setStyle(new ol.style.Style({
+                //填充色
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.8)'
+                }),
+                //边线颜色
+                stroke: new ol.style.Stroke({
+                    color: 'red',
+                    width: 2
+                }),
+                //形状
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+            vectorSource.addFeatures([square]);
+            
+        }
+
+        function addGeomPolygon()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+              //创建一个多变形
+            var polygon = new ol.Feature({
+                geometry: new ol.geom.Polygon([[[9871995.0, 4344069.0], [12689769.0, 5107216.0], [13002855.0, 3522218.0]]])
+            });
+            //设置区样式信息
+            polygon.setStyle(new ol.style.Style({
+                //填充色
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.5)'
+                }),
+                //边线颜色
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 2
+                }),
+                //形状
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            }));
+            vectorSource.addFeatures([polygon]);
+            
+        }
+
+        function deleteAll()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+            vectorSource.clear(true);
+        }
+
+
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+    </div>
+
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+             <span></span><i class="menuGroup">几何绘制</i><em></em>
+         </div>
+      
+     </div>
+ </div>
+ <div id="menu1" class="menuStrip" style='display:none' >
+     <ul  class="menuItems">
+         <li   onclick="addGeomPoint()"><span class="item1"></span><i >添加点</i>
+         </li>
+         <li   onclick="addGeomLine()"><span class="item1"></span><i >添加线</i>
+         </li>
+         <li   onclick="addGeomCircle()"><span class="item1"></span><i >添加圆</i>
+         </li>
+         <li   onclick="addGeomRect()"><span class="item1"></span><i >添加矩形</i>
+         </li>
+         <li   onclick="addGeomSquare()"><span class="item1"></span><i >添加正方形</i>
+         </li>
+         <li   onclick="addGeomPolygon()"><span class="item1"></span><i >添加多边形</i>
+         </li>
+         <li class="divider"></li>
+         <li  onclick="deleteAll()"><span class="item3"></span><i>清空</i>
+         </li>
+     </ul>
+  </div>
+ <script>
+    function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain');
+        if (temDivs.length > 0) {
+            for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] === div) {
+                    var status = div.getAttribute("status");
+                    if (status == "unactive") {
+                        div.setAttribute("status", "active");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "active";
+                        tem_ems[0].className = "active";
+
+                        //显示菜单项
+                        DisplayMenuItem(true, menuitemFrameID);
+
+                    }
+                    else {
+                        div.setAttribute("status", "unactive");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+
+                        //隐藏菜单项
+                        DisplayMenuItem(false, menuitemFrameID);
+                    }
+                }
+                else {
+                    var status = temDivs[i].getAttribute("status");
+                    if (status == "active") {
+                        temDivs[i].setAttribute("status", "unactive");
+                        var tem_spans = temDivs[i].getElementsByTagName("span");
+                        var tem_ems = temDivs[i].getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+                    }
+                }
+            }
+        }
+    }
+
+    function DisplayMenuItem (isDisplay, iframeID) {
+        var menuItemFrame = document.getElementById(iframeID);
+        if (menuItemFrame != null) {
+            if (isDisplay) {
+                var temDivs = document.getElementsByClassName('menuStrip');
+                if (temDivs.length > 0) {
+                    for (var i = 0; i < temDivs.length; i++) {
+                        if (temDivs[i] != menuItemFrame) {
+                            temDivs[i].style.display = "none";
+                        }
+                    }   
+                }
+                menuItemFrame.style.display = "";
+            }
+            else {
+                menuItemFrame.style.display = "none";
+            }
+        }
+    };
+ </script>
+</body>
+
+</html>

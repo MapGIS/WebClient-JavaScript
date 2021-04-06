@@ -3,7 +3,10 @@
  */
 import { EsCatlogType, EsCatlogName, EsGeoHashType } from './Enum';
 import EsCatlogService from './EsCatlogService';
+import ESGeoCode from './ESGeoCode';
+import ESGeoDecode from './ESGeoDecode';
+import ESQueryStats from './ESQueryStats';
 import EsTableService from './EsTableService';
 import EsSpaceTimeQueryByAgg from './EsSpaceTimeQueryByAgg';
 
-export { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg };
+export { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg };

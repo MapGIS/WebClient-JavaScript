@@ -29,8 +29,15 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap()
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             webGlobe.flyToEx(117.213063, 31.812956, {
@@ -85,7 +92,7 @@
                 //漫游模型url
                 modelUrl: './static/data/model/WuRenJi.glb',
                 //完成动画漫游回调函数
-                complete: function () {
+                complete: function() {
                     alert('完毕');
                 }
             });
@@ -111,7 +118,7 @@
 
             function subscribeParameter(name) {
                 Cesium.knockout.getObservable(viewModel, name).subscribe(
-                    function (newValue) {
+                    function(newValue) {
                         if (name === 'pitch') {
                             //animation.offsetZ = newValue;
                             //animation.pitch = Cesium.Math.toRadians(parseInt(newValue));
@@ -225,16 +232,14 @@
                 <tr id="pitch" style="display:''">
                     <td>俯仰角</td>
                     <td>
-                        <input type="range" min="-180" max="180" value="0" step="1"
-                            data-bind="value: pitch, valueUpdate: 'input'" size="20">
+                        <input type="range" min="-180" max="180" value="0" step="1" data-bind="value: pitch, valueUpdate: 'input'" size="20">
                         <input type="number" size="2" data-bind="value: pitch">
                     </td>
                 </tr>
                 <tr id="heading" style="display:''">
                     <td>方位角</td>
                     <td>
-                        <input type="range" min="-180" max="180" value="90" step="1"
-                            data-bind="value: heading, valueUpdate: 'input'">
+                        <input type="range" min="-180" max="180" value="90" step="1" data-bind="value: heading, valueUpdate: 'input'">
                         <input type="number" size="2" data-bind="value: heading">
                     </td>
                 </tr>

@@ -37,8 +37,15 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap()
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //开启地形深度检测
             webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
@@ -48,10 +55,13 @@
                 viewer: webGlobe.viewer
             });
             //添加三维地图文档：地形数据
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             terrainLayer.append(
-                `${protocol}://${ip}:${port}/igs/rest/g3d/250DEM_3D`,
-                {}
+                `${protocol}://${ip}:${port}/igs/rest/g3d/250DEM_3D`, {}
             );
 
             // var positionArr = [
@@ -115,7 +125,7 @@
                 positionArr,
                 true,
                 30,
-                function (entities) {
+                function(entities) {
                     modelEntity = entities;
                     webGlobe.viewer.trackedEntity = entities[entities.length - 1];
                     webGlobe.viewer.zoomTo(entities, new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-45)));

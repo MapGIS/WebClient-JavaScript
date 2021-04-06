@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+        var vectorSource=null;
+        var vectorLayer = null;
+        var drawTool = null;
+        var map = null ;
+        var commonStyle = null ;
+        var arrowStyle = null ; 
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [12000000, 4000000],  //地图初始中心点
+                    maxZoom: 28,     //最大瓦片显示级数
+                    minZoom: 1,      //最小瓦片显示级数
+                    zoom: 3          //地图初始显示级数
+                })
+            });
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            //加载天地图瓦片图层数据
+            map.addLayer(new ol.layer.Tile({
+                    title: "天地图矢量图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        wrapX: false
+                    })
+            }));
+            map.addLayer(new ol.layer.Tile({
+                    title: "天地图矢量注记图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk
+                    })
+                })
+            );
+            //实例化一个矢量图层Vector作为绘制层
+            vectorSource = new ol.source.Vector({ wrapX: false });
+
+            commonStyle = new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#ffcc33',
+                        width: 2
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#ffcc33'
+                        })
+                    })
+                });
+            vectorLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: commonStyle
+            });
+            //将绘制层添加到地图容器中
+            map.addLayer(vectorLayer);
+        }
+
+        /**
+         * 根据绘制类型进行交互绘制图形处理,pType参数取如下值：
+         * "Point":点
+         * "LineString":线
+         * "Polygon":多边形
+         * "Circle":圆
+         * "Square":正方形
+         * "Box":长方形
+         * "ArrowLine":箭头线
+        */
+        function addInteraction(pType) {
+            //绘制类型
+            var value = pType;
+            if (pType != "") {
+                var geometryFunction, maxPoints;
+                if (pType === 'Square') {
+                    value = 'Circle';
+                    //正方形图形（圆）
+                    geometryFunction = ol.interaction.Draw.createRegularPolygon(4);
+
+                } else if (pType === 'Box') {
+                    value = 'LineString';
+                    maxPoints = 2;
+                    geometryFunction = function (coordinates, geometry) {
+                        if (!geometry) {
+                            //多边形
+                            geometry = new ol.geom.Polygon(null);
+                        }
+                        var start = coordinates[0];
+                        var end = coordinates[1];
+                        geometry.setCoordinates([
+                            [start, [start[0], end[1]], end, [end[0], start[1]], start]
+                        ]);
+                        return geometry;
+                    };
+                }else if (pType==="ArrowLine")
+                {
+                    value  = "LineString";
+                    geometryFunction = null;
+                }
+
+                //实例化交互绘制类对象并添加到地图容器中
+                drawTool = new ol.interaction.Draw({
+                    //绘制层数据源
+                    source: vectorSource,
+                    /** @type {ol.geom.GeometryType}几何图形类型 */
+                    type: value,
+                    //几何信息变更时调用函数
+                    geometryFunction: geometryFunction,
+                    //最大点数
+                    maxPoints: maxPoints
+                });
+                map.addInteraction(drawTool);
+            }
+        }
+
+
+        function addGeomPoint()
+        {
+        vectorLayer.setStyle(commonStyle);
+        if(drawTool!=null)
+        {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+        }
+        
+            //添加交互绘制功能控件
+            addInteraction("Point");
+
+        }
+
+        function addGeomLine()
+        {
+            vectorLayer.setStyle(commonStyle);
+            if(drawTool!=null)
+        {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+        }
+        
+            //添加交互绘制功能控件
+            addInteraction("LineString"); 
+        }
+
+        function addGeomCircle()
+        {
+            vectorLayer.setStyle(commonStyle);
+            if(drawTool!=null)
+        {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+        }
+        
+            //添加交互绘制功能控件
+            addInteraction("Circle");        
+        }
+
+        function addGeomRect()
+        {
+            vectorLayer.setStyle(commonStyle);
+        if(drawTool!=null)
+        {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+        }
+        
+            //添加交互绘制功能控件
+            addInteraction("Box");        
+        }
+
+        function addGeomSquare()
+        {
+            vectorLayer.setStyle(commonStyle);
+            if(drawTool!=null)
+        {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+        }
+        
+            //添加交互绘制功能控件
+            addInteraction("Square");        
+        }
+
+        function addGeomPolygon()
+        {
+        vectorLayer.setStyle(commonStyle);
+        if(drawTool!=null)
+        {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+        }
+        
+            //添加交互绘制功能控件
+            addInteraction("Polygon");          
+        }
+
+        arrowStyle = function (feature) {
+            var geometry = feature.getGeometry();
+        
+            var styles = [
+                commonStyle
+            ];
+            if(geometry.getType()!=="LineString")
+            return styles;
+            geometry.forEachSegment(function (start, end) {
+                var dx = end[0] - start[0];
+                var dy = end[1] - start[1];
+                var rotation = Math.atan2(dy, dx);
+                //arrows
+                styles.push(new ol.style.Style({
+                    geometry: new ol.geom.Point(end),
+                    image: new ol.style.Icon({
+                        src: "./static/assets/olimages/label/linearrow.png",
+                        anchor: [0.75, 0.5],
+                        rotateWithView: false,
+                        rotation: -rotation
+                    })
+                }));
+            });
+
+            return styles;
+        };
+        function addArrowLine()
+        {
+            vectorLayer.setStyle(commonStyle);
+            vectorLayer.setStyle(arrowStyle);
+            if(drawTool!=null)
+            {
+                //移除绘制图形
+                map.removeInteraction(drawTool);
+            }
+        
+            //添加交互绘制功能控件
+            addInteraction("ArrowLine");      
+        }
+
+        function deleteAll()
+        {
+            if(vectorSource==null)
+            {
+                return;
+            }
+            vectorSource.clear(true);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+    </div>
+
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+             <span></span><i class="menuGroup">交互绘制</i><em></em>
+         </div>
+      
+     </div>
+ </div>
+ <div id="menu1" class="menuStrip" style='display:none' >
+     <ul  class="menuItems">
+         <li   onclick="addGeomPoint()"><span class="item1"></span><i >点</i>
+         </li>
+         <li   onclick="addGeomLine()"><span class="item1"></span><i >线</i>
+         </li>
+         <li   onclick="addGeomCircle()"><span class="item1"></span><i >圆</i>
+         </li>
+         <li   onclick="addGeomRect()"><span class="item1"></span><i >矩形</i>
+         </li>
+         <li   onclick="addGeomSquare()"><span class="item1"></span><i >正方形</i>
+         </li>
+         <li   onclick="addGeomPolygon()"><span class="item1"></span><i >多边形</i>
+         </li>
+         <li   onclick="addArrowLine()"><span class="item1"></span><i >箭头线</i>
+         </li>
+         <li class="divider"></li>
+         <li  onclick="deleteAll()"><span class="item3"></span><i>清空</i>
+         </li>
+     </ul>
+  </div>
+ <script>
+    function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain');
+        if (temDivs.length > 0) {
+            for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] === div) {
+                    var status = div.getAttribute("status");
+                    if (status == "unactive") {
+                        div.setAttribute("status", "active");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "active";
+                        tem_ems[0].className = "active";
+
+                        //显示菜单项
+                        DisplayMenuItem(true, menuitemFrameID);
+
+                    }
+                    else {
+                        div.setAttribute("status", "unactive");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+
+                        //隐藏菜单项
+                        DisplayMenuItem(false, menuitemFrameID);
+                    }
+                }
+                else {
+                    var status = temDivs[i].getAttribute("status");
+                    if (status == "active") {
+                        temDivs[i].setAttribute("status", "unactive");
+                        var tem_spans = temDivs[i].getElementsByTagName("span");
+                        var tem_ems = temDivs[i].getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+                    }
+                }
+            }
+        }
+    }
+
+    function DisplayMenuItem (isDisplay, iframeID) {
+        var menuItemFrame = document.getElementById(iframeID);
+        if (menuItemFrame != null) {
+            if (isDisplay) {
+                var temDivs = document.getElementsByClassName('menuStrip');
+                if (temDivs.length > 0) {
+                    for (var i = 0; i < temDivs.length; i++) {
+                        if (temDivs[i] != menuItemFrame) {
+                            temDivs[i].style.display = "none";
+                        }
+                    }   
+                }
+                menuItemFrame.style.display = "";
+            }
+            else {
+                menuItemFrame.style.display = "none";
+            }
+        }
+    };
+ </script>
+</body>
+
+</html>

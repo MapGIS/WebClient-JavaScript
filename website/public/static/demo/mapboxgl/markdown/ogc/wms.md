@@ -2,11 +2,11 @@
 
 ### 示例功能
 
-本示例实现在二维视图中加载显示一个WMS标准的地图服务数据，坐标系为`WGS84`。
+&ensp;&ensp;&ensp;&ensp;本示例实现在二维视图中加载显示一个WMS标准的地图服务数据，坐标系为`WGS84`。
 
 ### 示例实现
 
-本示例需要使用include-mapboxgl-local.js开发库实现，通过关键接口`mapboxgl.Map()`加载WGS84坐标系的WMS标准地图服务数据。
+&ensp;&ensp;&ensp;&ensp;本示例需要使用【include-mapboxgl-local.js】开发库实现，通过关键接口`mapboxgl.Map()`加载WGS84坐标系的WMS标准地图服务数据。
 
 > 开发库使用请参见**首页**-**概述**-**原生JS调用**内容
 
@@ -49,55 +49,62 @@
 
 ### 实现步骤
 
-1. 引用开发库，本示例通过本地离线include-mapboxgl-local.js脚本引入开发库；
+**Step 1.<font color=red>引用开发库</font>**:
+&ensp;&ensp;&ensp;&ensp;本示例通过本地离线【include-mapboxgl-local.js】脚本引入开发库；
 
-2. 创建`id="map"`的div作为地图容器，并设置其样式；
+**Step 2. <font color=red>创建布局</font>**：
+ &ensp;&ensp;&ensp;&ensp;创建`id="map"`的div作为地图容器，并设置其样式；
 
-3. 创建地图对象，设置地图的必要参数，如坐标系、地图div容器、样式等，在地图中加载天地图地图服务作为底图显示，具体操作参考`互联网地图`目录下的`天地图经纬度`示例；
+**Step 3. <font color=red>创建地图对象</font>**：
+ &ensp;&ensp;&ensp;&ensp;设置地图的必要参数，如坐标系、地图div容器、样式等，在地图中加载天地图地图服务作为底图显示，具体操作参考`互联网地图`目录下的`天地图经纬度`示例；
 
-4. 注册地图加载事件，当天地图底图加载后添加WMS标准的地图服务数据，示例中的WMS地图服务是通过MapGIS IGServer发布；
+**Step 4. <font color=red>注册地图加载事件</font>**：
+ &ensp;&ensp;&ensp;&ensp; 注册地图加载事件，当天地图底图加载后添加WMS标准的地图服务数据，示例中的WMS地图服务是通过MapGIS IGServer发布；
 
+* Example:
    ```javascript
-   //注册地图加载事件
-   map.on("load", function () {
-       map.addLayer({
-       id: "wms-layer",
-       type: "raster",
-       source: {
-           type: "raster",
-           tiles: [
-           "http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WMSServer?" +
-               "service=WMS" +
-               "&request=GetMap" +
-               "&layers=" +
-               "北京市,绿地_1,绿地_2,绿地_3,绿地_4,水域_3,水域_2,水域_1,大学,学校,动物园,高尔夫,观光胜地,果园,住宅用地,医院,商业用地,建筑物,铁路_1,铁路_2,铁路_3,主干道,主干道,高速公路_1,高速公路_1_9-10,三级道路_链接,三级道路,二级道路_链接,二级道路,一级道路_链接,一级道路,主干道_链接,主干道,主干道,高速公路_链接,高速公路_2,高速公路_2,三级道路_链接,三级道路,二级道路_链接,二级道路,一级道路_链接,一级道路,地铁,主干道_链接,主干道,主干道,高速公路_链接,高速公路_2,高速公路_2,地铁站POI,山顶,果园poi,汽车站点POI,大学poi,学校poi,中小学POI,幼儿园POI,医院POI,口腔医院POI,派出所POI,检察院POI,银行POI,邮局POI,体育馆POI,纪念碑POI,博物馆POI,名胜古迹点,动物园poi,观光胜地poi,主题公园POI,宾馆POI,百货店POI,便利店POI,书店POI,快餐POI,咖啡馆POI,电影院POI,高尔夫poi,村庄点,市镇点,区县点,首都点" +
-               "&styles=" +
-               "&format=image/jpeg" +
-               "&transparent=false" +
-               "&version=1.1.1" +
-               "&height=512" +
-               "&width=512" +
-               "&srs=EPSG:4326" +
-               "&bbox={bbox}",
-           ],
-           tileSize: 512,
-       },
-       paint: {},
-       });
-   });
+      //注册地图加载事件
+      map.on("load", function () {
+         map.addLayer({
+         id: "wms-layer",
+         type: "raster",
+         source: {
+            type: "raster",
+            tiles: [
+            "http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WMSServer?" +
+                  "service=WMS" +
+                  "&request=GetMap" +
+                  "&layers=" +
+                  "北京市,绿地_1,绿地_2,绿地_3,绿地_4,水域_3,水域_2,水域_1,大学,学校,动物园,高尔夫,观光胜地,果园,住宅用地,医院,商业用地,建筑物,铁路_1,铁路_2,铁路_3,主干道,主干道,高速公路_1,高速公路_1_9-10,三级道路_链接,三级道路,二级道路_链接,二级道路,一级道路_链接,一级道路,主干道_链接,主干道,主干道,高速公路_链接,高速公路_2,高速公路_2,三级道路_链接,三级道路,二级道路_链接,二级道路,一级道路_链接,一级道路,地铁,主干道_链接,主干道,主干道,高速公路_链接,高速公路_2,高速公路_2,地铁站POI,山顶,果园poi,汽车站点POI,大学poi,学校poi,中小学POI,幼儿园POI,医院POI,口腔医院POI,派出所POI,检察院POI,银行POI,邮局POI,体育馆POI,纪念碑POI,博物馆POI,名胜古迹点,动物园poi,观光胜地poi,主题公园POI,宾馆POI,百货店POI,便利店POI,书店POI,快餐POI,咖啡馆POI,电影院POI,高尔夫poi,村庄点,市镇点,区县点,首都点" +
+                  "&styles=" +
+                  "&format=image/jpeg" +
+                  "&transparent=false" +
+                  "&version=1.1.1" +
+                  "&height=512" +
+                  "&width=512" +
+                  "&srs=EPSG:4326" +
+                  "&bbox={bbox}",
+            ],
+            tileSize: 512,
+         },
+         paint: {},
+         });
+      });
    ```
-   
-5. 上面的步骤完成后在浏览器中可以查看到地图；
+
+**Step 5. <font color=red>浏览地图</font>**：
+ &ensp;&ensp;&ensp;&ensp; 上面的步骤完成后在浏览器中可以查看到地图。
+
 
 ### 关键接口
 
 #### 1.【MapBox样式规范】source
 
-数据源表明地图应显示哪些数据。 使用“type”属性指定数据源的类型，该属性必须是`vector`,`raster`,`raster-dem`,`geojson`,`image`,`video`之一。 添加数据源不足以使数据显示在地图上，因为数据源不包含颜色或宽度等样式细节。 图层通过指定数据源及设置相关的样式进行可视化表达。 这样就可以用不同的方式对同一数据源进行样式设置，例如在高速公路图层中区分不同类型的道路。
+&ensp;&ensp;&ensp;&ensp;数据源表明地图应显示哪些数据。 使用“type”属性指定数据源的类型，该属性必须是`vector`,`raster`,`raster-dem`,`geojson`,`image`,`video`之一。 添加数据源不足以使数据显示在地图上，因为数据源不包含颜色或宽度等样式细节。 图层通过指定数据源及设置相关的样式进行可视化表达。 这样就可以用不同的方式对同一数据源进行样式设置，例如在高速公路图层中区分不同类型的道路。
 
-示例中使用raster类型数据源，即瓦片栅格数据源，它是由JSON对象构成。
+&ensp;&ensp;&ensp;&ensp;示例中使用raster类型数据源，即瓦片栅格数据源，它是由JSON对象构成。
 
-> `raster`类型的source属性说明
+* `raster`类型的source属性说明
 
 | 属性名      | 类型   | 默认值                          | 说明                                                         |
 | ----------- | ------ | ------------------------------- | ------------------------------------------------------------ |
@@ -110,21 +117,17 @@
 | scheme      | enum   | "xyz"                           | 影响拼贴坐标的y方向，选项："xyz",  "tms"。假设全局 - 墨卡托（又称球形墨卡托）轮廓 |
 | attribution | string | 无                              | 包含向用户显示地图时要显示的属性                             |
 
-#### 2. 【地图对象】Map
+#### 2.【地图类】`mapboxgl.Map(options)`
 
-##### （1）`mapboxgl.Map(options)`：地图对象构造函数
+&ensp;&ensp;&ensp;&ensp;Map对象代表页面上的地图。 它开放了使您能够以编程方式更改地图的方法和属性，并在用户与地图互动时触发事件。
 
-Map对象代表页面上的地图。 它开放了使您能够以编程方式更改地图的方法和属性，并在用户与地图互动时触发事件。
-
-您可以通过指定容器和其他选项来创建地图， 然后使用`mapboxgl.Map(options)`初始化页面上的地图并返回Map对象。
-
-> `Map`主要参数
+&ensp;&ensp;&ensp;&ensp;您可以通过指定容器和其他选项来创建地图， 然后使用`mapboxgl.Map(options)`初始化页面上的地图并返回Map对象。
 
 | 参数名  | 类型   | 说明             |
 | ------- | ------ | ---------------- |
 | options | Object | 地图JSON对象参数 |
 
-> `options`属性参数说明
+* `options`属性参数说明
 
 | 参数名                       | 类型                                                         | 默认值                               | 说明                                                         |
 | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------------------ |
@@ -167,18 +170,16 @@ Map对象代表页面上的地图。 它开放了使您能够以编程方式更�
 | fadeDuration                 | number                                                       | 300                                  | 控制标签冲突的淡入/淡出动画的持续时间（以毫秒为单位）。此设置会影响所有符号图层。此设置不会影响运行时样式转换或栅格瓦片交叉渐变的持续时间 |
 | crossSource<br/>Collisions   | boolean                                                      | true                                 | 如果为true，则在碰撞检测期间来自多个源的符号可能彼此冲突。如果为false，则对每个源中的符号单独运行冲突检测 |
 
-##### （2）`addLayer(layer, beforeId)`：地图添加图层方法
+##### 【method】`addLayer(layer, beforeId)`：地图添加图层方法
 
-在地图样式中添加一个Mapbox样式图层。
-
-> `addLayer`主要参数
+&ensp;&ensp;&ensp;&ensp;在地图样式中添加一个Mapbox样式图层。
 
 | 参数名   | 类型                                                         | 说明                                                         |
 | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | layer    | Object\|<a href="https://docs.mapbox.com/mapbox-gl-js/api/properties/#customlayerinterface" target="_blank">CustomLayerInterface</a> | 要添加的图层，它符合Mapbox样式规范的图层定义，或者不常见的是[<a href="https://docs.mapbox.com/mapbox-gl-js/api/properties/#customlayerinterface" target="_blank">CustomLayerInterface</a>](https://docs.mapbox.com/mapbox-gl-js/api/properties/#customlayerinterface) |
 | beforeId | string                                                       | 在已有的图层（beforeId）前面添加新的图层。 如果未指定此参数，则该图层将附加到layers数组的末尾。 |
 
-> `layer`属性参数说明
+* `layer`属性参数说明
 
 | 参数名              | 类型           | 说明                                                         |
 | ------------------- | -------------- | ------------------------------------------------------------ |
@@ -198,11 +199,11 @@ Map对象代表页面上的地图。 它开放了使您能够以编程方式更�
 
 #### 1. WMS服务简介
 
-Web Map Service（网络地图服务），简称WMS，由开放地理信息联盟（Open GeoSpatial Consortium，OGC）制定。该规范定义了Web客户端从网络地图服务器获取地图的接口标准。一个WMS可以动态地生成具有地理参考数据的地图，这些地图通常用GIF、JPEG或PNG等图像格式，或者SVG、KML、VML和WebCGM等矢量图形格式来表现。使用者通过指定的参数获取相应的地图图片。
+&ensp;&ensp;&ensp;&ensp;Web Map Service（网络地图服务），简称WMS，由开放地理信息联盟（Open GeoSpatial Consortium，OGC）制定。该规范定义了Web客户端从网络地图服务器获取地图的接口标准。一个WMS可以动态地生成具有地理参考数据的地图，这些地图通常用GIF、JPEG或PNG等图像格式，或者SVG、KML、VML和WebCGM等矢量图形格式来表现。使用者通过指定的参数获取相应的地图图片。
 
 #### 2. 服务操作列表
 
-WMS实现规范由三个基础性操作协议(GetCapabilities，GetMap和GetFeatureInfo)组成，这些协议共同构成了利用WMS创建和叠加显示不同来源的远程异构地图服务的基础。WMS服务操作列表见下表所示。
+&ensp;&ensp;&ensp;&ensp;WMS实现规范由三个基础性操作协议(GetCapabilities，GetMap和GetFeatureInfo)组成，这些协议共同构成了利用WMS创建和叠加显示不同来源的远程异构地图服务的基础。WMS服务操作列表见下表所示。
 
 | 操作            | 实现要求       | 描述                                                         |
 | --------------- | -------------- | ------------------------------------------------------------ |
@@ -212,7 +213,7 @@ WMS实现规范由三个基础性操作协议(GetCapabilities，GetMap和GetFeat
 
 #### 3. 服务操作的参数列表
 
-> GetMap操作请求方法实现参数
+* `GetMap`操作请求方法实现参数说明
 
 | 参数名称    | 参数个数     | 参数类型和值                                                 |
 | ----------- | ------------ | ------------------------------------------------------------ |
@@ -232,9 +233,8 @@ WMS实现规范由三个基础性操作协议(GetCapabilities，GetMap和GetFeat
 | time        | 0或1个(可选) | 时间类型，值为时间值，表示需要在图层中有时间信息             |
 | elevation   | 0或1个(可选) | 数字类型，值为高程值，表示需要在图层中有高程信息             |
 
-请求示例：
-
-```javascript
-http://develop.smaryun.com:6163/igs/rest/ogc/doc/OGC_4326_CHINA/WMSServer?service=WMS&request=GetMap&layers=背景,中国,省级行政区,首都点,省会城市&styles=&format=image/jpeg&transparent=false&version=1.1.1&height=512&width=512&srs=EPSG:4326&bbox=90,0,180,90
-```
+* Example:
+  ```javascript
+  http://develop.smaryun.com:6163/igs/rest/ogc/doc/OGC_4326_CHINA/WMSServer?service=WMS&request=GetMap&layers=背景,中国,省级行政区,首都点,省会城市&styles=&format=image/jpeg&transparent=false&version=1.1.1&height=512&width=512&srs=EPSG:4326&bbox=90,0,180,90
+  ```
 

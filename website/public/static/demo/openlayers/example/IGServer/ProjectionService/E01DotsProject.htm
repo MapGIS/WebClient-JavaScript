@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <style>
+        .tableTxt
+        {
+            width: 40%;
+            float: left;
+            font-size: small;
+        }
+        input{
+            height: 12px;
+            display: block;
+            width: 50%;
+            font-size: 10px;
+        }
+        br{
+           display:inline; 
+           line-height:2px;
+        }
+    </style>
+    <script type="text/javascript">
+        function init() {
+            //初始化地图容器
+            var map = new ol.Map({
+                target: 'mapCon',
+                view: new ol.View({
+                    center: [0, 0],
+                    maxZoom: 28,
+                    minZoom: 3,
+                    zoom: 4
+                })
+            });
+        }
+        function OnePntProject()
+        {
+         //需要投影转换的点数组
+         var dots = new Array(1);
+            dots[0] = new Zondy.Object.Point2D(4819.949688726125, 67647.39383493776);
+            //设置源投影参数
+            var srcProjParam = new Zondy.Service.CProjectParam({
+                // 度分秒,即±DDDMMSS.SSSS格式
+                ProjAngleUnit: 5,
+                // 投影平面直角坐标系
+                ProjType: 3,
+                // 高斯-克吕格(横切椭圆柱等角)投影
+                ProjTypeID: 5,
+                // 厘米
+                ProjUnit: 12,
+                // 投影带号
+                ProjZoneNO: 39,
+                // 投影类型为3度分带
+                ProjZoneType: 1,
+                // 北京/克拉索夫斯基(1940年)椭球
+                SphereID: 2,
+                // 水平比例尺
+                ProjRate: 5000,
+                // 中央子午线经度
+                ProjLon: 1170000
+            });
+            //设置目的投影参数
+            var desProjParam = new Zondy.Service.CProjectParam({
+                // 角度单位为度
+                ProjAngleUnit: parseInt(document.getElementById("ProjAngleUnit_des").value.split(':')[0]),
+                // 地理坐标系
+                ProjType: parseInt(document.getElementById("ProjType_des").value.split(':')[0]),
+                // 地理坐标系
+                ProjTypeID: parseInt(document.getElementById("ProjTypeID_des").value.split(':')[0]),
+                // 毫米
+                ProjUnit: parseInt(document.getElementById("ProjUnit_des").value.split(':')[0]),
+                // 投影带号
+                ProjZoneNO: parseInt(document.getElementById("ProjZoneNO_des").value),
+                // 投影类型为6度分带
+                ProjZoneType: parseInt(document.getElementById("ProjZoneType_des").value.split(':')[0]),
+                // 北京/克拉索夫斯基(1940年)椭球
+                SphereID: parseInt(document.getElementById("SphereID_des").value.split(':')[0]),
+                // 水平比例尺
+                ProjRate: parseInt(document.getElementById("ProjRate_des").value),
+                // 中央子午线经度
+                ProjLon: parseInt(document.getElementById("ProjLon_des").value)
+            });
+
+            //初始化投影转换服务
+            var projectDotsService = new Zondy.Service.ProjectDots(
+                //设置需要投影转换的点数组
+                    dots,
+                //设置源投影参数
+                    srcProjParam,
+                //设置目的投影参数
+                    desProjParam,
+                //设置Options参数,包括服务器地址、端口号、返回结果格式
+                {
+                    ip: "develop.smaryun.com",
+                    port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                    resultFormat: "json"
+                }
+            );
+            //调用execute方法，执行点投影转换功能服务，并返回结果信息，onSuccess为回调函数
+            projectDotsService.execute(projSuccess);
+        }
+        //投影转换成功后的回调
+        function projSuccess(data) {
+            //显示结果
+            if(data.DesDots.length>0)
+            {
+                var resultStr = (data.DesDots)[0].x+","+(data.DesDots)[0].y;
+                document.getElementById("resultDiv").value = resultStr;
+            }
+           
+        }
+    </script>
+</head>
+
+<body>
+    <form action="" style="width: 50%;float: left;">
+        <fieldset>
+        <legend>源空间参照信息:</legend>
+        <div class="tableTxt">投影角度单位:</div><input  type="text"  readonly="readonly" value="5:DMS,度分秒,即±DDDMMSS.SSSS格式"><br>      
+        <div class="tableTxt">坐标系类型: </div><input  type="text" readonly="readonly" value="3:PRJ,投影平面直角坐标系"><br>
+        <div class="tableTxt">投影类型:</div> <input  type="text"  readonly="readonly" value="5:GaussKruger,高斯-克吕格(横切椭圆柱等角)投影"><br>
+        <div class="tableTxt">长度单位:</div> <input  type="text"  readonly="readonly" value="12:CentiMeter,厘米"><br>
+        <div class="tableTxt">投影带号:</div> <input  type="text"  readonly="readonly" value="39"><br>
+        <div class="tableTxt">投影分带类型: </div><input  type="text"  readonly="readonly" value="1:Degree 3, 3度"><br>
+        <div class="tableTxt">椭球体参数：</div><input  type="text"  readonly="readonly" value="1:Beijing54,北京/克拉索夫斯基(1940年)椭球"><br>
+        <div class="tableTxt">水平比例尺：</div><input  type="text"  readonly="readonly"value="5000"><br>
+        <div class="tableTxt">中央子午线经度：</div><input  type="text"  readonly="readonly" value="1170000"><br>
+        </fieldset>
+    </form>
+    <form action="" style="width: 50%;float: left;">
+        <fieldset>
+        <legend>目的空间参照信息:</legend>
+        <div class="tableTxt">投影角度单位:</div><input id="ProjAngleUnit_des"  type="text"  value="4:Degree,度"><br>      
+        <div class="tableTxt">坐标系类型: </div><input  id="ProjType_des"  type="text"  value="1:JWD,地理坐标系"><br>
+        <div class="tableTxt">投影类型:</div> <input id="ProjTypeID_des"  type="text"  value="0:LonLat,地理坐标系"><br>
+        <div class="tableTxt">长度单位:</div> <input id="ProjUnit_des"  type="text"  value="1:MilliMeter,毫米"><br>
+        <div class="tableTxt">投影带号:</div> <input id="ProjZoneNO_des"  type="text"  value="20"><br>
+        <div class="tableTxt">投影分带类型: </div><input id="ProjZoneType_des"  type="text"  value="0:Degree6，6度"><br>
+        <div class="tableTxt">椭球体参数：</div><input id="SphereID_des"  type="text" value="1:Beijing54,北京/克拉索夫斯基(1940年)椭球"><br>
+        <div class="tableTxt">水平比例尺：</div><input id="ProjRate_des"  type="text" value="1" ><br>
+        <div class="tableTxt">中央子午线经度：</div><input id="ProjLon_des"  type="text" value="1170000"><br>
+        </fieldset>
+    </form>
+    <form action="" style="width: 47%;float: left;">
+        <fieldset>
+        <legend>源坐标:</legend>
+           <input type="text" style="width: 98%;" value="4819.949688726125,67647.39383493776">
+        </fieldset>
+    </form>
+    <input type="button" value="投影==>" style="height:20px;width: 6%;float: left;position: relative;top: 23px;" onclick="OnePntProject()">
+    <form action="" style="width: 47%;float: left;">
+        <fieldset>
+        <legend>目的坐标:</legend>
+           <input id="resultDiv" type="text" style="width: 98%;">
+        </fieldset>
+    </form>
+</body>
+
+</html>

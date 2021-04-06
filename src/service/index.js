@@ -428,7 +428,7 @@ export const OGC = {
     WFS
 };
 
-import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, EsTableService, EsSpaceTimeQueryByAgg } from './datastore/elasticsearch';
+import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg } from './datastore/elasticsearch';
 import {
     PostgisCatlogService,
     PostgisCustomQueryService,
@@ -442,6 +442,9 @@ export const ElasticSearch = {
     EsCatlogName,
     EsGeoHashType,
     EsCatlogService,
+    ESGeoCode,
+    ESGeoDecode,
+    ESQueryStats,
     EsTableService,
     EsSpaceTimeQueryByAgg
 };
@@ -459,6 +462,9 @@ export const DataStore = {
     EsCatlogName,
     EsGeoHashType,
     EsCatlogService,
+    ESGeoCode,
+    ESGeoDecode,
+    ESQueryStats,
     EsTableService,
     EsSpaceTimeQueryByAgg
 };

@@ -282,6 +282,60 @@ Zondy.Source.MapLayerTileSource = MapLayerTileSource;
 /// 如: ["gdbps= gdbp://MapGisLocal/示例数据/ds/世界地图/sfcls/海洋陆地","gdbp://MapGisLocal/示例数据/ds/世界地图/sfcls/国界"].
 /// </param>
 /// <param name="opt_options" type="Object">属性键值对</param>
+/**
+ * @class Zondy.Map.GdbpLayer
+ * @classdesc GdbpLayer显示矢量图层
+ * @description Zondy.Map.GdbpLayer
+ * @param opt_name - {String} 可选项，显示瓦片地图的名称，无实际意义，可为NULL。
+ * @param opt_gdbps - {String} 必选项，简单要素类的URL地址信息（包括源要素类存储路径与名称），用户根据语法设置URL地址，或在数据库中图层节点上右击选择“复制URL”获得。多个间用“，”号隔开。如: ["gdbps= gdbp://MapGisLocal/示例数据/ds/世界地图/sfcls/海洋陆地","gdbp://MapGisLocal/示例数据/ds/世界地图/sfcls/国界"]。
+ * @param opt_options - {Object} 必选项，设置其他属性键值对对象。对象中的属性来自本类的属性。例如：{key1：value1, key2：value2 …}
+ * @param {String} [opt_options.ip = ''] 必选项，服务器ip地址，本地为“127.0.0.1”或“localhost”。
+ * @param {String} [opt_options.port = '6163'] 必选项，服务器端口号，默认值6163
+ * @param {String[]} [opt_options.gdbps = ''] 可选项，简单要素类的URL地址信息（包括源要素类存储路径与名称），用户根据语法设置URL地址，或在数据库中图层节点上右击选择“复制URL”获得。多个间用“，”号隔开。如: ["gdbps= gdbp://MapGisLocal/示例数据/ds/世界地图/sfcls/海洋陆地","gdbp://MapGisLocal/示例数据/ds/世界地图/sfcls/国界"]。
+ * @param {String} [opt_options.f = 'png'] 可选项，图像类型，取值为：jpg|png|gif，默认值png
+ * @param {String} [opt_options.filters = ''] 可选项，图层过滤条件，它由多个键值对组成，值为您所要设定的过滤条件。如：'1:ID>4,3:ID>1”。过滤条件中用到的符号包括“==”、“!=”、“<”、“>”、“<=”、“>=”、“..”、“~”等，当包含中文条件时，请使用UTF-8编码格式，其中“：”和“，”为保留字符，用于表示键值对概念和分隔不同图层的条件，请不要将这2个字符用于自定义条件中，javascitpt中请使用encodeURI（）函数编码后再代入filters参数中。
+ * @param {Zondy.Object.CDisplayStyle[]} [opt_options.style = ''] 可选项，矢量图层显示样式参数，与图层序号相对应。
+ * @param {Number[]} [opt_options.extent = ''] 可选项，图层数据范围
+ * @param {String} [opt_options.guid = ''] 可选项，矢量图层缓存的唯一标识，一般情况下无需赋值。
+ * @example
+ <script type="text/javascript">
+    //定义地图文档图层和地图
+    var VecLayer, map;
+    //初始化地图显示
+    function init() {
+        //地图范围
+        var extent = [634883.45517486, 3423051.6221381, 643377, 3431937.8];
+        //投影坐标系
+        var projection = new ol.proj.Projection({ units: ol.proj.Units.METERS, extent: extent });
+        //中心点
+        var center = ol.extent.getCenter(extent);
+        //图层显示名称
+        var name = "MapGIS IGS VecLayer";
+        //要显示的图层的gdbps地址
+        var gdbps = ["gdbp://MapGisLocal/sample/ds/地图综合/sfcls/水系"];
+        //创建一个图层
+        VecLayer = new Zondy.Map.GdbpLayer(name, gdbps, {
+            ip: "develop.smaryun.com",
+            port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+            extent:extent,
+            mapstyUri: 'mapstyUri',
+            mapstyOption: 'mapstyOption'
+        });
+        //创建一个地图容器
+        map = new ol.Map({
+            //目标DIV
+            target: 'mapCon',
+            //添加图层到地图容器中
+            layers: [VecLayer],
+            view: new ol.View({
+                center: center,
+                projection: projection,
+                zoom: 2
+            })
+        });
+    }
+ </script>
+ */
 var GdbpLayer = function (opt_name, opt_gdbps, opt_options) {
     var options = opt_options ? opt_options : {};
     assign(options, {'layerName': opt_name});
@@ -299,6 +353,12 @@ inherits(GdbpLayer, TileLayer);
 /**
  * Source for MapGIS servers
  * 刷新地图，重新取图，但保留了原有的GUID的标识
+ */
+/**
+ * @function Zondy.Map.GdbpLayer.refresh
+ * @description 刷新地图，重新取图，但保留了原有的guid的标识。
+ * @example
+ * VecLayer.refresh()
  */
 GdbpLayer.prototype.refresh = function () {
     this.setSource(null);
@@ -318,6 +378,13 @@ GdbpLayer.prototype.refresh = function () {
  * Source for MapGIS servers
  * 获取地图样式
  */
+/**
+ * @function Zondy.Map.GdbpLayer.getStyle
+ * @description 获取地图文档显示样式参数信息。
+ * @return {Zondy.Object.CDisplayStyle[]} 描述地图文档显示样式的参数信息.
+ * @example
+ * VecLayer.getStyle()
+ */
 GdbpLayer.prototype.getStyle = function () {
     return this.options.style !== undefined ? this.options.style : null;
 }
@@ -325,6 +392,13 @@ GdbpLayer.prototype.getStyle = function () {
 /**
  * Source for MapGIS servers
  * 设置地图样式
+ */
+/**
+ * @function Zondy.Map.GdbpLayer.setStyle(opt_style)
+ * @description 设置地图文档显示样式参数信息。
+ * @param opt_style - {Zondy.Object.CDisplayStyle[]} 地图文档显示样式参数。
+ * @example
+ * VecLayer.setStyle(opt_style)
  */
 GdbpLayer.prototype.setStyle = function (opt_style) {
     if (opt_style !== undefined && opt_style !== null) {
@@ -342,6 +416,17 @@ GdbpLayer.prototype.setStyle = function (opt_style) {
  * 如：1:面积>920
  * 如：1:name='中华人民共和国'
  * 如：FIRST_FIRS='Asia'
+ */
+/**
+ * @function Zondy.Map.GdbpLayer.setFilters(opt_filters)
+ * @description 设置地图文档图层过滤条件。
+ * @param opt_filters - {String} 过滤条件。如：'1:ID>4,3:ID>1”。
+ 过滤条件中用到的符号包括“==”、“!=”、“<”、“>”、“<=”、“>=”、“..”、“~”等，当包含中文条件时，请使用UTF-8编码格式，其中“：”和“，”为保留字符，用于表示键值对概念和分隔不同图层的条件，请不要将这2个字符用于自定义条件中，javascitpt中请使用encodeURI（）函数编码后再代入filters参数中。
+ * @example
+ //显示第0个图层，所有id大于1的数据
+ * var opt_style = '0:id>1';
+ * VecLayer.setFilters(opt_filters)
+ * VecLayer.refresh()
  */
 GdbpLayer.prototype.setFilters = function (opt_filters) {
     if (opt_filters != null && opt_filters.toString() != "") {

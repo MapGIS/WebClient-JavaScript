@@ -39,18 +39,28 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap()
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //构造M3D模型层管理对象（视图）
             var m3dLayer = new CesiumZondy.Layer.M3DLayer({
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             layerList = m3dLayer.append(
-                `${protocol}://${ip}:${port}/igs/rest/g3d/buildings1`,
-                {
+                `${protocol}://${ip}:${port}/igs/rest/g3d/buildings1`, {
                     maximumScreenSpaceError: 1
                 }
             );
@@ -126,12 +136,12 @@
                 var idList = [vlueNumber];
                 //构建参数：设置颜色
                 var options = {
-                    //高亮颜色
-                    color: new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 1),
-                    //高亮模式：REPLACE为替换
-                    colorBlendMode: Cesium.Cesium3DTileColorBlendMode.REPLACE
-                }
-                //结束闪烁
+                        //高亮颜色
+                        color: new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 1),
+                        //高亮模式：REPLACE为替换
+                        colorBlendMode: Cesium.Cesium3DTileColorBlendMode.REPLACE
+                    }
+                    //结束闪烁
                 analysisManager.stopCustomDisplay(currentLayer);
                 //开始闪烁查找到的模型
                 analysisManager.startCustomDisplay(currentLayer, idList, options);

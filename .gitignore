@@ -16,6 +16,7 @@
 /src/common/overlay/
 /src/common/assets/
 /src/config/common/
+src/config/opensource/output/
 
 /website/node_modules/
 /website/public/docs/other/

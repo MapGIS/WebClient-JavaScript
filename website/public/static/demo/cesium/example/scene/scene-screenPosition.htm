@@ -29,15 +29,26 @@
             var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
                 viewer: webGlobe.viewer
             });
-            //添加Google地图
-            thirdPartyLayer.appendOsmMap();
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
             //构造地形图层管理类
             var terrain = new CesiumZondy.Layer.TerrainLayer({
                 viewer: webGlobe.viewer
             });
             //加载三维地形地图文档（服务地址，配置参数）
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             var terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
 
             //初始化视图功能管理类
@@ -66,6 +77,7 @@
         function toCartesian() {
             mouseEventManager.unRegisterMouseEvent("LEFT_CLICK");
             mouseEventManager.registerMouseEvent("LEFT_CLICK", leftToCartesian);
+
             function leftToCartesian(movement) {
                 //输出屏幕坐标点
                 document.getElementById("screenPositionX").value = "x:" + movement.position.x;
@@ -85,6 +97,7 @@
         function toCartographic() {
             mouseEventManager.unRegisterMouseEvent("LEFT_CLICK");
             mouseEventManager.registerMouseEvent("LEFT_CLICK", leftToCartographic);
+
             function leftToCartographic(movement) {
                 //输出屏幕坐标点
                 document.getElementById("screenPositionX").value = "x:" + movement.position.x;
@@ -94,8 +107,8 @@
                 //var position = commonFuncManager.screenPositionToCartographic(movement.position);
                 //console.log(position);
                 var result = commonFuncManager.screenPositionToCartographic(movement.position);
-                let lng = Cesium.Math.toDegrees(result.longitude);//转为经度值
-                let lat = Cesium.Math.toDegrees(result.latitude);//转为纬度值
+                let lng = Cesium.Math.toDegrees(result.longitude); //转为经度值
+                let lat = Cesium.Math.toDegrees(result.latitude); //转为纬度值
                 //输出经纬度坐标点
                 document.getElementById("toPositionX").value = "x:" + lng;
                 document.getElementById("toPositionY").value = "y:" + lat;
@@ -107,6 +120,7 @@
         function toHeightFromDegrees() {
             mouseEventManager.unRegisterMouseEvent("LEFT_CLICK");
             mouseEventManager.registerMouseEvent("LEFT_CLICK", leftToHeightFromDegrees);
+
             function leftToHeightFromDegrees(movement) {
                 //输出屏幕坐标点
                 document.getElementById("screenPositionX").value = "x:" + movement.position.x;

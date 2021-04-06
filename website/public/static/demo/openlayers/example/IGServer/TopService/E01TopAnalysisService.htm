@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        #menu {
+            float: left;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 2000;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var vectorSource=null;
+        var map = null;
+        var TiandiMap_vect = null;
+        var TiandiMap_vectcia = null;
+        var firstGeomZD = null;
+        var secondGeomZD = null;
+        var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+        function init() {
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [114, 30.45],
+                    zoom: 9,
+                    projection: "EPSG:4326"
+                })
+            });
+            
+            //加载天地图瓦片图层数据
+            TiandiMap_vect = new ol.layer.Tile({
+                    title: "天地图矢量图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        wrapX: false
+                    })
+            });
+            
+            TiandiMap_vectcia =new ol.layer.Tile({
+                    title: "天地图矢量注记图层",
+                    source: new ol.source.XYZ({
+                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk
+                    })
+            });
+
+            map.addLayer(TiandiMap_vect);
+            map.addLayer(TiandiMap_vectcia);
+
+            //加载测量的绘制矢量层
+            vectorSource = new ol.source.Vector(); //图层数据源
+            var vectorLayer = new ol.layer.Vector({
+                source: vectorSource,
+                style: new ol.style.Style({ //图层样式
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)' //填充颜色
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#ffcc33',  //边框颜色
+                        width: 2   // 边框宽度
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#ffcc33'
+                        })
+                    })
+                })
+            });
+            map.addLayer(vectorLayer);
+        }
+        
+        function topoAnalysis()
+        {
+           if(firstGeomZD!=null && secondGeomZD!=null)
+           {
+                var topParam = new Zondy.Service.TopAnalysis({
+                    ip: "develop.smaryun.com",
+                    port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+                });
+               switch(firstGeomZD.gtype)
+               {
+                   case "pnt":
+                        //调用setPnt方法，设置点类型
+                       topParam.setPnt(firstGeomZD);
+                       break;
+                   case "lin":
+                       //调用setPnt方法，设置点类型
+                       topParam.setLine(firstGeomZD);
+                       break;
+                   case "reg":
+                       //调用setPnt方法，设置点类型
+                       topParam.setReg(firstGeomZD);
+                       break;
+               }
+                //调用setRelativeObj方法，设置拓扑分析参照物
+               topParam.setRelativeObj(secondGeomZD);
+                //设置拓扑分析半径
+               topParam.nearDis = "0.05";
+               //执行拓扑分析，成功执行后返回执行结果，onSuccess为回调函数
+               topParam.execute(AnalysisSuccess, AnalysisError);
+
+           }
+        }
+        //分析失败回调
+        function AnalysisError(e) {
+            //停止进度条
+           alert("分析失败！");
+        }
+        //分析成功后的回调
+        function AnalysisSuccess(data) {
+            alert("两几何之间的拓扑关系为:"+data);
+        } 
+
+        function changeData(val)
+        {
+            if(vectorSource!=null)
+            {
+                vectorSource.clear();
+            }
+            switch(val)
+            {
+                case "data_A":  //点--多边形
+                    //创建点对象
+                    var pointObj = new Zondy.Object.GPoint(114.155355, 30.784218,{gtype:"pnt"});
+                    //创建区几何对象
+                    var regionObj = new Zondy.Object.GRegion([
+                                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                                        new Zondy.Object.Point2D(114.301586, 30.533613),
+                                        new Zondy.Object.Point2D(114.301586, 30.396517),
+                                        new Zondy.Object.Point2D(114.544453, 30.396517),
+                                        new Zondy.Object.Point2D(114.444453, 30.533613),
+                                        new Zondy.Object.Point2D(114.401586, 30.533613)])
+                                    ])
+                    ],{gtype:"reg"});
+                    firstGeomZD = pointObj;
+                    secondGeomZD = regionObj;
+                    
+                    var linPointArr = [];
+                    for (var i = 0; i < regionObj.Rings[0].Arcs[0].Dots.length; i++) {
+                        linPointArr.push([regionObj.Rings[0].Arcs[0].Dots[i].x, regionObj.Rings[0].Arcs[0].Dots[i].y]);
+                    }
+                    //创建要素1（区要素）
+                    var feature1 = new ol.Feature({
+                        geometry: new ol.geom.Polygon([linPointArr])
+                    });
+                    //设置要素的样式
+                    feature1.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(22,33,44,0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 2,
+                            color: 'rgba(178,34,34,0.8)'
+                        })
+                    }));
+                    //创建要素2（点要素）
+                    var feature2 = new ol.Feature({
+                        geometry: new ol.geom.Point([pointObj.Dot.x, pointObj.Dot.y])
+                    });
+                    feature2.setStyle(new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 7,
+                            fill: new ol.style.Fill({
+                                color: '#ffcc33'
+                            })
+                        })
+                    }));
+                    vectorSource.addFeatures([feature1,feature2]);
+                    break;
+                case "data_B":  //线--多边形
+                        //创建线对象
+                    var lineObj = new Zondy.Object.GLine(
+                            new Zondy.Object.AnyLine([new Zondy.Object.Arc
+                                ([
+                                    new Zondy.Object.Point2D(114.40, 30.60),
+                                    new Zondy.Object.Point2D(114.45, 30.20)
+                                ])
+                            ]),{gtype:"lin"}
+                        );
+                    //创建区几何对象
+                    var regionObj = new Zondy.Object.GRegion([
+                                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                                        new Zondy.Object.Point2D(114.301586, 30.533613),
+                                        new Zondy.Object.Point2D(114.301586, 30.396517),
+                                        new Zondy.Object.Point2D(114.544453, 30.396517),
+                                        new Zondy.Object.Point2D(114.444453, 30.533613),
+                                        new Zondy.Object.Point2D(114.401586, 30.533613)])
+                                    ])
+                    ],{gtype:"reg"});
+                    firstGeomZD = lineObj;
+                    secondGeomZD = regionObj;
+                    
+                    var linePntArr = [];
+                    var linPointArr = [];
+                    for (var i = 0; i < lineObj.Line.Arcs[0].Dots.length; i++) {
+                        linePntArr.push([lineObj.Line.Arcs[0].Dots[i].x, lineObj.Line.Arcs[0].Dots[i].y]);
+                    }
+                    for (var i = 0; i < regionObj.Rings[0].Arcs[0].Dots.length; i++) {
+                        linPointArr.push([regionObj.Rings[0].Arcs[0].Dots[i].x, regionObj.Rings[0].Arcs[0].Dots[i].y]);
+                    }
+                    //创建要素1（线要素）
+                    var feature1 = new ol.Feature({
+                        geometry: new ol.geom.LineString(linePntArr)
+                    });
+                    //设置要素样式
+                    feature1.setStyle(new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color:'rgba(41,57,85,1)',
+                            width:3
+                        })
+                    }));
+                    //创建要素2（区要素）
+                    var feature2 = new ol.Feature({
+                        geometry: new ol.geom.Polygon([linPointArr])
+                    });
+                    //设置要素样式
+                    feature2.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(22,197,199,0.5)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: 'rgba(178,34,34,0.8)',
+                            width:2
+                        })
+                    }));
+                    vectorSource.addFeatures([feature1,feature2]);
+                    break;
+                case "data_C":  //多边形--多边形
+                    //创建区几何对象1
+                    var regObj = new Zondy.Object.GRegion([
+                                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                                        new Zondy.Object.Point2D(114.00017, 30.49651),
+                                        new Zondy.Object.Point2D(114.00017, 30.07587),
+                                        new Zondy.Object.Point2D(114.54445, 30.07587),
+                                        new Zondy.Object.Point2D(114.40564, 30.49651),
+                                        new Zondy.Object.Point2D(114.20158, 30.49651)])
+                                    ])
+                    ],{gtype:"reg"});
+                    //创建区几何对象2
+                    var regionObj = new Zondy.Object.GRegion([
+                                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                                        new Zondy.Object.Point2D(114.00017, 30.87587),
+                                        new Zondy.Object.Point2D(114.00017, 30.49651),
+                                        new Zondy.Object.Point2D(114.54445, 30.49651),
+                                        new Zondy.Object.Point2D(114.40564, 30.87587),
+                                        new Zondy.Object.Point2D(114.20158, 30.87587)])
+                                    ])
+                    ],{gtype:"reg"});
+                    firstGeomZD = regObj;
+                    secondGeomZD = regionObj;
+
+                    var lPointArr = [];
+                    var linPointArr = [];
+                    for (var i = 0; i < regObj.Rings[0].Arcs[0].Dots.length; i++) {
+                        lPointArr.push([regObj.Rings[0].Arcs[0].Dots[i].x, regObj.Rings[0].Arcs[0].Dots[i].y]);
+                    }
+                    for (var i = 0; i < regionObj.Rings[0].Arcs[0].Dots.length; i++) {
+                        linPointArr.push([regionObj.Rings[0].Arcs[0].Dots[i].x, regionObj.Rings[0].Arcs[0].Dots[i].y]);
+                    }
+                    //区要素1
+                    var feature1 = new ol.Feature({
+                        geometry: new ol.geom.Polygon([lPointArr])
+                    });
+                    //设置区1样式
+                    feature1.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(22,33,44,0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 2,
+                            color: 'rgba(178,34,34,0.8)'
+                        })
+                    }));
+                    //区要素2
+                    var feature2 = new ol.Feature({
+                        geometry: new ol.geom.Polygon([linPointArr])
+                    });
+                    //设置区2样式
+                    feature2.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(222,133,44,0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 2,
+                            color: 'rgba(178,34,34,0.8)'
+                        })
+                    }));
+                    vectorSource.addFeatures([feature1,feature2]);
+                    break;
+                case "data_D":
+                    //创建点对象
+                    var pointObj = new Zondy.Object.GPoint(114.155355, 30.784218,{gtype:"pnt"});
+                    //创建区几何对象
+                    var regionObj = new Zondy.Object.GRegion([
+                                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                                        new Zondy.Object.Point2D(114.00017, 30.87587),
+                                        new Zondy.Object.Point2D(114.00017, 30.49651),
+                                        new Zondy.Object.Point2D(114.54445, 30.49651),
+                                        new Zondy.Object.Point2D(114.40564, 30.87587),
+                                        new Zondy.Object.Point2D(114.20158, 30.87587)])
+                                    ])
+                    ],{gtype:"reg"});
+                    firstGeomZD = pointObj;
+                    secondGeomZD = regionObj;
+
+                    var linPointArr = [];
+                    for (var i = 0; i < regionObj.Rings[0].Arcs[0].Dots.length; i++) {
+                        linPointArr.push([regionObj.Rings[0].Arcs[0].Dots[i].x, regionObj.Rings[0].Arcs[0].Dots[i].y]);
+                    }
+                    //创建要素1（区要素）
+                    var feature1 = new ol.Feature({
+                        geometry: new ol.geom.Polygon([linPointArr])
+                    });
+                    //设置要素的样式
+                    feature1.setStyle(new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(22,33,44,0.6)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 2,
+                            color: 'rgba(178,34,34,0.8)'
+                        })
+                    }));
+                    //创建要素2（点要素）
+                    var feature2 = new ol.Feature({
+                        geometry:new ol.geom.Point([pointObj.Dot.x,pointObj.Dot.y])
+                    });
+                    feature2.setStyle(new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 7,
+                            fill: new ol.style.Fill({
+                                color: '#ffcc33'
+                            })
+                        })
+                    }));
+                    vectorSource.addFeatures([feature1,feature2]);
+                    break;
+            }
+            //计算几何之间拓扑关系
+            topoAnalysis();
+        }
+       
+        
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+        <div id="menu">
+            <label>数据选择: &nbsp;</label>
+            <select id="type" onchange="changeData(this.value)" >
+                <option style='display: none'></option>
+                <option value="data_A">点--多边形</option>
+                <option value="data_B">线--多边形</option>
+                <option value="data_C">多边形--多边形</option>
+                <option value="data_D">点--多边形(2)</option>
+            </select>
+        </div>
+    </div>
+</body>
+
+</html>

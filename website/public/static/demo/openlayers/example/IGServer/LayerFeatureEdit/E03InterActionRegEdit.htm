@@ -1,0 +1,637 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery,jquery-easyui" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        .ol-mouse-position {
+            top: 95%;
+            right: 8px;
+            position: absolute;
+        }
+        .refreshBtn {
+            float: right;
+            margin-right: 10px;
+        }
+        .panel-body {
+            background-color: #f0e1e1;
+            color: #000000;
+            font-size: 8px;
+        }
+        .panel{
+            opacity: 0.99;
+        }
+
+        .tableTxt
+        {
+            width: 45%;
+            float: left;
+            font-size: 8px;
+            font-family: monospace;
+        }
+        input{
+            height: 10px;
+            display: block;
+            width: 50%;
+            font-size: 8px;
+        }
+        br{
+           display:inline; 
+           line-height:2px;
+        }
+        
+
+    </style>
+
+    <script type="text/javascript">
+        var map = null;
+        var vectorLayer = null;
+        var drawTool = null;
+
+        function init() {    
+            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            //加载天地图瓦片图层数据
+            var TiandiMap_vectIGS = new Zondy.Map.TianDiTu({
+                layerType: Zondy.Enum.Map.TiandituType.VEC_IGS,
+                projection: ol.proj.get('EPSG:4326'),
+                //最小显示等级
+                minZoom: 0,
+                //最大显示等级
+                maxZoom: 15,
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //天地图key
+                token: tdk,
+                layerName:"天地图矢量"
+            });
+            
+            var TiandiMap_ciaIGS =new Zondy.Map.TianDiTu({
+                layerType: Zondy.Enum.Map.TiandituType.CVA_IGS,
+                projection: ol.proj.get('EPSG:4326'),
+                minZoom: 0, //最小显示等级               
+                maxZoom: 15, //最大显示等级
+                ip: "develop.smaryun.com",
+                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //天地图key
+                token: tdk,
+                layerName:"天地图注记"
+            });
+
+            //加载地图文档图层
+            vectorLayer = new Zondy.Map.GdbpLayer("MapGIS IGS VectorLayer", ["gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/myreglayer"], {
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+
+            //初始化地图容器
+            map = new ol.Map({
+                target: 'mapCon',     //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: true
+                    })
+                }),
+                view: new ol.View({
+                    center: [0, 0],
+                    zoom: 3,
+                    projection: 'EPSG:4326'
+                }),
+                layers:[TiandiMap_vectIGS,TiandiMap_ciaIGS,vectorLayer]
+            });
+            
+            map.addControl(new ol.control.MousePosition({
+                //坐标格式
+                coordinateFormat: ol.coordinate.createStringXY(4)}));
+        }
+
+        function RemoveAllEventListener()
+        {
+            if(drawTool!=null)
+            {
+                drawTool.un('drawend', onDrawEnd_addReg);
+                map.removeInteraction(drawTool);
+                drawTool = null;
+            }
+
+            map.removeEventListener('click', deletePolygonCallback);
+            map.removeEventListener('click', UpdateRegCallback);
+        }
+
+
+        /*=======================绘制线并获取线几何信息===================*/
+        var i;
+        var x = new Array();
+        var y = new Array();
+        //根据绘制类型进行交互绘制图形处理
+        function AddPolygon() {
+            document.getElementById("featureInfo").style.visibility = "hidden";
+            RemoveAllEventListener();
+
+            //实例化一个矢量图层Vector作为绘制层
+            var vector = new ol.layer.Vector
+            var source = new ol.source.Vector({ wrapX: false });
+            //添加绘制层数据源
+            vector.setSource(source);
+            //实例化交互绘制类对象并添加到地图容器中
+            drawTool = new ol.interaction.Draw({
+                //绘制层数据源
+                source: source,
+                //几何图形类型
+                type: 'Polygon',
+            });
+            drawTool.on('drawend', onDrawEnd_addReg);
+            //添加绘制控件
+            map.addInteraction(drawTool);
+        }
+
+        function onDrawEnd_addReg(evt)
+        {
+            var geomObj = new Zondy.Object.Polygon();
+            //把openlayers图形几何结构转化为
+            geomObj.setByOL(evt.feature.values_.geometry);
+            //获取所有顶点坐标
+            for (i = 0; i < geomObj.pointArr.length; i++) {
+                x[i] = geomObj.pointArr[i].x;
+                y[i] = geomObj.pointArr[i].y;
+            }
+            //获得坐标后在地图文档图层添加线
+            addRegByService();
+        }
+        //添加线要素
+        function addRegByService() {
+                //构成区要素的点
+                var pointObj = new Array();
+                for (var j = 0; j < x.length ; j++) {
+                    pointObj[j] = new Zondy.Object.Point2D(x[j], y[j]);
+                }
+
+                //设置区要素的几何信息
+                var gArc = new Zondy.Object.Arc(pointObj);
+                //构成区要素折线
+                var gAnyLine = new Zondy.Object.AnyLine([gArc]);
+                //构成区要素
+                var gRegion = new Zondy.Object.GRegion([gAnyLine]);
+                //构成区要素的几何信息
+                var fGeom = new Zondy.Object.FeatureGeometry({ RegGeom: [gRegion] });
+
+                //设置区要素的图形参数信息
+                var cRegionInfo = new Zondy.Object.CRegionInfo({
+                    //结束填充颜色，在渐变模式下设置才有意义。（请参考MapGIS颜色库中颜色编号）
+                    EndColor: 1,
+                    //填充颜色，在渐变模式下设置才有意义。（请参考MapGIS颜色库中颜色编号）
+                    FillColor: 6,
+                    //填充模式。取值范围：0（常规模式）、1（线性渐变模式）、2（矩形渐变模式）、3（圆形渐变模式）。
+                    FillMode: 0,
+                    //填充图案笔宽
+                    OutPenWidth: 1,
+                    //填充图案角度，取值范围为0~360。
+                    PatAngle: 1,
+                    //填充图案颜色（请参考MapGIS颜色库中颜色编号）
+                    PatColor: 1,
+                    //填充图案高度
+                    PatHeight: 1,
+                    //填充图案ID（请参考MapGIS符号库中线符号编号）
+                    PatID: 27,
+                    //填充图案宽度
+                    PatWidth: 1
+                });
+                //要素图形参数信息
+                var graphicInfo = new Zondy.Object.WebGraphicsInfo({
+                    InfoType: 3,
+                    RegInfo: cRegionInfo
+                });
+                //设置区要素的属性信息
+                var attValue = [0, 12345, 12345, "esstLake", "esstLake", "esstLake"];
+                //创建一个新的区要素
+                var newFeature = new Zondy.Object.Feature({
+                    AttValue: attValue,
+                    fGeom: fGeom,
+                    GraphicInfo: graphicInfo
+                });
+                newFeature.setFType(3);
+                //创建一个要素数据集
+                var featureSet = new Zondy.Object.FeatureSet();
+                var fldNumber = 6;
+                var fldType = ["long", "double", "double", "string", "string", "string"];
+                var fldName = ["ID", "面积", "周长", "CNTRY_NAME", "FIRST_FIRS", "name"];
+                var cAttValue = new Zondy.Object.CAttStruct({
+                    FldNumber: fldNumber,
+                    FldType: fldType,
+                    FldName: fldName
+                });
+                featureSet.AttStruct = cAttValue;
+                featureSet.addFeature(newFeature);
+                //创建一个要素编辑服务对象
+                var editLayerFeature = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/myreglayer", { 
+                    ip: "develop.smaryun.com",
+                    port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089 
+                });
+                editLayerFeature.add(featureSet, onAddRegSuccess);
+        }
+
+        //添加线要素回调函数
+        function onAddRegSuccess(rlt) {
+            if (rlt) {
+                alert("添加区要素成功！");
+                //刷新图层
+                vectorLayer.refresh();
+            } else {
+                alert("添加区要素失败！");
+            }
+        }
+
+        /**
+         * 以下为删除点的相关接口
+         */
+        function DeletePolygon()
+        {
+            document.getElementById("featureInfo").style.visibility = "hidden";
+            RemoveAllEventListener();
+            map.addEventListener('click', deletePolygonCallback);
+        }
+
+        function deletePolygonCallback(e)
+        {
+            //设置查询点为鼠标点击点
+            pointObj = new Zondy.Object.Point2D(e.coordinate[0], e.coordinate[1]);
+            //查询点半径
+            pointObj.nearDis = 2;
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //指定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                //是否将要素的可见性计算在内
+                EnableDisplayCondition: false,
+                //是否完全包含
+                MustInside: false,
+                //是否仅比较要素的外包矩形
+                CompareRectOnly: false,
+                //是否相交
+                Intersect: true
+            });
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/myreglayer", {
+                r: Math.random(),
+                geometry: pointObj,
+                resultFormat: "json",
+                rule: rule,
+                struct: queryStruct
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 20;
+            //实例化矢量图层查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+            
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(queryPolygonSuccess, queryError);
+        }
+
+        //查询失败回调
+        function queryError(e) {
+            alert("查询不到该图层")
+        }
+        //查询成功回调
+        function queryPolygonSuccess(result) {
+            if (result.SFEleArray[0].FID != "") {
+                //删除前进行询问
+                var r = confirm("确定删除选中区？");
+                if (r == true) {
+                    //删除线
+                    deleteRegByService(result.SFEleArray[0].FID);
+                } else {
+                    alert("删除失败")
+                }
+            }
+        }
+
+        //删除线要素
+        function deleteRegByService(featureIds) {
+            var deleteService = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/myreglayer", { 
+                ip: "develop.smaryun.com", 
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089 
+            });
+            deleteService.deletes(featureIds, onDeleteSuccess);
+        }
+
+        //删除线要素回调函数
+        function onDeleteSuccess(rlt) {
+            if (rlt) {
+                alert("删除区要素成功！");
+                //刷新图层
+                vectorLayer.refresh();
+
+            } else {
+                alert("删除区要素失败！");
+            }
+        }
+
+        /**
+         * 以下为更新点的相关接口
+         */
+        function UpdateReg()
+        {
+            document.getElementById("featureInfo").style.visibility = "visible";
+            RemoveAllEventListener();
+            map.addEventListener('click', UpdateRegCallback);
+            
+        }
+
+        function UpdateRegCallback(e)
+        {
+            //设置查询点为鼠标点击点
+            pointObj = new Zondy.Object.Point2D(e.coordinate[0], e.coordinate[1]);
+            //查询点半径
+            pointObj.nearDis = 2;
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = true;
+            //指定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                //是否将要素的可见性计算在内
+                EnableDisplayCondition: false,
+                //是否完全包含
+                MustInside: false,
+                //是否仅比较要素的外包矩形
+                CompareRectOnly: false,
+                //是否相交
+                Intersect: true
+            });
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/myreglayer", {
+                r: Math.random(),
+                geometry: pointObj,
+                resultFormat: "json",
+                rule: rule,
+                struct: queryStruct
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 20;
+            //实例化矢量图层查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: "develop.smaryun.com",
+                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(querySuccess_Update, queryError);
+        }
+
+        var resultReg = null;
+        //查询成功回调
+        function querySuccess_Update(result) {
+            if (result.SFEleArray==null || result.SFEleArray.length<=0)
+            {
+                return;
+            }
+            resultReg = result;
+            //获取选中线要素FID
+            var regFID = result.SFEleArray[0].FID;
+            //显示选中线要素的FID
+            document.getElementById('regFID').value = regFID;
+            document.getElementById('ID').value = result.SFEleArray[0].AttValue[3];
+            document.getElementById('area').value =result.SFEleArray[0].AttValue[4];
+            document.getElementById('perimeter').value =result.SFEleArray[0].AttValue[5];
+            document.getElementById('CNTRY_NAME').value =result.SFEleArray[0].AttValue[6];
+            document.getElementById('FIRST_FIRS').value =result.SFEleArray[0].AttValue[7];
+            document.getElementById('name').value =result.SFEleArray[0].AttValue[8];
+
+            document.getElementById('EndColor').value = result.SFEleArray[0].GraphicInfo.RegInfo.EndColor;
+            document.getElementById('FillColor').value= result.SFEleArray[0].GraphicInfo.RegInfo.FillColor;
+            document.getElementById('FillMode').value= result.SFEleArray[0].GraphicInfo.RegInfo.FillMode;
+            document.getElementById('OutPenWidth').value= result.SFEleArray[0].GraphicInfo.RegInfo.OutPenWidth;
+            document.getElementById('PatAngle').value= result.SFEleArray[0].GraphicInfo.RegInfo.PatAngle;
+            document.getElementById('PatColor').value= result.SFEleArray[0].GraphicInfo.RegInfo.PatColor;
+            document.getElementById('PatHeight').value= result.SFEleArray[0].GraphicInfo.RegInfo.PatHeight;
+            document.getElementById('PatID').value= result.SFEleArray[0].GraphicInfo.RegInfo.PatID;
+            document.getElementById('PatWidth').value= result.SFEleArray[0].GraphicInfo.RegInfo.PatWidth;
+        } 
+
+        //线更新函数
+        function updateLineByService() {
+            //设置区要素的图形参数信息
+            var cRegionInfo = new Zondy.Object.CRegionInfo({
+                //结束填充颜色，在渐变模式下设置才有意义。（请参考MapGIS颜色库中颜色编号）
+                EndColor: document.getElementById('EndColor').value,
+                //填充颜色，在渐变模式下设置才有意义。（请参考MapGIS颜色库中颜色编号）
+                FillColor: document.getElementById('FillColor').value,
+                //填充模式。取值范围：0（常规模式）、1（线性渐变模式）、2（矩形渐变模式）、3（圆形渐变模式）。
+                FillMode: document.getElementById('FillMode').value,
+                //填充图案笔宽
+                OutPenWidth: document.getElementById('OutPenWidth').value,
+                //填充图案角度，取值范围为0~360。
+                PatAngle: document.getElementById('PatAngle').value,
+                //填充图案颜色（请参考MapGIS颜色库中颜色编号）
+                PatColor: document.getElementById('PatColor').value,
+                //填充图案高度
+                PatHeight: document.getElementById('PatHeight').value,
+                //填充图案ID（请参考MapGIS符号库中线符号编号）
+                PatID: document.getElementById('PatID').value,
+                //填充图案宽度
+                PatWidth: document.getElementById('PatWidth').value
+            });
+            //要素图形参数信息
+            var graphicInfo = new Zondy.Object.WebGraphicsInfo({
+                InfoType: 3,
+                RegInfo: cRegionInfo
+            });
+            //设置区要素图形信息
+            resultReg.SFEleArray[0].graphicInfo = graphicInfo;
+            //设置区素属性信息(创建线图层时属性信息数组会自动添加三个个属性信息，设置从第四个开始)
+            resultReg.SFEleArray[0].AttValue[3] = document.getElementById('ID').value;
+            resultReg.SFEleArray[0].AttValue[4] = document.getElementById('area').value;
+            resultReg.SFEleArray[0].AttValue[5] = document.getElementById('perimeter').value;
+            resultReg.SFEleArray[0].AttValue[6] = document.getElementById('CNTRY_NAME').value;
+            resultReg.SFEleArray[0].AttValue[7] = document.getElementById('FIRST_FIRS').value;
+            resultReg.SFEleArray[0].AttValue[8] = document.getElementById('name').value;
+            //创建一个要素编辑服务对象
+            var editLayerFeature = new Zondy.Service.EditLayerFeature("gdbp://MapGisLocal/OpenLayerVecterMap/ds/地图编辑缓存经纬度/sfcls/myreglayer", { 
+                    ip: "develop.smaryun.com", 
+                    port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+                });
+            editLayerFeature.update(resultReg, onRegUpdateSuccess);
+        }
+        //修改区要素回调函数
+        function onRegUpdateSuccess(data) {
+            if (data.succeed) {
+                alert("修改区要素成功！");
+                //刷新图层
+                vectorLayer.refresh();
+            } else {
+                alert("修改区要素失败！");
+            }
+        }
+
+        function clearForm()
+        {
+            document.getElementById('regFID').value = "";
+            document.getElementById('ID').value = "";
+            document.getElementById('area').value ="";
+            document.getElementById('perimeter').value ="";
+            document.getElementById('CNTRY_NAME').value ="";
+            document.getElementById('FIRST_FIRS').value ="";
+            document.getElementById('name').value ="";
+
+
+            document.getElementById('EndColor').value = "";
+            document.getElementById('FillColor').value= "";
+            document.getElementById('FillMode').value= "";
+            document.getElementById('OutPenWidth').value= "";
+            document.getElementById('PatAngle').value= "";
+            document.getElementById('PatColor').value= "";
+            document.getElementById('PatID').value= "";
+            document.getElementById('PatHeight').value= "";
+            document.getElementById('PatWidth').value= "";
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapCon">
+
+    </div>
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+            <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">交互编辑</i><em></em>
+            </div>
+        </div>
+    </div>
+    <div id="menu1" class="menuStrip" style='display:none' >
+        <ul  class="menuItems">
+            <li   onclick="AddPolygon()"><span class="item1"></span><i >添加区</i>
+            </li>
+            <li  onclick="DeletePolygon()"><span class="item1"></span><i >删除区</i>
+            </li>
+            <li  onclick="UpdateReg()"><span class="item1"></span><i >更新区</i>
+            </li> 
+        </ul>
+    </div>
+    <div id="featureInfo" class="easyui-accordion" data-options="multiple:true" style="width:400px; visibility: hidden;">
+        <div title="要素信息" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:8px 10px 4px 10px;">
+            <form action="" style="width: 50%;float: left;">
+                <fieldset>
+                <legend>属性信息:</legend>
+                    <div class="tableTxt">要素ID:</div><input id="regFID"  type="text"  readonly="readonly"  value=""><br>      
+                    <div class="tableTxt">ID:</div><input  id="ID"  type="text"  value=""><br>
+                    <div class="tableTxt">area:</div><input  id="area"  type="text"  value=""><br>
+                    <div class="tableTxt">perimeter:</div><input  id="perimeter"  type="text"  value=""><br>  
+                    <div class="tableTxt">CNTRY_NAME:</div> <input id="CNTRY_NAME"  type="text"  value=""><br>
+                    <div class="tableTxt">FIRST_FIRS:</div> <input id="FIRST_FIRS"  type="text"  value=""><br>
+                    <div class="tableTxt">name:</div> <input id="name"  type="text"  value=""><br> 
+                    <div class="tableTxt" style="opacity: 0;" ></div> <input id=""  type="text"  value="" style="opacity: 0;"><br> 
+                    <div class="tableTxt" style="opacity: 0;" ></div> <input id=""  type="text"  value="" style="opacity: 0;">    
+                </fieldset>
+            </form>
+            <form action="" style="width: 50%;float: left;">
+                <fieldset>
+                <legend>图形信息:</legend>
+                    <div class="tableTxt">结束填充色:</div><input id="EndColor" type="text"   value=""><br>      
+                    <div class="tableTxt">填充色:</div><input id="FillColor" type="text" value=""><br>
+                    <div class="tableTxt">填充模式:</div> <input id="FillMode" type="text"  value=""><br>
+                    <div class="tableTxt">图案笔宽:</div> <input id="OutPenWidth" type="text"  value=""><br>
+                    <div class="tableTxt">图案角度:</div> <input  id="PatAngle" type="text"  value=""><br>
+                    <div class="tableTxt">图案颜色:</div> <input  id="PatColor" type="text"  value=""><br>
+                    <div class="tableTxt">图案ID:</div> <input id="PatID"  type="text"  value=""><br>
+                    <div class="tableTxt">图案高度:</div> <input id="PatHeight"  type="text"  value=""><br>
+                    <div class="tableTxt">图案宽度:</div> <input id="PatWidth"  type="text"  value="">
+                </fieldset>
+            </form>
+            <br>
+            <form action="" style="text-align: center;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateLineByService()">更新</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+            </form>
+        </div>
+    </div>
+ <script>
+    function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain');
+        if (temDivs.length > 0) {
+            for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] === div) {
+                    var status = div.getAttribute("status");
+                    if (status == "unactive") {
+                        div.setAttribute("status", "active");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "active";
+                        tem_ems[0].className = "active";
+
+                        //显示菜单项
+                        DisplayMenuItem(true, menuitemFrameID);
+
+                    }
+                    else {
+                        div.setAttribute("status", "unactive");
+                        var tem_spans = div.getElementsByTagName("span");
+                        var tem_ems = div.getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+
+                        //隐藏菜单项
+                        DisplayMenuItem(false, menuitemFrameID);
+                    }
+                }
+                else {
+                    var status = temDivs[i].getAttribute("status");
+                    if (status == "active") {
+                        temDivs[i].setAttribute("status", "unactive");
+                        var tem_spans = temDivs[i].getElementsByTagName("span");
+                        var tem_ems = temDivs[i].getElementsByTagName("em");
+                        tem_spans[0].className = "";
+                        tem_ems[0].className = "";
+                    }
+                }
+            }
+        }
+    }
+
+    function DisplayMenuItem (isDisplay, iframeID) {
+        var menuItemFrame = document.getElementById(iframeID);
+        if (menuItemFrame != null) {
+            if (isDisplay) {
+                var temDivs = document.getElementsByClassName('menuStrip');
+                if (temDivs.length > 0) {
+                    for (var i = 0; i < temDivs.length; i++) {
+                        if (temDivs[i] != menuItemFrame) {
+                            temDivs[i].style.display = "none";
+                        }
+                    }   
+                }
+                menuItemFrame.style.display = "";
+            }
+            else {
+                menuItemFrame.style.display = "none";
+            }
+        }
+    };
+ </script>
+</body>
+</html>

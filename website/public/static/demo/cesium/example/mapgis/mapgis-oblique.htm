@@ -18,7 +18,7 @@
         var webGlobe;
         //定义M3D图层对象
         var osgbLayer;
-        
+
         //加载三维场景
         function init() {
             //构造三维视图对象（视图容器div的id，三维视图设置参数）
@@ -31,14 +31,29 @@
             //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
             sceneManager.showPosition('coordinate_location');
 
-            //添加Google地图
-            webGlobe.appendGoogleMap('m@207000000');
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
 
-            var { protocol, ip, port } = window.webclient;
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
             osgbLayer = webGlobe.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DYT`, {});
 
             //跳转到数据范围
-            osgbLayer.readyPromise.then(function () {
+            osgbLayer.readyPromise.then(function() {
                 //3D瓦片数据的空间外包球
                 var boundingSphere = osgbLayer.boundingSphere;
                 //重新设置三维视图的的3D空间外包球

@@ -2,106 +2,109 @@
 <html>
 
 <head>
-  <meta charset='utf-8' />
-  <title>Buffer缓冲区分析</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-  <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
-  <!--当前示例页面样式表引用-->
-  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <meta charset='utf-8' />
+    <title>Buffer缓冲区分析</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
 </head>
 
 <body>
-  <div id='GlobeView'></div>
-  <script>
-    var webGlobe, map;
+    <div id='GlobeView'></div>
+    <script>
+        var webGlobe, map;
 
-    var origindata = {
-      "type": "FeatureCollection",
-      "features": [{
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Point",
-            "coordinates": [114.24270629882811,30.622550184776674]
-          }
-        },
-        {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "LineString",
-            "coordinates": [
-              [114.34810638427734,30.634958017061198],
-              [114.2856216430664,30.554869984737515],
-              [114.246826171875,30.4954261715298]
-            ]
-          }
-        },
-        {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [114.33815002441406,30.502230042106245],
-                [114.34398651123045,30.485071542395932],
-                [114.3728256225586,30.472348632640834],
-                [114.38278198242188,30.49010107130931],
-                [114.35256958007811,30.50518809826035],
-                [114.33815002441406,30.502230042106245]
-              ]
-            ]
-          }
+        var origindata = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [114.24270629882811, 30.622550184776674]
+                }
+            }, {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [114.34810638427734, 30.634958017061198],
+                        [114.2856216430664, 30.554869984737515],
+                        [114.246826171875, 30.4954261715298]
+                    ]
+                }
+            }, {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [114.33815002441406, 30.502230042106245],
+                            [114.34398651123045, 30.485071542395932],
+                            [114.3728256225586, 30.472348632640834],
+                            [114.38278198242188, 30.49010107130931],
+                            [114.35256958007811, 30.50518809826035],
+                            [114.33815002441406, 30.502230042106245]
+                        ]
+                    ]
+                }
+            }]
+        };
+        var geojson;
+
+        initMap();
+        loadData();
+
+        function initMap() {
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition('coordinate_location');
+            map = webGlobe.viewer;
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            var center = Cesium.Cartesian3.fromDegrees(114.289398, 30.59418345, 50000.0);
+            map.scene.camera.setView({
+                destination: center
+            });
+
+            var origindatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(origindata, {
+                stroke: Cesium.Color.BLACK,
+                fill: Cesium.Color.GRAY,
+                strokeWidth: 15
+            }));
+            map.flyTo(origindatasource);
         }
-      ]
-    };
-    var geojson;
 
-    initMap();
-    loadData();
-
-    function initMap() {
-      webGlobe = new Cesium.WebSceneControl('GlobeView', {
-        terrainExaggeration: 1,
-      });
-      //显示鼠标位置控件
-      webGlobe.showPosition('coordinate_location');
-      map = webGlobe.viewer;
-
-      //构造第三方图层对象
-      var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
-        viewer: webGlobe.viewer
-      });
-      //添加Google地图
-      thirdPartyLayer.appendOsmMap();
-
-      var center = Cesium.Cartesian3.fromDegrees(114.289398, 30.59418345, 50000.0);
-      map.scene.camera.setView({
-        destination: center
-      });
-
-      var origindatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(origindata, {
-        stroke: Cesium.Color.BLACK,
-        fill: Cesium.Color.GRAY,
-        strokeWidth: 15
-      }));
-      map.flyTo(origindatasource);
-    }
-
-    function loadData() {
-      geojson = turf.buffer(origindata, 1.5, {
-        units: 'miles'
-      });
-      map.dataSources.add(Cesium.GeoJsonDataSource.load(geojson, {
-        stroke: Cesium.Color.BLACK,
-        fill: Cesium.Color.GRAY,
-        strokeWidth: 15
-      }));
-    }
-
-  </script>
+        function loadData() {
+            geojson = turf.buffer(origindata, 1.5, {
+                units: 'miles'
+            });
+            map.dataSources.add(Cesium.GeoJsonDataSource.load(geojson, {
+                stroke: Cesium.Color.BLACK,
+                fill: Cesium.Color.GRAY,
+                strokeWidth: 15
+            }));
+        }
+    </script>
 
 </body>
 

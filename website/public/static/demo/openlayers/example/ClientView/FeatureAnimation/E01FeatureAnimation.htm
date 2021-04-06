@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script type="text/javascript">
+      var map = null
+      function init() {
+        //初始化地图容器
+        map = new ol.Map({
+          target: 'mapCon', //地图容器div的ID
+          controls: ol.control.defaults({
+            attributionOptions: {
+              collapsible: true,
+            },
+          }),
+          view: new ol.View({
+            center: [0, 0], //地图初始中心点
+            maxZoom: 28, //最大瓦片显示级数
+            minZoom: 1, //最小瓦片显示级数
+            zoom: 2, //地图初始显示级数
+            projection: 'EPSG:4326',
+          }),
+        })
+        var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+        //加载天地图瓦片图层数据
+        map.addLayer(
+          new ol.layer.Tile({
+            title: '天地图影像图层',
+            source: new ol.source.XYZ({
+              url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+              wrapX: false,
+            }),
+            projection: 'EPSG:4326',
+          })
+        )
+        map.addLayer(
+          new ol.layer.Tile({
+            title: '天地图矢量注记图层',
+            source: new ol.source.XYZ({
+              url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
+              wrapX: false,
+            }),
+            projection: 'EPSG:4326',
+          })
+        )
+        var source = new ol.source.Vector({
+          wrapX: false,
+        })
+        var vector = new ol.layer.Vector({
+          source: source,
+        })
+        map.addLayer(vector)
+
+        var count = 0
+        function addRandomFeature() {
+          if (count >= 500) {
+            window.clearInterval(intervalID)
+          } else {
+            count++
+          }
+
+          var x = Math.random() * 360 - 180
+          var y = Math.random() * 160 - 80
+          var geom = new ol.geom.Point([x, y])
+          var feature = new ol.Feature(geom)
+          source.addFeature(feature)
+        }
+
+        var duration = 3000
+        function flash(feature) {
+          var start = new Date().getTime()
+          var listenerKey = map.on('postcompose', animate)
+
+          function animate(event) {
+            var vectorContext = event.vectorContext
+            var frameState = event.frameState
+            var flashGeom = feature.getGeometry().clone()
+            var elapsed = frameState.time - start
+            var elapsedRatio = elapsed / duration
+            // radius will be 5 at start and 30 at end.
+            var radius = ol.easing.easeOut(elapsedRatio) * 25 + 5
+            var opacity = ol.easing.easeOut(1 - elapsedRatio)
+
+            var style = new ol.style.Style({
+              image: new ol.style.Circle({
+                radius: radius,
+                stroke: new ol.style.Stroke({
+                  color: 'rgba(255, 0, 0, ' + opacity + ')',
+                  width: 0.25 + opacity,
+                }),
+              }),
+            })
+
+            vectorContext.setStyle(style)
+            vectorContext.drawGeometry(flashGeom)
+            if (elapsed > duration) {
+              ol.Observable.unByKey(listenerKey)
+              return
+            }
+            // tell OpenLayers to continue postcompose animation
+            map.render()
+          }
+        }
+
+        source.on('addfeature', function(e) {
+          flash(e.feature)
+        })
+
+        var intervalID = window.setInterval(addRandomFeature, 1000)
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapCon"></div>
+  </body>
+</html>

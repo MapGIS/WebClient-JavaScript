@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>Measure distances</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="turf" src="./static/libs/include-openlayers-local.js"></script>
+  <style>
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var map = new ol.Map({
+      //地图容器div的ID
+      target: 'map',
+      //地图容器中加载的图层
+      layers: [],
+      //地图视图设置
+      view: new ol.View({
+        //地图初始中心点
+        center: ol.proj.fromLonLat([114.289398, 30.59418345]),
+        //地图初始显示级别
+        zoom: 11,
+        //最小级别
+        minZoom: 1,
+        //最大级别
+        maxZoom: 20
+      })
+    });
+
+    map.addLayer(new ol.layer.Tile({
+             source: new ol.source.TileImage({
+                url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoid2FuZ2hhaGExIiwiYSI6ImNqeHUycXF5ZDEweDQzYnBiOTcwZGoxMHAifQ.eCGuiA6erHJ7ew-Fkc7dRA'  
+            })
+    }));
+
+
+    var origindata = {
+      "type": "FeatureCollection",
+      'crs': {
+        'type': 'name',
+        'properties': {
+          'name': 'EPSG:4326'
+        }
+      },
+      "features": [{
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Point",
+            "coordinates": [114.24270629882811, 30.622550184776674]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [114.34810638427734, 30.634958017061198],
+              [114.2856216430664, 30.554869984737515],
+              [114.246826171875, 30.4954261715298]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [114.33815002441406, 30.502230042106245],
+                [114.34398651123045, 30.485071542395932],
+                [114.3728256225586, 30.472348632640834],
+                [114.38278198242188, 30.49010107130931],
+                [114.35256958007811, 30.50518809826035],
+                [114.33815002441406, 30.502230042106245]
+              ]
+            ]
+          }
+        }
+      ]
+    };
+    var geojson;
+
+
+    loadData();
+
+    function loadData() {
+
+      let styles = {
+        'Point': new ol.style.Style({
+          color: 'green',
+          width: 1
+        }),
+        'LineString': new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'green',
+            width: 1
+          })
+        }),
+        'MultiLineString': new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'green',
+            width: 1
+          })
+        }),
+        'MultiPoint': new ol.style.Style({
+          color: 'green',
+          width: 1
+        }),
+        'MultiPolygon': new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'yellow',
+            width: 1
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 0, 0.1)'
+          })
+        }),
+        'Polygon': new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'blue',
+            lineDash: [4],
+            width: 3
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(0, 0, 255, 0.1)'
+          })
+        }),
+        'GeometryCollection': new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'magenta',
+            width: 2
+          }),
+          fill: new ol.style.Fill({
+            color: 'magenta'
+          }),
+          image: new ol.style.Circle({
+            radius: 10,
+            fill: null,
+            stroke: new ol.style.Stroke({
+              color: 'magenta'
+            })
+          })
+        }),
+        'Circle': new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'red',
+            width: 2
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255,0,0,0.2)'
+          })
+        })
+      };
+
+      var styleFunction = function (feature) {
+        return styles[feature.getGeometry().getType()];
+      };
+
+      var source = new ol.source.Vector();
+      var format = new ol.format.GeoJSON();
+
+      geojson = turf.buffer(origindata, 1.5, {
+        units: 'miles'
+      });
+
+      let features = geojson.features;
+      for (var i = 0; i < features.length; i++) {
+        let oljson = new ol.format.GeoJSON();
+        let feature = oljson.readFeature(features[i]);
+        feature.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+        source.addFeature(feature);
+      }
+
+      map.addLayer(new ol.layer.Vector({
+        source: source,
+        style: styleFunction
+      }))
+    }
+  </script>
+
+</body>
+
+</html>

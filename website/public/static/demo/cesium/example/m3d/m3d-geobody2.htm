@@ -38,9 +38,8 @@
                 0.001
             );
             m3dlayer = webGlobe.append(
-                "http://develop.smaryun.com:6163/igs/rest/g3d/geobody2",
-                {
-                    loaded: function (layer) {
+                "http://develop.smaryun.com:6163/igs/rest/g3d/geobody2", {
+                    loaded: function(layer) {
                         var boundingSphere = layer.boundingSphere;
 
                         var cartographic = Cesium.Cartographic.fromCartesian(
@@ -53,8 +52,7 @@
                         );
                         var offset = Cesium.Cartesian3.fromRadians(
                             cartographic.longitude,
-                            cartographic.latitude,
-                            -12
+                            cartographic.latitude, -12
                         );
                         var translation = Cesium.Cartesian3.subtract(
                             offset,
@@ -67,13 +65,18 @@
                     },
                 }
             );
-            tdLayer = webGlobe.appendTDTuMap({
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
                 //天地图经纬度数据
-                url: "http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}",
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                 //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
-                token: "f5347cab4b28410a6e8ba5143e3d5a35",
+                token: "9c157e9585486c02edf817d2ecbc7752",
                 //地图类型 'vec'矢量 'img'影像 'ter'地形
-                type: "img",
+                ptype: "img"
             });
             tdLayer.alpha = 0.05;
         }
