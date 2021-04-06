@@ -21,6 +21,7 @@ import axios from 'axios';
  * @param {Cesium.TilingScheme} [option.tilingScheme] 矢量瓦片瓦片切分规则：经纬度还是墨卡托
  * @param {String} [option.token] 第三方需要的token，比如mapbox
  * @param {String} [option.show=true] 是否可见
+  * @param {String} [option.callback] 加载矢量瓦片成功回调，返回Provider
  * @example 
  * vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
         webGlobe.viewer,
@@ -42,6 +43,7 @@ export class VectorTileLayer {
         }
 
         this.options = options;
+        this.callback = options.callback;
         this.token = options.token || '';
         this.opacity = options.opacity || 1;
         this.vectortilejson = options.vectortilejson;
@@ -52,11 +54,9 @@ export class VectorTileLayer {
         this.tilingScheme = options.tilingScheme;
         this.provider = null;
 
-        console.log(options, this);
-
         this.initDevicePixelRatio();
         //this.bindEvent();
-        
+
         if (this.style) {
             if (this.style.indexOf('http') >= 0) {
                 //如果是个网络地址，就通过url请求获取矢量瓦片json对象
@@ -165,6 +165,10 @@ export class VectorTileLayer {
             });
             this.provider = this.viewer.imageryLayers.addImageryProvider(vectortile);
             this.provider.show = this.show;
+
+            if (this.callback) {
+                this.callback({ imageryLayer: this.provider });
+            }
         }
     }
 
@@ -199,15 +203,15 @@ export class VectorTileLayer {
         return this.styleData.vectortilejson.layers;
     }
 
-    unbindEvent() {}
+    unbindEvent() { }
 
-    moveStartEvent() {}
+    moveStartEvent() { }
 
-    moveEndEvent() {}
+    moveEndEvent() { }
 
-    zoomStartEvent() {}
+    zoomStartEvent() { }
 
-    zoomEndEvent() {}
+    zoomEndEvent() { }
 
     /**
      * 销毁图层-实际调用remove，为了接口保持一致
