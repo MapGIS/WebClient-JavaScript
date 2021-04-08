@@ -330,7 +330,6 @@ Zondy.Source.MapDocSource = MapDocSource;
  * @param {Zondy.Object.CGetImageBySRSID} [opt_options.proj = ''] 可选项，动态投影参数,设置地图文档在服务器端重新投影所需的空间参考系对象。
  * @param {String} [opt_options.guid = ''] 可选项，地图文档缓存的唯一标识，一般无需赋值。
  * @example
- <script type="text/javascript">
     //定义地图文档图层和地图
     var mapDocLayer, map;
     // 初始化地图显示
@@ -353,7 +352,6 @@ Zondy.Source.MapDocSource = MapDocSource;
         //将地图文档图层加载到地图中
         map.addLayer(mapDocLayer);
     }
-    </script>
  */
 var Doc = function (opt_name, opt_docName, opt_options) {
     this.options = opt_options ? opt_options : {};

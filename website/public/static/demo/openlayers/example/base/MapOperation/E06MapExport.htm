@@ -1,56 +1,61 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title></title>
-        <!--当前示例页面样式表引用-->
-        <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
-        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-        <script src="./static/libs/include-openlayers-local.js"></script>
-        <script src="./static/libs/cdn/filesaver/dist/FileSaver.min.js"></script>
-        <script src="./static/libs/cdn/filesaver/dist/jspdf.min.js"></script>
-        <style type="text/css">
-            #mapCon {
-                width: 100%;
-                height: 95%;
-                position: absolute;
-            }
-            .ol-mouse-position {
-                top: 95%;
-                right: 8px;
-                position: absolute;
-            }
-            label {
-                color: white;
-                font-size: 6px;
-                font-weight: 500;
-                font-family: cursive;
-                line-height: 10px;
-                margin: 5px 5px;
-            }
-            select {
-                height: 16px;
-                font-size: 8px;
-                width: 60px;
-            }
-        </style>
 
-        <script type="text/javascript">
-            var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
-            var mousePositionControl = null
-            var map = null
-            function init() {
-                //加载天地图瓦片图层数据
-                var TiandiMap_vect = new ol.layer.Tile({
-                    title: '天地图矢量图层',
-                    source: new ol.source.XYZ({
-                        url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
-                        wrapX: false,
-                        crossOrigin: 'Anonymous',
-                    }),
-                })
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-openlayers-local.js"></script>
+    <script src="./static/libs/cdn/filesaver/dist/FileSaver.min.js"></script>
+    <script src="./static/libs/cdn/filesaver/dist/jspdf.min.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        
+        .ol-mouse-position {
+            top: 95%;
+            right: 8px;
+            position: absolute;
+        }
+        
+        label {
+            color: white;
+            font-size: 6px;
+            font-weight: 500;
+            font-family: cursive;
+            line-height: 10px;
+            margin: 5px 5px;
+        }
+        
+        select {
+            height: 16px;
+            font-size: 8px;
+            width: 60px;
+        }
+    </style>
 
-                var TiandiMap_vectcia = new ol.layer.Tile({
+    <script type="text/javascript">
+        var tdk = '4c27d6e0e8a90715b23a989d42272fd8' //天地图密钥
+        var mousePositionControl = null
+        var map = null
+
+        function init() {
+            //加载天地图瓦片图层数据
+            var TiandiMap_vect = new ol.layer.Tile({
+                title: '天地图矢量图层',
+                source: new ol.source.XYZ({
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                    wrapX: false,
+                    crossOrigin: 'Anonymous',
+                }),
+            })
+
+            var TiandiMap_vectcia = new ol.layer.Tile({
                     title: '天地图矢量注记图层',
                     source: new ol.source.XYZ({
                         url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
@@ -58,77 +63,78 @@
                     }),
                 })
                 //初始化地图容器
-                map = new ol.Map({
-                    target: 'mapCon', //地图容器div的ID
-                    controls: ol.control.defaults({
-                        attributionOptions: {
-                            collapsible: true,
-                        },
-                    }),
-                    view: new ol.View({
-                        center: [12000000, 4000000], //地图初始中心点
-                        maxZoom: 28, //最大瓦片显示级数
-                        minZoom: 1, //最小瓦片显示级数
-                        zoom: 6, //地图初始显示级数
-                    }),
-                    layers: [TiandiMap_vect, TiandiMap_vectcia],
-                })
+            map = new ol.Map({
+                target: 'mapCon', //地图容器div的ID
+                controls: ol.control.defaults({
+                    attributionOptions: {
+                        collapsible: true,
+                    },
+                }),
+                view: new ol.View({
+                    center: [12000000, 4000000], //地图初始中心点
+                    maxZoom: 28, //最大瓦片显示级数
+                    minZoom: 1, //最小瓦片显示级数
+                    zoom: 6, //地图初始显示级数
+                }),
+                layers: [TiandiMap_vect, TiandiMap_vectcia],
+            })
 
-                mousePositionControl = new ol.control.MousePosition({
-                    coordinateFormat: ol.coordinate.createStringXY(4),
-                    // projection: 'EPSG:3857'
+            mousePositionControl = new ol.control.MousePosition({
+                coordinateFormat: ol.coordinate.createStringXY(4),
+                // projection: 'EPSG:3857'
+            })
+            map.addControl(mousePositionControl)
+        }
+
+        function MapExportPng() {
+            map.once('postcompose', function(event) {
+                var canvas = event.context.canvas
+
+                canvas.toBlob(function(blob) {
+                    saveAs(blob, 'map.png')
                 })
-                map.addControl(mousePositionControl)
+            })
+            map.renderSync()
+        }
+
+        function MapExportPdf() {
+            var dims = {
+                a0: [1189, 841],
+                a1: [841, 594],
+                a2: [594, 420],
+                a3: [420, 297],
+                a4: [297, 210],
+                a5: [210, 148],
             }
+            var format = document.getElementById('format').value
+            var resolution = document.getElementById('resolution').value
+            var dim = dims[format]
+            var width = Math.round((dim[0] * resolution) / 25.4)
+            var height = Math.round((dim[1] * resolution) / 25.4)
+            var size = /** @type {ol.Size} */ (map.getSize())
+            var extent = map.getView().calculateExtent(size)
 
-            function MapExportPng() {
-                map.once('postcompose', function(event) {
-                    var canvas = event.context.canvas
+            map.once('postcompose', function(event) {
+                var canvas = event.context.canvas
+                var data = canvas.toDataURL('image/jpeg')
+                var pdf = new jsPDF('landscape', undefined, format)
+                pdf.addImage(data, 'JPEG', 0, 0, dim[0], dim[1])
+                pdf.save('map.pdf')
+            })
 
-                    canvas.toBlob(function(blob) {
-                        saveAs(blob, 'map.png')
-                    })
-                })
-                map.renderSync()
-            }
-            function MapExportPdf() {
-                var dims = {
-                    a0: [1189, 841],
-                    a1: [841, 594],
-                    a2: [594, 420],
-                    a3: [420, 297],
-                    a4: [297, 210],
-                    a5: [210, 148],
-                }
-                var format = document.getElementById('format').value
-                var resolution = document.getElementById('resolution').value
-                var dim = dims[format]
-                var width = Math.round((dim[0] * resolution) / 25.4)
-                var height = Math.round((dim[1] * resolution) / 25.4)
-                var size = /** @type {ol.Size} */ (map.getSize())
-                var extent = map.getView().calculateExtent(size)
+            map.setSize([width, height])
+            map.getView().fit(extent, map.getSize())
+            map.renderSync()
+        }
+    </script>
+</head>
 
-                map.once('postcompose', function(event) {
-                    var canvas = event.context.canvas
-                    var data = canvas.toDataURL('image/jpeg')
-                    var pdf = new jsPDF('landscape', undefined, format)
-                    pdf.addImage(data, 'JPEG', 0, 0, dim[0], dim[1])
-                    pdf.save('map.pdf')
-                })
+<body onload="init()">
+    <div id="mapCon"></div>
 
-                map.setSize([width, height])
-                map.getView().fit(extent, map.getSize())
-                map.renderSync()
-            }
-        </script>
-    </head>
-
-    <body onload="init()">
-        <div id="mapCon"></div>
-
-        <fieldset style="position: absolute;width: 140px;height: 45px;top: 18px;left: 50px;background-color: black;opacity: 0.5;border-radius: 10px;padding: 10px 6px;">
-            <label>图片大小:</label>
-            <select id="format">
+    <fieldset style="position: absolute;width: 140px;height: 45px;top: 18px;left: 50px;background-color: black;opacity: 0.5;border-radius: 10px;padding: 10px 6px;">
+        <label>图片大小:</label>
+        <select id="format">
                 <option value="a0">A0</option>
                 <option value="a1">A1</option>
                 <option value="a2">A2</option>
@@ -136,84 +142,85 @@
                 <option value="a4" selected>A4</option>
                 <option value="a5">A5</option>
             </select>
-            <br />
-            <label style="letter-spacing: 4px;margin-right: 0px;">分辨率:</label>
-            <select id="resolution">
+        <br />
+        <label style="letter-spacing: 4px;margin-right: 0px;">分辨率:</label>
+        <select id="resolution">
                 <option value="72">72 dpi</option>
                 <option value="150">150 dpi</option>
                 <option value="300">300 dpi</option>
             </select>
-        </fieldset>
+    </fieldset>
 
-        <div id="menuContain" class="menuContain">
-            <div id="tool-container">
-                <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">地图输出</i><em></em></div>
-            </div>
+    <div id="menuContain" class="menuContain">
+        <div id="tool-container">
+            <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">地图输出</i><em></em></div>
         </div>
-        <div id="menu1" class="menuStrip" style="display:none">
-            <ul class="menuItems">
-                <li onclick="MapExportPng()"><span class="item1"></span><i>图片</i></li>
-                <li onclick="MapExportPdf()"><span class="item1"></span><i>PDF</i></li>
-            </ul>
-        </div>
-        <script>
-            function switchMenuStatus(div, menuitemFrameID) {
-                var temDivs = document.getElementsByClassName('optmain')
-                if (temDivs.length > 0) {
-                    for (var i = 0; i < temDivs.length; i++) {
-                        if (temDivs[i] === div) {
-                            var status = div.getAttribute('status')
-                            if (status == 'unactive') {
-                                div.setAttribute('status', 'active')
-                                var tem_spans = div.getElementsByTagName('span')
-                                var tem_ems = div.getElementsByTagName('em')
-                                tem_spans[0].className = 'active'
-                                tem_ems[0].className = 'active'
+    </div>
+    <div id="menu1" class="menuStrip" style="display:none">
+        <ul class="menuItems">
+            <li onclick="MapExportPng()"><span class="item1"></span><i>图片</i></li>
+            <li onclick="MapExportPdf()"><span class="item1"></span><i>PDF</i></li>
+        </ul>
+    </div>
+    <script>
+        function switchMenuStatus(div, menuitemFrameID) {
+            var temDivs = document.getElementsByClassName('optmain')
+            if (temDivs.length > 0) {
+                for (var i = 0; i < temDivs.length; i++) {
+                    if (temDivs[i] === div) {
+                        var status = div.getAttribute('status')
+                        if (status == 'unactive') {
+                            div.setAttribute('status', 'active')
+                            var tem_spans = div.getElementsByTagName('span')
+                            var tem_ems = div.getElementsByTagName('em')
+                            tem_spans[0].className = 'active'
+                            tem_ems[0].className = 'active'
 
-                                //显示菜单项
-                                DisplayMenuItem(true, menuitemFrameID)
-                            } else {
-                                div.setAttribute('status', 'unactive')
-                                var tem_spans = div.getElementsByTagName('span')
-                                var tem_ems = div.getElementsByTagName('em')
-                                tem_spans[0].className = ''
-                                tem_ems[0].className = ''
-
-                                //隐藏菜单项
-                                DisplayMenuItem(false, menuitemFrameID)
-                            }
+                            //显示菜单项
+                            DisplayMenuItem(true, menuitemFrameID)
                         } else {
-                            var status = temDivs[i].getAttribute('status')
-                            if (status == 'active') {
-                                temDivs[i].setAttribute('status', 'unactive')
-                                var tem_spans = temDivs[i].getElementsByTagName('span')
-                                var tem_ems = temDivs[i].getElementsByTagName('em')
-                                tem_spans[0].className = ''
-                                tem_ems[0].className = ''
-                            }
-                        }
-                    }
-                }
-            }
+                            div.setAttribute('status', 'unactive')
+                            var tem_spans = div.getElementsByTagName('span')
+                            var tem_ems = div.getElementsByTagName('em')
+                            tem_spans[0].className = ''
+                            tem_ems[0].className = ''
 
-            function DisplayMenuItem(isDisplay, iframeID) {
-                var menuItemFrame = document.getElementById(iframeID)
-                if (menuItemFrame != null) {
-                    if (isDisplay) {
-                        var temDivs = document.getElementsByClassName('menuStrip')
-                        if (temDivs.length > 0) {
-                            for (var i = 0; i < temDivs.length; i++) {
-                                if (temDivs[i] != menuItemFrame) {
-                                    temDivs[i].style.display = 'none'
-                                }
-                            }
+                            //隐藏菜单项
+                            DisplayMenuItem(false, menuitemFrameID)
                         }
-                        menuItemFrame.style.display = ''
                     } else {
-                        menuItemFrame.style.display = 'none'
+                        var status = temDivs[i].getAttribute('status')
+                        if (status == 'active') {
+                            temDivs[i].setAttribute('status', 'unactive')
+                            var tem_spans = temDivs[i].getElementsByTagName('span')
+                            var tem_ems = temDivs[i].getElementsByTagName('em')
+                            tem_spans[0].className = ''
+                            tem_ems[0].className = ''
+                        }
                     }
                 }
             }
-        </script>
-    </body>
+        }
+
+        function DisplayMenuItem(isDisplay, iframeID) {
+            var menuItemFrame = document.getElementById(iframeID)
+            if (menuItemFrame != null) {
+                if (isDisplay) {
+                    var temDivs = document.getElementsByClassName('menuStrip')
+                    if (temDivs.length > 0) {
+                        for (var i = 0; i < temDivs.length; i++) {
+                            if (temDivs[i] != menuItemFrame) {
+                                temDivs[i].style.display = 'none'
+                            }
+                        }
+                    }
+                    menuItemFrame.style.display = ''
+                } else {
+                    menuItemFrame.style.display = 'none'
+                }
+            }
+        }
+    </script>
+</body>
+
 </html>

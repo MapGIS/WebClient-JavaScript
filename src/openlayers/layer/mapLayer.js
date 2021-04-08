@@ -298,7 +298,6 @@ Zondy.Source.MapLayerTileSource = MapLayerTileSource;
  * @param {Number[]} [opt_options.extent = ''] 可选项，图层数据范围
  * @param {String} [opt_options.guid = ''] 可选项，矢量图层缓存的唯一标识，一般情况下无需赋值。
  * @example
- <script type="text/javascript">
     //定义地图文档图层和地图
     var VecLayer, map;
     //初始化地图显示
@@ -334,7 +333,6 @@ Zondy.Source.MapLayerTileSource = MapLayerTileSource;
             })
         });
     }
- </script>
  */
 var GdbpLayer = function (opt_name, opt_gdbps, opt_options) {
     var options = opt_options ? opt_options : {};
