@@ -344,7 +344,6 @@ Zondy.Source.MapDocTileSource = MapDocTileSource;
  * @param {Number[]} [opt_options.extent = ''] 可选项，地图文档数据范围
  * @param {String} [opt_options.guid = ''] 可选项，地图文档缓存的唯一标识，一般无需赋值。
  * @example
-    <script type="text/javascript">
     //定义地图文档图层和地图
     var mapDocLayer, map;
     // 初始化地图显示
@@ -372,7 +371,6 @@ Zondy.Source.MapDocTileSource = MapDocTileSource;
         //将地图文档图层加载到地图中
         map.addLayer(mapDocLayer);
     }
-    </script>
  */
 
 var MapDocTileLayer = function(opt_name, opt_docName, opt_options)
