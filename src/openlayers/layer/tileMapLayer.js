@@ -230,7 +230,6 @@ Zondy.Source.TileLayerSource = TileLayerSource;
  * @param {String} [opt_options.tileOriginType = 'leftTop'] 可选项，瓦片裁剪方式，是左上还是左下的方式，即是新瓦片裁剪的方式还是旧瓦片。一般无需设置此参数，直接由原点和中心点进行判断，只有在某些特殊的裁剪的瓦片中需要用到。例如若裁剪瓦片时以左下角为原点，方式却是新瓦片的方式则需要设置此参数为leftTop。
  * @param {Number} [opt_options.tileSize = '256'] 可选项，地图图片大小
  * @example
-    <script type="text/javascript">
         function init() {
             //瓦片投影，包含单位，坐标范围
             var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449];
@@ -269,7 +268,6 @@ Zondy.Source.TileLayerSource = TileLayerSource;
             //将地图文档图层加载到地图中
             map.addLayer(tileLayer);
         }
-    </script>
  */
 
 
