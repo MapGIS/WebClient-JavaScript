@@ -139,9 +139,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     width: fit-content;
-    // width: 100%;
-    max-width: 800px;
-    max-height: 400px;
+    max-width: 100vw;
+    max-height: 60vh;
     overflow: auto;
     .menu-badge {
         /*  padding-top: -30px !important;
