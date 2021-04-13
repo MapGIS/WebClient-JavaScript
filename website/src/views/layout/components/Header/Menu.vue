@@ -137,7 +137,12 @@ export default {
 <style lang="scss">
 .header-menu-wrapper {
     display: flex;
+    flex-wrap: wrap;
     width: fit-content;
+    // width: 100%;
+    max-width: 800px;
+    max-height: 400px;
+    overflow: auto;
     .menu-badge {
         /*  padding-top: -30px !important;
     padding-right: -30px !important;
