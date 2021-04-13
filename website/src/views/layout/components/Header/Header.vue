@@ -14,8 +14,15 @@
         </span>
       </div>
     </router-link>
-    <div class="mapgis-webclient-menu">
-      <el-popover
+    <IconFont
+        :style="style"
+        type="iconicon_commonly_barmenu"
+        class="mapgis-webclient-menu-icon"
+        @click="isShowMenu = !isShowMenu"
+    />
+    <div :class="['mapgis-webclient-menu',{'is-show':isShowMenu}]">
+        <div class="mapgis-webclient-nav">
+        <el-popover
         v-for="(h,i) in mobile ? mobileHeaders : headers"
         :key="i"
         placement="top-start"
@@ -54,6 +61,7 @@
           >{{h.title}}</el-button>
         </el-popover>
       </div>
+        </div>
     </div>
   </div>
 </template>
@@ -82,6 +90,12 @@ export default {
       subheaders: [],
       mobileHeaders: [],
       mobileSubheaders: [],
+      isShowMenu: false,
+      style: {
+          fontSize: '24px',
+          color: '#FFFFFF',
+          lineHeight: '72px'
+      }
     };
   },
   created () {
@@ -205,26 +219,57 @@ export default {
         }
     }
 
-    .mapgis-webclient-menu {
-        width: fit-content;
-        margin-right: 92px;
-        height: 72px;
-        align-items: center;
+    .mapgis-webclient-menu-icon {
         float: right;
+        height: 72px;
+        margin-right: 48px;
+        cursor: pointer;
+        display: none;
+
+        @media screen and (max-width: 1220px) {
+            display: block;
+        }
+    }
+
+    .mapgis-webclient-menu {
+        z-index: 200;
+        position: relative;
         display: flex;
+        align-items: center;
+
+        .mapgis-webclient-nav {
+            margin-left: auto;
+            margin-right: 92px;
+        }
+
+        @media screen and (max-width: 1220px) {
+            width: 100%;
+            flex-wrap: wrap;
+            background-color: rgba(37, 45, 69, .5);
+            display: none;
+
+            &.is-show {
+            display: flex;
+            }
+        }
 
         span {
             width: fit-content;
-            // height: 16px;
-            margin: 0px 6px;
-            padding: 0px 2px;
-            // margin-left: 12.5px;
+            height: 72px;
+            // margin: 0px 6px;
+            padding: 0px 4px;
+            // margin-let: 12.5px;
             font-size: 16px;
             font-family: Microsoft YaHei;
             font-weight: 500;
-            text-align: right;
+            text-align: center;
             color: rgba(255, 255, 255, 1);
-            line-height: 20px;
+            line-height: 72px;
+            
+            .el-button {
+                padding: 0;
+                border-width: 0;
+            }
         }
 
         span:hover {
