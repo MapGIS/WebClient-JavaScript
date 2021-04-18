@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>标记动画图</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="cluster" src="./static/libs/include-leaflet-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map', {
+            crs: L.CRS.EPSG4326, 
+        }).setView([34.25, 108.95], 10);
+        var layer1 = new Zondy.Map.TDTLayer({
+            layerType: 'vec',
+            minZoom: 0,
+            maxZoom: 15,
+            token: "4c27d6e0e8a90715b23a989d42272fd8",
+            noWrap: true
+        });
+        var layer2 = new Zondy.Map.TDTLayer({
+            layerType: 'cva',
+            minZoom: 0,
+            maxZoom: 15,
+            token: "4c27d6e0e8a90715b23a989d42272fd8",
+            noWrap: true
+        });
+        var LayerG = L.layerGroup([layer1, layer2]);
+        LayerG.addTo(map);
+
+        var bikeIcon = L.icon({
+            iconUrl: './static/data/picture/marker/bike.png',
+            iconSize: [25, 39],
+            iconAnchor: [12, 39],
+            shadowUrl: null
+        });
+        var routeLines = [], markers = [];
+        var lineGeoJson, pointGeoJson;
+        var point_list = {};
+
+        $.get('../../static/data/geojson/animate-marker.json', function (res) {
+            console.log('data', window.L.zondy);
+            for (var i = 0; i < res.features.length; i++) {
+                var point_iter = res.features[i].geometry.coordinates;
+                var lines = [];
+                for (var j = 0; j < point_iter.length; j++) {
+                    lines.push(
+                        [point_iter[j][0], point_iter[j][1]]
+                    );
+                }
+                var line = L.polyline(lines);
+                routeLines.push(line);
+            }
+
+            routeLines.forEach((routeLine, i) => {
+                var marker = L.zondy.AnimatedMarkerLayer(routeLine.getLatLngs(), {
+                    icon: bikeIcon,
+                    autoStart: true,
+                    distance: 1000, // meters,表示每帧移动的距离,越大则一秒移动的距离越远,速度越快
+                    interval: 1000, // milliseconds,每帧之间移动的时间间隔,与distance相互配合
+                    onEnd: function () {
+                        // TODO:
+                        this.remove();//消除该图标marker
+                    }
+                });
+                marker.on('click', function (e) {
+                });
+                marker.on('popupopen', function (e) {
+                });
+                marker.on('popupclose', function (e) {
+                });
+
+                var popup = L.popup().setContent('<p>Hello world!<br />This is a nice popup.</p>')
+
+                marker.bindPopup(popup);
+                map.addLayer(marker);
+                markers.push(marker);
+            });
+
+            markers.forEach(marker => {
+                marker.start();
+            });
+
+        });
+    </script>
+
+
+</body>
+
+</html>

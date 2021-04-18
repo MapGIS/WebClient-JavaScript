@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>标记动画图</title>
+    <script include="jquery,omnivore" src="./static/libs/include-lib-local.js"></script>
+    <script include="timedimension" src="./static/libs/include-leaflet-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var startDate = new Date();
+        startDate.setUTCHours(0, 0, 0, 0);
+
+        var map = L.map('map', {
+            zoom: 12,
+            fullscreenControl: true,
+            center: [39.3, 4]
+        });
+
+        // start of TimeDimension manual instantiation
+        var timeDimension = new L.zondy.TimeDimension({
+            period: "PT5M",
+        });
+        // helper to share the timeDimension object between all layers
+        map.timeDimension = timeDimension;
+        // otherwise you have to set the 'timeDimension' option on all layers.
+
+        var player = new L.zondy.TimeDimensionPlayer({
+            transitionTime: 100,
+            loop: false,
+            startOver: true
+        }, timeDimension);
+
+        var timeDimensionControlOptions = {
+            player: player,
+            timeDimension: timeDimension,
+            position: 'bottomleft',
+            autoPlay: true,
+            minSpeed: 1,
+            speedStep: 0.5,
+            maxSpeed: 15,
+            timeSliderDragUpdate: true
+        };
+
+        var timeDimensionControl = new L.zondy.TimeDimensionControl(timeDimensionControlOptions);
+        map.addControl(timeDimensionControl);
+
+        var icon = L.icon({
+            iconUrl: './static/data/picture/marker/running.png',
+            iconSize: [22, 22],
+            iconAnchor: [5, 25]
+        });
+
+        var customLayer = L.geoJson(null, {
+            pointToLayer: function (feature, latLng) {
+                if (feature.properties.hasOwnProperty('last')) {
+                    return new L.Marker(latLng, {
+                        icon: icon
+                    });
+                }
+                return L.circleMarker(latLng);
+            }
+        });
+
+        var gpxLayer = omnivore.gpx('../../static/data/gpx/running_mallorca.gpx', null, customLayer).on('ready', function () {
+            map.fitBounds(gpxLayer.getBounds(), {
+                paddingBottomRight: [40, 40]
+            });
+        });
+
+        var gpxTimeLayer = L.zondy.TimeDimensionLayerGeoJson(gpxLayer, {
+            updateTimeDimension: true,
+            addlastPoint: true,
+            waitForReady: true
+        });
+
+        var baseLayers = getCommonBaseLayers(map); // see baselayers.js
+        gpxTimeLayer.addTo(map);
+
+        function getCommonBaseLayers(map) {
+            var osmLayer = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+            });
+            var bathymetryLayer = L.tileLayer.wms("https://ows.emodnet-bathymetry.eu/wms", {
+                layers: 'emodnet:mean_atlas_land',
+                format: 'image/png',
+                transparent: true,
+                attribution: "EMODnet Bathymetry",
+                opacity: 0.8
+            });
+            var coastlinesLayer = L.tileLayer.wms("https://ows.emodnet-bathymetry.eu/wms", {
+                layers: 'coastlines',
+                format: 'image/png',
+                transparent: true,
+                attribution: "EMODnet Bathymetry",
+                opacity: 0.8
+            });
+            var bathymetryGroupLayer = L.layerGroup([bathymetryLayer, coastlinesLayer]);
+            bathymetryGroupLayer.addTo(map);
+            return {
+                "EMODnet Bathymetry": bathymetryGroupLayer,
+                "OSM": osmLayer
+            };
+        }
+    </script>
+</body>
+
+</html>

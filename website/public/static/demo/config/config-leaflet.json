@@ -326,6 +326,22 @@
               "detail": "",
               "icon": "common_marker_cluster.png",
               "update": "最后更新时间：2020-01-08"
+            },
+            {
+              "name": "标记动画图",
+              "file": "common_marker_animate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "common_marker_animate.png",
+              "update": "最后更新时间：2021-04-18"
+            },
+            {
+              "name": "轨迹动画图",
+              "file": "common_line_animate",
+              "diffcult": "1",
+              "detail": "",
+              "icon": "common_line_animate.png",
+              "update": "最后更新时间：2021-04-18"
             }
           ]
         },

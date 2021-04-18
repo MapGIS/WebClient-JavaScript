@@ -244,11 +244,12 @@
     if (inArray(includes, 'pdf')) {
       inputScript(httpUrl + "/cdn/jspdf/dist/jspdf.min.js");
     }
-
     if (inArray(includes, 'bing')) {
       inputScript(httpUrl + "/cdn/leaflet-plugins/leaflet-bing-layer/leaflet-bing-layer.min.js");
     }
-
+    if (inArray(includes, 'timedimension')) {
+      inputCSS(httpUrl + "/cdn/leaflet-plugins/Leaflet.TimeDimension/dist/leaflet.timedimension.control.css");
+    }
     if (!inArray(excludes, 'plugin')) {
       inputScript(httpUrl + "/cdn/zondyclient/webclient-leaflet-plugin.min.js");
     }

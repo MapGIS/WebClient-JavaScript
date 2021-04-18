@@ -97,6 +97,9 @@
     if (inArray(includes, 'papaparse')) {
       inputScript(httpUrl + "/cdn/papaparse/papaparse.js");
     }
+    if (inArray(includes, 'omnivore')) {
+      inputScript(httpUrl + "/cdn/omnivore/dist/omnivore.min.js");
+    }
   }
 
   load();
