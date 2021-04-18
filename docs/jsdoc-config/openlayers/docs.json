@@ -14,8 +14,8 @@
     },
     "source": {
       "includePattern": ".+\\.js?$",
-      "include": ["src/service/"],
-      "exclude": ["src/service/baseserver"]
+      "include": ["src/service/", "src/openlayers"],
+      "exclude": ["src/service/baseserver", "src/openlayers/extend/MilStd_old.js"]
     },
     "plugins": ["plugins/markdown"],
     "templates": {

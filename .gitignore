@@ -10,11 +10,11 @@
 
 /src/service/node_modules/
 
-/src/leaflet/theme/
-/src/mapboxgl/theme/
-/src/openlayers/theme/
-/src/common/overlay/
-/src/common/assets/
+#/src/leaflet/theme/
+#/src/mapboxgl/theme/
+#/src/openlayers/theme/
+#/src/common/overlay/
+#/src/common/assets/
 /src/config/common/
 src/config/opensource/output/
 

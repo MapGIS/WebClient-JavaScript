@@ -260,7 +260,7 @@ $margin-left: 80px;
   }
   .home-header {
     position: absolute;
-    z-index: 9999;
+    z-index: 100;
   }
   h1 {
     height: 36px;

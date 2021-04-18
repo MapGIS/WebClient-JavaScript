@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "website": "cd website && npm run serve",
+    "website-build": "cd website && npm run build",
     "leaflet-debug": "webpack --config src/config/opensource/leaflet-debug-config.js",
     "leaflet-release": "webpack --config src/config/opensource/leaflet-release-config.js --progress",
     "openlayers-debug": "webpack --config src/config/opensource/openlayers-debug-config.js",
