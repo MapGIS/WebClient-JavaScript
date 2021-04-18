@@ -651,7 +651,15 @@ import {
     StreamLayer,
     HeaterLayer,
 	ClusterLayer,
-	MarkerClusterLayer
+	MarkerClusterLayer,
+	AnimatedMarkerLayer,
+	TimeDimension,
+    TimeDimensionControl,
+    TimeDimensionLayer,
+    TimeDimensionLayerGeoJson,
+    TimeDimensionLayerWMS,
+    TimeDimensionPlayer,
+    TimeDimensionUtil
 } from '../../leaflet/overlay/index.js';
 
 export {
@@ -660,5 +668,13 @@ export {
     StreamLayer,
     HeaterLayer,
 	ClusterLayer,
-	MarkerClusterLayer
+	MarkerClusterLayer,
+	AnimatedMarkerLayer,
+	TimeDimension,
+    TimeDimensionControl,
+    TimeDimensionLayer,
+    TimeDimensionLayerGeoJson,
+    TimeDimensionLayerWMS,
+    TimeDimensionPlayer,
+    TimeDimensionUtil
 }

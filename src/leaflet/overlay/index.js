@@ -22,11 +22,34 @@ import {
     MarkerClusterLayer
 } from './view/MarkerClusterLayer';
 
+import {
+    AnimatedMarkerLayer
+} from './AnimatedMarkerLayer';
+
+import {
+    TimeDimension,
+    TimeDimensionControl,
+    TimeDimensionLayer,
+    TimeDimensionLayerGeoJson,
+    TimeDimensionLayerWMS,
+    TimeDimensionPlayer,
+    TimeDimensionUtil
+} from './timedimension'
+
 export {
     EchartsLayer,
     MapvLayer,
     StreamLayer,
     HeaterLayer,
     ClusterLayer,
-    MarkerClusterLayer
+    MarkerClusterLayer,
+    AnimatedMarkerLayer,
+
+    TimeDimension,
+    TimeDimensionControl,
+    TimeDimensionLayer,
+    TimeDimensionLayerGeoJson,
+    TimeDimensionLayerWMS,
+    TimeDimensionPlayer,
+    TimeDimensionUtil
 }
