@@ -55,9 +55,9 @@ import {
  * @classdesc 专题图服务
  * @description Zondy.Service.ThemeOper
  * @extends ServiceBase
+ * @param {String} [opt_guid=newGuid()] 客户端标识，用以服务器缓存地图
  * @param {Object} options 属性键值对
  * @param {Function} [options.p_onSuccess=null] 获取成功回调方法 onSuccess(Array<Zondy.Object.Theme.CThemeInfo>)
- * @param {String} [opt_guid=newGuid()] 客户端标识，用以服务器缓存地图
  */
 class ThemeOper extends ServiceBase {
     constructor(opt_guid, options) {
