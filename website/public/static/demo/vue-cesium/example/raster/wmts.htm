@@ -15,7 +15,7 @@
 
     <body>
         <div id="app">
-            <cesium-web-globe
+            <mapgis-web-scene
                 v-bind:ref="webgloberef"
                 v-bind:animation="false"
                 v-bind:timeline="false"
@@ -23,8 +23,8 @@
                 libPath="./static/libs/cdn/cesium/Cesium.js"
                 pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
             >
-                <cesium-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></cesium-ogc-wmts-layer>
-            </cesium-web-globe>
+                <mapgis-3d-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></mapgis-3d-ogc-wmts-layer>
+            </mapgis-web-scene>
         </div>
         <script>
             new Vue({

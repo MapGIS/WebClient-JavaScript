@@ -15,7 +15,7 @@
 
     <body>
         <div id="app">
-            <cesium-web-globe
+            <mapgis-web-scene
                 v-bind:ref="webgloberef"
                 v-bind:animation="false"
                 v-bind:timeline="false"
@@ -23,14 +23,14 @@
                 libPath="./static/libs/cdn/cesium/Cesium.js"
                 pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
             >
-                <cesium-igs-tile-layer 
+                <mapgis-3d-igs-tile-layer
                     v-bind:ip="ip" 
                     v-bind:port="port" 
                     v-bind:protocol="protocol" 
                     v-bind:server-name="serverName"
                 >
-                </cesium-igs-tile-layer>
-            </cesium-web-globe>
+                </mapgis-3d-igs-tile-layer>
+            </mapgis-web-scene>
         </div>
         <script>
             new Vue({
