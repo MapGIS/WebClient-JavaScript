@@ -12,7 +12,7 @@
       padding: 0;
     }
 
-    #map {
+    #map_heater {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -22,12 +22,12 @@
 </head>
 
 <body>
-  <div id="map"></div>
+  <div id="map_heater"></div>
   <script>
     mapboxgl.accessToken =
       'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var map = new mapboxgl.Map({
-      container: 'map',
+      container: 'map_heater',
       style: 'mapbox://styles/mapbox/dark-v9',
       /* style: {
         "version": 8,

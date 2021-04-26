@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Vue-地图瓦片</title>
-        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <script include="vue" exclude="cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
                 height: 100vh;
@@ -20,13 +20,13 @@
                 v-bind:animation="false"
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
-                libPath="./static/libs/cdn/cesium/Cesium.js"
-                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-vectortile-layer
+                <cesium-vectortile-layer
                     v-bind:style-url="styleUrl"
                 >
-                </mapgis-3d-vectortile-layer>
+                </cesium-vectortile-layer>
             </mapgis-web-scene>
         </div>
         <script>

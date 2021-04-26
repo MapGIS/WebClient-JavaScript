@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Vue-地图文档-M3D</title>
-        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
                 height: 100vh;
@@ -20,10 +20,10 @@
                 v-bind:animation="false"
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
-                libPath="./static/libs/cdn/cesium/Cesium.js"
-                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-tileset v-bind:url="url"> </mapgis-3d-tileset>
+                <cesium-3d-tileset v-bind:url="url"> </cesium-3d-tileset>
                 <mapgis-3d-ogc-wmts-layer v-bind:url="tiandidu" v-bind:options="tiandiduoptions"></mapgis-3d-ogc-wmts-layer>
             </mapgis-web-scene>
         </div>
