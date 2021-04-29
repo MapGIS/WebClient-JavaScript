@@ -85,7 +85,7 @@
     if (inArray(includes, "elasticsearch")) {
       inputScript(httpUrl + "/cdn/elasticsearch/14.1.0/elasticsearch.min.js");
     }
-    if (!inArray(excludes, "plugins")) {
+    if (!inArray(excludes, "plugin")) {
       inputScript(httpUrl + "/cdn/zondyclient/webclient-cesium-plugin.min.js");
     }
     if (inArray(includes, 'vue')) {

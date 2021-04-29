@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>GeoPoint</title>
+  <script src="./static/libs/include-mapboxgl-local.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    var { protocol, ip, port } = window.webclient;
+    ip = 'localhost'
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/epsg_4326_china.json`,
+      center: [106.563777, 29.578285],
+      zoom: 3,
+      crs: 'EPSG:4326'
+    });
+    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+    let sw = map.project(new mapboxgl.LngLat(73, 18));
+    let ne = map.project(new mapboxgl.LngLat(134, 53));
+    map.on('load', function (e) {
+      var features = map.queryRenderedFeatures(
+        [sw, ne],
+        { layers: ['省级行政区'] }
+      );
+      console.log('features', features);
+    });
+  </script>
+
+
+</body>
+
+</html>
