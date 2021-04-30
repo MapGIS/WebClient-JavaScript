@@ -9,7 +9,7 @@
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
   <script src="./static/libs/include-mapboxgl-local.js"></script>
   <!--引入当前页面样式表-->
-  <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
     #map {
       position: absolute;
@@ -102,6 +102,10 @@
           }
         });
       });
+      //注册鼠标移动事件
+      map.on('mousemove', function (e) {
+        document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+      });
 
       function loadGeoJson(xml) {
         if (!!xml) {
@@ -122,7 +126,10 @@
 </head>
 
 <body onload="init()">
-  <div id="map"></div>
+  <div id="map">
+    <div id="mouse-position">
+    </div>
+  </div>
 </body>
 
 </html>

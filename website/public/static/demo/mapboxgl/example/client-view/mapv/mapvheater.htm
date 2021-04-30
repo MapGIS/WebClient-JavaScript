@@ -6,6 +6,7 @@
   <title>热力图</title>
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
   <script include="language,proj4,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
   <style>
     body {
       margin: 0;
@@ -22,7 +23,10 @@
 </head>
 
 <body>
-  <div id="map"></div>
+  <div id="map">
+    <div id="mouse-position">
+    </div>
+  </div>
   <script>
     //一定要去mapbox注册一个key,这个key会失效的
     mapboxgl.accessToken =
@@ -35,7 +39,15 @@
     });
     map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
     map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
+    //注册鼠标移动事件
+    map.on('mousemove', function (e) {
+      //经纬度坐标转web墨卡托
+      const earthRad = 6378137.0;
+      const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+      const a = e.lngLat.lat * Math.PI / 180;
+      const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+      document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+    });
     var randomCount = 1000;
 
     var data = [];

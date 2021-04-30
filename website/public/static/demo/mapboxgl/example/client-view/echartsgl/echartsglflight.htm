@@ -5,7 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>伦敦飞机航线</title>
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-  <script include="elasticsearch,echarts,geojson,shapefile,language" src="./static/libs/include-mapboxgl-local.js"></script>
+  <script include="elasticsearch,echarts,geojson,shapefile,language"
+    src="./static/libs/include-mapboxgl-local.js"></script>
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
   <style>
     #mapid {
       position: absolute;
@@ -17,8 +19,13 @@
 </head>
 
 <body>
-  <div id="mapid"></div>
+  <div id="mapid">
+  </div>
+  <div id="mouse-position">
+  </div>
   <script>
+    var mousePosition = document.getElementById('mouse-position')
+
     //一定要去mapbox注册一个key,这个key会失效的
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var myChart = echarts.init(document.getElementById('mapid'), null, {
@@ -26,16 +33,16 @@
     });
     myChart.showLoading();
     // 数据来自 https://uber.github.io/deck.gl/#/examples/core-layers/line-layer
-    $.get('../../static/data/echartsgl/flight/data.txt', function(text) {
+    $.get('../../static/data/echartsgl/flight/data.txt', function (text) {
       myChart.hideLoading();
       var data = decodeFlightPathData(text);
 
       var dataAll = [];
       for (var i = 0; i < 4; i++) {
-        dataAll = dataAll.concat(data.map(function(item) {
+        dataAll = dataAll.concat(data.map(function (item) {
           return {
             name: item.name,
-            coords: item.coords.map(function(coord) {
+            coords: item.coords.map(function (coord) {
               return coord.slice();
             })
           };
@@ -82,8 +89,18 @@
           data: dataAll
         }]
       });
-
-      window.addEventListener('keydown', function() {
+      var mapbox = myChart.getModel().getComponent('mapbox3D').getMapbox();
+      mapbox.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+      //注册鼠标移动事件
+      mapbox.on('mousemove', function (e) {
+        //经纬度坐标转web墨卡托
+        const earthRad = 6378137.0;
+        const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+        const a = e.lngLat.lat * Math.PI / 180;
+        const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+        mousePosition.innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+      });
+      window.addEventListener('keydown', function () {
         myChart.dispatchAction({
           type: 'lines3DToggleEffect',
           seriesIndex: 0
@@ -159,22 +176,22 @@
 
       var result = [];
 
-      lines.forEach(function(line) {
+      lines.forEach(function (line) {
 
         if (!line) {
           return;
         }
 
         var parts = line.split('\t');
-        var coords0 = parts[2].split('\x01').map(function(str) {
+        var coords0 = parts[2].split('\x01').map(function (str) {
           return decodePolyline(str, 5)
         });
-        var coords1 = parts[3].split('\x01').map(function(str) {
+        var coords1 = parts[3].split('\x01').map(function (str) {
           return decodePolyline(str, 1)
         });
 
         var coords = [];
-        coords0.forEach(function(lineStr, i) {
+        coords0.forEach(function (lineStr, i) {
           for (var j = 1; j < lineStr.length; j++) {
             var prevPt0 = coords0[i][j - 1],
               prevPt1 = coords1[i][j - 1],
@@ -201,7 +218,7 @@
       });
       return result;
     }
-    window.addEventListener('keydown', function() {
+    window.addEventListener('keydown', function () {
       myChart.dispatchAction({
         type: 'lines3DToggleEffect',
         seriesIndex: 0

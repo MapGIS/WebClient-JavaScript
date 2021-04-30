@@ -16,7 +16,8 @@
         var webGlobe;
         var commfun;
         var update;
-
+        var m3dLayer;
+        var obliqueLayer;
         //设置旋转点
         var opt = {
             position: Cesium.Cartesian3.fromDegrees(108.96044700955785, 34.21796237686321, 60.99772929683282),
@@ -48,7 +49,7 @@
             });
 
             //构造M3D模型层管理对象（视图）
-            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+            m3dLayer = new CesiumZondy.Layer.M3DLayer({
                 viewer: webGlobe.viewer
             });
             //加载M3D地图文档（服务地址，配置参数）
@@ -57,7 +58,7 @@
                 ip,
                 port
             } = window.webclient;
-            var obliqueLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DaYanTa`, {});
+            obliqueLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DaYanTa`, {});
 
             //实例化通用功能管理类对象
             commfun = new CesiumZondy.Manager.CommonFuncManager({
@@ -89,7 +90,15 @@
             var sceneManager = new CesiumZondy.Manager.SceneManager({
                 viewer: webGlobe.viewer
             });
-            sceneManager.goHome(); //复位
+            // m3dLayer.zoomToM3dLayer(obliqueLayerp[0]);
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(108.96044700955785, 34.21796237686321, {
+                height: 60.99772929683282,
+                heading: -38.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+            //sceneManager.goHome(); //复位
         }
     </script>
 </head>

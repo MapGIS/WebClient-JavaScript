@@ -1,0 +1,10 @@
+/* 鼠标位置控件层样式设置 */
+#mouse-position {
+  margin-left: 20px;
+  color: red;
+  position: absolute;
+  bottom: 20px;
+  z-index: 1;
+  font-size: 16px;
+  right: 20px;
+}

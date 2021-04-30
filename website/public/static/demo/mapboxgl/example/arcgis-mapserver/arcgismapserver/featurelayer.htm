@@ -1,115 +1,124 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>OGC_WMS</title>
-        <!--引入第三方的jquery脚本库-->
-        <script src="./static/libs/include-mapboxgl-local.js"></script>
-        <!--引入当前页面样式表-->
-        <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
-        <style type="text/css">
-            #map {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                height: 100vh;
-            }
-        </style>
-        <script>
-            //使用严格模式
-            'use strict';
-            var map;
-            var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
-            /**
-             * 地图初始化
-             */
-            function init() {
-                //实例化要加载的source来源对象（世界矢量地图）
-                var dark = {
-                    type: 'raster',
-                    tiles: [
-                        //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
-                        'http://t0.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
-                            '&TILECOL=' +
-                            '{x}' +
-                            '&TILEROW=' +
-                            '{y}' +
-                            '&TILEMATRIX=' +
-                            '{z}' +
-                            '&tk=' +
-                            tiandituKey
-                    ],
-                    //栅格瓦片的分辨率
-                    tileSize: 256
-                };
-                //实例化Map对象加载地图
-                map = new mapboxgl.Map({
-                    crs: 'EPSG:4326', //经纬度一定要设置crs参数
-                    maxBounds: [
-                        [-180, -90],
-                        [180, 90]
-                    ],
-                    //地图容器div的id
-                    container: 'map',
-                    //设置地图样式信息
-                    style: {
-                        //设置版本号，一定要设置
-                        version: 8,
-                        //添加来源
-                        sources: {
-                            dark: dark
-                        },
-                        //设置加载并显示来源的图层信息
-                        layers: [
-                            {
-                                //图层id，要保证唯一性
-                                id: 'dark',
-                                //图层类型
-                                type: 'raster',
-                                //连接图层来源
-                                source: 'dark',
-                                //图层最小缩放级数
-                                minzoom: 0,
-                                //图层最大缩放级数
-                                maxzoom: 22
-                            }
-                        ]
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>OGC_WMS</title>
+    <!--引入第三方的jquery脚本库-->
+    <script src="./static/libs/include-mapboxgl-local.js"></script>
+    <!--引入当前页面样式表-->
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        #map {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+    <script>
+        //使用严格模式
+        'use strict';
+        var map;
+        var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+        /**
+         * 地图初始化
+         */
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            var dark = {
+                type: 'raster',
+                tiles: [
+                    //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                    'http://t0.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                    '&TILECOL=' +
+                    '{x}' +
+                    '&TILEROW=' +
+                    '{y}' +
+                    '&TILEMATRIX=' +
+                    '{z}' +
+                    '&tk=' +
+                    tiandituKey
+                ],
+                //栅格瓦片的分辨率
+                tileSize: 256
+            };
+            //实例化Map对象加载地图
+            map = new mapboxgl.Map({
+                crs: 'EPSG:4326', //经纬度一定要设置crs参数
+                maxBounds: [
+                    [-180, -90],
+                    [180, 90]
+                ],
+                //地图容器div的id
+                container: 'map',
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    version: 8,
+                    //添加来源
+                    sources: {
+                        dark: dark
                     },
-                    zoom: 3,
-                    center: [116.39, 40.2]
-                });
-
-                //注册地图加载事件
-                var { protocol, ip, port } = window.webclient;
-                map.on('load', function () {
-                    map.addLayer({
-                        id: 'featurelayer-layer',
-                        type: 'raster',
-                        source: {
+                    //设置加载并显示来源的图层信息
+                    layers: [
+                        {
+                            //图层id，要保证唯一性
+                            id: 'dark',
+                            //图层类型
                             type: 'raster',
-                            tiles: [
-                                `http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/export?` +
-                                    'F=image' +
-                                    '&FORMAT=PNG32' +
-                                    '&TRANSPARENT=true' +
-                                    '&LAYERS=show:0,2,4,7,9,10,11,12' +
-                                    '&SIZE=512,512' +
-                                    '&bbox={bbox}' +
-                                    '&BBOXSR=4326' +  // 即便这个地方是4547,也得设置成4326/4490，
-                                    '&IMAGESR=4326' +  // 请看右侧markdown说明
-                                    '&DPI=90'
-                            ],
-                            tileSize: 512
-                        },
-                        paint: {}
-                    });
-                });
-            }
-        </script>
-    </head>
+                            //连接图层来源
+                            source: 'dark',
+                            //图层最小缩放级数
+                            minzoom: 0,
+                            //图层最大缩放级数
+                            maxzoom: 22
+                        }
+                    ]
+                },
+                zoom: 3,
+                center: [116.39, 40.2]
+            });
 
-    <body onload="init()">
-        <div id="map"></div>
-    </body>
+            //注册地图加载事件
+            var { protocol, ip, port } = window.webclient;
+            map.on('load', function () {
+                map.addLayer({
+                    id: 'featurelayer-layer',
+                    type: 'raster',
+                    source: {
+                        type: 'raster',
+                        tiles: [
+                            `http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/export?` +
+                            'F=image' +
+                            '&FORMAT=PNG32' +
+                            '&TRANSPARENT=true' +
+                            '&LAYERS=show:0,2,4,7,9,10,11,12' +
+                            '&SIZE=512,512' +
+                            '&bbox={bbox}' +
+                            '&BBOXSR=4326' +  // 即便这个地方是4547,也得设置成4326/4490，
+                            '&IMAGESR=4326' +  // 请看右侧markdown说明
+                            '&DPI=90'
+                        ],
+                        tileSize: 512
+                    },
+                    paint: {}
+                });
+            });
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="map">
+        <div id="mouse-position">
+        </div>
+    </div>
+</body>
+
 </html>

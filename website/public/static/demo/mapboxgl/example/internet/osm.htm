@@ -7,7 +7,7 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="./static/libs/include-mapboxgl-local.js"></script>
     <!--引入当前页面样式表-->
-    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
     <style type='text/css'>
         #map {
             position: absolute;
@@ -19,6 +19,8 @@
 
 <body>
     <div id='map'>
+        <div id="mouse-position">
+        </div>
     </div>
     <script type="text/javascript">
         //使用严格模式
@@ -48,29 +50,29 @@
                 },
                 //设置加载并显示来源的图层信息
                 "layers": [{
-                        //图层id，要保证唯一性
-                        "id": "OSMLayer",
-                        //图层类型
-                        "type": "raster",
-                        //图层来源
-                        "source": "osm",
-                        //图层最小缩放级数
-                        "minzoom": 0,
-                        //图层最大缩放级数
-                        "maxzoom": 15
-                    },
-                    {
-                        //图层id，要保证唯一性
-                        "id": "OSMLayer1",
-                        //图层类型
-                        "type": "raster",
-                        //图层来源
-                        "source": "osm1",
-                        //图层最小缩放级数
-                        "minzoom": 0,
-                        //图层最大缩放级数
-                        "maxzoom": 15
-                    }
+                    //图层id，要保证唯一性
+                    "id": "OSMLayer",
+                    //图层类型
+                    "type": "raster",
+                    //图层来源
+                    "source": "osm",
+                    //图层最小缩放级数
+                    "minzoom": 0,
+                    //图层最大缩放级数
+                    "maxzoom": 15
+                },
+                {
+                    //图层id，要保证唯一性
+                    "id": "OSMLayer1",
+                    //图层类型
+                    "type": "raster",
+                    //图层来源
+                    "source": "osm1",
+                    //图层最小缩放级数
+                    "minzoom": 0,
+                    //图层最大缩放级数
+                    "maxzoom": 15
+                }
 
                 ],
             },
@@ -80,6 +82,15 @@
             zoom: 0,
             //倾斜角度，与屏幕面的夹角（0-60）度
             pitch: 0
+        });
+        //注册鼠标移动事件
+        map.on('mousemove', function (e) {
+            //经纬度坐标转web墨卡托
+            const earthRad = 6378137.0;
+            const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+            const a = e.lngLat.lat * Math.PI / 180;
+            const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+            document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
         });
     </script>
 </body>
