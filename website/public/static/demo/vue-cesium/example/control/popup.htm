@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Vue-Popup</title>
-        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
                 height: 100vh;
@@ -55,8 +55,8 @@
                 :animation="false"
                 :timeline="false"
                 v-on:load="handleLoad"
-                libPath="./static/libs/cdn/cesium/Cesium.js"
-                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
                 <mapgis-3d-rastertile-layer :url="url" />
                 <mapgis-3d-popup :position="position" v-on:load="bindEvent">

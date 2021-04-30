@@ -6,14 +6,13 @@
   <title>热力分析</title>
   <script include="jquery,moment" src="./static/libs/include-lib-local.js"></script>
   <script include="language,elasticsearch,geojson,geohash,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
-  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
   <style>
     body {
       margin: 0;
       padding: 0;
     }
 
-    #map {
+    #map_heater {
       position: absolute;
       top: 0;
       bottom: 0;
@@ -23,15 +22,12 @@
 </head>
 
 <body>
-  <div id="map">
-    <div id="mouse-position">
-    </div>
-  </div>
+  <div id="map_heater"></div>
   <script>
     mapboxgl.accessToken =
       'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var map = new mapboxgl.Map({
-      container: 'map',
+      container: 'map_heater',
       style: 'mapbox://styles/mapbox/dark-v9',
       /* style: {
         "version": 8,
@@ -55,15 +51,6 @@
       zoom: 10,
       pitch: 45,
       center: [116.35, 39.9]
-    });
-    //注册鼠标移动事件
-    map.on('mousemove', function (e) {
-      //经纬度坐标转web墨卡托
-      const earthRad = 6378137.0;
-      const x = e.lngLat.lng * Math.PI / 180 * earthRad;
-      const a = e.lngLat.lat * Math.PI / 180;
-      const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
-      document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
     });
 
     map.addControl(new MapboxLanguage(), 'top-right'); //中文支持

@@ -75,23 +75,10 @@
                         <div class="toolbar-item" v-on:click="toggleDelete1">删除</div>
                     </div>
                 </mapbox-base-draw>
-                <mapbox-base-draw
-                    class="custom-draw-wrapper"
-                    position="top-left"
-                    v-bind:controls="controls"
-                    v-on:added="handleAdded2"
-                    v-on:drawcreate="handleCreate2"
-                    ref="drawref2"
-                >
-                    <div id="toolbar-wrapper2">
-                        <div class="toolbar-item" v-on:click="toggleQueryPoint2">点查询</div>
-                        <div class="toolbar-item" v-on:click="toggleQueryPolygon2">区查询</div>
-                    </div>
-                </mapbox-base-draw>
             </mapbox-map>
         </div>
         <script>
-            let draw = new Vue({
+            var draw = new Vue({
                 el: '#app',
                 data() {
                     return {
@@ -138,20 +125,12 @@
                         }
                     },
                     handleAdded1(e, data) {
-                        let { drawer, map } = e;
+                        var { drawer, map } = e;
                         this.drawer1 = drawer;
-                    },
-                    handleAdded2(e, data) {
-                        let { drawer, map } = e;
-                        this.drawer2 = drawer;
                     },
                     handleCreate1(e) {
                         console.log('create', e);
                         // this.drawer1 && this.drawer1.deleteAll();
-                    },
-                    handleCreate2(e) {
-                        console.log('create', e);
-                        this.drawer2 && this.drawer2.deleteAll();
                     },
                     togglePoint1(e) {
                         this.enableDrawer1();
@@ -168,14 +147,6 @@
                     },
                     toggleDelete1() {
                         this.drawer1 && this.drawer1.deleteAll();
-                    },
-                    toggleQueryPoint2() {
-                        this.enableDrawer2();
-                        this.drawer2 && this.drawer2.changeMode('draw_point');
-                    },
-                    toggleQueryPolygon2() {
-                        this.enableDrawer2();
-                        this.drawer2 && this.drawer2.changeMode('draw_polygon');
                     },
                     toggleDelete2() {
                         this.drawer2 && this.drawer2.deleteAll();

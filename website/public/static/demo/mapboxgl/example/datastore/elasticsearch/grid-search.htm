@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>聚类分析</title>
+        <script include="jquery,moment" src="./static/libs/include-lib-local.js"></script>
+        <script include="language,elasticsearch,geojson,geohash,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>聚类分析</title>
-  <script include="jquery,moment" src="./static/libs/include-lib-local.js"></script>
-  <script include="language,elasticsearch,geojson,geohash,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
-  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
+            #map_grid {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+            .switch {
+              position: absolute;
+              top: 20px;
+              left: 20px;
+              border-radius: 4px;
+              padding: 4px;
+              background: #333333;
+            }
+            .item {
+              background: #ffffff;
+              border-radius: 4px;
+              padding: 4px;
+              color:#000000;
+            }
+        </style>
+    </head>
 
-    #map {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="map">
-    <div id="mouse-position">
-    </div>
-  </div>
-  <script>
-    mapboxgl.accessToken =
-      'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/dark-v9',
-      /* style: {
+    <body>
+        <div id="map_grid"></div>
+        <div class="switch">
+          <span class="item" onclick="changeMode('heater')">热力展示</span>
+          <span class="item" onclick="changeMode('grid')">网格展示</span>
+          <div>
+        <script>
+            var mode = 'heater';
+            mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+            var map = new mapboxgl.Map({
+                container: 'map_grid',
+                style: 'mapbox://styles/mapbox/dark-v9',
+                /* style: {
         "version": 8,
         "sources": {
           "mapbox-tiles": {
@@ -52,187 +65,198 @@
           "maxzoom": 22
         }]
       }, */
-      zoom: 10,
-      pitch: 45,
-      center: [116.35, 39.9]
-    });
+                zoom: 10,
+                pitch: 45,
+                center: [116.35, 39.9]
+            });
 
-    map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
-    //注册鼠标移动事件
-    map.on('mousemove', function (e) {
-      //经纬度坐标转web墨卡托
-      const earthRad = 6378137.0;
-      const x = e.lngLat.lng * Math.PI / 180 * earthRad;
-      const a = e.lngLat.lat * Math.PI / 180;
-      const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
-      document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
-    });
+            map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
 
-    var mapExtent, mapLevel, startTime, endTime, geojson;
-    startTime = currentTime = Date.parse(new Date("2012-11-01 08:00:00")); //1516723200000; 毫秒
-    endTime = Date.parse(new Date("2012-11-01 23:59:59")); // 1516809599000; 毫秒
-    var timeSpeed = 250000; //250秒的速度
-    var flashSpeed = 2000; //1秒一刷新
-    var timer; //定时器
+            var mapExtent, mapLevel, startTime, endTime, geojson;
+            startTime = currentTime = Date.parse(new Date('2012-11-01 08:00:00')); //1516723200000; 毫秒
+            endTime = Date.parse(new Date('2012-11-01 23:59:59')); // 1516809599000; 毫秒
+            var timeSpeed = 250000; //250秒的速度
+            var flashSpeed = 2000; //1秒一刷新
+            var timer; //定时器
 
-    var client = new elasticsearch.Client({
-      host: 'http://192.168.96.101:9200'
-    });
+            var client = new elasticsearch.Client({
+                host: 'http://192.168.96.101:9200'
+            });
 
-    var mapvLayer, layerDataSet, layerOptions = getLayerOptions();
+            var mapvLayer,
+                layerDataSet,
+                layerOptions = getLayerOptions();
 
-    map.on('load', function () {
-      timer = self.setInterval("clock()", flashSpeed);
-    });
+            map.on('load', function () {
+                timer = self.setInterval('clock()', flashSpeed);
+            });
 
-    var init = true;
+            var init = true;
 
-    function clock() {
-      if (!init) return;
-      loadData(currentTime, currentTime + timeSpeed);
-      //init = false;
-      currentTime = currentTime + timeSpeed;
-    };
-
-    function loadData(startTimeStamp, endTimeStamp) {
-      var bound = wrapLatLngBounds(map.getBounds());
-      var prec = recalcLevel(map.getZoom());
-      client.search({
-        index: 'sp_taxibj_200_2', //数据库名称
-        body: {
-          size: 0, //此处返回的是hits的数组大小
-          query: {
-            bool: {
-              filter: {
-                range: {
-                  'GPS_DateTime': {
-                    from: startTimeStamp, //毫秒转换成秒
-                    to: endTimeStamp //毫秒转换成秒
-                  }
-                }
-              }
+            function clock() {
+                if (!init) return;
+                loadData(currentTime, currentTime + timeSpeed);
+                //init = false;
+                currentTime = currentTime + timeSpeed;
             }
-          },
-          aggregations: {
-            'mapExtent': {
-              filter: {
-                geo_bounding_box: {
-                  'geometry': {
-                    top_left: {
-                      lat: bound.getNorthWest().lat,
-                      lon: bound.getNorthWest().lng
+
+            function loadData(startTimeStamp, endTimeStamp) {
+                var bound = wrapLatLngBounds(map.getBounds());
+                var prec = recalcLevel(map.getZoom());
+                client.search(
+                    {
+                        index: 'sp_taxibj_200_2', //数据库名称
+                        body: {
+                            size: 0, //此处返回的是hits的数组大小
+                            query: {
+                                bool: {
+                                    filter: {
+                                        range: {
+                                            GPS_DateTime: {
+                                                from: startTimeStamp, //毫秒转换成秒
+                                                to: endTimeStamp //毫秒转换成秒
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            aggregations: {
+                                mapExtent: {
+                                    filter: {
+                                        geo_bounding_box: {
+                                            geometry: {
+                                                top_left: {
+                                                    lat: bound.getNorthWest().lat,
+                                                    lon: bound.getNorthWest().lng
+                                                },
+                                                bottom_right: {
+                                                    lat: bound.getSouthEast().lat,
+                                                    lon: bound.getSouthEast().lng
+                                                }
+                                            }
+                                        }
+                                    },
+                                    aggregations: {
+                                        geohash: {
+                                            geohash_grid: {
+                                                field: 'geometry',
+                                                precision: prec
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    bottom_right: {
-                      lat: bound.getSouthEast().lat,
-                      lon: bound.getSouthEast().lng
-                    }
-                  }
-                }
-              },
-              aggregations: {
-                'geohash': {
-                  geohash_grid: {
-                    field: "geometry",
-                    precision: prec
-                  }
-                }
-              }
+                    getData
+                );
             }
-          }
-        }
-      }, getData);
-    };
 
-    function getData(error, response) {
-      layerDataSet = new mapv.DataSet(convertData(response));
-      updateView();
-    }
+            function getData(error, response) {
+                layerDataSet = new mapv.DataSet(convertData(response));
+                updateView();
+            }
 
-    function convertData(response) {
-      var data = [];
-      response.aggregations.mapExtent.geohash.buckets.forEach(function (bucket) {
-        var coordinates = decodeGeoHash(bucket.key);
-        data.push({
-          geometry: {
-            type: 'Point',
-            coordinates: [coordinates.longitude[2], coordinates.latitude[2]]
-          },
-          count: bucket.doc_count
-        });
-      });
-      return data;
-    };
+            function convertData(response) {
+                var data = [];
+                response.aggregations.mapExtent.geohash.buckets.forEach(function (bucket) {
+                    var coordinates = decodeGeoHash(bucket.key);
+                    data.push({
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [coordinates.longitude[2], coordinates.latitude[2]]
+                        },
+                        count: bucket.doc_count
+                    });
+                });
+                return data;
+            }
 
-    function updateView() {
-      if (!mapvLayer) {
-        mapvLayer = new mapboxgl.zondy.MapvLayer(map, layerDataSet, layerOptions, {
-          noWrap: true
-        });
-      } else {
-        mapvLayer.updateData(layerDataSet, layerOptions);
-      }
-    }
+            function updateView() {
+              layerOptions = getLayerOptions();  
+                if (!mapvLayer) {
+                    mapvLayer = new mapboxgl.zondy.MapvLayer(map, layerDataSet, layerOptions, {
+                        noWrap: true
+                    });
+                } else {
+                    mapvLayer.updateData(layerDataSet, layerOptions);
+                }
+            }
 
-    function getLayerOptions() {
-      return {
-        fillStyle: 'rgba(55, 50, 250, 0.8)',
-        shadowColor: 'rgba(255, 250, 50, 1)',
-        shadowBlur: 10,
-        size: 30,
-        globalAlpha: 0.7,
-        label: {
-          show: true,
-          fillStyle: 'white',
-          shadowColor: 'yellow',
-          font: '15px Arial',
-          shadowBlur: 10
-        },
-        gradient: {
-          0: "rgba(49, 54, 149, 0)",
-          0.05: "rgba(69,117,180, 0.7)",
-          0.1: "rgba(116,173,209, 0.7)",
-          0.15: "rgba(171,217,233, 0.7)",
-          0.2: "rgba(224,243,248, 0.7)",
-          0.25: "rgba(254,224,144,0.7)",
-          0.3: "rgba(253,174,97,0.7)",
-          0.4: "rgba(244,109,67,0.8)",
-          0.5: "rgba(215,48,39,0.8)",
-          0.9: "rgba(165, 0, 38,0.8)"
-        },
-        draw: 'honeycomb' //grid,honeycomb
-      };
-    }
+            function changeMode (newmode) {
+              mode = newmode ;
+            }
 
-    function recalcLevel(level) {
-      var prec = 5;
-      if (level <= 2) {
-        prec = 2;
-      } else if (level > 2 && level <= 5) {
-        prec = 10;
-      } else if (level > 5 && level <= 8) {
-        prec = 12;
-      } else if (level > 8 && level <= 11) {
-        prec = 12;
-      } else if (level > 11 && level <= 13) {
-        prec = 12;
-      } else if (level > 13 && level <= 15) {
-        prec = 12;
-      } else if (level > 15) {
-        prec = 12;
-      };
-      return prec;
-    }
+            function getLayerOptions() {
+                if (mode === 'heater') {
+                    return {
+                        fillStyle: 'rgba(55, 50, 250, 0.9)',
+                        shadowColor: 'rgba(55, 50, 250, 0.8)',
+                        globalCompositeOperation: 'lighter',
+                        shadowBlur: 5,
+                        size: 13,
+                        max: 20,
+                        maxOpacity: 0.9,
+                        draw: 'heatmap'
+                    };
+                } else {
+                    return {
+                        fillStyle: 'rgba(55, 50, 250, 0.8)',
+                        shadowColor: 'rgba(255, 250, 50, 1)',
+                        shadowBlur: 10,
+                        size: 30,
+                        globalAlpha: 0.7,
+                        label: {
+                            show: true,
+                            fillStyle: 'white',
+                            shadowColor: 'yellow',
+                            font: '15px Arial',
+                            shadowBlur: 10
+                        },
+                        gradient: {
+                            0: 'rgba(49, 54, 149, 0)',
+                            0.05: 'rgba(69,117,180, 0.7)',
+                            0.1: 'rgba(116,173,209, 0.7)',
+                            0.15: 'rgba(171,217,233, 0.7)',
+                            0.2: 'rgba(224,243,248, 0.7)',
+                            0.25: 'rgba(254,224,144,0.7)',
+                            0.3: 'rgba(253,174,97,0.7)',
+                            0.4: 'rgba(244,109,67,0.8)',
+                            0.5: 'rgba(215,48,39,0.8)',
+                            0.9: 'rgba(165, 0, 38,0.8)'
+                        },
+                        draw: 'honeycomb' //grid,honeycomb
+                    };
+                }
+            }
 
-    function wrapLatLngBounds(bound) {
-      var left = bound.getWest() < -180 ? -179.99 : bound.getWest();
-      var bottom = bound.getSouth() < -90 ? -89.99 : bound.getSouth();
-      var right = bound.getEast() > 180 ? 179.99 : bound.getEast();
-      var top = bound.getNorth() > 90 ? 89.99 : bound.getNorth();
-      return new mapboxgl.LngLatBounds(
-        new mapboxgl.LngLat(left, bottom),
-        new mapboxgl.LngLat(right, top));
-    }
-  </script>
-</body>
+            function recalcLevel(level) {
+                var prec = 5;
+                if (level <= 2) {
+                    prec = 2;
+                } else if (level > 2 && level <= 5) {
+                    prec = 10;
+                } else if (level > 5 && level <= 8) {
+                    prec = 12;
+                } else if (level > 8 && level <= 11) {
+                    prec = 12;
+                } else if (level > 11 && level <= 13) {
+                    prec = 12;
+                } else if (level > 13 && level <= 15) {
+                    prec = 12;
+                } else if (level > 15) {
+                    prec = 12;
+                }
+                return prec;
+            }
 
+            function wrapLatLngBounds(bound) {
+                var left = bound.getWest() < -180 ? -179.99 : bound.getWest();
+                var bottom = bound.getSouth() < -90 ? -89.99 : bound.getSouth();
+                var right = bound.getEast() > 180 ? 179.99 : bound.getEast();
+                var top = bound.getNorth() > 90 ? 89.99 : bound.getNorth();
+                return new mapboxgl.LngLatBounds(new mapboxgl.LngLat(left, bottom), new mapboxgl.LngLat(right, top));
+            }
+        </script>
+    </body>
 </html>

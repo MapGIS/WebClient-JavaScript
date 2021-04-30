@@ -846,14 +846,6 @@
                             "detail": "",
                             "icon": "grid-search.png",
                             "update": "最后更新时间：2019-11-07"
-                        },
-                        {
-                            "name": "热力分析",
-                            "file": "heat-search",
-                            "diffcult": "5",
-                            "detail": "",
-                            "icon": "heat-search.png",
-                            "update": "最后更新时间：2019-11-07"
                         }
                     ]
                 }
