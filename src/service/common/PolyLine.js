@@ -70,8 +70,6 @@ class PolyLine extends Tangram {
         if (this.nearDis !== undefined && this.nearDis !== null) {
 
             str += ";" + this.nearDis;
-        } else {
-            str = str.substring(0, str.length - 1);
         }
         return this.Trim(str, "g");
     }

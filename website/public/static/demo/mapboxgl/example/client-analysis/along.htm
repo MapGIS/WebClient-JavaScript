@@ -1,210 +1,215 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>插值</title>
-    <meta
-      name="viewport"
-      content="initial-scale=1,maximum-scale=1,user-scalable=no"
-    />
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <script
-      include="geohash,geojson,turf"
-      src="./static/libs/include-mapboxgl-local.js"
-    ></script>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
 
-      #map {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <title>插值</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="geohash,geojson,turf" src="./static/libs/include-mapboxgl-local.js"></script>
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-  <body>
-    <div id="map"></div>
-    <script>
-      var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
-      var map = new mapboxgl.Map({
-        crs: "EPSG:4326", //经纬度一定要设置crs参数
-        maxBounds: [
-          [-180, -90],
-          [180, 90],
-        ],
-        zoom: 3,
-        container: "map",
-        style: {
-          version: 8,
-          sources: {
-            "tianditu-4326-vector": {
-              //来源类型为栅格瓦片
-              type: "raster",
-              tiles: [
-                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
-                "http://t" +
-                  Math.round(Math.random() * 7) +
-                  ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
-                  "&TILECOL=" +
-                  "{x}" +
-                  "&TILEROW=" +
-                  "{y}" +
-                  "&TILEMATRIX=" +
-                  "{z}" +
-                  "&tk=" +
-                  tiandituKey,
-              ],
-              //栅格瓦片的分辨率
-              tileSize: 256,
-            },
-            "tianditu-4326-symbol": {
-              //来源类型为栅格瓦片
-              type: "raster",
-              tiles: [
-                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
-                "http://t" +
-                  Math.round(Math.random() * 7) +
-                  ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
-                  "&TILECOL=" +
-                  "{x}" +
-                  "&TILEROW=" +
-                  "{y}" +
-                  "&TILEMATRIX=" +
-                  "{z}" +
-                  "&tk=" +
-                  tiandituKey,
-              ],
-              //栅格瓦片的分辨率
-              tileSize: 256,
-            },
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map">
+    <div id="mouse-position">
+    </div>
+  </div>
+  <script>
+    var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
+    var map = new mapboxgl.Map({
+      crs: "EPSG:4326", //经纬度一定要设置crs参数
+      maxBounds: [
+        [-180, -90],
+        [180, 90],
+      ],
+      zoom: 3,
+      container: "map",
+      style: {
+        version: 8,
+        sources: {
+          "tianditu-4326-vector": {
+            //来源类型为栅格瓦片
+            type: "raster",
+            tiles: [
+              //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+              "http://t" +
+              Math.round(Math.random() * 7) +
+              ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+              "&TILECOL=" +
+              "{x}" +
+              "&TILEROW=" +
+              "{y}" +
+              "&TILEMATRIX=" +
+              "{z}" +
+              "&tk=" +
+              tiandituKey,
+            ],
+            //栅格瓦片的分辨率
+            tileSize: 256,
           },
-          layers: [
-            {
-              id: "tianditu-4326-vector",
-              type: "raster",
-              source: "tianditu-4326-vector",
-              minzoom: 0,
-              maxzoom: 22,
-            },
-            {
-              id: "tianditu-4326-symbol",
-              type: "raster",
-              source: "tianditu-4326-symbol",
-              minzoom: 0,
-              maxzoom: 22,
-            },
-          ],
+          "tianditu-4326-symbol": {
+            //来源类型为栅格瓦片
+            type: "raster",
+            tiles: [
+              //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+              "http://t" +
+              Math.round(Math.random() * 7) +
+              ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+              "&TILECOL=" +
+              "{x}" +
+              "&TILEROW=" +
+              "{y}" +
+              "&TILEMATRIX=" +
+              "{z}" +
+              "&tk=" +
+              tiandituKey,
+            ],
+            //栅格瓦片的分辨率
+            tileSize: 256,
+          },
         },
-        center: [116.35, 30.92],
-      });
-
-      var origin = [89.341, 40.92];
-      var destination = [133.989, 20.92];
-
-      var originLine = {
-        type: "FeatureCollection",
-        features: [
+        layers: [
           {
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: [origin, destination],
-            },
+            id: "tianditu-4326-vector",
+            type: "raster",
+            source: "tianditu-4326-vector",
+            minzoom: 0,
+            maxzoom: 22,
+          },
+          {
+            id: "tianditu-4326-symbol",
+            type: "raster",
+            source: "tianditu-4326-symbol",
+            minzoom: 0,
+            maxzoom: 22,
           },
         ],
-      };
-      var alongLine = {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: [origin, destination],
-            },
-          },
-        ],
-      };
+      },
+      center: [116.35, 30.92],
+    });
 
-      map.on("load", function() {
-        initMap();
-        insertLine();
-        updateView();
+    //注册鼠标移动事件
+    map.on('mousemove', function (e) {
+      document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+    });
+
+    var origin = [89.341, 40.92];
+    var destination = [133.989, 20.92];
+
+    var originLine = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [origin, destination],
+          },
+        },
+      ],
+    };
+    var alongLine = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [origin, destination],
+          },
+        },
+      ],
+    };
+
+    map.on("load", function () {
+      initMap();
+      insertLine();
+      updateView();
+    });
+
+    function initMap() {
+      //请特别重视这个图层名字geojsonOriginLine
+      map.addSource("geojsonOriginLine", {
+        type: "geojson",
+        data: originLine, //一开始的数据是空的,后面请求到了再更新
+      });
+      map.addLayer({
+        id: "line1",
+        type: "line",
+        source: "geojsonOriginLine", //必须和上面的geojsonOriginLine一致
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#222",
+          "line-width": 4,
+        },
       });
 
-      function initMap() {
-        //请特别重视这个图层名字geojsonOriginLine
-        map.addSource("geojsonOriginLine", {
-          type: "geojson",
-          data: originLine, //一开始的数据是空的,后面请求到了再更新
-        });
-        map.addLayer({
-          id: "line1",
-          type: "line",
-          source: "geojsonOriginLine", //必须和上面的geojsonOriginLine一致
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#222",
-            "line-width": 4,
-          },
-        });
+      //请特别重视这个图层名字geojsonAlongLine
+      map.addSource("geojsonAlongLine", {
+        type: "geojson",
+        data: alongLine, //一开始的数据是空的,后面请求到了再更新
+      });
+      map.addLayer({
+        id: "line2",
+        type: "line",
+        source: "geojsonAlongLine", //必须和上面的geojsonAlongLine一致
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#FF0000",
+          "line-width": 8,
+        },
+      });
+    }
 
-        //请特别重视这个图层名字geojsonAlongLine
-        map.addSource("geojsonAlongLine", {
-          type: "geojson",
-          data: alongLine, //一开始的数据是空的,后面请求到了再更新
-        });
-        map.addLayer({
-          id: "line2",
-          type: "line",
-          source: "geojsonAlongLine", //必须和上面的geojsonAlongLine一致
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#FF0000",
-            "line-width": 8,
-          },
-        });
-      }
+    function insertLine() {
+      var lineDistance = turf.distance(origin, destination, {
+        units: "kilometers",
+      });
 
-      function insertLine() {
-        var lineDistance = turf.distance(origin, destination, {
+      var arc = [];
+      var count = 100; //插入100个点
+      var clip = lineDistance / count; //用于下面的循环
+
+      for (var i = 0; i < lineDistance; i += clip) {
+        //计算对应第i个插值点的位置
+        var segment = turf.along(originLine.features[0], i, {
           units: "kilometers",
         });
-
-        var arc = [];
-        var count = 100; //插入100个点
-        var clip = lineDistance / count; //用于下面的循环
-
-        for (var i = 0; i < lineDistance; i += clip) {
-          //计算对应第i个插值点的位置
-          var segment = turf.along(originLine.features[0], i, {
-            units: "kilometers",
-          });
-          //将插值点加入到原始数据中
-          arc.push(segment.geometry.coordinates);
-        }
-        arc.push(destination); //补上终点
-        //更新数据
-        alongLine.features[0].geometry.coordinates = arc;
+        //将插值点加入到原始数据中
+        arc.push(segment.geometry.coordinates);
       }
+      arc.push(destination); //补上终点
+      //更新数据
+      alongLine.features[0].geometry.coordinates = arc;
+    }
 
-      function updateView() {
-        //注意centerPoint是之前添加的source的名字
-        map.getSource("geojsonOriginLine").setData(originLine);
-        map.getSource("geojsonAlongLine").setData(alongLine);
-      }
-    </script>
-  </body>
+    function updateView() {
+      //注意centerPoint是之前添加的source的名字
+      map.getSource("geojsonOriginLine").setData(originLine);
+      map.getSource("geojsonAlongLine").setData(alongLine);
+    }
+  </script>
+</body>
+
 </html>

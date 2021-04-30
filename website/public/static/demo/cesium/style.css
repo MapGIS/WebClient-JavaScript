@@ -5,6 +5,7 @@
 }
 
 #coordinateDiv {
+    position: absolute;
     color: #F0EFEF;
     line-height: 30px;
     margin-left: 30%;
@@ -69,7 +70,7 @@
     border-radius: 5px;
 }
 
-.message button:hover{
+.message button:hover {
     background-color: #1D9ED7;
     color: white;
 }

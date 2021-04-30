@@ -6,6 +6,7 @@
     <title>单值专题图</title>
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl" src="./static/libs/include-mapboxgl-local.js"></script>
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
     <style>
         .mapboxgl-ctrl-icon {
             background-position: 50% 50%;
@@ -61,7 +62,15 @@
                 noWrap: true
             });
             mapDocLayer.addToMap(map);
-
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                //经纬度坐标转web墨卡托
+                const earthRad = 6378137.0;
+                const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+                const a = e.lngLat.lat * Math.PI / 180;
+                const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+                document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+            });
             //初始化专题图服务类
             ThemeOper = new Zondy.Service.ThemeOper(guid);
             //设置ip地址
@@ -294,6 +303,11 @@
         /** 添加专题图
          */
         function addUniqueThemesInfo() {
+            if (themesInfoArr) {
+                //删除专题图,onUniqueTheme为回调函数
+                ThemeOper.removeThemesInfo("HubeiCity3857", "1/0", onUniqueTheme);
+                themesInfoArr = null;
+            }
             themesInfoArr = createThemesInfoArr();
             //显示进度条
             startPressBar();
@@ -365,6 +379,8 @@
         <span>正在操作，请稍候</span>
     </div>
     <div id="map" style="width: 100%; height:700px;">
+        <div id="mouse-position">
+        </div>
     </div>
 </body>
 

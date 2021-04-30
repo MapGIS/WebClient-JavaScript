@@ -90,7 +90,12 @@ import {
     DeepMerge,
     merge,
     mixin,
-    createCanvasContext2D
+    createCanvasContext2D,
+	formatQuery,
+	formatEdits,
+	returnPoint,
+	formatPoints,
+	notNULL
 } from './Util';
 
 export {AnyLine};
@@ -185,6 +190,11 @@ export {
  	DeepMerge,
  	merge,
  	mixin,
- 	createCanvasContext2D
+ 	createCanvasContext2D,
+	formatQuery,
+	formatEdits,
+	returnPoint,
+	formatPoints,
+	notNULL
  } ;
 

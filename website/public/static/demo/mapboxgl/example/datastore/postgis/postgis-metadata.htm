@@ -1,179 +1,190 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>元数据信息</title>
-        <script src="./static/libs/include-mapboxgl-local.js"></script>
-        <style>
-            #map {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-            }
-            .mapboxgl-popup {
-                max-width: fit-content !important;
-            }
-            .table-popup-wrapper {
-                max-width: 500px;
-                max-height: 500px;
-                overflow-y: scroll;
-                width: fit-content;
-            }
-        </style>
-    </head>
 
-    <body>
-        <div id="map"></div>
-        <script>
-            mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>元数据信息</title>
+    <script src="./static/libs/include-mapboxgl-local.js"></script>
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        #map {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
 
-            var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
-            var vecsrc = {
-                //来源类型为栅格瓦片
-                type: 'raster',
-                tiles: [
-                    //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
-                    'http://t' +
-                        Math.round(Math.random() * 7) +
-                        '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
-                        '&TILECOL=' +
-                        '{x}' +
-                        '&TILEROW=' +
-                        '{y}' +
-                        '&TILEMATRIX=' +
-                        '{z}' +
-                        '&tk=' +
-                        tiandituKey
-                ],
-                //栅格瓦片的分辨率
-                tileSize: 256
-            };
-            var cvasrc = {
-                //来源类型为栅格瓦片
-                type: 'raster',
-                tiles: [
-                    //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
-                    'http://t' +
-                        Math.round(Math.random() * 7) +
-                        '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
-                        '&TILECOL=' +
-                        '{x}' +
-                        '&TILEROW=' +
-                        '{y}' +
-                        '&TILEMATRIX=' +
-                        '{z}' +
-                        '&tk=' +
-                        tiandituKey
-                ],
-                //栅格瓦片的分辨率
-                tileSize: 256
-            };
-            var popup = new mapboxgl.Popup({ closeOnClick: false });
-            var map = new mapboxgl.Map({
-                container: 'map',
-                crs: 'EPSG:4326', //经纬度一定要设置crs参数
-                maxBounds: [
-                    [-180, -90],
-                    [180, 90]
-                ],
-                style: {
-                    //设置版本号，一定要设置
-                    version: 8,
-                    //添加来源
-                    sources: {
-                        vecsrc: vecsrc,
-                        cvasrc: cvasrc
-                    },
-                    //设置加载并显示来源的图层信息
-                    layers: [
-                        {
-                            //图层id，要保证唯一性
-                            id: 'vecsrc',
-                            //图层类型
-                            type: 'raster',
-                            //连接图层来源
-                            source: 'vecsrc',
-                            //图层最小缩放级数
-                            minzoom: 0,
-                            //图层最大缩放级数
-                            maxzoom: 22
-                        },
-                        {
-                            //图层id，要保证唯一性
-                            id: 'cvasrc',
-                            //图层类型
-                            type: 'raster',
-                            //连接图层来源
-                            source: 'cvasrc',
-                            //图层最小缩放级数
-                            minzoom: 0,
-                            //图层最大缩放级数
-                            maxzoom: 22
-                        }
-                    ]
+        .mapboxgl-popup {
+            max-width: fit-content !important;
+        }
+
+        .table-popup-wrapper {
+            max-width: 500px;
+            max-height: 500px;
+            overflow-y: scroll;
+            width: fit-content;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+        <div id="mouse-position">
+        </div>
+    </div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+
+        var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+        var vecsrc = {
+            //来源类型为栅格瓦片
+            type: 'raster',
+            tiles: [
+                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                'http://t' +
+                Math.round(Math.random() * 7) +
+                '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                '&TILECOL=' +
+                '{x}' +
+                '&TILEROW=' +
+                '{y}' +
+                '&TILEMATRIX=' +
+                '{z}' +
+                '&tk=' +
+                tiandituKey
+            ],
+            //栅格瓦片的分辨率
+            tileSize: 256
+        };
+        var cvasrc = {
+            //来源类型为栅格瓦片
+            type: 'raster',
+            tiles: [
+                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                'http://t' +
+                Math.round(Math.random() * 7) +
+                '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                '&TILECOL=' +
+                '{x}' +
+                '&TILEROW=' +
+                '{y}' +
+                '&TILEMATRIX=' +
+                '{z}' +
+                '&tk=' +
+                tiandituKey
+            ],
+            //栅格瓦片的分辨率
+            tileSize: 256
+        };
+        var popup = new mapboxgl.Popup({ closeOnClick: false });
+        var map = new mapboxgl.Map({
+            container: 'map',
+            crs: 'EPSG:4326', //经纬度一定要设置crs参数
+            maxBounds: [
+                [-180, -90],
+                [180, 90]
+            ],
+            style: {
+                //设置版本号，一定要设置
+                version: 8,
+                //添加来源
+                sources: {
+                    vecsrc: vecsrc,
+                    cvasrc: cvasrc
                 },
-                zoom: 10,
-                pitch: 45,
-                center: [121.4693, 31.12307]
-            });
+                //设置加载并显示来源的图层信息
+                layers: [
+                    {
+                        //图层id，要保证唯一性
+                        id: 'vecsrc',
+                        //图层类型
+                        type: 'raster',
+                        //连接图层来源
+                        source: 'vecsrc',
+                        //图层最小缩放级数
+                        minzoom: 0,
+                        //图层最大缩放级数
+                        maxzoom: 22
+                    },
+                    {
+                        //图层id，要保证唯一性
+                        id: 'cvasrc',
+                        //图层类型
+                        type: 'raster',
+                        //连接图层来源
+                        source: 'cvasrc',
+                        //图层最小缩放级数
+                        minzoom: 0,
+                        //图层最大缩放级数
+                        maxzoom: 22
+                    }
+                ]
+            },
+            zoom: 10,
+            pitch: 45,
+            center: [121.4693, 31.12307]
+        });
+        //注册鼠标移动事件
+        map.on('mousemove', function (e) {
+            document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+        });
+        let param = {
+            networkProtocol: 'http',
+            ip: '192.168.96.101',
+            port: 9091,
+            path: 'bigdata03/bigdata03',
+            tableNames: 'mpf24091'
+        };
 
-            let param = {
-                networkProtocol: 'http',
-                ip: '192.168.96.101',
-                port: 9091,
-                path: 'bigdata03/bigdata03',
-                tableNames: 'mpf24091'
-            };
+        let catlog = new Zondy.DataStore.PostGIS.PostgisTableService(param);
+        catlog.query(success, fail);
+        function success(res) {
+            let result = res.value[0].t;
+            let html = '<div class="table-popup-wrapper">' + makeHtml(result) + '</div>';
+            popup.setLngLat([121.4693, 31.12307]).setHTML(html).addTo(map);
+        }
 
-            let catlog = new Zondy.DataStore.PostGIS.PostgisTableService(param);
-            catlog.query(success, fail);
-            function success(res) {
-                let result = res.value[0].t;
-                let html = '<div class="table-popup-wrapper">' + makeHtml(result) + '</div>';
-                popup.setLngLat([121.4693, 31.12307]).setHTML(html).addTo(map);
-            }
+        function fail(error) {
+            console.log('fail', error);
+        }
 
-            function fail(error) {
-                console.log('fail', error);
-            }
-
-            function makeHtml(result) {
-                let html = '<div><table border="1"><tr><th>属性</th><th>值</th></tr>';
-                let keys = Object.keys(result);
-                // 显示非对象属性
-                keys.forEach((key) => {
-                    if (typeof result[key] != 'object' || result[key] == undefined) {
-                        html += `<tr>
+        function makeHtml(result) {
+            let html = '<div><table border="1"><tr><th>属性</th><th>值</th></tr>';
+            let keys = Object.keys(result);
+            // 显示非对象属性
+            keys.forEach((key) => {
+                if (typeof result[key] != 'object' || result[key] == undefined) {
+                    html += `<tr>
                                   <td>${key}</td>
                                   <td>${result[key]}</td>
                                 </tr>`;
-                    }
-                });
-                // 显示对象属性
-                keys.forEach((key) => {
-                    if (result[key] && typeof result[key] == 'object') {
-                        html += `<th colspan="2">${key}</th>`;
-                        html += '<tr><th>属性</th><th>值</th></tr>';
-                        let object = result[key];
-                        let fields = Object.keys(object);
-                        fields.forEach((f) => {
-                            let item;
-                            if (object[f] && typeof object[f] === 'object') {
-                                item = makeHtml(object[f]);
-                            } else {
-                                item = object[f];
-                            }
-                            html += `<tr>
+                }
+            });
+            // 显示对象属性
+            keys.forEach((key) => {
+                if (result[key] && typeof result[key] == 'object') {
+                    html += `<th colspan="2">${key}</th>`;
+                    html += '<tr><th>属性</th><th>值</th></tr>';
+                    let object = result[key];
+                    let fields = Object.keys(object);
+                    fields.forEach((f) => {
+                        let item;
+                        if (object[f] && typeof object[f] === 'object') {
+                            item = makeHtml(object[f]);
+                        } else {
+                            item = object[f];
+                        }
+                        html += `<tr>
                                   <td>${f}</td>
                                   <td>${item}</td>
                                 </tr>`;
-                        });
-                    }
-                });
+                    });
+                }
+            });
 
-                html += '</table></div>';
-                return html;
-            }
-        </script>
-    </body>
+            html += '</table></div>';
+            return html;
+        }
+    </script>
+</body>
+
 </html>
