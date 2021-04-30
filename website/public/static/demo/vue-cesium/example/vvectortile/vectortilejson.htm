@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-地图瓦片</title>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            #app {
+                height: 100vh;
+                width: 100vw;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapgis-web-scene
+                v-bind:ref="webgloberef"
+                v-bind:animation="false"
+                v-bind:timeline="false"
+                v-on:load="handleLoad"
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+            >
+                <mapgis-3d-vectortile-layer v-on:load="handleVectorTile" :vectortilejson="vectortilejson" />
+            </mapgis-web-scene>
+        </div>
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        webgloberef: 'webgloberef' + Math.random(),
+                        vectortilejson: {
+                            version: 8,
+                            name: '中国行政区 Style',
+                            sources: {
+                                中国行政区: {
+                                    type: 'vector',
+                                    tiles: ['http://develop.smaryun.com:6163/igs/rest/mrms/tile/中国行政区/{z}/{y}/{x}?type=cpbf'],
+                                    minZoom: 0,
+                                    maxZoom: 10
+                                }
+                            },
+                            sprite: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/sprite',
+                            glyphs: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf',
+                            layers: [
+                                {
+                                    id: '背景',
+                                    type: 'background',
+                                    paint: {
+                                        'background-color': 'rgba(247, 247, 247, 1)'
+                                    }
+                                },
+                                {
+                                    id: '中国行政区',
+                                    type: 'fill',
+                                    source: '中国行政区',
+                                    'source-layer': '中国行政区',
+                                    minzoom: 0,
+                                    maxzoom: 10,
+                                    layout: {
+                                        visibility: 'visible'
+                                    },
+                                    paint: {
+                                        'fill-outline-color': 'rgba(255, 255, 255, 1)',
+                                        'fill-color': 'rgba(175, 205, 220, 0)'
+                                    }
+                                }
+                            ],
+                            id: '中国行政区-id',
+                            crs: null
+                        }
+                    };
+                },
+                methods: {
+                    handleLoad(e) {
+                        let vm = this;
+                        console.log('地图加初始化完毕！', e);
+                        window.setTimeout(() => {
+                            vm.vectortilejson.layers = [
+                                {
+                                    id: '中国行政区',
+                                    type: 'fill',
+                                    source: '中国行政区',
+                                    'source-layer': '中国行政区',
+                                    minzoom: 0,
+                                    maxzoom: 10,
+                                    layout: {
+                                        visibility: 'visible'
+                                    },
+                                    paint: {
+                                        'fill-outline-color': 'rgba(0, 0, 0, 1)',
+                                        'fill-color': 'rgba(0, 0, 0, 1)'
+                                    }
+                                }
+                            ];
+                        }, 5000);
+                    },
+                    handleVectorTile(com) {
+                        let vm = this;
+                        console.log('矢量瓦片加初始化完毕！', com);
+                        window.setTimeout(() => {
+                            com.updateStyle({
+                                ...this.vectortilejson,
+                                layers: [
+                                    {
+                                        id: '中国行政区',
+                                        type: 'fill',
+                                        source: '中国行政区',
+                                        'source-layer': '中国行政区',
+                                        minzoom: 0,
+                                        maxzoom: 10,
+                                        layout: {
+                                            visibility: 'visible'
+                                        },
+                                        paint: {
+                                            'fill-outline-color': 'rgba(0, 0, 0, 1)',
+                                            'fill-color': 'rgba(255, 255, 255, 1)'
+                                        }
+                                    }
+                                ]
+                            });
+                        }, 2500);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

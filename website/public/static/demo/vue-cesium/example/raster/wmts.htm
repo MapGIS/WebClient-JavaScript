@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Vue-WMTS</title>
-        <script include="vue" exclude="plugin" src="./static/libs/include-cesium-local.js"></script>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
                 height: 100vh;
@@ -15,16 +15,16 @@
 
     <body>
         <div id="app">
-            <cesium-web-globe
+            <mapgis-web-scene
                 v-bind:ref="webgloberef"
                 v-bind:animation="false"
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
-                libPath="./static/libs/cdn/cesium/Cesium.js"
-                pluginPath="./static/libs/cdn/zondyclient/webclient-cesium-plugin.js"
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <cesium-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></cesium-ogc-wmts-layer>
-            </cesium-web-globe>
+                <mapgis-3d-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></mapgis-3d-ogc-wmts-layer>
+            </mapgis-web-scene>
         </div>
         <script>
             new Vue({
@@ -33,7 +33,7 @@
                     return {
                         webgloberef: 'webgloberef' + Math.random(),
                         url:
-                            'http://t0.tianditu.com/DataServer?T=vec_c' +
+                            'http://t2.tianditu.com/DataServer?T=vec_c' +
                             '&L={TileMatrix}&Y={TileRow}&X={TileCol}' +
                             '&tk=9c157e9585486c02edf817d2ecbc7752',
                         options: {
