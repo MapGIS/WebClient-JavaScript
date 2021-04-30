@@ -428,6 +428,14 @@
                             "detail": "",
                             "icon": "mapboxstyle.png",
                             "update": "最后更新时间：2019-12-16"
+                        },
+                        {
+                            "name": "前端查询",
+                            "file": "mapboxquery",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "mapboxquery.png",
+                            "update": "最后更新时间：2021-04-07"
                         }
                     ]
                 },

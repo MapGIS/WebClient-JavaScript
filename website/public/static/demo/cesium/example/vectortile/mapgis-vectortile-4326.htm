@@ -9,6 +9,19 @@
         <script src="./static/libs/include-cesium-local.js"></script>
         <!--引用示例页面样式表-->
         <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+        <style>
+            .vectortile-control-wrapper {
+                position: absolute;
+                z-index: 9999;
+                top: 20px;
+                left: 20px;
+            }
+            .item {
+                margin-top: 12px;
+                padding: 4px;
+                background: #ffffff;
+            }
+        </style>
         <script>
             //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
             'use strict';
@@ -36,7 +49,8 @@
                     style: 'default',
                     tileMatrixSetID: 'w',
                     maximumLevel: 9,
-                    format: 'tiles',
+                    format: 'tiles'
+
                     // tilingScheme: new Cesium.GeographicTilingScheme()
                 });
                 webGlobe.viewer.imageryLayers.addImageryProvider(tianditu);
@@ -59,9 +73,38 @@
                         tilingScheme: new Cesium.GeographicTilingScheme({
                             numberOfLevelZeroTilesX: 2,
                             numberOfLevelZeroTilesY: 1
-                        })
+                        }),
+                        callback: handleLayerAdd
                     }
                 );
+            }
+
+            function handleLayerAdd(payload) {
+                const { imageryLayer } = payload;
+                window.setTimeout(() => {
+                    imageryLayer.alpha = 0.5;
+                }, 5000);
+            }
+
+            function onLayoutChange() {
+                vectortileLayer.setLayoutProperty('省级行政区', 'visibility', 'none');
+            }
+
+            function onPaintChange() {
+                vectortileLayer.setPaintProperty('省级行政区', 'fill-color', 'rgba(0,0,0,1.0)');
+            }
+
+            function onFilterChange() {
+                vectortileLayer.setFilter('省级行政区', ['all', ['==', '省名', '甘肃']]);
+            }
+
+            function onStyleChange() {
+                $.ajax({
+                    url: `./static/data/mapbox/changestyle.json`,
+                    success: function (json) {
+                        vectortileLayer.updateStyle(json);
+                    }
+                });
             }
         </script>
     </head>
@@ -72,6 +115,12 @@
         <div id="coordinateDiv" class="coordinateClass">
             <label id="coordinate_location"></label>
             <label id="coordinate_height"></label>
+        </div>
+        <div class="vectortile-control-wrapper">
+            <div class="item" onclick="onLayoutChange()">改变布局属性</div>
+            <div class="item" onclick="onPaintChange()">改变画笔属性</div>
+            <div class="item" onclick="onFilterChange()">改变过滤属性</div>
+            <div class="item" onclick="onStyleChange()">改变整体样式</div>
         </div>
     </body>
 </html>
