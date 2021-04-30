@@ -241,92 +241,97 @@ export default class LabelLayer extends BaseLayer {
      * @returns {Entity} labelIcon  图标注记对象 移除通过removeEntity(entity)
      */
     appendLabelIconEx(lon, lat, height, options) {
-        options = defaultValue(options, {});
+        // eslint-disable-next-line no-param-reassign
+        options = Cesium.defaultValue(options, {});
 
-        let text = defaultValue(options.text, undefined);
-        let iconUrl = defaultValue(options.iconUrl, undefined);
+        const text = Cesium.defaultValue(options.text, undefined);
+        const iconUrl = Cesium.defaultValue(options.iconUrl, undefined);
 
-        if (!defined(text) && !defined(iconUrl)) {
+        if (!Cesium.defined(text) && !Cesium.defined(iconUrl)) {
+            // eslint-disable-next-line no-console
             console.log('text 和 iconUrl 都未定义，无法正常添加 labelIcon');
             return null;
         }
 
-        let translucencyByDistance = defaultValue(options.translucencyByDistance, new NearFarScalar(1.5e5, 1.0, 1.5e9, 0.0));
-        let scaleByDistance = defaultValue(options.scaleByDistance, new NearFarScalar(1.5e2, 1.5, 1.5e7, 0.0));
-        let disableDepthTestDistance = defaultValue(options.disableDepthTestDistance, Number.POSITIVE_INFINITY);
+        const translucencyByDistance = Cesium.defaultValue(options.translucencyByDistance, new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e9, 0.0));
+        const scaleByDistance = Cesium.defaultValue(options.scaleByDistance, new Cesium.NearFarScalar(1.5e2, 1.5, 1.5e7, 0.0));
+        const disableDepthTestDistance = Cesium.defaultValue(options.disableDepthTestDistance, Number.POSITIVE_INFINITY);
 
-        let iconWidth = defaultValue(options.iconWidth, 64);
-        let iconHeight = defaultValue(options.iconHeight, 64);
-        let icoPixelOffset = defaultValue(options.icoPixelOffset, new Cartesian2(0.0, 0.0));
-        let icoPixelOffsetScaleByDistance = defaultValue(options.icoPixelOffsetScaleByDistance, undefined);
-        let icoVerticalOrigin = defaultValue(options.icoVerticalOrigin, VerticalOrigin.CENTER);
-        let icoHorizontalOrigin = defaultValue(options.icoHorizontalOrigin, HorizontalOrigin.TOP);
+        const iconWidth = Cesium.defaultValue(options.iconWidth, 64);
+        const iconHeight = Cesium.defaultValue(options.iconHeight, 64);
+        const icoPixelOffset = Cesium.defaultValue(options.icoPixelOffset, new Cesium.Cartesian2(0.0, 0.0));
+        const icoPixelOffsetScaleByDistance = Cesium.defaultValue(options.icoPixelOffsetScaleByDistance, undefined);
+        const icoVerticalOrigin = Cesium.defaultValue(options.icoVerticalOrigin, Cesium.VerticalOrigin.CENTER);
+        const icoHorizontalOrigin = Cesium.defaultValue(options.icoHorizontalOrigin, Cesium.HorizontalOrigin.TOP);
 
-        let font = defaultValue(options.font, '14pt 楷体');
-        let labelPixelOffset = defaultValue(options.labelPixelOffset, new Cartesian2(0.0, -iconHeight / 2));
-        let labelPixelOffsetScaleByDistance = defaultValue(options.labelPixelOffsetScaleByDistance, new NearFarScalar(1.5e5, 1.5, 1.5e7, 0.0));
-        let labelFillColor = defaultValue(options.labelFillColor, Color.WHITE);
-        let labelShowBackground = defaultValue(options.labelShowBackground, false);
-        let labelBackgroundColor = defaultValue(options.labelBackgroundColor, new Color(0.165, 0.165, 0.165, 0.8));
-        let labelShow = defaultValue(options.labelShow, true);
-        let labelStyle = defaultValue(options.labelStyle, LabelStyle.FILL_AND_OUTLINE);
-        let labelOutlineWidth = defaultValue(options.labelOutlineWidth, 1);
-        let labelVerticalOrigin = defaultValue(options.labelVerticalOrigin, VerticalOrigin.BOTTOM);
-        let labelHorizontalOrigin = defaultValue(options.labelHorizontalOrigin, HorizontalOrigin.BOTTOM);
+        const font = Cesium.defaultValue(options.font, '14pt 楷体');
+        const labelPixelOffset = Cesium.defaultValue(options.labelPixelOffset, new Cesium.Cartesian2(0.0, -iconHeight / 2));
+        const labelPixelOffsetScaleByDistance = Cesium.defaultValue(
+            options.labelPixelOffsetScaleByDistance,
+            new Cesium.NearFarScalar(1.5e5, 1.5, 1.5e7, 0.0)
+        );
+        const labelFillColor = Cesium.defaultValue(options.labelFillColor, Cesium.Color.WHITE);
+        const labelShowBackground = Cesium.defaultValue(options.labelShowBackground, false);
+        const labelBackgroundColor = Cesium.defaultValue(options.labelBackgroundColor, new Cesium.Color(0.165, 0.165, 0.165, 0.8));
+        const labelShow = Cesium.defaultValue(options.labelShow, true);
+        const labelStyle = Cesium.defaultValue(options.labelStyle, Cesium.LabelStyle.FILL_AND_OUTLINE);
+        const labelOutlineWidth = Cesium.defaultValue(options.labelOutlineWidth, 1);
+        const labelVerticalOrigin = Cesium.defaultValue(options.labelVerticalOrigin, Cesium.VerticalOrigin.BOTTOM);
+        const labelHorizontalOrigin = Cesium.defaultValue(options.labelHorizontalOrigin, Cesium.HorizontalOrigin.BOTTOM);
 
-        let attribute = defaultValue(options.attribute, undefined);
+        const attribute = Cesium.defaultValue(options.attribute, undefined);
 
-        let entity = {
-            name: defined(text) ? text : 'defaut',
-            position: Cartesian3.fromDegrees(lon, lat, height),
+        const entity = {
+            name: Cesium.defined(text) ? text : 'defaut',
+            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
 
             description: attribute
         };
 
-        if (defined(iconUrl)) {
+        if (Cesium.defined(iconUrl)) {
             entity.billboard = {
-                //图标
+                // 图标
                 image: iconUrl,
                 width: iconWidth,
                 height: iconHeight,
                 pixelOffset: icoPixelOffset,
                 pixelOffsetScaleByDistance: icoPixelOffsetScaleByDistance,
-                //随远近隐藏
-                translucencyByDistance: translucencyByDistance,
-                //随远近缩放
-                scaleByDistance: scaleByDistance,
-                //定位点
+                // 随远近隐藏
+                translucencyByDistance,
+                // 随远近缩放
+                scaleByDistance,
+                // 定位点
                 verticalOrigin: icoVerticalOrigin,
                 horizontalOrigin: icoHorizontalOrigin,
-                disableDepthTestDistance: disableDepthTestDistance
+                disableDepthTestDistance
             };
         }
 
-        if (defined(text)) {
+        if (Cesium.defined(text)) {
             entity.label = {
-                //文字标签
-                text: text,
-                font: font,
+                // 文字标签
+                text,
+                font,
                 show: labelShow,
                 style: labelStyle,
                 fillColor: labelFillColor,
                 showBackground: labelShowBackground,
                 backgroundColor: labelBackgroundColor,
                 outlineWidth: labelOutlineWidth,
-                verticalOrigin: labelVerticalOrigin, //垂直方向以底部来计算标签的位置
-                horizontalOrigin: labelHorizontalOrigin, //原点在下方
+                verticalOrigin: labelVerticalOrigin, // 垂直方向以底部来计算标签的位置
+                horizontalOrigin: labelHorizontalOrigin, // 原点在下方
                 // heightReference: heightReference,
-                pixelOffset: labelPixelOffset, //x,y方向偏移 相对于屏幕
+                pixelOffset: labelPixelOffset, // x,y方向偏移 相对于屏幕
                 pixelOffsetScaleByDistance: labelPixelOffsetScaleByDistance,
-                //随远近缩放
-                scaleByDistance: scaleByDistance,
-                //随远近隐藏
-                translucencyByDistance: translucencyByDistance,
-                disableDepthTestDistance: disableDepthTestDistance
+                // 随远近缩放
+                scaleByDistance,
+                // 随远近隐藏
+                translucencyByDistance,
+                disableDepthTestDistance
             };
         }
 
-        let labelIcon = this.viewer.entities.add(entity);
+        const labelIcon = this.viewer.entities.add(entity);
         return labelIcon;
     }
 
