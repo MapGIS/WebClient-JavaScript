@@ -469,7 +469,40 @@ export const DataStore = {
     EsSpaceTimeQueryByAgg
 };
 
+import {
+    ArcGisFeatureLayer,
+    ArcGisFindParameters,
+    ArcGisFindTask,
+    ArcGisIdentifyTask,
+    ArcGisIdentifyParameters,
+    ArcGisGeometry,
+    ArcGisQuery,
+    ArcGisQueryTask,
+    ArcGisPoint,
+    ArcGisMultipoint,
+    ArcGisPolyline,
+    ArcGisPolygon,
+    ArcGisGraphic,
+    ArcGisExtent
+} from './ArcGis'
+export const ArcGis = {
+    ArcGisFeatureLayer,
+    ArcGisFindParameters,
+    ArcGisFindTask,
+    ArcGisIdentifyTask,
+    ArcGisIdentifyParameters,
+    ArcGisGeometry,
+    ArcGisQuery,
+    ArcGisQueryTask,
+    ArcGisPoint,
+    ArcGisMultipoint,
+    ArcGisPolyline,
+    ArcGisPolygon,
+    ArcGisGraphic,
+    ArcGisExtent
+};
 export default {
     MRFS,
-    MRFWS
+    MRFWS,
+    ArcGis
 };
