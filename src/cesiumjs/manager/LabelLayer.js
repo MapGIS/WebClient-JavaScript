@@ -207,6 +207,136 @@ export default class LabelLayer extends BaseLayer {
 
     /**
      * 添加图标注记
+     * @function module:客户端可视化.LabelLayer.prototype.appendLabelIconEx
+     * @param {Number} lon               经度
+     * @param {Number} lat               纬度
+     * @param {Number} height            高程
+     * @param {Object} [options]         可配置参数
+     * @param {String} [options.iconUrl] 图标路径，默认值: undefined
+     * @param {String} [options.text]    注记文字内容，默认值: undefined
+     * @param {Number} [options.disableDepthTestDistance] 图片和文字注记的深度测试
+     * @param {NearFarScalar} [options.translucencyByDistance] 透明显示参数 默认值: new NearFarScalar(1.5e5, 1.0, 1.5e9, 0.0)
+     * @param {NearFarScalar} [options.scaleByDistance] 缩放距离参数 默认值: new Cesium.NearFarScalar(1.5e2, 1.5, 1.5e7, 0.0)
+     * @param {Number} [options.iconWidth]              图标宽度 默认值: 64
+     * @param {Number} [options.iconHeight]             图标高度 默认值: 64
+     * @param {Cartesian2} [options.icoPixelOffset]     图标偏移 默认值: Cartesian2.ZERO
+     * @param {NearFarScalar} [options.icoPixelOffsetScaleByDistance] 图标偏移值缩放距离参数 默认值: undefined
+     * @param {Number} [options.icoVerticalOrigin]      图标相对于原点的竖直位置 默认值: VerticalOrigin.CENTER
+     * @param {Number} [options.icoHorizontalOrigin]    图标相对于原点的水平位置 默认值: HorizontalOrigin.TOP
+     * @param {String} [options.font]                   字体 这里将字体和大小放在一起 eg:'14pt 楷体'
+     * @param {Cartesian2} [options.labelPixelOffset]   默认值: new Cartesian2(0.0, -iconHeight / 4)
+     * @param {NearFarScalar} [options.labelPixelOffsetScaleByDistance] 文字注记偏移值缩放距离参数默认值: new NearFarScalar(1.5e5, 1.5, 1.5e7, 0.0)
+     * @param {Color}  [options.labelFillColor]         默认值: Color.WHITE
+     * @param {Color}  [options.labelBackgroundColor]   默认值: new Color(0.165, 0.165, 0.165, 0.8)
+     * @param {Bool}   [options.labelShow]              默认值: true
+     * @param {BOOL}   [options.labelShowBackground]    默认值: false
+     * @param {Number} [options.labelStyle]             默认值: LabelStyle.FILL_AND_OUTLINE
+     * @param {Color}  [options.labelOutlineWidth]      默认值: 1
+     * @param {String} [options.labelVerticalOrigin]    文字注记相对于原点的竖直位置 默认值: VerticalOrigin.BOTTOM
+     * @param {String} [options.labelHorizontalOrigin]  文字注记相对于原点的水平位置 默认值: HorizontalOrigin.BOTTOM
+     * @param {String} [options.attribute]              属性参数 默认值: undefined
+     * @example
+     *  const options = { iconUrl: '/car.png', text: '注记文本', font: '14pt 楷体', labelShowBackground: true, attribute: '这是属性信息查询时可以看到' }
+     *  const labelIcon = webGlobe.appendLabelIconEx(110, 33, 0, options);
+     * @returns {Entity} labelIcon  图标注记对象 移除通过removeEntity(entity)
+     */
+    appendLabelIconEx(lon, lat, height, options) {
+        // eslint-disable-next-line no-param-reassign
+        options = Cesium.defaultValue(options, {});
+
+        const text = Cesium.defaultValue(options.text, undefined);
+        const iconUrl = Cesium.defaultValue(options.iconUrl, undefined);
+
+        if (!Cesium.defined(text) && !Cesium.defined(iconUrl)) {
+            // eslint-disable-next-line no-console
+            console.log('text 和 iconUrl 都未定义，无法正常添加 labelIcon');
+            return null;
+        }
+
+        const translucencyByDistance = Cesium.defaultValue(options.translucencyByDistance, new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e9, 0.0));
+        const scaleByDistance = Cesium.defaultValue(options.scaleByDistance, new Cesium.NearFarScalar(1.5e2, 1.5, 1.5e7, 0.0));
+        const disableDepthTestDistance = Cesium.defaultValue(options.disableDepthTestDistance, Number.POSITIVE_INFINITY);
+
+        const iconWidth = Cesium.defaultValue(options.iconWidth, 64);
+        const iconHeight = Cesium.defaultValue(options.iconHeight, 64);
+        const icoPixelOffset = Cesium.defaultValue(options.icoPixelOffset, new Cesium.Cartesian2(0.0, 0.0));
+        const icoPixelOffsetScaleByDistance = Cesium.defaultValue(options.icoPixelOffsetScaleByDistance, undefined);
+        const icoVerticalOrigin = Cesium.defaultValue(options.icoVerticalOrigin, Cesium.VerticalOrigin.CENTER);
+        const icoHorizontalOrigin = Cesium.defaultValue(options.icoHorizontalOrigin, Cesium.HorizontalOrigin.TOP);
+
+        const font = Cesium.defaultValue(options.font, '14pt 楷体');
+        const labelPixelOffset = Cesium.defaultValue(options.labelPixelOffset, new Cesium.Cartesian2(0.0, -iconHeight / 2));
+        const labelPixelOffsetScaleByDistance = Cesium.defaultValue(
+            options.labelPixelOffsetScaleByDistance,
+            new Cesium.NearFarScalar(1.5e5, 1.5, 1.5e7, 0.0)
+        );
+        const labelFillColor = Cesium.defaultValue(options.labelFillColor, Cesium.Color.WHITE);
+        const labelShowBackground = Cesium.defaultValue(options.labelShowBackground, false);
+        const labelBackgroundColor = Cesium.defaultValue(options.labelBackgroundColor, new Cesium.Color(0.165, 0.165, 0.165, 0.8));
+        const labelShow = Cesium.defaultValue(options.labelShow, true);
+        const labelStyle = Cesium.defaultValue(options.labelStyle, Cesium.LabelStyle.FILL_AND_OUTLINE);
+        const labelOutlineWidth = Cesium.defaultValue(options.labelOutlineWidth, 1);
+        const labelVerticalOrigin = Cesium.defaultValue(options.labelVerticalOrigin, Cesium.VerticalOrigin.BOTTOM);
+        const labelHorizontalOrigin = Cesium.defaultValue(options.labelHorizontalOrigin, Cesium.HorizontalOrigin.BOTTOM);
+
+        const attribute = Cesium.defaultValue(options.attribute, undefined);
+
+        const entity = {
+            name: Cesium.defined(text) ? text : 'defaut',
+            position: Cesium.Cartesian3.fromDegrees(lon, lat, height),
+
+            description: attribute
+        };
+
+        if (Cesium.defined(iconUrl)) {
+            entity.billboard = {
+                // 图标
+                image: iconUrl,
+                width: iconWidth,
+                height: iconHeight,
+                pixelOffset: icoPixelOffset,
+                pixelOffsetScaleByDistance: icoPixelOffsetScaleByDistance,
+                // 随远近隐藏
+                translucencyByDistance,
+                // 随远近缩放
+                scaleByDistance,
+                // 定位点
+                verticalOrigin: icoVerticalOrigin,
+                horizontalOrigin: icoHorizontalOrigin,
+                disableDepthTestDistance
+            };
+        }
+
+        if (Cesium.defined(text)) {
+            entity.label = {
+                // 文字标签
+                text,
+                font,
+                show: labelShow,
+                style: labelStyle,
+                fillColor: labelFillColor,
+                showBackground: labelShowBackground,
+                backgroundColor: labelBackgroundColor,
+                outlineWidth: labelOutlineWidth,
+                verticalOrigin: labelVerticalOrigin, // 垂直方向以底部来计算标签的位置
+                horizontalOrigin: labelHorizontalOrigin, // 原点在下方
+                // heightReference: heightReference,
+                pixelOffset: labelPixelOffset, // x,y方向偏移 相对于屏幕
+                pixelOffsetScaleByDistance: labelPixelOffsetScaleByDistance,
+                // 随远近缩放
+                scaleByDistance,
+                // 随远近隐藏
+                translucencyByDistance,
+                disableDepthTestDistance
+            };
+        }
+
+        const labelIcon = this.viewer.entities.add(entity);
+        return labelIcon;
+    }
+
+    /**
+     * 添加图标注记
      * @function module:客户端可视化.LabelLayer.prototype.appendLabelIconComm
      * @param {String} name 注记文字内容
      * @param {String} description 描述

@@ -1,10 +1,12 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>计算折线长度</title>
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl,draw,transform" src="./static/libs/include-mapboxgl-local.js"></script>
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
         //使用严格模式
         "use strict";
@@ -45,9 +47,13 @@
                 }
             });
 
-            map.addControl(navigationControl, 'top-left');     //导航条
+            map.addControl(navigationControl, 'top-left');//导航条
             map.addControl(scaleControl);
             map.addControl(draw, "top-left");//绘制工具
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+            });
 
             map.on('draw.create', function (e) {
                 var lonlats = e.features[e.features.length - 1].geometry.coordinates;
@@ -63,6 +69,7 @@
             popup.on("close", function () {
                 draw.deleteAll();
             });
+            map.on("draw.delete", deleteMeasure);
         }
 
         /**
@@ -136,10 +143,15 @@
         }
     </script>
 </head>
+
 <body onload="init()">
-<div id="resultShow">
-</div>
-<div id="map" style="width: 100%; height:700px;">
-</div>
+    <div id="resultShow">
+    </div>
+    <div id="map" style="width: 100%; height:700px;">
+
+        <div id="mouse-position">
+        </div>
+    </div>
 </body>
+
 </html>

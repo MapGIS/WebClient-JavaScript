@@ -6,6 +6,7 @@
     <title>矢量图层要素添加</title>
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script include="mapboxgl,transform" src="./static/libs/include-mapboxgl-local.js"></script>
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
     <style>
         .mapboxgl-ctrl-icon {
             background-position: 50% 50%;
@@ -61,7 +62,10 @@
                 guid: guid
             });
             vectorLayer.addToMap(map);
-
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+            });
             var html = '<div class="mapboxgl-ctrl mapboxgl-ctrl-group">' +
                 '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-add" type="button" title="矢量要素添加" onclick="addFeature()" aria-label="add"></button>' +
                 '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-update" type="button" title="更新添加的要素" onclick="updateFeature()" aria-label="update"></button>' +
@@ -298,6 +302,8 @@
         <span>正在操作，请稍候</span>
     </div>
     <div id="map" style="width: 100%; height:700px;">
+        <div id="mouse-position">
+        </div>
     </div>
 </body>
 

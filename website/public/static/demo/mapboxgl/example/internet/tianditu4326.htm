@@ -9,19 +9,21 @@
     <script include="jquery,bootstrap" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-mapboxgl-local.js"></script>
     <!--引入当前页面样式表-->
-    <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
     <style type='text/css'>
         #map {
             position: absolute;
             width: 100%;
             height: 100%;
         }
+
         .dropdown {
             position: absolute;
             right: 20px;
             top: 10px;
             z-index: 1000;
         }
+
         .dropdown-menu {
             min-width: 95px;
         }
@@ -40,8 +42,8 @@
                 "type": "raster",
                 'tiles': [
                     //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
-                    "http://t" + Math.round(Math.random() * 7) + 
-                    ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" 
+                    "http://t" + Math.round(Math.random() * 7) +
+                    ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles"
                     + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}'
                     + "&tk=" + tiandituKey
                 ],
@@ -99,7 +101,7 @@
             //实例化Map对象加载地图
             map = new mapboxgl.Map({
                 //地图容器div的id
-                crs:"EPSG:4326", //经纬度一定要设置crs参数
+                crs: "EPSG:4326", //经纬度一定要设置crs参数
                 maxBounds: [[-180, -90], [180, 90]],
                 zoom: 1,
                 container: 'map', // container id
@@ -142,6 +144,10 @@
                         }
                     ]
                 }
+            });
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
             });
         }
         /** 图层切换
@@ -207,6 +213,8 @@
         </ul>
     </div>
     <div id='map'>
+        <div id="mouse-position">
+        </div>
     </div>
 </body>
 
