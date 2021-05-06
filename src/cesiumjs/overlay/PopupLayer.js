@@ -73,16 +73,16 @@ export default class PopupLayer {
         this.scene = map.scene;
         this.camera = map.camera;
         this.isShow = true;
-        console.log('popup 1');
 
-        this.handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
+        ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window["Cesium"].ScreenSpaceEventHandler;
+
+        this.handler = new ScreenSpaceEventHandler(this.scene.canvas);
 
         this.infoDiv = null;
         // this.px_position = null;
         if (position.entity) {
             this.cartesian = position.entity.position._value;
         }
-        console.log('popup 2');
 
         this.cartesian =
             this.cartesian ||

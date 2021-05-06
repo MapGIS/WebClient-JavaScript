@@ -66,12 +66,20 @@
             "leaffolder": true,
             "childs": [
                 {
-                    "name": "矢量瓦片",
+                    "name": "矢量瓦片-MVTURL",
                     "file": "vectortile",
                     "diffcult": "2",
                     "detail": "",
                     "icon": "vectortile.png",
                     "update": "最后更新时间：2020-12-22"
+                },
+                {
+                    "name": "矢量瓦片-MVTJSON",
+                    "file": "vectortilejson",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "vectortilejson.png",
+                    "update": "最后更新时间：2021-04-25"
                 }
             ]
         },
@@ -104,6 +112,14 @@
                     "detail": "",
                     "icon": "draw.png",
                     "update": "最后更新时间：2021-01-28"
+                },
+                {
+                    "name": "状态组件",
+                    "file": "state",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "state.png",
+                    "update": "最后更新时间：2021-04-11"
                 }
             ]
         },

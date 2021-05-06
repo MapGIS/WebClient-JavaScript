@@ -1020,6 +1020,135 @@ var createCanvasContext2D = function (opt_width, opt_height) {
     return canvas.getContext('2d');
 };
 
+/*
+ * APIMethod: formatQuery
+ * 转换参数对象为url字符串
+ *
+ * Parameters:
+ * query - {Object} 要转换的参数对象。
+ * url - {String} url字符串。
+ * paramArr - {Array} 要转化为json字符串的参数。
+ * formatObj - {Object} 要改名的参数对象
+ *
+ * Returns:
+ * url - {String} url字符串。
+ */
+var formatQuery = function (query,url,paramArr,formatObj) {
+    Object.keys(query).forEach(function (key) {
+        let param = query[key],keyStr = key;
+        //拼接url参数，param不能为空或者function
+        if(notNULL(param) && typeof(param) !== 'function'){
+            //当参数为geometry时，要转换格式
+            if(paramArr && paramArr.indexOf(key) > -1){
+                let geometry = {};
+                if(key === "geometry"){
+                    if(param.type === "polygon"){
+                        geometry["rings"] = query[key]["rings"];
+                    }
+                    if(param.type === "multipoint"){
+                        geometry["points"] = query[key]["points"];
+                    }
+                    if(param.type === "point"){
+                        if(query[key]["x"] && query[key]["y"]){
+                            geometry["y"] = query[key]["y"];
+                            geometry["x"] = query[key]["x"];
+                        }
+                    }
+                    if(param.type === "polyline"){
+                        geometry["paths"] = query[key]["paths"];
+                    }
+                    geometry["spatialReference"] = query[key]["spatialReference"];
+                    param = geometry;
+                    url += "&geometryType=esriGeometry" + query[key]["type"].charAt(0).toUpperCase() + query[key]["type"].slice(1);
+                }
+                param = JSON.stringify(param);
+            }
+            if(formatObj && formatObj.hasOwnProperty(key)){
+                keyStr = formatObj[key];
+            }
+            url += "&" + keyStr + "=" + param;
+        }
+    });
+    return url;
+}
+
+/*
+ * APIMethod: formatEdits
+ * 转换参数对象为url字符串
+ *
+ * Parameters:
+ * params - {Object} 要转换的参数对象。
+ * dataStr - {String} url字符串。
+ * editArr - {Array} 要转化名字的方法。
+ *
+ * Returns:
+ * dataStr - {String} url字符串。
+ */
+var formatEdits = function (dataStr,params,editArr) {
+    Object.keys(params).forEach(function (key) {
+        if(editArr && editArr.indexOf(key) > -1) {
+            let keyStr = key;
+            keyStr = key.substring(0,keyStr.length - 'Features'.length) + "s";
+            //add、update、delete都需要json格式，并进行转义
+            dataStr += keyStr + "=" + encodeURIComponent(params[key] instanceof Object ? JSON.stringify(params[key]) : params[key]) + "&";
+        }else {
+            //不需要处理
+            dataStr += key + "=" + params[key] + "&";
+        }
+
+    });
+    return dataStr;
+}
+
+/*
+ * APIMethod: returnPoint
+ * 输入坐标数组[x,y]，将某个几何对象d的hasM、hasZ、spatialReference传给ArcGisPoint对象，并返回该对象
+ *
+ * Parameters:
+ * constructor - {Function} ArcGisPoint构造函数。
+ * geometry - {Object} 几何对象。
+ * point - {Array} 数组坐标。
+ *
+ * Returns:
+ * ArcGisPoint - {Object} ArcGisPoint对象。
+ */
+var returnPoint = function (constructor,geometry,point) {
+    return new constructor({
+        longitude: point[0],
+        latitude: point[1],
+        z: point[2],
+        spatialReference: cloneObject(geometry.spatialReference)
+    });
+}
+
+//递归处理数据
+var formatPoints = function (points) {
+    for(let i = 0; i < points.length; i++){
+        if(points[i] instanceof Array){
+            formatPoints(points[i]);
+        }else {
+            if(points[i] instanceof Object){
+                points[i] = points[i].toArray();
+            }
+        }
+    }
+    return points;
+}
+
+/*
+ * APIMethod: notNULL
+ * 判断对象是否为""、null、undefined
+ *
+ * Parameters:
+ * obj - {Object} 要判断的对象。
+ *
+ * Returns:
+ * isNull - {Boolean} 是否为空。
+ */
+var notNULL = function (obj) {
+    return obj !== "" && obj !== null && obj !== undefined;
+}
+
 export {
     extend,
     isArray,
@@ -1056,7 +1185,12 @@ export {
     DeepMerge,
     merge,
     mixin,
-    createCanvasContext2D
+    createCanvasContext2D,
+    formatQuery,
+    formatEdits,
+    returnPoint,
+    formatPoints,
+    notNULL
 };
 Zondy.Util.extend = extend;
 Zondy.Util.isArray = isArray;
@@ -1094,3 +1228,8 @@ Zondy.Util.DeepMerge = DeepMerge;
 Zondy.Util.merge = merge;
 Zondy.Util.mixin = mixin;
 Zondy.Util.createCanvasContext2D = createCanvasContext2D;
+Zondy.Util.formatQuery = formatQuery;
+Zondy.Util.formatEdits = formatEdits;
+Zondy.Util.returnPoint = returnPoint;
+Zondy.Util.returnPoint = formatPoints;
+Zondy.Util.returnPoint = notNULL;
