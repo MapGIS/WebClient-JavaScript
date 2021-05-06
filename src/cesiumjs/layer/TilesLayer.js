@@ -73,6 +73,9 @@ export default class TilesLayer extends BaseLayer {
      * @param {Number} [optionsParam.rowNum=1] 瓦片初始级的列数 默认为1
      * @param {Number} [optionsParam.maxLevel=19] 瓦片最大显示级数 默认为19
      * @param {String} [optionsParam.proxy] 转发代理
+     * @param {Array}  [options.gdbps] gdbps地址数组
+     * @param {String} [options.layers] layers参数，用于过滤图层
+     *
      * @returns {ImageryLayer} 瓦片对象
      * @example
      * 如果裁瓦片的时候是按照经纬度裁剪的瓦片则只设置最大级数即可
@@ -91,6 +94,12 @@ export default class TilesLayer extends BaseLayer {
     append2DDocTile(url, optionsParam) {
         // 中地新版正常二维瓦片
         const options = Cesium.defaultValue(optionsParam, {});
+
+        if (Cesium.defined(options.gdbps) && Cesium.defined(options.layers)) {
+            // eslint-disable-next-line no-console
+            console.log('不能同时定义 gdbps 和 layers');
+        }
+
         options.url = url;
         const mapGis2DDocTile = this.viewer.imageryLayers.addImageryProvider(new Cesium.MapGIS2DDocMapProvider(options));
         return mapGis2DDocTile;
