@@ -1,7 +1,7 @@
 export const MainBanners = [
   "./static/assets/bane/banner1.png",
-  "./static/assets/bane/banner2.png",
-  "./static/assets/bane/banner3.png",
+  // "./static/assets/bane/banner2.png",
+  // "./static/assets/bane/banner3.png",
 ];
 
 export const DetailMains = [

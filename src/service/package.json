@@ -9,6 +9,7 @@
   "author": "mapgis",
   "license": "Apache2",
   "dependencies": {
+    "@turf/turf": "^6.3.0",
     "fast-xml-parser": "^3.17.6",
     "qs": "^6.9.4"
   }
