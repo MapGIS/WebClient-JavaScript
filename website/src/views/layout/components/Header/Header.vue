@@ -219,7 +219,7 @@ export default {
         span {
             width: fit-content;
             height: 64px;
-            // margin: 0px 6px;
+            margin: 0px 2px;
             padding: 0px 4px;
             // margin-let: 12.5px;
             font-size: 16px;

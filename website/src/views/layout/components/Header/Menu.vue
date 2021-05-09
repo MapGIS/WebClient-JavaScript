@@ -97,7 +97,7 @@ export default {
     flex-wrap: wrap;
     // width: fit-content;
     width: calc(100vw - 51px);
-    padding: 0 175px;
+    padding: 0 100px;
     height: 600px;
     max-width: 100vw;
     overflow: auto;
@@ -126,7 +126,7 @@ export default {
             font-size: 14px;
             font-family: Microsoft YaHei;
             font-weight: 400;
-            color: rgba(102, 102, 102, 1);
+            color: #ffffff;
             line-height: 30px;
         }
     }
@@ -153,7 +153,7 @@ export default {
             font-size: 14px;
             font-family: Microsoft YaHei;
             font-weight: 500;
-            color: rgba(0, 0, 0, 1);
+            color: #ffffff;
             line-height: 30px;
         }
     }
