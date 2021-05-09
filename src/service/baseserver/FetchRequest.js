@@ -156,6 +156,8 @@ var FetchRequest = Zondy.FetchRequest = {
             timeout: RequestTimeout
         }).then(function (response) {
             return response;
+        }).catch(function(error){
+            return error;
         });
     },
 
