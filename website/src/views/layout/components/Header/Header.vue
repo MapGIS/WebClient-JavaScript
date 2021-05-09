@@ -9,19 +9,21 @@
         <IconFont :style="style" type="iconicon_commonly_barmenu" class="mapgis-webclient-menu-icon" @click="isShowMenu = !isShowMenu" />
         <div :class="['mapgis-webclient-menu', { 'is-show': isShowMenu }]">
             <div class="mapgis-webclient-nav">
-                <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="top-start" trigger="hover">
-                    <header-menu :menus="h.menus" :icon="h.icon" />
-                    <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
-                        <IconFont :type="h.icon" class="menu-icon" />
-                        {{ h.title }}
-                    </el-button>
-                </el-popover>
                 <div v-if="mobile">
                     <el-popover v-for="h in mobileSubheaders" :key="h.title" placement="top-start" trigger="hover">
                         <header-sub-menu :active="activeTabs[h.title]" :menus="h.menus" />
                         <el-button type="text" slot="reference">{{ h.title }}</el-button>
                     </el-popover>
                 </div>
+                <template v-else>
+                  <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="hover">
+                    <header-menu :menus="h.menus" :icon="h.icon" />
+                    <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
+                        <IconFont :type="h.icon" class="menu-icon" />
+                        {{ h.title }}
+                    </el-button>
+                </el-popover>
+                </template>
             </div>
         </div>
     </div>
@@ -140,7 +142,9 @@ export default {
     .mapgis-webclient-menu {
         height: 48px !important;
         span {
-            font-size: 13px !important;
+          font-size: 13px !important;
+          height: 48px !important;
+          line-height: 48px !important;
         }
     }
 }

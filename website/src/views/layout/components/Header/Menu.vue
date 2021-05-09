@@ -92,12 +92,22 @@ export default {
 </script>
 
 <style lang="scss">
+@media (max-width:640px){
+  .header-menu-wrapper {
+    padding: 0 0vw !important;
+  }
+}
+@media (min-width:960px){
+  .header-menu-wrapper {
+    padding: 0 0vw !important;
+  }
+}
 .header-menu-wrapper {
     display: flex;
     flex-wrap: wrap;
     // width: fit-content;
     width: calc(100vw - 51px);
-    padding: 0 100px;
+    padding: 0 10vw;
     height: 600px;
     max-width: 100vw;
     overflow: auto;
