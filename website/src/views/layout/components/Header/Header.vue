@@ -22,7 +22,7 @@
                         <IconFont :type="h.icon" class="menu-icon" />
                         {{ h.title }}
                     </el-button>
-                </el-popover>
+                  </el-popover>
                 </template>
             </div>
         </div>

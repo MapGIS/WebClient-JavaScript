@@ -94,22 +94,32 @@ export default {
 <style lang="scss">
 @media (max-width:640px){
   .header-menu-wrapper {
-    padding: 0 0vw !important;
+    padding: 0 0vw;
+  }
+}
+@media (min-width:720px){
+  .header-menu-wrapper {
+    padding: 0 5vw;
   }
 }
 @media (min-width:960px){
   .header-menu-wrapper {
-    padding: 0 0vw !important;
+    padding: 0 15vw;
   }
 }
+
+@media (min-width:1280px){
+  .header-menu-wrapper {
+    padding: 0 20vw;
+  }
+}
+
 .header-menu-wrapper {
     display: flex;
     flex-wrap: wrap;
     // width: fit-content;
-    width: calc(100vw - 51px);
-    padding: 0 10vw;
+    width: 100vw;
     height: 600px;
-    max-width: 100vw;
     overflow: auto;
     background: #1c1c1c;
     box-shadow: 0px 1px 9px 0px rgba(0, 0, 12, 0.1);
@@ -189,6 +199,7 @@ export default {
 .el-popover {
     border: 1px solid #062f52 !important;
     background: #1c1c1c !important;
+    width: 100vw !important;
 }
 
 .popper__arrow {
