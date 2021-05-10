@@ -1,147 +1,129 @@
 <template>
-  <div
-    class="header-menu-wrapper"
-    :class="{'header-menu-wrapper-mobile': mobile}"
-  >
-    <div
-      class="header-menu-col"
-      v-for="menu in menus"
-      :key="menu.title"
-    >
-      <!-- <IconFont :type="icon" /> -->
-      <span :class="{strong: strong, 'light-title': light}">{{menu.title}}</span>
-      <el-divider v-if="divider"></el-divider>
-      <p v-else />
-      <div
-        class="header-menu-links"
-        v-for="(link, i) in menu.links"
-        :key="i"
-      >
-        <div
-          class="header-menu-link"
-          v-for="(l, j) in link"
-          :key="j"
-        >
-          <div
-            class="header-menu-link-text"
-            v-if="isLink(menu.routes[i][j])"
-          >
-            <el-badge
-              type="success"
-              :value="menu.hightlights[i][j] ? hint : ''"
-              class="menu-badge"
-            >
-              <a
-                class="header-menu-link-text"
-                :href="menu.routes[i][j]"
-                target="_blank"
-              >
-                <span :class="{'light-subtitle': light}">{{l}}</span>
-              </a>
-            </el-badge>
-          </div>
-          <div
-            class="header-menu-link-text"
-            v-else-if="isDocs(menu.routes[i][j])"
-          >
-            <el-badge
-              type="success"
-              :value="menu.hightlights[i][j] ? hint : ''"
-              class="menu-badge"
-            >
-              <a
-                class="header-menu-link-text"
-                :href="menu.routes[i][j]"
-              >
-                <span :class="{'light-subtitle': light}">{{l}}</span>
-              </a>
-            </el-badge>
-          </div>
-          <router-link
-            v-else
-            :to="menu.routes[i][j]"
-          >
-            <div class="header-menu-link-text">
-              <el-badge
-                type="success"
-                :value="menu.hightlights[i][j] ? hint : ''"
-                class="menu-badge"
-              >
-                <span :class="{'light-subtitle': light}">{{l}}</span>
-              </el-badge>
+    <div class="header-menu-wrapper" :class="{ 'header-menu-wrapper-mobile': mobile }">
+        <div class="header-menu-col" v-for="menu in menus" :key="menu.title">
+            <!-- <IconFont :type="icon" /> -->
+            <span :class="{ strong: strong, 'light-title': light }">{{ menu.title }}</span>
+            <el-divider v-if="divider"></el-divider>
+            <p v-else />
+            <div class="header-menu-links" v-for="(link, i) in menu.links" :key="i">
+                <div class="header-menu-link" v-for="(l, j) in link" :key="j">
+                    <div class="header-menu-link-text" v-if="isLink(menu.routes[i][j])">
+                        <el-badge type="success" :value="menu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                            <a class="header-menu-link-text" :href="menu.routes[i][j]" target="_blank">
+                                <span :class="{ 'light-subtitle': light }">{{ l }}</span>
+                            </a>
+                        </el-badge>
+                    </div>
+                    <div class="header-menu-link-text" v-else-if="isDocs(menu.routes[i][j])">
+                        <el-badge type="success" :value="menu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                            <a class="header-menu-link-text" :href="menu.routes[i][j]">
+                                <span :class="{ 'light-subtitle': light }">{{ l }}</span>
+                            </a>
+                        </el-badge>
+                    </div>
+                    <router-link v-else :to="menu.routes[i][j]">
+                        <div class="header-menu-link-text">
+                            <el-badge type="success" :value="menu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                                <span :class="{ 'light-subtitle': light }">{{ l }}</span>
+                            </el-badge>
+                        </div>
+                    </router-link>
+                </div>
             </div>
-          </router-link>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
-import { isMobile } from "@/utils/mobile";
+import { isMobile } from '@/utils/mobile';
 
 export default {
-  name: 'HeaderMenu',
-  props: {
-    icon: {
-      type: String,
+    name: 'HeaderMenu',
+    props: {
+        icon: {
+            type: String
+        },
+        title: {
+            type: String
+        },
+        menus: {
+            type: Array
+        },
+        divider: {
+            type: Boolean,
+            default: true
+        },
+        strong: {
+            type: Boolean,
+            default: false
+        },
+        light: {
+            type: Boolean,
+            default: false
+        }
     },
-    title: {
-      type: String,
+    data() {
+        return {
+            mobile: isMobile(),
+            hint: '新'
+        };
     },
-    menus: {
-      type: Array,
-    },
-    divider: {
-      type: Boolean,
-      default: true,
-    },
-    strong: {
-      type: Boolean,
-      default: false,
-    },
-    light: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data () {
-    return {
-      mobile: isMobile(),
-      hint: '新'
-    };
-  },
-  methods: {
-    isLink (link) {
-      if (link.indexOf('http') >= 0 || link.indexOf('storybook') >= 0) {
-        return true;
-      }
-      return false;
-    },
-    isRoute (link) {
-      if (link.indexOf('helper') >= 0) {
-        return true;
-      }
-      return false;
-    },
-    isDocs (link) {
-      if (link.indexOf('docs') >= 0) {
-        return true;
-      }
-      return false;
+    methods: {
+        isLink(link) {
+            if (link.indexOf('http') >= 0 || link.indexOf('storybook') >= 0) {
+                return true;
+            }
+            return false;
+        },
+        isRoute(link) {
+            if (link.indexOf('helper') >= 0) {
+                return true;
+            }
+            return false;
+        },
+        isDocs(link) {
+            if (link.indexOf('docs') >= 0) {
+                return true;
+            }
+            return false;
+        }
     }
-  },
-}
+};
 </script>
 
 <style lang="scss">
+@media (max-width:640px){
+  .header-menu-wrapper {
+    padding: 0 0vw;
+  }
+}
+@media (min-width:720px){
+  .header-menu-wrapper {
+    padding: 0 5vw;
+  }
+}
+@media (min-width:960px){
+  .header-menu-wrapper {
+    padding: 0 15vw;
+  }
+}
+
+@media (min-width:1280px){
+  .header-menu-wrapper {
+    padding: 0 20vw;
+  }
+}
+
 .header-menu-wrapper {
     display: flex;
     flex-wrap: wrap;
-    width: fit-content;
-    max-width: 100vw;
-    max-height: 60vh;
+    // width: fit-content;
+    width: 100vw;
+    height: 600px;
     overflow: auto;
+    background: #1c1c1c;
+    box-shadow: 0px 1px 9px 0px rgba(0, 0, 12, 0.1);
+    opacity: 0.9;
     .menu-badge {
         /*  padding-top: -30px !important;
     padding-right: -30px !important;
@@ -164,7 +146,7 @@ export default {
             font-size: 14px;
             font-family: Microsoft YaHei;
             font-weight: 400;
-            color: rgba(102, 102, 102, 1);
+            color: #ffffff;
             line-height: 30px;
         }
     }
@@ -191,7 +173,7 @@ export default {
             font-size: 14px;
             font-family: Microsoft YaHei;
             font-weight: 500;
-            color: rgba(0, 0, 0, 1);
+            color: #ffffff;
             line-height: 30px;
         }
     }
@@ -212,5 +194,21 @@ export default {
     .header-menu-link {
         width: 120px !important;
     }
+}
+
+.el-popover {
+    border: 1px solid #062f52 !important;
+    background: #1c1c1c !important;
+    width: 100vw !important;
+}
+
+.popper__arrow {
+    border-bottom-color: #062f52 !important;
+    opacity: 0.9;
+}
+
+.popper__arrow::after {
+    border-bottom-color: #062f52 !important;
+    opacity: 0.9;
 }
 </style>
