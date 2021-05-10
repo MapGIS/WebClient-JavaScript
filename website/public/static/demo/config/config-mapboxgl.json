@@ -358,7 +358,7 @@
                             "file": "wmsreverse",
                             "diffcult": "2",
                             "detail": "ogc-wms服务",
-                            "icon": "wms.png",
+                            "icon": "WMS-调序.png",
                             "update": "最后更新时间：2020-12-17"
                         }
                     ]
