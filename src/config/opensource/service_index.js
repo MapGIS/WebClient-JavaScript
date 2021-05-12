@@ -199,7 +199,7 @@ import {
     NetAnalyse,
     NetAnalysisExtent,
     SlopLineParam
-} from '../../service/extend';
+} from '../../service/Igserver/extend';
 
 export const Extend = {
     ContourNoteParam,
@@ -212,7 +212,7 @@ export const Extend = {
     SlopLineParam
 };
 
-import { G3DMapDoc, G3DService } from '../../service/G3D';
+import { G3DMapDoc, G3DService } from '../../service/Igserver/G3D';
 
 export const G3D = {
     G3DMapDoc,
@@ -231,7 +231,7 @@ export const BaseServer = {
     JSONFormat
 };
 
-import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer, SystomInfo } from '../../service/MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer, SystomInfo } from '../../service/Igserver/MRCS';
 
 export const MRCS = {
     ColorInfo,
@@ -259,7 +259,7 @@ import {
     QueryParameter,
     QueryParameterBase,
     QueryServiceBase
-} from '../../service/MRFS';
+} from '../../service/Igserver/MRFS';
 
 export const MRFS = {
     EditDocFeature,
@@ -299,7 +299,7 @@ import {
     ProjectBase,
     ProjectByLayer,
     ProjectBySRID
-} from '../../service/MRFWS';
+} from '../../service/Igserver/MRFWS';
 
 export const MRFWS = {
     AnalysisBase,
@@ -334,7 +334,7 @@ import {
     ProjectRang,
     Smooth,
     TopAnalysis
-} from '../../service/MRGS';
+} from '../../service/Igserver/MRGS';
 
 export const MRGS = {
     CalArea,
@@ -356,7 +356,7 @@ import {
     GetMapInfoService,
     GetTileImageService,
     MapServiceBase
-} from '../../service/MRMS';
+} from '../../service/Igserver/MRMS';
 
 export const MRMS = {
     GetDocImageService,
@@ -396,7 +396,7 @@ import {
     ItemValue,
     ThemeOper,
     ThemesInfo
-} from '../../service/theme';
+} from '../../service/Igserver/theme';
 
 export const Info = {
     CAllOtherDataItemInfoSource,
