@@ -47,6 +47,9 @@ Zondy.DataStore.PostGIS = Zondy.DataStore.PostGIS || {};
 Zondy.DataStore.Hbase = Zondy.DataStore.Hbase || {};
 Zondy.DataStore.MongoDB = Zondy.DataStore.MongoDB || {};
 
+Zondy.CloudDisk = Zondy.CloudDisk || {};
+Zondy.CloudDisk.GisCore = Zondy.CloudDisk.GisCore || {};
+
 Zondy.IGServerX = Zondy.IGServerX || {};
 Zondy.IGServerX.Vector = Zondy.IGServerX.Vector || {};
 

@@ -3,10 +3,11 @@ import { CommonServiceBase } from './CommonServiceBase';
 
 class IgsServiceBase extends CommonServiceBase {
     constructor(url, options) {
-        var options = options || {};
+        options = options || {};
         super(url, options);
         this.CLASS_NAME = 'Zondy.IgsServiceBase';
     }
+
     destroy() {
         super.destroy();
         var me = this;
@@ -18,6 +19,7 @@ class IgsServiceBase extends CommonServiceBase {
             me.eventListeners = null;
         }
     }
+
     /**
      * @function  MapService.prototype.processAsync
      * @description 负责将客户端的设置的参数传递到服务端，与服务端完成异步通讯。
@@ -34,12 +36,10 @@ class IgsServiceBase extends CommonServiceBase {
         });
     }
 
-    /*
-     * Method: serviceProcessCompleted
-     * 获取地图状态完成，执行此方法。
-     *
-     * Parameters:
-     * result - {Object} 服务器返回的结果对象。
+    /**
+     * @function serviceProcessCompleted
+     * @description 获取地图状态完成，执行此方法。
+     * @param {Object} result 服务器返回的结果对象。
      */
     serviceProcessCompleted(result) {
         var me = this;

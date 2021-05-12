@@ -71,7 +71,7 @@ class ServiceBase {
                 } else {
                     me.domainStr = me.domain;
                 }
-                
+
                 url.push(encodeURI((me.domainStr + '/' + me.baseUrl + '/' + _partUrl).trim()));
             }
         }
