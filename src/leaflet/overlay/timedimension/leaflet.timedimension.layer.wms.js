@@ -4,7 +4,24 @@ import { TimeDimensionLayer } from './leaflet.timedimension.layer'
 /*
  * L.TimeDimension.Layer.WMS: wms Layer associated to a TimeDimension
  */
-
+/**
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @class L.zondy.TimeDimensionLayerWMS
+ * @classdesc 基于leaflet的TimeDimensionLayer对象进行的拓展：为给定的WMS层实现TimeDimension层
+ * @extends {TimeDimensionLayer}
+ * @param options.cache - 默认为0
+ * @param options.cacheBackward - {Number},在之前时间中被隐藏的图层数
+ * @param options.cacheForward - {Number},在之后时间中地图上被隐藏的图层数
+ * @param options.updateTimeDimension - 使用getCapabilities获得的可用时间来更新附加的TimeDimension的可用时间列表。
+ * @param options.updateTimeDimensionMode - {String},默认值"intersect",合并TimeDimension和图层的可用时间（相交，并集，替换或极端）的操作。
+ * @param options.requestTimeFromCapabilities - {Boolean},默认值false,从getCapabilities获取该层的可用时间列表
+ * @param options.proxy - {String}用于从WMS服务器获取getCapabilities响应的代理的URL，以避免跨站点起源问题
+ * @param options.getCapabilitiesParams - {Object},创建getCapabilities请求所需的额外参数
+ * @param options.getCapabilitiesUrl - {String},GetCapabilities请求的备用URL（在使用诸如GeoWebCache之类的缓存服务时很有用）
+ * @param options.getCapabilitiesLayerName - {String},GetCapabilities请求的备用层名称（如果使用诸如GeoWebCache之类的缓存服务，则很有用）
+ * @param options.setDefaultTime - {Boolean},默认值false,如果为true，则会将当前时间更改为图层的默认时间（根据getCapabilities）
+ * @param options.period - {String},默认为null,时间间隔之间的持续时间，该时间间隔将用于生成图层的可用时间。它会覆盖getCapabilities中收到的值（如果不为null）
+ */
 export var TimeDimensionLayerWMS = TimeDimensionLayer.extend({
 
     initialize: function(layer, options) {

@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>标记动画图</title>
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <script include="cluster" src="./static/libs/include-leaflet-local.js"></script>
+    <script include="animate-marker" src="./static/libs/include-leaflet-local.js"></script>
     <style>
         body {
             margin: 0;
@@ -26,7 +26,7 @@
     <script>
         var map = L.map('map', {
             crs: L.CRS.EPSG4326, 
-        }).setView([34.25, 108.95], 10);
+        }).setView([25.25, 104.33], 11);
         var layer1 = new Zondy.Map.TDTLayer({
             layerType: 'vec',
             minZoom: 0,
@@ -45,8 +45,8 @@
         LayerG.addTo(map);
 
         var bikeIcon = L.icon({
-            iconUrl: './static/data/picture/marker/bike.png',
-            iconSize: [25, 39],
+            iconUrl: './static/data/picture/marker/img.png',
+            iconSize: [39, 39],
             iconAnchor: [12, 39],
             shadowUrl: null
         });
@@ -54,14 +54,14 @@
         var lineGeoJson, pointGeoJson;
         var point_list = {};
 
-        $.get('../../static/data/geojson/animate-marker.json', function (res) {
+        $.get('./static/data/geojson/animate-marker.json', function (res) {
             console.log('data', window.L.zondy);
             for (var i = 0; i < res.features.length; i++) {
                 var point_iter = res.features[i].geometry.coordinates;
                 var lines = [];
                 for (var j = 0; j < point_iter.length; j++) {
                     lines.push(
-                        [point_iter[j][0], point_iter[j][1]]
+                        [point_iter[j][1], point_iter[j][0]]
                     );
                 }
                 var line = L.polyline(lines);
@@ -69,14 +69,21 @@
             }
 
             routeLines.forEach((routeLine, i) => {
+                createMarker(routeLine,i)
+            });
+
+            function createMarker(routeLine,i) {
+                markers = [];
                 var marker = L.zondy.AnimatedMarkerLayer(routeLine.getLatLngs(), {
                     icon: bikeIcon,
                     autoStart: true,
-                    distance: 1000, // meters,表示每帧移动的距离,越大则一秒移动的距离越远,速度越快
-                    interval: 1000, // milliseconds,每帧之间移动的时间间隔,与distance相互配合
+                    distance: 200, // meters,表示每帧移动的距离,越大则一秒移动的距离越远,速度越快
+                    interval: 200, // milliseconds,每帧之间移动的时间间隔,与distance相互配合
                     onEnd: function () {
                         // TODO:
+                        // map.removeLayer(marker);
                         this.remove();//消除该图标marker
+                        // createMarker(routeLine,i);
                     }
                 });
                 marker.on('click', function (e) {
@@ -91,11 +98,12 @@
                 marker.bindPopup(popup);
                 map.addLayer(marker);
                 markers.push(marker);
-            });
-
+            }
             markers.forEach(marker => {
                 marker.start();
             });
+
+            map.removeLayer(marker);
 
         });
     </script>
