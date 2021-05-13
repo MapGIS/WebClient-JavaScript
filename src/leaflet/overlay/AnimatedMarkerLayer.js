@@ -6,6 +6,12 @@ import L from "leaflet";
  * @classdesc 基于leaflet的Layer对象进行的拓展
  * @extends {L.Marker}
  * @param {string} latlngs - 轨迹点
+ * @param options - {Object} 其他参数
+ * @param options.autoStart - {boolean},是否自动开启该marker
+ * @param options.distance - meters,表示每帧移动的距离,越大则一秒移动的距离越远,速度越快
+ * @param options.interval - milliseconds,每帧之间移动的时间间隔,与distance相互配合
+ * @param options.clickable - {boolean},如果是false，注记marker则不产生鼠标事件并表现为底层地图的一部分。
+ * @param options.onEnd() - animate结束的回调
  */
 export var AnimatedMarkerLayer = L.Marker.extend({
   options: {

@@ -6,7 +6,15 @@ import L from "leaflet";
  * Any children class should implement `_onNewTimeLoading`, `isReady` and `_update` functions
  * to react to time changes.
  */
-
+/**
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @class L.zondy.TimeDimensionLayer
+ * @classdesc 基于leaflet的Layer对象进行的拓展
+ * @extends {L.Layer}
+ * @param options.timeDimension - 管理该TimeDimensionLayer层的timeDimension对象。
+ * @param options.opacity - 默认为1
+ * @param options.zIndex - 默认为1
+ */
 export var TimeDimensionLayer = (L.Layer || L.Class).extend({
 
     includes: (L.Evented || L.Mixin.Events),
