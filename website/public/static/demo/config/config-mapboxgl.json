@@ -2,12 +2,14 @@
     "name": "",
     "title": "MapGIS WebClinet-MapboxGL演示网站",
     "mapmode": "mapboxgl",
-    "childs": [{
+    "childs": [
+        {
             "name": "互联网地图",
             "iconfont": "iconinternet",
             "folder": "internet",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "天地图经纬度",
                     "file": "tianditu4326",
                     "diffcult": "1",
@@ -46,7 +48,8 @@
             "iconfont": "iconcontrol1",
             "folder": "control",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "卷帘组件",
                     "file": "compare",
                     "diffcult": "1",
@@ -77,7 +80,8 @@
             "iconfont": "iconstandard1",
             "folder": "ogc",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "WMS",
                     "file": "wms",
                     "diffcult": "2",
@@ -108,12 +112,14 @@
             "iconfont": "iconserver1",
             "folder": "mapgis-igserver",
             "leaffolder": false,
-            "childs": [{
+            "childs": [
+                {
                     "name": "地图",
                     "iconfont": "iconmap",
                     "folder": "map",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "EPSG4326",
                             "file": "epsg4326",
                             "html": "EPSG4326.htm",
@@ -147,7 +153,8 @@
                     "iconfont": "iconfeature",
                     "folder": "feature",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "FID查询",
                             "file": "fid-search",
                             "diffcult": "3",
@@ -180,7 +187,8 @@
                     "iconfont": "iconlength-check",
                     "folder": "calc",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "长度",
                             "file": "calc-length",
                             "html": "",
@@ -205,7 +213,8 @@
                     "iconfont": "icontheme",
                     "folder": "theme",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "分段",
                             "file": "range-theme",
                             "html": "",
@@ -265,7 +274,8 @@
                     "iconfont": "iconsearch",
                     "folder": "analysis",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "缓冲分析",
                             "file": "buffer-analysis",
                             "html": "",
@@ -301,12 +311,14 @@
             "iconfont": "iconserver1",
             "folder": "arcgis-mapserver",
             "leaffolder": false,
-            "childs": [{
+            "childs": [
+                {
                     "name": "ArcGIS-MapServer",
                     "iconfont": "iconmap",
                     "folder": "arcgismapserver",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "瓦片图层",
                             "file": "tiles",
                             "diffcult": "2",
@@ -337,7 +349,8 @@
                     "iconfont": "iconmap",
                     "folder": "arcgisogc",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "WMTS",
                             "file": "wmts",
                             "diffcult": "2",
@@ -370,26 +383,30 @@
             "iconfont": "iconeye",
             "folder": "client-view",
             "leaffolder": false,
-            "childs": [{
+            "childs": [
+                {
                     "name": "通用可视化",
                     "iconfont": "iconapp_mw_cluster",
                     "folder": "common",
                     "leaffolder": true,
-                    "childs": [{
-                        "name": "聚类",
-                        "file": "cluster",
-                        "diffcult": "1",
-                        "detail": "GeoJSON格式的聚类分析",
-                        "icon": "cluster.png",
-                        "update": "最后更新时间：2021-01-05"
-                    }]
+                    "childs": [
+                        {
+                            "name": "聚类",
+                            "file": "cluster",
+                            "diffcult": "1",
+                            "detail": "GeoJSON格式的聚类分析",
+                            "icon": "cluster.png",
+                            "update": "最后更新时间：2021-01-05"
+                        }
+                    ]
                 },
                 {
                     "name": "矢量瓦片",
                     "iconfont": "icontile_hover",
                     "folder": "vectortile",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "上传样式",
                             "file": "mapgisstyle",
                             "diffcult": "1",
@@ -444,7 +461,8 @@
                     "iconfont": "iconview-map-1",
                     "folder": "echarts",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "微博签到",
                             "file": "echartsweibo",
                             "diffcult": "1",
@@ -548,7 +566,8 @@
                     "iconfont": "iconmap1",
                     "folder": "mapv",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "轨迹汇聚",
                             "file": "mapvpath_converge",
                             "diffcult": "1",
@@ -659,7 +678,8 @@
                     "iconfont": "iconview-map-1",
                     "folder": "echartsgl",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "开普敦出租车",
                             "file": "echartsglcapton",
                             "diffcult": "1",
@@ -724,62 +744,63 @@
                             "update": "最后更新时间：2018-07-06"
                         }
                     ]
-                },        {
+                },
+                {
                     "name": "客户端专题图",
                     "iconfont": "icontheme",
                     "folder": "clienttheme",
                     "leaffolder": true,
                     "childs": [
-                      {
-                        "name": "单值",
-                        "file": "unique",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "unique.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "分段",
-                        "file": "range",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "range.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "随机",
-                        "file": "random",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "random.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "统一",
-                        "file": "simple",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "simple.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "等级符号",
-                        "file": "grade-symbol",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "grade-symbol.png",
-                        "update": "最后更新时间："
-                      },
-                      {
-                        "name": "统计",
-                        "file": "graphic",
-                        "diffcult": "1",
-                        "detail": "",
-                        "icon": "graphic.png",
-                        "update": "最后更新时间："
-                      }
+                        {
+                            "name": "单值",
+                            "file": "unique",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "unique.png",
+                            "update": "最后更新时间："
+                        },
+                        {
+                            "name": "分段",
+                            "file": "range",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "range.png",
+                            "update": "最后更新时间："
+                        },
+                        {
+                            "name": "随机",
+                            "file": "random",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "random.png",
+                            "update": "最后更新时间："
+                        },
+                        {
+                            "name": "统一",
+                            "file": "simple",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "simple.png",
+                            "update": "最后更新时间："
+                        },
+                        {
+                            "name": "等级符号",
+                            "file": "grade-symbol",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "grade-symbol.png",
+                            "update": "最后更新时间："
+                        },
+                        {
+                            "name": "统计",
+                            "file": "graphic",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "graphic.png",
+                            "update": "最后更新时间："
+                        }
                     ]
-                  }
+                }
             ]
         },
         {
@@ -787,7 +808,8 @@
             "iconfont": "iconsqlserver",
             "folder": "client-analysis",
             "leaffolder": true,
-            "childs": [{
+            "childs": [
+                {
                     "name": "缓冲分析",
                     "file": "buffer",
                     "diffcult": "3",
@@ -850,12 +872,14 @@
             "iconfont": "iconESfuwuElasticsearch",
             "folder": "datastore",
             "leaffolder": false,
-            "childs": [{
+            "childs": [
+                {
                     "name": "PostGIS",
                     "iconfont": "iconpostgresql",
                     "folder": "postgis",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "数据目录",
                             "file": "postgis-catlog",
                             "diffcult": "3",
@@ -902,7 +926,8 @@
                     "iconfont": "iconelasticsearch",
                     "folder": "elasticsearch",
                     "leaffolder": true,
-                    "childs": [{
+                    "childs": [
+                        {
                             "name": "聚类分析",
                             "file": "grid-search",
                             "diffcult": "5",
@@ -919,45 +944,48 @@
             "iconfont": "iconeye",
             "folder": "industry",
             "leaffolder": false,
-            "childs": [{
-                "name": "地质调查",
-                "iconfont": "iconsearch",
-                "folder": "search",
-                "leaffolder": true,
-                "childs": [{
-                        "name": "100万地质点",
-                        "file": "point100",
-                        "diffcult": "5",
-                        "detail": "",
-                        "icon": "point100.png",
-                        "update": "最后更新时间：2019-11-07"
-                    },
-                    {
-                        "name": "100万地质点-符号",
-                        "file": "point100_symbol",
-                        "diffcult": "5",
-                        "detail": "",
-                        "icon": "point100_symbol.png",
-                        "update": "最后更新时间：2019-11-07"
-                    },
-                    {
-                        "name": "100万地质点聚类",
-                        "file": "point100_cluster",
-                        "diffcult": "5",
-                        "detail": "",
-                        "icon": "point100_cluster.png",
-                        "update": "最后更新时间：2019-11-07"
-                    },
-                    {
-                        "name": "100万地质点热力",
-                        "file": "point100_heater",
-                        "diffcult": "5",
-                        "detail": "",
-                        "icon": "point100_heater.png",
-                        "update": "最后更新时间：2019-11-07"
-                    }
-                ]
-            }]
+            "childs": [
+                {
+                    "name": "地质调查",
+                    "iconfont": "iconsearch",
+                    "folder": "search",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "100万地质点",
+                            "file": "point100",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100.png",
+                            "update": "最后更新时间：2019-11-07"
+                        },
+                        {
+                            "name": "100万地质点-符号",
+                            "file": "point100_symbol",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100_symbol.png",
+                            "update": "最后更新时间：2019-11-07"
+                        },
+                        {
+                            "name": "100万地质点聚类",
+                            "file": "point100_cluster",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100_cluster.png",
+                            "update": "最后更新时间：2019-11-07"
+                        },
+                        {
+                            "name": "100万地质点热力",
+                            "file": "point100_heater",
+                            "diffcult": "5",
+                            "detail": "",
+                            "icon": "point100_heater.png",
+                            "update": "最后更新时间：2019-11-07"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
