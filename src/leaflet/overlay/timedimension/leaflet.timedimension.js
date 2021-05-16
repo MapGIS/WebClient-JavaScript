@@ -5,7 +5,15 @@ import { TimeDimensionUtil } from './leaflet.timedimension.util'
  * It can be shared among different layers and it can be added to a map, and become
  * the default timedimension component for any layer added to the map.
  */
-
+/**
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @class L.zondy.TimeDimension
+ * @classdesc 基于leaflet的Layer对象进行的拓展
+ * @extends {L.Layer}
+ * @param options.loadingTimeout - {Number}，加载延迟时间
+ * @param options.currentTime - {Number},milliseconds,当前加载时间
+ * @param options.period -{String},默认"P1D",用于构造从第一个可用时间开始的可用时间数组,格式：ISO8601持续时间
+ */
 export var TimeDimension = (L.Layer || L.Class).extend({
 
     includes: (L.Evented || L.Mixin.Events),
