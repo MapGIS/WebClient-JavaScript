@@ -1,186 +1,199 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>客户端等级符号专题图</title>
-        <!--引入当前页面样式表-->
-        <link href="./style.css" rel="stylesheet" type="text/css" />
-        <script src="./static/libs/include-mapboxgl-local.js"></script>
-        <style>
-            body {
-                height: 700px;
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>客户端等级符号专题图</title>
+    <!--引入当前页面样式表-->
+    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <script src="./static/libs/include-mapboxgl-local.js"></script>
+    <style>
+        body {
+            height: 700px;
+        }
+    </style>
+    <script type="text/javascript">
+        //使用严格模式
+        'use strict';
+        //定义地图文档图层和地图、专题图图层
+        var mapDocLayer, map, themeLayer;
+        var { protocol, ip, port } = window.webclient;
+        var ip = `${ip}`;
+        var port = `${port}`;
+        var docName = 'Hubei3857';
+
+        /** 初始化地图显示*/
+        function init() {
+            map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map',
+                center: [112.247175, 30.152892],
+                zoom: 6,
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    version: 8,
+                    //添加来源
+                    sources: {},
+                    //设置加载并显示来源的图层信息
+                    layers: []
+                }
+            });
+            function appendMapDoc() {
+                if (map != null) {
+                    mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer(docName, {
+                        //IP地址
+                        ip: `${ip}`,
+                        //端口号
+                        port: `${port}`,
+                        //只显示一个图层,不平铺显示
+                        noWrap: true
+                    });
+                    mapDocLayer.addToMap(map);
+                }
             }
-        </style>
-        <script type="text/javascript">
-            //使用严格模式
-            'use strict';
-            //定义地图文档图层和地图、专题图图层
-            var mapDocLayer, map, themeLayer;
-            var { protocol, ip, port } = window.webclient;
-            var ip = `${ip}`;
-            var port = `${port}`;
-            var docName = 'Hubei4326';
+            map.on('load', function () {
+                appendMapDoc();
+            });
+        }
 
-            /** 初始化地图显示*/
-            function init() {
-                //地图容器
-                //地图容器
-                map = new window.mapboxgl.Map({
-                    container: 'map',
-                    minZoom: 3,
-                    center: [112.247175, 31.152892],
-                    style: { version: 8, sources: {}, layers: [] }
-                });
+        /** 添加专题图*/
+        function createThemeBtn() {
+            startPressBar();
+            addThemeFeatures(gradeQuerySuccess);
+        }
 
-                function appendMapDoc() {
-                    if (map != null) {
-                        var docLayer = new mapboxgl.Zondy.Map.MapDocLayer(docName, {
-                            //IP地址
-                            ip: ip,
-                            //端口号
-                            port: port,
-                            //只显示一个图层,不平铺显示
-                            noWrap: true
-                        });
-                        docLayer.addToMap(map);
+        /** 添加专题图要素*/
+        function addThemeFeatures(onsuccess) {
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryParameter({
+                resultFormat: 'json',
+                struct: queryStruct
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 10000;
+            //实例化地图文档查询服务对象
+            var queryService = new Zondy.Service.QueryDocFeature(queryParam, docName, 1, {
+                ip: ip,
+                port: port,
+                requestType: 'POST'
+            });
+
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query(onsuccess, null);
+        }
+
+        /** 生成专题图*/
+        function gradeQuerySuccess(data) {
+            if (data != null) {
+                themeLayer = Zondy.Map.rankSymbolThemeLayer('ThemeLayer', 'Circle', { calGravity: true, map: map });
+                themeLayer.themeField = 'GDP2011';
+                // 配置图表参数
+                themeLayer.symbolSetting = {
+                    //允许图形展示的值域范围，此范围外的数据将不制作图图形,必设参数
+                    codomain: [0, 1400],
+                    //圆最大半径 默认100
+                    maxR: 25,
+                    //圆最小半径 默认0
+                    minR: 5,
+                    // 圆形样式
+                    circleStyle: { fillOpacity: 0.8 },
+                    // 符号专题图填充颜色
+                    fillColor: '#00FF7F',
+                    // 专题图hover 样式
+                    circleHoverStyle: {
+                        fillOpacity: 1,
+                        stroke: true,
+                        strokeWidth: 4,
+                        strokeColor: 'blue'
                     }
-                }
-                map.on('load', function () {
-                    appendMapDoc();
-                });
+                };
+                themeLayer.on('mousemove', showInfoWin);
+                themeLayer.on('mouseout', closeInfoWin);
+                themeLayer.addFeatures(data);
             }
+            stopPressBar();
+        }
 
-            /** 添加专题图*/
-            function createThemeBtn() {
-                startPressBar();
-                addThemeFeatures(gradeQuerySuccess);
+        /** 删除专题图*/
+        function deleteTheme() {
+            if (map != null && themeLayer != null) {
+                map.removeLayer(themeLayer);
             }
+        }
 
-            /** 添加专题图要素*/
-            function addThemeFeatures(onsuccess) {
-                var queryStruct = new Zondy.Service.QueryFeatureStruct();
-                //是否包含几何图形信息
-                queryStruct.IncludeGeometry = true;
-                //是否包含属性信息
-                queryStruct.IncludeAttribute = true;
-                //是否包含图形显示参数
-                queryStruct.IncludeWebGraphic = false;
-                //实例化查询参数对象
-                var queryParam = new Zondy.Service.QueryParameter({
-                    resultFormat: 'json',
-                    struct: queryStruct
-                });
-                //设置查询分页号
-                queryParam.pageIndex = 0;
-                //设置查询要素数目
-                queryParam.recordNumber = 10000;
-                //实例化地图文档查询服务对象
-                var queryService = new Zondy.Service.QueryDocFeature(queryParam, docName, 1, {
-                    ip: ip,
-                    port: port,
-                    requestType: 'POST'
-                });
+        var popup = null;
 
-                //执行查询操作，querySuccess为查询回调函数
-                queryService.query(onsuccess, null);
+        /** 设置弹框*/
+        function showInfoWin(e) {
+            // e.target 是图形对象，即数据的可视化对象，柱状图中是柱条;
+            // 图形对象的 refDataID 属性是数据（feature）的 id 属性，它指明图形对象是由那个数据制作而来;
+            // 图形对象的 dataInfo 属性是图形对象表示的具体数据，他有两个属性，field 和 value;
+            if (e.target && e.target.refDataID && e.target.dataInfo) {
+                closeInfoWin();
+                // 获取图形对应的数据 (feature)
+                var fea = themeLayer.getFeatureById(e.target.refDataID);
+
+                var info = e.target.dataInfo;
+                // 弹窗内容
+                var contentHTML = "<div style='color: #000; background-color: #fff'>";
+                contentHTML += "行政区：" + "<br><strong>" + fea.attributes['NAME'] + "</strong>";
+
+                contentHTML += "<hr style='margin: 3px'>";
+                contentHTML += "GDP2011： <br/><strong>" + info.value + "</strong>";
+                contentHTML += "</div>";
+
+                var offsetTop = map.getContainer().offsetTop;
+                var offsetLeft = map.getContainer().offsetLeft;
+
+                var tempPoint = map.unproject(new window.mapboxgl.Point(e.event.x - offsetLeft, e.event.y - offsetTop));
+                popup = new mapboxgl.Popup({ anchor: 'bottom', closeOnClick: false, closeButton: false })
+                    .setHTML(contentHTML)
+                    .setLngLat(tempPoint)
+                    .addTo(map);
+                return;
             }
+        }
 
-            /** 生成专题图*/
-            function gradeQuerySuccess(data) {
-                if (data != null) {
-                    themeLayer = Zondy.Map.rankSymbolThemeLayer('ThemeLayer', 'Circle', { calGravity: true });
-                    themeLayer.themeField = 'GDP2016';
-                    // 配置图表参数
-                    themeLayer.symbolSetting = {
-                        //允许图形展示的值域范围，此范围外的数据将不制作图图形,必设参数
-                        codomain: [0, 1400],
-                        //圆最大半径 默认100
-                        maxR: 25,
-                        //圆最小半径 默认0
-                        minR: 5,
-                        // 圆形样式
-                        circleStyle: { fillOpacity: 0.8 },
-                        // 符号专题图填充颜色
-                        fillColor: '#00FF7F',
-                        // 专题图hover 样式
-                        circleHoverStyle: {
-                            fillOpacity: 1,
-                            stroke: true,
-                            strokeWidth: 4,
-                            strokeColor: 'blue'
-                        }
-                    };
-                    map.addLayer(themeLayer);
-                    themeLayer.on('mousemove', showInfoWin);
-                    themeLayer.on('mouseout', closeInfoWin);
-                    themeLayer.addFeatures(data);
-                }
-                stopPressBar();
+        /** 移除地图弹窗*/
+        function closeInfoWin() {
+            if (popup) {
+                popup.remove(map);
             }
+        }
 
-            /** 删除专题图*/
-            function deleteTheme() {
-                if (map != null && themeLayer != null) {
-                    map.removeLayer(themeLayer);
-                }
-            }
+        /** 开始进度条动画*/
+        function startPressBar() {
+            document.getElementById('preview').style.display = '';
+        }
 
-            var popup = null;
+        /** 停止进度条动画*/
+        function stopPressBar() {
+            document.getElementById('preview').style.display = 'none';
+        }
+    </script>
+</head>
 
-            /** 设置弹框*/
-            function showInfoWin(e) {
-                // e.target 是图形对象，即数据的可视化对象，柱状图中是柱条;
-                // 图形对象的 refDataID 属性是数据（feature）的 id 属性，它指明图形对象是由那个数据制作而来;
-                // 图形对象的 dataInfo 属性是图形对象表示的具体数据，他有两个属性，field 和 value;
-                if (e.target && e.target.refDataID && e.target.dataInfo) {
-                    closeInfoWin();
-                    // 获取图形对应的数据 (feature)
-                    var fea = themeLayer.getFeatureById(e.target.refDataID);
+<body onload="init();">
+    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
+        <img src="./static/assets/graphic-image/39-1.gif" alt="" /><br />
+        <br />
+        <span>正在操作，请稍候</span>
+    </div>
+    <div class="ToolLib" style="position:absolute;">
+        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
+        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    </div>
+    <div id="map" style="width: 100%; height: 95%; position: absolute; top: 34px; background-color: #d8d4d4"></div>
+</body>
 
-                    var info = e.target.dataInfo;
-                    // 弹窗内容
-                    var contentHTML = "<div style='color: #000; background-color: #fff'>";
-                    contentHTML += '行政区：' + '<br><strong>' + fea.attributes['NAME'] + '</strong>';
-
-                    contentHTML += "<hr style='margin: 3px'>";
-                    contentHTML += 'GDP2016： <br/><strong>' + info.value + '</strong>(亿元)';
-                    contentHTML += '</div>';
-
-                    var tempPoint = map.mouseEventToLatLng(e.event);
-                    popup = L.tooltip({ direction: 'top' }).setContent(contentHTML).setLatLng([tempPoint.lat, tempPoint.lng]).addTo(map);
-                    return;
-                }
-            }
-
-            /** 移除地图弹窗*/
-            function closeInfoWin() {
-                if (popup) {
-                    popup.remove(map);
-                }
-            }
-
-            /** 开始进度条动画*/
-            function startPressBar() {
-                document.getElementById('preview').style.display = '';
-            }
-
-            /** 停止进度条动画*/
-            function stopPressBar() {
-                document.getElementById('preview').style.display = 'none';
-            }
-        </script>
-    </head>
-
-    <body onload="init();">
-        <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-            <img src="./static/assets/graphic-image/39-1.gif" alt="" /><br />
-            <br />
-            <span>正在操作，请稍候</span>
-        </div>
-        <div class="ToolLib">
-            <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
-            <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
-        </div>
-        <div id="map" style="width: 100%; height: 95%; position: absolute; top: 34px; background-color: #d8d4d4"></div>
-    </body>
 </html>

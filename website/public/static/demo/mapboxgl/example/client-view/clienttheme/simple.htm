@@ -9,7 +9,7 @@
     <!--引入当前页面样式表-->
     <link href="./style.css" rel="stylesheet" type="text/css" />
     <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
-    <script src="./static/libs/include-leaflet-local.js"></script>
+    <script src="./static/libs/include-mapboxgl-local.js"></script>
     <style>
         body {
             height: 700px;
@@ -67,47 +67,55 @@
         var { protocol, ip, port } = window.webclient;
         var ip = `${ip}`;
         var port = `${port}`;
-        var docName = 'Hubei4326';
+        var docName = 'Hubei3857';
         var legendView, infoView;
 
         /** 初始化地图显示*/
         function init() {
             //地图容器
-            map = L.map('leaf_map', {
-                //地图渲染在canvas上
-                preferCanvas: true,
-                //不添加属性说明控件
-                attributionControl: false,
-                //添加缩放控件
-                zoomControl: true,
-                //投影坐标系
-                crs: L.CRS.EPSG4326,
-                //最大级数
-                maxZoom: 15,
-                //最小级数
-                minZoom: 4
-            }).setView([(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
-                / 2], 6);
-            //创建地图文档图层
-            mapDocLayer = new Zondy.Map.MapDocLayer(docName, {
-                //IP地址
-                ip: ip,
-                //端口号
-                port: port,
-                //只显示一个图层,不平铺显示
-                noWrap: true
-            }).addTo(map);
+            map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map',
+                center: [112.247175, 30.152892],
+                zoom: 6,
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    version: 8,
+                    //添加来源
+                    sources: {},
+                    //设置加载并显示来源的图层信息
+                    layers: []
+                }
+            });
+            function appendMapDoc() {
+                if (map != null) {
+                    mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer(docName, {
+                        //IP地址
+                        ip: `${ip}`,
+                        //端口号
+                        port: `${port}`,
+                        //只显示一个图层,不平铺显示
+                        noWrap: true
+                    });
+                    mapDocLayer.addToMap(map);
+                }
+            }
+            map.on('load', function () {
+                appendMapDoc();
+            });
         }
 
         /** 添加专题图*/
         function createThemeBtn() {
             startPressBar();
             themeLayer = Zondy.Map.simpleThemeLayer("ThemeLayer", {
+                map: map,
                 // 开启 hover 高亮效果
                 isHoverAble: true,
                 opacity: 0.8,
                 alwaysMapCRS: true
-            }).addTo(map);
+            });
 
             themeLayer.style = new Zondy.Map.ThemeStyle({
                 shadowBlur: 16,
@@ -163,7 +171,6 @@
             if (data != null) {
                 //客户端专题图：添加数据
                 themeLayer.addFeatures(data);
-                initInfoView_Range();
             }
             stopPressBar();
         }
@@ -171,60 +178,22 @@
         /** 高亮设置*/
         function highLightLayer(e) {
             if (e.target && e.target.refDataID) {
-                var fea = themeLayer.getFeatureById(e.target.refDataID);
+                document.getElementById("infoBox").style.display = "block";
+                var fid = e.target.refDataID;
+                var fea = themeLayer.getFeatureById(fid);
                 if (fea) {
-                    infoView.addTo(map);
-                    infoView.update(fea);
+                    document.getElementById("infoContent").innerHTML = "";
+                    document.getElementById("infoContent").innerHTML += "FID: " + fea.attributes.FID + "<br/>";
+                    document.getElementById("infoContent").innerHTML += '行政区: ' +
+                        fea.attributes['NAME'] + "<br/>";
+                    document.getElementById("infoContent").innerHTML += 'GDP2011：' +
+                        parseInt(fea.attributes['GDP2011']) + "<br/>";
                 }
-            } else if (infoView) {
-                infoView.remove();
             }
-        }
-
-        /** 初始化属性记录视图*/
-        function initInfoView_Range() {
-            infoView = L.control({ position: 'bottomright' });
-            infoView.onAdd = function () {
-                this._div = L.DomUtil.create('div', 'panel panel-primary infoPane');
-                this._div.style.width = '272px';
-                this._div.style.marginBottom = '70px';
-                var content = "<div class='panel-heading'><h5 class='panel-title text-center'>" + '属性表' + "</h5></div>";
-                content += "<div class='panel-body content' style='fontSize: 14px'></div>";
-                this._div.innerHTML = content;
-                handleMapEvent(this._div, this._map);
-                return this._div;
-            };
-
-            infoView.update = function (fea) {
-                if (!fea) {
-                    return;
-                }
-                var eles = document.getElementsByClassName('content');
-                if (eles != null && eles.length > 0) {
-                    var innerHtml = "FID: " + fea.attributes.FID + "<br/>";
-                    innerHtml += '行政区：' + fea.attributes['NAME'] + "<br/>";
-
-                    innerHtml += 'GDP2016：' + parseInt(fea.attributes['GDP2016']) + "<br/>";
-                    eles[0].innerHTML = innerHtml;
-                }
-            };
-        }
-
-        /** 地图容器事件处理函数*/
-        function handleMapEvent(div, map) {
-            if (!div || !map) {
-                return;
+            else {
+                document.getElementById("infoContent").innerHTML = "";
+                document.getElementById("infoBox").style.display = "none";
             }
-            div.addEventListener('mouseover', function () {
-                map.dragging.disable();
-                map.scrollWheelZoom.disable();
-                map.doubleClickZoom.disable();
-            });
-            div.addEventListener('mouseout', function () {
-                map.dragging.enable();
-                map.scrollWheelZoom.enable();
-                map.doubleClickZoom.enable();
-            });
         }
 
         /** 删除专题图*/
@@ -264,7 +233,15 @@
         <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
         <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
     </div>
-    <div id="leaf_map" style="width: 100%; height:95%;">
+    <div id="map" style="width: 100%; height:95%;">
+    </div>
+    <div id="infoBox" class="panel panel-primary infoPane"
+        style="width:272px;right: 10px;bottom: 0px;position: absolute;fontSize:14px;display: none;">
+        <div class="panel-heading">
+            <h5 class='panel-title text-center'>属性</h5>
+        </div>
+        <div id="infoContent" class="panel-body content">
+        </div>
     </div>
 </body>
 
