@@ -90,7 +90,7 @@
                     }
                 }
                 map.on('load', function () {
-                    appendMapDoc();
+                    // appendMapDoc();
                 });
             }
 
@@ -99,6 +99,7 @@
             function createThemeBtn() {
                 startPressBar();
                 themeLayer = Zondy.Map.rangeThemeLayer('ThemeLayer', {
+                    map: map,
                     // 开启 hover 高亮效果
                     isHoverAble: true,
                     opacity: 0.8,
@@ -161,9 +162,8 @@
                         }
                     }
                 ];
-                map.addLayer(themeLayer);
                 themeLayer.on('mousemove', highLightLayer);
-                addThemeFeatures(querySuccess);
+                addThemeFeatures(rangeQuerySuccess);
             }
 
             function addThemeFeatures(onsuccess) {
@@ -196,22 +196,13 @@
                 queryService.query(onsuccess, null);
             }
 
-            function querySuccess(data) {
+            function rangeQuerySuccess(data) {
+                stopPressBar();
                 if (data != null) {
                     //客户端专题图：添加数据
                     themeLayer.addFeatures(data);
                     document.getElementById('legendview').style.display = 'block';
                 }
-                stopPressBar();
-            }
-
-            function uniqueQuerySuccess(data) {
-                if (data != null) {
-                    //客户端专题图：添加数据
-                    themeLayer.addFeatures(data);
-                    document.getElementById('legendview').style.display = 'block';
-                }
-                stopPressBar();
             }
 
             function highLightLayer(e) {
