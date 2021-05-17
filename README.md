@@ -12,21 +12,25 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 
 ## 目录
 
-- [一、开始](#目录)
-  - [1、司马云](#1、司马云)
-  - [2、GitHub](#2、GitHub)
-  - [3、特性](#3、特性)
-  - [4、示例](#4、示例)
-- [二、深入了解](#二、深入了解)
-  - [1、代码结构](#1、代码结构)
-  - [2、编译](#2、编译)
-  - [3、问题](#3、问题)
-  - [4、依赖](#4、依赖)
-- [三、资源](#三、资源)
-  - [1、在线资源](#1、在线资源)
-  - [2、在线服务](#2、在线服务)
-- [四、团队](#四、团队)
-- [五、证书](#五、证书)
+- [MapGIS Client for JavaScript](#mapgis-client-for-javascript)
+  - [目录](#目录)
+  - [一、开始](#一开始)
+    - [1、司马云](#1司马云)
+    - [2、GitHub](#2github)
+    - [3、特性](#3特性)
+    - [4、示例](#4示例)
+  - [二、深入了解](#二深入了解)
+    - [1、代码结构](#1代码结构)
+    - [2、运行示例网站](#2运行示例网站)
+    - [3、编译](#3编译)
+    - [3、问题](#3问题)
+    - [4、依赖](#4依赖)
+  - [三、资源](#三资源)
+    - [Npm](#npm)
+    - [1、在线资源](#1在线资源)
+    - [2、在线服务](#2在线服务)
+    - [四、团队](#四团队)
+    - [五、证书](#五证书)
 
 ## 一、开始
 
@@ -41,9 +45,9 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 3. 更多详情请查看司马云 www.smaryun.com
 
 ### 3、特性
-|四大地图引擎|融合热门前端可视化技术|多样化开发方式|
-|:---|:---|:---|
-|<img alt="MapGIS" src="website/public/static/assets/bane/sub11.png">|<img alt="MapGIS" src="website/public/static/assets/bane/sub22.png">|<img alt="MapGIS" src="website/public/static/assets/bane/sub33.png">|
+| 四大地图引擎                                                         | 融合热门前端可视化技术                                               | 多样化开发方式                                                       |
+| :------------------------------------------------------------------- | :------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| <img alt="MapGIS" src="website/public/static/assets/bane/sub11.png"> | <img alt="MapGIS" src="website/public/static/assets/bane/sub22.png"> | <img alt="MapGIS" src="website/public/static/assets/bane/sub33.png"> |
 
 ### 4、示例
 <p align="center">
@@ -176,6 +180,23 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
   *  [mapgis司马云pro版本-cesium]()
 
 ## 三、资源
+
+### Npm
+1. 原始地图引擎  (npm上直接获取)
+    1. @mapgis/cesium
+    1. @mapgis/mapbox-gl
+    1. leaflet 1.7.0+
+    1. ol 5+ 暂不支持6的版本
+2. MapGIS拓展插件 (npm上无法直接获取)
+    1. webclient-cesium-plugin  (内置了webclient-es6-service)
+    2. webclient-mapboxgl-plugin  (内置了webclient-es6-service)
+    3. webclient-leaflet-plugin  (内置了webclient-es6-service)
+    4. webclient-openlayers-plugin  (内置了webclient-es6-service)
+    5. webclient-es6-service   (针对纯RestfulAPI，不带地图视图)
+3. Vue组件 (npm上直接获取)
+   1. @mapgis/webclient-vue-cesium
+   2. @mapgis/webclient-vue-mapboxgl
+   3. @mapgis/webclient-es6-service
 
 ### 1、在线资源
 [资源中心-云开发世界](http://www.smaryun.com/dev/resource_center.html#/type27/tag184/page1)
