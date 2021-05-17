@@ -343,7 +343,14 @@ export const MRGS = {
     TopAnalysis
 };
 
-import { GetDocImageService, GetLayerImageService, GetMapImageService, GetMapInfoService, GetTileImageService, MapServiceBase } from './Igserver/MRMS';
+import {
+    GetDocImageService,
+    GetLayerImageService,
+    GetMapImageService,
+    GetMapInfoService,
+    GetTileImageService,
+    MapServiceBase
+} from './Igserver/MRMS';
 
 export const MRMS = {
     GetDocImageService,
@@ -422,12 +429,20 @@ export const OGC = {
     WMSCapabilities,
     WMTSCapabilities,
     OGCWMTSInfo,
-    OGCWMSInfo,
+    OGCWMSInfo
 };
 
 import {
-  EsCatlogType,
-  EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg } from './datastore/elasticsearch';
+    EsCatlogType,
+    EsCatlogName,
+    EsGeoHashType,
+    EsCatlogService,
+    ESGeoCode,
+    ESGeoDecode,
+    ESQueryStats,
+    EsTableService,
+    EsSpaceTimeQueryByAgg
+} from './datastore/elasticsearch';
 
 import {
     PostgisCatlogService,
@@ -469,12 +484,11 @@ export const DataStore = {
     EsSpaceTimeQueryByAgg
 };
 
-import {
-  GeoDatasetService
-} from './clouddisk';
+import { GeoDatasetService, CalculateModelService } from './clouddisk';
 
 export const CloudDisk = {
-  GeoDatasetService
+    GeoDatasetService,
+    CalculateModelService
 };
 
 import {

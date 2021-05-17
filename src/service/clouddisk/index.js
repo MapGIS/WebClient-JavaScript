@@ -1,3 +1,8 @@
-import { GeoDatasetService } from './giscore';
+/**
+ * @module CloudDisk
+ */
 
-export { GeoDatasetService };
+import { GeoDatasetService } from './giscore';
+import { CalculateModelService } from './model';
+
+export { GeoDatasetService, CalculateModelService };
