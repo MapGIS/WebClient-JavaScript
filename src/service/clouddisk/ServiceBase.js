@@ -14,6 +14,14 @@ export class CloudDiskService extends ServiceBase {
         this.fixParams(options);
     }
 
+    /**
+     *
+     * @param {String} authorization 验证令牌
+     */
+    setAuthorization(authorization) {
+        this.options.Authorization = authorization;
+    }
+
     fixParams(option) {
         this.params = option;
         delete this.params.url;

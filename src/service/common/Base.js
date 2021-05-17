@@ -49,6 +49,7 @@ Zondy.DataStore.MongoDB = Zondy.DataStore.MongoDB || {};
 
 Zondy.CloudDisk = Zondy.CloudDisk || {};
 Zondy.CloudDisk.GisCore = Zondy.CloudDisk.GisCore || {};
+Zondy.CloudDisk.Model = Zondy.CloudDisk.Model || {};
 
 Zondy.IGServerX = Zondy.IGServerX || {};
 Zondy.IGServerX.Vector = Zondy.IGServerX.Vector || {};

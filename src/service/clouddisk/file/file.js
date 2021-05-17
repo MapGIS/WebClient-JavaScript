@@ -10,42 +10,40 @@ const CopyPath = 'copy';
  * @author 基础平台-潘卓然
  */
 export class FileService extends CloudDiskService {
-  constructor(options) {
-    super(options);
+    constructor(options) {
+        super(options);
+        /**
+         * @member module:CloudDisk.FileService.prototype.serviceUrl
+         * @description 服务地址
+         */
+        this.serviceUrl = '/clouddisk/rest/file/';
+    }
+
     /**
-     * @member module:CloudDisk.FileService.prototype.serviceUrl
-     * @description 服务地址
+     * @private 修正get/post需要的真正参数
      */
-    this.serviceUrl = '/clouddisk/rest/file/';
-  }
+    fixOption(option) {
+        this.option = {};
+    }
 
-  /**
-   * @private 修正get/post需要的真正参数
-   */
-  fixOption(option) {
-    this.option = {
-    };
-  }
-
-  /**
-   * @function module:CloudDisk.FileService.prototype.schema
-   * @description 空间数据元数据
-   * @param  {Object} options 请求参数
-   * @param  {String} options.destFileName 
-   * @param  {String} options.destFolderDir 
-   * @param  {String} options.isFolder 
-   * @param  {String} options.srcUrl 
-   * @param  {Function} onSuccess 成功回调
-   * @param  {Function} onError 失败回调
-   * @link http://192.168.199.53:9011/giscore/dataconvert/rest/geodataset/schema?
-   */
-  copy(options, onSuccess, onError) {
-    let { serviceUrl } = this;
-    serviceUrl += CopyPath;
-    let url = this.getFullUrl(serviceUrl, options);
-    this.get(url, onSuccess, onError);
-  }
-
+    /**
+     * @function module:CloudDisk.FileService.prototype.schema
+     * @description 空间数据元数据
+     * @param  {Object} options 请求参数
+     * @param  {String} options.destFileName 目地名称
+     * @param  {String} options.destFolderDir 目地目录
+     * @param  {String} options.isFolder 是否是文件夹
+     * @param  {String} options.srcUrl 原始文件或文件夹
+     * @param  {Function} onSuccess 成功回调
+     * @param  {Function} onError 失败回调
+     * @link http://192.168.199.53:9011/clouddisk/rest/file/copy?
+     */
+    copy(options, onSuccess, onError) {
+        let { serviceUrl } = this;
+        let baseurl = this.getBaseUrl();
+        let url = baseurl + serviceUrl + CopyPath;
+        this.post(url, options, onSuccess, onError);
+    }
 }
 
 export default FileService;
