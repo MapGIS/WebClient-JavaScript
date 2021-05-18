@@ -1,8 +1,44 @@
 <template>
   <div class="website-bug-commit">
-    <h1>提交BUG说明</h1>
+    <!-- <h1>提交BUG说明</h1> -->
+    <div class="overview-header">
+      <div class="title">插件<span>PLUG-IN&nbsp;UNIT</span></div>
+      <div class="overview-nav">
+        <router-link to="/total/plugins">
+          <div :class="['item',{select:$route.path === '/total/plugins'}]">
+              插件列表
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/detailChart">
+          <div :class="['item',{select:$route.path === '/total/detailChart'}]">
+              详细图表
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/pluginTags">
+          <div :class="['item',{select:$route.path === '/total/pluginTags'}]">
+              插件标签
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/bugCommit">
+          <div :class="['item',{select:$route.path === '/total/bugCommit'}]">
+              提交bug
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/other">
+          <div :class="['item',{select:$route.path === '/total/other'}]">
+              其他
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+      </div>
+    </div>
     <el-row type="flex" justify="center">
       <el-col :span="mobile ? 22 : 12">
+        <div class="bug-title">提交BUG说明</div>
         <h3>{{subQuestion.title}}</h3>
         <div class="tip">
           <p>
@@ -131,8 +167,21 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.overview-header {
+  background-image: url('../../../public/static/assets/total/totallogo.png');
+}
+.bug-title{
+  margin: 48px 0 24px 0;
+  width: 100%;
+  height: 48px;
+  background: #EBF7FE;
+  font-size: 14px;
+  line-height: 48px;
+  text-indent: 17px;
+  color: #333333;
+}
 .website-bug-commit {
-  margin: 30px 0px;
+  // margin: 30px 0px;
   h1 {
     font-size: 30px;
     text-align: center;

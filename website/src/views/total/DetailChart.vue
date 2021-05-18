@@ -1,6 +1,67 @@
 <template>
   <div class="webclient-detail-chart">
-    <el-row type="flex">
+    <div class="overview-header">
+      <div class="title">插件<span>PLUG-IN&nbsp;UNIT</span></div>
+      <div class="overview-nav">
+        <router-link to="/total/plugins">
+          <div :class="['item',{select:$route.path === '/total/plugins'}]">
+              插件列表
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/detailChart">
+          <div :class="['item',{select:$route.path === '/total/detailChart'}]">
+              详细图表
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/pluginTags">
+          <div :class="['item',{select:$route.path === '/total/pluginTags'}]">
+              插件标签
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/bugCommit">
+          <div :class="['item',{select:$route.path === '/total/bugCommit'}]">
+              提交bug
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+        <router-link to="/total/other">
+          <div :class="['item',{select:$route.path === '/total/other'}]">
+              其他
+              <div class="triangle"></div>
+          </div>
+        </router-link>
+      </div>
+    </div>
+    <div class="detailchart-content">
+      <div class="detailchart-title">统计各个模块的比例，难度以及树状结构</div>
+      <el-row type="flex" justify="center" class="banner">
+        <el-col :span="mobile ? 24 : 24">
+          <el-tabs type tab-position="top" style="height: 100%;" v-model="mapmode">
+            <el-tab-pane :label="t.label" v-for="(t) in tabs" :key="t.name" :name="t.name"></el-tab-pane>
+          </el-tabs>
+        </el-col>
+      </el-row>
+      <!-- <div class="detailchart-menu">
+        <div @click="changeCheck('1')" :class="['detailchart-menuitem', menucheck=='1'?'detailchart-menuitem-check': '']">Leaflet</div>
+        <div @click="changeCheck('2')" :class="['detailchart-menuitem', menucheck=='2'?'detailchart-menuitem-check': '']">Cesium</div>
+        <div @click="changeCheck('3')" :class="['detailchart-menuitem', menucheck=='3'?'detailchart-menuitem-check': '']">MapboxGL</div>
+        <div @click="changeCheck('4')" :class="['detailchart-menuitem', menucheck=='4'?'detailchart-menuitem-check': '']">OpenLayers</div>
+      </div> -->
+    </div>
+
+    <el-row type="flex" justify="center" class="banner">
+      <el-col :span="mobile ? 22 : 22">
+        <v-chart :options="treemap" theme="ovilia-green" />
+        <br />
+        <v-chart :options="tree" />
+        <br />
+        <v-chart :options="sunburst" />
+      </el-col>
+    </el-row>
+    <!-- <el-row type="flex">
       <el-col :offset="mobile ? 1 : 2">
         <h2>{{title}}</h2>
       </el-col>
@@ -10,22 +71,7 @@
       <el-col :offset="mobile ? 1 : 2">
         <h4>{{titledetail}}</h4>
       </el-col>
-    </el-row>
-
-    <el-row type="flex" justify="center" class="banner">
-      <el-col :span="mobile ? 23 : 20">
-        <el-tabs type tab-position="top" style="height: 100%;" v-model="mapmode">
-          <el-tab-pane :label="t.label" v-for="(t) in tabs" :key="t.name" :name="t.name"></el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
-
-    <br />
-      <v-chart :options="treemap" theme="ovilia-green" />
-    <br />
-    <v-chart :options="tree" />
-    <br />
-    <v-chart :options="sunburst" />
+    </el-row>-->
   </div>
 </template>
 
@@ -50,6 +96,7 @@ export default {
   },
   data() {
     return {
+      menucheck: '1',
       mobile: isMobile(),
       title: '图表统计',
       titledetail: '统计各个模块的比例，难度以及树状结构',
@@ -145,11 +192,96 @@ export default {
       vm.sunburst = vm.optionsbar[vm.mapmode]
     })
   },
-  methods: {}
+  methods: {
+    changeCheck(i) {
+      this.menucheck = i
+      let next = 'leaflet'
+      switch(i) {
+        case '1':
+          next = 'leafleat'
+          break;
+        case '2':
+          next = 'cesium'
+          break;
+        case '3':
+          next = 'mapboxgl'
+          break;
+        case '4':
+          next = 'openlayers'
+          break;
+        default:
+          break;
+      }
+      this.treemap = this.optionscube[next]
+      this.tree = this.optionstree[next]
+      this.sunburst = this.optionsbar[next]
+    }
+  }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.overview-header {
+  width: 100%;
+  height: 240px;
+  background-image: url('../../../public/static/assets/total/totallogo.png');
+  background-size: 100% 240px;
+}
+.detailchart-title{
+  margin: 48px 0 24px 0;
+  width: 100%;
+  background: #EEEEEE;
+  text-indent: 17px;
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #333333;
+  line-height: 70px;
+}
+.detailchart-content{
+  padding: 0 10vw 36px 10vw;
+  .detailchart-menu{
+    position: relative;
+    box-sizing: border-box;
+    height: 40px;
+    width: 100%;
+    line-height: 36px;
+    border-bottom: 1px solid #B0B9C8;
+    white-space: nowrap;
+    .detailchart-menuitem{
+        display: inline-block;
+        cursor: pointer;
+        padding: 0 20px 0 20px;
+        position: relative;
+      }
+  }
+
+  .detailchart-menuitem-check{
+    color: #3A85C6;
+    position: relative;
+  }
+  .detailchart-menuitem-check::before{
+    content: ' ';
+    position: absolute;
+    left: calc(50% - 5px);
+    top: 33px;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #B0B9C8;
+    background: #FFFFFF;
+    transform: rotate(45deg);
+  }
+  .detailchart-menuitem-check::after{
+    content: ' ';
+    position: absolute;
+    left: calc(50% - 2px);
+    top: 37px;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(90deg, #4794FA, #31E1E6);
+    transform: rotate(45deg);
+  }
+}
 .webclient-detail-chart {
   .echarts {  // Mobile端
       width: 85vw;
@@ -157,7 +289,7 @@ export default {
       margin-left: 30px;
   }
   .banner {
-    padding-top: 20px;
+    // padding-top: 20px;
     text-align: center;
   }
 
@@ -178,4 +310,50 @@ export default {
     clear: both;
   }
 }
+::v-deep .el-tabs__nav-wrap {
+      &::after {
+        bottom: 12px;
+      }
+
+      .el-tabs__active-bar {
+        width: 0;
+        height: 0;
+        position: relative;
+
+      &::before {
+          content: ' ';
+          position: absolute;
+          left: calc(50% - 8px);
+          top: 34px;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #B0B9C8;
+          background: #FFFFFF;
+          transform: rotate(45deg);
+      }
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        left: calc(50% - 3px);
+        top: 39px;
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(90deg, #4794FA, #31E1E6);
+        transform: rotate(45deg);
+      }
+      }
+
+      .el-tabs__item {
+        height: 56px;
+        font-size: 18px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: #3C4858;
+
+      &.is-active {
+        color: #3A85C6;
+      }
+      }
+    }
 </style>

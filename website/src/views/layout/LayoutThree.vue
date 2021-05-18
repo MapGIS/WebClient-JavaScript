@@ -74,8 +74,8 @@ export default {
     height: 48px !important;
 }
 .webclient-three-header {
-    padding: 0px;
-    height: 72px;
+  padding: 0px;
+  height: 72px !important;
 }
 .webclient-three-layout {
     padding: 0px;

@@ -15,7 +15,9 @@
       :label="mobile? 'leaf':'leaflet'"
       :filters="[
       { text: '支持', value: '支持' },
-      { text: '不支持', value: '不支持'}]"
+      { text: '后续支持', value: '后续支持'},
+       { text: '支持', value: '支持'},
+       { text: '无计划', value: '无计划'}]"
       :filter-method="filterLeafletTag"
       filter-placement="bottom-end"
     >
@@ -28,7 +30,9 @@
       :label="mobile? 'map':'MapboxGL'"
       :filters="[
       { text: '支持', value: '支持' },
-      { text: '不支持', value: '不支持'}]"
+      { text: '后续支持', value: '后续支持'},
+      { text: '支持', value: '支持'},
+      { text: '无计划', value: '无计划'}]"
       :filter-method="filterMapboxTag"
       filter-placement="bottom-end"
     >
@@ -41,7 +45,9 @@
       :label="mobile? 'ol':'OpenLayers'"
       :filters="[
       { text: '支持', value: '支持' },
-      { text: '不支持', value: '不支持'}]"
+      { text: '后续支持', value: '后续支持'},
+      { text: '支持', value: '支持'},
+      { text: '无计划', value: '无计划'}]"
       :filter-method="filterOpenlayerTag"
       filter-placement="bottom-end"
     >
@@ -54,7 +60,9 @@
       :label="mobile? 'ce':'Cesium'"
       :filters="[
       { text: '支持', value: '支持' },
-      { text: '不支持', value: '不支持'}]"
+      { text: '后续支持', value: '后续支持'},
+      { text: '支持', value: '支持'},
+      { text: '无计划', value: '无计划'}]"
       :filter-method="filterCesiumTag"
       filter-placement="bottom-end"
     >
