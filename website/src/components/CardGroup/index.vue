@@ -10,19 +10,11 @@
           :key="title"
           content-position="left"
         >
-          <el-tag
+          <span
             v-if="secondname"
-            type="info"
-            effect="light"
-          >{{ secondname }}</el-tag>
-          <el-divider
-            v-if="secondname"
-            direction="vertical"
-          ></el-divider>
-          <el-tag
-            type="info"
-            effect="light"
-          >{{ title }}</el-tag>
+          >{{ secondname }}</span>
+          <span
+          >{{ title }}</span>
         </el-divider>
       </el-col>
       <el-col
@@ -116,6 +108,14 @@ export default {
   .gallery-divider {
     background: transparent;
 
+    .el-divider__text{
+      height: 19px;
+      font-size: 18px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      color: #3C4858;
+      line-height: 18px;
+    }
     /* .el-divider--horizontal {
     display: block;
     height: 10px;
