@@ -15,7 +15,6 @@ export class CloudDiskService extends ServiceBase {
     }
 
     /**
-     *
      * @param {String} authorization 验证令牌
      */
     setAuthorization(authorization) {

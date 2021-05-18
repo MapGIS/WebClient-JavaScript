@@ -128,14 +128,18 @@ export default {
 
 <style rel='stylesheet/scss' lang='scss' scoped>
 .submenu-last-open {
-  /* border-radius:  8px;
-  
-  background: linear-gradient(
-      90deg,
-      rgba(71, 148, 250, 1),
-      rgba(49, 225, 230, 1)
-    ); */
+  //color: #3A85C6;
 }
+//.el-submenu__title:active{
+//  color: #3A85C6;
+//}
+.nest-menu:active{
+  color: #3A85C6;
+}
+.submenu__title:hover{
+  color: #3A85C6;
+}
+//el-submenu
 .submenu-item-span {
   width: 100%;
   display: flex;

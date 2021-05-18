@@ -1,9 +1,9 @@
 <template>
   <el-table
-    height="100%"
     :data="data"
     border
-    style="wfuncth: 100%; margin-top: 20px"
+    style="margin-top: 20px"
+    header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;"
   >
     <el-table-column
       prop="func"
@@ -14,72 +14,52 @@
       prop="leaflet"
       :label="mobile? 'leaf':'leaflet'"
       :filters="[
-      { text: '支持', value: '支持' }, 
-      { text: '后续支持', value: '后续支持'},
-       { text: '支持', value: '支持'}, 
-       { text: '无计划', value: '无计划'}]"
+      { text: '支持', value: '支持' },
+      { text: '不支持', value: '不支持'}]"
       :filter-method="filterLeafletTag"
       filter-placement="bottom-end"
     >
       <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.leaflet === '支持' ? 'success' : scope.row.leaflet === '支持' ? 'primary' : scope.row.leaflet === '后续支持' ? 'warning' : 'danger'"
-          disable-transitions
-        >{{scope.row.leaflet}}</el-tag>
+        <div :class="['default',{'support': scope.row.leaflet === '支持'}, {'not-support': scope.row.leaflet === '不支持'}]">{{scope.row.leaflet === '支持'? '√': scope.row.leaflet === '不支持'? '×': '-'}}</div>
       </template>
     </el-table-column>
     <el-table-column
       prop="mapboxgl"
       :label="mobile? 'map':'MapboxGL'"
       :filters="[
-      { text: '支持', value: '支持' }, 
-      { text: '后续支持', value: '后续支持'}, 
-      { text: '支持', value: '支持'}, 
-      { text: '无计划', value: '无计划'}]"
+      { text: '支持', value: '支持' },
+      { text: '不支持', value: '不支持'}]"
       :filter-method="filterMapboxTag"
       filter-placement="bottom-end"
     >
       <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.mapboxgl === '支持' ? 'success' : scope.row.mapboxgl === '支持' ? 'primary' : scope.row.mapboxgl === '后续支持' ? 'warning' : 'danger'"
-          disable-transitions
-        >{{scope.row.mapboxgl}}</el-tag>
+        <div :class="['default',{'support': scope.row.leaflet === '支持'}, {'not-support': scope.row.leaflet === '不支持'}]">{{scope.row.leaflet === '支持'? '√': scope.row.leaflet === '不支持'? '×': '-'}}</div>
       </template>
     </el-table-column>
     <el-table-column
       prop="openlayers"
       :label="mobile? 'ol':'OpenLayers'"
       :filters="[
-      { text: '支持', value: '支持' }, 
-      { text: '后续支持', value: '后续支持'}, 
-      { text: '支持', value: '支持'}, 
-      { text: '无计划', value: '无计划'}]"
+      { text: '支持', value: '支持' },
+      { text: '不支持', value: '不支持'}]"
       :filter-method="filterOpenlayerTag"
       filter-placement="bottom-end"
     >
       <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.openlayers === '支持' ? 'success' : scope.row.openlayers === '支持' ? 'primary' : scope.row.openlayers === '后续支持' ? 'warning' : 'danger'"
-          disable-transitions
-        >{{scope.row.openlayers}}</el-tag>
+        <div :class="['default',{'support': scope.row.leaflet === '支持'}, {'not-support': scope.row.leaflet === '不支持'}]">{{scope.row.leaflet === '支持'? '√': scope.row.leaflet === '不支持'? '×': '-'}}</div>
       </template>
     </el-table-column>
     <el-table-column
       prop="cesium"
       :label="mobile? 'ce':'Cesium'"
       :filters="[
-      { text: '支持', value: '支持' }, 
-      { text: '后续支持', value: '后续支持'}, 
-      { text: '支持', value: '支持'}, 
-      { text: '无计划', value: '无计划'}]"
+      { text: '支持', value: '支持' },
+      { text: '不支持', value: '不支持'}]"
       :filter-method="filterCesiumTag"
       filter-placement="bottom-end"
     >
       <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.cesium === '支持' ? 'success' : scope.row.cesium === '支持' ? 'primary' : scope.row.cesium === '后续支持' ? 'warning' : 'danger'"
-          disable-transitions
-        >{{scope.row.cesium}}</el-tag>
+        <div :class="['default',{'support': scope.row.leaflet === '支持'}, {'not-support': scope.row.leaflet === '不支持'}]">{{scope.row.leaflet === '支持'? '√': scope.row.leaflet === '不支持'? '×': '-'}}</div>
       </template>
     </el-table-column>
   </el-table>
@@ -115,3 +95,19 @@ export default {
   }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+.default {
+  font-size: 18px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+}
+
+.support {
+  color: #45AC50;
+}
+
+.not-support {
+  color: #EA4614;
+}
+</style>

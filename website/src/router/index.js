@@ -7,6 +7,8 @@ import LayoutTwo from "@/views/layout/LayoutTwo";
 import Helper from '../views/helper/Helper';
 import Gallery from "../views/gallery/Gallery";
 import ShowCase from "../views/demo/ShowCase";
+import Product from "../views/component/product";
+import Guide from "../views/guide/DevelopGuide";
 
 Vue.use(VueRouter);
 
@@ -151,6 +153,16 @@ export const routes = [
     component: () => import("@/views/empty/index"),
     name: "*",
   },
+  {
+    path:"/component/product",
+    component: Product,
+    name: "product"
+  },
+  {
+    path:"/guide/DevelopGuide",
+    component: Guide,
+    name: "guide"
+  }
 ];
 
 const router = new VueRouter({

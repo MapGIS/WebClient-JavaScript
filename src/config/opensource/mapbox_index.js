@@ -212,6 +212,9 @@ import {
     ThemesInfo
 } from '../../service/Igserver/theme';
 
+import { GeoDatasetService, CalculateModelService } from '../../service/clouddisk';
+export { GeoDatasetService, CalculateModelService };
+
 export { ServiceBase };
 
 export {
@@ -391,28 +394,28 @@ export {
 };
 
 import {
-	GeoFeatureThemeLayer,
-	ThemeLayer,
-	RangeThemeLayer,
-	UniqueThemeLayer,
-	GraphThemeLayer,
-	graphThemeLayer,
-	RandomThemeLayer,
-	SimpleThemeLayer,
-	RankSymbolThemeLayer,
-	ThemeStyle
+    GeoFeatureThemeLayer,
+    ThemeLayer,
+    RangeThemeLayer,
+    UniqueThemeLayer,
+    GraphThemeLayer,
+    graphThemeLayer,
+    RandomThemeLayer,
+    SimpleThemeLayer,
+    RankSymbolThemeLayer,
+    ThemeStyle
 } from '../../mapboxgl/theme';
 export {
-	GeoFeatureThemeLayer,
-	ThemeLayer,
-	RangeThemeLayer,
-	UniqueThemeLayer,
-	GraphThemeLayer,
-	graphThemeLayer,
-	RandomThemeLayer,
-	SimpleThemeLayer,
-	RankSymbolThemeLayer,
-	ThemeStyle
+    GeoFeatureThemeLayer,
+    ThemeLayer,
+    RangeThemeLayer,
+    UniqueThemeLayer,
+    GraphThemeLayer,
+    graphThemeLayer,
+    RandomThemeLayer,
+    SimpleThemeLayer,
+    RankSymbolThemeLayer,
+    ThemeStyle
 };
 
 // 大数据相关

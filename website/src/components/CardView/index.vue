@@ -135,15 +135,25 @@ export default {
     }
     .el-card__header {
         padding: 0px 0px;
-        border-bottom: 1px solid #ebeef5;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
+        border-bottom:none !important;
+        //border-bottom: 1px solid #ebeef5;
+        //-webkit-box-sizing: border-box;
+        //box-sizing: border-box;
     }
     .el-card {
-        background: transparent;
+        background: #F5F5F5;
+      &:hover{
+        transition: all 0.2s linear;
+        transform: scale(1.1, 1.1);
+      }
     }
     .el-card__body {
-        background: transparent;
+        background: #F5F5F5;
+        padding: 15px;
+      &:hover{
+        transition: all 0.2s linear;
+        transform: scale(1.1, 1.1);
+      }
     }
     .gallery-card-wrapper {
         .box-card-header {
@@ -158,7 +168,7 @@ export default {
                 width: 100%;
                 transition: all 0.2s linear;
                 &:hover {
-                    transform: scale(1.1, 1.1);
+                    //transform: scale(1.1, 1.1);
                     /* filter: contrast(130%); */
                 }
             }
@@ -180,9 +190,9 @@ export default {
 }
 .gallery-card-wrapper:hover {
     border-radius: 4px;
-    background: linear-gradient(90deg, rgba(71, 148, 250, 1), rgba(49, 225, 230, 1));
+    //background: linear-gradient(90deg, rgba(71, 148, 250, 1), rgba(49, 225, 230, 1));
     .title {
-        color: #ffffff;
+        color: #323333;
     }
     .el-icon-picture-outline {
         height: 256px;

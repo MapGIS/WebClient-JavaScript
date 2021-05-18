@@ -7,7 +7,7 @@ const RasterMetadataPath = 'raster/metadata';
 const StatisticsPath = 'featureclass/statistics';
 
 /**
- * @class module:CloudDisk.GisCore.GeoDatasetService
+ * @class module:CloudDisk.GeoDatasetService
  * @description DataStore的云盘数据转换服务
  * @see 该方法强依赖java版本的mapgis.so动态库
  * @author 基础平台-潘卓然
@@ -20,14 +20,6 @@ export class GeoDatasetService extends CloudDiskService {
      * @description 服务地址
      */
     this.serviceUrl = '/giscore/dataconvert/rest/geodataset/';
-  }
-
-  /**
-   * @private 修正get/post需要的真正参数
-   */
-  fixOption(option) {
-    this.option = {
-    };
   }
 
   /**

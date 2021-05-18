@@ -14,7 +14,7 @@ const NodesPath = '/nodes';
 const NodesIdPath = '/nodes/{nodeId}?';
 
 /**
- * @class module:CloudDisk.GisCore.CalculateModelService
+ * @class module:CloudDisk.CalculateModelService
  * @description DataStore的云盘数据转换服务
  * @see 该方法强依赖datastore
  * @author 基础平台-潘卓然
@@ -32,13 +32,6 @@ export class CalculateModelService extends CloudDiskService {
          * @description 服务地址
          */
         this.serviceUrl = '/clouddisk/rest/CalculateModel';
-    }
-
-    /**
-     * @private 修正get/post需要的真正参数
-     */
-    fixOption(option) {
-        this.option = {};
     }
 
     /**

@@ -80,6 +80,53 @@ export default {
 .banner {
   padding-top: 20px;
   text-align: center;
+
+  ::v-deep .el-tabs__nav-wrap {
+      &::after {
+        bottom: 12px;
+      }
+
+      .el-tabs__active-bar {
+        width: 0;
+        height: 0;
+        position: relative;
+
+      &::before {
+          content: ' ';
+          position: absolute;
+          left: calc(50% - 8px);
+          top: 34px;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #B0B9C8;
+          background: #FFFFFF;
+          transform: rotate(45deg);
+      }
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        left: calc(50% - 3px);
+        top: 39px;
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(90deg, #4794FA, #31E1E6);
+        transform: rotate(45deg);
+      }
+      }
+
+      .el-tabs__item {
+        height: 56px;
+        font-size: 18px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: #3C4858;
+
+      &.is-active {
+        color: #3A85C6;
+      }
+      }
+    }
 }
 .webclient-detail-panel {
   margin: 30px 0px;

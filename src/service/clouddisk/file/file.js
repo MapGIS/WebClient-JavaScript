@@ -20,13 +20,6 @@ export class FileService extends CloudDiskService {
     }
 
     /**
-     * @private 修正get/post需要的真正参数
-     */
-    fixOption(option) {
-        this.option = {};
-    }
-
-    /**
      * @function module:CloudDisk.FileService.prototype.schema
      * @description 空间数据元数据
      * @param  {Object} options 请求参数
