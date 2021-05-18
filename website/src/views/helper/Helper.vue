@@ -1,26 +1,54 @@
 <template>
   <el-container>
     <el-header
-      style="padding:0px;"
-      :class="{'webclient-three-header-mobile':mobile, 'webclient-three-header': true}"
+        style="padding:0px;"
+        :class="{'webclient-three-header-mobile':mobile, 'webclient-three-header': true}"
     >
       <Header></Header>
     </el-header>
-    <el-main class="webclient-three-layout">
-      <vue-markdown
-        :watches="['show','html','breaks','linkify','emoji','typographer']"
-        :style="{padding: '20px 15vw'}"
-        :source="markdown"
-        :html="true"
-        :toc="false"
-        :linkify="true"
-        @rendered="markdownRendered"
-      ></vue-markdown>
-      <el-backtop></el-backtop>
-    </el-main>
+    <el-container class="helper-asideContent">
+      <el-aside
+          class="aside-scroll-content"
+      >
+        <el-scrollbar
+            class="element-scroll-content"
+            wrapStyle="overflow-x: hidden;"
+            viewStyle="overflow-y: hidden;"
+        >
+          <div class="header-menu-col">
+            <span :class="{ strong: strong, 'light-title': light }">{{ asideMenu.title }}</span>
+            <div class="header-menu-links" v-for="(link, i) in asideMenu.links" :key="i">
+              <div class="header-menu-link" v-for="(l, j) in link" :key="j">
+                <div class="header-menu-link-text">
+                  <el-badge type="success" :value="asideMenu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                    <a class="header-menu-link-text" :href="asideMenu.routes[i][j]">
+                      <span :class="{ 'light-subtitle': light }">{{ l }}</span>
+                    </a>
+                  </el-badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-scrollbar>
+      </el-aside>
+      <el-container>
+        <el-main>
+          <vue-markdown
+              :watches="['show','html','breaks','linkify','emoji','typographer']"
+              :style="{padding: '2px 1vw'}"
+              :source="markdown"
+              :html="true"
+              :toc="false"
+              :linkify="true"
+              @rendered="markdownRendered"
+          ></vue-markdown>
+          <el-backtop></el-backtop>
+        </el-main>
+      </el-container>
+    </el-container>
     <el-footer
-      :height="mobile?'300':'250'"
-      style="padding:0px;"
+        :height="mobile?'300':'250'"
+        style="padding:0px;"
     >
       <main-footer></main-footer>
     </el-footer>
@@ -28,8 +56,8 @@
 </template>
 
 <script>
-import { Header, MainFooter } from "@/views/layout/components";
-import { isMobile } from "@/utils/mobile";
+import {Header, MainFooter} from "@/views/layout/components";
+import {isMobile} from "@/utils/mobile";
 import VueMarkdown from "vue-markdown";
 import Prism from "prismjs";
 import axios from 'axios';
@@ -47,22 +75,27 @@ export default {
     MainFooter,
     VueMarkdown,
   },
-  data () {
+  data() {
     return {
       mobile: isMobile(),
       markdown: "> `暂无说明`, 请检查改目录下的帮助说明是否存在",
+      asideContent: "",
+      asideMenu: "",
+      strong: true,
+      light: false,
+      hint: '新',
     }
   },
-  mounted () {
+  mounted() {
     this.getCurrentKind();
   },
   watch: {
-    "$route.path" () {
+    "$route.path"() {
       this.getCurrentKind();
     }
   },
   methods: {
-    getCurrentKind () {
+    getCurrentKind() {
       // let anchors = location.href.split("#");
       // if (!anchors || anchors.length < 2) return;
 
@@ -86,15 +119,43 @@ export default {
       let first, second;
       if (hrefs.length <= 3) {
         first = hrefs[hrefs.length - 2];
-         second = undefined;
-       } else {
-         first = hrefs[hrefs.length - 3];
+        second = undefined;
+      } else {
+        first = hrefs[hrefs.length - 3];
         second = hrefs[hrefs.length - 2];
       }
 
       this.resetHtml(mode, file, first, second);
+      this.getAsideContent(mode);
     },
-    getMapMode () {
+    getAsideContent(mode,file,first,second) {
+      let self = this;
+      let asideUrl = "./static/demo/config/config-headers.json";
+      // let url =  mode + "/helper/" + first + "/"+ second + "/" + file ;
+      axios.get(asideUrl).then(response => {
+        let temp = response.data;
+        for (let i in temp) {
+          if (mode === (temp[i].title).toLowerCase()) {
+            self.asideContent = temp[i];
+            break;
+          }
+        }
+        let menus = self.asideContent.menus;
+        for (let j in menus) {
+          if (menus[j].type || menus[j].type === "helper") {
+            self.asideMenu = menus[j]
+            break;
+          }
+        }
+        // for (let i in self.asideMenu.routes[0]){
+        //   if (url === self.asideMenu.routes[0][i]){
+        //     let activeDiv = document.getElementsByClassName('');
+        //   }
+        // }
+
+      });
+    },
+    getMapMode() {
       var mapMode = "leaflet";
       if (this.$route.path.indexOf("leaflet") > 0) {
         mapMode = "leaflet";
@@ -107,7 +168,7 @@ export default {
       }
       return mapMode;
     },
-    getHtmlUrl (type, image, first, second) {
+    getHtmlUrl(type, image, first, second) {
       var baseUrl = "./static/demo/";
       var imageUrl = baseUrl + type + "/helper/" + first + "/";
       if (second !== undefined) {
@@ -117,7 +178,7 @@ export default {
       }
       return imageUrl;
     },
-    resetHtml (mode, file, first, second) {
+    resetHtml(mode, file, first, second) {
       this.loading = true;
       var self = this;
 
@@ -126,13 +187,13 @@ export default {
       var url = this.getHtmlUrl(mode, file, first, second);
 
       axios.get(url)
-        .then(response => {
-          self.markdown = response.data;
-        }).catch(() => {
-          window.console.warn('暂无该帮助的markdown说明，后续持续补充......');
-        })
+          .then(response => {
+            self.markdown = response.data;
+          }).catch(() => {
+        window.console.warn('暂无该帮助的markdown说明，后续持续补充......');
+      })
     },
-    markdownRendered () {
+    markdownRendered() {
       this.$nextTick(() => {
         Prism.highlightAll();
       });
@@ -140,3 +201,63 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.strong {
+  font-weight: bold !important;
+  border-bottom: 1px solid #D2D8E2;
+}
+
+.light-title {
+  color: #ffffff !important;
+}
+
+.helper-asideContent {
+  .aside-scroll-content {
+    height: calc(100vh - 80px);
+    width: 250px;
+    margin: 36px 0px 36px 79px;
+    overflow-x: hidden;
+    background-color: #F5F7FB;
+  }
+}
+
+.header-menu-col {
+  margin: 7px 30px;
+  width: fit-content;
+  height: fit-content;
+
+  span {
+    margin-left: 10px;
+    width: 60px;
+    height: 14px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 30px;
+  }
+
+  .el-badge__content--success {
+    background: linear-gradient(90deg, #1CA054, #24C066);
+  }
+
+  .header-menu-links {
+    padding: 10px;
+  }
+
+  .header-menu-link-text {
+    color: #323333;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+  }
+
+  .header-menu-link-text:hover {
+    color: #3A85C6;
+  }
+
+  .header-menu-link:hover {
+    border-left: 2px solid #3A85C6;
+  }
+}
+</style>

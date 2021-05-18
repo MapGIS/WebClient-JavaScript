@@ -59,10 +59,10 @@
             <IconFont type="iconcollapseright" />
           </div>
           <transition name="bounce">
-            <ShowGallery
-              v-if="currentKind.length > 0 && !fullScreen"
-              :list="currentKind"
-            />
+<!--            <ShowGallery-->
+<!--              v-if="currentKind.length > 0 && !fullScreen"-->
+<!--              :list="currentKind"-->
+<!--            />-->
           </transition>
           <router-view
             class="main-demo-wrapper"
