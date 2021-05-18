@@ -11,14 +11,13 @@ import { IgsServiceBase } from '../baseserver/IServiceBase';
 export class CloudDiskService extends ServiceBase {
     constructor(options) {
         super(options);
+        const { headers } = options;
         this.fixParams(options);
+        this.headers = headers ? headers : undefined;
     }
 
-    /**
-     * @param {String} authorization 验证令牌
-     */
-    setAuthorization(authorization) {
-        this.options.Authorization = authorization;
+    setHeaders(headers) {
+        this.headers = headers;
     }
 
     fixParams(option) {
@@ -70,15 +69,18 @@ export class CloudDiskService extends ServiceBase {
      * @param {Function} onError 查询失败回调函数。
      */
     get(url, onSuccess, onError) {
-        var me = this;
-        var service = new IgsServiceBase(url, {
+        let me = this;
+        let service = new IgsServiceBase(url, {
             eventListeners: {
                 scope: me,
                 processCompleted: onSuccess,
                 processFailed: onError
             }
         });
-        service.processAsync();
+        service.processAsync({
+            method: 'GET',
+            headers: this.headers || { 'Content-Type': 'text/plain;charset=UTF-8' }
+        });
     }
 
     /**
@@ -89,8 +91,8 @@ export class CloudDiskService extends ServiceBase {
      * @param {Function} onError 查询失败回调函数。
      */
     post(url, param, onSuccess, onError) {
-        var me = this;
-        var service = new IgsServiceBase(url, {
+        let me = this;
+        let service = new IgsServiceBase(url, {
             eventListeners: {
                 scope: me,
                 processCompleted: onSuccess,
@@ -100,7 +102,7 @@ export class CloudDiskService extends ServiceBase {
         service.processAsync({
             method: 'POST',
             data: JSON.stringify(param),
-            headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+            headers: this.headers || { 'Content-Type': 'text/plain;charset=UTF-8' }
         });
     }
 }

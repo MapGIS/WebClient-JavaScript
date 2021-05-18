@@ -212,8 +212,8 @@ import {
     ThemesInfo
 } from '../../service/Igserver/theme';
 
-import { GeoDatasetService, CalculateModelService } from '../../service/clouddisk';
-export { GeoDatasetService, CalculateModelService };
+import { UserService, GeoDatasetService, CalculateModelService } from '../../service/clouddisk';
+export { UserService, GeoDatasetService, CalculateModelService };
 
 export { ServiceBase };
 

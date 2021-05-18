@@ -18,9 +18,10 @@ const NodesIdPath = '/nodes/{nodeId}?';
  * @description DataStore的云盘数据转换服务
  * @see 该方法强依赖datastore
  * @author 基础平台-潘卓然
+ * @see http://192.168.199.53:9011/clouddisk/rest/swagger-ui.html
  * @example
  * let service = new CalculateModelService({ domain: "http://192.168.199.53:9011"});
- * service.setAuthorization('pk.sdfsedfsxseres');
+ * service.setHeaders({authorization: 'pk.xxxxxx'});
  * service.add({nodeId: 100}, (res) => {}, (error) => {});
  * service.catalog({nodeId: 100}, (res) => {}, (error) => {});
  */
