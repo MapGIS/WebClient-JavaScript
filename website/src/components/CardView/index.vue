@@ -125,7 +125,7 @@ export default {
 
 <style lang="scss">
 .gallery-card-div {
-    margin: 4px;
+    margin: 8px;
     display: flex;
     .card-image {
         height: 256px;

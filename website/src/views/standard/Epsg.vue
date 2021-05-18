@@ -1,28 +1,6 @@
 <template>
   <div class="webclient-epsg-wrapper">
-    <div class="overview-header">
-      <div class="title">协议<span>AGREEMENT</span></div>
-      <div class="overview-nav">
-        <router-link to="/standard/epsg">
-          <div :class="['item',{select:$route.path === '/standard/epsg'}]">
-              epsg
-              <div class="triangle"></div>
-          </div>
-        </router-link>
-        <router-link to="/standard/ogc">
-          <div :class="['item',{select:$route.path === '/standard/ogc'}]">
-              ogc
-              <div class="triangle"></div>
-          </div>
-        </router-link>
-        <router-link to="/standard/geojson">
-          <div :class="['item',{select:$route.path === '/standard/geojson'}]">
-              geojson
-              <div class="triangle"></div>
-          </div>
-        </router-link>
-      </div>
-    </div>
+    <standard-tab />
     <div class="standard-content">
       <div class="standard-content-link">
         <a href="http://epsg.io/">EPSG官方网址</a>
@@ -60,10 +38,12 @@
 import { isMobile } from "@/utils/mobile";
 import OgcTable from "@/components/Table/OgcTable";
 import epsg from "@/config/config-epsg";
+import StandardTab from '@/components/Tabs/StandardTab';
 
 export default {
   components: {
-    OgcTable
+    OgcTable,
+    StandardTab
   },
   data() {
     return {

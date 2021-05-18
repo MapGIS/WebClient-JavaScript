@@ -87,49 +87,47 @@ export default {
 <style lang="scss">
 .sidebar-demo-wrapper {
   .el-menu {
-    background: #f4f7fb;
-  }
-  .el-menu-item {
-    text-decoration: none !important;
-    font-size: 12px;
-    height: 36px !important;
-    line-height: 36px !important;
-    border-left: 7px solidrgba(49, 225, 230, 1);
-  }
-  /* .el-menu-item .is-active {
-    border-left: 4px solid #409eff;
-  } */
-  /deep/ .el-submenu__title:hover{
-    background: linear-gradient(
-    90deg,
-    rgba(71, 148, 250, 1),
-    rgba(49, 225, 230, 1)
-  ) !important;
-  }
-
-  // .el-submenu:hover,
-  .el-menu-item:focus,
-  .el-menu-item:hover {
-    outline: 0;
-    color: #3A85C6;
-    //background: linear-gradient(
-    //  90deg,
-    //  rgba(71, 148, 250, 1),
-    //  rgba(49, 225, 230, 1)
-    //);
-  }
-  .el-menu-item.is-active {
-    //background: linear-gradient(
-    //  90deg,
-    //  rgba(71, 148, 250, 1),
-    //  rgba(49, 225, 230, 1)
-    //);
-    color: #3A85C6;
-  }
-  .el-menu-item {
-    .is-active {
-      color: #3A85C6 !important;
+        background: #f4f7fb;
     }
-  }
+    .el-submenu .el-menu {
+        border-left: 1px solid #C8CDD4;
+        margin-left: 30px;
+    }
+    .el-menu-item {
+        font-size: 12px;
+        height: 36px !important;
+        line-height: 36px !important;
+        border-left: 7px solidrgba(49, 225, 230, 1);
+    }
+    .is-opened:first-child {
+        // background: linear-gradient(90deg, rgba(71, 148, 250, 0.31), rgba(49, 225, 230, 0.31));
+    }
+    .el-menu-item:focus,
+    .el-menu-item:hover {
+        outline: 0;
+        color: #ffffff;
+        background: linear-gradient(90deg, rgba(71, 148, 250, 0.31), rgba(49, 225, 230, 0.31));
+    }
+    .el-menu-item.is-active {
+        // background: linear-gradient(90deg, rgba(71, 148, 250, 0.31), rgba(49, 225, 230, 0.31));
+        color: #3A85C6;
+    }
+    .el-menu-item {
+        .is-active {
+            color: #ffffff !important;
+        }
+    }
+    .el-submenu .is-opened {
+        // background: linear-gradient(90deg, rgba(71, 148, 250, 0.31), rgba(49, 225, 230, 0.31));
+    }
+    .el-submenu__title {
+        padding-left: 20px !important;
+    }
+    .submenu-item-span {
+        padding-left: 4px !important;
+    }
+    .el-submenu .el-menu-item {
+        min-width: 156px;
+    }
 }
 </style>

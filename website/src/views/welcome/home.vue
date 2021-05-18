@@ -194,7 +194,7 @@ export default {
 };
 </script>
 
-<style  lang="scss">
+<style  lang="scss" scoped>
 $padding-left: 60px;
 $margin-left: 80px;
 .webclient-home-mobile {
@@ -227,6 +227,10 @@ $margin-left: 80px;
 }
 .webclient-home {
   .mapgis-header {
+    background: transparent !important;
+    box-shadow: 0px 3px 7px 0px transparent !important;;
+  }
+  .mapgis-webclient-header {
     background: transparent !important;
   }
   .home-header {
