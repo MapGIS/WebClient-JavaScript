@@ -13,8 +13,8 @@
       <el-col :span="mobile? 22: 18">
         <el-tabs tab-position='top' style="height: 100%;">
           <el-tab-pane label="DataStore">
-            <el-table :data="datastore" border stripe style="width: 100%">
-              <el-table-column type="index">
+            <el-table :data="datastore" border stripe style="width: 100%" header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;">
+              <el-table-column type="index" label="序号" width="60">
               </el-table-column>
               <el-table-column prop="func" label="功能">
               </el-table-column>
@@ -25,8 +25,8 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="DataAnalysis">
-            <el-table :data="dataanalysis" border stripe style="width: 100%">
-              <el-table-column type="index">
+            <el-table :data="dataanalysis" border stripe style="width: 100%" header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;">
+              <el-table-column type="index" label="序号" width="60">
               </el-table-column>
               <el-table-column prop="func" label="功能">
               </el-table-column>
@@ -37,8 +37,8 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="DataView">
-            <el-table :data="dataview" border stripe style="width: 100%">
-              <el-table-column type="index">
+            <el-table :data="dataview" border stripe style="width: 100%" header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;">
+              <el-table-column type="index" label="序号" width="60">
               </el-table-column>
               <el-table-column prop="func" label="功能">
               </el-table-column>
@@ -49,8 +49,8 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="IgServer">
-            <el-table :data="igserver" border stripe style="width: 100%">
-              <el-table-column type="index">
+            <el-table :data="igserver" border stripe style="width: 100%" header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;">
+              <el-table-column type="index" label="序号" width="60">
               </el-table-column>
               <el-table-column prop="func" label="功能">
               </el-table-column>
@@ -244,7 +244,61 @@ import { isMobile } from "@/utils/mobile";
   .banner {
     padding-top: 20px;
     text-align: center;
+
+    ::v-deep .el-tabs__nav-wrap {
+      &::after {
+        bottom: 12px;
+      }
+
+      .el-tabs__active-bar {
+        width: 0;
+        height: 0;
+        position: relative;
+
+      &::before {
+          content: ' ';
+          position: absolute;
+          left: calc(50% - 8px);
+          top: 34px;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #B0B9C8;
+          background: #FFFFFF;
+          transform: rotate(45deg);
+      }
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        left: calc(50% - 3px);
+        top: 39px;
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(90deg, #4794FA, #31E1E6);
+        transform: rotate(45deg);
+      }
+      }
+
+      .el-tabs__item {
+        height: 56px;
+        font-size: 18px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: #3C4858;
+
+      &.is-active {
+        color: #3A85C6;
+      }
+      }
+    }
+
+    // ::v-deep.el-table .el-table__header-wrapper {
+    //   tr {
+    //     background-color: #F5F7FA;
+    //   }
+    // }
   }
+
   .webclient-core-wrapper {
      margin: 30px 0px;
      .framework-style-image {
