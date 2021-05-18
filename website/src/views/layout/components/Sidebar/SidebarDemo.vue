@@ -99,27 +99,36 @@ export default {
   /* .el-menu-item .is-active {
     border-left: 4px solid #409eff;
   } */
+  /deep/ .el-submenu__title:hover{
+    background: linear-gradient(
+    90deg,
+    rgba(71, 148, 250, 1),
+    rgba(49, 225, 230, 1)
+  ) !important;
+  }
+
   // .el-submenu:hover,
   .el-menu-item:focus,
   .el-menu-item:hover {
     outline: 0;
-    background: linear-gradient(
-      90deg,
-      rgba(71, 148, 250, 1),
-      rgba(49, 225, 230, 1)
-    );
+    color: #3A85C6;
+    //background: linear-gradient(
+    //  90deg,
+    //  rgba(71, 148, 250, 1),
+    //  rgba(49, 225, 230, 1)
+    //);
   }
   .el-menu-item.is-active {
-    background: linear-gradient(
-      90deg,
-      rgba(71, 148, 250, 1),
-      rgba(49, 225, 230, 1)
-    );
-    color: #ffffff;
+    //background: linear-gradient(
+    //  90deg,
+    //  rgba(71, 148, 250, 1),
+    //  rgba(49, 225, 230, 1)
+    //);
+    color: #3A85C6;
   }
   .el-menu-item {
     .is-active {
-      color: #ffffff !important;
+      color: #3A85C6 !important;
     }
   }
 }

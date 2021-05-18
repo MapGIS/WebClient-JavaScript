@@ -4,6 +4,41 @@
       <Header></Header>
     </el-header>
     <el-main class="webclient-empty-wrapper">
+      <div class="overview-header">
+        <div class="title">插件<span>PLUG-IN&nbsp;UNIT</span></div>
+        <div class="overview-nav">
+          <router-link to="/total/plugins">
+            <div :class="['item',{select:$route.path === '/total/plugins'}]">
+                插件列表
+                <div class="triangle"></div>
+            </div>
+          </router-link>
+          <router-link to="/total/detailChart">
+            <div :class="['item',{select:$route.path === '/total/detailChart'}]">
+                详细图表
+                <div class="triangle"></div>
+            </div>
+          </router-link>
+          <router-link to="/total/pluginTags">
+            <div :class="['item',{select:$route.path === '/total/pluginTags'}]">
+                插件标签
+                <div class="triangle"></div>
+            </div>
+          </router-link>
+          <router-link to="/total/bugCommit">
+            <div :class="['item',{select:$route.path === '/total/bugCommit'}]">
+                提交bug
+                <div class="triangle"></div>
+            </div>
+          </router-link>
+          <router-link to="/total/other">
+            <div :class="['item',{select:$route.path === '/total/other'}]">
+                其他
+                <div class="triangle"></div>
+            </div>
+          </router-link>
+        </div>
+      </div>
       <div class="wscn-http404-container">
         <div class="wscn-http404">
           <div class="pic-404">
@@ -56,14 +91,16 @@
 
 <script>
 import { Header, MainFooter } from "../layout/components";
+import { isMobile } from "@/utils/mobile";
 export default {
   name: 'Page404',
   components: {
     Header,
-    MainFooter,
+    MainFooter
   },
   data () {
     return {
+      mobile: isMobile(),
       empty: {
         main: './static/assets/404_images/404.png',
         cloud: './static/assets/404_images/404_cloud.png',
@@ -83,22 +120,24 @@ export default {
 .el-footer {
   padding: 0 0px;
 }
+.overview-header {
+  background-image: url('../../../public/static/assets/total/totallogo.png');
+}
 .webclient-empty-wrapper {
   padding: 0px;
   min-height: 70vh;
   margin: 0px 0px;
 }
-.wscn-http404-container {
-  transform: translate(-50%, -50%);
-  position: absolute;
-  top: 40%;
-  left: 50%;
-}
 .wscn-http404 {
   position: relative;
   width: 1200px;
   padding: 0 50px;
+  margin: 48px 0;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: row;
   .pic-404 {
     position: relative;
     float: left;

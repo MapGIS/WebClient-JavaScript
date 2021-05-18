@@ -16,7 +16,7 @@
                     </el-popover>
                 </div>
                 <template v-else>
-                  <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="hover">
+                  <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="click">
                     <header-menu :menus="h.menus" :icon="h.icon" />
                     <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
                         <IconFont :type="h.icon" class="menu-icon" />
@@ -152,12 +152,12 @@ export default {
     font-family: Microsoft YaHei;
     width: 100%;
     padding: 0px !important;
-    height: 64px;
+    height: 72px;
     background: rgba(37, 45, 69, 1);
 
     .mapgis-webclient-header {
         width: fit-content;
-        height: 64px;
+        height: 72px;
         align-items: center;
         float: left;
         display: flex;
@@ -188,7 +188,7 @@ export default {
 
     .mapgis-webclient-menu-icon {
         float: right;
-        height: 64px;
+        height: 72px;
         margin-right: 48px;
         cursor: pointer;
         display: none;
@@ -222,7 +222,7 @@ export default {
 
         span {
             width: fit-content;
-            height: 64px;
+            height: 72px;
             margin: 0px 2px;
             padding: 0px 4px;
             // margin-let: 12.5px;
@@ -231,7 +231,7 @@ export default {
             font-weight: 500;
             text-align: center;
             color: rgba(255, 255, 255, 1);
-            line-height: 64px;
+            line-height: 72px;
 
             .el-button {
                 padding: 0;

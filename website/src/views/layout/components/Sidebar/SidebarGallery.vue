@@ -90,11 +90,8 @@ export default {
     line-height: 36px !important;
     border-left: 7px solidrgba(49, 225, 230, 1);
   }
-  .is-opened:last-child {
-    /* background: linear-gradient(
-      90deg,
-      rgba(71, 148, 250, 1),
-      rgba(49, 225, 230, 1)); */
+  .is-opened:first-child {
+    background: linear-gradient(90deg, #4794FA, #31E1E6);
   }
   .el-menu-item:focus,
   .el-menu-item:hover {
@@ -107,17 +104,24 @@ export default {
     );
   }
   .el-menu-item.is-active {
-    /*     background: linear-gradient(
+    background: linear-gradient(
       90deg,
       rgba(71, 148, 250, 1),
       rgba(49, 225, 230, 1)
-    ); */
+    );
     color: #ffffff;
   }
   .el-menu-item {
     .is-active {
       color: #ffffff !important;
     }
+  }
+  .el-submenu .is-opened{
+    background: linear-gradient(
+            90deg,
+            rgba(71, 148, 250, 1),
+            rgba(49, 225, 230, 1)
+    );
   }
 }
 </style>

@@ -159,7 +159,7 @@ import "codemirror/lib/codemirror.css";
 // language
 import "codemirror/mode/javascript/javascript.js";
 // theme css
-import "codemirror/theme/monokai.css";
+import "codemirror/theme/moxer.css";
 // require active-line.js
 import "codemirror/addon/selection/active-line.js";
 // styleSelectedText
@@ -198,8 +198,14 @@ import "codemirror/addon/fold/xml-fold.js";
 //import 'codemirror/theme/base16-dark.css'
 import "codemirror/theme/base16-light.css";
 import "codemirror/theme/paraiso-light.css";
-import "codemirror/theme/monokai.css";
+import "codemirror/theme/moxer.css";
 import "codemirror/theme/cobalt.css";
+import "codemirror/theme/eclipse.css";
+import "codemirror/theme/mdn-like.css";
+import "codemirror/theme/ssms.css";
+import "codemirror/theme/neo.css";
+import "codemirror/theme/solarized.css";
+
 
 // import "@/styles/markdown.css";
 //import "@/styles/prism.css";
@@ -251,7 +257,7 @@ export default {
         keyMap: "sublime",
         matchBrackets: true,
         showCursorWhenSelecting: true,
-        theme: "base16-light",
+        theme: "neo",
         extraKeys: { Ctrl: "autocomplete" }
       }
     };
@@ -357,9 +363,9 @@ export default {
           // demoContent[0].style.height = window.innerHeight - 102 + "px";
           // markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 242 + "px";
         } else {
-          codeContent[0].style.height = window.innerHeight - 295 + "px";
-          demoContent[0].style.height = window.innerHeight - 230 + "px";
-          markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 295 + "px";
+          codeContent[0].style.height = window.innerHeight - 160 + "px";
+          demoContent[0].style.height = window.innerHeight - 90 + "px";
+          markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 160 + "px";
         }
       }
     },
@@ -495,6 +501,8 @@ export default {
 		}
 	}
 .splitpanes__pane {
+    width: 40%;
+    height: 90%;
     background-color: #ffffff !important;
 }
 .webclient-showcase-mobile {
@@ -533,7 +541,7 @@ export default {
     }
 
     .editor-codemirror-wraper {
-        height: calc(100vh - 235px);
+        height: calc(100vh - 50px);
     }
 
     .iframemobile {
@@ -593,5 +601,8 @@ export default {
       position: relative;
     } */
     }
+  .splitpanes__pane{
+    height: 100% !important;
+  }
 }
 </style>

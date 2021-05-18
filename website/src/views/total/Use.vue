@@ -1,6 +1,31 @@
 <template>
   <div class="webclient-use-wrapper">
-    <el-steps :active="1">
+    <div class="steps">
+      <div class="index">
+        <div class="number">01</div>
+        <div class="content">
+          <div class="main">核心用法</div>
+          <div class="sub">include-xxx.js</div>
+        </div>
+      </div>
+      <img/>
+      <div class="index">
+        <div class="number">02</div>
+        <div class="content">
+          <div class="main">离线使用</div>
+          <div class="sub">include-xxx-local.js</div>
+        </div>
+      </div>
+      <img/>
+      <div class="index">
+        <div class="number">03</div>
+        <div class="content">
+          <div class="main">在线使用</div>
+          <div class="sub">include-xxx-online.js</div>
+        </div>
+      </div>
+    </div>
+    <!-- <el-steps :active="1">
       <el-step
         title="核心用法"
         description="include-xxx.js"
@@ -13,18 +38,17 @@
         title="在线使用"
         description="include-xxx-online.js"
       ></el-step>
-    </el-steps>
+    </el-steps> -->
 
     <div class="tip">
       <p>使用方式主要分为三种: 本地离线使用，局域网使用，在线互联网使用.。</p>
     </div>
 
-    <h2>
-      核心用法
-    </h2>
-    <el-divider>
-      <i class="el-icon-star-on"></i>
-    </el-divider>
+    <div class="title">
+      <img/>
+      <div class="main">核心用法</div>
+      <div class="sub">include-xxx.js</div>
+    </div>
 
     <div class="tip">
       <p>这里是引入基本的三方库如jquery，bootstrap等.</p>
@@ -57,15 +81,11 @@
       :preview-src-list="[useCoreImg]"
     />
 
-    <h2>
-      本地离线使用
-    </h2>
-    <h3>
-      include-xxx-local.js
-    </h3>
-    <el-divider>
-      <i class="el-icon-star-on"></i>
-    </el-divider>
+    <div class="title">
+      <img/>
+      <div class="main">本地离线使用</div>
+      <div class="sub">include-xxx-local.js</div>
+    </div>
 
     <div class="warning">
       <p>离线版本的核心原理就是根据include=""中的名字，在 当前cdn文件夹下寻找对应的js的脚本并按照规定的顺序引入到浏览器中.</p>
@@ -88,15 +108,11 @@
       </p>
     </div>
 
-    <h2>
-      互联网在线使用
-    </h2>
-    <h3>
-      include-xxx-online.js
-    </h3>
-    <el-divider>
-      <i class="el-icon-star-on"></i>
-    </el-divider>
+    <div class="title">
+      <img/>
+      <div class="main">互联网在线使用</div>
+      <div class="sub">include-xxx-online.js</div>
+    </div>
 
     <div class="warning">
       <p>
@@ -229,20 +245,71 @@ export default {
   margin-left: 10%;
   margin-right: 10%;
   padding-top: 40px;
+
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+
+    .index {
+      display: flex;
+      align-items: center;
+
+      .number {
+        font-size: 48px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        font-style: italic;
+        color: rgba(51, 51, 51, .2);
+      }
+
+      .content {
+        margin-left: 16px;
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        font-style: italic;
+        color: #3C4858;
+      }
+    }
+
+    img {
+      width: 77px;
+      height: 34px;
+    }
+  }
+
   .first-title {
     margin-top: 50px;
   }
 
-  h2 {
-    text-align: center;
-    font-size: 30px;
-    font-family: Adobe Heiti Std;
-  }
+  .title {
+    display: flex;
+    align-items: center;
+    height: 22px;
+    margin: 56px 0 24px 0;
 
-  h3 {
-    text-align: center;
-    font-size: 20px;
-    font-family: Adobe Heiti Std;
+    img {
+      width: 10px;
+      height: 22px;
+    }
+
+    .main {
+      margin-left: 8px;
+      font-size: 20px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      color: #3C4858;
+    }
+
+    .sub {
+      margin-left: 16px;
+      font-size: 16px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: #999999;
+    }
   }
 
   .tip {
