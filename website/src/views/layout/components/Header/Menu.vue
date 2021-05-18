@@ -2,7 +2,10 @@
     <div class="header-menu-wrapper" :class="{ 'header-menu-wrapper-mobile': mobile }">
         <div class="header-menu-col" v-for="menu in menus" :key="menu.title">
             <!-- <IconFont :type="icon" /> -->
-            <span :class="{ strong: strong, 'light-title': light }">{{ menu.title }}</span>
+            <div>
+                <IconFont :type="menu.icon" class="menu-icon" />
+                <span :class="{ strong: strong, 'light-title': light }">{{ menu.title }}</span>
+            </div>
             <el-divider v-if="divider"></el-divider>
             <p v-else />
             <div class="header-menu-links" v-for="(link, i) in menu.links" :key="i">
@@ -36,8 +39,12 @@
 
 <script>
 import { isMobile } from '@/utils/mobile';
+import IconFont from '@/components/IconFont/iconfront';
 
 export default {
+    components: {
+        IconFont
+    },
     name: 'HeaderMenu',
     props: {
         icon: {
@@ -99,18 +106,18 @@ export default {
 }
 @media (min-width:720px){
   .header-menu-wrapper {
-    padding: 0 5vw;
+    padding: 0 3vw;
   }
 }
 @media (min-width:960px){
   .header-menu-wrapper {
-    padding: 0 15vw;
+    padding: 0 5vw;
   }
 }
 
 @media (min-width:1280px){
   .header-menu-wrapper {
-    padding: 0 20vw;
+    padding: 0 8vw;
   }
 }
 
@@ -119,9 +126,9 @@ export default {
     flex-wrap: wrap;
     // width: fit-content;
     width: 100vw;
-    height: 600px;
+    height: calc(100vh - 180px);
     overflow: auto;
-    background: #1c1c1c;
+    background: #062f52;
     box-shadow: 0px 1px 9px 0px rgba(0, 0, 12, 0.1);
     opacity: 0.9;
     .menu-badge {
@@ -147,7 +154,7 @@ export default {
             font-family: Microsoft YaHei;
             font-weight: 400;
             color: #ffffff;
-            line-height: 30px;
+            line-height: 36px;
         }
     }
     .strong {
@@ -166,26 +173,26 @@ export default {
     }
     .header-menu-link {
         width: 160px;
-        height: 30px;
+        height: 36px;
         span {
-            margin-left: 10px;
+            margin-left: 0px;
             width: 61px;
             font-size: 14px;
             font-family: Microsoft YaHei;
             font-weight: 500;
             color: #ffffff;
-            line-height: 30px;
+            line-height: 36px;
         }
     }
     .header-menu-link:hover {
         width: 160px;
-        height: 30px;
+        height: 36px;
         // border-radius: 4px;
         background: linear-gradient(90deg, rgba(71, 148, 250, 1), rgba(49, 225, 230, 1));
     }
     .header-menu-link-text {
         width: 160px;
-        height: 30px;
+        height: 36px;
         display: block;
     }
 }
@@ -197,8 +204,12 @@ export default {
 }
 
 .el-popover {
+    overflow: hidden;
     border: 1px solid #062f52 !important;
-    background: #1c1c1c !important;
+    background: #062F52 !important;
+    opacity: .9;
+    border-radius: 4px;
+    box-shadow: 0px 1px 9px 0px rgba(0, 0, 12, 0.1);
     width: 100vw !important;
 }
 

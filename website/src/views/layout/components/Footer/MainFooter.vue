@@ -22,30 +22,31 @@
           />
           <div class="icp-row">
             <a>
-              © 2020 云生态圈, all rights reserved.
+              © 2020 MapGis.com版权所有
             </a>
           </div>
           <div class="icp-row">
-            <img
+            <!-- <img
               src="http://oss-smaryun-new.oss-cn-beijing.aliyuncs.com/images/police_icon.png"
               style="height:18px;"
-            /><a
+            /> -->
+            <a
               href="http://www.beian.miit.gov.cn"
               target="_blank"
-            >&nbsp;ICP证：鄂B2-20190047</a>&nbsp;
+            >&nbsp;鄂ICP备14000625号</a>&nbsp;
           </div>
           <div class="icp-row">
-            <img
+            <!-- <img
               src="http://oss-smaryun-new.oss-cn-beijing.aliyuncs.com/images/police_icon.png"
               style="height:18px;"
-            />
+            /> -->
             <a
               href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=42018502000503"
               target="_blank"
             >&nbsp;鄂公网安备 42018502000503号
             </a>
           </div>
-          <div class="icp-row">
+          <!-- <div class="icp-row">
             <img
               src="http://oss-smaryun-new.oss-cn-beijing.aliyuncs.com/images/govIcon.gif"
               style="height:18px;"
@@ -59,7 +60,7 @@
             >
               工商电子标识
             </a>
-          </div>
+          </div> -->
         </div>
       </el-col>
       <el-col

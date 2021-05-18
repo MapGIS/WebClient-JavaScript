@@ -11,8 +11,8 @@
           :key="index"
         >
           <el-card v-bind:style="list[g].styleObject" class="little-card">
-            <h2 class="info-title">{{l.name}}</h2>
-            <p>{{l.info}}</p>
+            <div class="info-title">{{l.name}}</div>
+            <div class="info-detail">{{l.info}}</div>
           </el-card>
         </el-col>
       </el-row>
@@ -39,5 +39,20 @@ export default {
       border-radius: 20px;
     }
   }
+}
+.info-title{
+  padding: 0 0 16px 0;
+  font-size: 24px;
+  font-family: Microsoft YaHei;
+  font-weight: bold;
+  color: #3A85C6;
+  line-height: 36px;
+}
+.info-detail{
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #6C7582;
+  line-height: 24px;
 }
 </style>

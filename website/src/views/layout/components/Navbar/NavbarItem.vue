@@ -62,7 +62,7 @@ export default {
 }
 
 a {
-  color: #409eff;
+  color: #3A85C6;
   text-decoration: none;
 }
 
