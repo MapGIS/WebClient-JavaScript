@@ -33,7 +33,7 @@ export default {
       return false;
     },
     getColor (key) {
-      if (this.isActive(key)) return '#33dbe8'
+      if (this.isActive(key)) return '#3A85C6'
       else return ''
     },
     handleClick (key) {
@@ -51,13 +51,13 @@ export default {
 <style lang="scss">
 .gallery-fix-anchors {
   .active {
-    color: #33dbe8 !important;
+    color: #3A85C6 !important;
     .el-timeline-item__content {
-      color: #33dbe8;
+      color: #3A85C6;
     }
   }
   .el-timeline-item__node--normal {
-    left: -1px;
+    left: -2.5px;
     width: 12px;
     height: 12px;
   }

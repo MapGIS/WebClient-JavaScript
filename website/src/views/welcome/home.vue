@@ -7,21 +7,9 @@
       class="banner banner-desc"
     >
       <div :class="{'banner-desc-wrapper': true, 'banner-desc-wrapper-mobile': mobile}">
-        <el-carousel
-          :interval="4000"
-          :height="mobile?'240px':'640px'"
-          width="100vw"
-        >
-          <el-carousel-item
-            v-for="banner in mains"
-            :key="banner"
-          >
-            <img
-              :src="banner"
-              class="main-bane-img"
-            >
-          </el-carousel-item>
-        </el-carousel>
+        <div>
+          <img :src="mains[0]" alt="logo" :style="{width:'100%',height:mobile?'240px':'640px'}">
+        </div>
 
         <div
           class="main-bane-texts"
@@ -58,9 +46,7 @@
     >
       <div>
         <h1 class="text-center">云 GIS 网络客户端开发平台</h1>
-        <h6 class="text-center text-detail">MapGIS Client for JavaScript，在云计算、大数据管理与分析等技术支撑下，将传统WebGIS与云GIS完美融合，
-          集成四大主流地图开源框架和Echarts、MapV、D3等可视化库，进一步增强了大数据、实时流数据的高效可视化表达和分析功能
-        </h6>
+        <div class="text-center-detail">MapGIS Client for JavaScript，在云计算、大数据管理与分析等技术支撑下，将传统WebGIS与云GIS完美融合， 集成四大主流地图开源框架和Echarts、MapV、D3 等可视化库，进一步增强了大数据、实时流数据的高效可视化表达和分析功能</div>
         <el-row justify="space-around">
           <el-col
             :xs="12"
@@ -89,11 +75,7 @@
     </el-row>
     <el-row class="banner banner-gallery">
       <div>
-        <h1 class="text-center">热门功能示例</h1>
-        <el-divider><i
-            class="el-icon-star-on"
-            style="color:#666666"
-          ></i></el-divider>
+        <h1 class="text-center" style="color:#3c4858;margin-bottom:64px">热门功能示例</h1>
         <el-row :gutter="20">
           <el-col
             v-for="g in gallyers"
@@ -119,67 +101,52 @@
     <el-row class="banner banner-carousel">
       <div>
         <h1 class="text-center">功能特性</h1>
-        <el-row
-          v-for="(b,i) in banners"
-          :key="i"
-        >
-          <el-col
-            :class="{'banner-right': i % 2 === 1 && !mobile}"
-            :span="mobile ? 20 :10"
-            :offset="2"
-          >
-            <h3>{{b.title}}</h3>
-            <p class="h3-divider" />
-            <span>{{b.detail}}</span>
-          </el-col>
-          <el-col
-            :class="{'banner-right': i % 2 === 1  && !mobile}"
-            :span="mobile ? 20 :10"
-            :offset="mobile? 2 : 0"
-          >
-            <img
-              class="feature-image"
-              :src="b.icon"
-            >
-          </el-col>
-          <p v-if="mobile" />
+        <el-row class="line-menu">
+          <el-col class="menu-item"  @click.native="changeCheckLine('1')"  :span="8" :class="{ 'check-line-item': checkLineItem==='1'}">开源地图库</el-col>
+          <el-col class="menu-item"  @click.native="changeCheckLine('2')"  :span="8" :class="{ 'check-line-item': checkLineItem==='2'}">可视化技术</el-col>
+          <el-col class="menu-item"  @click.native="changeCheckLine('3')"  :span="8" :class="{ 'check-line-item': checkLineItem==='3'}">开发方式</el-col>
         </el-row>
+        <div class="gradient-line"></div>
+        <div class="menu-content">
+          <el-row class="menu-content-row" v-for="(b,i) in banners" :key="i" v-show="checkLineItem==i+1">
+            <el-col :span="12" class="menu-content-item">
+              <img
+                class="menu-content-item-image"
+                :src="b.icon"
+              >
+            </el-col>
+            <el-col :span="12" class="menu-content-item">
+              <div class="menu-content-item-title">{{b.title}}</div>
+              <div class="menu-content-item-text">{{b.detail}}</div>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </el-row>
-    <el-row class="banner banner-history">
-      <el-col
-        :span="mobile?23:16"
-        :offset="mobile?0:4"
-      >
-        <h1 class="text-center">版本进化史</h1>
-        <el-divider><i
-            class="el-icon-star-on"
-            style="color:#666666"
-          ></i></el-divider>
-        <el-timeline :reverse="false">
-          <el-timeline-item
-            v-for="h in historys"
-            :key="h.title"
-            :timestamp="h.timestamp"
-            placement="top"
-            :type="h.type"
-            size="large"
-          >
-            <el-card>
-              <h4>{{h.title}}</h4>
+    <el-row class="banner-history">
+      <div class="history-title">
+        版本信息
+      </div>
+      <el-row class="history-content" v-for="h in historys" :key="h.title">
+        <el-col class="history-content-time" :span="4">
+          <div class="history-content-timedata">{{h.timestamp}}</div>
+          <div class="history-content-timeicon">
+            <img src="" alt="图片">
+          </div>
+        </el-col>
+        <el-col class="history-content-text" :span="20">
+            <div class="history-content-text-title">{{h.title}}</div>
+            <div v-for="l in h.link" :key="l" class="history-content-text-link">
               <a
-                v-for="l in h.link"
-                :key="l"
                 :href="l"
                 target="_blank"
               >
-                <p>{{l}}</p>
+                {{l}}
               </a>
-              <p class="client-timeline-p">{{h.detail}}</p>
-            </el-card>
-          </el-timeline-item>
-        </el-timeline>
-      </el-col>
+            </div>
+            <div class="history-content-text-detail">{{h.detail}}</div>
+        </el-col>
+      </el-row>
     </el-row>
   </div>
 </template>
@@ -207,6 +174,7 @@ export default {
       banners: DetailBanners,
       historys: Histroys,
       carouselIndex: 0,
+      checkLineItem: "1"
     };
   },
 
@@ -218,12 +186,15 @@ export default {
   methods: {
     handleCarousel (index) {
       this.carouselIndex = index
+    },
+    changeCheckLine (i) {
+      this.checkLineItem = i;
     }
   }
 };
 </script>
 
-<style  lang="scss">
+<style  lang="scss" scoped>
 $padding-left: 60px;
 $margin-left: 80px;
 .webclient-home-mobile {
@@ -257,6 +228,10 @@ $margin-left: 80px;
 .webclient-home {
   .mapgis-header {
     background: transparent !important;
+    box-shadow: 0px 3px 7px 0px transparent !important;;
+  }
+  .mapgis-webclient-header {
+    background: transparent !important;
   }
   .home-header {
     position: absolute;
@@ -271,7 +246,7 @@ $margin-left: 80px;
     line-height: 36px;
     letter-spacing: 0px;
     color: #3c4858;
-    margin-top: 80px;
+    margin: 98px 0 25px 0;
   }
   h3 {
     height: 26px;
@@ -285,7 +260,7 @@ $margin-left: 80px;
     margin-top: 70px;
   }
   h6 {
-    margin-top: 10px;
+    margin-top: 0px;
   }
   .text-center {
     text-align: center;
@@ -299,6 +274,17 @@ $margin-left: 80px;
     color: rgba(102, 102, 102, 1);
     line-height: 25px;
   }
+  .text-center-detail{
+    width: 80vw;
+    margin: 0 auto;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #999999;
+    line-height: 24px;
+    text-align: center;
+    opacity: 0.7;
+  }
   .main-bane-img {
     height: 100%;
     width: 100%;
@@ -311,6 +297,9 @@ $margin-left: 80px;
   .banner-desc-wrapper {
     width: 100%;
     height: 640px;
+    .banner-logo{
+      width: 100vw;
+    }
   }
   .banner-desc-wrapper-mobile {
     width: 100%;
@@ -321,8 +310,8 @@ $margin-left: 80px;
     background: #ffffff;
   }
   .banner-gallery {
-    background: rgba(245, 245, 245, 1);
-    padding: 30px 137px;
+    background:#fff;
+    padding: 0 137px;
     .el-divider__text {
       background-color: rgba(245, 245, 245, 1);
     }
@@ -364,16 +353,59 @@ $margin-left: 80px;
     }
   }
   .banner-history {
+    padding: 0 10%;
     min-height: 720px;
-    background: url("../../../public/static/assets/home/history.png");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    -moz-background-size: 100% 100%;
-    .el-divider__text {
-      background-color: #cbe4f2;
+    background: #F7FCFF;
+    .history-content{
+      padding-bottom: 56px;
     }
-    .el-divider--horizontal {
-      background: #ffffff;
+    .history-title{
+      text-align: center;
+      padding: 100px 0 56px 0;
+      font-size: 36px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: #3C4858;
+      line-height: 36px;
+    }
+    .history-content-time{
+      text-align: right;
+      .history-content-timedata{
+        font-size: 20px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #3C4858;
+        line-height: 36px;
+      }
+      .history-content-timeicon{
+        width: 100%;
+        text-align: right;
+      }
+    }
+    .history-content-text{
+      padding-left: 10%;
+      .history-content-text-title{
+        padding: 6px 0 15px 0;
+        font-size: 20px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: #3C4858;
+        line-height: 26px;
+      }
+      .history-content-text-link{
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #3A85C6;
+        line-height: 26px;
+      }
+      .history-content-text-detail{
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+        line-height: 26px;
+      }
     }
   }
   .main-bane-texts {
@@ -424,10 +456,93 @@ $margin-left: 80px;
     margin: auto;
   }
   .main-flat-card {
-    margin: 70px 45px;
+    margin: 75px 45px;
   }
   .gallery-card {
     margin: 8px 4px;
   }
+}
+</style>
+
+<style scoped>
+.line-menu{
+  margin: 40px 0 21px 0;
+  text-align:center;
+  font-size: 18px;
+  font-family: Microsoft YaHei;
+  font-weight: bold;
+  color: #3C4858;
+  line-height: 36px;
+}
+.gradient-line{
+  height: 2px;
+  width: 100%;
+  background: -webkit-linear-gradient(-90deg, rgba(176, 185, 200, 0), #B0B9C8, rgba(176, 185, 200, 0));
+  background: linear-gradient(-90deg, rgba(176, 185, 200, 0), #B0B9C8, rgba(176, 185, 200, 0));;
+}
+.menu-item{
+  position: relative;
+  cursor: pointer;
+}
+.check-line-item{
+  color: #3A85C6;
+  position: relative;
+}
+.check-line-item::before{
+  content: ' ';
+  position: absolute;
+  left: calc(50% - 8px);
+  top: 49px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #B0B9C8;
+  background: #FFFFFF;
+  transform: rotate(45deg);
+}
+.check-line-item::after{
+  content: ' ';
+  position: absolute;
+  left: calc(50% - 3px);
+  top: 54px;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(90deg, #4794FA, #31E1E6);
+  transform: rotate(45deg);
+}
+.menu-content{
+  width: 100%;
+  height: 512px;
+}
+.menu-content-row{
+  height: 100%;
+}
+.menu-content-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  height: 100%;
+}
+.menu-content-item-image{
+  width: 492px !important;
+  height: 374px !important;
+  background: transparent !important;
+}
+.menu-content-item-title{
+  width: 100%;
+  font-size: 26px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #3C4858;
+  line-height: 36px;
+  padding-bottom: 45px;
+}
+.menu-content-item-text{
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #666666;
+  line-height: 26px;
+  padding-right: 46px;
 }
 </style>

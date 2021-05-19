@@ -4,6 +4,8 @@
     :default-sort="{prop: 'name', order: 'descending'}"
     border
     stripe
+    :header-cell-style="{background:'#F5F7FA',fontSize: '14px',fontFamily: 'Microsoft YaHei',fontWeight: 'bold',color: '#606266'}"
+    :cell-style="{fontSize: '14px',fontFamily: 'Microsoft YaHei',color: '#606266'}"
     style="width: 100%"
   >
     <el-table-column type="index">

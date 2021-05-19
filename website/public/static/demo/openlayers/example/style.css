@@ -4,7 +4,7 @@
     position: absolute;
 }
 
-.menuContain span,i,em 
+.menuContain span,i,em
  {
     float: left;
     display:inline-block;
@@ -33,7 +33,7 @@
     background-image: url("./menu/newtools_icon.png");
     background-repeat: no-repeat;
     background-position: -40px -116px;
-      
+
 }
 .menuContain span.active {
     background-position: -40px -48px;
@@ -42,10 +42,10 @@
 {
 	z-index:9999;
     background-color: rgba(47, 41, 41, 0.75);
-	height:22px; 
+	height:22px;
 	position: absolute;
 	top:10px;
-	width:100px; 
+	width:100px;
 	right:100px;
 }
 .menuGroup
@@ -57,16 +57,16 @@
 }
 
 #menu1 {
-   right: 100px;  	
+   right: 100px;
 }
 #menu2 {
-   right: 377px;  	
+   right: 377px;
 }
 #menu3 {
-   right: 257px;  	
+   right: 257px;
 }
 #menu4 {
-   right: 137px;  	
+   right: 137px;
 }
 .menuStrip {
     display: block;
@@ -80,7 +80,7 @@
     color: #4c4c4c;
     width: 100px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-} 
+}
 .menuStrip ul{
     display: block;
     list-style-type: none;
@@ -101,12 +101,12 @@
     padding-left: 9px;
     display: list-item;
     text-align: -webkit-match-parent;
-} 
+}
 .menuStrip .menuItems li:hover {
     background-color: #6389de;
     color: #fff;
-} 
-        
+}
+
 .menuStrip .menuItems span {
     float: left;
     height: 25px;

@@ -11,5 +11,6 @@ module.exports = {
                 javascriptEnabled: true
             }
         }
-    }
+    },
+    lintOnSave: false
 };

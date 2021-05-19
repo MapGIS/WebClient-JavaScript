@@ -484,9 +484,10 @@ export const DataStore = {
     EsSpaceTimeQueryByAgg
 };
 
-import { GeoDatasetService, CalculateModelService } from './clouddisk';
+import { UserService, GeoDatasetService, CalculateModelService } from './clouddisk';
 
 export const CloudDisk = {
+    UserService,
     GeoDatasetService,
     CalculateModelService
 };

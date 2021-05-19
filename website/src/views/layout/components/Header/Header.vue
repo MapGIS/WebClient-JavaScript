@@ -16,13 +16,13 @@
                     </el-popover>
                 </div>
                 <template v-else>
-                  <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="hover">
-                    <header-menu :menus="h.menus" :icon="h.icon" />
-                    <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
-                        <IconFont :type="h.icon" class="menu-icon" />
-                        {{ h.title }}
-                    </el-button>
-                  </el-popover>
+                    <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="click">
+                        <header-menu :menus="h.menus" :icon="h.icon" />
+                        <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
+                            <IconFont :type="h.icon" class="menu-icon" />
+                            {{ h.title }}
+                        </el-button>
+                    </el-popover>
                 </template>
             </div>
         </div>
@@ -142,9 +142,9 @@ export default {
     .mapgis-webclient-menu {
         height: 48px !important;
         span {
-          font-size: 13px !important;
-          height: 48px !important;
-          line-height: 48px !important;
+            font-size: 13px !important;
+            height: 48px !important;
+            line-height: 48px !important;
         }
     }
 }
@@ -152,16 +152,16 @@ export default {
     font-family: Microsoft YaHei;
     width: 100%;
     padding: 0px !important;
-    height: 64px;
-    background: rgba(37, 45, 69, 1);
+    height: 71px;
+    background: #ffffff;
+    box-shadow: 0px 3px 7px 0px rgba(13, 43, 77, 0.15);
 
     .mapgis-webclient-header {
         width: fit-content;
-        height: 64px;
+        height: 71px;
         align-items: center;
         float: left;
         display: flex;
-        background: transparent;
 
         .mapgis-webclient-logo {
             margin-left: 81px;
@@ -171,14 +171,13 @@ export default {
             width: fit-content;
             height: 24px;
             margin-left: 13px;
-            color: rgba(255, 255, 255, 1);
+            color: #3a85c6;
             font-stretch: normal;
             letter-spacing: 1.5px;
             font-size: 22px;
             font-family: Microsoft YaHei;
             font-weight: bold;
             font-style: italic;
-            color: #ffffff;
             line-height: 24px;
         }
         .menu-icon {
@@ -188,7 +187,7 @@ export default {
 
     .mapgis-webclient-menu-icon {
         float: right;
-        height: 64px;
+        height: 72px;
         margin-right: 48px;
         cursor: pointer;
         display: none;
@@ -222,7 +221,7 @@ export default {
 
         span {
             width: fit-content;
-            height: 64px;
+            height: 72px;
             margin: 0px 2px;
             padding: 0px 4px;
             // margin-let: 12.5px;
@@ -230,8 +229,8 @@ export default {
             font-family: Microsoft YaHei;
             font-weight: 500;
             text-align: center;
-            color: rgba(255, 255, 255, 1);
-            line-height: 64px;
+            color: #3f454d;
+            line-height: 72px;
 
             .el-button {
                 padding: 0;
@@ -240,14 +239,14 @@ export default {
         }
 
         span:hover {
-            color: #33dbe8;
+            color: #3A85C6
         }
 
         .active {
             border-radius: 0px;
             border-bottom: 3px solid #33dbe8;
             span {
-                color: #33dbe8 !important;
+                color: linear-gradient(90deg, #4794fa, #31e1e6) !important;
                 font-size: bold;
             }
         }

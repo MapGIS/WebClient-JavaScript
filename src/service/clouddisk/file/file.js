@@ -20,7 +20,7 @@ export class FileService extends CloudDiskService {
     }
 
     /**
-     * @function module:CloudDisk.FileService.prototype.schema
+     * @function module:CloudDisk.FileService.prototype.copy
      * @description 空间数据元数据
      * @param  {Object} options 请求参数
      * @param  {String} options.destFileName 目地名称
