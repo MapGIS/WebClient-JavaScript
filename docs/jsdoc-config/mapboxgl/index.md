@@ -22,20 +22,23 @@
 
 #### IGServer
 > igserver的Object,Catalog,Service的对象的分类与封装
-    >> [Zondy.Object.Feature](Zondy.Object.Feature.html)<br>
-    >> [Zondy.Catalog.MapDoc](Zondy.Catalog.MapDoc.html)<br>
-    >> [Zondy.Service.GetDocImageService](Zondy.Service.GetDocImageService.html)<br>
+> 
+> [Zondy.Object.Feature](Zondy.Object.Feature.html)<br>
+> [Zondy.Catalog.MapDoc](Zondy.Catalog.MapDoc.html)<br>
+> [Zondy.Service.GetDocImageService](Zondy.Service.GetDocImageService.html)<br>
 
 #### DataStore
 
 > ElasticSearch的时空聚类效果
-    >> [mapboxgl.zondy.GeoHashService](mapboxgl.zondy.GeoHashService.html)<br>
+> 
+> [mapboxgl.zondy.GeoHashService](mapboxgl.zondy.GeoHashService.html)<br>
 
 #### D3，Echarts，MapV
 
 > 丰富的可视化效果，矢量瓦片、客户端专题图、开源可视化库[ECharts](http://echarts.baidu.com/)，[MapV](http://mapv.baidu.com/)
-    >> [mapboxgl.zondy.EchartsLayer](mapboxgl.zondy.EchartsLayer.html)<br>
-    >> [mapboxgl.zondy.MapvLayer](mapboxgl.zondy.MapvLayer.html)<br>
+>
+> [mapboxgl.zondy.EchartsLayer](mapboxgl.zondy.EchartsLayer.html)<br>
+> [mapboxgl.zondy.MapvLayer](mapboxgl.zondy.MapvLayer.html)<br>
 
 
 #### 参考API

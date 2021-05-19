@@ -356,7 +356,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
         if (subCategoryName) {
           heading = heading + ' / ' + subCategoryName
         }
-        nav += '<h3>' + heading + '</h3><ul>' + itemsNav + '</ul>'
+        nav += '<div class="mapgis-menu-span">' + heading + '</div><ul class="mapgis-sidebar-menus">' + itemsNav + '</ul>'
       }
     }
   })
@@ -379,7 +379,7 @@ function buildGroupNav (members, title) {
   var seen = {}
   nav += '<div class="category">'
   if (title) {
-    nav += '<h2>' + title + '</h2>'
+    nav += '<span class="mapgis-menu-span">' + title + '</span>'
   }
   /* nav += buildMemberNav(members.tutorials || [], 'Tutorials', seenTutorials, linktoTutorial)
   nav += buildMemberNav(members.modules || [], 'Modules', {}, linkto)
@@ -413,10 +413,10 @@ function buildGroupNav (members, title) {
 
     if (!globalNav) {
       // turn the heading into a link so you can actually get to the global page
-      nav += '<h3>' + linkto('global', '全局') + '</h3>'
+      nav += '<div class="mapgis-menu-span">' + linkto('global', '全局') + '</div>'
     }
     else {
-      nav += '<h3>全局</h3><ul>' + globalNav + '</ul>'
+      nav += '<div class="mapgis-menu-span">全局</div><ul class="mapgis-sidebar-menus">' + globalNav + '</ul>'
     }
   }
   nav += '</div>'
@@ -438,9 +438,31 @@ function buildGroupNav (members, title) {
  * @param {array<object>} members.interfaces
  * @return {string} The HTML for the navigation sidebar.
  */
+ function buildApiLink(members, navTypes = null, betterDocs) {
+  const href = betterDocs.landing ? 'docs.html' : 'index.html'
+  var nav = `<span class="mapgis-api-document-span"><a href="${href}">API文档</a></span>`
+  return nav
+ }
+
+/**
+ * Create the navigation sidebar.
+ * @param {object} members The members that will be used to create the sidebar.
+ * @param {array<object>} members.classes
+ * @param {array<object>} members.components
+ * @param {array<object>} members.externals
+ * @param {array<object>} members.globals
+ * @param {array<object>} members.mixins
+ * @param {array<object>} members.modules
+ * @param {array<object>} members.namespaces
+ * @param {array<object>} members.tutorials
+ * @param {array<object>} members.events
+ * @param {array<object>} members.interfaces
+ * @return {string} The HTML for the navigation sidebar.
+ */
 function buildNav(members, navTypes = null, betterDocs) {
   const href = betterDocs.landing ? 'docs.html' : 'index.html'
-  var nav = navTypes ? '' : `<h2><a href="${href}">API文档</a></h2>`
+  // var nav = navTypes ? '' : `<span class="mapgis-api-document-span"><a href="${href}">API文档</a></span>`
+  var nav = ''
 
   var categorised = {}
   var rootScope = {}
@@ -705,6 +727,7 @@ exports.publish = function(taffyData, opts, tutorials) {
   view.outputSourceFiles = outputSourceFiles
 
   // once for all
+  view.apilink = buildApiLink(members, null, conf.betterDocs)
   view.nav = buildNav(members, null, conf.betterDocs)
   view.tutorialsNav = buildNav(members, ['tutorials'], conf.betterDocs)
   bundler(members.components, outdir, conf)
