@@ -1,5 +1,5 @@
 .top-nav {
-    background : #252d45;
+    background: #252d45;
     align-items: center !important;
 }
 
@@ -7,25 +7,61 @@ body.small-header .top-nav {
     height: 72px !important;
 }
 
-.link {
-    color: #ffffff !important;
+#main > .core {
+    background: #ffffff;
 }
 
+#main > .core > .content {
+    background: #ffffff;
+    padding: 20px !important;
+    border-radius: 0px;
+    box-shadow: 0 0 0 0 rgb(115 134 160 / 24%);
+}
+
+.footer {
+    background: #ffffff;
+}
+
+a {
+    color: #3a85c6;
+}
+
+.link {
+    color: #3f454d !important;
+}
 
 .link:hover {
-    color: #33dbe8 !important;
+    color: #3A85C6 !important;
+}
+
+.user-link {
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #3f454d;
+    line-height: 36px;
+}
+
+.top-nav {
+    align-items: center !important;
+    background: #ffffff;
+    box-shadow: 0px 3px 7px 0px rgba(13, 43, 77, 0.15);
 }
 
 .top-nav h1 {
-    width      : 255px;
-    height     : 24px;
+    width: 255px;
+    height: 24px;
     margin-left: 13px;
-    font-size  : 22px;
+    font-size: 22px;
     font-weight: bold;
-    font-style : italic;
-    color      : white;
+    font-style: italic;
+    color: white;
     line-height: 24px;
-    margin-top : 8px;
+    margin-top: 8px;
+}
+
+.top-nav .menu .navigation .link:hover:not(.no-hover) {
+    border-bottom: 2px solid #3A85C6;
 }
 
 /* .image img {
@@ -40,23 +76,29 @@ body.small-header .top-nav {
 }
 
 .logo {
-    float  : left !important;
+    float: left !important;
     display: flex !important;
 }
 
-#main>.core {
+#main > .core {
     padding: 6px !important;
 }
 
+#main > .sidebar {
+    padding: 0px;
+}
 
 .content h1,
 .content header.page-title h1 {
-    font-family: "TT Norms Medium", sans-serif;
-    font-size  : 17px;
+    font-family: 'TT Norms Medium', sans-serif;
+    font-size: 17px;
     font-weight: bold;
-    margin     : 8px 0;
+    margin: 8px 0;
 }
 
+.vertical-section {
+    border-top: 1px solid #d2d8e2 !important;
+}
 
 h1 {
     font-size: 20px !important;
@@ -82,31 +124,91 @@ h5 {
     font-size: 14px;
 }
 
-.member>.name .code-name {
+.content h1 {
+    margin-bottom: 12px;
+    border-left: 6px solid #008ddf;
+    padding-left: 16px;
+}
+
+.content h2 {
+    margin-bottom: 12px;
+    border-left: 6px solid #008ddf;
+    padding-left: 16px;
+}
+
+.content h3 {
+    border-left: 6px solid #008ddf;
+    padding-left: 16px;
+    font-size: 18px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #3f454d;
+    line-height: 24px;
+}
+
+.content blockquote {
+    background: #f4f7fb;
+    border-left: 0px solid #dbdbdb;
+}
+
+.side-nav h3 {
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: fold;
+    color: #3f454d;
+    line-height: 24px;
+}
+
+.side-nav a {
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #77808c;
+    line-height: 24px;
+}
+
+.side-nav a:hover,
+.side-nav a.is-active {
+    color: #3a85c6;
+}
+
+.member > .name .code-name {
     font-size: 14px;
 }
 
-.member>.description p {
+.member > .description p {
     font-size: 14px;
-    margin   : 25px 0;
+    margin: 25px 0;
 }
 
 .table {
     font-size: 12px;
 }
 
+.table thead {
+    background-color: #f5f7fa;
+    border: 1px solid #ebeef5;
+}
+
+.content table td {
+    border: 1px solid #ebeef5;
+    border-width: 1 1 1px;
+    padding: 0.5em 0.75em;
+    vertical-align: top;
+}
+
 table.params td.name code,
 table.props td.name code {
     background: transparent;
-    padding   : 0;
-    font-size : 12px;
-    color     : #211D1A;
+    padding: 0;
+    font-size: 12px;
+    color: #211d1a;
 }
 
 table.params thead th,
 table.props thead th {
     font-weight: bold;
-    padding    : 6px 12px;
+    padding: 6px 12px;
 }
 
 table.params td,
@@ -119,18 +221,43 @@ body {
 }
 
 .button {
-    transition   : all 0.2s;
+    transition: all 0.2s;
     border-radius: 4px;
-    padding      : 8px 24px;
-    height       : 30px;
-    border-color : #4268F6;
-    font-size    : 12px;
-    color        : #4268F6;
+    padding: 8px 24px;
+    height: 30px;
+    border-color: #3a85c6;
+    font-size: 12px;
+    color: #3a85c6;
 }
 
-#main>.core>.content {
+#main > .core > .content {
     background: #fff;
-    padding   : 20px;
+    padding: 20px;
+}
+
+.code-name {
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: fold;
+    color: #3f454d;
+    line-height: 36px;
+}
+
+.description p {
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #77808c;
+    line-height: 24px;
+}
+
+.tag-author {
+    font-size: 16px !important;
+    font-family: Microsoft YaHei !important;
+    font-weight: 400 !important;
+    color: #3f454d !important;
+    line-height: 24px !important;
+    margin-left: 12px;
 }
 
 .tag-source span {
@@ -143,13 +270,13 @@ body {
 }
 
 .details dt {
-    font-size   : 14px;
-    border-left : 2px solid #008DDF;
+    font-size: 14px;
     padding-left: 16px;
+    border-left: 0px;
 }
 
 .top-nav .menu .navigation .link:hover:not(.no-hover) {
-    border-bottom: 2px solid #33dbe8;
+    border-bottom: 2px solid #3A85C6;
 }
 
 .vertical-section {
@@ -157,19 +284,40 @@ body {
 }
 
 .page-title {
-    margin-bottom : 12px;
+    height: 42px;
+    margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom : 1px dashed #252d45;
+    border-bottom: 1px solid #d2d8e2;
 }
 
 .page-title-name {
     margin-left: 12px;
-    font-size  : 18px;
+    font-size: 18px;
 }
 
 .page-title-kind {
     font-weight: bold;
-    font-size  : 18px !important;
+    font-size: 18px !important;
+}
+
+.page-title-main {
+    width: fit-content;
+    height: 14px;
+    font-size: 18px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #999999;
+    line-height: 36px;
+    margin-left: 17px;
+}
+.page-title-sub {
+    width: fit-content;
+    height: 17px;
+    font-size: 20px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    color: #3f454d;
+    line-height: 36px;
 }
 
 .sidebar a {
@@ -177,51 +325,50 @@ body {
 }
 
 .sidebar::-webkit-scrollbar {
-    width : 4px;
+    width: 4px;
     height: 1px;
-
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    border-radius     : 4px;
+    border-radius: 4px;
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-    background        : rgba(144, 147, 153, .5);
+    background: rgba(144, 147, 153, 0.5);
 }
 
 .sidebar::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-    border-radius     : 4px;
-    background        : transparent;
+    border-radius: 4px;
+    background: transparent;
 }
 
 .core::-webkit-scrollbar {
-    width : 4px;
+    width: 4px;
     height: 1px;
 }
 
 .core::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background   : rgba(144, 147, 153, .5);
+    background: rgba(144, 147, 153, 0.5);
 }
 
 .core::-webkit-scrollbar-track {
     border-radius: 4px;
-    background   : transparent;
+    background: transparent;
 }
 
 .side-nav::-webkit-scrollbar {
-    width : 4px;
+    width: 4px;
     height: 1px;
 }
 
 .side-nav::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background   : rgba(144, 147, 153, .5);
+    background: rgba(144, 147, 153, 0.5);
 }
 
 .side-nav::-webkit-scrollbar-track {
     border-radius: 4px;
-    background   : transparent;
+    background: transparent;
 }
 
 .module-list-info {
@@ -230,4 +377,94 @@ body {
 
 .module-summary .module-classdesc {
     margin-left: 20px !important;
+}
+
+.sidebar .search-wrapper {
+    margin: 0px;
+    padding: 0 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d2d8e2;
+}
+
+#main > .sidebar {
+    background: #f4f7fb;
+}
+
+.mapgis-api-document-span {
+    height: 60px;
+}
+.mapgis-api-document-span a {
+    margin: 19px;
+    width: 63px;
+    height: 16px;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+    line-height: 48px;
+}
+
+.mapgis-menu-span {
+    width: 28px;
+    height: 12px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #3c4858;
+    line-height: 15px;
+    margin: 20px 0px 16px 19px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    color: #3a85c6;
+}
+
+.mapgis-sidebar-menus {
+    list-style: none;
+    border-left: 1px solid #c8cdd4;
+    margin-left: 34px !important;
+}
+
+.module-class-name a {
+    color: #3a85c6;
+    margin-left: 20px;
+}
+
+.subsection-title {
+    color: #3f454d !important;
+    border-left: 6px solid #4794fa;
+    margin-left: 12px;
+    padding-left: 6px;
+    font-size: 18px !important;
+    font-family: Microsoft YaHei;
+    font-weight: 400 !important;
+    color: #3f454d !important;
+    line-height: 24px !important;
+}
+
+.module-class-name a {
+    height: 11px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #3a85c6;
+    line-height: 24px;
+}
+
+.mapgis-api-function {
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    font-style: italic;
+    color: #3f454d;
+    line-height: 24px;
+}
+.mapgis-api-function-title {
+    font-size: 16px !important;
+    font-family: Microsoft YaHei !important;
+    font-weight: 400 !important;
+    color: #3f454d !important;
+    line-height: 24px !important;
+    margin-left: 12px;
 }

@@ -35,7 +35,7 @@
         },
         "better-docs": {
             "logo": "../image/mapgis_blue.png",
-            "title": "",
+            "title": "Client for JavaScript",
             "hideGenerator": false,
             "navLinks": [
                 {
