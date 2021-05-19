@@ -14,10 +14,10 @@
             >
                 <el-table-column label="图解" prop="img" width="120">
                     <template slot-scope="scope">
-                        <img :src="scope.row.img" min-width="70" height="70" />
+                        <img :src="scope.row.img" min-width="90" height="90" />
                     </template>
                 </el-table-column>
-                <el-table-column label="类型" prop="type" width="150"></el-table-column>
+                <el-table-column label="类型" prop="type" :width="mobile?50:160"></el-table-column>
                 <el-table-column label="格式" prop="format">
                     <template slot-scope="scope">
                         <div v-html="formatMethod(scope.row.format)"></div>

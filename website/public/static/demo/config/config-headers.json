@@ -31,27 +31,27 @@
         "icon": "iconapp_mw_cluster",
         "menus": [
             {
-                "title": "产品介绍",
-                "icon": "iconapp_mw_cluster",
+                "title": "组件",
+                "icon": "iconhome",
                 "links": [["产品介绍", "资源下载", "开发环境", "开发授权", "模块介绍", "相关产品", "三方产品", "新特性", "开始开发"]],
                 "hightlights": [[true, false, false, false, false, false, false, false, false]],
                 "routes": [
                     [
-                        "/component/product#introduction",
-                        "/component/product#download",
-                        "/component/product#developEnvironment",
-                        "/component/product#authorization",
-                        "/component/product#moduleIntroduction",
-                        "/component/product#relatedProduct",
-                        "/component/product#thirdPartyProducts",
-                        "/component/product#newFeatures",
-                        "/component/product#startDevelop"
+                        "/component/product/component/introduction",
+                        "/component/product/component/download",
+                        "/component/product/component/developEnvironment",
+                        "/component/product/component/authorization",
+                        "/component/product/component/moduleIntroduction",
+                        "/component/product/component/relatedProduct",
+                        "/component/product/component/thirdPartyProducts",
+                        "/component/product/component/newFeatures",
+                        "/component/product/component/startDevelop"
                     ]
                 ]
             },
             {
                 "title": "开发指南",
-                "icon": "iconapp_mw_cluster",
+                "icon": "iconhome",
                 "links": [
                     [
                         "准备",
@@ -69,45 +69,27 @@
                     ]
                 ],
                 "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
-                "routes": [["", "", "", "", "", "", "", "", "", "", "", ""]]
+                "routes": [["/guide/component/development_mapboxgl", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
                 "title": "在线示例",
-                "icon": "iconapp_mw_cluster",
+                "icon": "iconhome",
                 "links": [
                     [
-                        "图层M3D",
-                        "互联网地图",
-                        "OGC服务",
-                        "MapGIS地图服务",
-                        "场景",
-                        "三维空间分析",
-                        "轨迹模拟",
-                        "图形绘制",
-                        "常用工具",
-                        "数据查询",
-                        "客户端可视化",
-                        "客户端空间分析",
-                        "Echarts",
-                        "MapV"
+                        "Cesium示例",
+                        "MapboxGL示例",
+                        "StoryBook-MapboxGL"
                     ]
                 ],
-                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false, false, false]],
-                "routes": [["", "", "", "", "", "", "", "", "", "", "", "", "", ""]]
+                "hightlights": [[false, false, false]],
+                "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-layer", "/storybook/index.html"]]
             },
             {
                 "title": "在线API",
-                "icon": "iconapp_mw_cluster",
-                "links": [["客户端数据服务", "客户端可视化", "客户端渲染", "客户端事件管理", "客户端公共方法", "客户端视图管理", "客户端可视化分析"]],
-                "hightlights": [[false, false, false, false, false, false, false]],
-                "routes": [["", "", "", "", "", "", ""]]
-            },
-            {
-                "title": "故事",
-                "icon": "iconapp_mw_cluster",
-                "links": [["StoryBook-MapboxGL"]],
-                "hightlights": [[false]],
-                "routes": [["/storybook/index.html"]]
+                "icon": "iconhome",
+                "links": [["Cesium-API", "MapboxGL-API"]],
+                "hightlights": [[false, false]],
+                "routes": [["http://120.78.200.128:8891/#/", "http://120.78.200.128:8891/#/"]]
             }
         ]
     },
@@ -115,6 +97,47 @@
         "title": "Cesium",
         "icon": "iconsatellite",
         "menus": [
+            {
+                "title": "组件",
+                "icon": "iconhome",
+                "links": [["产品介绍", "资源下载", "开发环境", "开发授权", "模块介绍", "相关产品", "三方产品", "新特性", "开始开发"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/component/product/cesium/produce_cesium",
+                        "/component/product/cesium/download",
+                        "/component/product/cesium/developEnvironment",
+                        "/component/product/cesium/authorization",
+                        "/component/product/cesium/moduleIntroduction",
+                        "/component/product/cesium/relatedProduct",
+                        "/component/product/cesium/thirdPartyProducts",
+                        "/component/product/cesium/newFeatures",
+                        "/component/product/cesium/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconhome",
+                "links": [
+                    [
+                        "准备",
+                        "数据准备",
+                        "数据处理",
+                        "数据发布",
+                        "新建网站",
+                        "引入开发包",
+                        "数据可视化",
+                        "视图设置",
+                        "标题添加",
+                        "量算分析",
+                        "数据查询",
+                        "可视化效果"
+                    ]
+                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/cesium/development_cesium", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
             {
                 "title": "常见问题",
                 "icon": "iconhome",
@@ -127,7 +150,8 @@
                         "/helper/cesium/vue/memery/index",
                         "/helper/cesium/vue/route/index"
                     ]
-                ]
+                ],
+                "type":"helper"
             },
             {
                 "title": "Js开发示例",
@@ -210,6 +234,47 @@
         "icon": "iconmapbox",
         "menus": [
             {
+                "title": "组件",
+                "icon": "iconhome",
+                "links": [["产品介绍", "资源下载", "开发环境", "开发授权", "模块介绍", "相关产品", "三方产品", "新特性", "开始开发"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/component/product/mapboxgl/produce_mapboxgl",
+                        "/component/product/mapboxgl/download",
+                        "/component/product/mapboxgl/developEnvironment",
+                        "/component/product/mapboxgl/authorization",
+                        "/component/product/mapboxgl/moduleIntroduction",
+                        "/component/product/mapboxgl/relatedProduct",
+                        "/component/product/mapboxgl/thirdPartyProducts",
+                        "/component/product/mapboxgl/newFeatures",
+                        "/component/product/mapboxgl/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconhome",
+                "links": [
+                    [
+                        "准备",
+                        "数据准备",
+                        "数据处理",
+                        "数据发布",
+                        "新建网站",
+                        "引入开发包",
+                        "数据可视化",
+                        "视图设置",
+                        "标题添加",
+                        "量算分析",
+                        "数据查询",
+                        "可视化效果"
+                    ]
+                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/mapboxgl/development_mapboxgl", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
                 "title": "常见问题",
                 "icon": "iconhome",
                 "hightlights": [[true, true, true, true, true, true, true]],
@@ -226,7 +291,8 @@
                         "/helper/mapboxgl/vectortile/style",
                         "/helper/mapboxgl/vue/import"
                     ]
-                ]
+                ],
+                "type":"helper"
             },
             {
                 "title": "JS开发示例",
