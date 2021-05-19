@@ -7,8 +7,37 @@
       <Header></Header>
     </el-header>
     <el-container class="helper-asideContent">
+      <el-drawer
+          title=""
+          :size="drawerSize"
+          :visible.sync="drawerShow"
+          direction="ltr"
+          :show-close="false"
+          v-if="mobile">
+        <el-scrollbar
+            class="element-scroll-content"
+            wrapStyle="overflow-x: hidden;"
+            viewStyle="overflow-y: hidden;"
+        >
+          <div class="header-menu-col">
+            <span :class="{ strong: strong, 'light-title': light }">{{ asideMenu.title }}</span>
+            <div class="header-menu-links" v-for="(link, i) in asideMenu.links" :key="i">
+              <div class="header-menu-link" v-for="(l, j) in link" :key="j">
+                <div class="header-menu-link-text">
+                  <el-badge type="success" :value="asideMenu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                    <a class="header-menu-link-text" :href="asideMenu.routes[i][j]">
+                      <span :class="{ 'light-subtitle': light }">{{ l }}</span>
+                    </a>
+                  </el-badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-scrollbar>
+      </el-drawer>
       <el-aside
           class="aside-scroll-content"
+          v-else
       >
         <el-scrollbar
             class="element-scroll-content"
@@ -32,6 +61,13 @@
         </el-scrollbar>
       </el-aside>
       <el-container>
+        <div
+            class="mobile-drawer-open"
+            @click="handleDrawer"
+            v-if="mobile"
+        >
+          <IconFont type="iconcollapseright" />
+        </div>
         <el-main>
           <vue-markdown
               :watches="['show','html','breaks','linkify','emoji','typographer']"
@@ -61,6 +97,7 @@ import {isMobile} from "@/utils/mobile";
 import VueMarkdown from "vue-markdown";
 import Prism from "prismjs";
 import axios from 'axios';
+import IconFont from "@/components/IconFont/iconfront";
 
 import "prismjs/themes/prism-coy.css";  // theme
 import 'prismjs/components/prism-javascript';  // language
@@ -74,6 +111,7 @@ export default {
     Header,
     MainFooter,
     VueMarkdown,
+    IconFont
   },
   data() {
     return {
@@ -84,6 +122,8 @@ export default {
       strong: true,
       light: false,
       hint: '新',
+      drawerShow: false,
+      drawerSize: "60%"
     }
   },
   mounted() {
@@ -183,11 +223,12 @@ export default {
       var self = this;
 
       window.console.log('reset', mode, file, first, second);
-
+      debugger
       var url = this.getHtmlUrl(mode, file, first, second);
 
       axios.get(url)
           .then(response => {
+            debugger
             self.markdown = response.data;
           }).catch(() => {
         window.console.warn('暂无该帮助的markdown说明，后续持续补充......');
@@ -197,6 +238,9 @@ export default {
       this.$nextTick(() => {
         Prism.highlightAll();
       });
+    },
+    handleDrawer () {
+      this.drawerShow = !this.drawerShow;
     }
   },
 }
@@ -205,7 +249,6 @@ export default {
 <style lang="scss" scoped>
 .strong {
   font-weight: bold !important;
-  border-bottom: 1px solid #D2D8E2;
 }
 
 .light-title {
@@ -243,6 +286,7 @@ export default {
 
   .header-menu-links {
     padding: 10px;
+    border-top: 1px solid #D2D8E2;
   }
 
   .header-menu-link-text {
@@ -258,6 +302,29 @@ export default {
 
   .header-menu-link:hover {
     border-left: 2px solid #3A85C6;
+  }
+
+  .mobile-drawer-open {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 100;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: #fff;
+    -webkit-box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    border-radius: 0 4px 4px 0;
   }
 }
 </style>
