@@ -2,12 +2,10 @@
     {
         "title": "首页",
         "icon": "iconhome",
-        "imgsrc": "./static/assets/home/titlelogo/home.png",
         "menus": [
             {
                 "title": "概述",
                 "icon": "iconhome",
-                "imgsrc": "./static/assets/home/titlelogo/summary.png",
                 "links": [["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]],
                 "hightlights": [[false, false, false, false, false]],
                 "routes": [["/total/core", "/total/detail", "/total/use", "/total/select", "/total/download"]]
@@ -15,7 +13,6 @@
             {
                 "title": "插件",
                 "icon": "iconhome",
-                "imgsrc": "./static/assets/home/titlelogo/plug.png",
                 "links": [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
                 "hightlights": [[false, false, false, false, false]],
                 "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]]
@@ -23,7 +20,6 @@
             {
                 "title": "协议",
                 "icon": "iconhome",
-                "imgsrc": "./static/assets/home/titlelogo/standard.png",
                 "links": [["epsg", "geojson"]],
                 "hightlights": [[false, false]],
                 "routes": [["/standard/epsg", "/standard/geojson"]]
@@ -33,7 +29,6 @@
     {
         "title": "组件",
         "icon": "iconapp_mw_cluster",
-        "imgsrc": "./static/assets/home/titlelogo/template.png",
         "menus": [
             {
                 "title": "产品介绍",
@@ -119,7 +114,6 @@
     {
         "title": "Cesium",
         "icon": "iconsatellite",
-        "imgsrc": "./static/assets/home/titlelogo/Cesium.png",
         "menus": [
             {
                 "title": "常见问题",
@@ -214,7 +208,6 @@
     {
         "title": "MapboxGL",
         "icon": "iconmapbox",
-        "imgsrc": "./static/assets/home/titlelogo/MapboxGL.png",
         "menus": [
             {
                 "title": "常见问题",
@@ -310,7 +303,6 @@
     {
         "title": "Leaflet",
         "icon": "iconLeaf",
-        "imgsrc": "./static/assets/home/titlelogo/Leaflet.png",
         "menus": [
             {
                 "title": "开发示例",
@@ -356,7 +348,6 @@
     {
         "title": "Openlayers",
         "icon": "iconlayers",
-        "imgsrc": "./static/assets/home/titlelogo/OpenLayers.png",
         "menus": [
             {
                 "title": "开发示例",
