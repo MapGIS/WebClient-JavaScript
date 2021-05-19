@@ -20,6 +20,7 @@
                         <header-menu :menus="h.menus" :icon="h.icon" />
                         <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
                             <IconFont :type="h.icon" class="menu-icon" />
+                            <!-- <img :src="h.imgsrc" alt="" style="width:16px;height:16px;"> -->
                             {{ h.title }}
                         </el-button>
                     </el-popover>
@@ -56,7 +57,7 @@ export default {
             isShowMenu: false,
             style: {
                 fontSize: '24px',
-                color: '#FFFFFF',
+                color: '#000000',
                 lineHeight: '72px'
             }
         };
