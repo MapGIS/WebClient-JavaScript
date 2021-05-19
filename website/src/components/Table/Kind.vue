@@ -3,7 +3,7 @@
     :data="data"
     border
     style="margin-top: 20px"
-    header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;"
+    :header-cell-style="headerCellStyle"
   >
     <el-table-column
       prop="func"
@@ -85,6 +85,13 @@ export default {
   data () {
     return {
       mobile: isMobile(),
+      headerCellStyle: {
+          backgroundColor: '#F5F7FA',
+          fontSize: '14px',
+          fontFamily: 'Microsoft YaHei',
+          fontWeight: 'bold',
+          color: '#606266'
+      }
     }
   },
   methods: {

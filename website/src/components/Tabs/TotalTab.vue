@@ -2,35 +2,25 @@
     <div class="overview-header">
         <div class="title">概述<span>SUMMARY</span></div>
         <div class="overview-nav">
-            <router-link to="/total/core">
-                <div :class="['item', { select: $route.path === '/total/core' }]">
-                    核心服务
-                    <div class="triangle"></div>
-                </div>
+            <router-link to="/total/core" :class="{ select: $route.path === '/total/core' }">
+                <div class="item">核心服务</div>
+                <div class="triangle"></div>
             </router-link>
-            <router-link to="/total/detail">
-                <div :class="['item', { select: $route.path === '/total/detail' }]">
-                    详细服务
-                    <div class="triangle"></div>
-                </div>
+            <router-link to="/total/detail" :class="{ select: $route.path === '/total/detail' }">
+                <div class="item">详细服务</div>
+                <div class="triangle"></div>
             </router-link>
-            <router-link to="/total/use">
-                <div :class="['item', { select: $route.path === '/total/use' }]">
-                    调用方式
-                    <div class="triangle"></div>
-                </div>
+            <router-link to="/total/use" :class="{ select: $route.path === '/total/use' }">
+                <div class="item">调用方式</div>
+                <div class="triangle"></div>
             </router-link>
-            <router-link to="/total/select">
-                <div :class="['item', { select: $route.path === '/total/select' }]">
-                    四大引擎选择
-                    <div class="triangle"></div>
-                </div>
+            <router-link to="/total/select" :class="{ select: $route.path === '/total/select' }">
+                <div class="item">四大引擎选择 </div>
+                <div class="triangle"></div>
             </router-link>
-            <router-link to="/total/download">
-                <div :class="['item', { select: $route.path === '/total/download' }]">
-                    选择下载
-                    <div class="triangle"></div>
-                </div>
+            <router-link to="/total/download" :class="{ select: $route.path === '/total/download' }">
+                <div class="item">选择下载</div>
+                <div class="triangle"></div>
             </router-link>
         </div>
     </div>
@@ -73,29 +63,33 @@ export default {
         box-shadow: -1px 4px 8px 0px rgba(0, 0, 0, 0.1);
 
         a {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex: 1;
+
+            &.select {
+                background-color: rgba(255, 255, 255, 0.14);
+
+                .triangle {
+                    position: absolute;
+                    bottom: 0;
+                    width: 0;
+                    height: 0;
+                    margin: 0 auto;
+                    border-top: 10px solid transparent;
+                    border-left: 10px solid transparent;
+                    border-right: 10px solid transparent;
+                    border-bottom: 10px solid #ffffff;
+                }
+            }
 
             .item {
                 font-size: 18px;
                 font-family: Microsoft YaHei;
                 font-weight: 400;
                 color: #ffffff;
-                line-height: 64px;
-                text-align: center;
-
-                &.select {
-                    background-color: rgba(255, 255, 255, 0.14);
-
-                    .triangle {
-                        width: 0;
-                        height: 0;
-                        margin: -20px auto 0;
-                        border-top: 10px solid transparent;
-                        border-left: 10px solid transparent;
-                        border-right: 10px solid transparent;
-                        border-bottom: 10px solid #ffffff;
-                    }
-                }
             }
         }
     }

@@ -15,7 +15,7 @@
                             border
                             stripe
                             style="width: 100%"
-                            header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;"
+                            :header-cell-style="headerCellStyle"
                         >
                             <el-table-column type="index" label="序号" width="60"> </el-table-column>
                             <el-table-column prop="func" label="功能"> </el-table-column>
@@ -29,7 +29,7 @@
                             border
                             stripe
                             style="width: 100%"
-                            header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;"
+                            :header-cell-style="headerCellStyle"
                         >
                             <el-table-column type="index" label="序号" width="60"> </el-table-column>
                             <el-table-column prop="func" label="功能"> </el-table-column>
@@ -43,7 +43,7 @@
                             border
                             stripe
                             style="width: 100%"
-                            header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;"
+                            :header-cell-style="headerCellStyle"
                         >
                             <el-table-column type="index" label="序号" width="60"> </el-table-column>
                             <el-table-column prop="func" label="功能"> </el-table-column>
@@ -57,7 +57,7 @@
                             border
                             stripe
                             style="width: 100%"
-                            header-cell-style="background-color: #F5F7FA;font-size: 14px;font-family: Microsoft YaHei;font-weight: bold;color: #606266;"
+                            :header-cell-style="headerCellStyle"
                         >
                             <el-table-column type="index" label="序号" width="60"> </el-table-column>
                             <el-table-column prop="func" label="功能"> </el-table-column>
@@ -284,7 +284,14 @@ export default {
                     detail: '通过rest服务获取相关数据，绘制客户端专题图',
                     url: '除原始地图引擎脚本外，还需引入igserver.js'
                 }
-            ]
+            ],
+            headerCellStyle: {
+              backgroundColor: '#F5F7FA',
+              fontSize: '14px',
+              fontFamily: 'Microsoft YaHei',
+              fontWeight: 'bold',
+              color: '#606266'
+            }
         };
     }
 };

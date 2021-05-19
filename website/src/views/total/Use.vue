@@ -1,8 +1,8 @@
-<template>
+p<template>
     <div class="webclient-use-wrapper">
         <total-tab />
         <div class="content-wrapper">
-            <div class="steps">
+            <div :class="[{ steps: !mobile }, { mobile: mobile }]">
                 <div class="index">
                     <div class="number">01</div>
                     <div class="content">
@@ -10,7 +10,7 @@
                         <div class="sub">include-xxx.js</div>
                     </div>
                 </div>
-                <img />
+                <img src="../../../public/static/assets/total/use/arrow.png" />
                 <div class="index">
                     <div class="number">02</div>
                     <div class="content">
@@ -18,7 +18,7 @@
                         <div class="sub">include-xxx-local.js</div>
                     </div>
                 </div>
-                <img />
+                <img src="../../../public/static/assets/total/use/arrow.png" />
                 <div class="index">
                     <div class="number">03</div>
                     <div class="content">
@@ -27,27 +27,13 @@
                     </div>
                 </div>
             </div>
-            <!-- <el-steps :active="1">
-      <el-step
-        title="核心用法"
-        description="include-xxx.js"
-      ></el-step>
-      <el-step
-        title="离线使用"
-        description="include-xxx-local.js"
-      ></el-step>
-      <el-step
-        title="在线使用"
-        description="include-xxx-online.js"
-      ></el-step>
-    </el-steps> -->
 
             <div class="tip">
                 <p>使用方式主要分为三种: 本地离线使用，局域网使用，在线互联网使用.。</p>
             </div>
 
             <div class="title">
-                <img />
+                <img src="../../../public/static/assets/total/retouch.png" />
                 <div class="main">核心用法</div>
                 <div class="sub">include-xxx.js</div>
             </div>
@@ -80,7 +66,7 @@
             <el-image :class="{ 'image-mobile': mobile }" :src="useCoreImg" :preview-src-list="[useCoreImg]" />
 
             <div class="title">
-                <img />
+                <img src="../../../public/static/assets/total/retouch.png" />
                 <div class="main">本地离线使用</div>
                 <div class="sub">include-xxx-local.js</div>
             </div>
@@ -99,7 +85,7 @@
             </div>
 
             <div class="title">
-                <img />
+                <img src="../../../public/static/assets/total/retouch.png" />
                 <div class="main">互联网在线使用</div>
                 <div class="sub">include-xxx-online.js</div>
             </div>
@@ -117,7 +103,7 @@
                 <el-image :class="{ 'image-mobile': mobile }" :src="useOnlineImg" :preview-src-list="[useOnlineImg]" />
             </div>
 
-            <h3><a aria-hidden="true" class="header-anchor">¶</a> 司马云的官方在线的网址是</h3>
+            <h4>司马云的官方在线的网址是</h4>
             <div class="tip">
                 <div v-for="l in smaryun" :key="l.name">
                     <span class="information">{{ l.name }}</span>
@@ -253,6 +239,37 @@ export default {
             img {
                 width: 77px;
                 height: 34px;
+            }
+        }
+
+        .mobile {
+            display: flex;
+            justify-content: space-between;
+
+            .index {
+                width: 54px;
+
+                .number {
+                    font-size: 36px;
+                    font-family: Microsoft YaHei;
+                    font-weight: bold;
+                    font-style: italic;
+                    color: rgba(51, 51, 51, 0.2);
+                }
+
+                .content {
+                    font-size: 12px;
+                    font-family: Microsoft YaHei;
+                    font-weight: bold;
+                    font-style: italic;
+                    color: #3c4858;
+                }
+            }
+
+            img {
+                margin-top: 12px;
+                width: 48px;
+                height: 24px;
             }
         }
 
