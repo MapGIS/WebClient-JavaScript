@@ -154,12 +154,12 @@ export const routes = [
         name: '*'
     },
     {
-        path: '/component/product',
+        path: '/component/product/:mapmode/:file',
         component: Product,
         name: 'product'
     },
     {
-        path: '/guide/DevelopGuide',
+        path: '/guide/:mapmpde/:file',
         component: Guide,
         name: 'guide'
     }

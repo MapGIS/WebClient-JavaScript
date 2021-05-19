@@ -86,14 +86,22 @@
             :lg="6"
             :xl="6"
           >
-            <box-card
-              class="gallery-card"
-              :src="g.icon"
-              :title="g.title"
-              :subtitle="g.subtitle"
-              :index="g.index"
-              imageStyle="width: 100%; height: 236px;"
-            ></box-card>
+            <div class="hot-examples-content">
+              <div class="hot-examples-imghover">
+                <div class="hot-examples-text">
+                  {{g.subtitle}}
+                </div>
+                <router-link :to="g.index">
+                  <div class="hot-examples-detail">
+                    查看示例 <div class="right-icon">></div>
+                  </div>
+                </router-link>
+              </div>
+              <img class="hot-examples-img" :src="g.icon" alt="">
+              <div class="hot-examples-title">
+                {{g.title}}
+              </div>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -134,10 +142,11 @@
             <img src="" alt="图片">
           </div>
         </el-col>
-        <el-col class="history-content-text" :span="20">
+        <el-col class="history-content-text" :span="18">
             <div class="history-content-text-title">{{h.title}}</div>
             <div v-for="l in h.link" :key="l" class="history-content-text-link">
               <a
+                style="word-break: break-all;"
                 :href="l"
                 target="_blank"
               >
@@ -544,5 +553,66 @@ $margin-left: 80px;
   color: #666666;
   line-height: 26px;
   padding-right: 46px;
+}
+.hot-examples-img{
+  width: 100%;
+  height: 236px;
+}
+.hot-examples-content{
+  position: relative;
+  font-size: 0;
+  margin-bottom: 24px;
+}
+.hot-examples-imghover{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 236px;
+  opacity: 0;
+}
+.hot-examples-imghover:hover{
+  background: linear-gradient(90deg, rgba(14, 98, 210, 0.5), rgba(0, 192, 197, 0.5));
+  opacity: 1;
+}
+.hot-examples-text{
+  padding: 13px 44px 13px 16px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 21px;
+}
+.hot-examples-detail{
+  cursor: pointer;
+  padding: 13px 44px 13px 16px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 21px;
+}
+.right-icon{
+  margin-left:3px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  line-height: 16px;
+  text-align: center;
+}
+.hot-examples-title{
+  height: 65px;
+  line-height: 65px;
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #3C4858;
+  font-size: 14px;
+  text-indent: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E0E4EA;
 }
 </style>

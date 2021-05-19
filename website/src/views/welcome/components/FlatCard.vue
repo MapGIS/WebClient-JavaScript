@@ -66,8 +66,8 @@ export default {
   text-align: center;
   width: 205px;
   .image {
-    width: 123px;
-    height: 123px;
+    width: 160px;
+    height: 160px;
     background: transparent;
   }
   .title {

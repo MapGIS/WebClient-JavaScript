@@ -36,7 +36,18 @@
           </div>
         </el-scrollbar>
       </el-aside>
-      <el-main></el-main>
+      <el-main>
+        <vue-markdown
+            :watches="['show','html','breaks','linkify','emoji','typographer']"
+            :style="{padding: '2px 1vw'}"
+            :source="markdown"
+            :html="true"
+            :toc="false"
+            :linkify="true"
+            @rendered="markdownRendered"
+        ></vue-markdown>
+        <el-backtop></el-backtop>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -45,6 +56,13 @@
 import axios from "axios";
 import {isMobile} from "@/utils/mobile";
 import {Header} from "@/views/layout/components";
+import VueMarkdown from "vue-markdown";
+import Prism from "prismjs";
+import "prismjs/themes/prism-coy.css";  // theme
+import 'prismjs/components/prism-javascript';  // language
+// theme css
+import "@/styles/markdown.css";
+import "@/styles/prism.css";
 
 export default {
   name: "product",
@@ -54,18 +72,65 @@ export default {
       asideContent: "",
       asideMenu: "",
       light: true,
-      hint: '新'
+      hint: '新',
+      markdown: "> `暂无说明`, 请检查改目录下的帮助说明是否存在",
     }
   },
   components: {
-    Header
+    Header,
+    VueMarkdown
   },
   mounted() {
     this.initConfig();
   },
   methods: {
     initConfig() {
+      let anchors = location.href.split("#");
+      if (!anchors || anchors.length < 2) return;
+
+      let hrefs = anchors[1].split("/").slice(2);
+      let mode = this.getMapMode();
+      let file = hrefs[hrefs.length - 1];
+      let first;
+      if (hrefs.length <= 3) {
+        first = hrefs[hrefs.length - 3];
+      }
+      this.resetHtml(mode, file, first);
       this.getAsideList();
+    },
+    getMapMode() {
+      var mapMode = "leaflet";
+      if (this.$route.path.indexOf("leaflet") > 0) {
+        mapMode = "leaflet";
+      } else if (this.$route.path.indexOf("openlayer") > 0) {
+        mapMode = "openlayers";
+      } else if (this.$route.path.indexOf("cesium") > 0) {
+        mapMode = "cesium";
+      } else if (this.$route.path.indexOf("mapboxgl") > 0) {
+        mapMode = "mapboxgl";
+      } else if (this.$route.path.indexOf("component") > 0) {
+        mapMode = "component";
+      }
+      return mapMode;
+    },
+    resetHtml(mode, file, first) {
+      this.loading = true;
+      var self = this;
+
+      window.console.log('reset', mode, file, first);
+
+      var url = this.getHtmlUrl(mode, file, first);
+      axios.get(url)
+          .then(response => {
+            self.markdown = response.data;
+          }).catch(() => {
+        window.console.warn('暂无该帮助的markdown说明，后续持续补充......');
+      })
+    },
+    getHtmlUrl(type, image) {
+      var baseUrl = "./static/demo/";
+      var imageUrl = baseUrl + type + "/source/" + image + ".md";
+      return imageUrl;
     },
     getAsideList() {
       let self = this;
@@ -80,7 +145,12 @@ export default {
         }
         self.asideMenu = self.asideContent.menus[0];
       });
-    }
+    },
+    markdownRendered() {
+      this.$nextTick(() => {
+        Prism.highlightAll();
+      });
+    },
   }
 }
 </script>
