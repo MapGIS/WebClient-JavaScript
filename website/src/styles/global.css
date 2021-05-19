@@ -1,4 +1,5 @@
 a {
     color: #409eff;
     text-decoration: none;
+    word-wrap: break-word;
 }

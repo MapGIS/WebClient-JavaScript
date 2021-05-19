@@ -2,12 +2,12 @@
     <div class="webclient-select-panel">
         <total-tab />
         <div class="content-head">
-            <el-row class="row-bg" justify="space-around" gutter="20">
+            <el-row :class="['row-bg', { mobile: mobile }]" justify="space-around" :gutter="20">
                 <el-col :span="mobile ? 24 : 6" v-for="github in githubs" :key="github.name" class="card">
                     <el-card :body-style="{ padding: '0px' }">
                         <div style="padding: 14px">
                             <div class="head-area">
-                                <img />
+                                <img src="../../../public/static/assets/total/retouch.png" />
                                 <div class="info">
                                     <div class="name">{{ github.name }}</div>
                                     <div class="star">★ {{ github.star }}</div>
@@ -45,12 +45,12 @@
                                 </div>
 
                                 <div class="title">
-                                    <img />
+                                    <img src="../../../public/static/assets/total/retouch.png" />
                                     <div class="text">优点</div>
                                 </div>
 
                                 <div class="advantage-container">
-                                    <div class="content" v-for="(adv, index) in map.advs" :key="index">
+                                    <div :class="['content', { mobile: mobile }]" v-for="(adv, index) in map.advs" :key="index">
                                         <img :src="adv.image" class="card-image" />
                                         <div class="info">{{ adv.info }}</div>
                                         <div class="tag-area">
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <div class="title">
-                                    <img />
+                                    <img src="../../../public/static/assets/total/retouch.png" />
                                     <div class="text">缺点</div>
                                 </div>
 
@@ -75,12 +75,12 @@
               <div class="warning" v-for="d in map.develops" :key="d">{{d}}</div> -->
 
                                 <div class="title">
-                                    <img />
+                                    <img src="../../../public/static/assets/total/retouch.png" />
                                     <div class="text">教程</div>
                                 </div>
 
                                 <el-row>
-                                    <img class="tutorials-icon" />
+                                    <img class="tutorials-icon" src="../../../public/static/assets/total/select/material.png" />
                                     <div v-for="h in map.helper" :key="h.name">
                                         <el-link type="primary" :href="h.link" target="_blank">{{ h.name }}</el-link>
                                     </div>
@@ -300,13 +300,20 @@ export default {
 
     .advantage-container {
         display: flex;
+        flex-wrap: wrap;
+        width: 100%;
 
         .content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1;
-            margin: 0 40px;
+            width: 17%;
+            margin: 0 4%;
+
+            &.mobile {
+                width: 100%;
+                margin: 5%;
+            }
 
             img {
                 width: 160px;
@@ -411,6 +418,14 @@ h2 {
     margin-left: 10%;
     margin-right: 10%;
     margin-top: 50px;
+
+    .mobile {
+        display: block;
+
+        .card + .card {
+            margin-top: 10px;
+        }
+    }
 }
 
 .content-main {
@@ -515,7 +530,7 @@ h2 {
 
     .tutorials-icon {
         width: 24px;
-        height: 19px;
+        height: 24px;
         margin-left: 20px;
         margin-right: 16px;
     }

@@ -3,11 +3,11 @@
         <total-tab />
         <div class="content-wrapper">
             <div class="title">
-                <img />
+                <img src="../../../public/static/assets/total/retouch.png" />
                 <div class="text">SDK下载</div>
             </div>
             <div class="warning">在这里，可以下载到所有您需要的中地数码 WebClient 产品：{{ SDK.version }}</div>
-            <div class="download-area">
+            <div :class="['download-area', { mobile: mobile }]">
                 <div class="complete package">
                     <span class="name">完整包</span>
                     <div class="text">该包含有webclient四大主脚本以及所需的全部的三方cdn脚本</div>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="title">
-                <img />
+                <img src="../../../public/static/assets/total/retouch.png" />
                 <div class="text">Npm</div>
             </div>
             <el-row>
@@ -52,11 +52,13 @@
 <script>
 import { download } from './DownloadConfig';
 import TotalTab from '@/components/Tabs/TotalTab';
+import { isMobile } from '@/utils/mobile';
 
 export default {
     components: { TotalTab },
     data() {
         return {
+            mobile: isMobile(),
             version: [
                 {
                     name: 'Cesium运行时版本',
@@ -188,6 +190,18 @@ export default {
 
         .package + .package {
             margin-left: 40px;
+        }
+
+        &.mobile {
+            flex-wrap: wrap;
+
+            .package {
+                flex: initial;
+                width: 100%;
+                margin-top: 20px;
+                margin-left: 0;
+                padding: 0 20px;
+            }
         }
     }
 
