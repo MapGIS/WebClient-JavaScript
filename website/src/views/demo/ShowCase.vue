@@ -154,7 +154,7 @@ export default {
 .webclient-showcase-main-mobile {
     .main-demo-wrapper {
         margin-left: 0px !important;
-        height: calc(100vh - 155px) !important;
+        height: calc(100vh - 50px) !important;
     }
     .main-scroll-content {
         overflow-y: hidden;

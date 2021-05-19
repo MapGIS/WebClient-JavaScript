@@ -1,6 +1,7 @@
 <template>
     <splitpanes :horizontal="mobile" :class="{ 'default-theme': true, 'webclient-showcase': true, 'webclient-showcase-mobile': mobile }">
         <pane min-size="0" :size="mobile ? 40 : 40">
+            <ShowGallery v-if="currentKind.length > 0 && !fullscreen && mobile" :list="currentKind" />    
             <div class="code-wrapper">
                 <el-button-group class="toolbar-showcase-group">
                     <el-tooltip class="item" effect="dark" v-show="!mobile" :content="fullscreen ? '关闭全屏' : '开启全屏'" placement="top">
@@ -62,9 +63,7 @@
                 <div v-bind:class="{ iframemobile: mobile }" class="editor-codemirror-wraper">
                     <iframe style="border-width: 0px; margin: 0px; padding: 0px" id="showcase" scrolling="no"></iframe>
                 </div>
-                <!-- <transition name="bounce"> -->
-                    <ShowGallery v-if="currentKind.length > 0 && !fullscreen" :list="currentKind" />
-                <!-- </transition> -->
+                <ShowGallery v-if="currentKind.length > 0 && !fullscreen && !mobile" :list="currentKind" />
             </el-row>
         </pane>
     </splitpanes>
@@ -156,7 +155,7 @@ export default {
     },
     props: {
         fullscreen: Boolean,
-        config: Object,
+        config: Object
     },
     data() {
         return {
@@ -204,7 +203,7 @@ export default {
             this.getCurrentKind();
         },
         config(next) {
-          this.getGalleryKind(next);
+            this.getGalleryKind(next);
         }
     },
     mounted() {
@@ -350,7 +349,7 @@ export default {
                 markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 92 + 'px';
             } else {
                 if (this.mobile) {
-                    codeContent[0].style.height = window.innerHeight / 2 - 162 + 'px';
+                    codeContent[0].style.height = window.innerHeight * 0.6 - 162 + 'px';
                     // demoContent[0].style.height = window.innerHeight - 102 + "px";
                     // markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 242 + "px";
                 } else {
@@ -477,14 +476,17 @@ export default {
     }
 }
 .splitpanes__pane {
-    width: 40%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     background-color: #ffffff !important;
 }
 .webclient-showcase-mobile {
     .element-scroll-content {
-        height: calc(100vh - 45vh - 150px) !important;
+        height: calc(100vh - 40vh) !important;
         overflow-x: hidden;
+    }
+    .editor-codemirror-wraper {
+        // height: calc(60vh - 120px) !important;
     }
 }
 .webclient-showcase {
@@ -582,7 +584,7 @@ export default {
     } */
     }
     .splitpanes__pane {
-        height: 100% !important;
+        height: 100%;
     }
 }
 </style>

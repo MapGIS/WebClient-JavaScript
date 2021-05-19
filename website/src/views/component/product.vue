@@ -9,8 +9,6 @@
     <div class="product-header">
       <span class="product-span">组件</span>
     </div>
-    <!--    <el-header class="product-header">-->
-    <!--    </el-header>-->
     <el-container class="product-container">
       <el-aside
           class="aside-scroll-content"
@@ -49,13 +47,16 @@
         <el-backtop></el-backtop>
       </el-main>
     </el-container>
+    <el-footer :height="mobile ? '300' : '250'" style="padding: 0px">
+        <main-footer></main-footer>
+    </el-footer>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
 import {isMobile} from "@/utils/mobile";
-import {Header} from "@/views/layout/components";
+import {Header, MainFooter} from "@/views/layout/components";
 import VueMarkdown from "vue-markdown";
 import Prism from "prismjs";
 import "prismjs/themes/prism-coy.css";  // theme
@@ -78,6 +79,7 @@ export default {
   },
   components: {
     Header,
+    MainFooter,
     VueMarkdown
   },
   mounted() {
@@ -116,8 +118,6 @@ export default {
     resetHtml(mode, file, first) {
       this.loading = true;
       var self = this;
-
-      window.console.log('reset', mode, file, first);
 
       var url = this.getHtmlUrl(mode, file, first);
       axios.get(url)

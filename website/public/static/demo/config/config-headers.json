@@ -195,15 +195,6 @@
                 ]
             },
             {
-                "title": "Vue开发示例",
-                "icon": "iconhome",
-                "hightlights": [[true, true, true, true]],
-                "links": [["Vue-栅格", "Vue-矢量瓦片", "Vue-交互", "Vue-模型"]],
-                "routes": [
-                    ["/gallery/vue-cesium#raster", "/gallery/vue-cesium#vvectortile", "/gallery/vue-cesium#control", "/gallery/vue-cesium#model"]
-                ]
-            },
-            {
                 "title": "开发API",
                 "icon": "iconhome",
                 "links": [
@@ -328,20 +319,6 @@
                         "/gallery/mapboxgl#client-analysis",
                         "/gallery/mapboxgl#datastore#elasticsearch",
                         "/gallery/mapboxgl#industry#search"
-                    ]
-                ]
-            },
-            {
-                "title": "Vue开发示例",
-                "icon": "iconhome",
-                "hightlights": [[true, false, false, true]],
-                "links": [["Vue-图层", "Vue-栅格", "Vue-OGC", "Vue-交互"]],
-                "routes": [
-                    [
-                        "/gallery/vue-mapboxgl#vue-layer",
-                        "/gallery/vue-mapboxgl#vue-raster",
-                        "/gallery/vue-mapboxgl#vue-ogc",
-                        "/gallery/vue-mapboxgl#vue-control"
                     ]
                 ]
             },

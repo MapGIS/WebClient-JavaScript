@@ -223,7 +223,6 @@ export default {
       var self = this;
 
       window.console.log('reset', mode, file, first, second);
-      debugger
       var url = this.getHtmlUrl(mode, file, first, second);
 
       axios.get(url)
