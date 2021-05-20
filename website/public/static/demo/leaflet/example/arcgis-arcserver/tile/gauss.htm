@@ -17,38 +17,32 @@
     <div id="map"></div>
     <script>
         //高斯3带投影
-        var crs = new L.Proj.CRS('EPSG:2362',
+        var crs = new L.Proj.CRS('EPSG:2383',
                 '+proj=tmerc +lat_0=0 +lon_0=114 +k=1 +x_0=500000 +y_0=0 +a=6378140 +b=6356755.288157528 +units=m +no_defs', {
                     resolutions: [
-                        35.07833000659791, 17.539165003298955, 8.769582501649477,
-                        4.384791250824739, 2.1923956254123693, 1.0961978127061847
+                    132.2919312505292, 66.1459656252646, 33.0729828126323,
+                    16.53649140631615, 8.268245703158074, 4.134122851579037
                     ],
-                    origin: [38570106.6565339, 4107440.9868805557],
+                    origin: [395479.7309999997, 3172303.252699999],
                     bounds: L.bounds([
-                        [38570106.6565339, 4100174.3296849937],
-                        [38576679.186042026, 4107440.9868805557]
+                        [395479.7309999997, 3089235.3508],
+                        [451196.83910000045, 3172303.252699999]
                     ])
                 }),
 
 
             map = L.map('map', {
                 crs: crs,
-                center: [37.09, 114.80], //注意这里要使用经纬度坐标
-                zoom: 2,
+                center: [28, 113.50], //注意这里要使用经纬度坐标
+                zoom: 0,
                 continuousWorld: true,
                 worldCopyJump: false,
             });
 
-        var { protocol, ip, port } = window.webclient;
-        //创建地图文档图层
-        var mapDocLayer = new Zondy.Map.MapTileLayer("高斯坐标", {
-            //IP地址
-            ip: `${ip}`,
-            //端口号
-            port: `${port}`,
-            //只显示一个图层,不平铺显示
-            noWrap: true
-        }).addTo(map);
+            var arcgisUrl = "https://localhost:6443/arcgis/rest/services/arcgis_gauss/MapServer/tile/{z}/{y}/{x}"
+            var Layer = L.tileLayer(arcgisUrl, { minZoom: 0, maxZoom: 6 });
+
+            Layer.addTo(map);
     </script>
 </body>
 

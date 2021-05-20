@@ -80,6 +80,7 @@ export default {
     },
     methods: {
         initScroll() {
+            // https://css-tricks.com/sticky-table-of-contents-with-scrolling-active-states/
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     let id = entry.target.getAttribute('id');
