@@ -37,15 +37,15 @@
                 "hightlights": [[true, false, false, false, false, false, false, false, false]],
                 "routes": [
                     [
-                        "/component/product/component/introduction",
-                        "/component/product/component/download",
-                        "/component/product/component/developEnvironment",
-                        "/component/product/component/authorization",
-                        "/component/product/component/moduleIntroduction",
-                        "/component/product/component/relatedProduct",
-                        "/component/product/component/thirdPartyProducts",
-                        "/component/product/component/newFeatures",
-                        "/component/product/component/startDevelop"
+                        "/product/component/introduction",
+                        "/product/component/download",
+                        "/product/component/developEnvironment",
+                        "/product/component/authorization",
+                        "/product/component/moduleIntroduction",
+                        "/product/component/relatedProduct",
+                        "/product/component/thirdPartyProducts",
+                        "/product/component/newFeatures",
+                        "/product/component/startDevelop"
                     ]
                 ]
             },
@@ -69,7 +69,7 @@
                     ]
                 ],
                 "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
-                "routes": [["/guide/component/development_mapboxgl", "", "", "", "", "", "", "", "", "", "", ""]]
+                "routes": [["/guide/component/development_component", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
                 "title": "在线示例",
@@ -104,15 +104,15 @@
                 "hightlights": [[true, false, false, false, false, false, false, false, false]],
                 "routes": [
                     [
-                        "/component/product/cesium/produce_cesium",
-                        "/component/product/cesium/download",
-                        "/component/product/cesium/developEnvironment",
-                        "/component/product/cesium/authorization",
-                        "/component/product/cesium/moduleIntroduction",
-                        "/component/product/cesium/relatedProduct",
-                        "/component/product/cesium/thirdPartyProducts",
-                        "/component/product/cesium/newFeatures",
-                        "/component/product/cesium/startDevelop"
+                        "/product/cesium/produce_cesium",
+                        "/product/cesium/download",
+                        "/product/cesium/developEnvironment",
+                        "/product/cesium/authorization",
+                        "/product/cesium/moduleIntroduction",
+                        "/product/cesium/relatedProduct",
+                        "/product/cesium/thirdPartyProducts",
+                        "/product/cesium/newFeatures",
+                        "/product/cesium/startDevelop"
                     ]
                 ]
             },
@@ -231,15 +231,15 @@
                 "hightlights": [[true, false, false, false, false, false, false, false, false]],
                 "routes": [
                     [
-                        "/component/product/mapboxgl/produce_mapboxgl",
-                        "/component/product/mapboxgl/download",
-                        "/component/product/mapboxgl/developEnvironment",
-                        "/component/product/mapboxgl/authorization",
-                        "/component/product/mapboxgl/moduleIntroduction",
-                        "/component/product/mapboxgl/relatedProduct",
-                        "/component/product/mapboxgl/thirdPartyProducts",
-                        "/component/product/mapboxgl/newFeatures",
-                        "/component/product/mapboxgl/startDevelop"
+                        "/product/mapboxgl/produce_mapboxgl",
+                        "/product/mapboxgl/download",
+                        "/product/mapboxgl/developEnvironment",
+                        "/product/mapboxgl/authorization",
+                        "/product/mapboxgl/moduleIntroduction",
+                        "/product/mapboxgl/relatedProduct",
+                        "/product/mapboxgl/thirdPartyProducts",
+                        "/product/mapboxgl/newFeatures",
+                        "/product/mapboxgl/startDevelop"
                     ]
                 ]
             },
