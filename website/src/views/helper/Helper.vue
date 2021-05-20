@@ -257,7 +257,7 @@ export default {
 .helper-asideContent {
   .aside-scroll-content {
     height: calc(100vh - 80px);
-    width: 250px;
+    width: 250px !important;
     margin: 36px 0px 36px 79px;
     overflow-x: hidden;
     background-color: #F5F7FB;
