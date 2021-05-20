@@ -1,35 +1,18 @@
 <template>
-  <el-container>
-    <el-header
-        style="padding:0px;"
-        :height="mobile?'48px':'64px'"
-    >
+  <el-container class="mapgis-product-wrapper">
+    <el-header style="padding:0px;" :height="mobile?'48px':'64px'">
       <Header></Header>
     </el-header>
     <div class="product-header">
-      <span class="product-span">组件</span>
+      <span class="product-span">{{ asideMenu.title }}</span>
     </div>
     <el-container class="product-container">
-      <el-aside
-          class="aside-scroll-content"
-      >
-        <el-scrollbar
-            class="element-scroll-content"
-            wrapStyle="overflow-x: hidden;"
-            viewStyle="overflow-y: hidden;"
-        >
+      <el-aside class="aside-scroll-content">
+        <el-scrollbar class="element-scroll-content" wrapStyle="overflow-x: hidden;" viewStyle="overflow-y: hidden;">
           <div class="header-menu-col">
             <span class="strong">{{ asideMenu.title }}</span>
-            <div class="header-menu-links" v-for="(link, i) in asideMenu.links" :key="i">
-              <div class="header-menu-link" v-for="(l, j) in link" :key="j">
-                <div class="header-menu-link-text">
-                  <el-badge type="success" :value="asideMenu.hightlights[i][j] ? hint : ''" class="menu-badge">
-                    <a class="header-menu-link-text" :href="asideMenu.routes[i][j]">
-                      <span :class="{ 'light-subtitle': light }">{{ l }}</span>
-                    </a>
-                  </el-badge>
-                </div>
-              </div>
+            <div class="header-menu-col">
+              <div id="develop-markdown-toc"></div>
             </div>
           </div>
         </el-scrollbar>
@@ -40,9 +23,14 @@
             :style="{padding: '2px 1vw'}"
             :source="markdown"
             :html="true"
-            :toc="false"
+            :toc="true"
+            :toc-first-level="2"
+            toc-id="develop-markdown-toc"
+            toc-class="mapgis-toc-class"
+            :toc-anchor-link="true"
             :linkify="true"
             @rendered="markdownRendered"
+            @toc-rendered="tocRendered"
         ></vue-markdown>
         <el-backtop></el-backtop>
       </el-main>
@@ -74,7 +62,10 @@ export default {
       asideMenu: "",
       light: true,
       hint: '新',
-      markdown: "> `暂无说明`, 请检查改目录下的帮助说明是否存在",
+      markdown: "> `暂无说明`, 请检查该目录下的帮助说明是否存在",
+      mode: "",
+      isContentFinish: false,
+      isTocFinish: false
     }
   },
   components: {
@@ -84,20 +75,51 @@ export default {
   },
   mounted() {
     this.initConfig();
+    this.initScroll();
+  },
+  watch: {
+    "$route.path"() {
+      this.initConfig();
+    }
   },
   methods: {
+    initScroll() {
+      /**
+       *  目标元素和视窗viewport的交集的变化的方法API
+       * @type {IntersectionObserver}
+       */
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          let id = entry.target.getAttribute('id');
+          id = encodeURI(id);
+          //intersectionRatio：目标元素出现在视窗的比例
+          if (entry.intersectionRatio > 0) {
+            document.querySelector(`li a[href="#${id}"]`).parentElement.classList.add('active');
+          } else {
+            document.querySelector(`li a[href="#${id}"]`).parentElement.classList.remove('active');
+          }
+        });
+      });
+      //observer.observe():监听当前所有的h2[id]
+      document.querySelectorAll('h2[id]').forEach((section) => {
+        observer.observe(section);
+      });
+      document.querySelectorAll('h3[id]').forEach((section) => {
+        observer.observe(section);
+      });
+    },
     initConfig() {
       let anchors = location.href.split("#");
       if (!anchors || anchors.length < 2) return;
 
       let hrefs = anchors[1].split("/").slice(2);
-      let mode = this.getMapMode();
+      this.mode = this.getMapMode();
       let file = hrefs[hrefs.length - 1];
       let first;
       if (hrefs.length <= 3) {
         first = hrefs[hrefs.length - 3];
       }
-      this.resetHtml(mode, file, first);
+      this.resetHtml(this.mode, file, first);
       this.getAsideList();
     },
     getMapMode() {
@@ -138,7 +160,10 @@ export default {
       axios.get(asideUrl).then(response => {
         let temp = response.data;
         for (let i in temp) {
-          if ("组件" === (temp[i].title).toLowerCase()) {
+          if (self.mode === "component") {
+             self.mode = "组件";
+          }
+          if (self.mode === (temp[i].title).toLowerCase()) {
             self.asideContent = temp[i];
             break;
           }
@@ -146,16 +171,58 @@ export default {
         self.asideMenu = self.asideContent.menus[0];
       });
     },
+    /**
+     * @rendered: markdown内容已渲染完毕时调用下面方法
+     */
     markdownRendered() {
+      this.isContentFinish = true;
+      if (this.isTocFinish && this.isContentFinish) {
+        this.initScroll();
+      }
       this.$nextTick(() => {
         Prism.highlightAll();
       });
     },
+    /**
+     * @toc-rendered: toc目录渲染完成时调用下面方法
+     */
+    tocRendered() {
+      this.isTocFinish = true;
+      if (this.isTocFinish && this.isContentFinish) {
+        this.initScroll();
+      }
+    }
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.mapgis-product-wrapper {
+  .mapgis-toc-class {
+    ul {
+      list-style-type: none;
+      padding-left: 16px;
+      margin: 8px 0px;
+    }
+
+    li {
+      list-style-type: none;
+      margin: 8px 0px;
+    }
+
+    a {
+      color: #3f454d;
+    }
+
+    .active {
+      border-left: 3px solid #000000;
+      padding-left: 6px;
+      color: #000000;
+      font-weight: bold;
+    }
+  }
+}
+
 .product-header {
   padding: 0;
   height: 240px !important;
@@ -209,10 +276,12 @@ export default {
 .light-subtitle {
   color: #3C4858 !important;
 }
-.header-menu-link{
+
+.header-menu-link {
   margin: 4px 0px;
   width: fit-content;
   height: fit-content;
+
   span {
     width: 60px;
     height: 14px;
@@ -222,7 +291,12 @@ export default {
     line-height: 30px;
   }
 }
-.header-menu-col{
-  padding: 5px 90px;
+
+.header-menu-col {
+  padding: 5px 5px;
+}
+
+#develop-markdown-toc {
+  width: fit-content;
 }
 </style>
