@@ -138,63 +138,6 @@ export default {
     text-align: center;
   }
 }
-.overview-header {
-  width: 100%;
-  height: 240px;
-  background-image: url('../../../public/static/assets/standard/standardlogo.png');
-  background-size: 100% 240px;
-
-  .title {
-      height: 176px;
-      font-size: 30px;
-      font-family: Source Han Sans CN;
-      font-weight: bold;
-      font-style: italic;
-      color: #ffffff;
-      line-height: 176px;
-      margin-left: 130px;
-
-      span {
-          margin-left: 15px;
-          color: rgba(255, 255, 255, 0.3);
-      }
-  }
-
-  .overview-nav {
-      display: flex;
-      height: 64px;
-      padding: 0 122px;
-      background-color: rgba(255, 255, 255, 0.13);
-      box-shadow: -1px 4px 8px 0px rgba(0, 0, 0, 0.1);
-
-      a {
-          flex: 1;
-
-          .item {
-              font-size: 18px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              color: #ffffff;
-              line-height: 64px;
-              text-align: center;
-
-              &.select {
-                  background-color: rgba(255, 255, 255, 0.14);
-
-                  .triangle {
-                      width: 0;
-                      height: 0;
-                      margin: -20px auto 0;
-                      border-top: 10px solid transparent;
-                      border-left: 10px solid transparent;
-                      border-right: 10px solid transparent;
-                      border-bottom: 10px solid #ffffff;
-                  }
-              }
-          }
-      }
-  }
-}
 .standard-content{
   min-height: 70vh;
   padding: 0 10vw;

@@ -76,10 +76,12 @@ export default {
   mounted() {
     this.initConfig();
     this.initScroll();
+    this.changeTabBackground();
   },
   watch: {
     "$route.path"() {
       this.initConfig();
+      this.changeTabBackground();
     }
   },
   methods: {
@@ -136,6 +138,14 @@ export default {
         mapMode = "component";
       }
       return mapMode;
+    },
+    changeTabBackground() {
+      let tabs = document.getElementsByClassName('product-header');
+      if(tabs && tabs.length > 0) {
+        let tab = tabs[0];
+        let mode = this.getMapMode();
+        tab.style.backgroundImage = `url('../../../static/assets/tab/${mode}.png')`;
+      }
     },
     resetHtml(mode, file, first) {
       this.loading = true;

@@ -11,14 +11,14 @@
             <div class="header-menu-links" v-for="(link, i) in menu.links" :key="i">
                 <div class="header-menu-link" v-for="(l, j) in link" :key="j">
                     <div class="header-menu-link-text" v-if="isLink(menu.routes[i][j])">
-                        <el-badge type="success" :value="menu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                        <el-badge type="success" :is-dot="menu.hightlights[i][j]"  class="menu-badge">
                             <a class="header-menu-link-text" :href="menu.routes[i][j]" target="_blank">
                                 <span :class="{ 'light-subtitle': light }">{{ l }}</span>
                             </a>
                         </el-badge>
                     </div>
                     <div class="header-menu-link-text" v-else-if="isDocs(menu.routes[i][j])">
-                        <el-badge type="success" :value="menu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                        <el-badge type="success" :is-dot="menu.hightlights[i][j]"  class="menu-badge">
                             <a class="header-menu-link-text" :href="menu.routes[i][j]">
                                 <span :class="{ 'light-subtitle': light }">{{ l }}</span>
                             </a>
@@ -26,7 +26,8 @@
                     </div>
                     <router-link v-else :to="menu.routes[i][j]">
                         <div class="header-menu-link-text">
-                            <el-badge type="success" :value="menu.hightlights[i][j] ? hint : ''" class="menu-badge">
+                            <el-badge type="success" :is-dot="menu.hightlights[i][j]" 
+                             class="menu-badge">
                                 <span :class="{ 'light-subtitle': light }">{{ l }}</span>
                             </el-badge>
                         </div>
@@ -99,26 +100,26 @@ export default {
 </script>
 
 <style lang="scss">
-@media (max-width:640px){
-  .header-menu-wrapper {
-    padding: 0 0vw;
-  }
+@media (max-width: 640px) {
+    .header-menu-wrapper {
+        padding: 0 0vw;
+    }
 }
-@media (min-width:720px){
-  .header-menu-wrapper {
-    padding: 0 3vw;
-  }
+@media (min-width: 720px) {
+    .header-menu-wrapper {
+        padding: 0 3vw;
+    }
 }
-@media (min-width:960px){
-  .header-menu-wrapper {
-    padding: 0 5vw;
-  }
+@media (min-width: 960px) {
+    .header-menu-wrapper {
+        padding: 0 5vw;
+    }
 }
 
-@media (min-width:1280px){
-  .header-menu-wrapper {
-    padding: 0 8vw;
-  }
+@media (min-width: 1280px) {
+    .header-menu-wrapper {
+        padding: 0 8vw;
+    }
 }
 
 .header-menu-wrapper {
@@ -136,6 +137,17 @@ export default {
     padding-right: -30px !important;
     margin-right: -30px !important; */
     }
+    .el-badge__content {
+        border: 0px solid transparent;
+    }
+    .el-badge__content--success {
+        background-color: #3a85c6;
+        top: 5px;
+        right: 0px;
+    }
+    .el-badge__content.is-fixed.is-dot {
+     top: 5px;
+}
     .el-divider--horizontal {
         display: block;
         height: 1px;
@@ -152,10 +164,14 @@ export default {
             height: 14px;
             font-size: 14px;
             font-family: Microsoft YaHei;
-            font-weight: 400;
+            font-weight: bold;
             color: #ffffff;
             line-height: 36px;
         }
+    }
+    .menu-icon {
+        color: #47abff;
+        font-size: 22px;
     }
     .strong {
         font-weight: bold !important;
@@ -206,8 +222,8 @@ export default {
 .el-popover {
     overflow: hidden;
     border: 1px solid #062f52 !important;
-    background: #062F52 !important;
-    opacity: .9;
+    background: #062f52 !important;
+    opacity: 0.9;
     border-radius: 4px;
     box-shadow: 0px 1px 9px 0px rgba(0, 0, 12, 0.1);
     width: 100vw !important;

@@ -50,9 +50,11 @@
               <div class="header-menu-link" v-for="(l, j) in link" :key="j">
                 <div class="header-menu-link-text">
                   <el-badge type="success" :value="asideMenu.hightlights[i][j] ? hint : ''" class="menu-badge">
-                    <a class="header-menu-link-text" :href="asideMenu.routes[i][j]">
+                  <router-link :to="asideMenu.routes[i][j]">  
+                    <a class="header-menu-link-text">
                       <span :class="{ 'light-subtitle': light }">{{ l }}</span>
                     </a>
+                  </router-link>
                   </el-badge>
                 </div>
               </div>
@@ -227,7 +229,6 @@ export default {
 
       axios.get(url)
           .then(response => {
-            debugger
             self.markdown = response.data;
           }).catch(() => {
         window.console.warn('暂无该帮助的markdown说明，后续持续补充......');

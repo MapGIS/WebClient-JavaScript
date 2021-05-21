@@ -164,8 +164,8 @@ export default {
   }
 
   .image {
-    height: 96px;
-    width: 96px;
+    height: 64px;
+    width: 64px;
   }
 }
 

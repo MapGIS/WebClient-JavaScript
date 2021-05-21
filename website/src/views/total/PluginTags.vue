@@ -115,12 +115,6 @@ export default {
     color: #333333;
     line-height: 70px;
 }
-.overview-header {
-    width: 100%;
-    height: 240px;
-    background-image: url('../../../public/static/assets/total/totallogo.png');
-    background-size: 100% 240px;
-}
 .plugintags-content {
     padding: 0 10vw 36px 10vw;
 }

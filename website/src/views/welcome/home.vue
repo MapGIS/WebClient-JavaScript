@@ -3,6 +3,8 @@
         <Header class="home-header" />
         <el-row type="flex" justify="center" class="banner banner-desc">
             <div :class="{ 'banner-desc-wrapper': true, 'banner-desc-wrapper-mobile': mobile }">
+                <div class="main-title">热门开源可视化技术<span>JavaSript&nbsp;Client</span></div>
+                <div class="sub-title">Echart, MapV, d3, turfjs等主流技术</div>
                 <div>
                     <img :src="mains[0]" alt="logo" :style="{ width: '100%', height: mobile ? '240px' : '640px' }" />
                 </div>
@@ -197,6 +199,34 @@ $margin-left: 80px;
     }
 }
 .webclient-home {
+    .main-title {
+        position: absolute;
+        height: 48px;
+        font-size: 48px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 48px;
+        top: 251px;
+        left: 89px;
+
+        span {
+            margin-left: 15px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+    }
+    .sub-title {
+        position: absolute;
+        height: 33px;
+        font-size: 30px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.3);
+        line-height: 36px;
+        opacity: 0.85;
+        top: 334px;
+        left: 89px;
+    }
     .mapgis-header {
         background: transparent !important;
         box-shadow: 0px 3px 7px 0px transparent !important;
@@ -206,20 +236,25 @@ $margin-left: 80px;
     }
 
     .mapgis-webclient-text {
-      color: #FFFFFF !important;
+        color: #ffffff !important;
     }
 
-    .mapgis-header .mapgis-webclient-menu span  {
-      color: #FFFFFF;
+    .mapgis-header .mapgis-webclient-menu span {
+        color: #ffffff;
     }
 
     .mapgis-webclient-menu-icon {
-      color: #FFFFFF !important;
+        color: #ffffff !important;
     }
 
     .home-header {
         position: absolute;
         z-index: 100;
+    }
+    a {
+        color: #3a85c6;
+        text-decoration: none;
+        word-wrap: break-word;
     }
     h1 {
         height: 36px;
@@ -338,7 +373,9 @@ $margin-left: 80px;
     .banner-history {
         padding: 0 10%;
         min-height: 720px;
-        background: #f7fcff;
+        background-image: url('../../../public/static/assets/home/version.png');
+        background-size: 100% 720px;
+        /* background: #f7fcff; */
         .history-content {
             padding-bottom: 56px;
         }

@@ -354,7 +354,7 @@ export default {
                     // markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 242 + "px";
                 } else {
                     codeContent[0].style.height = window.innerHeight - 160 + 'px';
-                    demoContent[0].style.height = window.innerHeight - 224 + 'px';
+                    demoContent[0].style.height = window.innerHeight - 190 + 'px';
                     markdownContent[markdownContent.length - 1].style.height = window.innerHeight - 160 + 'px';
                 }
             }
@@ -523,7 +523,7 @@ export default {
     }
 
     .editor-codemirror-wraper {
-        height: calc(100vh - 240px);
+        height: calc(100vh - 190px);
     }
 
     .iframemobile {

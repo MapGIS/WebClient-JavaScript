@@ -16,7 +16,7 @@
                     </el-popover>
                 </div>
                 <template v-else>
-                    <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="click">
+                    <el-popover v-for="(h, i) in mobile ? mobileHeaders : headers" :key="i" placement="bottom-start" trigger="hover">
                         <header-menu :menus="h.menus" :icon="h.icon" />
                         <el-button type="text" slot="reference" :class="{ active: isActiveMenu(h.title) }">
                             <IconFont :type="h.icon" class="menu-icon" />
@@ -228,7 +228,7 @@ export default {
             // margin-let: 12.5px;
             font-size: 16px;
             font-family: Microsoft YaHei;
-            font-weight: 500;
+            font-weight: bold;
             text-align: center;
             color: #3f454d;
             line-height: 72px;
@@ -240,7 +240,7 @@ export default {
         }
 
         span:hover {
-            color: #3A85C6
+            color: #3a85c6;
         }
 
         .active {

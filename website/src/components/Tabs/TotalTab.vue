@@ -36,7 +36,7 @@ export default {
 .overview-header {
     width: 100%;
     height: 240px;
-    background-image: url('../../../public/static/assets/total/totallogo.png');
+    background-image: url('../../../public/static/assets/tab/total.png');
     background-size: 100% 240px;
 
     .title {
