@@ -89,7 +89,7 @@ class GeoFeatureThemeLayer extends ThemeLayer {
    */
   addFeatures(features) {
     var me = this;
-    window.mapboxgl.Evented.prototype.fire("beforefeaturesadded", {
+    mapboxgl.Evented.prototype.fire("beforefeaturesadded", {
       features: features
     });
 

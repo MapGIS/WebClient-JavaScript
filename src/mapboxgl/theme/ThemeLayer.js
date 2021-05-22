@@ -421,7 +421,9 @@ class ThemeLayer {
             map = this.map;
         var tempPoint = null;
         if (isArray(coordinate)) {
-            coordinate = this.WebMercator2lonLat(coordinate[0], coordinate[1]);
+             
+            // coordinate = this.WebMercator2lonLat(coordinate[0], coordinate[1]);
+            coordinate = new mapboxgl.LngLat(coordinate[0], coordinate[1]);
             tempPoint = map.project(coordinate);
             pixelP = [tempPoint.x, tempPoint.y];
         }
@@ -443,7 +445,7 @@ class ThemeLayer {
         }
         this.startPitch = this.map.getPitch();
         this.startBearing = this.map.getBearing();
-        var startMovePoint = this.map.project(this.WebMercator2lonLat(0, 0));
+        var startMovePoint = this.map.project(new mapboxgl.LngLat(0, 0));
         this.startMoveX = startMovePoint.x;
         this.startMoveY = startMovePoint.y;
     }
@@ -462,7 +464,8 @@ class ThemeLayer {
         this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
         var tPitch = this.map.getPitch() - this.startPitch;
         var tBearing = -this.map.getBearing() + this.startBearing;
-        var endMovePoint = this.map.project(this.WebMercator2lonLat(0, 0));
+        // var endMovePoint = this.map.project(this.WebMercator2lonLat(0, 0));
+        var endMovePoint = this.map.project(new mapboxgl.LngLat(0, 0));
         var tMoveX = endMovePoint.x - this.startMoveX;
         var tMoveY = endMovePoint.y - this.startMoveY;
         this.div.style.transform = 'rotateX(' + tPitch + 'deg)' + ' rotateZ(' + tBearing + 'deg)' + ' translate3d(' + tMoveX + 'px, ' + tMoveY + 'px, 0px)';

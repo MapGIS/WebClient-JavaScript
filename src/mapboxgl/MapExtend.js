@@ -1,3 +1,5 @@
+import mapboxgl from '@mapgis/mapbox-gl';
+
 /**
  * @function mapboxgl.Zondy.MapExtend
  * @description  扩展了 mapboxgl.Map 对图层相关的操作。
@@ -5,9 +7,9 @@
  */
 export var MapExtend = function () {
 
-	window.mapboxgl.Map.prototype.overlayLayersManager = {};
-	// window.mapboxgl.Map.prototype.addLayerBak = window.mapboxgl.Map.prototype.addLayerBak;
-	window.mapboxgl.Map.prototype.addLayer = function (layer, before) {
+	mapboxgl.Map.prototype.overlayLayersManager = {};
+	// mapboxgl.Map.prototype.addLayerBak = mapboxgl.Map.prototype.addLayerBak;
+	mapboxgl.Map.prototype.addLayer = function (layer, before) {
 		if (layer.source || layer.type === 'custom' || layer.type === "background") {
 			this.addLayerBak(layer, before);
 			return this;
@@ -18,18 +20,19 @@ export var MapExtend = function () {
 			});
 			return;
 		}
-		addLayer(layer, this);
+		// addLayer(layer, this);
+		this._addLayer(layer, this);
 		this.overlayLayersManager[layer.id] = layer;
 		return this;
 	};
-	window.mapboxgl.Map.prototype.getLayer = function (id) {
+	mapboxgl.Map.prototype.getLayer = function (id) {
 		if (this.overlayLayersManager[id]) {
 			return this.overlayLayersManager[id];
 		}
 		return this.style.getLayer(id);
 	};
 
-	window.mapboxgl.Map.prototype.moveLayer = function (id, beforeId) {
+	mapboxgl.Map.prototype.moveLayer = function (id, beforeId) {
 		if (this.overlayLayersManager[id]) {
 			moveLayer(id, beforeId);
 			return this;
@@ -41,7 +44,7 @@ export var MapExtend = function () {
 		}
 	};
 
-	window.mapboxgl.Map.prototype.removeLayer = function (id) {
+	mapboxgl.Map.prototype.removeLayer = function (id) {
 		if (this.overlayLayersManager[id]) {
 			removeLayer(this.overlayLayersManager[id]);
 			delete this.overlayLayersManager[id];
@@ -53,7 +56,7 @@ export var MapExtend = function () {
 	};
 
 	//目前扩展的overlayer，只支持显示或隐藏图层操作
-	window.mapboxgl.Map.prototype.setLayoutProperty = function (layerID, name, value) {
+	mapboxgl.Map.prototype.setLayoutProperty = function (layerID, name, value) {
 		if (this.overlayLayersManager[layerID]) {
 			if (name === "visibility") {
 				if (value === "visible") {
@@ -70,21 +73,21 @@ export var MapExtend = function () {
 		this._update(true);
 		return this;
 	};
-	window.mapboxgl.Map.prototype.updateTransform = function (units, originX, originY, centerX, centerY, width, height) {
+	mapboxgl.Map.prototype.updateTransform = function (units, originX, originY, centerX, centerY, width, height) {
 		this.transform.units = units;
 		this.transform.latRange = [this._tileExtent[1], this._tileExtent[3]];
 		this.transform.lngRange = [this._tileExtent[0], this._tileExtent[2]];
 		var mercatorZfromAltitude = this.mercatorZfromAltitude;
-		window.mapboxgl.MercatorCoordinate.fromLngLat = function (lngLatLike, altitude) {
+		mapboxgl.MercatorCoordinate.fromLngLat = function (lngLatLike, altitude) {
 			altitude = altitude || 0;
-			const lngLat = window.mapboxgl.LngLat.convert(lngLatLike);
-			return new window.mapboxgl.MercatorCoordinate(
+			const lngLat = mapboxgl.LngLat.convert(lngLatLike);
+			return new mapboxgl.MercatorCoordinate(
 				(lngLat.lng - originX) / width,
 				(originY - lngLat.lat) / height,
 				mercatorZfromAltitude(altitude, lngLat.lat));
 		};
-		window.mapboxgl.MercatorCoordinate.prototype.toLngLat = function () {
-			return new window.mapboxgl.LngLat(
+		mapboxgl.MercatorCoordinate.prototype.toLngLat = function () {
+			return new mapboxgl.LngLat(
 				this.x * width + originX,
 				originY - this.y * height);
 		};
@@ -125,7 +128,7 @@ export var MapExtend = function () {
 		if (beforeLayerID) {
 			var beforeLayer = document.getElementById(beforeLayerID);
 			if (!beforeLayer) {
-				window.mapboxgl.Evented.prototype.fire("error", {
+				mapboxgl.Evented.prototype.fire("error", {
 					error: new Error(`Layer with id "${beforeLayerID}" does not exist on this document.`)
 				});
 			}

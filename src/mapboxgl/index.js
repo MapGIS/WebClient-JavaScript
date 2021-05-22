@@ -1,3 +1,7 @@
+import { MapExtend } from './MapExtend';
+
+export { MapExtend };
+
 import { mapboxgl, MapDocLayer, MapTileLayer, MapWmsLayer, MapWMTSLayer, MapVectorLayer, ArcGISLayer, TDTLayer } from './layer';
 
 export { mapboxgl, MapDocLayer, MapTileLayer, MapWmsLayer, MapWMTSLayer, MapVectorLayer, ArcGISLayer, TDTLayer };
@@ -105,11 +109,11 @@ import {
     NetAnalyse,
     NetAnalysisExtent,
     SlopLineParam
-} from '../service/extend';
+} from '../service/Igserver/extend';
 
 import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat } from '../service/baseserver';
 
-import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer } from '../service/MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer } from '../service/Igserver/MRCS';
 
 import {
     EditDocFeature,
@@ -127,7 +131,7 @@ import {
     QueryParameter,
     QueryParameterBase,
     QueryServiceBase
-} from '../service/MRFS';
+} from '../service/Igserver/MRFS';
 
 import {
     AnalysisBase,
@@ -149,7 +153,7 @@ import {
     ProjectBase,
     ProjectByLayer,
     ProjectBySRID
-} from '../service/MRFWS';
+} from '../service/Igserver/MRFWS';
 
 import {
     CalArea,
@@ -162,7 +166,7 @@ import {
     ProjectRang,
     Smooth,
     TopAnalysis
-} from '../service/MRGS';
+} from '../service/Igserver/MRGS';
 
 import {
     GetDocImageService,
@@ -171,7 +175,7 @@ import {
     GetMapInfoService,
     GetTileImageService,
     MapServiceBase
-} from '../service/MRMS';
+} from '../service/Igserver/MRMS';
 
 import {
     CAllOtherDataItemInfoSource,
@@ -202,7 +206,10 @@ import {
     ItemValue,
     ThemeOper,
     ThemesInfo
-} from '../service/theme';
+} from '../service/Igserver/theme';
+
+import { UserService, GeoDatasetService, CalculateModelService } from '../service/clouddisk';
+export { UserService, GeoDatasetService, CalculateModelService };
 
 export { ServiceBase };
 
@@ -382,15 +389,52 @@ export {
     ThemesInfo
 };
 
+import {
+    GeoFeatureThemeLayer,
+    ThemeLayer,
+    RangeThemeLayer,
+    UniqueThemeLayer,
+    GraphThemeLayer,
+    graphThemeLayer,
+    RandomThemeLayer,
+    SimpleThemeLayer,
+    RankSymbolThemeLayer,
+    ThemeStyle
+} from './theme';
+export {
+    GeoFeatureThemeLayer,
+    ThemeLayer,
+    RangeThemeLayer,
+    UniqueThemeLayer,
+    GraphThemeLayer,
+    graphThemeLayer,
+    RandomThemeLayer,
+    SimpleThemeLayer,
+    RankSymbolThemeLayer,
+    ThemeStyle
+};
+
 // 大数据相关
+import {
+    PostgisCatlogService,
+    PostgisCustomQueryService,
+    PostgisQueryService,
+    PostgisTableService,
+    PostgisVectorTileService
+} from '../service/datastore/postgis';
+
+export { PostgisCatlogService, PostgisCustomQueryService, PostgisQueryService, PostgisTableService, PostgisVectorTileService };
+
 import {
     EchartsLayer,
     MapvLayer,
     DeckglLayer
+    /* StreamLayer */
 } from './overlay/index.js';
 
-export let Overlay = {
+export {
     EchartsLayer,
     MapvLayer,
     DeckglLayer
+    /* StreamLayer */
 };
