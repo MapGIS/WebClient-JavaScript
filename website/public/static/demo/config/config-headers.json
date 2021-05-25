@@ -348,6 +348,47 @@
         "icon": "iconLeaf",
         "menus": [
             {
+                "title": "产品",
+                "icon": "icon3chanpin",
+                "links": [["产品介绍", "资源下载", "开发环境", "开发授权", "模块介绍", "相关产品", "三方产品", "新特性", "开始开发"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/leaflet/produce_leaflet",
+                        "/product/leaflet/download",
+                        "/product/leaflet/developEnvironment",
+                        "/product/leaflet/authorization",
+                        "/product/leaflet/moduleIntroduction",
+                        "/product/leaflet/relatedProduct",
+                        "/product/leaflet/thirdPartyProducts",
+                        "/product/leaflet/newFeatures",
+                        "/product/leaflet/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconicon_zhinan",
+                "links": [
+                    [
+                        "准备",
+                        "数据准备",
+                        "数据处理",
+                        "数据发布",
+                        "新建网站",
+                        "引入开发包",
+                        "数据可视化",
+                        "视图设置",
+                        "标题添加",
+                        "量算分析",
+                        "数据查询",
+                        "可视化效果"
+                    ]
+                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/leaflet/development_leaflet", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
                 "title": "开发示例",
                 "icon": "iconkaifashili",
                 "links": [["互联网地图", "OGC服务", "地图", "要素", "量算", "专题图", "空间分析", "客户端可视化", "客户端空间分析", "ElasticSearch"]],
@@ -392,6 +433,47 @@
         "title": "Openlayers",
         "icon": "iconlayers",
         "menus": [
+            {
+                "title": "产品",
+                "icon": "icon3chanpin",
+                "links": [["产品介绍", "资源下载", "开发环境", "开发授权", "模块介绍", "相关产品", "三方产品", "新特性", "开始开发"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/openlayers/produce_ol",
+                        "/product/openlayers/download",
+                        "/product/openlayers/developEnvironment",
+                        "/product/openlayers/authorization",
+                        "/product/openlayers/moduleIntroduction",
+                        "/product/openlayers/relatedProduct",
+                        "/product/openlayers/thirdPartyProducts",
+                        "/product/openlayers/newFeatures",
+                        "/product/openlayers/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconicon_zhinan",
+                "links": [
+                    [
+                        "准备",
+                        "数据准备",
+                        "数据处理",
+                        "数据发布",
+                        "新建网站",
+                        "引入开发包",
+                        "数据可视化",
+                        "视图设置",
+                        "标题添加",
+                        "量算分析",
+                        "数据查询",
+                        "可视化效果"
+                    ]
+                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/openlayers/development_ol", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
             {
                 "title": "开发示例",
                 "icon": "iconkaifashili",

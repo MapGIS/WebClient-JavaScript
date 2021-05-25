@@ -120,6 +120,9 @@ export default {
             if (title.indexOf(this.activeMenu) >= 0) {
                 return true;
             }
+            if (title === "组件" && this.activeMenu === "component"){
+                return true
+            }
             return false;
         }
     }
@@ -140,6 +143,7 @@ export default {
     .mapgis-webclient-menu {
         margin-right: 22px !important;
     }
+
     .mapgis-webclient-menu {
         height: 48px !important;
         span {
@@ -203,6 +207,7 @@ export default {
         position: relative;
         display: flex;
         align-items: center;
+        height: 72px;
 
         .mapgis-webclient-nav {
             margin-left: auto;
@@ -222,7 +227,6 @@ export default {
 
         span {
             width: fit-content;
-            height: 72px;
             margin: 0px 2px;
             padding: 0px 4px;
             // margin-let: 12.5px;
@@ -231,7 +235,7 @@ export default {
             font-weight: bold;
             text-align: center;
             color: #3f454d;
-            line-height: 72px;
+            line-height: 45px;
 
             .el-button {
                 padding: 0;
@@ -245,11 +249,11 @@ export default {
 
         .active {
             border-radius: 0px;
-            border-bottom: 3px solid #33dbe8;
-            span {
-                color: linear-gradient(90deg, #4794fa, #31e1e6) !important;
-                font-size: bold;
-            }
+            border-bottom: 3px solid #3a85c6 !important;
+            //span {
+            //    color: linear-gradient(90deg, #4794fa, #31e1e6) !important;
+            //    font-size: bold;
+            //}
         }
     }
 }

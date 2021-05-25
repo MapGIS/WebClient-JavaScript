@@ -1,6 +1,6 @@
 <template>
   <el-container class="mapgis-guide-wrapper">
-    <el-header style="padding: 0px" :height="mobile ? '48px' : '64px'">
+    <el-header style="padding: 0px" :height="mobile ? '48px' : '72px'">
       <Header></Header>
     </el-header>
     <div class="product-header">

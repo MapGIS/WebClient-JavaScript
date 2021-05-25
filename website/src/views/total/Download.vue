@@ -4,21 +4,24 @@
         <div class="content-wrapper">
             <div class="title">
                 <img src="../../../public/static/assets/total/retouch.png" />
-                <div class="text">SDK下载</div>
+                <div class="text">离线包下载</div>
             </div>
-            <div class="warning">在这里，可以下载到所有您需要的中地数码 WebClient 产品：{{ SDK.version }}</div>
-            <div :class="['download-area', { mobile: mobile }]">
-                <div class="complete package">
-                    <span class="name">完整包</span>
-                    <div class="text">该包含有webclient四大主脚本以及所需的全部的三方cdn脚本</div>
-                    <el-button type="primary"><a :href="SDK.websiteUrl" target="_blank">立即下载</a></el-button>
-                </div>
-                <div class="streamline package">
-                    <span class="name">精简包</span>
-                    <div class="text">只包含webclient主脚本</div>
-                    <el-button type="primary"><a :href="SDK.websiteUrl" target="_blank">立即下载</a></el-button>
-                </div>
+            <div class="warning">下载地址：
+<!--              <el-button type="primary"><a href="http://smaryun.com/dev/download_detail.html#/download828" target="_blank">下载</a></el-button>-->
+              <a href="http://smaryun.com/dev/download_detail.html#/download828" >http://smaryun.com/dev/download_detail.html#/download828</a>
             </div>
+<!--            <div :class="['download-area', { mobile: mobile }]">-->
+<!--                <div class="complete package">-->
+<!--                    <span class="name">完整包</span>-->
+<!--                    <div class="text">该包含有webclient四大主脚本以及所需的全部的三方cdn脚本</div>-->
+<!--                    <el-button type="primary"><a :href="SDK.websiteUrl" target="_blank">立即下载</a></el-button>-->
+<!--                </div>-->
+<!--                <div class="streamline package">-->
+<!--                    <span class="name">精简包</span>-->
+<!--                    <div class="text">只包含webclient主脚本</div>-->
+<!--                    <el-button type="primary"><a :href="SDK.websiteUrl" target="_blank">立即下载</a></el-button>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="title">
                 <img src="../../../public/static/assets/total/retouch.png" />
                 <div class="text">Npm</div>
@@ -108,8 +111,8 @@ export default {
         display: flex;
         align-items: center;
         height: 22px;
-        margin-top: 56px;
-        margin-bottom: 32px;
+        margin-top: 37px;
+        margin-bottom: 2px;
 
         img {
             width: 10px;
@@ -206,16 +209,16 @@ export default {
     }
 
     .warning {
-        margin-bottom: 24px;
-        padding: 25px 20px;
-        background-color: #eeeeee;
+        margin-bottom: 2px;
+        padding: 18px 20px;
+        //background-color: #eeeeee;
         font-size: 16px;
         font-family: Microsoft YaHei;
         font-weight: 400;
         color: #333;
     }
     a {
-        color: #ffffff;
+        color: #4794fa;
     }
     .download-tag {
         width: 100%;
