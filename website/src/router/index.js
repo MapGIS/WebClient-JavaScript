@@ -159,7 +159,7 @@ export const routes = [
         name: 'product'
     },
     {
-        path: '/guide/:mapmpde/:file',
+        path: '/guide/:mapmode/:file',
         component: Guide,
         name: 'guide'
     }

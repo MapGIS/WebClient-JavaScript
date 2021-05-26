@@ -204,12 +204,16 @@ export default {
         width: 160px;
         height: 36px;
         // border-radius: 4px;
-        background: linear-gradient(90deg, rgba(71, 148, 250, 1), rgba(49, 225, 230, 1));
     }
     .header-menu-link-text {
         width: 160px;
         height: 36px;
         display: block;
+    }
+    .header-menu-link-text:hover{
+      span{
+        color: #47abff !important;
+      }
     }
 }
 
