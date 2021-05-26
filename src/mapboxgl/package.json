@@ -15,6 +15,7 @@
     "author": "zondy",
     "license": "ISC",
     "dependencies": {
+        "@mapgis/webclient-es6-gl": "^10.5.3",
         "@mapgis/mapbox-gl": "^1.9.4",
         "echarts": "^4.8.0",
         "mapv": "^2.0.56"
