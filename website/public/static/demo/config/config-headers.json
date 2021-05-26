@@ -89,7 +89,7 @@
                 "icon": "iconAPIwendang",
                 "links": [["Cesium-API", "MapboxGL-API"]],
                 "hightlights": [[false, false]],
-                "routes": [["http://120.78.200.128:8891/#/", "http://120.78.200.128:8891/#/"]]
+                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892"]]
             }
         ]
     },
