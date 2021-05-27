@@ -366,6 +366,14 @@ export default class AdvancedAnalysisManager {
      * 创建下雨特效
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createRain
      * @param {Object} options 下雨特效参数
+     * @param {Matrix4} options.viewInverseMatrix 场景视图逆矩阵viewer.camera._invViewMatrix
+     * @param {Matrix4} options.modelMatrix 模型转换矩阵
+     * @param {Array<Cartesian3>} options.positionArray 限定模型下雨范围
+     * @param {Number} [options.alpha] 雨丝透明度
+     * @param {Number} [options.angle] 雨丝倾斜角度
+     * @param {Number} [options.speed] 雨丝速度
+     * @param {Number} [options.rainLength] 雨丝附加长度
+     * @param {Number} [options.factor] 雨丝与场景混合度
      * @param {Number} [options.hueShift] 色调
      * @param {Number} [options.saturationShift] 饱和度
      * @param {Number} [options.brightnessShift] 亮度
@@ -376,7 +384,7 @@ export default class AdvancedAnalysisManager {
     createRain(options) {
         const optionsParam = Cesium.defaultValue(options, {});
         const collection = this.viewer.scene.postProcessStages;
-        const rain = Cesium.PostProcessStageLibrary.createRainStage();
+        const rain = Cesium.PostProcessStageLibrary.createRainStage(optionsParam);
         collection.add(rain);
         this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(optionsParam.hueShift, -0.8);
         this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(optionsParam.saturationShift, -0.7);
