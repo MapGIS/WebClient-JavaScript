@@ -376,7 +376,7 @@ export default class AdvancedAnalysisManager {
     createRain(options) {
         const optionsParam = Cesium.defaultValue(options, {});
         const collection = this.viewer.scene.postProcessStages;
-        const rain = Cesium.PostProcessStageLibrary.createRainStage();
+        const rain = Cesium.PostProcessStageLibrary.createRainStage(optionsParam);
         collection.add(rain);
         this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(optionsParam.hueShift, -0.8);
         this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(optionsParam.saturationShift, -0.7);
