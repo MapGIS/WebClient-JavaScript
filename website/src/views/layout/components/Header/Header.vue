@@ -244,7 +244,7 @@ export default {
         }
 
         span:hover {
-            color: #3a85c6;
+            color: #3a85c6 !important;
         }
 
         .active {
