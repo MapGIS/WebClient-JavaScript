@@ -45,11 +45,22 @@
   <script src="libs/include-openLayers-local.js"></script>
   ```
 
-<img src="img/开发库.png" alt="MapGIS Client for JavaScript开发库" style="zoom:80%;" />
+<img src="./static/demo/openlayers/source/img/开发库.png" alt="MapGIS Client for JavaScript开发库" style="zoom:80%;" />
 
-#### nmp方式（在线）
+#### npm 方式引用
 
 
+&ensp;&ensp;&ensp;&ensp;使用此方式前请先检查电脑中是否已安装应用程序 <a href="https://nodejs.org/en/">Node.js</a>，若未安装，需要先安装<a href="https://nodejs.org/en/">Node.js</a>环境。
+
+&ensp;&ensp;&ensp;&ensp;通过 npm 命令引入 OpenLayers 地图引擎，建议使用 5.x 版本。
+
+- Example:
+
+  ```javascript
+  npm install ol@5.3.0
+  ```
+
+&ensp;&ensp;&ensp;&ensp;通过 npm 指令引入 MapGIS Client for JavaScript 开发包。
 
 
 
@@ -64,7 +75,7 @@
 &ensp;&ensp;&ensp;&ensp;本示例使用MapGIS官方云端（develop.smaryun.com）已经发布的名称为“北京市”（或“SampleDoc”）的地图文档进行演示。若您需要显示自己的地图文档，需要先附加待显示地图数据所在的地理数据库，然后通过**MapGIS Server Manager**配置GIS服务环境并发布地图服务。
 
 <center>
-  <img src="img/MapGIS发布服务.png" alt="MapGIS服务发布" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/MapGIS发布服务.png" alt="MapGIS服务发布" style="zoom:80%;" />
   <br>
   <div class="notes">MapGIS Server Manager发布服务</div>
 </center>
@@ -81,7 +92,7 @@
 &ensp;&ensp;&ensp;&ensp;在VSCode或本地磁盘中新建一个文件目录作为Web网站目录，名称为MapDisplay；
 
 <center>
-  <img src="img/01.新建网站目录.png" alt="新建网站目录" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/01.新建网站目录.png" alt="新建网站目录" style="zoom:80%;" />
   <br>
   <div class="notes">新建网站目录</div>
 </center>
@@ -92,7 +103,7 @@
 &ensp;&ensp;&ensp;&ensp;在新建的Web网站（文件目录）中，拷贝MapGIS Client for JavaScript（OpenLayers5）开发库到网站根目录下，即将SDK包路径MapGIS Client for JavaScript_V10.5.X.X\static\libs的libs拷贝到“MapDisplay”目录下。此libs包含了全部的开发库（js与css文件），可选择只拷贝OpenLayers5的库。
 
 <center>
-  <img src="img/02.引用脚本库资源.png" alt="引入脚本库资源" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/02.引用脚本库资源.png" alt="引入脚本库资源" style="zoom:80%;" />
   <br>
   <div class="notes">引入脚本库资源</div>
 </center>
@@ -103,14 +114,14 @@
 (1) 在上述新建的网站中，通过新建文件方式，创建一个名称为“MapDocDisplay”的html网页文件，可通过自定义模板快速创建网页结构内容；
 
 <center>
-  <img src="img/03.新建HTML页面（空）.png" alt="新建HTML页面（空）" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/03.新建HTML页面（空）.png" alt="新建HTML页面（空）" style="zoom:80%;" />
   <br>
   <div class="notes">新建HTML页面（空）</div>
 </center>
 <br/>
 
 <center>
-  <img src="img/03.新建HTML页面（模板）.png" alt="新建HTML页面（模板）" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/03.新建HTML页面（模板）.png" alt="新建HTML页面（模板）" style="zoom:80%;" />
   <br>
   <div class="notes">新建HTML页面（模板）</div>
 </center>
@@ -119,7 +130,7 @@
 (2) 设置示例标题，在该页面引入OpenLayers5开发的必要脚本库include-openlayers-local.js，此脚本库会动态引入核心库webclient-openlayers-plugin.min.js与相关第三方库、样式文件等；
 
 <center>
-  <img src="img/04.引用开发库.png" alt="引用开发库" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/04.引用开发库.png" alt="引用开发库" style="zoom:80%;" />
   <br>
   <div class="notes">引用开发库</div>
 </center>
@@ -129,7 +140,7 @@
 (3) 创建一个ID为“mapCon”的div层，并设置其样式，用来作为显示矢量地图文档的地图容器;
 
 <center>
-  <img src="img/05.创建div层并设置样式.png" alt="创建div层并设置样式" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/05.创建div层并设置样式.png" alt="创建div层并设置样式" style="zoom:80%;" />
   <br>
   <div class="notes">创建div层并设置样式</div>
 </center>
@@ -138,7 +149,7 @@
 (4) 通过body的onload事件触发调用矢量地图文档显示的脚本函数init()；
 
 <center>
-  <img src="img/06. body的onload事件.png" alt="body的onload事件" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/06. body的onload事件.png" alt="body的onload事件" style="zoom:80%;" />
   <br>
   <div class="notes">body的onload事件</div>
 </center>
@@ -149,7 +160,7 @@
 > 注意：通常情况下，功能实现的JavaScript代码可以单独放置到一个JS文件中，便于维护
 
 <center>
-  <img src="img/07.矢量地图文档显示的脚本函数init.png" alt="矢量地图文档显示的脚本函数init" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/07.矢量地图文档显示的脚本函数init.png" alt="矢量地图文档显示的脚本函数init" style="zoom:80%;" />
   <br>
   <div class="notes">矢量地图文档显示的脚本函数init()</div>
 </center>
@@ -189,13 +200,13 @@
 &ensp;&ensp;&ensp;&ensp;在此，可先将“MapDisplay”站点发布，然后通过浏览器查看与调试。例如：在IIS中发布站点后，右键“浏览”选中的“MapDocDisplay.html”文件，即可在浏览器中查看，并进行前端调试。
 
 <center>
-  <img src="img/08.在IIS中浏览网页.png" alt="在IIS中浏览网页" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/08.在IIS中浏览网页.png" alt="在IIS中浏览网页" style="zoom:80%;" />
   <br>
   <div class="notes">在IIS中浏览网页</div>
 </center>
 <br/>
 <center>
-  <img src="img/09.矢量地图文档显示效果图.png" alt="矢量地图文档显示效果图" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/09.矢量地图文档显示效果图.png" alt="矢量地图文档显示效果图" style="zoom:80%;" />
   <br>
   <div class="notes">矢量地图文档显示效果图</div>
 </center>
@@ -213,7 +224,7 @@
 在MapGIS Server Manager页面左侧导航栏中的“地图与数据服务”中，单击“发布服务”，在下拉菜单中选择“文档发布（包括WMS/WFS/WMTS）”选项。页面跳转至发布服务配置页面。
  
 <center>
-  <img src="img/MapGIS发布服务.png" alt="MapGIS服务发布" style="zoom:80%;" />
+  <img src="./static/demo/openlayers/source/img/MapGIS发布服务.png" alt="MapGIS服务发布" style="zoom:80%;" />
   <br>
   <div class="notes">MapGIS Server Manager发布服务</div>
 </center>
@@ -245,7 +256,7 @@
 | 鹰眼 | 	ol.control.OverviewMap  | 鹰眼，默认位于地图右下角 |
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapControl/E01Navigation" target="_blank">
- <img src="img/dev/100-地图控件.png" alt="地图控件" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/100-地图控件.png" alt="地图控件" style="zoom:80%;" />
 </a>
 
 <font color=red>导航控件</font>
@@ -361,7 +372,7 @@
 &ensp;&ensp;&ensp;&ensp;地图基本操作是Web地图应用的基本功能，也是用户与地图的简单交互，主要包括地图放大、缩小、移动、复位和更新等。在具体的地图操作应用中，其交互操作的方式多样化。例如，地图缩放有单击缩放、在地图上拉框缩放、导航条按钮缩放、通过键盘按键控制地图缩放等。
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E01MapOperation" target="_blank">
- <img src="img/dev/101-地图操作.png" alt="地图操作" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/101-地图操作.png" alt="地图操作" style="zoom:80%;" />
 </a>
 
 <font color=red>地图放大</font>
@@ -429,7 +440,7 @@
 
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E02MapInfomation" target="_blank">
- <img src="img/dev/102-地图域信息.png" alt="地图域信息" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/102-地图域信息.png" alt="地图域信息" style="zoom:80%;" />
 </a>
 
 <font color=red>获取当前视图分辨率</font>
@@ -471,11 +482,11 @@
 
 &ensp;&ensp;&ensp;&ensp;图层的显示控制，包括图层的显示隐藏、地图图层的过滤显示，以及某一图层的地图要素的过滤显示。地图容器中加载的图层以列表形式显示，并提供显示控制的功能，便于用户查看与操作。
 
-<a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E08MapLayerProbe" target="_blank">
- <img src="img/dev/103-图层透明度.png" alt="图层透明度" style="zoom:55%;margin:0 10px;" />
+<a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E03LayerGroupControl" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/103-图层透明度.png" alt="图层透明度" style="zoom:44%;margin:0 10px;" />
 </a>
-<a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E08MapLayerProbe" target="_blank">
- <img src="img/dev/104-图层顺序调整.png" alt="图层顺序调整" style="zoom:50%;" />
+<a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E09LayerLevelControl" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/104-图层顺序调整.png" alt="图层顺序调整" style="zoom:40%;" />
 </a>
 
 <font color=red>设置图层透明度</font>
@@ -632,7 +643,7 @@
 &ensp;&ensp;&ensp;&ensp;当多图层叠加显示时，顶层图层会遮盖下层图层。图层探查，就是为了方便查看位于下层的图层数据，辅助功能操作或分析，是一个非常实用的工具。图层探查的原理，就是在客户端裁剪上层图层，将上层图层挖掉一部分，让下层图层数据可见。
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapOperation/E08MapLayerProbe" target="_blank">
- <img src="img/dev/109-图层探查.png" alt="图层探查" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/109-图层探查.png" alt="图层探查" style="zoom:80%;" />
 </a>
 
 Step 1. <font color=red>获取鼠标实时的视图位置(像素值)</font>:
@@ -711,7 +722,7 @@ Step 3. <font color=red>实现图层探查</font>:
 
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/GraphicEdit/E01GraphicDraw" target="_blank">
- <img src="img/dev/201-绘制固定几何图形.png" alt="绘制固定几何图形" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/201-绘制固定几何图形.png" alt="绘制固定几何图形" style="zoom:80%;" />
 </a>
 
 <font color=red>添加点</font>
@@ -944,7 +955,7 @@ Step 3. <font color=red>实现图层探查</font>:
 &ensp;&ensp;&ensp;&ensp;交互绘制几何图形实现：先通过ol.interaction.Draw()方法构建交互式绘制控件，然后使用map.addInteraction()方法把交互式绘制控件添加到地图中。
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/GraphicEdit/E02InterActionGraphicDraw" target="_blank">
- <img src="img/dev/202-交互绘制图形.png" alt="交互绘制图形" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/202-交互绘制图形.png" alt="交互绘制图形" style="zoom:80%;" />
 </a>
 
 Step 1. <font color=red>创建矢量图层</font>:
@@ -1043,7 +1054,7 @@ Step 2. <font color=red>添加交互绘制控件，实现图形绘制</font>:
 | 聚合标注| ol.source.Cluster() | 创建聚合标注数据源 |
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/Base/MapMark/E01InterActionMapMark" target="_blank">
- <img src="img/dev/301-地图标注.png" alt="地图标注" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/301-地图标注.png" alt="地图标注" style="zoom:80%;" />
 </a>
 
 
@@ -1470,7 +1481,7 @@ Step 3. 加载聚合标注数据图层
   ```
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/ThirdMap/E01Baidu" target="_blank">
- <img src="img/dev/401-百度地图.png" alt="百度地图" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/401-百度地图.png" alt="百度地图" style="zoom:80%;" />
 </a>
 
 
@@ -1495,7 +1506,7 @@ Step 3. 加载聚合标注数据图层
   ```
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/ThirdMap/E02Tianditu" target="_blank">
- <img src="img/dev/402-天地图.png" alt="天地图" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/402-天地图.png" alt="天地图" style="zoom:80%;" />
 </a>
 
 ### Bing地图
@@ -1523,7 +1534,7 @@ Step 3. 加载聚合标注数据图层
   ```
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/ThirdMap/E04Bings" target="_blank">
- <img src="img/dev/403-Bing地图.png" alt="Bing地图" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/403-Bing地图.png" alt="Bing地图" style="zoom:80%;" />
 </a>
 
 ### OSM地图
@@ -1557,7 +1568,7 @@ Step 3. 加载聚合标注数据图层
   ```
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/ThirdMap/E05OSM" target="_blank">
- <img src="img/dev/404-OSM地图.png" alt="OSM地图" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/404-OSM地图.png" alt="OSM地图" style="zoom:80%;" />
 </a>
 
 
@@ -1617,6 +1628,8 @@ Step 3. 加载聚合标注数据图层
 
 ### WMS 
 
+&ensp;&ensp;&ensp;&ensp;Web Map Service（网络地图服务），简称 WMS，由开放地理信息联盟（Open GeoSpatial Consortium，OGC）制定。该规范定义了 Web 客户端从网络地图服务器获取地图的接口标准。一个 WMS 可以动态地生成具有地理参考数据的地图，这些地图通常用 GIF、JPEG 或 PNG 等图像格式，或者 SVG、KML、VML 和 WebCGM 等矢量图形格式来表现。使用者通过指定的参数获取相应的地图图片。
+
 - Example:
 
   ```javascript
@@ -1639,10 +1652,12 @@ Step 3. 加载聚合标注数据图层
   ```
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/OGC/E01WMS_MapGISM" target="_blank">
- <img src="img/dev/405-WMS地图服务.png" alt="WMS地图服务" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/405-WMS地图服务.png" alt="WMS地图服务" style="zoom:80%;" />
 </a>
 
 ### WMTS 
+
+&ensp;&ensp;&ensp;&ensp;Web Map Tile Service（网络地图瓦片服务），简称 WMTS，由开放地理信息联盟（Open GeoSpatial Consortium，OGC）制定，是和 WMS 并列的重要 OGC 规范之一。WMTS 不同于 WMS,它最重要的特征是采用缓存技术能够缓解 WebGIS 服务器端数据处理的压力，提高交互响应速度，大幅改善在线地图应用客户端的用户体验。WMTS 是 OGC 主推的缓存技术规范，是目前各种缓存技术相互兼容的一种方法。
 
 - Example:
 
@@ -1692,7 +1707,7 @@ Step 3. 加载聚合标注数据图层
   ```
 
 <a href="http://develop.smaryun.com/#/demo/openlayers/OGC/E03WMTS_MapGIS" target="_blank">
- <img src="img/dev/406-WMTS地图服务.png" alt="WMTS地图服务" style="zoom:80%;" />
+ <img src="./static/demo/openlayers/source/img/dev/406-WMTS地图服务.png" alt="WMTS地图服务" style="zoom:80%;" />
 </a>
 
 
@@ -1709,6 +1724,13 @@ Step 3. 加载聚合标注数据图层
 - **矢量瓦片**，对矢量电子地图按照一定的标准和技术将其保存为多种比例尺的矢量分块数据，在前端显示电子地图时，可直接调用矢量分块进行绘制。矢量瓦片的样式可以改变和定制，矢量切片可以在客户端渲染，可以按照用户赋予的样式渲染。使用MapGIS IGServer配置矢量瓦片的显示样式，配置的样式信息保存为xxx.json文件，上传文件到MapGIS IGServer服务器，客户端通过接口即可访问定制样式的矢量瓦片。
 
 
+| 地图类型 |  类名          |     API说明    |
+| ------- | -------------- |----------------|
+| 矢量地图文档 | Zondy.Map.Doc | 加载基于MapGIS矢量地图文档的矢量服务数据 |
+| 矢量图层 | Zondy.Map.GdbpLayer | 加载基于MapGIS矢量图层的矢量服务数据 |
+| 瓦片地图 | Zondy.Map.TileLayer | 加载基于MapGIS瓦片的瓦片服务数据 |
+
+
 ### 矢量地图文档
 
 &ensp;&ensp;&ensp;&ensp;基于地图文档加载矢量地图：首先实例化ol.proj.Projection对象定义参考系，通过ol.extent对象的getCenter()方法获取图层中心点，然后实例化Zondy.Map.Doc对象构建地图文档图层。
@@ -1719,6 +1741,11 @@ Step 3. 加载聚合标注数据图层
   var projection = new ol.proj.Projection({ units: ol.proj.Units.METERS, extent: extent })
   //中心点
   var center = ol.extent.getCenter(extent)
+  //地图文档服务的显示名称
+  var name = 'MapGIS IGS MapDocLayer'
+  //地图文档名称
+  var docname = 'SampleDoc'
+
   //构建地图文档图层
   var mapDocLayer = new Zondy.Map.Doc(name, docname, {
     ip: `http://develop.smaryun.com/`,
@@ -1755,6 +1782,10 @@ Step 3. 加载聚合标注数据图层
   var projection = new ol.proj.Projection({ units: ol.proj.Units.METERS, extent: extent })
   //中心点
   var center = ol.extent.getCenter(extent)
+  //图层显示名称
+  var name = 'MapGIS IGS VecLayer'
+  //要显示的图层的gdbps地址
+  var gdbps = ['gdbp://MapGisLocal/sample/ds/地图综合/sfcls/水系']
   //创建一个矢量图层
   var VecLayer = new Zondy.Map.GdbpLayer(name, gdbps, {
     ip: `http://develop.smaryun.com/`,
@@ -1784,12 +1815,18 @@ Step 3. 加载聚合标注数据图层
 
 &ensp;&ensp;&ensp;&ensp;加载瓦片地图：首先实例化ol.proj.Projection对象定义参考系，通过ol.extent对象的getCenter()方法获取图层中心点，然后实例化Zondy.Map.TileLayer对象构建瓦片地图图层。
 
+&ensp;&ensp;&ensp;&ensp;**瓦片地图:**
+
 - Example
   ```javascript
   //定义参考系
   var projection = new ol.proj.Projection({ units: ol.proj.Units.METERS, extent: extent })
   //中心点
   var center = ol.extent.getCenter(extent)
+  //瓦片的显示名称
+  var name = 'MapGIS IGS TileLayer'
+  //瓦片地图的名称
+  var TileName = 'SAMPLETILE'
   //构建瓦片地图图层
   var TileLayer = new Zondy.Map.TileLayer(name, TileName, {
     ip: `http://develop.smaryun.com/`,
@@ -1814,22 +1851,80 @@ Step 3. 加载聚合标注数据图层
   })
   ```
 
+&ensp;&ensp;&ensp;&ensp;**自定义比例尺瓦片地图:**
+
+- Example
+  ```javascript
+        //瓦片投影，包含单位，坐标范围
+        var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449]
+        var projection = new ol.proj.Projection({
+          units: ol.proj.Units.DEGREES,
+          extent: projectionExtent,
+        })
+        //最大分辨率，新瓦片必须设置，旧瓦片无需设置
+        var maxResolution = 0.0009655719622925324
+        var center = [(114.12567815477894 + 114.47583026053915) / 2, (30.457571584721734 + 30.708389893334449) / 2]
+        //初始化地图容器
+        var map = new ol.Map({
+          target: 'mapCon',
+          view: new ol.View({
+            projection: projection,
+            extent: projectionExtent,
+            center: center,
+            maxZoom: 7,
+            minZoom: 0,
+            zoom: 1,
+          }),
+        })
+
+        //显示瓦片图
+        var tileLayer = new Zondy.Map.TileLayer('MapGIS IGS TileLayer', '武汉市区自定义比例尺', {
+          ip: `http://develop.smaryun.com/`,
+          port: 6163,//访问IGServer的端口号，.net版为6163，Java版为8089
+          projection: projection,
+          maxResolution: maxResolution,
+          tileSize: 256,
+          //瓦片裁剪方式
+          tileOriginType: 'leftTop',
+        })
+
+        //将瓦片地图图层加载到地图中
+        map.addLayer(tileLayer)
+  ```
+
 
 ## 查询
 
 &ensp;&ensp;&ensp;&ensp;查询是WebGIS中最常用的核心功能之一，广泛应用于各类项目中。通过对空间和属性要素的查询，提取需要的信息，与地图联动进行展示，满足应用的需求。
 
-&ensp;&ensp;&ensp;&ensp;查询定位在应用中很常见，根据不同的应用需求，可以选择不同的查询方式、实现方式以及表现方式。查询方式：基于GIS的特性，查询主要包括几何查询、属性条件查询以及两者结合的复合查询。
+&ensp;&ensp;&ensp;&ensp;查询定位在应用中很常见，根据不同的应用需求，可以选择不同的查询方式、实现方式以及表现方式。查询方式：基于GIS的特性，查询主要包括几何查询、属性条件查询以及两者结合的复合查询，以及OID查询。
 
 - 几何查询有点击、画线、画圆、拉框、多边形五种操作方式，以操作的空间范围作为限定条件进行查询；
 - 属性条件查询以要素属性限定条件进行查询；
 - 复合查询则是两者的结合，空间范围组合属性条件，统一查询满足要求的空间要素；
+- OID查询：根据地图要素的唯一标识OID进行查询；
+
+| 类型 |  类名/方法名         |     API说明    |
+| ------- | -------------- |----------------|
+| 文档要素查询 | Zondy.Service.QueryDocFeature / query() | 基于地图文档的矢量要素查询，支持几何、属性、OID查询 |
+| 图层要素查询 | Zondy.Service.QueryLayerFeature / query() | 基于矢量图层的矢量要素查询，支持几何、属性、OID查询 |
+
+
 
 ### 文档要素查询
 
 &ensp;&ensp;&ensp;&ensp;通过Zondy.Service.QueryDocFeature实例化服务，通过query方法进行查询。
 
 &ensp;&ensp;&ensp;&ensp;**以属性查询为例：**
+
+<!-->
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/DocFeatureQuery/E01QueryDocByAttribute" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/501-QueryDocByAttribute.png" alt="文档要素属性查询" style="zoom:80%;" />
+</a>
+<!-->
+
+<br/>
+<br/>
 
 **Step 1. <font color=red>初始化查询结构对象</font>**：
 &ensp;&ensp;&ensp;&ensp;初始化查询结构对象`Zondy.Service.QueryFeatureStruct`，设置查询结构包含几何信息；
@@ -1930,6 +2025,15 @@ Step 3. 加载聚合标注数据图层
 &ensp;&ensp;&ensp;&ensp;通过Zondy.Service.QueryLayerFeature实例化服务，通过query方法进行查询。
 
 &ensp;&ensp;&ensp;&ensp;**以几何查询为例：**
+
+<!-->
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/LayerFeatureQuery/E03QueryLayerByGeom" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/502-QueryLayerByGeom.png" alt="图层要素几何查询" style="zoom:80%;" />
+</a>
+<!-->
+
+<br/>
+<br/>
 
 **Step 1. <font color=red>初始化查询结构对象</font>**：
 &ensp;&ensp;&ensp;&ensp;初始化查询结构对象`Zondy.Service.QueryFeatureStruct`，设置查询结构包含几何信息；
@@ -2203,11 +2307,26 @@ Step 3. 加载聚合标注数据图层
 
 &ensp;&ensp;&ensp;&ensp;WebGIS中的要素编辑功能，打破了传统单机编辑的局限，用户不必每次都登录服务器进行数据的变更维护，可以通过网络更加方便、快捷地完成数据维护，可以说弥补了单机数据管理维护方案的局限。Web矢量要素编辑功能，包括矢量要素添加、更新、删除三种功能操作，可对要素的几何信息和属性信息进行编辑。
 
+
+| 类型 |  类名/方法名         |     API说明    |
+| ------- | -------------- |----------------|
+| 文档要素编辑 | Zondy.Service.EditDocFeature / add()、update()、deletes() | 基于地图文档的矢量要素编辑，支持添加、更新、删除操作 |
+| 图层要素编辑 | Zondy.Service.EditLayerFeature / add()、update()、deletes() | 基于矢量图层的矢量要素编辑，支持添加、更新、删除操作 |
+
+
+
 ### 文档要素编辑
 
 &ensp;&ensp;&ensp;&ensp;通过Zondy.Service.EditDocFeature实例化服务，通过add方法添加要素，通过deletes方法删除要素，调用update方法更新要素
 
 &ensp;&ensp;&ensp;&ensp;**以点要素编辑为例：**
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/DocFeatureEdit/E01InterActionDocPointEdit" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/601-InterActionDocPointEdit.png" alt="文档点要素编辑" style="zoom:80%;" />
+</a>
+
+<br/>
+<br/>
 
 **Step 1. <font color=red>加载地图文档</font>**：
 &ensp;&ensp;&ensp;&ensp;加载MapGIS地图文档；
@@ -2366,6 +2485,13 @@ map.addEventListener('click', function(e){
 &ensp;&ensp;&ensp;&ensp;通过Zondy.Service.EditLayerFeature实例化服务，通过add方法添加要素，通过deletes方法删除要素，通过update方法更新要素。
 
 &ensp;&ensp;&ensp;&ensp;**以区要素编辑为例：**
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/LayerFeatureEdit/E03InterActionRegEdit" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/602-InterActionRegEdit.png" alt="图层区要素编辑" style="zoom:80%;" />
+</a>
+
+<br/>
+<br/>
 
 **Step 1. <font color=red>加载矢量图层</font>**：
 &ensp;&ensp;&ensp;&ensp;加载MapGIS矢量图层；
@@ -2582,6 +2708,12 @@ map.addLayer(vectorLayer);
 
 &ensp;&ensp;&ensp;&ensp;**以分段专题图（单字段）为例：**
 
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/ThemeService/E03ParagraphThemeBySinglefield" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/701-ParagraphThemeBySinglefield.png" alt="分段专题图（单字段）" style="zoom:80%;" />
+</a>
+
+
 **Step 1. <font color=red>添加地图文档图层</font>**:
   &ensp;&ensp;&ensp;&ensp;创建地图文档瓦片图层对象,设置其服务的名称、服务器的 IP 和 Port,以及文档的 GUID,在把该图层加载到地图容器中显示 (说明：该 GUID 用于该地图文档服务在客户端生成缓存的文件夹名称，这样在指定 GUID 以后，该文档服务生成的缓存就只有一份，且保存在该文件夹下)；
 
@@ -2703,7 +2835,7 @@ map.addLayer(vectorLayer);
   ```
 
 **Step 8. <font color=red>更新前端的专题图显示效果</font>**:
-&ensp;&ensp;&ensp;&ensp;在 Step 4 中指定了专题图服务类对象的 guid，该 guid 对应的是地图文档缓存的 guid(指定文档的 guid 是为了防止每次请求都从服务端取图而造成的客户端显示效率低下)，由于专题图的添加、删除、更新是对地图文档进行了修改，因此需要对指定 guid 的缓存重新生成。
+&ensp;&ensp;&ensp;&ensp;在 Step 1 中指定了专题图服务类对象的 guid，该 guid 对应的是地图文档缓存的 guid(指定文档的 guid 是为了防止每次请求都从服务端取图而造成的客户端显示效率低下)，由于专题图的添加、删除、更新是对地图文档进行了修改，因此需要对指定 guid 的缓存重新生成。
 
 - Example:
 
@@ -2727,7 +2859,20 @@ map.addLayer(vectorLayer);
 &ensp;&ensp;&ensp;&ensp;GIS与一般电子地图最重要的区别之一，就是提供强大的查询统计、空间分析功能，而这些特性让其在各个领域的应用中发挥着重要作用，为生产生活提供了更多的便利与服务。
 &ensp;&ensp;&ensp;&ensp;空间分析，是基于地理对象的位置和形态等空间数据进行分析的技术，其目的在于提取和传输空间信息。空间分析是地理信息系统的主要特征。空间分析能力（特别是对空间隐含信息的提取和传输能力）是地理信息系统区别与一般信息系统的主要方面，也是评价一个地理信息系统成功与否的一个主要指标。随着地理信息技术的发展，空间分析的具体功能逐渐地增加，广泛应用于军事、经济、环境、资源等领域，使地理信息系统拥有不可取代的意义。
 
-&ensp;&ensp;&ensp;&ensp;最常用的空间分析功能，包括拓扑分析、裁剪分析、叠加分析、路径分析、缓冲区分析。
+&ensp;&ensp;&ensp;&ensp;最常用的空间分析功能，包括拓扑分析、裁剪分析、叠加分析、缓冲区分析。
+
+|  类名/方法名         |     API说明    |
+| -------------- |----------------|
+| Zondy.Service.FeatureBuffBySingleRing / execute() | 基于要素的单圈缓冲区分析 |
+| Zondy.Service.FeatureBuffByMultiplyRing / execute() | 基于要素的多圈缓冲区分析 |
+| Zondy.Service.ClassBufferBySingleRing / execute() | 基于简单要素类的单圈缓冲区分析 |
+| Zondy.Service.ClassBufferByMultiplyRing / execute() | 基于简单要素类的多圈缓冲区分析 |
+| Zondy.Service.ClipByLayer / execute() | 图层裁剪分析 |
+| Zondy.Service.ClipByCircle、new Zondy.Service.ClipByPolygon / execute() | 几何图形裁剪分析 |
+| Zondy.Service.OverlayByLayer / execute() | 图层叠加分析 |
+| Zondy.Service.OverlayByPolygon / execute() | 多边形叠加分析 |
+
+
 
 ### 缓冲区分析
 
@@ -2735,7 +2880,13 @@ map.addLayer(vectorLayer);
 
 &ensp;&ensp;&ensp;&ensp;提供要素缓冲区分析和图层缓冲区分析接口。要素缓冲区分析，对指定要素进行缓冲区分析，并生成结果图层。图层缓冲区分析，基本原理与要素缓冲区分析相同，不同的是，前者指定要素，而后者以图层为单位进行缓冲区分析。
 
-&ensp;&ensp;&ensp;&ensp;**以要素缓冲区分析为例：**实现针对几何要素的单圈或多圈的缓冲分析。
+&ensp;&ensp;&ensp;&ensp;**以要素缓冲区分析为例**：实现针对几何要素的单圈或多圈的缓冲分析。
+
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/AnalysisService/E02BuffAnalysisByFeature" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/801-BuffAnalysisByFeature.png" alt="要素缓冲区分析" style="zoom:80%;" />
+</a>
+
 
 **Step 1. <font color=red>添加源几何多边形</font>**:
 &ensp;&ensp;&ensp;&ensp;创建矢量图层，和矢量数据源，添加多边形要素，作为源数据在地图上显示；
@@ -2892,7 +3043,14 @@ map.addLayer(vectorLayer);
 
 &ensp;&ensp;&ensp;&ensp;提供几何要素裁剪和区图层裁剪分析功能服务接口ClipByCircle、ClipByPolygon、ClipByLayer。要素裁剪分析，以自定义要素的几何范围作为裁剪范围，调用接口ClipByCircle、ClipByPolygon，设置裁剪规则，并执行裁剪分析，便可得到裁剪分析结果。分析结果可以图层的形式展示到客户端。图层裁剪分析，以指定图层的范围作为裁剪范围，从而实现裁剪分析。二者本质相同。
 
-&ensp;&ensp;&ensp;&ensp;**以图层裁剪分析为例：**实现针对简单要素类的图层裁剪分析(以图层中的要素作为裁剪框)。
+&ensp;&ensp;&ensp;&ensp;**以图层裁剪分析为例**：实现针对简单要素类的图层裁剪分析(以图层中的要素作为裁剪框)。
+
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/AnalysisService/E05PolygonOverLayAnalysis" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/802-LayerClipAnalysis.png" alt="图层裁剪分析" style="zoom:80%;" />
+</a>
+
+
 
 **Step 1. <font color=red>实现图层裁剪分析</font>**:
 &ensp;&ensp;&ensp;&ensp;创建图层裁剪服务对象，设置被裁剪和裁剪框数据的 URL、结果数据的 URL，并执行裁剪分析；
@@ -2953,7 +3111,12 @@ map.addLayer(vectorLayer);
 
 &ensp;&ensp;&ensp;&ensp;提供要素叠加分析接口OverlayByLayer和图层叠加分析类OverlayByPolygon。要素叠加分析，是指将自定义要素与指定图层中的要素进行叠加分析，叠加结果生成图层。图层叠加分析，是指两个图层中的要素进行叠加分析，基本原理与要素叠加分析相同，分析结果同样生成图层。
 
-&ensp;&ensp;&ensp;&ensp;**以多边形叠加分析为例：**实现针对简单要素类的多边形叠加分析，即以几何多边形为叠加对象，简单要素类图层为被叠加对象，执行叠加分析的几何运算。
+&ensp;&ensp;&ensp;&ensp;**以多边形叠加分析为例**：实现针对简单要素类的多边形叠加分析，即以几何多边形为叠加对象，简单要素类图层为被叠加对象，执行叠加分析的几何运算。
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/AnalysisService/E05PolygonOverLayAnalysis" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/803-PolygonOverLayAnalysis.png" alt="多边形叠加分析" style="zoom:80%;" />
+</a>
+
 
 **Step 1. <font color=red>添加源几何(以该几何为叠加对象)</font>**:
 &ensp;&ensp;&ensp;&ensp;创建矢量图层，和矢量数据源，添加几何多边形要素，作为源数据在地图上显示；
@@ -3074,6 +3237,10 @@ map.addLayer(vectorLayer);
 
 &ensp;&ensp;&ensp;&ensp;提供路径分析功能服务接口NetAnalysis。支持用户和系统两种分析模式，和普通公路优先、高速公路优先、最少花费、最短路径、最短时间等多种分析类型。基于网络类数据设置感兴趣起始点、障碍点，以及其它必要信息，调用路径分析功能服务接口，可将获取到的最佳路径信息绘制到客户端以做展示。
 
+
+<a href="http://develop.smaryun.com/#/demo/openlayers/IGServer/NetService/E01NetAnalysist" target="_blank">
+ <img src="./static/demo/openlayers/source/img/dev/804-NetAnalysist.png" alt="路径分析" style="zoom:80%;" />
+</a>
 
 &ensp;&ensp;&ensp;&ensp;实现方法：首先实例化Zondy.Map.GdbpLayer对象构建道路图层；实例化ol.Feature对象在地图上标注起始点；实例化Zondy.Service.NetAnalysis构建路径分析服务，调用execute()方法进行路径分析，在成功回调函数中对结果进行处理，绘制路径在地图中。
 

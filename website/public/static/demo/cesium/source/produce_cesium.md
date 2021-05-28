@@ -3,7 +3,7 @@
 &ensp;&ensp;&ensp;&ensp;MapGIS 3DClient for WebGL，即MapGIS Client for JavaScript（Cesium），是一款基于开源三维地图框架Cesium开发的跨浏览器端二次开发产品，零插件、简单、易开发、易扩展，用户可以通过该产品轻松构建功能强大的城市、城市群级别的全空间真三维Web应用。
 
 <center>
-  <img src="img/产品架构.png" alt="产品架构" style="zoom:80%;" />
+  <img src="./static/demo/cesium/source/img/产品架构.png" alt="产品架构" style="zoom:50%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript产品架构图</div>
 </center>
@@ -93,7 +93,7 @@
 | include-cesium-local.js | 二次开发引用库，在此引入了for WebGL的核心库webclient-cesium-plugins.min.js，cesium原生库，以及其他第三方库，同时提供了示例访问MapGIS IGServer服务器的配置 |
 
 <center>
-  <img src="img/Cesium开发库.png" alt="Cesium开发库" style="zoom:80%;" />
+  <img src="./static/demo/cesium/source/img/Cesium开发库.png" alt="Cesium开发库" style="zoom:80%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript（Cesium）开发库</div>
 </center>
@@ -118,7 +118,7 @@
 - 离线使用：方式一，可在云开发世界下载<a href="http://www.smaryun.com/dev/download_detail.html#/download828" target="_blank">MapGIS Client for JavaScript开发包</a>，解压后按说明步骤发布即可；方式二，可通过开源社区拉取整套源码，然后编译运行，此略
 
 <center>
-  <img src="img/Cesium开发示例.png" alt="开发示例" style="zoom:90%;" />
+  <img src="./static/demo/cesium/source/img/Cesium开发示例.png" alt="开发示例" style="zoom:50%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript（Cesium）开发示例</div>
 </center>
@@ -135,23 +135,14 @@
 
 &ensp;&ensp;&ensp;&ensp;MapGIS Client for JavaScript（Cesium）的**核心库**为**webclient-cesium-plugins.min.js**，是基于开源框架Cesium进行扩展，面向客户端Web三维应用进行全新封装的脚本库，提供访问云GIS服务器的数据、服务、资源的能力。包括2D矢量、2D瓦片、3D地形、M3D模型缓存等；支持第三方地图服务，包括Google、高德、百度、天地图、天地图WMTS、OpenWeather、吉威WMTS；支持通用数据加载，包括通用模型文件的单个或批量操作（KML、KMZ、CZML、GLTF、GeoJson）；支持添加、删除常规的点、线、面、图片、注记、PopUP等标绘功能；支持三维场景粒子特效、热力图、动态扫描圆等客户端可视化功能；重点提供丰富的三维分析功能，包括坡度坡向量测、洪水淹没模拟、挖填方计算、通视分析、可视域分析、天际线分析等功能。
 
-**简要列出SDK所提供的功能，画功能导图（参见超图模块说明）**
-
-### API 功能体系
-
-
-<center>
-  <img src="img/超图功能模块.png" alt="产品功能模块" style="zoom:90%;" />
-  <br>
-  <div class="notes">MapGIS Client for JavaScript（Cesium）功能模块(待替换)</div>
-</center>
+### API 功能体系（导图）
 
 ### API 结构说明
 
 &ensp;&ensp;&ensp;&ensp;MapGIS Client for JavaScript（Cesium）二次开发库的提供的开发接口如下图所示：
 
 <center>
-  <img src="img/Cesium API结构.png" alt="Cesium API结构" style="zoom:80%;" />
+  <img src="./static/demo/cesium/source/img/Cesium API结构.png" alt="Cesium API结构" style="zoom:50%;" />
   <br>
   <div class="notes">基于Cesium扩展的mapgis开发接口</div>
 </center>
@@ -162,7 +153,20 @@
 
 ### <font color=red>V10.5.2.10</font>
 
-1. 
+1. 功能新增
+- 实现模型压平功能,支持任意凸多边形的压平
+- 优化粒子特效：优化雨雪雾粒子效果，提升真实度；新增火焰、喷泉粒子特效、以及烟雾粒子特效
+- 提供解压M3D压缩数据流的功能，客户端支持将压缩的流进行高效解压，并渲染
+
+2. 性能优化
+- 海量倾斜摄影数据缓存结构优化策略升级，提高网络传输效率以及前端渲染效率
+- 加载渲染亿级Las格式点云数据，帧率在15帧以上，交互流畅；
+- 加载渲染亿级地质网格剖分结果数据，帧率在15帧以上，交互流畅；
+- 加载渲染千万级三角网单个地质体数据，帧率在15帧以上，交互流畅；
+- 加载渲染500平方公里以上倾斜模型，帧率在15帧以上，交互流畅；
+
+3. 站点维护
+- 示例说明文档美化
 
 
 ### <font color=red>V10.5.0.10</font>
@@ -186,55 +190,55 @@
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2207" target="_blank">
-<img src="img/Desktop高级64.png" alt="MapGIS Desktop高级版" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/Desktop高级64.png" alt="MapGIS Desktop高级版" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=3114" target="_blank">
-<img src="img/Desktop九州.png" alt="MapGIS Desktop（九州）" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/Desktop九州.png" alt="MapGIS Desktop（九州）" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS Desktop**是一个专业的二三维一体化桌面GIS产品，具备强大的数据管理与编辑、数据制图与可视化、空间分析与影像处理、三维可视化与分析等能力，通过“框架+插件”的思想构建，支持按需定制。
+> - **MapGIS Desktop**是一个专业的二三维一体化桌面GIS产品，具备强大的数据管理与编辑、数据制图与可视化、空间分析与影像处理、三维可视化与分析等能力，通过“框架+插件”的思想构建，支持按需定制。
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS Desktop 九州**是一个专业的跨平台桌面GIS产品，基于跨平台微内核构建，全面适配全国产化环境。在原有MapGIS Desktop产品功能基础上，重点增强了全国产化适配支持。
+> - **MapGIS Desktop 九州**是一个专业的跨平台桌面GIS产品，基于跨平台微内核构建，全面适配全国产化环境。在原有MapGIS Desktop产品功能基础上，重点增强了全国产化适配支持。
 
 ### MapGIS 3D SceneBuilder、MapGIS 3D GeoModeler
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2663" target="_blank">
-<img src="img/3D SceneBuilder.png" alt="MapGIS 3D SceneBuilder" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/3D SceneBuilder.png" alt="MapGIS 3D SceneBuilder" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=2833" target="_blank">
-<img src="img/3D GeoModeler.png" alt="MapGIS 3D GeoModeler" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/3D GeoModeler.png" alt="MapGIS 3D GeoModeler" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS 3D SceneBuilder**是一个城市空间三维模型构建工具，提供多样化的建模方法，基于二维矢量或CAD数据，实现三维城市部件的快速、批量、自动化构建。融合丰富的粒子特效和三维分析工具，实现智慧城市的三维专业分析与应用。
+> - **MapGIS 3D SceneBuilder**是一个城市空间三维模型构建工具，提供多样化的建模方法，基于二维矢量或CAD数据，实现三维城市部件的快速、批量、自动化构建。融合丰富的粒子特效和三维分析工具，实现智慧城市的三维专业分析与应用。
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS 3D GeoModeler**是一个三维地学建模、可视化和分析的工具。融合钻孔、剖面、物化探等多源地学数据，通过自动和半自动化的快速建模技术，构建含断层、透镜体等复杂地学特征的结构和属性模型，实现地学模型的全流程一体化构建，并提供基于地学特征的可视化表达和分析功能。
+> - **MapGIS 3D GeoModeler**是一个三维地学建模、可视化和分析的工具。融合钻孔、剖面、物化探等多源地学数据，通过自动和半自动化的快速建模技术，构建含断层、透镜体等复杂地学特征的结构和属性模型，实现地学模型的全流程一体化构建，并提供基于地学特征的可视化表达和分析功能。
 
 ### MapGIS IGServer、MapGIS IGServer-X、MapGIS IGServer-S
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2229" target="_blank">
-<img src="img/IGServer64.png" alt="MapGIS IGServer" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/IGServer64.png" alt="MapGIS IGServer" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=3193" target="_blank">
-<img src="img/IGServer九州.png" alt="MapGIS IGServer（九州）" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/IGServer九州.png" alt="MapGIS IGServer（九州）" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS IGServer**是一款跨平台的高性能GIS服务器产品，也是一款浏览器端GIS应用与开发的平台软件。为用户提供强大的空间数据管理、分析、可视化及共享服务，支持用户进行各行业领域的WebGIS应用开发与扩展。
+> - **MapGIS IGServer**是一款跨平台的高性能GIS服务器产品，也是一款浏览器端GIS应用与开发的平台软件。为用户提供强大的空间数据管理、分析、可视化及共享服务，支持用户进行各行业领域的WebGIS应用开发与扩展。
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS IGServer-X**是一款大数据GIS服务器产品，提供矢量大数据、实时大数据、影像大数据和文本大数据等高性能计算服务，实现多维时空大数据的分析与挖掘。
+> - **MapGIS IGServer-X**是一款大数据GIS服务器产品，提供矢量大数据、实时大数据、影像大数据和文本大数据等高性能计算服务，实现多维时空大数据的分析与挖掘。
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS IGServer-S**是一款智能GIS服务器产品，基于深度学习框架，提供数据关联与融合、空间分析与预测、聚类分类与统计等智能化服务，应用于遥感影像变化检测、建筑物提取等领域。
+> - **MapGIS IGServer-S**是一款智能GIS服务器产品，基于深度学习框架，提供数据关联与融合、空间分析与预测、聚类分类与统计等智能化服务，应用于遥感影像变化检测、建筑物提取等领域。
 
 ### MapGIS DataStore
 
-&ensp;&ensp;&ensp;&ensp;**MapGIS DataStore**产品是以分布式的方式存储和管理关系型数据、切片型数据、实时型数据以及非结构数据的混合数据库，与MapGIS SDE无缝融合，形成完整的地理大数据存储管理方案。
+> - **MapGIS DataStore**产品是以分布式的方式存储和管理关系型数据、切片型数据、实时型数据以及非结构数据的混合数据库，与MapGIS SDE无缝融合，形成完整的地理大数据存储管理方案。
 
 > 请访问<a href="http://www.smaryun.com/" targer="_blank">司马云资源中心</a>获取MapGIS相关产品的产品配套资料
 
@@ -246,23 +250,23 @@
 
 <div>
 <a href="https://cesium.com/platform/cesiumjs/" target="_blank">
-<img src="img/Cesium.png" alt="Cesium" style="margin:0 20px; zoom:90%;"  />
+<img src="./static/demo/cesium/source/img/Cesium.png" alt="Cesium" style="margin:0 20px; zoom:90%;"  />
 </a>
 
 <a href="https://echarts.apache.org/zh/index.html" target="_blank">
-<img src="img/ECharts.png" alt="ECharts" style="margin:10 20px;zoom:60%;"  />
+<img src="./static/demo/cesium/source/img/ECharts.png" alt="ECharts" style="margin:10 20px;zoom:60%;"  />
 </a>
 
 <a href="https://mapv.baidu.com/" target="_blank">
-<img src="img/MapV.png" alt="MapV" style="margin:0px;zoom:70%;"  />
+<img src="./static/demo/cesium/source/img/MapV.png" alt="MapV" style="margin:0px;zoom:70%;"  />
 </a>
 
 <a href="https://turfjs.org/" target="_blank">
-<img src="img/turf.png" alt="turfjs" style="margin:0px;zoom:40%;"  />
+<img src="./static/demo/cesium/source/img/turf.png" alt="turfjs" style="margin:0px;zoom:40%;"  />
 </a>
 
 <a href="https://d3js.org/" target="_blank">
-<img src="img/D3.png" alt="d3js" style="margin:0 30px;zoom:40%;"  />
+<img src="./static/demo/cesium/source/img/D3.png" alt="d3js" style="margin:0 30px;zoom:40%;"  />
 </a>
 </div>
 

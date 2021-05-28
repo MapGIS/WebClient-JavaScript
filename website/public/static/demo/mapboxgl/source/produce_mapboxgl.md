@@ -4,7 +4,7 @@
 
 
 <center>
-  <img src="img/产品架构.png" alt="产品架构" style="zoom:80%;" />
+  <img src="./static/demo/mapboxgl/source/img/产品架构.png" alt="产品架构" style="zoom:50%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript产品架构图</div>
 </center>
@@ -81,7 +81,7 @@
 | include-mapboxgl-local.js | 二次开发引用库，在此引入了MapGIS Client for JavaScript（MapboxGL）的核心库webclient-mapboxgl-plugin.min.js， MapboxGL原生库，以及其他第三方库，同时提供了示例访问MapGIS IGServer服务器的配置 |
 
 <center>
-  <img src="img/MapboxGL开发库.png" alt="MapboxGL开发库" style="zoom:80%;" />
+  <img src="./static/demo/mapboxgl/source/img/MapboxGL开发库.png" alt="MapboxGL开发库" style="zoom:80%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript（MapboxGL）开发库</div>
 </center>
@@ -106,7 +106,7 @@
 - 离线使用：方式一，可在云开发世界下载<a href="http://www.smaryun.com/dev/download_detail.html#/download828" target="_blank">MapGIS Client for JavaScript开发包</a>，解压后按说明步骤发布即可；方式二，可通过开源社区拉取整套源码，然后编译运行，此略
 
 <center>
-  <img src="img/MapboxGL开发示例.png" alt="开发示例" style="zoom:90%;" />
+  <img src="./static/demo/mapboxgl/source/img/MapboxGL开发示例.png" alt="开发示例" style="zoom:50%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript（MapboxGL）开发示例</div>
 </center>
@@ -123,16 +123,7 @@
 
 MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显示、数据管理、查询、编辑、专题图、统计图、预案标绘、分析等全WebGIS功能，以及大数据与智能GIS功能，其矢量瓦片可视化效果和性能很出众。
 
-**简要列出SDK所提供的功能，画功能导图（参见超图模块说明）**
-
-### API 功能体系
-
-
-<center>
-  <img src="img/超图功能模块.png" alt="产品功能模块" style="zoom:90%;" />
-  <br>
-  <div class="notes">MapGIS Client for JavaScript（MapboxGL）功能模块(待替换)</div>
-</center>
+### API 功能体系（导图）
 
 ### API 结构说明
 
@@ -140,29 +131,20 @@ MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显�
 
 &ensp;&ensp;&ensp;&ensp;MapboxGL是一个使用WebGL技术独立渲染地图前端库，底层采用WebGL实现，性能和体验显著的提升，主要作为前端渲染矢量瓦片交互地图的工具。此核心库基于MapboxGL框架，对接MapGIS IGServer等云GIS产品，在MapboxGL框架的基础上进行扩展，构造了调用云GIS服务器的数据服务和功能服务的相关类，将前端MapboxGL与云GIS服务器融合，富端强云的结合将会给开发和应用带来更大的便捷、更好客户端体验，其矢量大数据能力突出、性能出色。
 
-&ensp;&ensp;&ensp;&ensp;核心库webclient-mapboxgl-plugin.min.js的接口结构如下图所示：
-
-<center>
-  <img src="img/MapboxGL API结构.png" alt="MapboxGL API结构" style="zoom:80%;" />
-  <br>
-  <div class="notes">基于MapboxGL扩展的mapgis开发接口</div>
-</center>
-<br/>
-
-- Map命名空间：调用地图数据资源的类，如矢量地图文档服务、瓦片地图服务等；
-- Service命名空间：调用GIS功能资源服务的类，如查询、编辑、分析等功能服务；
-- Object命名空间：结构类，或者MapGIS对象类，主要协助地图数据资源类和GIS功能资源类完成资源调用功能。
-
-> 调用GIS服务器资源的类都以简单明了代表实际意义的英文名称来命名，方便用户获取资源调用接口。具体请查看配套的MapboxGL API，在API文档中每个类说明的最前面的文字内容写明了该类的继承类（父类）和子类，供广大用户学习和参考。
 
 
 ## 产品更新
 
 ### <font color=red>V10.5.2.10</font>
+1. 功能新增
+- 新增直接支持ArcGIS地图服务与OGC服务；
+- 新增PostGIS支持，可实现基于PostGIS的数据查询统计、实时矢量瓦片等功能；
+- 新增支持ElasticSearch的分布式大数据搜索与分析能力，可实现热力分析、聚类分析等功能。
 
-1. 新增直接支持ArcGIS地图服务与OGC服务；
-2. 新增PostGIS支持，可实现基于PostGIS的数据查询统计、实时矢量瓦片等功能；
-3. 新增支持ElasticSearch的分布式大数据搜索与分析能力，可实现热力分析、聚类分析等功能。
+2. 性能优化-无
+
+3. 站点维护
+- 示例说明文档美化
 
 
 ### <font color=red>V10.5.0.10</font>
@@ -186,11 +168,11 @@ MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显�
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2207" target="_blank">
-<img src="img/Desktop高级64.png" alt="MapGIS Desktop高级版" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/mapboxgl/source/img/Desktop高级64.png" alt="MapGIS Desktop高级版" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=3114" target="_blank">
-<img src="img/Desktop九州.png" alt="MapGIS Desktop（九州）" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/mapboxgl/source/img/Desktop九州.png" alt="MapGIS Desktop（九州）" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
@@ -202,11 +184,11 @@ MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显�
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2229" target="_blank">
-<img src="img/IGServer64.png" alt="MapGIS IGServer" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/mapboxgl/source/img/IGServer64.png" alt="MapGIS IGServer" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=3193" target="_blank">
-<img src="img/IGServer九州.png" alt="MapGIS IGServer（九州）" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/mapboxgl/source/img/IGServer九州.png" alt="MapGIS IGServer（九州）" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
@@ -230,31 +212,31 @@ MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显�
 
 <div>
 <a href="https://www.mapbox.com/mapbox-gl-js/api/" target="_blank">
-<img src="img/mapbox.png" alt="MapboxGL" style="margin:0 20px;zoom:100%;"  />
+<img src="./static/demo/mapboxgl/source/img/mapbox.png" alt="MapboxGL" style="margin:0 20px;zoom:50%;"  />
 </a>
 
 <a href="https://echarts.apache.org/zh/index.html" target="_blank">
-<img src="img/ECharts.png" alt="ECharts" style="margin:10 0px;zoom:60%;"  />
+<img src="./static/demo/mapboxgl/source/img/ECharts.png" alt="ECharts" style="margin:10 0px;zoom:30%;"  />
 </a>
 
 <a href="https://mapv.baidu.com/" target="_blank">
-<img src="img/MapV.png" alt="MapV" style="margin:0 10px;zoom:70%;"  />
+<img src="./static/demo/mapboxgl/source/img/MapV.png" alt="MapV" style="margin:0 10px;zoom:30%;"  />
 </a>
 
 <a href="https://turfjs.org/" target="_blank">
-<img src="img/turf.png" alt="turfjs" style="margin:0px;zoom:40%;"  />
+<img src="./static/demo/mapboxgl/source/img/turf.png" alt="turfjs" style="margin:0px;zoom:30%;"  />
 </a>
 
 <a href="https://d3js.org/" target="_blank">
-<img src="img/D3.png" alt="d3js" style="margin:0 100px;zoom:40%;"  />
+<img src="./static/demo/mapboxgl/source/img/D3.png" alt="d3js" style="margin:0 100px;zoom:30%;"  />
 </a>
 
 <a href="https://www.elastic.co/cn/" target="_blank">
-<img src="img/elasticsearch.png" alt="ElasticSearch" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/mapboxgl/source/img/elasticsearch.png" alt="ElasticSearch" style="margin:0px;zoom:30%;"  />
 </a>
 
 <a href="http://postgis.net/" target="_blank">
-<img src="img/postgis.png" alt="PostGIS" style="margin:0px 50px;zoom:40%;"  />
+<img src="./static/demo/mapboxgl/source/img/postgis.png" alt="PostGIS" style="margin:0px 50px;zoom:30%;"  />
 </a>
 </div>
 

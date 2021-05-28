@@ -69,14 +69,9 @@
                     vecDoc = layer.append2DDocTile(
                         `${protocol}://${ip}:${port}/igs/rest/mrms/docs/北京市`, {
                             guid: "__readonly_user__",
-                            layers: "exclude:1"
+                            //layers: "exclude:1"
                         }
                     );
-                    // vecDoc = layer.append2DDocTile(
-                    //     `${protocol}://${ip}:${port}/igs/rest/mrms/layers`, {
-                    //         gdbps: ["GDBP://MapGISLocalPlus/北京市/ds/行政区/sfcls/北京市", "GDBP://MapGISLocalPlus/北京市/ds/行政区/sfcls/首都点"],
-                    //     }
-                    // );
                 }
             });
         }

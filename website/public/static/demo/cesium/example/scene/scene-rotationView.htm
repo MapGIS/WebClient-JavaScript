@@ -67,6 +67,7 @@
         }
 
         function startRotationView() {
+            stopRotationView();
             //创建绕点旋转对象
             update = commfun.rotationView('rotationAroundPos', opt);
             //设置开始绕点旋转
@@ -75,14 +76,12 @@
 
         function pauseRotationView() {
             //设置暂停绕点旋转
-            update = commfun.rotationView('rotationAroundPos', opt);
             commfun.pauseRotationView(update);
 
         }
 
         function stopRotationView() {
             //设置移除绕点旋转
-            update = commfun.rotationView('rotationAroundPos', opt);
             commfun.removeRotationView(update);
         }
 
@@ -90,7 +89,6 @@
             var sceneManager = new CesiumZondy.Manager.SceneManager({
                 viewer: webGlobe.viewer
             });
-            // m3dLayer.zoomToM3dLayer(obliqueLayerp[0]);
             //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
             sceneManager.flyToEx(108.96044700955785, 34.21796237686321, {
                 height: 60.99772929683282,
@@ -98,7 +96,6 @@
                 pitch: -15,
                 roll: 0
             });
-            //sceneManager.goHome(); //复位
         }
     </script>
 </head>

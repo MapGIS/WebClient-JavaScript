@@ -4,7 +4,7 @@
 
 
 <center>
-  <img src="img/产品架构.png" alt="产品架构" style="zoom:80%;" />
+  <img src="./static/demo/leaflet/source/img/产品架构.png" alt="产品架构" style="zoom:80%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript产品架构图</div>
 </center>
@@ -78,7 +78,7 @@
 | include-leaflet-local.js | 二次开发引用库，在此引入了MapGIS Client for JavaScript（Leaflet）的核心库webclient-leaflet-plugin.min.js，Leaflet原生库，以及其他第三方库，同时提供了示例访问MapGIS IGServer服务器的配置 |
 
 <center>
-  <img src="img/Leaflet开发库.png" alt="Leaflet开发库" style="zoom:80%;" />
+  <img src="./static/demo/leaflet/source/img/Leaflet开发库.png" alt="Leaflet开发库" style="zoom:80%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript（Leaflet）开发库</div>
 </center>
@@ -103,7 +103,7 @@
 - 离线使用：方式一，可在云开发世界下载<a href="http://www.smaryun.com/dev/download_detail.html#/download828" target="_blank">MapGIS Client for JavaScript开发包</a>，解压后按说明步骤发布即可；方式二，可通过开源社区拉取整套源码，然后编译运行，此略
 
 <center>
-  <img src="img/Leaflet开发示例.png" alt="开发示例" style="zoom:90%;" />
+  <img src="./static/demo/leaflet/source/img/Leaflet开发示例.png" alt="开发示例" style="zoom:50%;" />
   <br>
   <div class="notes">MapGIS Client for JavaScript（Leaflet）开发示例</div>
 </center>
@@ -120,16 +120,7 @@
 
 MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示、数据管理、查询、编辑、专题图、统计图、预案标绘、分析等全WebGIS功能，以及大数据与智能GIS功能。
 
-**简要列出SDK所提供的功能，画功能导图（参见超图模块说明）**
-
-### API 功能体系
-
-
-<center>
-  <img src="img/超图功能模块.png" alt="产品功能模块" style="zoom:90%;" />
-  <br>
-  <div class="notes">MapGIS Client for JavaScript（Leaflet）功能模块(待替换)</div>
-</center>
+### API 功能体系（功能导图）
 
 ### API 结构说明
 
@@ -139,7 +130,7 @@ MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示
 
 &ensp;&ensp;&ensp;&ensp;Leaflet原生库，主要用来在页面中创建地图并操纵地图，其类的继承扩展框架图大致如下图所示：
 <center>
-  <img src="img/leaflet类的继承扩展结构图.png" alt="leaflet类的继承扩展结构图" style="zoom:60%;" />
+  <img src="./static/demo/leaflet/source/img/leaflet类的继承扩展结构图.png" alt="leaflet类的继承扩展结构图" style="zoom:50%;" />
   <br>
   <div class="notes">leaflet类的继承扩展结构图</div>
 </center>
@@ -148,7 +139,7 @@ MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示
 &ensp;&ensp;&ensp;&ensp;核心库webclient-leaflet-plugin.min.js的接口结构如下图所示：
 
 <center>
-  <img src="img/Leaflet API结构.png" alt="Leaflet API结构" style="zoom:80%;" />
+  <img src="./static/demo/leaflet/source/img/Leaflet API结构.png" alt="Leaflet API结构" style="zoom:80%;" />
   <br>
   <div class="notes">基于Leaflet扩展的mapgis开发接口</div>
 </center>
@@ -165,8 +156,15 @@ MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示
 
 ### <font color=red>V10.5.2.10</font>
 
-1. Leaflet示例全面优化，提供配套示例说明文档与API；
-2. 新增支持ElasticSearch的分布式大数据搜索与分析能力，可实现热力分析、聚类分析等功能。
+1. 功能新增
+- Leaflet示例全面优化，提供配套示例说明文档与API；
+- 新增支持ElasticSearch的分布式大数据搜索与分析能力，可实现热力分析、聚类分析等功能。
+
+2. 性能优化-无
+
+3. 站点维护
+- 示例说明文档美化
+
 
 
 ### <font color=red>V10.5.0.10</font>
@@ -189,11 +187,11 @@ MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2207" target="_blank">
-<img src="img/Desktop高级64.png" alt="MapGIS Desktop高级版" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/Desktop高级64.png" alt="MapGIS Desktop高级版" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=3114" target="_blank">
-<img src="img/Desktop九州.png" alt="MapGIS Desktop（九州）" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/Desktop九州.png" alt="MapGIS Desktop（九州）" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
@@ -205,11 +203,11 @@ MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示
 
 <div>
 <a href="http://www.smaryun.com/goods.php?id=2229" target="_blank">
-<img src="img/IGServer64.png" alt="MapGIS IGServer" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/IGServer64.png" alt="MapGIS IGServer" style="margin:0px;zoom:60%;"  />
 </a>
 
 <a href="http://www.smaryun.com/goods.php?id=3193" target="_blank">
-<img src="img/IGServer九州.png" alt="MapGIS IGServer（九州）" style="margin:0 50px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/IGServer九州.png" alt="MapGIS IGServer（九州）" style="margin:0 50px;zoom:60%;"  />
 </a>
 </div>
 
@@ -233,27 +231,27 @@ MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示
 
 <div>
 <a href="https://leafletjs.com/" target="_blank">
-<img src="img/Leaflet.png" alt="Leaflet" style="margin:0 20px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/Leaflet.png" alt="Leaflet" style="margin:0 20px;zoom:60%;"  />
 </a>
 
 <a href="https://echarts.apache.org/zh/index.html" target="_blank">
-<img src="img/ECharts.png" alt="ECharts" style="margin:10 0px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/ECharts.png" alt="ECharts" style="margin:10 0px;zoom:60%;"  />
 </a>
 
 <a href="https://mapv.baidu.com/" target="_blank">
-<img src="img/MapV.png" alt="MapV" style="margin:0 10px;zoom:70%;"  />
+<img src="./static/demo/leaflet/source/img/MapV.png" alt="MapV" style="margin:0 10px;zoom:70%;"  />
 </a>
 
 <a href="https://turfjs.org/" target="_blank">
-<img src="img/turf.png" alt="turfjs" style="margin:0px;zoom:40%;"  />
+<img src="./static/demo/leaflet/source/img/turf.png" alt="turfjs" style="margin:0px;zoom:40%;"  />
 </a>
 
 <a href="https://d3js.org/" target="_blank">
-<img src="img/D3.png" alt="d3js" style="margin:0 100px;zoom:40%;"  />
+<img src="./static/demo/leaflet/source/img/D3.png" alt="d3js" style="margin:0 100px;zoom:40%;"  />
 </a>
 
 <a href="https://www.elastic.co/cn/" target="_blank">
-<img src="img/elasticsearch.png" alt="ElasticSearch" style="margin:0px;zoom:60%;"  />
+<img src="./static/demo/leaflet/source/img/elasticsearch.png" alt="ElasticSearch" style="margin:0px;zoom:60%;"  />
 </a>
 </div>
 

@@ -17,7 +17,7 @@
           </div>
         </el-scrollbar>
       </el-aside>
-      <el-main>
+      <el-main class="markdown-body">
         <vue-markdown
             :watches="['show','html','breaks','linkify','emoji','typographer']"
             :style="{padding: '2px 1vw'}"
@@ -161,6 +161,7 @@ export default {
     },
     getHtmlUrl(type, image) {
       var baseUrl = "./static/demo/";
+      debugger;
       var imageUrl = baseUrl + type + "/source/" + image + ".md";
       return imageUrl;
     },
@@ -207,8 +208,29 @@ export default {
 </script>
 
 <style lang="scss">
+.markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
+    }
+}
 .mapgis-product-wrapper {
+  .toc-anchor-link {
+    background-image: url("../../../public/static/assets/total/retouch.png");
+    font-size: 16px;
+    width:10px;
+    height:19px;
+    margin-right: 10px;
+    display: inline-block;
+    text-indent:-9999px;
+  }
   .mapgis-toc-class {
+   
     ul {
       list-style-type: none;
       padding-left: 16px;
