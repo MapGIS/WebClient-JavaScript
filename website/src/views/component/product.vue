@@ -247,10 +247,13 @@ export default {
     }
 
     .active {
-      border-left: 3px solid #000000;
+      border-left: 3px solid #3A85C6;
       padding-left: 6px;
-      color: #000000;
       font-weight: bold;
+
+      a {
+        color: #3A85C6;
+      }
     }
   }
 }
