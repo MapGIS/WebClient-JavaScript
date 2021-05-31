@@ -74,7 +74,7 @@ export default class PopupLayer {
         this.camera = map.camera;
         this.isShow = true;
 
-        ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window["Cesium"].ScreenSpaceEventHandler;
+        let ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window["Cesium"].ScreenSpaceEventHandler;
 
         this.handler = new ScreenSpaceEventHandler(this.scene.canvas);
 
