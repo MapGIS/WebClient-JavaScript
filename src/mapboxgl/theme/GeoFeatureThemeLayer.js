@@ -106,7 +106,7 @@ class GeoFeatureThemeLayer extends ThemeLayer {
                         attrs['FID'] = feature.FID;
                     }
                     feature.attributes = attrs;
-                    feature.LabelDot = LabelDots[i];
+                    LabelDots && LabelDots[j] && (feature.LabelDot = LabelDots[j]);
                     me.features.push(feature);
                 }
             }
