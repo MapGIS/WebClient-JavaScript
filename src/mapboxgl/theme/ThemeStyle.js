@@ -1,5 +1,5 @@
-import {Zondy} from '../../service/common/Base';
-import {extend} from '../../service/common/Util';
+import { Zondy } from '../../service/common/Base';
+import { extend } from '../../service/common/Util';
 
 /**
  * @class Zondy.Map.ThemeStyle
@@ -34,7 +34,6 @@ import {extend} from '../../service/common/Util';
  * @param {number} [options.labelYOffset=0] - 附加文本在y轴方向的偏移量。
  */
 class ThemeStyle {
-
     constructor(options) {
         options = options || {};
 
@@ -48,7 +47,7 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.fillColor="#000000"]
          * @description 十六进制填充颜色。
          */
-        this.fillColor = "#000000";
+        this.fillColor = '#000000';
 
         /**
          *  @member {number} [Zondy.Map.ThemeStyle.prototype.fillOpacity=1]
@@ -66,7 +65,7 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.strokeColor="#000000"]
          * @description  十六进制描边颜色。
          */
-        this.strokeColor = "#000000";
+        this.strokeColor = '#000000';
 
         /**
          * @member {number} [Zondy.Map.ThemeStyle.prototype.strokeOpacity=1]
@@ -84,20 +83,20 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.strokeLinecap="butt"]
          * @description  线帽样式；strokeLinecap 有三种类型 “butt", "round", "square" 。
          */
-        this.strokeLinecap = "butt";
+        this.strokeLinecap = 'butt';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.strokeLineJoin="miter"]
          * @description  线段连接样式；strokeLineJoin 有三种类型 “miter", "round", "bevel"。
          */
-        this.strokeLineJoin = "miter";
+        this.strokeLineJoin = 'miter';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.strokeDashstyle="solid"]
          * @description   虚线类型； strokeDashstyle 有八种类型 “dot",“dash",“dashdot",“longdash",“longdashdot",“solid", "dashed", "dotted";
          * solid 表示实线。
          */
-        this.strokeDashstyle = "solid";
+        this.strokeDashstyle = 'solid';
 
         /**
          * @member {number} [Zondy.Map.ThemeStyle.prototype.pointRadius=6]
@@ -115,7 +114,7 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.shadowColor='#000000']
          * @description  阴影颜色。注：请将 shadowColor 属性与 shadowBlur 属性一起使用，来创建阴影。
          */
-        this.shadowColor = "#000000";
+        this.shadowColor = '#000000';
 
         /**
          * @member {number} [Zondy.Map.ThemeStyle.prototype.shadowOffsetX=0]
@@ -133,7 +132,7 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.label]
          * @description 专题要素附加文本标签内容。
          */
-        this.label = "";
+        this.label = '';
 
         /**
          * @member {boolean} [Zondy.Map.ThemeStyle.prototype.labelRect=false]
@@ -145,7 +144,7 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.fontColor]
          * @description 附加文本字体颜色。
          */
-        this.fontColor = "";
+        this.fontColor = '';
 
         /**
          * @member {number} [Zondy.Map.ThemeStyle.prototype.fontSize=12]
@@ -157,51 +156,51 @@ class ThemeStyle {
          * @member {string} [Zondy.Map.ThemeStyle.prototype.fontStyle="normal"]
          * @description 附加文本字体样式。可设值："normal", "italic", "oblique"。
          */
-        this.fontStyle = "normal";
+        this.fontStyle = 'normal';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.fontVariant="normal"]
          * @description 附加文本字体变体。可设值："normal", "small-caps"。
          */
-        this.fontVariant = "normal";
+        this.fontVariant = 'normal';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.fontWeight="normal"]
          * @description 附加文本字体粗细。可设值："normal", "bold", "bolder", "lighter"。
          */
-        this.fontWeight = "normal";
+        this.fontWeight = 'normal';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.fontFamily="arial,sans-serif"]
          * @description 附加文本字体系列。fontFamily 值是字体族名称或/及类族名称的一个优先表，每个值逗号分割，浏览器会使用它可识别的第一个
          * 可以使用具体的字体名称（"times"、"courier"、"arial"）或字体系列名称（"serif"、"sans-serif"、"cursive"、"fantasy"、"monospace"）。
          */
-        this.fontFamily = "arial,sans-serif";
+        this.fontFamily = 'arial,sans-serif';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.labelPosition='top']
          * @description 附加文本位置, 可以是 'inside', 'left', 'right', 'top', 'bottom'。
          */
-        this.labelPosition = "top";
+        this.labelPosition = 'top';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.labelAlign='center']
          * @description 附加文本水平对齐。可以是 'left', 'right', 'center'。
          */
-        this.labelAlign = "center";
+        this.labelAlign = 'center';
 
         /**
          * @member {string} [Zondy.Map.ThemeStyle.prototype.labelBaseline='middle']
          * @description  附加文本垂直对齐。 可以是 'top', 'bottom', 'middle'。
          */
-        this.labelBaseline = "middle";
+        this.labelBaseline = 'middle';
 
         /**
          * @member {number} [Zondy.Map.ThemeStyle.prototype.labelXOffset=0]
          * @description  附加文本在 X 轴方向的偏移量。
          */
         this.labelXOffset = 0;
-        
+
         /**
          * @member {number} [Zondy.Map.ThemeStyle.prototype.labelYOffset=0]
          * @description 附加文本在 Y 轴方向的偏移量。
@@ -212,5 +211,5 @@ class ThemeStyle {
     }
 }
 
-export {ThemeStyle};
+export { ThemeStyle };
 Zondy.Map.ThemeStyle = ThemeStyle;

@@ -1,7 +1,7 @@
-import mapboxgl from "@mapgis/mapbox-gl";
-import { Zondy } from "../../service/common/Base";
-import { Theme as FeatureTheme } from "../../common/overlay/feature/Theme";
-import { GraphThemeLayer } from "./GraphThemeLayer";
+import mapboxgl from '@mapgis/mapbox-gl';
+import { Zondy } from '../../service/common/Base';
+import { Theme as FeatureTheme } from '../../common/overlay/feature/Theme';
+import { GraphThemeLayer } from './GraphThemeLayer';
 
 /**
  * @class Zondy.Map.rankSymbolThemeLayer
@@ -27,59 +27,49 @@ import { GraphThemeLayer } from "./GraphThemeLayer";
  * @extends {Zondy.Map.GraphThemeLayer}
  */
 class RankSymbolThemeLayer extends GraphThemeLayer {
-  constructor(name, symbolType, options) {
-    super(name, symbolType, options);
-    this.symbolType = symbolType;
-    this.symbolSetting = options.symbolSetting;
-    this.themeField = options.themeField;
-    this.options = {
-      calGravity: options.calGravity || true
-    };
-  }
-
-  /**
-   * @function Zondy.Map.rankSymbolThemeLayer.prototype.setSymbolType
-   * @description 设置标志符号。
-   * @param {string} [symbolType] - 符号类型。
-   */
-  setSymbolType(symbolType) {
-    this.symbolType = symbolType;
-    this.redraw();
-  }
-
-  /**
-   * @function Zondy.Map.rankSymbolThemeLayer.prototype.createThematicFeature
-   * @description 创建专题图形要素。
-   * @param {Object} feature - 要创建的专题图形要素。
-   */
-  createThematicFeature(feature) {
-    var thematicFeature;
-    // 检查图形创建条件并创建图形
-    if (
-      FeatureTheme[this.symbolType] &&
-      this.themeField &&
-      this.symbolSetting
-    ) {
-      thematicFeature = new FeatureTheme[this.symbolType](
-        feature,
-        this,
-        [this.themeField],
-        this.symbolSetting,
-        null,
-        this.options
-      );
+    constructor(name, symbolType, options) {
+        super(name, symbolType, options);
+        this.symbolType = symbolType;
+        this.symbolSetting = options.symbolSetting;
+        this.themeField = options.themeField;
+        this.options = {
+            calGravity: options.calGravity || true
+        };
     }
-    // thematicFeature 是否创建成功
-    if (!thematicFeature) {
-      return false;
+
+    /**
+     * @function Zondy.Map.rankSymbolThemeLayer.prototype.setSymbolType
+     * @description 设置标志符号。
+     * @param {string} [symbolType] - 符号类型。
+     */
+    setSymbolType(symbolType) {
+        this.symbolType = symbolType;
+        this.redraw();
     }
-    // 对专题要素执行图形装载
-    thematicFeature.assembleShapes();
-    return thematicFeature;
-  }
+
+    /**
+     * @function Zondy.Map.rankSymbolThemeLayer.prototype.createThematicFeature
+     * @description 创建专题图形要素。
+     * @param {Object} feature - 要创建的专题图形要素。
+     */
+    createThematicFeature(feature) {
+        var thematicFeature;
+        // 检查图形创建条件并创建图形
+        if (FeatureTheme[this.symbolType] && this.themeField && this.symbolSetting) {
+            thematicFeature = new FeatureTheme[this.symbolType](feature, this, [this.themeField], this.symbolSetting, null, this.options);
+        }
+        // thematicFeature 是否创建成功
+        if (!thematicFeature) {
+            return false;
+        }
+        // 对专题要素执行图形装载
+        thematicFeature.assembleShapes();
+        return thematicFeature;
+    }
 }
 
-export var rankSymbolThemeLayer = function(name, symbolType, options) {
-  return new RankSymbolThemeLayer(name, symbolType, options);
+export { RankSymbolThemeLayer };
+export var rankSymbolThemeLayer = function (name, symbolType, options) {
+    return new RankSymbolThemeLayer(name, symbolType, options);
 };
 Zondy.Map.rankSymbolThemeLayer = rankSymbolThemeLayer;

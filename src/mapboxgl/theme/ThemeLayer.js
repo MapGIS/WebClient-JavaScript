@@ -1,11 +1,10 @@
 import mapboxgl from '@mapgis/mapbox-gl';
-import {Zondy} from '../../service/common/Base';
-import {LevelRenderer} from '../../common/overlay/levelRender/LevelRenderer';
-import {modifyDOMElement} from "../../service/common/Util";
-import {isArray} from "../../service/common/Util";
-import {indexOf} from "../../service/common/Util";
-import {newGuid} from "../../service/common";
-
+import { Zondy } from '../../service/common/Base';
+import { LevelRenderer } from '../../common/overlay/levelRender/LevelRenderer';
+import { modifyDOMElement } from '../../service/common/Util';
+import { isArray } from '../../service/common/Util';
+import { indexOf } from '../../service/common/Util';
+import { newGuid } from '../../service/common';
 
 /**
  * @class Zondy.Map.ThemeLayer
@@ -21,8 +20,6 @@ import {newGuid} from "../../service/common";
  * @fires Zondy.Map.ThemeLayer#featuresremoved
  */
 class ThemeLayer {
-
-
     constructor(name, opt_options) {
         var options = opt_options ? opt_options : {};
         /**
@@ -67,7 +64,6 @@ class ThemeLayer {
         if (this.map) {
             this.map.addLayer(this);
         }
-
     }
 
     /**
@@ -119,7 +115,7 @@ class ThemeLayer {
         this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
         this.div.style.width = canvas.style.width;
         this.div.style.height = canvas.style.height;
-        this.div.className = "themeLayer";
+        this.div.className = 'themeLayer';
         this.div.width = parseInt(canvas.width);
         this.div.height = parseInt(canvas.height);
         container.appendChild(this.div);
@@ -135,7 +131,7 @@ class ThemeLayer {
      * @param {Zondy.Feature.Vector} features - 将被销毁的要素。
      */
     destroyFeatures(features) {
-        var all = (features === undefined);
+        var all = features === undefined;
         if (all) {
             features = this.features;
         }
@@ -166,7 +162,7 @@ class ThemeLayer {
      * @param {boolean} [display] - 是否显示图层。
      */
     display(display) {
-        this.div.style.display = display ? "block" : "none";
+        this.div.style.display = display ? 'block' : 'none';
     }
 
     /**
@@ -178,8 +174,7 @@ class ThemeLayer {
         if (opacity !== this.opacity) {
             this.opacity = opacity;
             var element = this.div;
-            modifyDOMElement(element, null, null, null,
-                null, null, null, opacity);
+            modifyDOMElement(element, null, null, null, null, null, null, opacity);
 
             if (this.map !== null) {
                 /**
@@ -190,7 +185,7 @@ class ThemeLayer {
                  */
                 window.mapboxgl.Evented.prototype.fire('changelayer', {
                     layer: this,
-                    property: "opacity"
+                    property: 'opacity'
                 });
             }
         }
@@ -201,8 +196,8 @@ class ThemeLayer {
      * @param {Object} features - 待添加要素。
      * @description 抽象方法，可实例化子类必须实现此方法。向专题图图层中添加数据 ,
      */
-    addFeatures(features) { // eslint-disable-line no-unused-vars
-
+    addFeatures(features) {
+        // eslint-disable-line no-unused-vars
     }
 
     /**
@@ -221,7 +216,7 @@ class ThemeLayer {
         if (features === this.features) {
             return this.removeAllFeatures();
         }
-        if (!(isArray(features))) {
+        if (!isArray(features)) {
             features = [features];
         }
         var featuresFailRemoved = [];
@@ -254,7 +249,7 @@ class ThemeLayer {
          * @property {Array.<Zondy.Feature.Vector>} features - 未被成功删除的要素。
          * @property {boolean} succeed - 删除成功与否。
          */
-        window.mapboxgl.Evented.prototype.fire("featuresremoved", {
+        window.mapboxgl.Evented.prototype.fire('featuresremoved', {
             features: featuresFailRemoved,
             succeed: succeed
         });
@@ -344,7 +339,8 @@ class ThemeLayer {
      * @description 抽象方法，可实例化子类必须实现此方法。重绘专题要素。
      * @param {mapboxgl.LngLatBounds} extent - 重绘的范围。
      */
-    redrawThematicFeatures(extent) { // eslint-disable-line no-unused-vars
+    redrawThematicFeatures(extent) {
+        // eslint-disable-line no-unused-vars
     }
 
     /**
@@ -354,7 +350,8 @@ class ThemeLayer {
      * @param {function} callback - 回调函数。
      * @param {string} context - 信息。
      */
-    on(event, callback, context) { // eslint-disable-line no-unused-vars
+    on(event, callback, context) {
+        // eslint-disable-line no-unused-vars
         if (this.renderer) {
             this.renderer.on(event, callback);
         } else {
@@ -370,7 +367,8 @@ class ThemeLayer {
      * @param {function} callback - 回调函数。
      * @param {string} context - 信息。
      */
-    off(event, callback, context) { // eslint-disable-line no-unused-vars
+    off(event, callback, context) {
+        // eslint-disable-line no-unused-vars
         var me = this;
         if (me.renderer) {
             me.renderer.off(event, callback);
@@ -391,20 +389,19 @@ class ThemeLayer {
         for (var i = 0; i < len; i++) {
             this.renderer.on(tfEs[i][0], tfEs[i][1]);
         }
-
     }
 
     WebMercator2lonLat(cx, cy) {
-        var x = cx / 20037508.34 * 180;
-        var y = cy / 20037508.34 * 180;
-        y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
+        var x = (cx / 20037508.34) * 180;
+        var y = (cy / 20037508.34) * 180;
+        y = (180 / Math.PI) * (2 * Math.atan(Math.exp((y * Math.PI) / 180)) - Math.PI / 2);
         return [x, y];
     }
 
     lonLat2WebMercator(wx, wy) {
-        var x = wx * 20037508.34 / 180;
-        var y = Math.log(Math.tan((90 + wy) * Math.PI / 360)) / (Math.PI / 180);
-        y = y * 20037508.34 / 180;
+        var x = (wx * 20037508.34) / 180;
+        var y = Math.log(Math.tan(((90 + wy) * Math.PI) / 360)) / (Math.PI / 180);
+        y = (y * 20037508.34) / 180;
         return {
             x: x,
             y: y
@@ -421,7 +418,6 @@ class ThemeLayer {
             map = this.map;
         var tempPoint = null;
         if (isArray(coordinate)) {
-             
             // coordinate = this.WebMercator2lonLat(coordinate[0], coordinate[1]);
             coordinate = new mapboxgl.LngLat(coordinate[0], coordinate[1]);
             tempPoint = map.project(coordinate);
@@ -468,7 +464,8 @@ class ThemeLayer {
         var endMovePoint = this.map.project(new mapboxgl.LngLat(0, 0));
         var tMoveX = endMovePoint.x - this.startMoveX;
         var tMoveY = endMovePoint.y - this.startMoveY;
-        this.div.style.transform = 'rotateX(' + tPitch + 'deg)' + ' rotateZ(' + tBearing + 'deg)' + ' translate3d(' + tMoveX + 'px, ' + tMoveY + 'px, 0px)';
+        this.div.style.transform =
+            'rotateX(' + tPitch + 'deg)' + ' rotateZ(' + tBearing + 'deg)' + ' translate3d(' + tMoveX + 'px, ' + tMoveY + 'px, 0px)';
     }
 
     zoomStartEvent() {
@@ -504,7 +501,7 @@ class ThemeLayer {
         this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
         var tPitch = this.map.getPitch() - this.startPitch;
         var tBearing = -this.map.getBearing() + this.startBearing;
-        this.div.style.transform = 'rotateX(' + tPitch + 'deg)' + ' rotateZ(' + tBearing + 'deg)'
+        this.div.style.transform = 'rotateX(' + tPitch + 'deg)' + ' rotateZ(' + tBearing + 'deg)';
     }
 
     rotateEndEvent() {
@@ -576,5 +573,5 @@ class ThemeLayer {
     }
 }
 
-export {ThemeLayer};
+export { ThemeLayer };
 Zondy.Map.ThemeLayer = ThemeLayer;
