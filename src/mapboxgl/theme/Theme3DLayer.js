@@ -205,9 +205,11 @@ class Theme3DLayer {
               var ring = rings[j];
               if (ring != null && ring.length > 0) {
                 for (var k = 0; k < ring.length; k++) {
+                  let coordinate = new mapboxgl.LngLat(ring[k][0], ring[k][1]);
+                  let tempPoint = map.project(coordinate);
                   data.features[i].geometry.coordinates[j][
                     k
-                  ] = this.WebMercator2lonLat(ring[k][0], ring[k][1]);
+                  ] = [tempPoint.x, tempPoint.y];
                 }
               }
             }
@@ -220,9 +222,11 @@ class Theme3DLayer {
                   var ring = polygon[j];
                   if (ring != null && ring.length > 0) {
                     for (var k = 0; k < ring.length; k++) {
+                      let coordinate = new mapboxgl.LngLat(ring[k][0], ring[k][1]);
+                      let tempPoint = map.project(coordinate);
                       data.features[i].geometry.coordinates[m][j][
                         k
-                      ] = this.WebMercator2lonLat(ring[k][0], ring[k][1]);
+                      ] = [tempPoint.x, tempPoint.y];
                     }
                   }
                 }

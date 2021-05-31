@@ -62,7 +62,7 @@
             var { protocol, ip, port } = window.webclient;
             var ip = `${ip}`;
             var port = `${port}`;
-            var docName = 'Hubei3857';
+            var docName = 'Hubei4326';
             var legendView, infoView;
             var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
 
@@ -71,6 +71,7 @@
                 //地图容器
                 map = new mapboxgl.Map({
                     //地图容器div的id
+                    crs: "EPSG:4326",
                     container: 'map',
                     center: [112.247175, 30.152892],
                     zoom: 6,
@@ -87,7 +88,7 @@
 
                 function appendMapDoc() {
                     if (map != null) {
-                        mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer('Hubei3857', {
+                        mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer(docName, {
                             //IP地址
                             ip: `${ip}`,
                             //端口号
@@ -222,7 +223,7 @@
                     if (fea) {
                         document.getElementById('infoContent').innerHTML = '';
                         document.getElementById('infoContent').innerHTML += 'FID: ' + fea.attributes.FID + '<br/>';
-                        document.getElementById('infoContent').innerHTML += '行政区: ' + fea.attributes['省名'] + '<br/>';
+                        document.getElementById('infoContent').innerHTML += '行政区: ' + fea.attributes['NAME'] + '<br/>';
                         document.getElementById('infoContent').innerHTML += '分类索引：' + parseInt(fea.attributes['分类索引']) + '<br/>';
                     }
                 } else {
