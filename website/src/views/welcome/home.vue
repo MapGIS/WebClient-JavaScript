@@ -3,8 +3,8 @@
         <Header class="home-header" />
         <el-row type="flex" justify="center" class="banner banner-desc">
             <div :class="{ 'banner-desc-wrapper': true, 'banner-desc-wrapper-mobile': mobile }">
-                <div class="main-title">热门开源可视化技术<span>JavaSript&nbsp;Client</span></div>
-                <div class="sub-title">Echart, MapV, d3, turfjs等主流技术</div>
+                <div class="main-title">云GIS Web客户端开发平台</div>
+                <div class="sub-title">开源、免费、可扩展</div>
                 <div>
                     <img :src="mains[0]" alt="logo" :style="{ width: '100%', height: mobile ? '240px' : '640px' }" />
                 </div>
@@ -25,7 +25,7 @@
         </el-row>
         <el-row type="flex" justify="center" class="banner banner-developer">
             <div>
-                <h1 class="text-center">云 GIS 网络客户端开发平台</h1>
+                <h1 class="text-center">云GIS Web客户端开发平台</h1>
                 <div class="text-center-detail">
                     MapGIS Client for JavaScript，在云计算、大数据管理与分析等技术支撑下，将传统WebGIS与云GIS完美融合，
                     集成四大主流地图开源框架和Echarts、MapV、D3 等可视化库，进一步增强了大数据、实时流数据的高效可视化表达和分析功能
@@ -102,26 +102,26 @@
                 </div>
             </div>
         </el-row>
-        <el-row class="banner-history">
-            <div class="history-title">版本信息</div>
-            <el-row class="history-content" v-for="h in historys" :key="h.title">
-                <el-col class="history-content-time" :span="4">
-                    <div class="history-content-timedata">{{ h.timestamp }}</div>
-                    <div class="history-content-timeicon">
-                        <img src="static/assets/home/flow.png" alt="图片" />
-                    </div>
-                </el-col>
-                <el-col class="history-content-text" :span="18">
-                    <div class="history-content-text-title">{{ h.title }}</div>
-                    <div v-for="l in h.link" :key="l" class="history-content-text-link">
-                        <a style="word-break: break-all" :href="l" target="_blank">
-                            {{ l }}
-                        </a>
-                    </div>
-                    <div class="history-content-text-detail">{{ h.detail }}</div>
-                </el-col>
-            </el-row>
-        </el-row>
+<!--        <el-row class="banner-history">-->
+<!--            <div class="history-title">版本信息</div>-->
+<!--            <el-row class="history-content" v-for="h in historys" :key="h.title">-->
+<!--                <el-col class="history-content-time" :span="4">-->
+<!--                    <div class="history-content-timedata">{{ h.timestamp }}</div>-->
+<!--                    <div class="history-content-timeicon">-->
+<!--                        <img src="static/assets/home/flow.png" alt="图片" />-->
+<!--                    </div>-->
+<!--                </el-col>-->
+<!--                <el-col class="history-content-text" :span="18">-->
+<!--                    <div class="history-content-text-title">{{ h.title }}</div>-->
+<!--                    <div v-for="l in h.link" :key="l" class="history-content-text-link">-->
+<!--                        <a style="word-break: break-all" :href="l" target="_blank">-->
+<!--                            {{ l }}-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="history-content-text-detail">{{ h.detail }}</div>-->
+<!--                </el-col>-->
+<!--            </el-row>-->
+<!--        </el-row>-->
     </div>
 </template>
 
@@ -202,7 +202,7 @@ $margin-left: 80px;
     .main-title {
         position: absolute;
         height: 48px;
-        font-size: 48px;
+        font-size: 43px;
         font-family: Microsoft YaHei;
         font-weight: 400;
         color: #ffffff;
@@ -299,7 +299,7 @@ $margin-left: 80px;
         font-size: 16px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        //color: #999999;
         line-height: 24px;
         text-align: center;
         opacity: 0.7;
@@ -477,6 +477,9 @@ $margin-left: 80px;
     }
     .main-flat-card {
         margin: 75px 45px;
+       .subtitle{
+          color: #666666;
+       }
     }
     .gallery-card {
         margin: 8px 4px;

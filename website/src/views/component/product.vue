@@ -27,7 +27,7 @@
             :toc-first-level="2"
             toc-id="develop-markdown-toc"
             toc-class="mapgis-toc-class"
-            :toc-anchor-link="true"
+            :toc-anchor-link="false"
             :linkify="true"
             @rendered="markdownRendered"
             @toc-rendered="tocRendered"

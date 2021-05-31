@@ -111,13 +111,14 @@
         var { protocol, ip, port } = window.webclient;
         var ip = `${ip}`;
         var port = `${port}`;
-        var docName = 'Hubei3857';
+        var docName = 'Hubei4326';
 
         /** 初始化地图显示*/
         function init() {
             //地图容器
             map = new mapboxgl.Map({
                 //地图容器div的id
+                crs: "EPSG:4326",
                 container: 'map',
                 center: [112.247175, 30.152892],
                 zoom: 6,
