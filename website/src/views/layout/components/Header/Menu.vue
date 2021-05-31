@@ -171,7 +171,7 @@ export default {
     }
     .menu-icon {
         color: #47abff;
-        font-size: 22px;
+        font-size: 16px;
     }
     .strong {
         font-weight: bold !important;
