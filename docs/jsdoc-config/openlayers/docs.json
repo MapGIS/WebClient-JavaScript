@@ -17,6 +17,7 @@
         "include": ["src/service/", "src/openlayers"],
         "exclude": [
             "src/service/baseserver",
+            "src/service/node_modules",
             "src/openlayers/extend/MilStd_old.js",
             "src/service/node_modules/turf-jsts/",
             "src/service/node_modules/@turf",

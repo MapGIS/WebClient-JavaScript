@@ -17,7 +17,8 @@
         "include": ["src/service/", "src/mapboxgl/"],
         "exclude": [
             "src/service/baseserver",
-            "src/service/node_modules/turf-jsts/",
+            "src/service/node_modules",
+            "src/service/node_modules/turf-jsts",
             "src/service/node_modules/@turf",
             "src/service/node_modules/polygon-clipping",
             "src/service/node_modules/splaytree"
