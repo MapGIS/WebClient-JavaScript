@@ -1,7 +1,7 @@
-import { mapboxgl } from  '@mapgis/mapbox-gl';
+import { mapboxgl } from '@mapgis/mapbox-gl';
 import { Zondy } from '../../service/common/Base';
-import {Theme3DLayer} from './Theme3DLayer';
-import {extend} from '../../service/common/Util';
+import { Theme3DLayer } from './Theme3DLayer';
+import { extend } from '../../service/common/Util';
 
 /**
  * @class mapboxgl.zondy.UniqueTheme3DLayer
@@ -32,9 +32,9 @@ class UniqueTheme3DLayer extends Theme3DLayer {
         opacity = isNaN(parseFloat(opacity)) ? 1 : parseFloat(opacity);
         var options = {
             'fill-extrusion-color': {
-                'stops': this.colorStops,
-                'property': this.themeField,
-                'type': 'categorical'
+                stops: this.colorStops,
+                property: this.themeField,
+                type: 'categorical'
             },
             'fill-extrusion-opacity': opacity
         };
@@ -43,17 +43,17 @@ class UniqueTheme3DLayer extends Theme3DLayer {
             options['fill-extrusion-height'] = this.height;
         } else {
             options['fill-extrusion-height'] = {
-                'property': this.heightField || 'height',
-                'type': 'categorical',
-                'stops': this.heightStops,
+                property: this.heightField || 'height',
+                type: 'categorical',
+                stops: this.heightStops
             };
         }
 
         if (this.baseHeightField) {
             options['fill-extrusion-base'] = {
-                'property': this.baseHeightField,
-                'type': 'identity'
-            }
+                property: this.baseHeightField,
+                type: 'identity'
+            };
         }
         return options;
     }
@@ -64,15 +64,15 @@ class UniqueTheme3DLayer extends Theme3DLayer {
      * @returns {Object}  mapbox gl样式对象
      */
     getHighlightStyleOptions() {
-        var color = (this.highlight && this.highlight.color != null) ? this.highlight.color : '#ADA91E';
+        var color = this.highlight && this.highlight.color != null ? this.highlight.color : '#ADA91E';
         var paint = {
             'fill-extrusion-color': color,
             'fill-extrusion-height': {
-                "stops": this.heightStops,  
-                "property": this.heightField,
-                'type': 'categorical'
+                stops: this.heightStops,
+                property: this.heightField,
+                type: 'categorical'
             },
-            'fill-extrusion-opacity': this.highlight && this.highlight.opacity || 0.6
+            'fill-extrusion-opacity': (this.highlight && this.highlight.opacity) || 0.6
         };
         if (this.height != null) {
             paint['fill-extrusion-height'] = this.height || 0;
@@ -81,19 +81,19 @@ class UniqueTheme3DLayer extends Theme3DLayer {
     }
 
     _createLegendElement() {
-        var legendListElement = "<ul>";
-        var len = this.colorStops && this.colorStops.length || 0;
+        var legendListElement = '<ul>';
+        var len = (this.colorStops && this.colorStops.length) || 0;
         for (var i = 0; i < len; i++) {
             var text = this.colorStops[i][0];
             var color = this.colorStops[i][1];
-            legendListElement += "<li><span style='background-color:" + color + ";'></span><span>" + text + "</span></li>";
+            legendListElement += "<li><span style='background-color:" + color + ";'></span><span>" + text + '</span></li>';
         }
-        legendListElement += "</ul>";
+        legendListElement += '</ul>';
         return legendListElement;
     }
-};
+}
 
-export {UniqueTheme3DLayer};
+export { UniqueTheme3DLayer };
 export var uniqueTheme3DLayer = function (id, layerOptions) {
     return new UniqueTheme3DLayer(id, layerOptions);
 };
