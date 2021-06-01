@@ -21,7 +21,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -30,17 +30,17 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl">
-        </mapbox-ogc-wmts-layer>
-        <mapbox-raster-layer
+        <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl">
+        </mapgis-ogc-wmts-layer>
+        <mapgis-rastertile-layer
           :layer="layerRaster"
           :layer-id="layerRasterId"
           :source="sourceRaster"
           :source-id="sourceRasterId"
           >
-        </mapbox-raster-layer>
-        <mapbox-geolocate-control :track-user-location="track" :show-user-location="user" />
-      </mapbox-map>
+        </mapgis-rastertile-layer>
+        <mapgis-geolocate :track-user-location="track" :show-user-location="user" />
+      </mapgis-web-map>
     </div>
     <script>
       new Vue({

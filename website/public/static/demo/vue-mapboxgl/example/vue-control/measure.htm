@@ -45,7 +45,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map id="map" 
+            <mapgis-web-map id="map" 
                 :access-token="accessToken" 
                 :map-style="mapStyle" 
                 :zoom="mapZoom" 
@@ -53,15 +53,15 @@
                 :crs="mapCrs"
                 v-on:load="handleMapLoad"
                 >
-                <mapbox-igs-tdt-layer 
+                <mapgis-igs-tdt-layer 
                     :layer="layer" 
                     :layer-id="layerId" 
                     :source-id="sourceId" 
                     :baseURL="baseURL" 
                     :token="token" 
                     :crs="mapCrs">
-                </mapbox-igs-tdt-layer>
-                <mapbox-base-measure
+                </mapgis-igs-tdt-layer>
+                <mapgis-measure
                     class="custom-measure-wrapper"
                     :measure-mode="measureMode"
                     v-on:added="handleAdded"
@@ -73,14 +73,14 @@
                         <div class="toolbar-item" v-on:click="toggleQueryLength">长度</div>
                         <div class="toolbar-item" v-on:click="toggleQueryArea">面积</div>
                     </div>
-                    <mapbox-marker color="#ff0000" :coordinates="coordinates" v-if="coordinates.length > 0">
+                    <mapgis-marker color="#ff0000" :coordinates="coordinates" v-if="coordinates.length > 0">
                         <div slot="marker" class="label">
                             <div>面积：{{ area }}</div>
                             <div>周长：{{ perimeter }}</div>    
                         </div>
-                    </mapbox-marker>
-                </mapbox-base-measure>
-            </mapbox-map>
+                    </mapgis-marker>
+                </mapgis-measure>
+            </mapgis-web-map>
         </div>
         <script>
             new Vue({

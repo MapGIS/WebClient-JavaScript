@@ -20,7 +20,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -28,21 +28,21 @@
         :center="outerCenter"
         :crs="mapCrs"
         v-on:load="handleMapLoad">
-        <mapbox-ogc-wmts-layer
+        <mapgis-ogc-wmts-layer
           :layer="layerWmts"
           :layer-id="layerWmtsId"
           :source-id="sourceWmtsId"
           :url="wmtsurl">
-        </mapbox-ogc-wmts-layer>
+        </mapgis-ogc-wmts-layer>
         <canvas id="canvasID" width="400" height="400">Canvas not supported</canvas>
-        <mapbox-canvas-layer
+        <mapgis-canvas-layer
           :source-id="canvasSourceId"
           :source="canvasSource"
           :layer-id="canvasLayerId"
           :layer="canvasLayer"
           v-on:layer-source-loading="handCanvasLoad">
-        </mapbox-canvas-layer>
-      </mapbox-map>
+        </mapgis-canvas-layer>
+      </mapgis-web-map>
     </div>
     <script>
       new Vue({

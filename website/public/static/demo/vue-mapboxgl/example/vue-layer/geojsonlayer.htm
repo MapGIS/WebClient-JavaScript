@@ -20,7 +20,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -29,32 +29,32 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-ogc-wmts-layer
+        <mapgis-ogc-wmts-layer
           :layer="layerWmts"
           :layer-id="layerWmtsId"
           :source-id="sourceWmtsId"
           :url="wmtsurl">
-        </mapbox-ogc-wmts-layer>
-        </mapbox-raster-layer>
-        <mapbox-geojson-layer
+        </mapgis-ogc-wmts-layer>
+        </mapgis-rastertile-layer>
+        <mapgis-geojson-layer
           :source="geojsonSource"
           :source-id="geojsonSourceId"
           :layer="circleLayer"
           :layer-id="circleLayerId">
-        </mapbox-geojson-layer>
-        <mapbox-geojson-layer
+        </mapgis-geojson-layer>
+        <mapgis-geojson-layer
           :source="geojsonSource"
           :source-id="geojsonSourceId"
           :layer="lineLayer"
           :layer-id="lineLayerId">
-        </mapbox-geojson-layer>
-        <mapbox-geojson-layer
+        </mapgis-geojson-layer>
+        <mapgis-geojson-layer
           :source="geojsonSource"
           :source-id="geojsonSourceId"
           :layer="fillLayer"
           :layer-id="fillLayerId">
-        </mapbox-geojson-layer>
-      </mapbox-map>
+        </mapgis-geojson-layer>
+      </mapgis-web-map>
     </div>
     <script>
       var geojson = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[114.28939819335936,30.594183452544694]}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[114.34776306152344,30.623436511269382],[114.32510375976562,30.63909360759635],[114.30673599243164,30.634958017061198],[114.29180145263672,30.629640569460406],[114.28339004516601,30.627424880048103],[114.26467895507812,30.620777507443577],[114.24613952636719,30.616050209185243],[114.23566818237304,30.61073172273802]]}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[114.33454513549805,30.479893814659587],[114.38587188720703,30.479893814659587],[114.38587188720703,30.504596494227247],[114.33454513549805,30.504596494227247],[114.33454513549805,30.479893814659587]]]}}]};
