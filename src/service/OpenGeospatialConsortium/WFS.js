@@ -115,12 +115,12 @@ class WFS extends OGCService {
 
         if (version === '1.1.0') {
             if (bbox) {
-                object = { ...object, bbox: `${bbox},${srsname}` };
+              object = Object.assign(object, { bbox: `${bbox},${srsname}` });
             } else {
-                object = { ...object };
+                object = object;
             }
         } else if (version === '2.0.0') {
-            object = { ...object, Envelope: `${bbox},${srsname}` };
+            object = Object.assign(object, { Envelope: `${bbox},${srsname}`});
         }
 
         if (index === length) {

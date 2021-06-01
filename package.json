@@ -6,6 +6,7 @@
     "scripts": {
         "website": "cd website && npm run serve",
         "website-build": "cd website && npm run build",
+        "build-all": "npm run leaflet-plugin-debug && npm run leaflet-plugin-release && npm run openlayers-plugin-debug && npm run openlayers-plugin-release && npm run mapbox-plugin-debug && npm run  mapbox-plugin-release && npm run cesium-plugin-debug && npm run cesium-plugin-release && npm run service-debug && npm run service-releas",
         "leaflet-debug": "webpack --config src/config/opensource/leaflet-debug-config.js",
         "leaflet-release": "webpack --config src/config/opensource/leaflet-release-config.js --progress",
         "openlayers-debug": "webpack --config src/config/opensource/openlayers-debug-config.js",
