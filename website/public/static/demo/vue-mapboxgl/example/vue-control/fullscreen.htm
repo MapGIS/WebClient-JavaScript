@@ -26,7 +26,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -35,18 +35,18 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl">
-        </mapbox-ogc-wmts-layer>
-        <mapbox-raster-layer
+        <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl">
+        </mapgis-ogc-wmts-layer>
+        <mapgis-rastertile-layer
           :layer="layerRaster"
           :layer-id="layerRasterId"
           :source="sourceRaster"
           :source-id="sourceRasterId"
           >
-        </mapbox-raster-layer>
-        <mapbox-fullscreen-control :position="position" :container="container">
-        </mapbox-fullscreen-control>
-      </mapbox-map>
+        </mapgis-rastertile-layer>
+        <mapgis-fullscreen :position="position" :container="container">
+        </mapgis-fullscreen>
+      </mapgis-web-map>
       <div class="custom" ref="custom">自定义样式,屏蔽后默认显示地图组件</div>
     </div>
     <script>

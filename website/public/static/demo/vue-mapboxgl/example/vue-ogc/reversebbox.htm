@@ -45,7 +45,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 v-bind:access-token="accessToken"
                 v-bind:map-style="mapStyle"
@@ -54,23 +54,23 @@
                 v-bind:crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-igs-tdt-layer
+                <mapgis-igs-tdt-layer
                     v-bind:layer="layer"
                     v-bind:layer-id="layerId"
                     v-bind:source-id="sourceId"
                     v-bind:base-u-r-l="baseURL"
                     v-bind:token="token"
                 >
-                </mapbox-igs-tdt-layer>
-                <mapbox-ogc-wms-layer
+                </mapgis-igs-tdt-layer>
+                <mapgis-ogc-wms-layer
                     v-bind:layer="layerWms"
                     v-bind:layer-id="layerWmsId"
                     v-bind:source-id="sourceWmsId"
                     v-bind:url="wmsurl"
                     v-bind:reversebbox="reversebbox"
                 >
-                </mapbox-ogc-wms-layer>
-            </mapbox-map>
+                </mapgis-ogc-wms-layer>
+            </mapgis-web-map>
         </div>
         <script>
             new Vue({

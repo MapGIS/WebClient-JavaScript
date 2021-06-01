@@ -21,7 +21,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 :access-token="accessToken"
                 :map-style="mapStyle"
@@ -30,12 +30,12 @@
                 :crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapbox-ogc-wmts-layer>
-                <mapbox-vector-layer :layer="layerSymbol1" :layer-id="layerSymbolId1" :source="sourceSymbol1" :source-id="sourceSymbolId1">
-                </mapbox-vector-layer>
-                <mapbox-vector-layer :layer="layerSymbol2" :layer-id="layerSymbolId2" :source="sourceSymbol2" :source-id="sourceSymbolId2">
-                </mapbox-vector-layer>
-            </mapbox-map>
+                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapgis-ogc-wmts-layer>
+                <mapgis-vector-layer :layer="layerSymbol1" :layer-id="layerSymbolId1" :source="sourceSymbol1" :source-id="sourceSymbolId1">
+                </mapgis-vector-layer>
+                <mapgis-vector-layer :layer="layerSymbol2" :layer-id="layerSymbolId2" :source="sourceSymbol2" :source-id="sourceSymbolId2">
+                </mapgis-vector-layer>
+            </mapgis-web-map>
         </div>
         <script>
             var GeoPoints = {

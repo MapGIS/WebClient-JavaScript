@@ -20,7 +20,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -29,20 +29,20 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-ogc-wmts-layer
+        <mapgis-ogc-wmts-layer
           :layer="layerWmts"
           :layer-id="layerWmtsId"
           :source-id="sourceWmtsId"
           :url="wmtsurl">
-        </mapbox-ogc-wmts-layer>
-</mapbox-raster-layer>
-<mapbox-video-layer
+        </mapgis-ogc-wmts-layer>
+</mapgis-rastertile-layer>
+<mapgis-video-layer
   :source="videoSource"
   :source-id="videoSourceId"
   :layer="videoLayer"
   :layer-id="videoLayerId">
-</mapbox-video-layer>
-</mapbox-map>
+</mapgis-video-layer>
+</mapgis-web-map>
 </div>
 <script>
   new Vue({

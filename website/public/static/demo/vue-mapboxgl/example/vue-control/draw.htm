@@ -43,7 +43,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 v-bind:access-token="accessToken"
                 v-bind:map-style="mapStyle"
@@ -51,7 +51,7 @@
                 v-bind:center="outerCenter"
                 v-bind:crs="mapCrs"
             >
-                <mapbox-igs-tdt-layer
+                <mapgis-igs-tdt-layer
                     v-bind:layer="layer"
                     v-bind:layer-id="layerId"
                     v-bind:source-id="sourceId"
@@ -59,8 +59,8 @@
                     v-bind:token="token"
                     :crs="mapCrs"
                 >
-                </mapbox-igs-tdt-layer>
-                <mapbox-base-draw
+                </mapgis-igs-tdt-layer>
+                <mapgis-draw
                     class="custom-draw-wrapper"
                     position="top-left"
                     v-bind:controls="controls"
@@ -74,8 +74,8 @@
                         <div class="toolbar-item" v-on:click="togglePolygon1">画区</div>
                         <div class="toolbar-item" v-on:click="toggleDelete1">删除</div>
                     </div>
-                </mapbox-base-draw>
-            </mapbox-map>
+                </mapgis-draw>
+            </mapgis-web-map>
         </div>
         <script>
             var draw = new Vue({

@@ -20,7 +20,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -29,19 +29,19 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-raster-layer
+        <mapgis-rastertile-layer
           :layer="raster1Layer"
           :layer-id="raster1LayerId"
           :source-id="raster1SourceId"
           :source="raster1Source">
-        </mapbox-raster-layer>
-        <mapbox-raster-layer
+        </mapgis-rastertile-layer>
+        <mapgis-rastertile-layer
           :layer="raster2Layer"
           :layer-id="raster2LayerId"
           :source-id="raster2SourceId"
           :source="raster2Source">
-        </mapbox-raster-layer>
-      </mapbox-map>
+        </mapgis-rastertile-layer>
+      </mapgis-web-map>
     </div>
     <script>
       new Vue({

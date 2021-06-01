@@ -21,7 +21,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 :access-token="accessToken"
                 :map-style="mapStyle"
@@ -32,10 +32,10 @@
                 :crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapbox-ogc-wmts-layer>
-                <mapbox-vector-layer :layer="layerVector" :layer-id="layerVectorId" :source="sourceVector" :source-id="sourceVectorId">
-                </mapbox-vector-layer>
-            </mapbox-map>
+                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapgis-ogc-wmts-layer>
+                <mapgis-vector-layer :layer="layerVector" :layer-id="layerVectorId" :source="sourceVector" :source-id="sourceVectorId">
+                </mapgis-vector-layer>
+            </mapgis-web-map>
         </div>
         <script>
             var GeoPolygons = {
