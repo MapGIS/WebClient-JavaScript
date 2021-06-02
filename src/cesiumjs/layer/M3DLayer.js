@@ -73,26 +73,34 @@ export default class M3DLayer extends BaseLayer {
     /**
      * 添加m3d文档服务
      * @function module:客户端数据服务.M3DLayer.prototype.append
-     * @param {String} url 服务地址
-     * @param {Object} optionsParam 包含以下参数
-     * @param {Boolean} [optionsParam.autoReset = true] 是否自动定位
-     * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
-     * @param {Function} [optionsParam.loaded = function] 回调函数
-     * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
-     * @param {Boolean} [optionsParam.showBoundingVolume = false] 是否显示包围盒
-     * @param {Number} [optionsParam.maximumScreenSpaceError = 16] 用于控制模型显示细节  值较大将会渲染更少的贴图,进而可以提高性能,而较低的值将提高视觉质量
+     * @param {String}          url 服务地址
+     * @param {Object}          optionsParam 包含以下参数
+     * @param {Boolean}         [optionsParam.autoReset = true] 是否自动定位
+     * @param {Boolean}         [optionsParam.synchronous = true] 是否异步请求
+     * @param {Function}        [optionsParam.loaded = function] 回调函数
+     * @param {DefaultProxy}    [optionsParam.proxy = defaultProxy] 代理
+     * @param {Boolean}         [optionsParam.showBoundingVolume = false] 是否显示包围盒
+     * @param {Number}          [optionsParam.maximumScreenSpaceError = 16] 用于控制模型显示细节  值较大将会渲染更少的贴图,进而可以提高性能,而较低的值将提高视觉质量
+     * @param {String}          [options.layers=undefined] 图层过滤功能
      * @see {@link https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileset.html}
      * @returns {Array<MapGISM3DSet>} 返回m3d图层对象数组,长度为图层对象个数
      * @example
+     *
      * function callBackfunction(layer){
-     * console.log(layer)
+     *  console.log(layer)
      * }
+     *
+     * // layers 属性类似二维服务
+     * // layers=show:0,1 表示只显示 layerIndex 为 0, 1 的图层
+     * // layers=hide:0,1 表示只隐藏 layerIndex 为 0, 1 的图层
+     *
      * let result = m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D, {
-     * autoReset:false,
-     * synchronous:true,
-     * showBoundingVolume:false,
-     * maximumScreenSpaceError:16,
-     * loaded:callBackfunction
+     *  autoReset:false,
+     *  synchronous:true,
+     *  showBoundingVolume:false,
+     *  maximumScreenSpaceError:16,
+     *  layers:'layers=show:0',
+     *  loaded:callBackfunction
      * });
      *
      */
@@ -106,6 +114,38 @@ export default class M3DLayer extends BaseLayer {
         let resource;
         let proxy;
         const docLayers = [];
+
+        const layersString = defaultValue(op.layers, '');
+
+        let layersVec = layersString.split('=');
+
+        let layerShow = true;
+        let indexArray = [];
+
+        if (layersVec.length === 2) {
+            var tmpString = layersVec[1];
+            layersVec = tmpString.split(':');
+
+            if (layersVec.length === 2) {
+                if (layersVec[0] === 'show') {
+                    layerShow = true;
+                } else if (layersVec[0] === 'hide') {
+                    layerShow = false;
+                } else {
+                    // eslint-disable-next-line no-console
+                    console.log('layers 参数输入错误：' + layersString);
+                }
+
+                tmpString = layersVec[1];
+                layersVec = tmpString.split(',');
+
+                if (layersVec.length > 0) {
+                    for (var index = 0; index < layersVec.length; index++) {
+                        indexArray.push(parseInt(layersVec[index]));
+                    }
+                }
+            }
+        }
 
         if (Cesium.defined(options)) {
             if (Cesium.defined(options.proxy)) {
@@ -130,7 +170,16 @@ export default class M3DLayer extends BaseLayer {
                     const type = parseInt(layer.layerType, 10);
                     if (type === LayerType.M3DLAYER) {
                         const { layerRenderIndex, layerIndex, gdbpUrl, isVisible } = layer;
-                        const m3d = this.appendM3DLayer(baseUrl, layerRenderIndex, layerIndex, gdbpUrl, isVisible, true, options);
+
+                        let isShow = true;
+
+                        if (layersString.length > 7 && indexArray.length > 0) {
+                            isShow = (indexArray.indexOf(layerIndex) !== -1) === layerShow;
+                        } else {
+                            isShow = isVisible;
+                        }
+
+                        const m3d = this.appendM3DLayer(baseUrl, layerRenderIndex, layerIndex, gdbpUrl, isShow, true, options);
                         docLayers.push(m3d);
                         m3d.readyPromise.then(_callBack);
                     }
@@ -268,7 +317,11 @@ export default class M3DLayer extends BaseLayer {
         let hpr = new Cesium.Matrix3();
         const hprObj = new Cesium.HeadingPitchRoll(Cesium.Math.PI, Cesium.Math.PI, Cesium.Math.PI);
         hpr = Cesium.Matrix3.fromHeadingPitchRoll(hprObj, hpr);
-        const modelMatrix = Cesium.Matrix4.multiplyByTranslation(Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(longtitude, latitude, 0)), new Cesium.Cartesian3(), new Cesium.Matrix4());
+        const modelMatrix = Cesium.Matrix4.multiplyByTranslation(
+            Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(longtitude, latitude, 0)),
+            new Cesium.Cartesian3(),
+            new Cesium.Matrix4()
+        );
         Cesium.Matrix4.multiplyByMatrix3(modelMatrix, hpr, modelMatrix);
         const { _root } = tileSet;
         _root.transform = modelMatrix;
