@@ -16,32 +16,21 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                    v-bind:ref="webgloberef"
-                v-bind:animation="false"
-                v-bind:timeline="false"
+                :animation="false"
+                :timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-igs-doc-layer
-                    v-bind:ip="ip" 
-                    v-bind:port="port" 
-                    v-bind:protocol="protocol" 
-                    v-bind:server-name="serverName"
-                >
-                </mapgis-3d-igs-doc-layer>
-            </mapgis-web-scene >
+                <mapgis-3d-igs-doc-layer :base-url="baseUrl" />
+            </mapgis-web-scene>
         </div>
         <script>
             new Vue({
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
-                        ip: 'develop.smaryun.com',
-                        port: '6163',
-                        protocol: 'http',
-                        serverName: '北京市'
+                        baseUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市'
                     };
                 },
                 methods: {

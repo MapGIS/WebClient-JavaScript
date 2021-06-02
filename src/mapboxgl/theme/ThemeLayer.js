@@ -183,7 +183,7 @@ class ThemeLayer {
                  * @property {Object} layer - 图层。
                  * @property {string} property - 被改变的属性。
                  */
-                window.mapboxgl.Evented.prototype.fire('changelayer', {
+                mapboxgl.Evented.prototype.fire('changelayer', {
                     layer: this,
                     property: 'opacity'
                 });
@@ -249,7 +249,7 @@ class ThemeLayer {
          * @property {Array.<Zondy.Feature.Vector>} features - 未被成功删除的要素。
          * @property {boolean} succeed - 删除成功与否。
          */
-        window.mapboxgl.Evented.prototype.fire('featuresremoved', {
+        mapboxgl.Evented.prototype.fire('featuresremoved', {
             features: featuresFailRemoved,
             succeed: succeed
         });
@@ -264,7 +264,7 @@ class ThemeLayer {
             this.renderer.clear();
         }
         this.features = [];
-        window.mapboxgl.Evented.prototype.fire('featuresremoved', {
+        mapboxgl.Evented.prototype.fire('featuresremoved', {
             features: [],
             succeed: true
         });

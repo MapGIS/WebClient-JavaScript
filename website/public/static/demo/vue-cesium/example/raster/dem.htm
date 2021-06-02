@@ -16,60 +16,37 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                v-bind:ref="webgloberef"
-                v-bind:animation="false"
-                v-bind:timeline="false"
+                :animation="false"
+                :timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <cesium-terrain-provider v-bind:url="demurl"></cesium-terrain-provider>
-                <mapgis-3d-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></mapgis-3d-ogc-wmts-layer>
+                <cesium-terrain-provider :url="demUrl" :v-if="showDem" />
+                <mapgis-3d-ogc-wmts-layer :base-url="baseUrl" :wmts-layer="wmtsLayer" :srs="srs" :tile-matrix-set="tileMatrixSet" />
             </mapgis-web-scene>
         </div>
         <script>
-            Cesium.Ion.defaultAccessToken =
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiM2Q0ZGMxYy1iZGZkLTQ4OWItODlhMy1iOWNkMDE0M2U3YWEiLCJpZCI6NTEzNSwiaWF0IjoxNjA2MjE0OTkyfQ.2aktNrUASlLsPwSFtkgKBTQLJTAnOTyjgKDRQmnafiE';
             new Vue({
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
-                        demurl: new Cesium.IonResource.fromAssetId(1),
-                        url:
-                            'http://t5.tianditu.com/DataServer?T=img_c' +
-                            '&L={TileMatrix}&Y={TileRow}&X={TileCol}' +
-                            '&tk=f5347cab4b28410a6e8ba5143e3d5a35',
+                        showDem: false,
+                        demUrl: undefined,
+                        baseUrl: 'http://t6.tianditu.gov.cn/vec_c/wmts?tk=9c157e9585486c02edf817d2ecbc7752',
+                        wmtsLayer: 'vec',
+                        tileMatrixSet: 'c',
+                        srs: 'EPSG:4326',
                         options: {
-                            tilingScheme: 'EPSG:4490',
-                            tileMatrixLabels: [
-                                '1',
-                                '2',
-                                '3',
-                                '4',
-                                '5',
-                                '6',
-                                '7',
-                                '8',
-                                '9',
-                                '10',
-                                '11',
-                                '12',
-                                '13',
-                                '14',
-                                '15',
-                                '16',
-                                '17',
-                                '18',
-                                '19',
-                                '20'
-                            ]
+                            format: 'tiles'
                         }
                     };
                 },
                 methods: {
                     handleLoad(e) {
-                        const { component } = e;
+                        const { component, Cesium } = e;
+                        Cesium.Ion.defaultAccessToken =
+                            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiM2Q0ZGMxYy1iZGZkLTQ4OWItODlhMy1iOWNkMDE0M2U3YWEiLCJpZCI6NTEzNSwiaWF0IjoxNjA2MjE0OTkyfQ.2aktNrUASlLsPwSFtkgKBTQLJTAnOTyjgKDRQmnafiE';
                         const { webGlobe } = component;
                         webGlobe.viewer.camera.setView({
                             direction: { x: 0.4680575394156845, y: -0.8267033643312148, z: 0.31222377744109403 },
@@ -86,6 +63,10 @@
                             pitch: -16,
                             roll: 0
                         });
+
+                        this.demUrl = new Cesium.IonResource.fromAssetId(1);
+                        this.showDem = true;
+
                         console.log('地图加初始化完毕！', webGlobe.viewer.camera);
                     }
                 }

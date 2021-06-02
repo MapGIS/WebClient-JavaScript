@@ -16,7 +16,6 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                v-bind:ref="webgloberef"
                 v-bind:animation="false"
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
@@ -31,7 +30,6 @@
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
                         vectortilejson: {
                             version: 8,
                             name: '中国行政区 Style',

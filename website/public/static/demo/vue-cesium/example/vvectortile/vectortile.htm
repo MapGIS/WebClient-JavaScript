@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Vue-地图瓦片</title>
-        <script include="vue" exclude="cesium" src="./static/libs/include-cesium-local.js"></script>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
                 height: 100vh;
@@ -16,17 +16,13 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                v-bind:ref="webgloberef"
-                v-bind:animation="false"
-                v-bind:timeline="false"
+                :animation="false"
+                :timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-vectortile-layer 
-                    v-bind:style-url="styleUrl"
-                >
-                </mapgis-3d-vectortile-layer>
+                <mapgis-3d-vectortile-layer v-bind:style-url="styleUrl" />
             </mapgis-web-scene>
         </div>
         <script>
@@ -34,10 +30,6 @@
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
-                        ip: 'develop.smaryun.com',
-                        port: '6163',
-                        protocol: 'http',
                         styleUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/蓝色-墨卡托.json'
                     };
                 },

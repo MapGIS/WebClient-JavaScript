@@ -51,14 +51,13 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                :ref="websceneref"
                 :animation="false"
                 :timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-raster-layer :url="url" />
+                <mapgis-3d-arcgis-tile-layer :base-url="baseUrl" />
                 <mapgis-3d-popup :position="position" v-on:load="bindEvent">
                     <div>
                         Vue槽-实现任何自定义样式
@@ -72,18 +71,15 @@
                 el: '#app',
                 data() {
                     return {
-                        websceneref: 'websceneref' + Math.random(),
-                        url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                        baseUrl: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer',
                         position: {
                             longitude: 110,
                             latitude: 30,
                             height: 300
-                        },
-                        popupoptions: {}
+                        }
                     };
                 },
                 mounted() {
-                    console.log('mounted');
                 },
                 methods: {
                     handleLoad(e) {
@@ -95,7 +91,6 @@
                     bindEvent() {
                         let popup,
                             popups = document.getElementsByClassName('cesium-custom-popup-content');
-                        console.log('popups', popups);
                         if (popups.length > 0) {
                             popup = popups[0];
                             popup.addEventListener('click', this.handleClick.bind(this));

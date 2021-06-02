@@ -1,7 +1,3 @@
-//var mapboxgl = window.mapboxgl = window.mapboxgl ||require('@mapgis/mapbox-gl.js');  //开发过程中调试源码可用，其他情况下直接用下面的源码编译
-//var mapboxgl = window.mapboxgl = window.mapboxgl || require('@mapgis/mapbox-gl.js');
-// var mapboxgl = window.mapboxgl = window.mapboxgl ||require('mapbox-gl');
-
 import { MapExtend } from '../../mapboxgl/MapExtend';
 
 export { MapExtend };
