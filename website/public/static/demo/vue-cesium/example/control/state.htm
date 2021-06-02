@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-Popup</title>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            #app {
+                height: 100vh;
+                width: 100vw;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapgis-web-scene
+                :ref="websceneref"
+                :animation="false"
+                :timeline="false"
+                v-on:load="handleLoad"
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+            >
+                <mapgis-3d-raster-layer :url="url" />
+                <mapgis-3d-statebar />
+            </mapgis-web-scene>
+        </div>
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        websceneref: 'websceneref' + Math.random(),
+                        url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                    };
+                },
+                mounted() {
+                    console.log('mounted');
+                },
+                methods: {
+                    handleLoad(e) {
+                        console.log('地图加初始化完毕！', e);
+                    },
+                }
+            });
+        </script>
+    </body>
+</html>

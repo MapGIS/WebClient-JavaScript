@@ -63,13 +63,13 @@ class GraphThemeLayer extends ThemeLayer {
    */
   addFeatures(features) {
     var me = this;
-    window.mapboxgl.Evented.prototype.fire("beforefeaturesadded", {
+    mapboxgl.Evented.prototype.fire("beforefeaturesadded", {
       features: features
     });
 
     if (features instanceof FeatureSet) {
       var attrs = null;
-
+      var LabelDots = features.LabelDots;
       var attstruct = features.AttStruct;
       var feaArr = features.SFEleArray;
       if (feaArr != null && feaArr.length > 0) {
@@ -83,6 +83,7 @@ class GraphThemeLayer extends ThemeLayer {
             attrs["FID"] = feature.FID;
           }
           feature.attributes = attrs;
+          LabelDots && LabelDots[j] && (feature.LabelDot = LabelDots[j]);
           me.features.push(feature);
         }
       }

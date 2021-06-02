@@ -5,7 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>上海房价图</title>
   <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-  <script include="elasticsearch,echarts,geojson,shapefile,language" src="./static/libs/include-mapboxgl-local.js"></script>
+  <script include="elasticsearch,echarts,geojson,shapefile,language"
+    src="./static/libs/include-mapboxgl-local.js"></script>
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
   <style>
     #mapid {
       position: absolute;
@@ -18,7 +20,10 @@
 
 <body>
   <div id="mapid"></div>
+  <div id="mouse-position">
+  </div>
   <script>
+    var mousePosition = document.getElementById('mouse-position')
     //一定要去mapbox注册一个key,这个key会失效的
     mapboxgl.accessToken =
       'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
@@ -92,6 +97,15 @@
       });
       var mapbox = myChart.getModel().getComponent('mapbox3D').getMapbox();
       mapbox.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+      //注册鼠标移动事件
+      mapbox.on('mousemove', function (e) {
+        //经纬度坐标转web墨卡托
+        const earthRad = 6378137.0;
+        const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+        const a = e.lngLat.lat * Math.PI / 180;
+        const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+        mousePosition.innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+      });
     });
     window.addEventListener('keydown', function () {
       myChart.dispatchAction({

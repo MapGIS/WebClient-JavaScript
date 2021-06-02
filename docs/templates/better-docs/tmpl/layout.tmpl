@@ -26,6 +26,9 @@ var search = env.conf.templates && env.conf.templates.search
             class="sidebar <?js= isTutorial ? 'tutorials' : '' ?>"
             id="sidebarNav"
         >
+            <div>
+                <?js= this.apilink ?>
+            </div>
             <?js if(search) { ?>
                 <div class="search-wrapper">
                     <input id="search" type="text" placeholder="搜索文档..." class="input">
@@ -42,8 +45,8 @@ var search = env.conf.templates && env.conf.templates.search
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p><?js= subtitle ?></p>
-                    <h1><?js= title ?></h1>
+                    <span class="page-title-sub"><?js= title ?></span>
+                    <span class="page-title-main"><?js= subtitle ?></span>
                 </header>
                 <?js= content ?>
             </div>

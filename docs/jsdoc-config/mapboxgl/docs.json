@@ -1,55 +1,62 @@
 {
-  "opts": {
-    "encoding": "utf8",
-    "private": false,
-    "recurse": true,
-    "lenient": true,
-    "tutorials": "./docs/jsdoc-config/mapboxgl/tutorials",
-    "destination": "./website/public/docs/mapboxgl",
-    "template": "./docs/templates/better-docs"
-  },
-  "disqus": "",
-  "tags": {
-    "allowUnknownTags": true
-  },
-  "source": {
-    "includePattern": ".+\\.js?$",
-    "include": ["src/service/", "src/mapboxgl/"],
-    "exclude": ["src/service/baseserver"]
-  },
-  "plugins": ["plugins/markdown"],
-  "templates": {
-    "search": true,
-    "cleverLinks": true,
-    "monospaceLinks": true,
-    "outputSourceFiles": true,
-    "outputSourcePath": true,
-    "default": {
-      "outputSourceFiles": true
+    "opts": {
+        "encoding": "utf8",
+        "private": false,
+        "recurse": true,
+        "lenient": true,
+        "tutorials": "./docs/jsdoc-config/mapboxgl/tutorials",
+        "destination": "./website/public/docs/mapboxgl",
+        "template": "./docs/templates/better-docs"
     },
-    "better-docs": {
-      "logo": "../image/mapgis_blue.png",
-      "title": "",
-      "hideGenerator": false,
-      "navLinks": [
-        {
-          "label": "Cesium",
-          "href": "/docs/cesium/index.html"
-        },
-        {
-          "label": "MapboxGL",
-          "href": "/docs/mapboxgl/index.html"
-        },
-        {
-          "label": "Leaflet",
-          "href": "/docs/leaflet/index.html"
-        },
-        {
-          "label": "OpenLayers",
-          "href": "/docs/openlayers/index.html"
-        }
-      ]
+    "disqus": "",
+    "tags": {
+        "allowUnknownTags": true
     },
-    "linenums": true
-  }
+    "source": {
+        "includePattern": ".+\\.js?$",
+        "include": ["src/service/", "src/mapboxgl/"],
+        "exclude": [
+            "src/service/baseserver",
+            "src/service/node_modules",
+            "src/service/node_modules/turf-jsts",
+            "src/service/node_modules/@turf",
+            "src/service/node_modules/polygon-clipping",
+            "src/service/node_modules/splaytree"
+        ]
+    },
+    "plugins": ["plugins/markdown"],
+    "templates": {
+        "search": true,
+        "cleverLinks": true,
+        "monospaceLinks": true,
+        "outputSourceFiles": true,
+        "outputSourcePath": true,
+        "default": {
+            "outputSourceFiles": true
+        },
+        "better-docs": {
+            "logo": "../image/mapgis_blue.png",
+            "title": "Client for JavaScript",
+            "hideGenerator": false,
+            "navLinks": [
+                {
+                    "label": "Cesium",
+                    "href": "/docs/cesium/index.html"
+                },
+                {
+                    "label": "MapboxGL",
+                    "href": "/docs/mapboxgl/index.html"
+                },
+                {
+                    "label": "Leaflet",
+                    "href": "/docs/leaflet/index.html"
+                },
+                {
+                    "label": "OpenLayers",
+                    "href": "/docs/openlayers/index.html"
+                }
+            ]
+        },
+        "linenums": true
+    }
 }

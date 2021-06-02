@@ -1,80 +1,119 @@
 [
-    {
-        "title": "首页",
-        "active": "功能",
+  {
+    "title": "首页",
+    "active": "功能",
+    "menus": [
+      {
+        "title": "功能",
         "menus": [
-            {
-                "title": "功能",
-                "menus": [
-                    {
-                        "title": "概述",
-                        "links": [["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]],
-                        "hightlights": [[false, false, false, false, true]],
-                        "routes": [["/total/core", "/total/detail", "/total/use", "/total/select", "/total/download"]]
-                    }
-                ]
-            },
-            {
-                "title": "插件",
-                "menus": [
-                    {
-                        "title": "插件详情",
-                        "links": [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
-                        "hightlights": [[false, false, false, false, false]],
-                        "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]]
-                    }
-                ]
-            }
+          {
+            "title": "概述",
+            "links": [["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]],
+            "hightlights": [[false, false, false, false, true]],
+            "routes": [["/total/core", "/total/detail", "/total/use", "/total/select", "/total/download"]]
+          }
         ]
-    },
-    {
-        "title": "开发指南",
-        "active": "Cesium",
+      },
+      {
+        "title": "插件",
         "menus": [
-            {
-                "title": "Cesium",
-                "menus": [
-                    {
-                        "title": "常用链接",
-                        "links": [["演示示例", "API文档"]],
-                        "hightlights": [[true, false]],
-                        "routes": [["/gallery/cesium", "./docs/cesium/index.html"]]
-                    }
-                ]
-            },
-            {
-                "title": "MapboxGL",
-                "menus": [
-                    {
-                        "title": "常用链接",
-                        "links": [["演示示例", "API文档"]],
-                        "hightlights": [[true, false]],
-                        "routes": [["/gallery/mapboxgl", "./docs/mapboxgl/index.html"]]
-                    }
-                ]
-            },
-            {
-                "title": "OpenLayers",
-                "menus": [
-                    {
-                        "title": "常用链接",
-                        "links": [["演示示例", "API文档"]],
-                        "hightlights": [[false, false]],
-                        "routes": [["/gallery/openlayers", "./docs/openlayers/index.html"]]
-                    }
-                ]
-            },
-            {
-                "title": "Leaflet",
-                "menus": [
-                    {
-                        "title": "常用链接",
-                        "links": [["演示示例", "API文档"]],
-                        "hightlights": [[false, false]],
-                        "routes": [["/gallery/leaflet", "./docs/leaflet/index.html"]]
-                    }
-                ]
-            }
+          {
+            "title": "插件详情",
+            "links": [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
+            "hightlights": [[false, false, false, false, false]],
+            "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]]
+          }
         ]
-    }
+      },
+      {
+        "title": "标准",
+        "menus": [
+          {
+            "title": "协议",
+            "links": [
+              ["epsg", "ogc", "geojson"]
+            ],
+            "hightlights": [
+              [false, false, false]
+            ],
+            "routes": [
+              ["/standard/epsg", "/standard/ogc", "/standard/geojson"]
+            ]
+          }
+
+        ]}
+    ]
+  },
+  {
+    "title": "开发指南",
+    "active": "Cesium",
+    "menus": [
+      {
+        "title": "Cesium",
+        "menus": [
+          {
+            "title": "常用链接",
+            "links": [["演示示例", "API文档"]],
+            "hightlights": [[true, false]],
+            "routes": [["/gallery/cesium", "./docs/cesium/index.html"]]
+          }
+        ]
+      },
+      {
+        "title": "MapboxGL",
+        "menus": [
+          {
+            "title": "常用链接",
+            "links": [["演示示例", "API文档"]],
+            "hightlights": [[true, false]],
+            "routes": [["/gallery/mapboxgl", "./docs/mapboxgl/index.html"]]
+          }
+        ]
+      },
+      {
+        "title": "OpenLayers",
+        "menus": [
+          {
+            "title": "常用链接",
+            "links": [["演示示例", "API文档"]],
+            "hightlights": [[false, false]],
+            "routes": [["/gallery/openlayers", "./docs/openlayers/index.html"]]
+          }
+        ]
+      },
+      {
+        "title": "Leaflet",
+        "menus": [
+          {
+            "title": "常用链接",
+            "links": [["演示示例", "API文档"]],
+            "hightlights": [[false, false]],
+            "routes": [["/gallery/leaflet", "./docs/leaflet/index.html"]]
+          }
+        ]
+      },
+      {
+        "title": "Vue-Cesium",
+        "menus": [
+          {
+            "title": "常用链接",
+            "links": [["演示示例", "API文档"]],
+            "hightlights": [[true, false]],
+            "routes": [["/gallery/vue-cesium", "./docs/cesium/index.html"]]
+          }
+        ]
+      },
+      {
+        "title": "Vue-MapboxGL",
+        "menus": [
+          {
+            "title": "常用链接",
+            "links": [["演示示例", "API文档"]],
+            "hightlights": [[true, false]],
+            "routes": [["/gallery/vue-mapboxgl", "./docs/mapboxgl/index.html"]]
+          }
+        ]
+      }
+    ]
+  }
 ]

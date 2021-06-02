@@ -367,7 +367,7 @@ export default {
     overflow-x: hidden;
   }
   .el-main {
-    padding: 0 6px;
+    padding: 0 10px;
   }
   .el-timeline-item {
     position: relative;

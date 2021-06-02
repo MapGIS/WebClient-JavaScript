@@ -748,7 +748,7 @@ import {
     NetAnalyse,
     NetAnalysisExtent,
     SlopLineParam
-} from '../../service/extend';
+} from '../../service/Igserver/extend';
 
 import {
     CommonServiceBase,
@@ -767,7 +767,7 @@ import {
     CatalogService,
     TileLayer,
     VectorLayer
-} from '../../service/MRCS';
+} from '../../service/Igserver/MRCS';
 
 import {
     EditDocFeature,
@@ -785,7 +785,7 @@ import {
     QueryParameter,
     QueryParameterBase,
     QueryServiceBase
-} from '../../service/MRFS';
+} from '../../service/Igserver/MRFS';
 
 import {
     AnalysisBase,
@@ -808,7 +808,7 @@ import {
     ProjectByLayer,
     ProjectBySRID,
     FunctionWareService
-} from '../../service/MRFWS';
+} from '../../service/Igserver/MRFWS';
 
 import {
     CalArea,
@@ -821,7 +821,7 @@ import {
     ProjectRang,
     Smooth,
     TopAnalysis
-} from '../../service/MRGS';
+} from '../../service/Igserver/MRGS';
 
 import {
     GetDocImageService,
@@ -830,7 +830,7 @@ import {
     GetMapInfoService,
     GetTileImageService,
     MapServiceBase
-} from '../../service/MRMS';
+} from '../../service/Igserver/MRMS';
 
 
 import {
@@ -862,8 +862,8 @@ import {
     ItemValue,
     ThemeOper,
     ThemesInfo
-} from '../../service/theme';
-import { CoordinateElpTrans } from "../../service/MRGS/CoordinateElpTrans";
+} from '../../service/Igserver/theme';
+import { CoordinateElpTrans } from "../../service/Igserver/MRGS/CoordinateElpTrans";
 
 export {
     ServiceBase

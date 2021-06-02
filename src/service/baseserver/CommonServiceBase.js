@@ -239,12 +239,20 @@ class CommonServiceBase {
             withCredentials: options.withCredentials,
             timeout: options.async ? 0 : null,
             proxy: options.proxy
-        }).then(function (response) {
+        })
+        .then(function (response) {
             if (response.text) {
                 return response.text();
             }
             return response.json();
-        }).then(function (text) {
+        })
+        .catch(function(error) {
+            let result = {error: true, value: {}};
+            var failure = (options.scope) ? bind(options.failure, options.scope) : options.failure;
+            failure(result);
+        })
+        .then(function (text) {
+            if (!text) return;
             var result = null;
             if (typeof text === "string" && (text.toLowerCase() === 'true' || text.toLowerCase() === 'false')) {
                 result = {};

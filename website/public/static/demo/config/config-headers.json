@@ -1,71 +1,126 @@
-[{
+[
+    {
         "title": "首页",
         "icon": "iconhome",
-        "menus": [{
+        "menus": [
+            {
                 "title": "概述",
-                "links": [
-                    ["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]
-                ],
-                "hightlights": [
-                    [false, false, false, false, false]
-                ],
-                "routes": [
-                    ["/total/core", "/total/detail", "/total/use", "/total/select", "/total/download"]
-                ]
+                "icon": "icongaishu",
+                "links": [["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]],
+                "hightlights": [[false, false, false, false, false]],
+                "routes": [["/total/core", "/total/detail", "/total/use", "/total/select", "/total/download"]]
             },
             {
                 "title": "插件",
-                "links": [
-                    ["插件列表", "详细图表", "插件标签", "提交bug", "其他"]
-                ],
-                "hightlights": [
-                    [false, false, false, false, false]
-                ],
-                "routes": [
-                    ["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]
-                ]
+                "icon": "iconchajian",
+                "links": [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
+                "hightlights": [[false, false, false, false, false]],
+                "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]]
             },
             {
                 "title": "协议",
-                "links": [
-                    ["epsg", "ogc", "geojson"]
-                ],
-                "hightlights": [
-                    [false, false, false]
-                ],
-                "routes": [
-                    ["/standard/epsg", "/standard/ogc", "/standard/geojson"]
-                ]
+                "icon": "iconxieyi",
+                "links": [["epsg", "geojson"]],
+                "hightlights": [[false, false]],
+                "routes": [["/standard/epsg", "/standard/geojson"]]
             }
         ]
     },
     {
         "title": "组件",
-        "icon": "iconapp_mw_cluster",
-        "menus": [{
-            "title": "故事",
-            "links": [
-                ["StoryBook-MapboxGL"]
-            ],
-            "hightlights": [
-                [true]
-            ],
-            "routes": [
-                ["/storybook/index.html"]
-            ]
-        }]
+        "icon": "iconpuzzle-piece-plugin",
+        "menus": [
+            {
+                "title": "产品",
+                "icon": "iconchanpinjieshao",
+                "links": [["产品介绍"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/component/introduction",
+                        "/product/component/download",
+                        "/product/component/developEnvironment",
+                        "/product/component/authorization",
+                        "/product/component/moduleIntroduction",
+                        "/product/component/relatedProduct",
+                        "/product/component/thirdPartyProducts",
+                        "/product/component/newFeatures",
+                        "/product/component/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconkaifazhinan",
+                "links": [
+                    [
+                        "开发指南"
+                    ]
+                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/component/development_component", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
+                "title": "开发示例",
+                "icon": "iconzaixianshili",
+                "links": [
+                    [
+                        "Cesium示例",
+                        "MapboxGL示例",
+                        "StoryBook-MapboxGL"
+                    ]
+                ],
+                "hightlights": [[false, false, false]],
+                "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-layer", "/storybook/index.html"]]
+            },
+            {
+                "title": "开发API",
+                "icon": "iconsanfangAPI",
+                "links": [["Cesium-API", "MapboxGL-API"]],
+                "hightlights": [[false, false]],
+                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892"]]
+            }
+        ]
     },
     {
         "title": "Cesium",
         "icon": "iconsatellite",
-        "menus": [{
-                "title": "常见问题",
-                "hightlights": [
-                    [false, true, true, true]
-                ],
+        "menus": [
+            {
+                "title": "产品",
+                "icon": "iconchanpinjieshao",
+                "links": [["产品介绍"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/cesium/produce_cesium",
+                        "/product/cesium/download",
+                        "/product/cesium/developEnvironment",
+                        "/product/cesium/authorization",
+                        "/product/cesium/moduleIntroduction",
+                        "/product/cesium/relatedProduct",
+                        "/product/cesium/thirdPartyProducts",
+                        "/product/cesium/newFeatures",
+                        "/product/cesium/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconkaifazhinan",
                 "links": [
-                    ["OGC-WMTS", "Vue-基本引入", "Vue-内存溢出", "Vue-路由切换"]
+                    [
+                        "开发指南"
+                    ]
                 ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/cesium/development_cesium", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
+                "title": "常见问题",
+                "icon": "iconchangjianwenti",
+                "hightlights": [[false, true, true, true]],
+                "links": [["OGC-WMTS", "Vue-基本引入", "Vue-内存溢出", "Vue-路由切换"]],
                 "routes": [
                     [
                         "/helper/cesium/ogc/wmts/WMTS",
@@ -73,14 +128,13 @@
                         "/helper/cesium/vue/memery/index",
                         "/helper/cesium/vue/route/index"
                     ]
-                ]
+                ],
+                "type":"helper"
             },
             {
                 "title": "开发示例",
-                "hightlights": [
-                    [false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-                    [true, true, true, true]
-                ],
+                "icon": "iconzaixianshili",
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false, false, false]],
                 "links": [
                     [
                         "图层M3D",
@@ -97,8 +151,7 @@
                         "客户端-Echarts",
                         "客户端-MapV",
                         "客户端空间分析"
-                    ],
-                    ["Vue-栅格", "Vue-矢量瓦片", "Vue-交互", "Vue-模型"]
+                    ]
                 ],
                 "routes": [
                     [
@@ -116,12 +169,12 @@
                         "/gallery/cesium#clientView_Echarts",
                         "/gallery/cesium#clientView_MapV",
                         "/gallery/cesium#clientAnalysis"
-                    ],
-                    ["/gallery/vue-cesium#raster", "/gallery/vue-cesium#vvectortile", "/gallery/vue-cesium#control", "/gallery/vue-cesium#model"]
+                    ]
                 ]
             },
             {
                 "title": "开发API",
+                "icon": "iconsanfangAPI",
                 "links": [
                     ["客户端数据服务", "客户端可视化", "客户端渲染", "客户端事件管理", "客户端公共方法", "客户端视图管理", "客户端可视化分析"],
                     ["Cesium", "TurfJs"]
@@ -148,11 +201,41 @@
     {
         "title": "MapboxGL",
         "icon": "iconmapbox",
-        "menus": [{
-                "title": "常见问题",
-                "hightlights": [
-                    [true, true, true, true, true, true, true]
+        "menus": [
+            {
+                "title": "产品",
+                "icon": "iconchanpinjieshao",
+                "links": [["产品介绍"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/mapboxgl/produce_mapboxgl",
+                        "/product/mapboxgl/download",
+                        "/product/mapboxgl/developEnvironment",
+                        "/product/mapboxgl/authorization",
+                        "/product/mapboxgl/moduleIntroduction",
+                        "/product/mapboxgl/relatedProduct",
+                        "/product/mapboxgl/thirdPartyProducts",
+                        "/product/mapboxgl/newFeatures",
+                        "/product/mapboxgl/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconkaifazhinan",
+                "links": [
+                    [
+                        "开发指南"
+                    ]
                 ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/mapboxgl/development_mapboxgl", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
+                "title": "常见问题",
+                "icon": "iconchangjianwenti",
+                "hightlights": [[true, true, true, true, true, true, true]],
                 "links": [
                     ["OGC-WMTS", "ArcServer-WMS", "ArcServer-要素图层", "矢量瓦片-介绍", "矢量瓦片-离线部署", "矢量瓦片-几何&符号", "Vue-基本引入"]
                 ],
@@ -166,14 +249,13 @@
                         "/helper/mapboxgl/vectortile/style",
                         "/helper/mapboxgl/vue/import"
                     ]
-                ]
+                ],
+                "type":"helper"
             },
             {
                 "title": "开发示例",
-                "hightlights": [
-                    [false, false, true, false, false, false, false, false, false, false, true, true],
-                    [true, false, false, true]
-                ],
+                "icon": "iconzaixianshili",
+                "hightlights": [[false, false, true, false, false, false, false, false, false, false, true, true]],
                 "links": [
                     [
                         "互联网地图",
@@ -188,8 +270,7 @@
                         "客户端空间分析",
                         "DataStore",
                         "行业特色"
-                    ],
-                    ["Vue-图层", "Vue-栅格", "Vue-OGC", "Vue-交互"]
+                    ]
                 ],
                 "routes": [
                     [
@@ -205,25 +286,14 @@
                         "/gallery/mapboxgl#client-analysis",
                         "/gallery/mapboxgl#datastore#elasticsearch",
                         "/gallery/mapboxgl#industry#search"
-                    ],
-                    [
-                        "/gallery/vue-mapboxgl#vue-layer",
-                        "/gallery/vue-mapboxgl#vue-raster",
-                        "/gallery/vue-mapboxgl#vue-ogc",
-                        "/gallery/vue-mapboxgl#vue-control"
                     ]
                 ]
             },
             {
                 "title": "开发API",
-                "hightlights": [
-                    [false, false, false, false, false, false, false, false],
-                    [false]
-                ],
-                "links": [
-                    ["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"],
-                    ["Mapbox-GL"]
-                ],
+                "icon": "iconsanfangAPI",
+                "hightlights": [[false, false, false, false, false, false, false, false], [false]],
+                "links": [["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"], ["Mapbox-GL"]],
                 "routes": [
                     [
                         "./docs/mapboxgl/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html",
@@ -243,14 +313,42 @@
     {
         "title": "Leaflet",
         "icon": "iconLeaf",
-        "menus": [{
-                "title": "开发示例",
+        "menus": [
+            {
+                "title": "产品",
+                "icon": "iconchanpinjieshao",
+                "links": [["产品介绍"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/leaflet/produce_leaflet",
+                        "/product/leaflet/download",
+                        "/product/leaflet/developEnvironment",
+                        "/product/leaflet/authorization",
+                        "/product/leaflet/moduleIntroduction",
+                        "/product/leaflet/relatedProduct",
+                        "/product/leaflet/thirdPartyProducts",
+                        "/product/leaflet/newFeatures",
+                        "/product/leaflet/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconkaifazhinan",
                 "links": [
-                    ["互联网地图", "OGC服务", "地图", "要素", "量算", "专题图", "空间分析", "客户端可视化", "客户端空间分析", "ElasticSearch"]
+                    [
+                        "开发指南"
+                    ]
                 ],
-                "hightlights": [
-                    [false, false, false, false, false, false, false, false, false, false]
-                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/leaflet/development_leaflet", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
+                "title": "开发示例",
+                "icon": "iconzaixianshili",
+                "links": [["互联网地图", "OGC服务", "地图", "要素", "量算", "专题图", "空间分析", "客户端可视化", "客户端空间分析", "ElasticSearch"]],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false]],
                 "routes": [
                     [
                         "/gallery/leaflet#internet",
@@ -268,14 +366,9 @@
             },
             {
                 "title": "开发API",
-                "links": [
-                    ["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"],
-                    ["Leaflet"]
-                ],
-                "hightlights": [
-                    [false, false, false, false, false, false, false, false],
-                    [false]
-                ],
+                "icon": "iconsanfangAPI",
+                "links": [["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"], ["Leaflet"]],
+                "hightlights": [[false, false, false, false, false, false, false, false], [false]],
                 "routes": [
                     [
                         "./docs/leaflet/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html",
@@ -295,8 +388,40 @@
     {
         "title": "Openlayers",
         "icon": "iconlayers",
-        "menus": [{
+        "menus": [
+            {
+                "title": "产品",
+                "icon": "iconchanpinjieshao",
+                "links": [["产品介绍"]],
+                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "routes": [
+                    [
+                        "/product/openlayers/produce_ol",
+                        "/product/openlayers/download",
+                        "/product/openlayers/developEnvironment",
+                        "/product/openlayers/authorization",
+                        "/product/openlayers/moduleIntroduction",
+                        "/product/openlayers/relatedProduct",
+                        "/product/openlayers/thirdPartyProducts",
+                        "/product/openlayers/newFeatures",
+                        "/product/openlayers/startDevelop"
+                    ]
+                ]
+            },
+            {
+                "title": "开发指南",
+                "icon": "iconkaifazhinan",
+                "links": [
+                    [
+                        "开发指南"
+                    ]
+                ],
+                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "routes": [["/guide/openlayers/development_ol", "", "", "", "", "", "", "", "", "", "", ""]]
+            },
+            {
                 "title": "开发示例",
+                "icon": "iconzaixianshili",
                 "links": [
                     [
                         "地图控件",
@@ -311,21 +436,13 @@
                         "图层要素查询",
                         "文档要素查询",
                         "几何量算",
-                        "投影变换",
-                        "专题图",
-                        "通用可视化",
-                        "要素动画"
+                        "投影变换"
                     ],
-                    [
-                        "几何分析",
-                        "空间分析",
-                        "网络分析",
-                        "客户端空间分析"
-                    ]
+                    ["专题图", "通用可视化", "要素动画", "几何分析", "空间分析", "网络分析", "客户端空间分析"]
                 ],
                 "hightlights": [
-                    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-                    [false, false, false, false]
+                    [false, false, false, false, false, false, false, false, false, false, false, false, false],
+                    [false, false, false, false, false, false, false]
                 ],
                 "routes": [
                     [
@@ -341,12 +458,12 @@
                         "/gallery/openlayers#IGServer#LayerFeatureQuery",
                         "/gallery/openlayers#IGServer#DocFeatureQuery",
                         "/gallery/openlayers#IGServer#Measure",
-                        "/gallery/openlayers#IGServer#TopService",
-                        "/gallery/openlayers#IGServer#ThemeService",
-                        "/gallery/openlayers#ClientView#Common",
-                        "/gallery/openlayers#ClientView#FeatureAnimation"
+                        "/gallery/openlayers#IGServer#TopService"
                     ],
                     [
+                        "/gallery/openlayers#IGServer#ThemeService",
+                        "/gallery/openlayers#ClientView#Common",
+                        "/gallery/openlayers#ClientView#FeatureAnimation",
                         "/gallery/openlayers#IGServer#ProjectionService",
                         "/gallery/openlayers#IGServer#AnalysisService",
                         "/gallery/openlayers#IGServer#NetService",
@@ -356,14 +473,9 @@
             },
             {
                 "title": "开发API",
-                "links": [
-                    ["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"],
-                    ["OpenLayers"]
-                ],
-                "hightlights": [
-                    [false, false, false, false, false, false, false, false],
-                    [false]
-                ],
+                "icon": "iconsanfangAPI",
+                "links": [["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"], ["OpenLayers"]],
+                "hightlights": [[false, false, false, false, false, false, false, false], [false]],
                 "routes": [
                     [
                         "./docs/openlayers/module-%25E5%259C%25B0%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html",

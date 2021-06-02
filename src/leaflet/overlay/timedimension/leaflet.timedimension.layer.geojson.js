@@ -5,7 +5,19 @@ import { TimeDimensionUtil } from './leaflet.timedimension.util'
 /*
  * TimeDimensionLayer.GeoJson:
  */
-
+/**
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @class L.zondy.TimeDimensionLayerGeoJson
+ * @classdesc 基于TimeDimensionLayer对象进行的拓展
+ * @extends {L.Layer}
+ * @param layer, L.geoJSON创建的图层
+ * @param options.updateTimeDimension - {Boolean},用这个GeoJSON的可用时间更新附加TimeDimension的可用时间列表
+ * @param options.updateTimeDimensionMode - {String},合并TimeDimension和图层的可用时间（相交，并集，替换或极端）的操作，默认为"extremes"
+ * @param options.duration - 持续时间
+ * @param options.addlastPoint -{Boolean},在LineString的最后一个有效坐标处添加一个Point。默认为false
+ * @param options.waitForReady - {Boolean},如果为true，它将等待直到加载baseLayer来将其自身标记为就绪。默认为false
+ * @param options.updateCurrentTime -{Boolean},自动将地图的当前时间更改为GeoJSON图层的第一个可用时间,默认为updateTimeDimension的值
+ */
 export var TimeDimensionLayerGeoJson = TimeDimensionLayer.extend({
 
     initialize: function(layer, options) {

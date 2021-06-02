@@ -16,7 +16,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 :access-token="accessToken"
                 :map-style="mapStyle"
@@ -25,14 +25,14 @@
                 :crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-google-layer
+                <mapgis-google-layer
                     :layer="googleLayer"
                     :layer-id="googleLayerId"
                     :source-id="googleSourceId"
                     :url="googleUrl"
                 >
-                </mapbox-google-layer>
-            </mapbox-map>
+                </mapgis-google-layer>
+            </mapgis-web-map>
         </div>
         <script>
             new Vue({

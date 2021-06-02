@@ -1,56 +1,64 @@
 {
-  "opts": {
-    "encoding": "utf8",
-    "private": false,
-    "recurse": true,
-    "lenient": true,
-    "tutorials": "./docs/jsdoc-config/leaflet/tutorials",
-    "destination": "./website/public/docs/leaflet",
-    "template": "./docs/templates/better-docs"
-  },
-  "disqus": "",
-  "tags": {
-    "allowUnknownTags": true,
-    "linkdoc-leaflet": "https://www.mapbox.com/mapbox-gl-js/api/"
-  },
-  "source": {
-    "includePattern": ".+\\.js?$",
-    "include": ["src/service/", "src/leaflet/"],
-    "exclude": ["src/service/baseserver", "src/leaflet/extend/leaflet-plugins"]
-  },
-  "plugins": ["plugins/markdown"],
-  "templates": {
-    "search": true,
-    "cleverLinks": true,
-    "monospaceLinks": true,
-    "outputSourceFiles": true,
-    "outputSourcePath": true,
-    "default": {
-      "outputSourceFiles": true
+    "opts": {
+        "encoding": "utf8",
+        "private": false,
+        "recurse": true,
+        "lenient": true,
+        "tutorials": "./docs/jsdoc-config/leaflet/tutorials",
+        "destination": "./website/public/docs/leaflet",
+        "template": "./docs/templates/better-docs"
     },
-    "better-docs": {
-      "logo": "../image/mapgis_blue.png",
-      "title": "",
-      "hideGenerator": false,
-      "navLinks": [
-        {
-          "label": "Cesium",
-          "href": "/docs/cesium/index.html"
-        },
-        {
-          "label": "MapboxGL",
-          "href": "/docs/mapboxgl/index.html"
-        },
-        {
-          "label": "Leaflet",
-          "href": "/docs/leaflet/index.html"
-        },
-        {
-          "label": "OpenLayers",
-          "href": "/docs/openlayers/index.html"
-        }
-      ]
+    "disqus": "",
+    "tags": {
+        "allowUnknownTags": true,
+        "linkdoc-leaflet": "https://www.mapbox.com/mapbox-gl-js/api/"
     },
-    "linenums": true
-  }
+    "source": {
+        "includePattern": ".+\\.js?$",
+        "include": ["src/service/", "src/leaflet/"],
+        "exclude": [
+            "src/service/baseserver",
+            "src/leaflet/extend/leaflet-plugins",
+            "src/service/node_modules",
+            "src/service/node_modules/turf-jsts/",
+            "src/service/node_modules/@turf",
+            "src/service/node_modules/polygon-clipping",
+            "src/service/node_modules/splaytree"
+        ]
+    },
+    "plugins": ["plugins/markdown"],
+    "templates": {
+        "search": true,
+        "cleverLinks": true,
+        "monospaceLinks": true,
+        "outputSourceFiles": true,
+        "outputSourcePath": true,
+        "default": {
+            "outputSourceFiles": true
+        },
+        "better-docs": {
+            "logo": "../image/mapgis_blue.png",
+            "title": "",
+            "hideGenerator": false,
+            "navLinks": [
+                {
+                    "label": "Cesium",
+                    "href": "/docs/cesium/index.html"
+                },
+                {
+                    "label": "MapboxGL",
+                    "href": "/docs/mapboxgl/index.html"
+                },
+                {
+                    "label": "Leaflet",
+                    "href": "/docs/leaflet/index.html"
+                },
+                {
+                    "label": "OpenLayers",
+                    "href": "/docs/openlayers/index.html"
+                }
+            ]
+        },
+        "linenums": true
+    }
 }

@@ -16,7 +16,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -25,21 +25,21 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-igs-tdt-layer
+        <mapgis-igs-tdt-layer
           :layer="tianditu1Layer"
           :layer-id="tianditu1LayerId"
           :source-id="tianditu1SourceId"
           :url="tianditu1Url"
           >
-        </mapbox-igs-tdt-layer>
-        <mapbox-igs-tdt-layer
+        </mapgis-igs-tdt-layer>
+        <mapgis-igs-tdt-layer
           :layer="tianditu2Layer"
           :layer-id="tianditu2LayerId"
           :source-id="tianditu2SourceId"
           :url="tianditu2Url"
           >
-        </mapbox-igs-tdt-layer>
-      </mapbox-map>
+        </mapgis-igs-tdt-layer>
+      </mapgis-web-map>
     </div>
     <script>
       var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';

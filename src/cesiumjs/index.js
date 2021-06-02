@@ -116,7 +116,7 @@ import {
     NetAnalyse,
     NetAnalysisExtent,
     SlopLineParam
-} from '../service/extend';
+} from '../service/Igserver/extend';
 
 import {
     CommonServiceBase,
@@ -135,7 +135,7 @@ import {
     CatalogService,
     TileLayer,
     VectorLayer
-} from '../service/MRCS';
+} from '../service/Igserver/MRCS';
 
 import {
     EditDocFeature,
@@ -153,7 +153,7 @@ import {
     QueryParameter,
     QueryParameterBase,
     QueryServiceBase
-} from '../service/MRFS';
+} from '../service/Igserver/MRFS';
 
 import {
     AnalysisBase,
@@ -175,7 +175,7 @@ import {
     ProjectBase,
     ProjectByLayer,
     ProjectBySRID
-} from '../service/MRFWS';
+} from '../service/Igserver/MRFWS';
 
 import {
     CalArea,
@@ -188,7 +188,7 @@ import {
     ProjectRang,
     Smooth,
     TopAnalysis
-} from '../service/MRGS';
+} from '../service/Igserver/MRGS';
 
 import {
     GetDocImageService,
@@ -197,7 +197,7 @@ import {
     GetMapInfoService,
     GetTileImageService,
     MapServiceBase
-} from '../service/MRMS';
+} from '../service/Igserver/MRMS';
 
 import {
     CAllOtherDataItemInfoSource,
@@ -228,7 +228,7 @@ import {
     ItemValue,
     ThemeOper,
     ThemesInfo
-} from '../service/theme';
+} from '../service/Igserver/theme';
 
 import {
     WMSCapabilities,

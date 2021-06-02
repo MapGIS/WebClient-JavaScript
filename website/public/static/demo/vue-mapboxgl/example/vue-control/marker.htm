@@ -27,7 +27,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 v-bind:access-token="accessToken"
                 v-bind:map-style="mapStyle"
@@ -36,21 +36,21 @@
                 v-bind:crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-ogc-wmts-layer v-bind:layer="layerWmts" v-bind:layer-id="layerWmtsId" v-bind:source-id="sourceWmtsId" v-bind:url="wmtsurl">
-                </mapbox-ogc-wmts-layer>
-                <mapbox-raster-layer
+                <mapgis-ogc-wmts-layer v-bind:layer="layerWmts" v-bind:layer-id="layerWmtsId" v-bind:source-id="sourceWmtsId" v-bind:url="wmtsurl">
+                </mapgis-ogc-wmts-layer>
+                <mapgis-rastertile-layer
                     v-bind:layer="layerRaster"
                     v-bind:layer-id="layerRasterId"
                     v-bind:source="sourceRaster"
                     v-bind:source-id="sourceRasterId"
                 >
-                </mapbox-raster-layer>
-                <mapbox-marker :coordinates="coordinates1" :color="color1" :offset="offset"></mapbox-marker>
-                <mapbox-marker :coordinates="coordinates2" :color="color2"> </mapbox-marker>
-                <mapbox-marker :coordinates="coordinates3" :color="color3">
+                </mapgis-rastertile-layer>
+                <mapgis-marker :coordinates="coordinates1" :color="color1" :offset="offset"></mapgis-marker>
+                <mapgis-marker :coordinates="coordinates2" :color="color2"> </mapgis-marker>
+                <mapgis-marker :coordinates="coordinates3" :color="color3">
                     <div slot="marker" class="custom">内部自定义槽</div>
-                </mapbox-marker>
-            </mapbox-map>
+                </mapgis-marker>
+            </mapgis-web-map>
         </div>
         <script>
             new Vue({

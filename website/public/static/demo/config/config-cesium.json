@@ -111,6 +111,14 @@
                     "update": "最后更新时间：2020-06-17"
                 },
                 {
+                    "name": "OSM地图",
+                    "file": "third-osm",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "third-osm.png",
+                    "update": "最后更新时间：2021-05-14"
+                },
+                {
                     "name": "OpenWeather",
                     "file": "third-openweather",
                     "diffcult": "1",
@@ -149,6 +157,13 @@
             "folder": "mapgis",
             "leaffolder": true,
             "childs": [{
+                    "name": "二维矢量图层服务",
+                    "file": "mapgis-2d-layer",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-2d-layer.png",
+                    "update": "最后更新时间：2021-05-14"
+                }, {
                     "name": "二维地图文档服务",
                     "file": "mapgis-2d-doc",
                     "diffcult": "2",

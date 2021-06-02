@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>自定义参考系</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="proj4" src="./static/libs/include-leaflet-local.js"></script>
+    <style>
+        #map {
+            height: 800px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        //高斯3带投影
+        var crs = new L.Proj.CRS('EPSG:2383',
+                '+proj=tmerc +lat_0=0 +lon_0=114 +k=1 +x_0=500000 +y_0=0 +a=6378140 +b=6356755.288157528 +units=m +no_defs', {
+                    resolutions: [
+                    132.2919312505292, 66.1459656252646, 33.0729828126323,
+                    16.53649140631615, 8.268245703158074, 4.134122851579037
+                    ],
+                    origin: [395479.7309999997, 3172303.252699999],
+                    bounds: L.bounds([
+                        [395479.7309999997, 3089235.3508],
+                        [451196.83910000045, 3172303.252699999]
+                    ])
+                }),
+
+
+            map = L.map('map', {
+                crs: crs,
+                center: [28, 113.50], //注意这里要使用经纬度坐标
+                zoom: 0,
+                continuousWorld: true,
+                worldCopyJump: false,
+            });
+
+            var arcgisUrl = "https://localhost:6443/arcgis/rest/services/arcgis_gauss/MapServer/tile/{z}/{y}/{x}"
+            var Layer = L.tileLayer(arcgisUrl, { minZoom: 0, maxZoom: 6 });
+
+            Layer.addTo(map);
+    </script>
+</body>
+
+</html>

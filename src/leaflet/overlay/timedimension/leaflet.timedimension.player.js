@@ -2,6 +2,22 @@ import L from "leaflet";
 /*
  * L.TimeDimension.Player
  */
+/**
+ * @author 基础平台/创新中心 潘卓然 ParnDeedlit
+ * @class L.zondy.TimeDimensionPlayer
+ * @classdesc 基于leaflet的Layer对象进行的拓展：组件使用timeDimension设置地图动画，定期更改时间。
+ * @extends {L.Layer}
+ * @param options.buffer - {Number},默认值：5
+ * @param options.minBufferReady - {Number}，默认值：1，如果此选项大于0，则每当下一个准备时间（下一个准备就绪的层）的数量低于此数量时，播放器就会填充缓冲区。
+ * @param options.loop - {Boolean}，循环播放，默认值：false，到达最后一个可用时间时循环播放动画
+ * @param options.transitionTime -{Number},1000,player将等待下一次在TimeDimension中检查并启动的毫秒数
+ * @param options.startOver - {Boolean}，当播放器player位于最后一个位置时，它会从用户按下播放时重新开始,默认值：false
+ *
+ * player播放器的事件：start()、stop()、
+ *                  pause()、release()、
+ *                  getTransitionTime()-返回时间间隔，在两个动画步数之间。
+ *                  setTransitionTime(<Number> transitionTime)、isLooped()：返回循环的boolean值
+ */
 export var TimeDimensionPlayer = (L.Layer || L.Class).extend({
 
     includes: (L.Evented || L.Mixin.Events),

@@ -8,7 +8,11 @@
     <script src="./static/libs/include-openlayers-local.js"></script>
     <script type="text/javascript">
         var map, wmtsLayer, baseUrlTile, baseLayer;
-        var { protocol, ip, port } = window.webclient;
+        var {
+            protocol,
+            ip,
+            port
+        } = window.webclient;
 
         //地图初始化函数
         function init() {
@@ -26,34 +30,33 @@
                 target: 'mapCon',
                 layers: [baseLayer],
                 view: new ol.View({
-                    center: [114.3, 30.6],
-                    zoom: 12,
+                    center: [116.397128, 39.916527],
+                    zoom: 8,
                     projection: 'EPSG:4326'
                 })
             });
 
             /*======创建WMTS图层对象并加载到地图中======*/
-            var projection = ol.proj.get('EPSG:4326');
-            //var projectionExtent = projection.getExtent();
-            var projectionExtent = [114.125602229914, 30.4539323507469, 114.500788705197, 30.8291188260302];
-            var size = ol.extent.getWidth(projectionExtent) / 256;
-            var resolutions = new Array(14);
-            var matrixIds = new Array(14);
-            for (var z = 0; z < 14; ++z) {
+            const projection = ol.proj.get('EPSG:4326')
+            var projectionExtent = projection.getExtent()
+            const size = ol.extent.getWidth(projectionExtent) / 256
+            const resolutions = new Array(14)
+            const matrixIds = new Array(14)
+            for (let z = 0; z < 14; z++) {
                 //为这个WMTS图层生存分辨率和matrixIds数组
-                resolutions[z] = size / Math.pow(2, z);
-                matrixIds[z] = z;
+                resolutions[z] = size / Math.pow(2, z) / 2
+                matrixIds[z] = z
             }
             //WMTS服务访问基地址
             baseUrlTile = `${protocol}://${ip}:${port}/igs/rest/ogc/WMTSServer`;
             //初始化WMTS图层对象
-            wmtsLayer = new ol.layer.Tile({
+            const wmtsLayer = new ol.layer.Tile({
                 opacity: 1,
                 source: new ol.source.WMTS({
                     //WMTS服务基地址
                     url: baseUrlTile,
                     //WMTS服务图层
-                    layer: "WhMapTileWMTS",
+                    layer: 'beijing',
                     //瓦片模型呈现标识，设置为投影坐标系
                     matrixSet: 'EPSG:4326',
                     //样式
@@ -66,13 +69,13 @@
                         //分辨率数组
                         resolutions: resolutions,
                         //矩阵标识列表，与地图级数保持一致
-                        matrixIds: matrixIds
+                        matrixIds: matrixIds,
                     }),
                     //数据的投影坐标系
                     projection: projection,
-                    wrapX: true
-                })
-            });
+                    wrapX: false,
+                }),
+            })
             map.addLayer(wmtsLayer);
         }
     </script>

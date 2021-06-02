@@ -4,6 +4,7 @@ import { getLayers, getFonts, getVectorTileSource, getSpritePng } from './vector
 import VectorTileProvider from './vectortile/VectorTileProvider';
 import VectorTileStyle from './vectortile/MapgisVectorTileStyle';
 import axios from 'axios';
+import { find } from 'ol/array';
 
 /**
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
@@ -58,15 +59,15 @@ export class VectorTileLayer {
         //this.bindEvent();
 
         if (this.style) {
-            if (this.style.indexOf('http') >= 0) {
+            if (typeof this.style === 'string') {
                 //如果是个网络地址，就通过url请求获取矢量瓦片json对象
                 this.url = this.style;
                 this.requestVectortileJson();
             } else {
-                this.requestStyleData();
+                this.requestStyleData(this.style);
             }
         } else if (this.styleUrl) {
-            if (this.styleUrl.indexOf('http') >= 0) {
+            if (typeof this.styleUrl === 'string') {
                 this.url = this.styleUrl;
                 this.requestVectortileJson();
             } else {
@@ -77,7 +78,7 @@ export class VectorTileLayer {
                 //如果没有矢量瓦片json对象，就通过url请求获取矢量瓦片json对象
                 this.requestVectortileJson();
             } else {
-                this.requestStyleData();
+                this.requestStyleData(this.vectortilejson);
             }
         }
     }
@@ -117,6 +118,7 @@ export class VectorTileLayer {
      * @see https://docs.mapbox.com/mapbox-gl-js/style-spec/
      */
     requestStyleData(vectortilejson) {
+        this.vectortilejson = vectortilejson;
         var layers = getLayers(vectortilejson);
         var sources = getVectorTileSource(vectortilejson);
         var spritepng = getSpritePng(vectortilejson);
@@ -173,45 +175,89 @@ export class VectorTileLayer {
     }
 
     /**
-     * 通过修改图层样式，更新图层
-     * @function module:客户端渲染.VectorTileLayer.prototype.updateLayer
-     * @param {Array} layersStyle 所有图层的样式参数 Array<Mapbox-Style-Spec-Layers>
+     * @description 设置布局属性
+     * @function module:客户端渲染.VectorTileLayer.prototype.updateStyle
+     * @param {Object} mvtStyle
      */
-    updateLayer(layersStyle) {
-        if (!this.styleData || !this.styleData.vectortilejson || !this.styleData.vectortilejson.layers) {
-            return;
-        }
+    updateStyle(mvtStyle) {
+        if (!this.styleData) return;
+        this.styleData.vectortilejson = mvtStyle;
         this.remove();
-        this.styleData.vectortilejson.layers = layersStyle;
-        var layers = [];
-        for (var i = 0; i < layersStyle.length; i++) {
-            layers.push(layersStyle[i].id);
-        }
-        this.styleData.layers = layers;
         this.addLayer(this.styleData);
     }
 
     /**
-     * 获取所有图层的样式
-     * @function module:客户端渲染.VectorTileLayer.prototype.getLayersStyle
-     * @returns {*} 获取满足MVT样式的图层信息
+     * @description 设置布局属性
+     * @function module:客户端渲染.VectorTileLayer.prototype.setLayoutProperty
+     * @param {String} layer
+     * @param {String} key
+     * @param {Object} value
      */
-    getLayersStyle() {
-        if (!this.styleData || !this.styleData.vectortilejson || !this.styleData.vectortilejson.layers) {
-            return;
-        }
-        return this.styleData.vectortilejson.layers;
+    setLayoutProperty(layerId, key, value) {
+        if (!this.vectortilejson || !this.vectortilejson.layers) return;
+        const { layers } = this.vectortilejson;
+        let finds = layers.filter((l) => {
+            return l.id === layerId;
+        });
+        let layer = finds && finds.length > 0 ? finds[0] : undefined;
+        if (!layer) return;
+        layer.layout = layer.layout || {};
+        layer.layout[key] = value;
+        this.styleData.vectortilejson = this.vectortilejson;
+        this.remove();
+        this.addLayer(this.styleData);
     }
 
-    unbindEvent() { }
+    /**
+     * @description 设置画笔属性
+     * @function module:客户端渲染.VectorTileLayer.prototype.setPaintProperty
+     * @param {String} layerId
+     * @param {String} key
+     * @param {Object} value
+     */
+    setPaintProperty(layerId, key, value) {
+        if (!this.vectortilejson || !this.vectortilejson.layers) return;
+        const { layers } = this.vectortilejson;
+        let finds = layers.filter((l) => {
+            return l.id === layerId;
+        });
+        let layer = finds && finds.length > 0 ? finds[0] : undefined;
+        if (!layer) return;
+        layer.paint = layer.paint || {};
+        layer.paint[key] = value;
+        this.remove();
+        this.addLayer(this.styleData);
+    }
 
-    moveStartEvent() { }
+    /**
+     * @description 设置过滤属性
+     * @function module:客户端渲染.VectorTileLayer.prototype.setFilter
+     * @param {String} layerId
+     * @param {Array} rule
+     */
+    setFilter(layerId, rule) {
+        if (!this.vectortilejson || !this.vectortilejson.layers) return;
+        const { layers } = this.vectortilejson;
+        let finds = layers.filter((l) => {
+            return l.id === layerId;
+        });
+        let layer = finds && finds.length > 0 ? finds[0] : undefined;
+        if (!layer) return;
+        layer.filter = layer.filter || {};
+        layer.filter = rule;
+        this.remove();
+        this.addLayer(this.styleData);
+    }
 
-    moveEndEvent() { }
+    unbindEvent() {}
 
-    zoomStartEvent() { }
+    moveStartEvent() {}
 
-    zoomEndEvent() { }
+    moveEndEvent() {}
+
+    zoomStartEvent() {}
+
+    zoomEndEvent() {}
 
     /**
      * 销毁图层-实际调用remove，为了接口保持一致
@@ -237,12 +283,17 @@ export class VectorTileLayer {
      */
     remove() {
         let self = this;
+        if (self.provider) {
+            self.viewer.imageryLayers.remove(self.provider, true);
+            self.provider.show = false;
+        }
+        /* let self = this;
         window.setTimeout(() => {
             if (self.provider) {
                 self.viewer.imageryLayers.remove(self.provider, true);
                 self.provider.show = false;
             }
-        }, 1000);
+        }, 1000); */
     }
 }
 

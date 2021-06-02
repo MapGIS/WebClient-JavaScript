@@ -16,6 +16,7 @@
     "includePattern": ".+\\.js?$",
     "include": ["src/cesiumjs/"],
     "exclude": [
+      "src/service/node_modules",
       "src/cesiumjs/overlay/echarts/",
       "src/cesiumjs/overlay/mapv/",
       "src/cesiumjs/ui/draw/"

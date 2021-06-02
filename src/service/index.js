@@ -191,7 +191,7 @@ import {
     NetAnalyse,
     NetAnalysisExtent,
     SlopLineParam
-} from './extend';
+} from './Igserver/extend';
 
 export const Extend = {
     ContourNoteParam,
@@ -204,7 +204,7 @@ export const Extend = {
     SlopLineParam
 };
 
-import { G3DMapDoc, G3DService } from './G3D';
+import { G3DMapDoc, G3DService } from './Igserver/G3D';
 
 export const G3D = {
     G3DMapDoc,
@@ -223,7 +223,7 @@ export const BaseServer = {
     JSONFormat
 };
 
-import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer, SystomInfo } from './MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer, SystomInfo } from './Igserver/MRCS';
 
 export const MRCS = {
     ColorInfo,
@@ -252,7 +252,7 @@ import {
     QueryParameterBase,
     QueryServiceBase,
     QueryUnifyParameter
-} from './MRFS';
+} from './Igserver/MRFS';
 
 export const MRFS = {
     EditDocFeature,
@@ -293,7 +293,7 @@ import {
     ProjectBase,
     ProjectByLayer,
     ProjectBySRID
-} from './MRFWS';
+} from './Igserver/MRFWS';
 
 export const MRFWS = {
     AnalysisBase,
@@ -328,7 +328,7 @@ import {
     ProjectRang,
     Smooth,
     TopAnalysis
-} from './MRGS';
+} from './Igserver/MRGS';
 
 export const MRGS = {
     CalArea,
@@ -343,7 +343,14 @@ export const MRGS = {
     TopAnalysis
 };
 
-import { GetDocImageService, GetLayerImageService, GetMapImageService, GetMapInfoService, GetTileImageService, MapServiceBase } from './MRMS';
+import {
+    GetDocImageService,
+    GetLayerImageService,
+    GetMapImageService,
+    GetMapInfoService,
+    GetTileImageService,
+    MapServiceBase
+} from './Igserver/MRMS';
 
 export const MRMS = {
     GetDocImageService,
@@ -383,7 +390,7 @@ import {
     ItemValue,
     ThemeOper,
     ThemesInfo
-} from './theme';
+} from './Igserver/theme';
 
 export const Info = {
     CAllOtherDataItemInfoSource,
@@ -428,7 +435,18 @@ export const OGC = {
     WFS
 };
 
-import { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg } from './datastore/elasticsearch';
+import {
+    EsCatlogType,
+    EsCatlogName,
+    EsGeoHashType,
+    EsCatlogService,
+    ESGeoCode,
+    ESGeoDecode,
+    ESQueryStats,
+    EsTableService,
+    EsSpaceTimeQueryByAgg
+} from './datastore/elasticsearch';
+
 import {
     PostgisCatlogService,
     PostgisCustomQueryService,
@@ -469,7 +487,49 @@ export const DataStore = {
     EsSpaceTimeQueryByAgg
 };
 
+import { UserService, GeoDatasetService, CalculateModelService } from './clouddisk';
+
+export const CloudDisk = {
+    UserService,
+    GeoDatasetService,
+    CalculateModelService
+};
+
+import {
+    ArcGisFeatureLayer,
+    ArcGisFindParameters,
+    ArcGisFindTask,
+    ArcGisIdentifyTask,
+    ArcGisIdentifyParameters,
+    ArcGisGeometry,
+    ArcGisQuery,
+    ArcGisQueryTask,
+    ArcGisPoint,
+    ArcGisMultipoint,
+    ArcGisPolyline,
+    ArcGisPolygon,
+    ArcGisGraphic,
+    ArcGisExtent
+} from './ArcGis';
+
+export const ArcGis = {
+    ArcGisFeatureLayer,
+    ArcGisFindParameters,
+    ArcGisFindTask,
+    ArcGisIdentifyTask,
+    ArcGisIdentifyParameters,
+    ArcGisGeometry,
+    ArcGisQuery,
+    ArcGisQueryTask,
+    ArcGisPoint,
+    ArcGisMultipoint,
+    ArcGisPolyline,
+    ArcGisPolygon,
+    ArcGisGraphic,
+    ArcGisExtent
+};
 export default {
     MRFS,
-    MRFWS
+    MRFWS,
+    ArcGis
 };

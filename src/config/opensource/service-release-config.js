@@ -8,10 +8,10 @@ var happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
 
 module.exports = {
     mode: "none",
-    entry: path.join(__dirname, '.', 'service_main.js'),//已多次提及的唯一入口文件
+    entry: path.join(__dirname, '../../', 'service/index.js'),//已多次提及的唯一入口文件
     output: {
         path: path.join(__dirname, '.', 'output'),//打包后的文件存放的地方
-        filename: "webclient-service-framework.min.js"//打包后输出文件的文件名
+        filename: "webclient-es6-service.min.js"//打包后输出文件的文件名
     },
     devtool: "sourcemap", //生成用来调试的map
     externals: {},

@@ -8,7 +8,7 @@
   <!--引入第三方的jquery脚本库-->
   <script src="./static/libs/include-mapboxgl-local.js"></script>
   <!--引入当前页面样式表-->
-  <link href="../../css/mapboxgl/style.css" rel="stylesheet" type="text/css" />
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
     #map {
       position: absolute;
@@ -77,10 +77,13 @@
             },
           ],
         },
-        zoom: 7.5,
-        center: [116.39, 40.20]
+        zoom: 3,
+        center: [102.31, 37.41]
       });
-
+      //注册鼠标移动事件
+      map.on('mousemove', function (e) {
+        document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+      });
       //注册地图加载事件
       var { protocol, ip, port } = window.webclient;
       map.on("load", function () {
@@ -98,11 +101,11 @@
               "&styles=" +
               "&format=image/png" +
               "&transparent=true" +
-              "&version=1.3.0" + 
+              "&version=1.3.0" +
               "&height=512" +
               "&width=512" +
               "&crs=EPSG:4326" +
-              "&bbox={bbox}" + 
+              "&bbox={bbox}" +
               "&reversebbox=true"  // 部分arcgis需要转置bbox的顺序
             ],
             tileSize: 512,
@@ -115,7 +118,10 @@
 </head>
 
 <body onload="init()">
-  <div id="map"></div>
+  <div id="map">
+    <div id="mouse-position">
+    </div>
+  </div>
 </body>
 
 </html>

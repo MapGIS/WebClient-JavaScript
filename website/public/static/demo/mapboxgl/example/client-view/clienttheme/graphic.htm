@@ -9,7 +9,7 @@
     <!--引入当前页面样式表-->
     <link href="./style.css" rel="stylesheet" type="text/css" />
     <!--该库集成了leaflet与MapGIS IGServer for JavaScript脚本库-->
-    <script src="./static/libs/include-leaflet-local.js"></script>
+    <script src="./static/libs/include-mapboxgl-local.js"></script>
     <style>
         body {
             height: 700px;
@@ -116,69 +116,40 @@
         /** 初始化地图显示*/
         function init() {
             //地图容器
-            map = L.map('leaf_map', {
-                //地图渲染在canvas上
-                preferCanvas: true,
-                //不添加属性说明控件
-                attributionControl: false,
-                //添加缩放控件
-                zoomControl: true,
-                //投影坐标系
-                crs: L.CRS.EPSG4326,
-                //最大级数
-                maxZoom: 15,
-                //最小级数
-                minZoom: 0
-            }).setView([(29.0125822276524 + 33.2932017737021) / 2, (108.34341 + 116.150939561213)
-                / 2], 6);
-            //创建地图文档图层
-            mapDocLayer = new Zondy.Map.MapDocLayer(docName, {
-                //IP地址
-                ip: ip,
-                //端口号
-                port: port,
-                //只显示一个图层,不平铺显示
-                noWrap: true
-            }).addTo(map);
-            initGraphicToolBar();
-        }
-
-        /** 初始化统计图图标*/
-        function initGraphicToolBar() {
-            var toolbar = L.control({ position: 'topright' });
-            toolbar.onAdd = function () {
-                var me = this;
-                me._div = L.DomUtil.create('div', 'editPane');
-                me._div.style.width = '236px';
-                me._div.innerHTML = "<button type='button' class='btn btn-default graph' id='bar' data-toggle='tooltip' data-placement='bottom' title='柱状图'></button>" +
-                    "<button type='button' class='btn btn-default graph' id='bar3d' data-toggle='tooltip' data-placement='bottom' title='三维柱状图'></button>" +
-                    "<button type='button' class='btn btn-default graph' id='line' data-toggle='tooltip' data-placement='bottom' title='折线图'></button>" +
-                    "<button type='button' class='btn btn-default graph' id='point' data-toggle='tooltip' data-placement='bottom' title='点状图'></button>" +
-                    "<button type='button' class='btn btn-default graph' id='pie' data-toggle='tooltip' data-placement='bottom' title='饼图'></button>" +
-                    "<button type='button' class='btn btn-default graph' id='ring' data-toggle='tooltip' data-placement='bottom' title='环状图'></button>";
-                handleMapEvent(me._div, me._map);
-                return me._div;
-            };
-            toolbar.addTo(map);
-            initGraphicStyles();
-            bindEvent();
-        }
-
-        /** 图标事件绑定*/
-        function handleMapEvent(div, map) {
-            if (!div || !map) {
-                return;
+            map = new mapboxgl.Map({
+                //地图容器div的id
+                crs: "EPSG:4326",
+                container: 'map',
+                center: [112.247175, 30.152892],
+                zoom: 6,
+                //设置地图样式信息
+                style: {
+                    //设置版本号，一定要设置
+                    version: 8,
+                    //添加来源
+                    sources: {},
+                    //设置加载并显示来源的图层信息
+                    layers: []
+                }
+            });
+            function appendMapDoc() {
+                if (map != null) {
+                    mapDocLayer = new mapboxgl.Zondy.Map.MapDocLayer(docName, {
+                        //IP地址
+                        ip: `${ip}`,
+                        //端口号
+                        port: `${port}`,
+                        //只显示一个图层,不平铺显示
+                        noWrap: true
+                    });
+                    mapDocLayer.addToMap(map);
+                }
             }
-            div.addEventListener('mouseover', function () {
-                map.dragging.disable();
-                map.scrollWheelZoom.disable();
-                map.doubleClickZoom.disable();
+            map.on('load', function () {
+                appendMapDoc();
             });
-            div.addEventListener('mouseout', function () {
-                map.dragging.enable();
-                map.scrollWheelZoom.enable();
-                map.doubleClickZoom.enable();
-            });
+            bindEvent();
+            initGraphicStyles();
         }
 
         var chartsSettingForBarAddBar3DCommon;
@@ -304,7 +275,7 @@
         function initStatus() {
             removeClassAttribute('graph', 'active');
             if (themeLayer) {
-                map.removeLayer(themeLayer);
+                themeLayer.removeFromMap();
                 themeLayer = null;
             }
         }
@@ -343,8 +314,9 @@
 
             themeLayerOptions.chartsSetting = chartsSettingForBar;
             themeLayerOptions.calGravity = true;
+            themeLayerOptions.map = map;
             //themeLayerOptions.fitZoom = 8;
-            themeLayer = Zondy.Map.graphThemeLayer("BarLayer", "Bar", themeLayerOptions).addTo(map);
+            themeLayer = Zondy.Map.graphThemeLayer("BarLayer", "Bar", themeLayerOptions);
             console.log('data', data);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
@@ -380,7 +352,8 @@
             themeLayerOptions.chartsSetting = chartsSettingForBar3D;
             themeLayerOptions.calGravity = true;
             //themeLayerOptions.fitZoom = 8;
-            themeLayer = Zondy.Map.graphThemeLayer("Bar3DLayer", "Bar3D", themeLayerOptions).addTo(map);
+            themeLayerOptions.map = map;
+            themeLayer = Zondy.Map.graphThemeLayer("Bar3DLayer", "Bar3D", themeLayerOptions);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
             themeLayer.on("mouseout", closeInfoWin);
@@ -394,7 +367,8 @@
             themeLayerOptions.chartsSetting = chartsSettingForPointOrLine;
             themeLayerOptions.calGravity = true;
             //themeLayerOptions.fitZoom = 8;
-            themeLayer = Zondy.Map.graphThemeLayer("LineLayer", "Line", themeLayerOptions).addTo(map);
+            themeLayerOptions.map = map;
+            themeLayer = Zondy.Map.graphThemeLayer("LineLayer", "Line", themeLayerOptions);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
             themeLayer.on("mouseout", closeInfoWin);
@@ -408,7 +382,8 @@
             themeLayerOptions.chartsSetting = chartsSettingForPointOrLine;
             themeLayerOptions.calGravity = true;
             //themeLayerOptions.fitZoom = 8;
-            themeLayer = Zondy.Map.graphThemeLayer("PiontLayer", "Point", themeLayerOptions).addTo(map);
+            themeLayerOptions.map = map;
+            themeLayer = Zondy.Map.graphThemeLayer("PiontLayer", "Point", themeLayerOptions);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
             themeLayer.on("mouseout", closeInfoWin);
@@ -421,7 +396,8 @@
             themeLayerOptions.chartsSetting = chartsSettingForPieOrRing;
             themeLayerOptions.calGravity = true;
             //themeLayerOptions.fitZoom = 8;
-            themeLayer = Zondy.Map.graphThemeLayer("PieLayer", "Pie", themeLayerOptions).addTo(map);
+            themeLayerOptions.map = map;
+            themeLayer = Zondy.Map.graphThemeLayer("PieLayer", "Pie", themeLayerOptions);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
             themeLayer.on("mouseout", closeInfoWin);
@@ -435,7 +411,8 @@
             themeLayerOptions.chartsSetting = chartsSettingForPieOrRing;
             themeLayerOptions.calGravity = true;
             //themeLayerOptions.fitZoom = 8;
-            themeLayer = Zondy.Map.graphThemeLayer("RingLayer", "Ring", themeLayerOptions).addTo(map);
+            themeLayerOptions.map = map;
+            themeLayer = Zondy.Map.graphThemeLayer("RingLayer", "Ring", themeLayerOptions);
             themeLayer.addFeatures(data);
             themeLayer.on('mousemove', showInfoWin);
             themeLayer.on("mouseout", closeInfoWin);
@@ -462,26 +439,30 @@
                 contentHTML += "<hr style='margin: 3px'>";
                 switch (info.field) {
                     case "第一产业增加值2013":
-                        contentHTML += "2013年第一产业增加值： <br/><strong>" + info.value + "</strong>";
+                        contentHTML += "GDP_2013： <br/><strong>" + info.value + "</strong>";
                         break;
                     case "第一产业增加值2014":
-                        contentHTML += "2014年第一产业增加值： <br/><strong>" + info.value + "</strong>";
+                        contentHTML += "GDP_2014： <br/><strong>" + info.value + "</strong>";
                         break;
                     case "第一产业增加值2015":
-                        contentHTML += "2015年第一产业增加值： <br/><strong>" + info.value + "</strong>";
+                        contentHTML += "GDP_2015： <br/><strong>" + info.value + "</strong>";
                         break;
                     case "第一产业增加值2016":
-                        contentHTML += "2016年第一产业增加值： <br/><strong>" + info.value + "</strong>";
+                        contentHTML += "GDP_2016： <br/><strong>" + info.value + "</strong>";
                         break;
+
                     default:
                         contentHTML += "No Data";
                 }
                 contentHTML += "</div>";
+                var offsetTop = map.getContainer().offsetTop;
+                var offsetLeft = map.getContainer().offsetLeft;
+                var tempPoint = map.unproject(new window.mapboxgl.Point(e.event.x - offsetLeft, e.event.y - offsetTop));
 
-                var tempPoint = map.mouseEventToLatLng(e.event);
-                popup = L.tooltip({ direction: 'top' })
-                    .setContent(contentHTML)
-                    .setLatLng([tempPoint.lat, tempPoint.lng])
+                //  var tempPoint = map.unproject(new window.mapboxgl.Point(e.event.x, e.event.y));
+                popup = new mapboxgl.Popup({ anchor: 'bottom', closeOnClick: false, closeButton: false })
+                    .setHTML(contentHTML)
+                    .setLngLat(tempPoint)
                     .addTo(map);
                 return;
             }
@@ -556,7 +537,21 @@
         <br />
         <span>正在操作，请稍候</span>
     </div>
-    <div id="leaf_map" style="width: 100%; height:95%;">
+    <div class="editPane" role="group" aria-label="...">
+        <button type='button' class='btn btn-default graph' id='bar' data-toggle='tooltip' data-placement='bottom'
+            title='柱状图'></button>
+        <button type='button' class='btn btn-default graph' id='bar3d' data-toggle='tooltip' data-placement='bottom'
+            title='三维柱状图'></button>
+        <button type='button' class='btn btn-default graph' id='line' data-toggle='tooltip' data-placement='bottom'
+            title='折线图'></button>
+        <button type='button' class='btn btn-default graph' id='point' data-toggle='tooltip' data-placement='bottom'
+            title='点状图'></button>
+        <button type='button' class='btn btn-default graph' id='pie' data-toggle='tooltip' data-placement='bottom'
+            title='饼图'></button>
+        <button type='button' class='btn btn-default graph' id='ring' data-toggle='tooltip' data-placement='bottom'
+            title='环状图'></button>
+    </div>
+    <div id="map" style="width: 100%; height:95%;">
     </div>
 </body>
 

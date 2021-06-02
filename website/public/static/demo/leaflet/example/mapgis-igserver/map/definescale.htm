@@ -6,7 +6,10 @@
     <script type="text/javascript">
 
         var map;
-        var { protocol, ip, port } = window.webclient;
+        // var { protocol, ip, port } = window.webclient;
+        var protocol = 'http';
+        var ip = 'localhost';
+        var port = '6163';
 
         /**显示地图*/
         function init() {
@@ -19,7 +22,7 @@
             var mapInfo = new Zondy.Catalog.TileLayer({
                 ip: `${ip}`,
                 port: `${port}`,
-                tileName: "武汉市区自定义比例尺"
+                tileName: "高斯坐标系_自定义比例尺"
             });
             mapInfo.getTileInfo(getSuccess);
         }
@@ -91,7 +94,7 @@
 
             map = L.map('leaf_map', mapOpt);
 
-            new Zondy.Map.MapTileLayer("武汉市区自定义比例尺", {
+            new Zondy.Map.MapTileLayer("高斯坐标系_自定义比例尺", {
                 //IGServer所在ip地址
                 ip: `${ip}`,
                 //IGServer请求端口号

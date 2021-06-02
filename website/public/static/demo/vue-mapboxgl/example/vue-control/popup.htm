@@ -25,7 +25,7 @@
 
   <body>
     <div id="app">
-      <mapbox-map
+      <mapgis-web-map
         id="map"
         :access-token="accessToken"
         :map-style="mapStyle"
@@ -34,23 +34,23 @@
         :crs="mapCrs"
         v-on:load="handleMapLoad"
         >
-        <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl">
-        </mapbox-ogc-wmts-layer>
-        <mapbox-raster-layer
+        <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl">
+        </mapgis-ogc-wmts-layer>
+        <mapgis-rastertile-layer
           :layer="layerRaster"
           :layer-id="layerRasterId"
           :source="sourceRaster"
           :source-id="sourceRasterId"
           >
-        </mapbox-raster-layer>
-        <mapbox-popup :coordinates="coordinates1" :anchor="anchor" :showed="show">
+        </mapgis-rastertile-layer>
+        <mapgis-popup :coordinates="coordinates1" :anchor="anchor" :showed="show">
           <div class="custom">独立显示</div>
-        </mapbox-popup>
-        <mapbox-marker :coordinates="coordinates2" :color="color2"> </mapbox-marker>
-        <mapbox-marker :coordinates="coordinates3" :color="color3">
-          <mapbox-popup :anchor="anchor" :showed="show"> <div class="custom">绑定Marker显示</div> </mapbox-popup>
-        </mapbox-marker>
-      </mapbox-map>
+        </mapgis-popup>
+        <mapgis-marker :coordinates="coordinates2" :color="color2"> </mapgis-marker>
+        <mapgis-marker :coordinates="coordinates3" :color="color3">
+          <mapgis-popup :anchor="anchor" :showed="show"> <div class="custom">绑定Marker显示</div> </mapgis-popup>
+        </mapgis-marker>
+      </mapgis-web-map>
     </div>
     <script>
       new Vue({

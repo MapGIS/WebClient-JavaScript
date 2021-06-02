@@ -1,7 +1,7 @@
 export const MainBanners = [
-  "./static/assets/bane/banner1.png",
-  "./static/assets/bane/banner2.png",
-  "./static/assets/bane/banner3.png",
+  "./static/assets/bane/banner.png",
+  // "./static/assets/bane/banner2.png",
+  // "./static/assets/bane/banner3.png",
 ];
 
 export const DetailMains = [
@@ -30,7 +30,7 @@ export const DetailMains = [
 export const Develops = [
   {
     icon: "./static/assets/home/cesium.png",
-    iconHover: "./static/assets/home/cesium-hover.png",
+    iconHover: "./static/assets/home/cesiumhover.png",
     routeGallery: "/gallery/cesium",
     routeAPI: "./docs/cesium/index.html",
     title: "Cesium",
@@ -40,7 +40,7 @@ export const Develops = [
   },
   {
     icon: "./static/assets/home/mapboxgl.png",
-    iconHover: "./static/assets/home/mapboxgl-hover.png",
+    iconHover: "./static/assets/home/mapboxglhover.png",
     routeGallery: "/gallery/mapboxgl",
     routeAPI: "./docs/mapboxgl/index.html",
     title: "MapboxGL",
@@ -50,7 +50,7 @@ export const Develops = [
   },
   {
     icon: "./static/assets/home/openlayers.png",
-    iconHover: "./static/assets/home/openlayers-hover.png",
+    iconHover: "./static/assets/home/openlayershover.png",
     routeGallery: "/gallery/openlayers",
     routeAPI: "./docs/openlayers/index.html",
     title: "OpenLayers",
@@ -60,7 +60,7 @@ export const Develops = [
   },
   {
     icon: "./static/assets/home/leaflet.png",
-    iconHover: "./static/assets/home/leaflet-hover.png",
+    iconHover: "./static/assets/home/leaflethover.png",
     routeGallery: "/gallery/leaflet",
     routeAPI: "./docs/leaflet/index.html",
     title: "Leaflet",

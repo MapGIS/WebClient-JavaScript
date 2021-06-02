@@ -39,7 +39,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="left"
                 class="map"
                 ref="leftmap"
@@ -49,12 +49,12 @@
                 :crs="mapCrs"
                 v-on:load="handleLeftMapLoad"
             >
-                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl1"> </mapbox-ogc-wmts-layer>
-                <mapbox-compare ref="compare">
+                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl1"> </mapgis-ogc-wmts-layer>
+                <mapgis-compare ref="compare">
                     <div class="custom-compare-toolbar" v-on:click="handleEnable">卷帘</div>
-                </mapbox-compare>
-            </mapbox-map>
-            <mapbox-map
+                </mapgis-compare>
+            </mapgis-web-map>
+            <mapgis-web-map
                 id="right"
                 class="map"
                 :map-style="mapStyle"
@@ -63,8 +63,8 @@
                 :crs="mapCrs"
                 v-on:load="handleRightMapLoad"
             >
-                <mapbox-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl2"> </mapbox-ogc-wmts-layer>
-            </mapbox-map>
+                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl2"> </mapgis-ogc-wmts-layer>
+            </mapgis-web-map>
         </div>
         <script>
             var leftMap, rightMap;

@@ -66,8 +66,8 @@ export default {
   text-align: center;
   width: 205px;
   .image {
-    width: 123px;
-    height: 123px;
+    width: 160px;
+    height: 160px;
     background: transparent;
   }
   .title {
@@ -75,7 +75,7 @@ export default {
     font-size: 18px;
     font-family: MicrosoftYaHei;
     font-weight: bold;
-    color: rgba(51, 51, 51, 1);
+    color: #3c4858;
     line-height: 23px;
   }
   .subtitle {
@@ -84,7 +84,7 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 300;
-    color: rgba(102, 102, 102, 1);
+    color:#999;
     line-height: 24px;
   }
   .actions {

@@ -1,7 +1,5 @@
 {
-   "compact": false,
-   "ast": false,
-    "presets": [
-    ["es2015", { "modules": false }]
-  ]
+    "compact": false,
+    "ast": false,
+    "presets": [["es2015", { "modules": false }]]
 }

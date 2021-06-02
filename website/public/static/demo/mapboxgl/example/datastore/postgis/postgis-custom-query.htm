@@ -1,238 +1,250 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>查询统计</title>
-        <script include="mapboxgl,turf" src="./static/libs/include-mapboxgl-local.js"></script>
-        <style>
-            #map {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-            }
-            .mapboxgl-popup {
-                max-width: fit-content !important;
-            }
-            .table-popup-wrapper {
-                width: fit-content;
-            }
-            .map-text-control {
-                z-index: 2000;
-                position: relative;
-                top: 20px;
-                left: 20px;
-            }
-            .map-sql-button {
-                width: fit-content;
-                height: 32px;
-                line-height: 32px;
-                background: #ffffff;
-                padding: 0 12px;
-                border-radius: 4px;
-            }
-        </style>
-    </head>
 
-    <body>
-        <div id="map"></div>
-        <div class="map-text-control">
-            <textarea cols="30" rows="15" id="sql">
-select ST_AsGeoJSON(ST_AsText(ST_centroid(mpshape))) as geoCenter, "taxiid", "time", "lat", "d1", "d2", "d3", "mpoid", st_asgeojson("mpshape"), "mpmod_time", "mpginf_id" from "bigdata03"."mpf26126" where ST_Intersects(mpshape, ST_GeomFromText('srid=4326;POLYGON ((121.2487030393727 31.033472144133537, 121.2487030393727 31.371331637858788, 121.66135850451805 31.371331637858788, 121.66135850451805 31.033472144133537, 121.2487030393727 31.033472144133537))')) limit 100</textarea
-            >
-            <div class="map-sql-button" onclick="excuteSQL()">SQL查询</div>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>查询统计</title>
+    <script include="mapboxgl,turf" src="./static/libs/include-mapboxgl-local.js"></script>
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        #map {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mapboxgl-popup {
+            max-width: fit-content !important;
+        }
+
+        .table-popup-wrapper {
+            width: fit-content;
+        }
+
+        .map-text-control {
+            z-index: 2000;
+            position: relative;
+            top: 20px;
+            left: 20px;
+        }
+
+        .map-sql-button {
+            width: fit-content;
+            height: 32px;
+            line-height: 32px;
+            background: #ffffff;
+            padding: 0 12px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+        <div id="mouse-position">
         </div>
-        <script>
-            mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
-            var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
-            var vecsrc = {
-                //来源类型为栅格瓦片
-                type: 'raster',
-                tiles: [
-                    //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
-                    'http://t' +
-                        Math.round(Math.random() * 7) +
-                        '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
-                        '&TILECOL=' +
-                        '{x}' +
-                        '&TILEROW=' +
-                        '{y}' +
-                        '&TILEMATRIX=' +
-                        '{z}' +
-                        '&tk=' +
-                        tiandituKey
-                ],
-                //栅格瓦片的分辨率
-                tileSize: 256
-            };
-            var cvasrc = {
-                //来源类型为栅格瓦片
-                type: 'raster',
-                tiles: [
-                    //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
-                    'http://t' +
-                        Math.round(Math.random() * 7) +
-                        '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
-                        '&TILECOL=' +
-                        '{x}' +
-                        '&TILEROW=' +
-                        '{y}' +
-                        '&TILEMATRIX=' +
-                        '{z}' +
-                        '&tk=' +
-                        tiandituKey
-                ],
-                //栅格瓦片的分辨率
-                tileSize: 256
-            };
-            var popup = new mapboxgl.Popup({ closeOnClick: false });
-            var map = new mapboxgl.Map({
-                container: 'map',
-                crs: 'EPSG:4326', //经纬度一定要设置crs参数
-                maxBounds: [
-                    [-180, -90],
-                    [180, 90]
-                ],
-                style: {
-                    //设置版本号，一定要设置
-                    version: 8,
-                    //添加来源
-                    sources: {
-                        vecsrc: vecsrc,
-                        cvasrc: cvasrc
-                    },
-                    //设置加载并显示来源的图层信息
-                    layers: [
-                        {
-                            //图层id，要保证唯一性
-                            id: 'vecsrc',
-                            //图层类型
-                            type: 'raster',
-                            //连接图层来源
-                            source: 'vecsrc',
-                            //图层最小缩放级数
-                            minzoom: 0,
-                            //图层最大缩放级数
-                            maxzoom: 22
-                        },
-                        {
-                            //图层id，要保证唯一性
-                            id: 'cvasrc',
-                            //图层类型
-                            type: 'raster',
-                            //连接图层来源
-                            source: 'cvasrc',
-                            //图层最小缩放级数
-                            minzoom: 0,
-                            //图层最大缩放级数
-                            maxzoom: 22
-                        }
-                    ]
+    </div>
+    <div class="map-text-control">
+        <textarea cols="30" rows="15" id="sql">
+select ST_AsGeoJSON(ST_AsText(ST_centroid(mpshape))) as geoCenter, "taxiid", "time", "lat", "d1", "d2", "d3", "mpoid", st_asgeojson("mpshape"), "mpmod_time", "mpginf_id" from "bigdata03"."mpf26126" where ST_Intersects(mpshape, ST_GeomFromText('srid=4326;POLYGON ((121.2487030393727 31.033472144133537, 121.2487030393727 31.371331637858788, 121.66135850451805 31.371331637858788, 121.66135850451805 31.033472144133537, 121.2487030393727 31.033472144133537))')) limit 100</textarea>
+        <div class="map-sql-button" onclick="excuteSQL()">SQL查询</div>
+    </div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+        var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+        var vecsrc = {
+            //来源类型为栅格瓦片
+            type: 'raster',
+            tiles: [
+                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                'http://t' +
+                Math.round(Math.random() * 7) +
+                '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                '&TILECOL=' +
+                '{x}' +
+                '&TILEROW=' +
+                '{y}' +
+                '&TILEMATRIX=' +
+                '{z}' +
+                '&tk=' +
+                tiandituKey
+            ],
+            //栅格瓦片的分辨率
+            tileSize: 256
+        };
+        var cvasrc = {
+            //来源类型为栅格瓦片
+            type: 'raster',
+            tiles: [
+                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                'http://t' +
+                Math.round(Math.random() * 7) +
+                '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                '&TILECOL=' +
+                '{x}' +
+                '&TILEROW=' +
+                '{y}' +
+                '&TILEMATRIX=' +
+                '{z}' +
+                '&tk=' +
+                tiandituKey
+            ],
+            //栅格瓦片的分辨率
+            tileSize: 256
+        };
+        var popup = new mapboxgl.Popup({ closeOnClick: false });
+        var map = new mapboxgl.Map({
+            container: 'map',
+            crs: 'EPSG:4326', //经纬度一定要设置crs参数
+            maxBounds: [
+                [-180, -90],
+                [180, 90]
+            ],
+            style: {
+                //设置版本号，一定要设置
+                version: 8,
+                //添加来源
+                sources: {
+                    vecsrc: vecsrc,
+                    cvasrc: cvasrc
                 },
-                zoom: 10,
-                pitch: 45,
-                center: [121.4693, 31.12307]
-            });
-
-            var sourceId = 'query-source';
-            var layerId = 'select_layer';
-            map.on('mouseenter', layerId, function (e) {
-                map.getCanvas().style.cursor = 'pointer';
-                var coordinates = e.features[0].geometry.coordinates.slice();
-                var result = e.features[0].properties;
-                var html = '<div class="table-popup-wrapper">' + makeHtml(result) + '</div>';
-                popup.setLngLat(coordinates).setHTML(html).addTo(map);
-            });
-            map.on('mouseleave', layerId, function () {
-                map.getCanvas().style.cursor = '';
-                popup.remove();
-            });
-
-            function query(sql) {
-                var param = {
-                    networkProtocol: 'http',
-                    ip: '192.168.96.101',
-                    port: 9091,
-                    path: 'bigdata03/bigdata03/mpf24091', // 这里的最后一个mpf24091是mapgis平台中的图层名
-                    queryBody: sql
-                };
-
-                var catlog = new Zondy.DataStore.PostGIS.PostgisCustomQueryService(param);
-                catlog.query(success, fail);
-            }
-
-            function success(res) {
-                res.features = res.features.map((f) => {
-                    f.geometry = JSON.parse(f.properties.st_asgeojson);
-                    return f;
-                });
-                var geojson = res;
-                if (map.getLayer(layerId)) map.removeLayer(layerId);
-                if (map.getSource(sourceId)) map.removeSource(sourceId);
-                map.addSource(sourceId, {
-                    type: 'geojson',
-                    data: geojson
-                });
-                map.addLayer({
-                    id: layerId,
-                    type: 'circle',
-                    source: sourceId,
-                    paint: {
-                        'circle-radius': 8,
-                        'circle-color': '#B42222',
-                        'circle-stroke-width': 2,
-                        'circle-stroke-color': '#ffffff'
+                //设置加载并显示来源的图层信息
+                layers: [
+                    {
+                        //图层id，要保证唯一性
+                        id: 'vecsrc',
+                        //图层类型
+                        type: 'raster',
+                        //连接图层来源
+                        source: 'vecsrc',
+                        //图层最小缩放级数
+                        minzoom: 0,
+                        //图层最大缩放级数
+                        maxzoom: 22
                     },
-                    filter: ['==', '$type', 'Point']
-                });
-            }
+                    {
+                        //图层id，要保证唯一性
+                        id: 'cvasrc',
+                        //图层类型
+                        type: 'raster',
+                        //连接图层来源
+                        source: 'cvasrc',
+                        //图层最小缩放级数
+                        minzoom: 0,
+                        //图层最大缩放级数
+                        maxzoom: 22
+                    }
+                ]
+            },
+            zoom: 10,
+            pitch: 45,
+            center: [121.4693, 31.12307]
+        });
+        //注册鼠标移动事件
+        map.on('mousemove', function (e) {
+            document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
+        });
+        var sourceId = 'query-source';
+        var layerId = 'select_layer';
+        map.on('mouseenter', layerId, function (e) {
+            map.getCanvas().style.cursor = 'pointer';
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var result = e.features[0].properties;
+            var html = '<div class="table-popup-wrapper">' + makeHtml(result) + '</div>';
+            popup.setLngLat(coordinates).setHTML(html).addTo(map);
+        });
+        map.on('mouseleave', layerId, function () {
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
 
-            function fail(error) {
-                console.log('fail', error);
-            }
+        function query(sql) {
+            var param = {
+                networkProtocol: 'http',
+                ip: '192.168.96.101',
+                port: 9091,
+                path: 'bigdata03/bigdata03/mpf24091', // 这里的最后一个mpf24091是mapgis平台中的图层名
+                queryBody: sql
+            };
 
-            function excuteSQL() {
-                var sqldom = document.getElementById('sql');
-                var sql = sqldom.value;
-                query(sql);
-            }
+            var catlog = new Zondy.DataStore.PostGIS.PostgisCustomQueryService(param);
+            catlog.query(success, fail);
+        }
 
-            function makeHtml(result) {
-                var html = '<div><table border="1"><tr><th>属性</th><th>值</th></tr>';
-                var keys = Object.keys(result);
-                // 显示非对象属性
-                keys.forEach((key) => {
-                    if (typeof result[key] != 'object' || result[key] == undefined) {
-                        html += `<tr>
+        function success(res) {
+            res.features = res.features.map((f) => {
+                f.geometry = JSON.parse(f.properties.st_asgeojson);
+                return f;
+            });
+            var geojson = res;
+            if (map.getLayer(layerId)) map.removeLayer(layerId);
+            if (map.getSource(sourceId)) map.removeSource(sourceId);
+            map.addSource(sourceId, {
+                type: 'geojson',
+                data: geojson
+            });
+            map.addLayer({
+                id: layerId,
+                type: 'circle',
+                source: sourceId,
+                paint: {
+                    'circle-radius': 8,
+                    'circle-color': '#B42222',
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#ffffff'
+                },
+                filter: ['==', '$type', 'Point']
+            });
+        }
+
+        function fail(error) {
+            console.log('fail', error);
+        }
+
+        function excuteSQL() {
+            var sqldom = document.getElementById('sql');
+            var sql = sqldom.value;
+            query(sql);
+        }
+
+        function makeHtml(result) {
+            var html = '<div><table border="1"><tr><th>属性</th><th>值</th></tr>';
+            var keys = Object.keys(result);
+            // 显示非对象属性
+            keys.forEach((key) => {
+                if (typeof result[key] != 'object' || result[key] == undefined) {
+                    html += `<tr>
                                               <td>${key}</td>
                                               <td>${result[key]}</td>
                                             </tr>`;
-                    }
-                });
-                // 显示对象属性
-                keys.forEach((key) => {
-                    if (result[key] && typeof result[key] == 'object') {
-                        html += `<th colspan="2">${key}</th>`;
-                        html += '<tr><th>属性</th><th>值</th></tr>';
-                        var object = result[key];
-                        var fields = Object.keys(object);
-                        fields.forEach((f) => {
-                            var item;
-                            if (object[f] && typeof object[f] === 'object') {
-                                item = makeHtml(object[f]);
-                            } else {
-                                item = object[f];
-                            }
-                            html += `<tr>
+                }
+            });
+            // 显示对象属性
+            keys.forEach((key) => {
+                if (result[key] && typeof result[key] == 'object') {
+                    html += `<th colspan="2">${key}</th>`;
+                    html += '<tr><th>属性</th><th>值</th></tr>';
+                    var object = result[key];
+                    var fields = Object.keys(object);
+                    fields.forEach((f) => {
+                        var item;
+                        if (object[f] && typeof object[f] === 'object') {
+                            item = makeHtml(object[f]);
+                        } else {
+                            item = object[f];
+                        }
+                        html += `<tr>
                                               <td>${f}</td>
                                               <td>${item}</td>
                                             </tr>`;
-                        });
-                    }
-                });
+                    });
+                }
+            });
 
-                html += '</table></div>';
-                return html;
-            }
-        </script>
-    </body>
+            html += '</table></div>';
+            return html;
+        }
+    </script>
+</body>
+
 </html>

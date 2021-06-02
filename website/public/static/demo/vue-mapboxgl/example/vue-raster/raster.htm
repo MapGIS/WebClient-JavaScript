@@ -45,7 +45,7 @@
 
     <body>
         <div id="app">
-            <mapbox-map
+            <mapgis-web-map
                 id="map"
                 v-bind:access-token="accessToken"
                 v-bind:map-style="mapStyle"
@@ -54,21 +54,21 @@
                 v-bind:crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapbox-ogc-wmts-layer 
+                <mapgis-ogc-wmts-layer 
                     v-bind:layer="layerWmts" 
                     v-bind:layer-id="layerWmtsId" 
                     v-bind:source-id="sourceWmtsId" 
                     v-bind:url="wmtsurl"
                 >
-                </mapbox-ogc-wmts-layer>
-                <mapbox-raster-layer
+                </mapgis-ogc-wmts-layer>
+                <mapgis-rastertile-layer
                     v-bind:layer="layerRaster"
                     v-bind:layer-id="layerRasterId"
                     v-bind:source="sourceRaster"
                     v-bind:source-id="sourceRasterId"
                 >
-                </mapbox-raster-layer>
-            </mapbox-map>
+                </mapgis-rastertile-layer>
+            </mapgis-web-map>
         </div>
         <script>
             new Vue({
