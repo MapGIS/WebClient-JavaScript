@@ -71,7 +71,7 @@
                     ]
                 ],
                 "hightlights": [[false, false, false]],
-                "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-layer", "/storybook/index.html"]]
+                "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-vector", "/storybook/index.html"]]
             },
             {
                 "title": "开发API",
