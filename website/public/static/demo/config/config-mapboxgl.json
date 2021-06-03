@@ -352,7 +352,7 @@
                     "childs": [
                         {
                             "name": "WMTS",
-                            "file": "wmts",
+                            "file": "arcgis-wmts",
                             "diffcult": "2",
                             "detail": "arcgis-ogc-wmts服务",
                             "icon": "wmts.png",
@@ -360,9 +360,9 @@
                         },
                         {
                             "name": "WMS",
-                            "file": "wms",
+                            "file": "arcgis-wms",
                             "diffcult": "2",
-                            "detail": "ogc-wms服务",
+                            "detail": "arcgis-ogc-wms服务",
                             "icon": "wms.png",
                             "update": "最后更新时间：2020-11-27"
                         },

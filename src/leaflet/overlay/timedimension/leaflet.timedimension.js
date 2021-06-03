@@ -76,7 +76,7 @@ export var TimeDimension = (L.Layer || L.Class).extend({
         }
         this._loadingTimeIndex = newIndex;
         var newTime = this._availableTimes[newIndex];
-        console.log('INIT -- Current time: ' + new Date(newTime).toISOString());
+        // console.log('INIT -- Current time: ' + new Date(newTime).toISOString());
         if (this._checkSyncedLayersReady(this._availableTimes[this._loadingTimeIndex])) {
             this._newTimeIndexLoaded();
         } else {
@@ -99,7 +99,7 @@ export var TimeDimension = (L.Layer || L.Class).extend({
             return;
         }
         var time = this._availableTimes[this._loadingTimeIndex];
-        console.log('END -- Current time: ' + new Date(time).toISOString());
+        // console.log('END -- Current time: ' + new Date(time).toISOString());
         this._currentTimeIndex = this._loadingTimeIndex;
         this.fire('timeload', {
             time: time
