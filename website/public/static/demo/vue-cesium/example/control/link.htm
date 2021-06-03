@@ -55,7 +55,7 @@
                     lib-path="./static/libs/cdn/cesium/Cesium.js"
                     plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer :url="url1"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-raster-layer :base-url="url1"> </mapgis-3d-raster-layer>
                     <mapgis-3d-link :enable="link"></mapgis-3d-link>
                 </mapgis-web-scene>
             </div>
@@ -64,7 +64,7 @@
                     lib-path="./static/libs/cdn/cesium/Cesium.js"
                     plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer :url="url2"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-raster-layer :base-url="url2"> </mapgis-3d-raster-layer>
                     <mapgis-3d-link :enable="link"></mapgis-3d-link>
                 </mapgis-web-scene>
             </div>
@@ -73,7 +73,7 @@
                     lib-path="./static/libs/cdn/cesium/Cesium.js"
                     plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer :url="url3"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-raster-layer :base-url="url3"> </mapgis-3d-raster-layer>
                 </mapgis-web-scene>
             </div>
             <div class="item bottom-right">
@@ -81,7 +81,7 @@
                     lib-path="./static/libs/cdn/cesium/Cesium.js"
                     plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer :url="url4"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-raster-layer :base-url="url4"> </mapgis-3d-raster-layer>
                 </mapgis-web-scene>
             </div>
             <div :class="{'control': true, active: link}" v-on:click="changeMode"></div>

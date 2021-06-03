@@ -1,6 +1,6 @@
 {
     "name": "@mapgis/webclient",
-    "version": "10.5.3",
+    "version": "10.5.4",
     "description": "",
     "main": "index.js",
     "scripts": {

@@ -403,7 +403,8 @@ export default {
         },
         resetCase(code) {
             let vm = this;
-            var iframe = document.getElementById('showcase');
+            let iframe = document.getElementById('showcase');
+            iframe.contentWindow.location.reload();
 
             var showcaseFrame = iframe.contentWindow;
             if (!showcaseFrame) {

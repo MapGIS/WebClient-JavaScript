@@ -22,8 +22,9 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <cesium-terrain-provider :url="demUrl" :v-if="showDem" />
-                <mapgis-3d-ogc-wmts-layer :base-url="baseUrl" :wmts-layer="wmtsLayer" :srs="srs" :tile-matrix-set="tileMatrixSet" />
+                <cesium-terrain-provider :url="demUrl" :v-if="showDem"></cesium-terrain-provider>
+                <mapgis-3d-ogc-wmts-layer :base-url="baseUrl" :wmts-layer="wmtsLayer" :srs="srs" :tile-matrix-set="tileMatrixSet">
+                </mapgis-3d-ogc-wmts-layer>
             </mapgis-web-scene>
         </div>
         <script>
