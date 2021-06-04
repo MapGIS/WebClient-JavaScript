@@ -138,14 +138,6 @@
                     "update": "最后更新时间：2021-01-07"
                 },
                 {
-                    "name": "Google图层",
-                    "file": "googlelayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "googlelayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                },
-                {
                     "name": "天地图图层",
                     "file": "tdtlayer",
                     "diffcult": "2",
@@ -184,6 +176,22 @@
                     "detail": "",
                     "icon": "reversebbox.png",
                     "update": "最后更新时间：2020-11-27"
+                }
+            ]
+        },
+        {
+            "name": "Vue-ArcGIS",
+            "iconfont": "icon_ogc",
+            "folder": "vue-arcgis",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "ArcGIS瓦片",
+                    "file": "arcgisTile",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "marker.png",
+                    "update": "最后更新时间：2021-06-04"
                 }
             ]
         },

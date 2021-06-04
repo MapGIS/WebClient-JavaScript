@@ -47,7 +47,6 @@
         <div id="app">
             <mapgis-web-map
                 id="map"
-                v-bind:access-token="accessToken"
                 v-bind:map-style="mapStyle"
                 v-bind:zoom="mapZoom"
                 v-bind:center="outerCenter"
@@ -63,11 +62,11 @@
                 >
                 </mapgis-igs-tdt-layer>
                 <mapgis-ogc-wms-layer
-                    v-bind:layer="layerWms"
+                    v-bind:layers="layerWms"
                     v-bind:layer-id="layerWmsId"
                     v-bind:source-id="sourceWmsId"
-                    v-bind:url="wmsurl"
-                    v-bind:reversebbox="reversebbox"
+                    v-bind:base-url="wmsurl"
+                    v-bind:reverse-bbox="reversebbox"
                 >
                 </mapgis-ogc-wms-layer>
             </mapgis-web-map>
@@ -96,11 +95,12 @@
                         baseURL: 'http://t2.tianditu.gov.cn/img_c/wmts', // 请求基地址
                         token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
 
-                        layerWms: {},
+                        layerWms: "0,2,4,6,8,10",
                         layerWmsId: 'ogcwms_layerId',
                         sourceWmsId: 'ogcwms_sourceId',
                         wmsurl:
-                            'http://219.142.81.85/arcgis/services/10wanZH/MapServer/WMSServer?service=WMS&request=GetMap&layers=0,1,2,3,5,7,9,11&styles=&format=image/png&transparent=true&version=1.3.0&height=512&width=512&crs=EPSG:4326&bbox={bbox}&reversebbox=true',
+                            'http://219.142.81.85/arcgis/services/10wanZH/MapServer/WMSServer',
+
                         reversebbox: true  // 转置arcgis的bbox [minx,miny,maxx,maxy] -> [miny,minx,maxy,maxx]
                     };
                 },

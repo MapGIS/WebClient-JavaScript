@@ -22,17 +22,19 @@
     <div id="app">
       <mapgis-web-map
         id="map"
-        :access-token="accessToken"
         :map-style="mapStyle"
         :zoom="mapZoom"
         :center="outerCenter"
         :crs="mapCrs"
         v-on:load="handleMapLoad">
         <mapgis-ogc-wmts-layer
-          :layer="layerWmts"
           :layer-id="layerWmtsId"
           :source-id="sourceWmtsId"
-          :url="wmtsurl">
+          :base-url="wmtsurl"
+          :tile-matrix-set="tileMatrixSet"
+          :wmts-layer="layer"
+          :format="format"
+          :token="token">
         </mapgis-ogc-wmts-layer>
         <canvas id="canvasID" width="400" height="400">Canvas not supported</canvas>
         <mapgis-canvas-layer
@@ -58,10 +60,13 @@
                   outerCenter: [116.3, 40.5],
                   mapCrs: 'EPSG:4326',
 
-                  layerWmts: {},
                   layerWmtsId: 'ogcwmts_layerId',
                   sourceWmtsId: 'ogcwmts_sourceId',
-                  wmtsurl: 'http://t0.tianditu.com/DataServer?T=vec_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+                  wmtsurl: 'http://t0.tianditu.com/vec_c/wmts',
+                  layer:"vec",
+                  tileMatrixSet:"c",
+                  format:"tiles",
+                  token:"f5347cab4b28410a6e8ba5143e3d5a35",
 
                   canvasSourceId: 'canvassourceid',
                   canvasSource: {

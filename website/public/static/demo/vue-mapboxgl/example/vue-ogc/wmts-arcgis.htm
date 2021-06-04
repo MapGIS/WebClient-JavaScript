@@ -63,10 +63,10 @@
                 >
                 </mapgis-igs-tdt-layer>
                 <mapgis-ogc-wmts-layer 
-                    v-bind:layer="layerWmts" 
+                    v-bind:wmts-layer="layerWmts"
                     v-bind:layer-id="layerWmtsId" 
                     v-bind:source-id="sourceWmtsId" 
-                    v-bind:url="wmtsurl"
+                    v-bind:base-url="wmtsurl"
                     v-bind:zoom-offset="offset"
                 >
                 </mapgis-ogc-wmts-layer>
@@ -96,10 +96,10 @@
                         baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
                         token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
 
-                        layerWmts: {},
+                        layerWmts: '0,2,4,6,8,10',
                         layerWmtsId: 'ogcwmts_layerId',
                         sourceWmtsId: 'ogcwmts_sourceId',
-                        wmtsurl: 'http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/tile/{z}/{y}/{x}',
+                        wmtsurl: 'http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer',
                         offset: -1,  //这里一定不能去掉
                     };
                 },

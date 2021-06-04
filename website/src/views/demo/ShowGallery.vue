@@ -134,8 +134,8 @@ export default {
 .gallery-image-col {
   display: flex;
   margin: 10px 0px;
-  // overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-x: overlay;
+  //overflow-y: hidden;
 
   .gallyer-image-wrapper {
     margin-right: 6px;

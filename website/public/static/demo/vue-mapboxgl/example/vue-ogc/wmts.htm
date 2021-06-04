@@ -54,8 +54,22 @@
                 :crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapgis-ogc-wmts-layer :layer="layerTdt" :layer-id="layerTdtId" :source-id="sourceTdtId" :url="tdturl"> </mapgis-ogc-wmts-layer>
-                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapgis-ogc-wmts-layer>
+                <mapgis-ogc-wmts-layer
+                :layer-id="layerTdtId"
+                :source-id="sourceTdtId"
+                :base-url="tdturl"
+                :tile-matrix-set="tileMatrixSet"
+                :wmts-layer="layer"
+                :format="format"
+                :token="token">
+                </mapgis-ogc-wmts-layer>
+                <mapgis-ogc-wmts-layer
+                :wmts-layer="layerArcGis"
+                :layer-id="layerWmtsId"
+                :source-id="sourceWmtsId"
+                :base-url="wmtsurl"
+                :tile-matrix-set="tileMatrixSetArcGis"
+                > </mapgis-ogc-wmts-layer>
             </mapgis-web-map>
         </div>
         <script>
@@ -79,14 +93,21 @@
                         layerTdtId: 'igsLayer_layerId',
                         sourceTdtId: 'igsLayer_sourceId',
                         layerTdt: {}, // 图层配置信息
-                        tdturl: 'http://t0.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}&tk=2ddaabf906d4b5418aed0078e1657029',
+                        tdturl: 'http://t0.tianditu.gov.cn/vec_w/wmts',
+                        layer:"vec",
+                        tileMatrixSet:"w",
+                        format:"tiles",
+                        token:"f5347cab4b28410a6e8ba5143e3d5a35",
 
-                        layerWmts: {},
                         layerWmtsId: 'ogcwmts_layerId',
                         sourceWmtsId: 'ogcwmts_sourceId',
 
-                        wmtsurl:
-                            'https://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/WMTS/?layer=Demographics_USA_Population_Density&style=default&tilematrixset=default028mm&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}'
+                        wmtsurl:"http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer/WMTS",
+                        tileMatrixSetArcGis:"default028mm",
+                        layerArcGis:"ChinaOnlineCommunity",
+                        // wmtsurl:
+                        //     '/?layer=&style=default&tilematrixset=&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}'
+                        //
                     };
                 },
                 methods: {

@@ -66,7 +66,7 @@ export default {
     }
   },
   methods: {
-    handleSelect (key) {
+    handleSelect(key) {
       let se = key;
       return se;
     },
@@ -74,20 +74,25 @@ export default {
       let href = window.location.href; // .split("/");
       let newHref = href.replace('/demo', '/gallery');
       const mapmode = this.$route.params.mapmode;
+      const file = this.$route.params.file;
       const first = this.$route.params.first;
+      const second = this.$route.params.second;
       let match,matchIndex,baseUrl;
       if (this.$route.params.hasOwnProperty("second")){
-        match = `/gallery/${mapmode}/${first}`;
-        matchIndex = newHref.indexOf(match);
-        match = `/gallery/${mapmode}#${first}`;
-        baseUrl = newHref.slice(0,matchIndex);
-        baseUrl = baseUrl + match;
+        if (key === second){
+          baseUrl = href.replace(file,"");
+        } else {
+          match = `/gallery/${mapmode}`;
+          matchIndex = newHref.indexOf(match);
+          baseUrl = newHref.slice(0, matchIndex + match.length);
+          window.location.href = baseUrl + `#${key}`;
+        }
       } else {
         match = `/gallery/${mapmode}`;
         matchIndex = newHref.indexOf(match);
         baseUrl = newHref.slice(0, matchIndex + match.length);
+        window.location.href = baseUrl + `#${key}`;
       }
-      window.location.href = baseUrl + `#${key}`;
       return key;
     }
   }

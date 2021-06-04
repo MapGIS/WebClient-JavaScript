@@ -3,12 +3,23 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-测量</title>
-        <!--引入第三方的jquery脚本库-->
+        <title>Vue-arcgisTile</title>
         <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
         <style type="text/css">
-            #map {
+            body {
+                margin: 0px !important;
+            }
+            #app {
+                margin: 0 0;
+                width: 100vw;
                 height: 100vh;
+                overflow: hidden;
+            }
+            .map {
+                position: absolute; /* 只能是绝对布局 */
+                top: 0;
+                bottom: 0;
+                height: 100%;
                 width: 100%;
             }
         </style>
@@ -17,19 +28,16 @@
     <body>
         <div id="app">
             <mapgis-web-map
-                id="map"
-                :map-style="mapStyle"
-                :zoom="mapZoom"
-                :center="outerCenter"
-                :crs="mapCrs"
-                v-on:load="handleMapLoad"
-            >
-                <mapgis-arcgis-tile-layer
-                    :layer-id="arcgisLayerId"
-                    :source-id="arcgisSourceId"
-                    :base-url="arcgisUrl"
-                >
-                </mapgis-arcgis-tile-layer>
+              id="map"
+              :map-style="mapStyle"
+              :zoom="mapZoom"
+              :center="outerCenter"
+              :crs="mapCrs"
+              v-on:load="handleMapLoad">
+              <mapgis-arcgis-tile-layer
+                :layer-id="layertileid"
+                :base-url="tileurl">
+              </mapgis-arcgis-tile-layer>
             </mapgis-web-map>
         </div>
         <script>
@@ -43,24 +51,16 @@
                             //添加来源
                             sources: {},
                             //设置加载并显示来源的图层信息
-                            layers: [],
+                            layers: []
                         }, // 地图样式
-                        mapZoom: 2, // 地图初始化级数
-                        outerCenter: [116.39, 40.20], // 地图显示中心
+                        mapZoom: 8, // 地图初始化级数
+                        outerCenter: [114.299039,30.594797], // 地图显示中心
                         mapCrs: 'EPSG:3857',
-
-                        arcgisLayerId: 'ogcwmts_layer_id',
-                        arcgisSourceId: 'arcgis_source_id',
-                        arcgisUrl: "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer",
+                        layertileid:"layerid",
+                        tileurl:"http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer"
                     };
                 },
                 methods: {
-                    enableMeasure() {
-                        const component = this.$refs.measureref;
-                        if (component) {
-                            component.enableMeasure();
-                        }
-                    },
                     handleMapLoad(payload) {
                         this.map = payload.map;
                     }
