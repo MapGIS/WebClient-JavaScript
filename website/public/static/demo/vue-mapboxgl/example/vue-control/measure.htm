@@ -157,11 +157,10 @@
                     handleMeasure(e) {
                         console.log('测量结果', e);
                         this.disableDrag();
-                        const {center, perimeter, area} = e;
-                        const coords = center.geometry.coordinates;
+                        const coords = e.center.geometry.coordinates;
                         this.coordinates = coords;
-                        this.area = area || '无';
-                        this.perimeter = perimeter;
+                        this.area = e.geographyArea || '无';
+                        this.perimeter = e.geographyPerimeter;
                     },
                     toggleQueryLength(e) {
                         this.enableMeasure();

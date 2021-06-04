@@ -43,7 +43,7 @@
           :source-id="sourceRasterId"
           >
         </mapgis-rastertile-layer>
-        <mapbox-navigation-control :showCompass="compass" :showZoom="zoom" />
+        <mapgis-navigation :showCompass="compass" :showZoom="zoom" ></mapgis-navigation>
       </mapgis-web-map>
     </div>
     <script>
@@ -51,6 +51,7 @@
           el: '#app',
           data() {
               return {
+                  accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA',
                   mapStyle: {
                       //设置版本号，一定要设置
                       version: 8,
