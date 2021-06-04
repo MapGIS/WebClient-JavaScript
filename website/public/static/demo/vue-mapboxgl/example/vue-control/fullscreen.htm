@@ -16,11 +16,6 @@
           height: 100vh;
           width: 100%;
       }
-      .custom {
-          height: 100vh;
-          background: #FFFFFF;
-          padding: 12px;
-      }
     </style>
   </head>
 
@@ -54,13 +49,13 @@
            :container="container">
           </mapgis-fullscreen>
       </mapgis-web-map>
-      <div class="custom" ref="custom">自定义样式,屏蔽后默认显示地图组件</div>
     </div>
     <script>
       new Vue({
           el: '#app',
           data() {
               return {
+                accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA',
                   mapStyle: {
                       //设置版本号，一定要设置
                       version: 8,
@@ -97,9 +92,8 @@
           methods: {
               handleMapLoad(payload) {
                   this.map = payload.map;
-                  let custom = this.$refs.custom;
+                  let custom = document.getElementById("#map");
                   this.container = custom;
-                  console.log('custom', custom);
               }
           }
       });
