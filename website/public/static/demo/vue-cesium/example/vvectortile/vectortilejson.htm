@@ -16,14 +16,13 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                v-bind:ref="webgloberef"
                 v-bind:animation="false"
                 v-bind:timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-vectortile-layer v-on:load="handleVectorTile" :vectortilejson="vectortilejson" />
+                <mapgis-3d-vectortile-layer v-on:load="handleVectorTile" :vectortilejson="vectortilejson"></mapgis-3d-vectortile-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -31,7 +30,6 @@
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
                         vectortilejson: {
                             version: 8,
                             name: '中国行政区 Style',

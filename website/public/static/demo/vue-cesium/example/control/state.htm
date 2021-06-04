@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>Vue-Popup</title>
-        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+        <script include="vue" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
                 height: 100vh;
@@ -16,15 +16,14 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                :ref="websceneref"
                 :animation="false"
                 :timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-raster-layer :url="url" />
-                <mapgis-3d-statebar />
+                <mapgis-3d-raster-layer :base-url="baseUrl"></mapgis-3d-raster-layer>
+                <mapgis-3d-statebar> </mapgis-3d-statebar>
             </mapgis-web-scene>
         </div>
         <script>
@@ -32,8 +31,8 @@
                 el: '#app',
                 data() {
                     return {
-                        websceneref: 'websceneref' + Math.random(),
-                        url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                        vueKey: 'state',
+                        baseUrl: 'http://t6.tianditu.com/img_w/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={z}&layer=img&style=default&tilerow={y}&tilecol={x}&tilematrixset=w&format=tiles&tk=f5347cab4b28410a6e8ba5143e3d5a35',
                     };
                 },
                 mounted() {
@@ -42,7 +41,7 @@
                 methods: {
                     handleLoad(e) {
                         console.log('地图加初始化完毕！', e);
-                    },
+                    }
                 }
             });
         </script>

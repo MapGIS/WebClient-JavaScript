@@ -19,6 +19,7 @@
         "exclude": [
             "src/service/baseserver",
             "src/leaflet/extend/leaflet-plugins",
+            "src/service/node_modules",
             "src/service/node_modules/turf-jsts/",
             "src/service/node_modules/@turf",
             "src/service/node_modules/polygon-clipping",

@@ -52,74 +52,50 @@
         <div id="app">
             <div class="item top-left">
                 <mapgis-web-scene
-                    v-bind:ref="webgloberef1"
-                    v-bind:animation="false"
-                    v-bind:timeline="false"
-                    v-on:load="handleLoad"
                     lib-path="./static/libs/cdn/cesium/Cesium.js"
                     plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer v-bind:url="url1"> </mapgis-3d-raster-layer>
-                    <mapgis-3d-link v-bind:enable="link"></mapgis-3d-link>
+                    <mapgis-3d-raster-layer :base-url="url1"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-link :enable="link"></mapgis-3d-link>
                 </mapgis-web-scene>
             </div>
             <div class="item top-right">
                 <mapgis-web-scene
-                    v-bind:ref="webgloberef2"
-                    v-bind:animation="false"
-                    v-bind:timeline="false"
-                    v-on:load="handleLoad"
-                    libPath="./static/libs/cdn/cesium/Cesium.js"
-                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                    lib-path="./static/libs/cdn/cesium/Cesium.js"
+                    plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer v-bind:url="url2"> </mapgis-3d-raster-layer>
-                    <mapgis-3d-link v-bind:enable="link"></mapgis-3d-link>
+                    <mapgis-3d-raster-layer :base-url="url2"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-link :enable="link"></mapgis-3d-link>
                 </mapgis-web-scene>
             </div>
             <div class="item bottom-left">
                 <mapgis-web-scene
-                    v-bind:ref="webgloberef3"
-                    v-bind:animation="false"
-                    v-bind:timeline="false"
-                    v-on:load="handleLoad"
-                    libPath="./static/libs/cdn/cesium/Cesium.js"
-                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                    lib-path="./static/libs/cdn/cesium/Cesium.js"
+                    plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-raster-layer v-bind:url="url3"> </mapgis-3d-raster-layer>
+                    <mapgis-3d-raster-layer :base-url="url3"> </mapgis-3d-raster-layer>
                 </mapgis-web-scene>
             </div>
             <div class="item bottom-right">
                 <mapgis-web-scene
-                    v-bind:ref="webgloberef4"
-                    v-bind:animation="false"
-                    v-bind:timeline="false"
-                    v-on:load="handleLoad"
-                    libPath="./static/libs/cdn/cesium/Cesium.js"
-                    pluginPath="./static/libs/cdn/cesium/webclient-cesium-plugin.js"
+                    lib-path="./static/libs/cdn/cesium/Cesium.js"
+                    plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
                 >
-                    <mapgis-3d-ogc-wmts-layer v-bind:url="url4" v-bind:options="wmtsoptions" />
+                    <mapgis-3d-raster-layer :base-url="url4"> </mapgis-3d-raster-layer>
                 </mapgis-web-scene>
             </div>
-            <div v-bind:class="{'control': true, active: link}" v-on:click="changeMode"></div>
+            <div :class="{'control': true, active: link}" v-on:click="changeMode"></div>
         </div>
         <script>
             new Vue({
                 el: '#app',
                 data() {
                     return {
-                        webgloberef1: 'webgloberef1',
-                        webgloberef2: 'webgloberef2',
-                        webgloberef3: 'webgloberef3',
-                        webgloberef4: 'webgloberef4',
-                        link: true,
+                        link: false,
                         url1: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
                         url2: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        url3: 'http://online0.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20170908',
-                        url4: 'http://t0.tianditu.com/DataServer?T=vec_c&L={TileMatrix}&Y={TileRow}&X={TileCol}&tk=9c157e9585486c02edf817d2ecbc7752',
-                        wmtsoptions: {
-                            tilingScheme: 'EPSG:4490',
-                            tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-                        }
+                        url3: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetWarm/MapServer/tile/{z}/{y}/{x}',
+                        url4: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}'
                     };
                 },
                 methods: {

@@ -16,14 +16,20 @@
     <body>
         <div id="app">
             <mapgis-web-scene
-                v-bind:ref="webgloberef"
-                v-bind:animation="false"
-                v-bind:timeline="false"
+                :animation="false"
+                :timeline="false"
                 v-on:load="handleLoad"
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-ogc-wmts-layer v-bind:url="url" v-bind:options="options"></mapgis-3d-ogc-wmts-layer>
+                <mapgis-3d-ogc-wmts-layer
+                    :base-url="baseUrl"
+                    :wmts-layer="wmtsLayer"
+                    :tile-matrix-set="tileMatrixSet"
+                    :srs="srs"
+                    :options="options"
+                >
+                </mapgis-3d-ogc-wmts-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -31,14 +37,12 @@
                 el: '#app',
                 data() {
                     return {
-                        webgloberef: 'webgloberef' + Math.random(),
-                        url:
-                            'http://t2.tianditu.com/DataServer?T=vec_c' +
-                            '&L={TileMatrix}&Y={TileRow}&X={TileCol}' +
-                            '&tk=9c157e9585486c02edf817d2ecbc7752',
+                        baseUrl: 'http://t6.tianditu.gov.cn/vec_c/wmts?tk=9c157e9585486c02edf817d2ecbc7752',
+                        wmtsLayer: 'vec',
+                        tileMatrixSet: 'c',
+                        srs: 'EPSG:4326',
                         options: {
-                            tilingScheme: 'EPSG:4490',
-                            tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+                            format: 'tiles'
                         }
                     };
                 },
