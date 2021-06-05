@@ -115,7 +115,7 @@ export default class M3DLayer extends BaseLayer {
         let proxy;
         const docLayers = [];
 
-        const layersString = defaultValue(op.layers, '');
+        const layersString = Cesium.defaultValue(options.layers, '');
 
         let layersVec = layersString.split('=');
 

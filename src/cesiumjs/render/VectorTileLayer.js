@@ -16,7 +16,7 @@ import { find } from 'ol/array';
  * @param {String} [option.ip = localhost] 地图服务ip
  * @param {String} [option.port = 6163] 地图服务port
  * @param {String} [option.layerName] 地图名
- * @param {String} option.style 样式json文件路径或者MVT-JSON对象，当为url时等于styleUrl；当为vectortilejson等于vectortilejson
+ * @param {String} option.mvtStyle 样式json文件路径或者MVT-JSON对象，当为url时等于styleUrl；当为vectortilejson等于vectortilejson
  * @param {String} [option.styleUrl] 样式json文件路径,有styleUrl就可以直接读取styleUrl里的信息;不然就是加载中地发布的矢量瓦片，使用ip，port和layerName先拼接styleUrl路径再进行查询。
  * @param {Object} [option.vectortilejson] 矢量瓦片json对象,直接取json对象，不需要再去请求。
  * @param {Cesium.TilingScheme} [option.tilingScheme] 矢量瓦片瓦片切分规则：经纬度还是墨卡托
@@ -27,7 +27,7 @@ import { find } from 'ol/array';
  * vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
         webGlobe.viewer,
         {
-            style:"http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/街道-墨卡托.json",
+            mvtStyle:"http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/街道-墨卡托.json",
             token: "",
             show: true,
         }
@@ -50,7 +50,7 @@ export class VectorTileLayer {
         this.vectortilejson = options.vectortilejson;
         this.threadId = options.threadId || Math.random() * 10000;
         this.show = options.show;
-        this.style = options.style;
+        this.mvtStyle = options.mvtStyle;
         this.styleUrl = options.styleUrl;
         this.tilingScheme = options.tilingScheme;
         this.provider = null;
@@ -58,13 +58,13 @@ export class VectorTileLayer {
         this.initDevicePixelRatio();
         //this.bindEvent();
 
-        if (this.style) {
-            if (typeof this.style === 'string') {
+        if (this.mvtStyle) {
+            if (typeof this.mvtStyle === 'string') {
                 //如果是个网络地址，就通过url请求获取矢量瓦片json对象
-                this.url = this.style;
+                this.url = this.mvtStyle;
                 this.requestVectortileJson();
             } else {
-                this.requestStyleData(this.style);
+                this.requestStyleData(this.mvtStyle);
             }
         } else if (this.styleUrl) {
             if (typeof this.styleUrl === 'string') {
