@@ -23,7 +23,6 @@
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
                 <mapgis-3d-tileset :url="url"> </mapgis-3d-tileset>
-                <mapgis-3d-rastertile-layer :base-url="rasterUrl"></mapgis-3d-rastertile-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -31,9 +30,7 @@
                 el: '#app',
                 data() {
                     return {
-                        url: './static/data/3DTile/Tileset/tileset.json',
-                        rasterUrl:
-                            'http://t6.tianditu.com/img_w/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={z}&layer=img&style=default&tilerow={y}&tilecol={x}&tilematrixset=w&format=tiles&tk=f5347cab4b28410a6e8ba5143e3d5a35'
+                        url: './static/data/3DTile/Tileset/tileset.json'
                     };
                 },
                 methods: {

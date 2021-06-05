@@ -10,6 +10,30 @@
             "leaffolder": true,
             "childs": [
                 {
+                    "name": "通用瓦片",
+                    "file": "raster",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "raster.png",
+                    "update": "最后更新时间：2020-11-23"
+                },
+                {
+                    "name": "地形瓦片",
+                    "file": "dem",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "dem.png",
+                    "update": "最后更新时间：2020-11-23"
+                }
+            ]
+        },
+        {
+            "name": "Vue-IGServer",
+            "iconfont": "iconhand_draw",
+            "folder": "igserver",
+            "leaffolder": true,
+            "childs": [
+                {
                     "name": "地图文档",
                     "file": "document",
                     "diffcult": "2",
@@ -24,15 +48,15 @@
                     "detail": "",
                     "icon": "tile.png",
                     "update": "最后更新时间：2020-11-23"
-                },
-                {
-                    "name": "通用瓦片",
-                    "file": "raster",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "raster.png",
-                    "update": "最后更新时间：2020-11-23"
-                },
+                }
+            ]
+        },
+        {
+            "name": "Vue-OGC",
+            "iconfont": "iconhand_draw",
+            "folder": "ogc",
+            "leaffolder": true,
+            "childs": [
                 {
                     "name": "WMTS瓦片",
                     "file": "wmts",
@@ -48,14 +72,6 @@
                     "detail": "",
                     "icon": "wms.png",
                     "update": "最后更新时间：2021-01-28"
-                },
-                {
-                    "name": "地形瓦片",
-                    "file": "dem",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "dem.png",
-                    "update": "最后更新时间：2020-11-23"
                 }
             ]
         },

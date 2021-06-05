@@ -22,9 +22,16 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <cesium-terrain-provider :url="demUrl" :v-if="showDem"></cesium-terrain-provider>
-                <mapgis-3d-ogc-wmts-layer :base-url="baseUrl" :wmts-layer="wmtsLayer" :srs="srs" :tile-matrix-set="tileMatrixSet">
-                </mapgis-3d-ogc-wmts-layer>
+                <mapgis-3d-terrain-provider :url="demUrl" :v-if="showDem"></mapgis-3d-terrain-provider>
+                <mapgis-3d-ogc-wmts-layer
+                :base-url="baseUrl"
+                :wmts-layer="wmtsLayer"
+                :srs="srs"
+                :tile-matrix-set="tileMatrixSet"
+                :format="format"
+                :layer-style="layerStyle"
+            >
+            </mapgis-3d-ogc-wmts-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -34,12 +41,13 @@
                     return {
                         showDem: false,
                         demUrl: undefined,
-                        baseUrl: 'http://t6.tianditu.gov.cn/vec_c/wmts?tk=9c157e9585486c02edf817d2ecbc7752',
-                        wmtsLayer: 'vec',
+                        baseUrl: 'http://t6.tianditu.gov.cn/img_c/wmts?tk=9c157e9585486c02edf817d2ecbc7752',
+                        wmtsLayer: 'img',
                         tileMatrixSet: 'c',
                         srs: 'EPSG:4326',
-                        options: {
-                            format: 'tiles'
+                        format: 'tiles',
+                        layerStyle: {
+                            zIndex: 1
                         }
                     };
                 },

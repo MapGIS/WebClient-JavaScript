@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-WMTS</title>
+        <title>Vue-地图文档</title>
         <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
@@ -22,14 +22,7 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-ogc-wmts-layer
-                    :base-url="baseUrl"
-                    :wmts-layer="wmtsLayer"
-                    :tile-matrix-set="tileMatrixSet"
-                    :srs="srs"
-                    :options="options"
-                >
-                </mapgis-3d-ogc-wmts-layer>
+                <mapgis-3d-igs-doc-layer :base-url="baseUrl" :layer-style="layerStyle"></mapgis-3d-igs-doc-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -37,12 +30,9 @@
                 el: '#app',
                 data() {
                     return {
-                        baseUrl: 'http://t6.tianditu.gov.cn/vec_c/wmts?tk=9c157e9585486c02edf817d2ecbc7752',
-                        wmtsLayer: 'vec',
-                        tileMatrixSet: 'c',
-                        srs: 'EPSG:4326',
-                        options: {
-                            format: 'tiles'
+                        baseUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市',
+                        layerStyle: {
+                            zIndex: 1
                         }
                     };
                 },

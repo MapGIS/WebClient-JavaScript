@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-地图文档</title>
+        <title>Vue-地图瓦片</title>
         <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
         <style type="text/css">
             #app {
@@ -22,7 +22,7 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-igs-doc-layer :base-url="baseUrl"></mapgis-3d-igs-doc-layer>
+                <mapgis-3d-igs-tile-layer :base-url="baseUrl" :layer-style="layerStyle"></mapgis-3d-igs-tile-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -30,7 +30,10 @@
                 el: '#app',
                 data() {
                     return {
-                        baseUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市'
+                        baseUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/tile/北京市',
+                        layerStyle: {
+                            zIndex: 1
+                        }
                     };
                 },
                 methods: {

@@ -23,11 +23,6 @@
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
                 <mapgis-3d-igs-m3d :url="url"> </mapgis-3d-igs-m3d>
-                <mapgis-3d-rastertile-layer
-                    :id="rastertile.id"
-                    :base-url="rastertile.baseUrl"
-                    :layer-style="rastertile.layerStyle"
-                ></mapgis-3d-rastertile-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -35,15 +30,7 @@
                 el: '#app',
                 data() {
                     return {
-                        url: 'http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels',
-                        rastertile: {
-                            id: 'rastertile',
-                            baseUrl:
-                                'http://t6.tianditu.com/img_w/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={z}&layer=img&style=default&tilerow={y}&tilecol={x}&tilematrixset=w&format=tiles&tk=f5347cab4b28410a6e8ba5143e3d5a35',
-                            layerStyle: {
-                                zIndex: 2
-                            }
-                        }
+                        url: 'http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels'
                     };
                 },
                 methods: {

@@ -22,7 +22,7 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-vectortile-layer v-bind:style-url="styleUrl"></mapgis-3d-vectortile-layer>
+                <mapgis-3d-vectortile-layer v-bind:mvt-style="mvtStyle"></mapgis-3d-vectortile-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -30,7 +30,7 @@
                 el: '#app',
                 data() {
                     return {
-                        styleUrl: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/蓝色-墨卡托.json'
+                        mvtStyle: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/styles/蓝色-墨卡托.json'
                     };
                 },
                 methods: {
