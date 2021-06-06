@@ -74,7 +74,7 @@ export default class PopupLayer {
         this.camera = map.camera;
         this.isShow = true;
 
-        let ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window["Cesium"].ScreenSpaceEventHandler;
+        let ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window['Cesium'].ScreenSpaceEventHandler;
 
         this.handler = new ScreenSpaceEventHandler(this.scene.canvas);
 
@@ -89,9 +89,23 @@ export default class PopupLayer {
             this.position.cartesian ||
             Cesium.Cartesian3.fromDegrees(this.position.longitude, this.position.latitude, this.position.height);
 
-        let parents = document.getElementsByClassName('cesium-widget');
-        parent = parents.length > 0 ? parents[0] : map.container;
-        this.parent = parent;
+        let vc = this.map.container;
+        let cesumWidgetContainer = undefined;
+        if (vc.children && vc.children.length > 0) {
+            if (vc.children[0].children && vc.children[0].children.length > 0) {
+                if (vc.children[0].children[0].children && vc.children[0].children[0].children.length > 0) {
+                    cesumWidgetContainer = vc.children[0].children[0].children[0];
+                }
+            }
+        }
+
+        if (!cesumWidgetContainer) {
+            let parents = document.getElementsByClassName('cesium-widget');
+            parent = parents.length > 0 ? parents[0] : map.container;
+            this.parent = parent;
+        } else {
+            this.parent = cesumWidgetContainer;
+        }
 
         // this.initDevicePixelRatio();
         this.showClose = options.showClose === undefined ? true : options.showClose;
