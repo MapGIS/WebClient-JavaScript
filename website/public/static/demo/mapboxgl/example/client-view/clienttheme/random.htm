@@ -198,7 +198,7 @@
         /** 删除专题图*/
         function deleteTheme() {
             if (map != null && themeLayer != null) {
-                map.removeLayer(themeLayer);
+                themeLayer.removeFromMap();
             }
             if (infoView) {
                 map.removeControl(infoView);
