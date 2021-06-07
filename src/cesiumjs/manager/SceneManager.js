@@ -137,7 +137,8 @@ export default class SceneManager {
                 longitudeString = Cesium.Math.toDegrees(cartographic.longitude);
                 latitudeString = Cesium.Math.toDegrees(cartographic.latitude);
                 cameraHeight = Math.ceil(that.viewer.camera.positionCartographic.height);
-                height = Math.max(that.viewer.scene.globe.getHeight(cartographic), cartographic.height);
+                // height = Math.max(that.viewer.scene.globe.getHeight(cartographic), cartographic.height);
+                height = cartographic.height;
                 longlatHeight = `经度:${longitudeString.toFixed(4)}°，纬度:${latitudeString.toFixed(4)}°，海拔高度:${height.toFixed(0)}米，相机视角高度:${cameraHeight.toFixed(0)}米`;
             }
             let strHpr = '';
