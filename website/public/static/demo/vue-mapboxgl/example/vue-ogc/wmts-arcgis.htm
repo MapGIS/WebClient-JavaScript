@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-测量</title>
+        <title>Vue-arcgis</title>
         <!--引入第三方的jquery脚本库-->
         <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
         <style type="text/css">
@@ -47,27 +47,28 @@
         <div id="app">
             <mapgis-web-map
                 id="map"
-                v-bind:access-token="accessToken"
                 v-bind:map-style="mapStyle"
                 v-bind:zoom="mapZoom"
                 v-bind:center="outerCenter"
                 v-bind:crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapgis-igs-tdt-layer
-                    v-bind:layer="layer"
-                    v-bind:layer-id="layerId"
-                    v-bind:source-id="sourceId"
-                    v-bind:baseURL="baseURL"
-                    v-bind:token="token"
-                >
-                </mapgis-igs-tdt-layer>
-                <mapgis-ogc-wmts-layer 
+                <mapgis-ogc-wmts-layer
+                   v-bind:layer-id="layerTdtId"
+                   v-bind:source-id="sourceTdtId"
+                   v-bind:base-url="tdturl"
+                   v-bind:tile-matrix-set="tileMatrixSetTdt"
+                   v-bind:wmts-layer="layer"
+                   v-bind:format="format"
+                   v-bind:token="token">
+                </mapgis-ogc-wmts-layer>
+                <mapgis-ogc-wmts-layer
                     v-bind:wmts-layer="layerWmts"
                     v-bind:layer-id="layerWmtsId" 
                     v-bind:source-id="sourceWmtsId" 
                     v-bind:base-url="wmtsurl"
                     v-bind:zoom-offset="offset"
+                    v-bind:tile-matrix-set="tileMatrixSet"
                 >
                 </mapgis-ogc-wmts-layer>
             </mapgis-web-map>
@@ -77,7 +78,6 @@
                 el: '#app',
                 data() {
                     return {
-                        accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA', // 使用mapbox样式需要的秘钥
                         mapStyle: {
                             //设置版本号，一定要设置
                             version: 8,
@@ -90,16 +90,20 @@
                         outerCenter: [116.39, 40.20], // 地图显示中心
                         mapCrs: 'EPSG:4326',
 
-                        layerId: 'igsLayer_layerId',
-                        sourceId: 'igsLayer_sourceId',
-                        layer: {}, // 图层配置信息
-                        baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
-                        token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
+                        layerTdtId: 'igsLayer_layerId',
+                        sourceTdtId: 'igsLayer_sourceId',
+                        layerTdt: {}, // 图层配置信息
+                        tdturl: 'http://t0.tianditu.gov.cn/vec_c/wmts',
+                        layer:"vec",
+                        tileMatrixSetTdt:"c",
+                        format:"tiles",
+                        token:"f5347cab4b28410a6e8ba5143e3d5a35",
 
-                        layerWmts: '0,2,4,6,8,10',
+                        layerWmts: '10wanZH',
                         layerWmtsId: 'ogcwmts_layerId',
                         sourceWmtsId: 'ogcwmts_sourceId',
-                        wmtsurl: 'http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer',
+                        wmtsurl: 'http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/WMTS',
+                        tileMatrixSet:"default",
                         offset: -1,  //这里一定不能去掉
                     };
                 },
