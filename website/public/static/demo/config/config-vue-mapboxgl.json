@@ -214,8 +214,16 @@
                     "file": "arcgisTile",
                     "diffcult": "2",
                     "detail": "",
-                    "icon": "marker.png",
+                    "icon": "ArcgisTile.png",
                     "update": "最后更新时间：2021-06-04"
+                },
+                {
+                    "name": "ArcGIS地图",
+                    "file": "arcgisMap",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "ArcgisMap.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         },
@@ -358,6 +366,30 @@
                     "detail": "",
                     "icon": "event-layer.png",
                     "update": "最后更新时间：2021-03-08"
+                }
+            ]
+        },
+        {
+            "name": "Vue-Overlay",
+            "iconfont": "iconeye",
+            "folder": "vue-overlay",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "echarts",
+                    "file": "echarts",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "event-layer.png",
+                    "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "mapv",
+                    "file": "mapv",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "event-layer.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         }
