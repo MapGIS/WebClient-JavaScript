@@ -336,6 +336,8 @@
                     "detail": "arcgis图例组件",
                     "icon": "legend.png",
                     "update": "最后更新时间：2021-06-07"
+                },
+                {
                     "name": "表格组件",
                     "file": "table",
                     "diffcult": "3",
