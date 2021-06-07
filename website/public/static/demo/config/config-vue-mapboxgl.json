@@ -296,6 +296,22 @@
                     "detail": "比例尺组件",
                     "icon": "scale.png",
                     "update": "最后更新时间：2021-01-07"
+                },
+                {
+                    "name": "鹰眼组件",
+                    "file": "hawkeye",
+                    "diffcult": "1",
+                    "detail": "鹰眼组件",
+                    "icon": "hawkeye.png",
+                    "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "arcgis图例组件",
+                    "file": "legend",
+                    "diffcult": "1",
+                    "detail": "arcgis图例组件",
+                    "icon": "legend.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         },

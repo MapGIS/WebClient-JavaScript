@@ -91,7 +91,11 @@
     if (inArray(includes, 'vue')) {
       inputCSS(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.css');
       inputScript(httpUrl + '/cdn/vue/2.6/vue.js');
-      inputScript(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.umd.min.js');
+      inputScript(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.umd.js');
+    }
+    if (inArray(includes, 'antd')) {
+      inputCSS(httpUrl + '/cdn/ant-design-vue/dist/antd.css');
+      inputScript(httpUrl + '/cdn/ant-design-vue/dist/antd.js');
   }
   }
 

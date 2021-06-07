@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-卷帘</title>
+    <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene>
+            <mapgis-3d-arcgis-map-layer :base-url="mapUrl2" :id="mapId2"></mapgis-3d-arcgis-map-layer>
+            <mapgis-3d-arcgis-tile-layer :base-url="tileUrl" :id="tileId"></mapgis-3d-arcgis-tile-layer>
+            <mapgis-3d-arcgis-map-layer :base-url="mapUrl1" :id="mapId1"></mapgis-3d-arcgis-map-layer>
+            <mapgis-3d-compare :before-layers="beforeLayers" :after-layers="afterLayers">
+            </mapgis-3d-compare>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    tileUrl:
+                        "http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer",
+                    tileId: "tile-layer",
+                    mapUrl1:
+                        "http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer",
+                    mapId1: "map1-layer",
+                    mapUrl2: "http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetGray/MapServer",
+                    mapId2: "map2-layer",
+                    beforeLayers: ["tile-layer"],
+                    afterLayers: ["map1-layer"]
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

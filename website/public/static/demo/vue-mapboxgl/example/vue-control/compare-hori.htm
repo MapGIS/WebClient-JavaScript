@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <title>Vue-卷帘</title>
     <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
     <style type="text/css">
@@ -16,132 +17,52 @@
             height: 100vh;
             overflow: hidden;
         }
-
-        .map {
-            position: absolute; /* 只能是绝对布局 */
-            top: 0;
-            bottom: 0;
-            height: 100%;
-            width: 100%;
-        }
-
-        .custom-compare-toolbar {
-            position: absolute;
-            z-index: 9000;
-            top: 20px;
-            left: 20px;
-            height: 36px;
-            width: 36px;
-            border-radius: 6px;
-            background: #ffffff;
-            color: #000000;
-            line-height: 36px;
-        }
     </style>
 </head>
 
 <body>
-<div id="app">
-    <mapgis-web-map
-            id="left"
-            class="map"
-            ref="leftmap"
-            :map-style="mapStyle"
-            :zoom="mapZoom"
-            :center="outerCenter"
-            :crs="mapCrs"
-            v-on:load="handleLeftMapLoad"
-    >
-        <mapgis-ogc-wmts-layer
-           :layer-id="layerWmtsId"
-           :source-id="sourceWmtsId"
-           :base-url="wmtsurl1"
-           :tile-matrix-set="tileMatrixSet"
-           :wmts-layer="layer1"
-           :format="format"
-           :token="token">
-        </mapgis-ogc-wmts-layer>
-        <mapgis-compare ref="compare">
-            <div class="custom-compare-toolbar" v-on:click="handleEnable">卷帘</div>
-        </mapgis-compare>
-    </mapgis-web-map>
-    <mapgis-web-map
-            id="right"
-            class="map"
-            :map-style="mapStyle"
-            :zoom="mapZoom"
-            :center="outerCenter"
-            :crs="mapCrs"
-            v-on:load="handleRightMapLoad"
-    >
-        <mapgis-ogc-wmts-layer
-                :layer-id="layerWmtsId"
-                :source-id="sourceWmtsId"
-                :base-url="wmtsurl2"
-                :tile-matrix-set="tileMatrixSet"
-                :wmts-layer="layer2"
-                :format="format"
-                :token="token">
-        </mapgis-ogc-wmts-layer>
-    </mapgis-web-map>
-</div>
-<script>
-    var leftMap, rightMap;
-    new Vue({
-        el: '#app',
-        data() {
-            return {
-                left: 'left',
-                right: 'right',
-                mapStyle: {
-                    //设置版本号，一定要设置
-                    version: 8,
-                    //添加来源
-                    sources: {},
-                    //设置加载并显示来源的图层信息
-                    layers: []
-                }, // 地图样式
-                mapZoom: 2, // 地图初始化级数
-                outerCenter: [116.39, 40.2], // 地图显示中心
-                mapCrs: 'EPSG:4326',
+    <div id="app">
+        <mapgis-compare :orientation="orientation">
+            <mapgis-web-map :map-style="mapStyle" :zoom="mapZoom" :center="outerCenter" :crs="mapCrs" slot="beforeMap">
+                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId"
+                    :url="wmtsurl1"> </mapgis-ogc-wmts-layer>
 
-                layerWmts: {},
-                layerWmtsId: 'ogcwmts_layerId',
-                sourceWmtsId: 'ogcwmts_sourceId',
-                wmtsurl1: 'http://t0.tianditu.gov.cn/img_c/wmts',
-                layer1:"img",
-                tileMatrixSet:"c",
-                format:"tiles",
-                token:"f5347cab4b28410a6e8ba5143e3d5a35",
-                wmtsurl2: 'http://t0.tianditu.gov.cn/vec_c/wmts',
-                layer2:"vec",
-            };
-        },
-        methods: {
-            handleLeftMapLoad(payload) {
-                leftMap = payload.map;
-            },
-            handleRightMapLoad(payload) {
-                rightMap = payload.map;
-            },
-            handleEnable(e) {
-                let compare = this.$refs.compare;
-                let enable = compare.enable;
-                console.log('compare', compare);
-                if (enable) {
-                    compare.remove();
-                } else {
-                    var container = '#comparison-container';
-                    let parent = this.$refs.leftmap.$parent.$el;
-                    compare.compare(leftMap, rightMap, parent, {
-                        // Set this to enable comparing two maps by mouse movement:
-                        // mousemove: true,
-                        orientation: 'horizontal'
-                    });
-                }
+            </mapgis-web-map>
+            <mapgis-web-map :map-style="mapStyle" :zoom="mapZoom" :center="outerCenter" :crs="mapCrs" slot="afterMap">
+                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId"
+                    :url="wmtsurl2"> </mapgis-ogc-wmts-layer>
+            </mapgis-web-map>
+        </mapgis-compare>
+    </div>
+    
+    <script>
+        var leftMap, rightMap;
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    orientation: "horizontal",
+                    mapStyle: {
+                        //设置版本号，一定要设置
+                        version: 8,
+                        //添加来源
+                        sources: {},
+                        //设置加载并显示来源的图层信息
+                        layers: []
+                    }, // 地图样式
+                    mapZoom: 2, // 地图初始化级数
+                    outerCenter: [116.39, 40.2], // 地图显示中心
+                    mapCrs: 'EPSG:4326',
+
+                    layerWmts: {},
+                    layerWmtsId: 'ogcwmts_layerId',
+                    sourceWmtsId: 'ogcwmts_sourceId',
+                    wmtsurl1: 'http://t0.tianditu.com/DataServer?T=img_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+                    wmtsurl2: 'http://t0.tianditu.com/DataServer?T=vec_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752'
+                };
             }
-        }
-    });
-</script>
+        });
+    </script>
 </body>
+
 </html>

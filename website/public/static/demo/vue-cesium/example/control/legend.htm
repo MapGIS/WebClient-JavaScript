@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-arcgis图例</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene>
+            <mapgis-3d-arcgis-tile-layer
+                base-url="http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer">
+            </mapgis-3d-arcgis-tile-layer>
+            <mapgis-3d-arcgis-legend></mapgis-3d-arcgis-legend>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app"
+        })
+    </script>
+</body>
+
+</html>
