@@ -20,7 +20,7 @@
             <mapgis-3d-arcgis-map-layer :base-url="mapUrl2" :id="mapId2"></mapgis-3d-arcgis-map-layer>
             <mapgis-3d-arcgis-tile-layer :base-url="tileUrl" :id="tileId"></mapgis-3d-arcgis-tile-layer>
             <mapgis-3d-arcgis-map-layer :base-url="mapUrl1" :id="mapId1"></mapgis-3d-arcgis-map-layer>
-            <mapgis-3d-compare :before-layers="beforeLayers" :after-layers="afterLayers">
+            <mapgis-3d-compare :before-layers="beforeLayers" :after-layers="afterLayers" :vue-key="vueKey">
             </mapgis-3d-compare>
         </mapgis-web-scene>
     </div>
@@ -39,7 +39,8 @@
                     mapUrl2: "http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetGray/MapServer",
                     mapId2: "map2-layer",
                     beforeLayers: ["tile-layer"],
-                    afterLayers: ["map1-layer"]
+                    afterLayers: ["map1-layer"],
+                    vueKey: 'default'
                 }
             }
         })

@@ -370,30 +370,6 @@
                     "update": "最后更新时间：2021-03-08"
                 }
             ]
-        },
-        {
-            "name": "Vue-Overlay",
-            "iconfont": "iconeye",
-            "folder": "vue-overlay",
-            "leaffolder": true,
-            "childs": [
-                {
-                    "name": "echarts",
-                    "file": "echarts",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "event-layer.png",
-                    "update": "最后更新时间：2021-06-07"
-                },
-                {
-                    "name": "mapv",
-                    "file": "mapv",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "event-layer.png",
-                    "update": "最后更新时间：2021-06-07"
-                }
-            ]
         }
     ]
 }

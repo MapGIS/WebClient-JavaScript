@@ -104,6 +104,14 @@
                     "detail": "",
                     "icon": "map.png",
                     "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "arcgis图例组件",
+                    "file": "legend",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "legend.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         },
@@ -175,14 +183,6 @@
                     "diffcult": "3",
                     "detail": "",
                     "icon": "compare.png",
-                    "update": "最后更新时间：2021-06-07"
-                },
-                {
-                    "name": "arcgis图例组件",
-                    "file": "legend",
-                    "diffcult": "3",
-                    "detail": "",
-                    "icon": "legend.png",
                     "update": "最后更新时间：2021-06-07"
                 }
             ]
