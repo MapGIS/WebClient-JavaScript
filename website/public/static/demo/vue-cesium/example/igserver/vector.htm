@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-矢量图层</title>
+    <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene>
+            <mapgis-3d-igs-vector-layer :gdbps="gdbps" :base-url="baseUrl"></mapgis-3d-igs-vector-layer>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    gdbps: ["GDBP://MapGISLocalPlus/北京市/ds/行政区/sfcls/北京市"],
+                    baseUrl: "http://develop.smaryun.com:6163/igs/rest/mrms/layers"
+                };
+            },
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-arcgis图例</title>
+    <script include="vue,antd" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0px !important;
+        }
+
+        #app {
+            margin: 0 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-map v-bind="{ ...mapOptions }">
+            <mapgis-arcgis-tile-layer v-bind="{ ...layerOptions }"></mapgis-arcgis-tile-layer>
+            <mapgis-arcgis-legend></mapgis-arcgis-legend>
+        </mapgis-web-map>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    mapOptions: {
+                        crs: "EPSG:4326", //经纬度一定要设置crs参数
+                        maxBounds: [
+                            [-180, -90],
+                            [180, 90],
+                        ],
+                        //设置地图样式信息
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {
+                                dark: {
+                                    type: "raster",
+                                    tiles: [
+                                        //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                                        "http://t0.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                                        "&TILECOL=" +
+                                        "{x}" +
+                                        "&TILEROW=" +
+                                        "{y}" +
+                                        "&TILEMATRIX=" +
+                                        "{z}" +
+                                        "&tk=" +
+                                        "f5347cab4b28410a6e8ba5143e3d5a35",
+                                    ],
+                                    //栅格瓦片的分辨率
+                                    tileSize: 256,
+                                },
+                            },
+                            //设置加载并显示来源的图层信息
+                            layers: [
+                                {
+                                    //图层id，要保证唯一性
+                                    id: "dark",
+                                    //图层类型
+                                    type: "raster",
+                                    //连接图层来源
+                                    source: "dark",
+                                    //图层最小缩放级数
+                                    minzoom: 0,
+                                    //图层最大缩放级数
+                                    maxzoom: 22,
+                                },
+                            ],
+                        },
+                        zoom: 7.5,
+                        center: [116.39, 40.2],
+                    },
+                    layerOptions: {
+                        layerId: "tile-layer",
+                        type: "raster",
+                        source: {
+                            type: "raster",
+                            tiles: [
+                                "http://219.142.81.85/arcgis/rest/services/10wanZH/MapServer/tile/{z}/{y}/{x}",
+                            ],
+                            tileSize: 512,
+                            mapgisOffset: -1,
+                        },
+                        paint: {},
+                    },
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

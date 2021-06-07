@@ -48,6 +48,14 @@
                     "detail": "",
                     "icon": "tile.png",
                     "update": "最后更新时间：2020-11-23"
+                },
+                {
+                    "name": "矢量图层",
+                    "file": "vector",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "vector.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         },
@@ -136,6 +144,22 @@
                     "detail": "",
                     "icon": "state.png",
                     "update": "最后更新时间：2021-04-11"
+                },
+                {
+                    "name": "卷帘组件",
+                    "file": "compare",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "compare.png",
+                    "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "arcgis图例组件",
+                    "file": "legend",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "legend.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         },
@@ -160,6 +184,30 @@
                     "detail": "",
                     "icon": "tileset.png",
                     "update": "最后更新时间：2020-11-24"
+                }
+            ]
+        },
+        {
+            "name": "Vue-分析",
+            "iconfont": "icon_features",
+            "folder": "analysis",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "通视分析",
+                    "file": "sightline",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "sightline.png",
+                    "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "可视域分析",
+                    "file": "viewshed",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "viewshed.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         }
