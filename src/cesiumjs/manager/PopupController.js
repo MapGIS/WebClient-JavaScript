@@ -86,10 +86,10 @@ export default class PopupController extends BaseLayer {
         const randID = CommonFuncManager.generateRandom();
         const rootContentDiv = document.createElement('div');
         rootContentDiv.setAttribute('id', `popup_${randID}`);
-        rootContentDiv.setAttribute('class', 'cesium-popup');
+        rootContentDiv.setAttribute('class', 'mapgis-popup');
         rootContentDiv.setAttribute('style', 'top:5px;left:0;');
         const closeDiv = document.createElement('a');
-        closeDiv.setAttribute('class', 'cesium-popup-close-button');
+        closeDiv.setAttribute('class', 'mapgis-popup-close-button');
         // closeDiv.setAttribute('href', '#');
         closeDiv.innerHTML = '×';
         const webControl = this;
@@ -101,18 +101,18 @@ export default class PopupController extends BaseLayer {
         rootContentDiv.appendChild(closeDiv);
 
         const contentDiv = document.createElement('div');
-        contentDiv.setAttribute('class', 'cesium-popup-content-wrapper');
+        contentDiv.setAttribute('class', 'mapgis-popup-content-wrapper');
         const contentLinkDiv = document.createElement('div');
-        contentLinkDiv.setAttribute('class', 'cesium-popup-content');
+        contentLinkDiv.setAttribute('class', 'mapgis-popup-content');
         contentLinkDiv.setAttribute('style', 'max-width: 300px;');
         contentLinkDiv.innerHTML = content;
         contentDiv.appendChild(contentLinkDiv);
         rootContentDiv.appendChild(contentDiv);
 
         const tipContainDiv = document.createElement('div');
-        tipContainDiv.setAttribute('class', 'cesium-popup-tip-container');
+        tipContainDiv.setAttribute('class', 'mapgis-popup-tip-container');
         const tipDiv = document.createElement('div');
-        tipDiv.setAttribute('class', 'cesium-popup-tip');
+        tipDiv.setAttribute('class', 'mapgis-popup-tip');
         tipContainDiv.appendChild(tipDiv);
         rootContentDiv.appendChild(tipContainDiv);
 
@@ -274,7 +274,7 @@ export default class PopupController extends BaseLayer {
         if (removeDiv && popDiv.parentNode !== null) {
             popDiv.parentNode.removeChild(popDiv);
         }
-        if (owner.popupContain !== null && owner.popupContain.length > 0) {
+        if (Cesium.defined(owner.popupContain) && owner.popupContain.length > 0) {
             for (let i = 0, n = 0; i < owner.popupContain.length; i += 1) {
                 if (owner.popupContain[i].id !== popID) {
                     owner.popupContain[(n += 1)] = owner.popupContain[i];
@@ -282,7 +282,7 @@ export default class PopupController extends BaseLayer {
             }
             owner.popupContain.length -= 1;
         }
-        if (owner.popupContain.length <= 0) {
+        if (Cesium.defined(owner.popupContain) && owner.popupContain.length <= 0) {
             owner.viewer.camera.percentageChanged = 0.5;
             owner.viewer.camera.changed.removeEventListener(this.updatePopups, this);
         }

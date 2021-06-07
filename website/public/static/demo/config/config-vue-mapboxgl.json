@@ -148,6 +148,30 @@
             ]
         },
         {
+            "name": "Vue-矢量瓦片",
+            "iconfont": "iconraster",
+            "folder": "vue-vectortile",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "整体样式MVT",
+                    "file": "mvtstyle",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mvtstyle.png",
+                    "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "单图层",
+                    "file": "layer",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "layer.png",
+                    "update": "最后更新时间：2021-06-07"
+                }
+            ]
+        },
+        {
             "name": "Vue-OGC",
             "iconfont": "icon_ogc",
             "folder": "vue-ogc",
