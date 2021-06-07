@@ -86,10 +86,10 @@ export default class PopupController extends BaseLayer {
         const randID = CommonFuncManager.generateRandom();
         const rootContentDiv = document.createElement('div');
         rootContentDiv.setAttribute('id', `popup_${randID}`);
-        rootContentDiv.setAttribute('class', 'cesium-popup');
+        rootContentDiv.setAttribute('class', 'mapgis-popup');
         rootContentDiv.setAttribute('style', 'top:5px;left:0;');
         const closeDiv = document.createElement('a');
-        closeDiv.setAttribute('class', 'cesium-popup-close-button');
+        closeDiv.setAttribute('class', 'mapgis-popup-close-button');
         // closeDiv.setAttribute('href', '#');
         closeDiv.innerHTML = '×';
         const webControl = this;
@@ -101,18 +101,18 @@ export default class PopupController extends BaseLayer {
         rootContentDiv.appendChild(closeDiv);
 
         const contentDiv = document.createElement('div');
-        contentDiv.setAttribute('class', 'cesium-popup-content-wrapper');
+        contentDiv.setAttribute('class', 'mapgis-popup-content-wrapper');
         const contentLinkDiv = document.createElement('div');
-        contentLinkDiv.setAttribute('class', 'cesium-popup-content');
+        contentLinkDiv.setAttribute('class', 'mapgis-popup-content');
         contentLinkDiv.setAttribute('style', 'max-width: 300px;');
         contentLinkDiv.innerHTML = content;
         contentDiv.appendChild(contentLinkDiv);
         rootContentDiv.appendChild(contentDiv);
 
         const tipContainDiv = document.createElement('div');
-        tipContainDiv.setAttribute('class', 'cesium-popup-tip-container');
+        tipContainDiv.setAttribute('class', 'mapgis-popup-tip-container');
         const tipDiv = document.createElement('div');
-        tipDiv.setAttribute('class', 'cesium-popup-tip');
+        tipDiv.setAttribute('class', 'mapgis-popup-tip');
         tipContainDiv.appendChild(tipDiv);
         rootContentDiv.appendChild(tipContainDiv);
 
