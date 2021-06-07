@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-arcgisMap</title>
+        <script include="vue" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            body {
+                margin: 0px !important;
+            }
+            #app {
+                margin: 0 0;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+        </style>
+        <script src="../../../../../../../../../../productSet/mapgis-client-for-javascript-all-v10.5.4.10/site/static/libs/include-cesium-local.js"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapgis-web-scene
+                    :animation="false"
+                    :timeline="false"
+                    v-on:load="handleLoad"
+                    lib-path="./static/libs/cdn/cesium/Cesium.js"
+                    plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+            >
+              <mapgis-3d-arcgis-map-layer
+                :base-url="mapurl"
+                :layers="showlayers"
+                :layer-style="layerStyle"
+                :options="options"
+                :srs="srs">
+              </mapgis-3d-arcgis-map-layer>
+            </mapgis-web-scene>
+        </div>
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapurl:"http://219.142.81.85/arcgis/rest/services/20wanZL/MapServer",
+                        showlayers:"show:0,2,4,7,9,10,11,12",
+                        layerStyle: {
+                            visible: true,
+                            opacity: 1,
+                            zIndex: 2
+                        },
+                        options:{
+                            tileWidth:256,
+                            tileHeight:256,
+                        },
+                        srs:"EPSG:4326"
+                    };
+                },
+                methods: {
+                    handleLoad(e) {
+                        console.log('地图加初始化完毕！', e);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
