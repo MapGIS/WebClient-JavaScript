@@ -64,7 +64,6 @@
                 >
                 </mapgis-ogc-wmts-layer>
                 <mapgis-igs-doc-layer
-                    v-bind:layer="layerRaster"
                     v-bind:layer-id="layerRasterId"
                     v-bind:source-id="sourceRasterId"
                     v-bind:url="url"
@@ -97,7 +96,6 @@
                         format:"tiles",
                         token:"f5347cab4b28410a6e8ba5143e3d5a35",
 
-                        layerRaster: {},
                         layerRasterId: 'raster_layerId',
                         sourceRasterId: 'raster_sourceId',
                         url:'http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市'

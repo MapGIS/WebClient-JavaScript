@@ -92,11 +92,12 @@
       inputCSS(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.css');
       inputScript(httpUrl + '/cdn/vue/2.6/vue.js');
       inputScript(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.umd.js');
+	}
+	if (inArray(includes, 'antd')) {
+		inputScript(httpUrl + '/cdn/moment/2.18.1/moment.min.js');
+        inputCSS(httpUrl + '/cdn/ant-design-vue/dist/antd.min.css');
+        inputScript(httpUrl + '/cdn/ant-design-vue/dist/antd.min.js');
     }
-    if (inArray(includes, 'antd')) {
-      inputCSS(httpUrl + '/cdn/ant-design-vue/dist/antd.css');
-      inputScript(httpUrl + '/cdn/ant-design-vue/dist/antd.js');
-  }
   }
 
   load();

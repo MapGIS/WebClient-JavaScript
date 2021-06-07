@@ -52,7 +52,6 @@
                 v-bind:crs="mapCrs"
             >
                 <mapgis-igs-tdt-layer
-                    v-bind:layer="layer"
                     v-bind:layer-id="layerId"
                     v-bind:source-id="sourceId"
                     v-bind:baseURL="baseURL"
@@ -64,15 +63,15 @@
                     class="custom-draw-wrapper"
                     position="top-left"
                     v-bind:controls="controls"
-                    v-on:added="handleAdded1"
-                    v-on:drawcreate="handleCreate1"
-                    ref="drawref1"
+                    v-on:added="handleAdded"
+                    v-on:drawcreate="handleCreate"
+                    ref="drawref"
                 >
                     <div id="toolbar-wrapper1">
-                        <div class="toolbar-item" v-on:click="togglePoint1">画点</div>
-                        <div class="toolbar-item" v-on:click="togglePolyline1">画线</div>
-                        <div class="toolbar-item" v-on:click="togglePolygon1">画区</div>
-                        <div class="toolbar-item" v-on:click="toggleDelete1">删除</div>
+                        <div class="toolbar-item" v-on:click="togglePoint">画点</div>
+                        <div class="toolbar-item" v-on:click="togglePolyline">画线</div>
+                        <div class="toolbar-item" v-on:click="togglePolygon">画区</div>
+                        <div class="toolbar-item" v-on:click="toggleDelete">删除</div>
                     </div>
                 </mapgis-draw>
             </mapgis-web-map>
@@ -97,7 +96,6 @@
 
                         layerId: 'igsLayer_layerId',
                         sourceId: 'igsLayer_sourceId',
-                        layer: {}, // 图层配置信息
                         baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
                         token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
                         controls: {
@@ -112,44 +110,34 @@
                     };
                 },
                 methods: {
-                    enableDrawer1() {
-                        const component = this.$refs.drawref1;
+                    enableDrawer() {
+                        const component = this.$refs.drawref;
                         if (component) {
                             component.enableDrawer();
                         }
                     },
-                    enableDrawer2() {
-                        const component = this.$refs.drawref2;
-                        if (component) {
-                            component.enableDrawer();
-                        }
-                    },
-                    handleAdded1(e, data) {
+                    handleAdded(e, data) {
                         var { drawer, map } = e;
-                        this.drawer1 = drawer;
+                        this.drawer = drawer;
                     },
-                    handleCreate1(e) {
+                    handleCreate(e) {
                         console.log('create', e);
-                        // this.drawer1 && this.drawer1.deleteAll();
                     },
-                    togglePoint1(e) {
-                        this.enableDrawer1();
-                        this.drawer1 && this.drawer1.changeMode('draw_point');
+                    togglePoint(e) {
+                        this.enableDrawer();
+                        this.drawer && this.drawer.changeMode('draw_point');
                     },
-                    togglePolyline1() {
-                        this.enableDrawer1();
-                        this.drawer1 && this.drawer1.changeMode('draw_line_string');
+                    togglePolyline() {
+                        this.enableDrawer();
+                        this.drawer && this.drawer.changeMode('draw_line_string');
                     },
-                    togglePolygon1() {
-                        this.enableDrawer1();
+                    togglePolygon() {
+                        this.enableDrawer();
                         this.mode = 'QueryByPolygon';
-                        this.drawer1 && this.drawer1.changeMode('draw_polygon');
+                        this.drawer && this.drawer.changeMode('draw_polygon');
                     },
-                    toggleDelete1() {
-                        this.drawer1 && this.drawer1.deleteAll();
-                    },
-                    toggleDelete2() {
-                        this.drawer2 && this.drawer2.deleteAll();
+                    toggleDelete() {
+                        this.drawer && this.drawer.deleteAll();
                     }
                 }
             });

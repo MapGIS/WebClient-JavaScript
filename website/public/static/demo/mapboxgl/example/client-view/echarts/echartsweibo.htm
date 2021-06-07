@@ -59,6 +59,7 @@
       ]
       var layer;
       $.get('../../static/data/echarts/weibo.geojson', function (weiboData) {
+        weiboData = JSON.parse(weiboData);
         weiboData = weiboData.map(function (serieData, idx) {
           var px = serieData[0] / 1000;
           var py = serieData[1] / 1000;

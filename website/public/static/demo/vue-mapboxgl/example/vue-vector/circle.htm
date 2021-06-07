@@ -23,17 +23,32 @@
         <div id="app">
             <mapgis-web-map
                 id="map"
-                :access-token="accessToken"
                 :map-style="mapStyle"
                 :zoom="mapZoom"
                 :center="outerCenter"
                 :crs="mapCrs"
                 v-on:load="handleMapLoad"
             >
-                <mapgis-ogc-wmts-layer :layer="layerWmts" :layer-id="layerWmtsId" :source-id="sourceWmtsId" :url="wmtsurl"> </mapgis-ogc-wmts-layer>
-                <mapgis-vector-layer :layer="layerVector" :layer-id="layerVectorId" :source="sourceVector" :source-id="sourceVectorId">
+                <mapgis-ogc-wmts-layer
+                    :layer-id="layerWmtsId"
+                    :source-id="sourceWmtsId"
+                    :base-url="wmtsurl"
+                    :tile-matrix-set="tileMatrixSet"
+                    :wmts-layer="layer"
+                    :format="format"
+                    :token="token">
+                </mapgis-ogc-wmts-layer>
+                <mapgis-vector-layer
+                    :layer="layerVector"
+                    :layer-id="layerVectorId"
+                    :source="sourceVector"
+                    :source-id="sourceVectorId">
                 </mapgis-vector-layer>
-                <mapgis-vector-layer :layer="layerSymbol" :layer-id="layerSymbolId" :source="sourceSymbol" :source-id="sourceSymbolId">
+                <mapgis-vector-layer
+                     :layer="layerSymbol"
+                     :layer-id="layerSymbolId"
+                     :source="sourceSymbol"
+                     :source-id="sourceSymbolId">
                 </mapgis-vector-layer>
             </mapgis-web-map>
         </div>
@@ -81,10 +96,13 @@
                         outerCenter: [114.39960479736327, 30.495722001885323], // 地图显示中心
                         mapCrs: 'EPSG:4326',
 
-                        layerWmts: {},
                         layerWmtsId: 'ogcwmts_layer_id',
                         sourceWmtsId: 'ogcwmts_source_id',
-                        wmtsurl: 'http://t0.tianditu.com/DataServer?T=img_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752',
+                        wmtsurl: 'http://t0.tianditu.gov.cn/img_c/wmts',
+                        layer:"img",
+                        tileMatrixSet:"c",
+                        format:"tiles",
+                        token:"f5347cab4b28410a6e8ba5143e3d5a35",
 
                         sourceVectorId: 'vector_source_id',
                         layerVectorId: 'vector_layer_id',
