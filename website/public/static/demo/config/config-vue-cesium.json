@@ -76,6 +76,30 @@
             ]
         },
         {
+            "name": "Vue-ArcGIS",
+            "iconfont": "icon_ogc",
+            "folder": "arcgis",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "ArcGIS瓦片",
+                    "file": "arcgisTile",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "tile.png",
+                    "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "ArcGIS地图",
+                    "file": "arcgisMap",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "map.png",
+                    "update": "最后更新时间：2021-06-07"
+                }
+            ]
+        },
+        {
             "name": "Vue-矢量瓦片",
             "iconfont": "icon_features",
             "folder": "vvectortile",

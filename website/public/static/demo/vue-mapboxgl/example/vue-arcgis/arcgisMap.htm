@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-arcgisTile</title>
+        <title>Vue-arcgisMap</title>
         <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
         <style type="text/css">
             body {
@@ -27,10 +27,11 @@
               :center="outerCenter"
               :crs="mapCrs"
               v-on:load="handleMapLoad">
-              <mapgis-arcgis-tile-layer
-                :layer-id="layertileid"
-                :base-url="tileurl">
-              </mapgis-arcgis-tile-layer>
+              <mapgis-arcgis-map-layer
+                :layer-id="layermapid"
+                :base-url="tileurl"
+                :layers="showlayers">
+              </mapgis-arcgis-map-layer>
             </mapgis-web-map>
         </div>
         <script>
@@ -49,8 +50,9 @@
                         mapZoom: 8, // 地图初始化级数
                         outerCenter: [114.299039,30.594797], // 地图显示中心
                         mapCrs: 'EPSG:3857',
-                        layertileid:"layerid",
-                        tileurl:"http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer"
+                        layermapid:"layerid",
+                        tileurl:"http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer",
+                        showlayers:"show:0"
                     };
                 },
                 methods: {
