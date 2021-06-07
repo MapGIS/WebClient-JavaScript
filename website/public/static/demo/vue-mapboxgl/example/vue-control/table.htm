@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-表格</title>
+        <script include="vue,antd" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            #map {
+                height: 100vh;
+                width: 100vw;
+            }
+            .mapgis-baseTable-toolbar{
+                bottom: 443px!important;
+            }
+            .ant-table-body{
+                height: 464px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapgis-web-map
+                id="map"
+                v-bind:map-style="mapStyle"
+                v-bind:zoom="mapZoom"
+                v-bind:center="outerCenter"
+                v-bind:crs="mapCrs"
+            >
+                <mapgis-igs-tdt-layer
+                    v-bind:layer="layer"
+                    v-bind:layer-id="layerId"
+                    v-bind:source-id="sourceId"
+                    v-bind:base-url="baseURL"
+                    v-bind:token="token"
+                    :crs="mapCrs"
+                >
+                </mapgis-igs-tdt-layer>
+                <mapgis-igs-doc-layer
+                        v-bind:layer-id="docLayerId"
+                        v-bind:source-id="docSourceId"
+                        v-bind:base-url="docLayerUrl"
+                ></mapgis-igs-doc-layer>
+                <mapgis-base-table
+                        v-bind:data-source="dataSource"
+                        v-bind:pagination="pagination"
+                        v-bind:columns="columns"
+                        v-show="show"
+                >
+                </mapgis-base-table>
+                <mapgis-feature-service
+                        v-on:loaded="serviceLoaded"
+                        v-bind:url="serviceUrl"></mapgis-feature-service>
+            </mapgis-web-map>
+        </div>
+        <script>
+            var draw = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: {
+                            //设置版本号，一定要设置
+                            version: 8,
+                            //添加来源
+                            sources: {},
+                            //设置加载并显示来源的图层信息
+                            layers: []
+                        }, // 地图样式
+                        mapZoom: 3, // 地图初始化级数
+                        outerCenter: [114, 31], // 地图显示中心
+                        mapCrs: 'EPSG:3857',
+
+                        layerId: 'igsLayer_layerId',
+                        sourceId: 'igsLayer_sourceId',
+                        layer: {}, // 图层配置信息
+                        baseURL: 'http://t2.tianditu.gov.cn/vec_c/wmts', // 请求基地址
+                        token: '2ddaabf906d4b5418aed0078e1657029', // 请求天地图的key值
+                        docLayerUrl: "http://develop.smaryun.com:6163/igs/rest/mrms/docs/Hubei3857",
+                        docLayerId: "igs_layer_layerid",
+                        docSourceId: "igs_layer_sourceid",
+                        serviceUrl: "http://develop.smaryun.com:6163/igs/rest/mrfs/docs/Hubei3857",
+                        columns: [],
+                        dataSource: [],
+                        pagination:{
+                            total:0,
+                            pageSize:10
+                        },
+                        show:false
+                    };
+                },
+                methods: {
+                    serviceLoaded(service){
+                        this.service = service;
+                        this.getData();
+                    },
+                    getData(){
+                        this.query(0,10,undefined,undefined,true);
+                    },
+                    query(pageIndex,pagination,orderBy,isAsc,initial){
+                        var vm = this;
+                        var sql = this.service.$_getSQLParameter({
+                            layers: "1",
+                            where: '',
+                            pageIndex: pageIndex,
+                            pagination: pagination,
+                            orderBy: orderBy,
+                            isAsc: isAsc
+                        })
+                        //zondy格式
+                        vm.service.$_queryBySQL(sql,function (result) {
+                            vm.dataSource = result;
+                            vm.pagination.total = result.TotalCount;
+                            vm.show = true;
+                        },function () {})
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

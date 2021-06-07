@@ -296,6 +296,14 @@
                     "detail": "比例尺组件",
                     "icon": "scale.png",
                     "update": "最后更新时间：2021-01-07"
+                },
+                {
+                    "name": "表格组件",
+                    "file": "table",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "table.png",
+                    "update": "最后更新时间：2021-6-7"
                 }
             ]
         },
