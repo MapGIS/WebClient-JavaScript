@@ -48,7 +48,7 @@
       document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
     });
     $.get('../../static/data/mapv/beijing-village.geojson', function (data) {
-
+      data = JSON.parse(data);
       var dataSet = new mapv.DataSet(data);
 
       var options = {
