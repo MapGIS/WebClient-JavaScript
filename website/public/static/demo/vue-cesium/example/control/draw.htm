@@ -41,11 +41,12 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-draw ref="drawref" :vue-key="vueKey" v-on:load="handleDrawLoad" v-on:drawcreate="handleCreate">
+                <mapgis-3d-draw ref="drawref" v-on:load="handleDrawLoad" v-on:drawcreate="handleCreate">
                     <div id="toolbar-wrapper">
                         <div class="toolbar-item" v-on:click="togglePoint">画点</div>
                         <div class="toolbar-item" v-on:click="togglePolyline">画线</div>
                         <div class="toolbar-item" v-on:click="togglePolygon">画区</div>
+                        <div class="toolbar-item" v-on:click="toggleRectangle">画矩形</div>
                         <div class="toolbar-item" v-on:click="toggleDelete">删除</div>
                     </div>
                 </mapgis-3d-draw>
@@ -82,6 +83,9 @@
                     },
                     togglePolygon() {
                         this.drawer && this.drawer.enableDrawPolygon();
+                    },
+                    toggleRectangle() {
+                        this.drawer && this.drawer.enableDrawRectangle();
                     },
                     toggleDelete() {
                         this.drawer && this.drawer.removeEntities();

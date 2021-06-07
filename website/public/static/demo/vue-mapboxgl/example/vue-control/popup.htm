@@ -43,7 +43,6 @@
           :token="token">
         </mapgis-ogc-wmts-layer>
         <mapgis-rastertile-layer
-          :layer="layerRaster"
           :layer-id="layerRasterId"
           :source="sourceRaster"
           :source-id="sourceRasterId"
@@ -82,8 +81,6 @@
                   tileMatrixSet:"c",
                   format:"tiles",
                   token:"f5347cab4b28410a6e8ba5143e3d5a35",
-
-                  layerRaster: {},
                   sourceRaster: {
                       type: 'raster',
                       tiles: ['http://t0.tianditu.com/DataServer?T=cia_c&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752']

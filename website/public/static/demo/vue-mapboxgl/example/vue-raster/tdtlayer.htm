@@ -25,14 +25,12 @@
         v-on:load="handleMapLoad"
         >
         <mapgis-igs-tdt-layer
-          :layer="tianditu1Layer"
           :layer-id="tianditu1LayerId"
           :source-id="tianditu1SourceId"
           :url="tianditu1Url"
           >
         </mapgis-igs-tdt-layer>
         <mapgis-igs-tdt-layer
-          :layer="tianditu2Layer"
           :layer-id="tianditu2LayerId"
           :source-id="tianditu2SourceId"
           :url="tianditu2Url"
@@ -58,7 +56,6 @@
                   outerCenter: [116.39, 40.20], // 地图显示中心
                   mapCrs: 'EPSG:4326',
 
-                  tianditu1Layer: {},
                   tianditu1LayerId: 'tianditu_layer_id_1',
                   tianditu1SourceId: 'tianditu_source_id_1',
                   tianditu1Url:  'http://t' +
@@ -68,7 +65,6 @@
                       '&TILECOL={x}&TILEROW={y}&TILEMATRIX={z}' +
                       '&tk=' +  tiandituKey,
 
-                  tianditu2Layer: {},
                   tianditu2LayerId: 'tianditu_layer_id_2',
                   tianditu2SourceId: 'tianditu_source_id_2',
                   tianditu2Url:  'http://t' +
