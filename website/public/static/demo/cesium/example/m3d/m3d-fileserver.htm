@@ -33,29 +33,29 @@
                     viewer: webGlobe.viewer
                 });
                 //加载天地图
-                var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                /* var tdtLayer = thirdPartyLayer.appendTDTuMap({
                     //天地图经纬度数据
                     url: 'http://t3.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
                     //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
                     token: '9c157e9585486c02edf817d2ecbc7752',
                     //地图类型 'vec'矢量 'img'影像 'ter'地形
                     ptype: 'img'
-                });
+                }); */
 
                 //加载M3D地图文档（服务地址，配置参数）
                 var { protocol, ip, port } = window.webclient;
                 ip = 'localhost';
                 port = 7777;
-                /* tileset = new Cesium.MapGISM3DSet({
+                tileset = new Cesium.MapGISM3DSet({
                     url: `${protocol}://${ip}:${port}/福田地质体_挖后效果.mcj`, // 
                     igserver: false
-                }); */
-                tileset = new Cesium.Cesium3DTileset({
+                });
+                /* tileset = new Cesium.Cesium3DTileset({
                     url: `${protocol}://${ip}:${port}/福田地质体_挖后效果.mcj`, //
                     igserver: false
-                });
+                }); */
 
-                // webGlobe.viewer.scene.primitives.add(tileset);
+                webGlobe.viewer.scene.primitives.add(tileset);
 
                 tileset.readyPromise.then(function (primitives) {
                     console.log('file m3d', primitives);

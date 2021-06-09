@@ -15,14 +15,16 @@
 </head>
 
 <body>
-    <div id="app">
-        <mapgis-web-scene>
-            <mapgis-3d-raster-layer :url="url"></mapgis-3d-raster-layer>
-            <mapgis-3d-igs-m3d :auto-reset="autoReset" :maximum-screen-space-error="maximumScreenSpaceError"
-                :url="m3dUrl"></mapgis-3d-igs-m3d>
-            <mapgis-3d-sightline></mapgis-3d-sightline>
-        </mapgis-web-scene>
-    </div>
+<div id="app">
+    <mapgis-web-scene
+            lib-path="./static/libs/cdn/cesium/Cesium.js"
+            plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js">
+        <mapgis-3d-raster-layer :url="url"></mapgis-3d-raster-layer>
+        <mapgis-3d-igs-m3d :auto-reset="autoReset" :maximum-screen-space-error="maximumScreenSpaceError"
+                           :url="m3dUrl"></mapgis-3d-igs-m3d>
+        <mapgis-3d-sightline></mapgis-3d-sightline>
+    </mapgis-web-scene>
+</div>
 
     <script>
         new Vue({
