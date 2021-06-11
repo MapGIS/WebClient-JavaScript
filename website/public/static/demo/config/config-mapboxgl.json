@@ -313,7 +313,7 @@
             "leaffolder": false,
             "childs": [
                 {
-                    "name": "ArcGIS-MapServer",
+                    "name": "ArcServer",
                     "iconfont": "iconmap",
                     "folder": "arcgismapserver",
                     "leaffolder": true,

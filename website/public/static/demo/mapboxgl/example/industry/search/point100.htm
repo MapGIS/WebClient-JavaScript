@@ -5,11 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <title>谷歌地图显示</title>
-    <!--引入第三方的jquery脚本库-->
-    <script include="jquery,bootstrap" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-mapboxgl-local.js"></script>
-    <!--引入当前页面样式表-->
-    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         #map {
             position: absolute;
@@ -52,6 +48,8 @@
                 //地图容器div的id
                 container: 'map',
                 crs: 'EPSG:4326',
+                center: [110,30],
+                zoom: 3,
                 maxBounds: [
                     [-179, -89],
                     [179, 89]
