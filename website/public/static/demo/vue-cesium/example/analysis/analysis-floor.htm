@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>洪水淹没分析</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //定义三维视图的主要类
+        var webGlobe, viewer;
+        //定义三维瓦片类
+        var geobodyLayer;
+        //定义交互式绘制矩形控件类
+        var drawElement;
+        //定义洪水淹没分析类
+        var flood;
+        //加载三维视图
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+                infoBox: true,
+            });
+            viewer = webGlobe.viewer;
+            if (webGlobe) {
+                //构造第三方图层对象
+                var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载天地图
+                var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                    //天地图经纬度数据
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                    //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                    token: "9c157e9585486c02edf817d2ecbc7752",
+                    //地图类型 'vec'矢量 'img'影像 'ter'地形
+                    ptype: "img"
+                });
+
+                //初始化视图功能管理类
+                var sceneManager = new CesiumZondy.Manager.SceneManager({
+                    viewer: webGlobe.viewer
+                });
+                //视点跳转
+                sceneManager.flyToEx(120.9819, 23.5307, {
+                    height: 9161,
+                    heading: 30,
+                    pitch: -10,
+                    roll: 0
+                });
+                //显示鼠标位置控件
+                sceneManager.showPosition("coordinateDiv");
+                //构造M3D模型层管理对象
+                var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                    viewer: webGlobe.viewer
+                });
+                //构造地形图层管理类
+                var terrain = new CesiumZondy.Layer.TerrainLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载三维地形地图文档（服务地址，配置参数）
+                var {
+                    protocol,
+                    ip,
+                    port
+                } = window.webclient;
+                geobodyLayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {
+                    // autoReset: false,
+                    // maximumScreenSpaceError: 8,
+                    loaded: function(layer) {
+
+                    }
+                });
+            }
+        }
+
+
+        function add() {
+            //初始化交互式绘制控件
+            drawElement = new Cesium.DrawElement(webGlobe.viewer);
+            //激活交互式绘制工具
+            drawElement.startDrawingPolygon({
+                //绘制完成回调函数
+                callback: function(positions) {
+                    if (flood) {
+                        webGlobe.scene.VisualAnalysisManager.remove(flood);
+                        flood = null;
+                    }
+                    //初始化高级分析功能管理类
+                    var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                        viewer: viewer
+                    });
+                    //初始化洪水淹没分析类
+                    flood = advancedAnalysisManager.createFlood(positions, {
+                        //设置洪水淹没区域动画最低高度
+                        minHeight: Number(document.getElementById('minHeight').value <= 0 ? 0 : document.getElementById('minHeight').value), //设置洪水淹没区域动画最低高度
+                        //设置洪水淹没区域最高高度
+                        maxHeight: Number(document.getElementById('maxHeight').value <= 0 ? 2000 : document.getElementById('maxHeight').value),
+                        //设置洪水上涨速度
+                        floodSpeed: Number(document.getElementById('floodSpeed').value <= 0 ? 1 : document.getElementById('floodSpeed').value),
+                    });
+                    flood.floodColor = new Cesium.Color(1, 1, 0.4, 0.7);
+                    //水纹频率 指波浪的个数
+                    flood.frequency = 100;
+                    //水纹速度
+                    flood.animationSpeed = 0.01;
+                    //水波的高度
+                    flood.amplitude = 10;
+                    // 指定光线强度
+                    flood.specularIntensity = 3.0;
+                    viewer.scene.globe.depthTestAgainstTerrain = true;
+                    //添加洪水淹没结果显示
+                    webGlobe.scene.VisualAnalysisManager.add(flood);
+                }
+            });
+        }
+
+        function update() {
+            flood.maxHeight += 1000;
+            flood.isDownFlood = false;
+            webGlobe.scene.requestRender();
+        }
+
+        function downheight() {
+            flood.maxHeight -= 1000;
+            flood.isDownFlood = true;
+            webGlobe.scene.requestRender();
+        }
+        /*移除洪水淹没分析*/
+        function stopFloodAnalysis() {
+            //判断是否已有洪水淹没分析结果
+            if (flood != undefined) {
+                //移除洪水淹没分析显示结果
+                webGlobe.scene.VisualAnalysisManager.remove(flood);
+            }
+            //取消交互式绘制矩形事件激活状态
+            drawElement.stopDrawing();
+            webGlobe.viewer.entities.removeAll();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message" style="left: 10px;">
+            <p>参数</p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>淹没最底高度</td>
+                        <td>
+                            <input type="text" id="minHeight" value="0">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>淹没最高高度</td>
+                        <td>
+                            <input type="text" id="maxHeight" value="2000">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>洪水上涨速度</td>
+                        <td>
+                            <input type="text" id="floodSpeed" value="500">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>波浪个数</td>
+                        <td>
+                            <input type="text" id="frequency" value="1000">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>波浪速度</td>
+                        <td>
+                            <input type="text" id="animationSpeed" value="0.01">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>波浪高度</td>
+                        <td>
+                            <input type="text" id="amplitude" value="10">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align: center;">
+                <button style="margin-left:auto; margin-right:auto" onclick="add()">添加洪水淹没分析</button>
+                <button style="margin-left:auto; margin-right:auto" onclick="update()">升高</button>
+                <button style="margin-left:auto; margin-right:auto" onclick="downheight()">下降</button>
+            </div>
+        </div>
+    </div>
+    <div id="coordinateDiv" class="coordinateClass"> </div>
+</body>
+
+</html>

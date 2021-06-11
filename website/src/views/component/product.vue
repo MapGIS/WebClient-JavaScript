@@ -161,7 +161,6 @@ export default {
     },
     getHtmlUrl(type, image) {
       var baseUrl = "./static/demo/";
-      debugger;
       var imageUrl = baseUrl + type + "/source/" + image + ".md";
       return imageUrl;
     },
@@ -244,15 +243,17 @@ export default {
 
     a {
       color: #3f454d;
+      font-size: 14px;
     }
 
     .active {
       border-left: 3px solid #3A85C6;
       padding-left: 6px;
-      font-weight: bold;
+      //font-weight: bold;
 
       a {
         color: #3A85C6;
+        font-size: 14px;
       }
     }
   }

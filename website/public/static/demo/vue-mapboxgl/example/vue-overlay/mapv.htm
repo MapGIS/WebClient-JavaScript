@@ -3,30 +3,32 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>Vue-点</title>
-        <script include="vue" exclude="plugin,mapboxgl" src="./static/libs/include-mapboxgl-local.js"></script>
+        <title>Vue-echarts</title>
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
         <style type="text/css">
-            #main {
-                margin: 0 0;
-                width: 100%;
-                height: 100vh;
+            body {
+                margin: 0px !important;
             }
-            #map {
+            #app {
+                margin: 0 0;
+                width: 100vw;
                 height: 100vh;
-                width: 100%;
+                overflow: hidden;
             }
         </style>
     </head>
 
     <body>
         <div id="app">
-            <mapgis-web-map id="map" 
-                :map-style="mapStyle" 
-                :zoom="mapZoom" 
-                :center="outerCenter" 
-                :crs="mapCrs" 
-                v-on:load="handleMapLoad"
-            >
+            <mapgis-web-map
+              id="map"
+              :map-style="mapStyle"
+              :zoom="mapZoom"
+              :access-token="accessToken"
+              :center="outerCenter"
+              v-on:load="handleMapLoad">
+                <mapgis-mapv-layer :geojson="geojson" :options="options"></mapgis-mapv-layer>
             </mapgis-web-map>
         </div>
         <script>
@@ -34,25 +36,69 @@
                 el: '#app',
                 data() {
                     return {
-                        mapStyle: {
-                            version: 8, //设置版本号，一定要设置
-                            sources: {}, //添加来源
-                            layers: [], //设置加载并显示来源的图层信息
-                            //特别注意，这里是字体库，下面的sprite才是样式库
-                            glyphs: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf',
-                            //特别注意，这里是真正的图片样式库
-                            sprite: 'http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/sprite'
-                        }, // 地图样式
+                        mapStyle: 'mapbox://styles/mapbox/dark-v9',
+                        accessToken: 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA',
                         mapZoom: 3, // 地图初始化级数
-                        outerCenter: [114.39960479736327, 30.495722001885323], // 地图显示中心
-                        mapCrs: 'EPSG:4326',
+                        outerCenter: [114.321317, 30.398428], // 地图显示中心
+                        options: {
+                            context: '2d',
+                            fillStyle: 'rgba(55, 50, 250, 0.8)',
+                            size: 40,
+                            globalAlpha: 0.5,
+                            label: {
+                                show: true,
+                                fillStyle: 'white',
+                                shadowColor: 'yellow',
+                                font: '15px Arial',
+                                shadowBlur: 10
+                            },
+                            gradient: {
+                                0: "rgba(49, 54, 149, 0)",
+                                0.2: "rgba(69,117,180, 0.7)",
+                                0.3: "rgba(116,173,209, 0.7)",
+                                0.4: "rgba(171,217,233, 0.7)",
+                                0.5: "rgba(224,243,248, 0.7)",
+                                0.6: "rgba(254,224,144,0.7)",
+                                0.7: "rgba(253,174,97,0.7)",
+                                0.8: "rgba(244,109,67,0.8)",
+                                0.9: "rgba(215,48,39,0.8)",
+                                0.95: "rgba(165, 0, 38,0.8)"
+                            },
+                            shadowColor: 'rgba(255, 255, 50, 1)',
+                            shadowBlur: 10,
+                            max: 100,
+                            draw: 'grid'
+                        },
+                        geojson: {}
                     };
+                },
+                mounted() {
+                    this.initData();
                 },
                 methods: {
                     handleMapLoad(payload) {
-                        let map = payload.map;
+                        this.map = payload.map;
+                    },
+                    initData() {
+                        var vm = this;
+                        var randomCount = 500;
+                        var data = [];
+                        while (randomCount--) {
+                            data.push({
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: [75 + Math.random() * 50, 20.3 + Math.random() * 20]
+                                },
+                                properties:{
+                                    count: 30 * Math.random()
+                                },
+                            });
+                        };
+                        vm.geojson = {
+                            "features": data
+                        }
                     }
-                }
+                },
             });
         </script>
     </body>

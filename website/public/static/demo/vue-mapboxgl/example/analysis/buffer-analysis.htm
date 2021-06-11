@@ -1,0 +1,292 @@
+﻿<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>要素多圈缓冲分析</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="mapboxgl,transform" src="./static/libs/include-mapboxgl-local.js"></script>
+    <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        .mapboxgl-ctrl-icon {
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: 60%;
+        }
+
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-add {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594093104250" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4905"><path d="M789.994 771.154L459.266 670.616l295.152-343.032-380.88 318.478L64.28 553.82l896.008-427.218-170.294 644.552z m-341.168 127.42v-177.38l108.868 30.812-108.868 146.568z" p-id="4906"></path></svg>');
+        }
+
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-update {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594090532673" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1150"><path d="M512 269.922592l0 121.038704 161.384597-161.384597L512 68.191078l0 121.038704c-178.330548 0-322.770218 144.43967-322.770218 322.770218 0 63.343677 18.559705 122.047684 50.02944 171.874509l58.905598-58.905598c-17.953907-33.689287-28.242228-72.018244-28.242228-112.969934C269.922592 378.251833 378.251833 269.922592 512 269.922592zM784.740778 340.124468l-58.905598 58.905598c17.953907 33.689287 28.242228 72.018244 28.242228 112.969934 0 133.748167-108.329241 242.077408-242.077408 242.077408L512 633.038704 350.614379 794.423301l161.384597 161.384597L511.998977 834.770218c178.330548 0 322.770218-144.43967 322.770218-322.770218C834.770218 448.656323 816.210513 389.952316 784.740778 340.124468z" p-id="1151"></path></svg>');
+        }
+
+        .mapboxgl-ctrl-icon.mapboxgl-ctrl-delete {
+            background-image: url('data:image/svg+xml;utf8,<svg t="1594092749945" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4754"><path d="M517.59 21.609c-100.299 0-181.703 79.514-185.167 179.34H98.603c-25.979 0-47.235 21.099-47.235 47.236 0 25.98 21.099 47.237 47.236 47.237h52.117v528.416c0 99.196 67.233 180.285 150.37 180.285h423.55c82.98 0 150.37-80.616 150.37-180.285V295.737h47.236c25.98 0 47.236-21.1 47.236-47.237 0-25.98-21.099-47.236-47.236-47.236H702.441C699.449 101.124 617.888 21.61 517.59 21.61z m-96.677 179.34c3.464-51.172 45.19-90.85 96.834-90.85s93.37 39.835 96.362 90.85H420.913z m-119.98 714.842c-29.444 0-61.88-37.789-61.88-91.953V295.737h547.311V824.31c0 54.007-32.436 91.954-61.88 91.954H300.933v-0.473z m0 0" p-id="4755"></path><path d="M364.387 802.267c21.57 0 39.363-21.571 39.363-48.653V476.022c0-27.082-17.635-48.654-39.363-48.654-21.572 0-39.364 21.572-39.364 48.654v277.592c0 26.924 17.32 48.653 39.364 48.653z m142.496 0c21.571 0 39.363-21.571 39.363-48.653V476.022c0-27.082-17.635-48.654-39.363-48.654-21.571 0-39.364 21.572-39.364 48.654v277.592c0 26.924 17.793 48.653 39.364 48.653z m149.896 0c21.571 0 39.364-21.571 39.364-48.653V476.022c0-27.082-17.635-48.654-39.364-48.654-21.571 0-39.363 21.572-39.363 48.654v277.592c0 26.924 17.162 48.653 39.363 48.653z m0 0" p-id="4756"></path></svg>');
+        }
+    </style>
+    <script type="text/javascript">
+        //整个js文件都是严格模式下执行的
+        "use strict";
+        // 定义地图容器全局变量
+        var map;
+        // 定义矢量图层全局变量
+        var vectorLayer;
+        //缓存结果图层的基地址
+        var resultBaseUrl = "gdbp://MapGisLocal/ClientTheme/ds/SpatialAnalysis/sfcls/";
+        // 缓冲区图层id
+        var layerId = [];
+        // 定义矢量图层guid
+        var guid;
+        var { protocol, ip, port } = window.webclient;
+
+        /** 地图初始化函数
+         */
+        function init() {
+            //随机生成一个guid
+            guid = Math.floor(Math.random() * 10000000).toString();
+            // 创建地图容器
+            map = new mapboxgl.Map({
+                // 地图显示的div容器
+                container: 'map',
+                minZoom: 3,
+                zoom: 6,
+                center: [112.247175, 30.152892]
+            });
+            var navigationControl = new mapboxgl.NavigationControl();
+            map.addControl(navigationControl, 'top-left');
+
+            // 创建矢量图层
+            vectorLayer = new mapboxgl.Zondy.Map.MapVectorLayer(["gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省边界1", "gdbp://MapGisLocal/ClientTheme/ds/epsg3857/sfcls/湖北省市级区划1"], {
+                // IGServer所在ip地址
+                ip: `${ip}`,
+                // IGServer请求端口号
+                port: `${port}`,
+                //添加guid
+                guid: guid
+            });
+            // 将矢量图层添加到地图
+            vectorLayer.addToMap(map);
+            map.on('load', function () {
+                var poly = [[[112.59, 30.67], [112.80, 30.83], [112.86, 30.70], [113.28, 30.90], [113.45, 30.63], [113.45, 30.38], [112.90, 30.56], [112.86, 30.50], [112.59, 30.67]]];
+                var feature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": poly
+                    }
+                }
+                //用geojson创建一个多边形
+                var geometryPolygon = {
+                    "type": "FeatureCollection",
+                    "features": [feature]
+                };
+                var source = {
+                    "type": "geojson",
+                    "data": geometryPolygon
+                };
+                //将多边形添加到一个图层中，在地图中显示
+                map.addLayer({
+                    //此id可随意设置，但是要唯一
+                    "id": "poly",
+                    //指定类型为fill（填充区域）
+                    "type": "fill",
+                    //设置数据来源
+                    "source": source,
+                    //设置绘制参数
+                    "paint": {
+                        //设置填充颜色
+                        "fill-color": "rgba(255, 0, 0, 0.2)",
+                        "fill-outline-color": '#FF0000'
+                    }
+                });
+            })
+
+            var html = '<div class="mapboxgl-ctrl mapboxgl-ctrl-group">' +
+                '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-add" type="button" title="多圈缓冲区分析" onclick="multiBuffAnalysis()" aria-label="add"></button>' +
+                '<button class="mapboxgl-ctrl-icon mapboxgl-ctrl-delete" type="button" title="清除结果" onclick="clearA()" aria-label="delete"></button>' +
+                '</div>';
+            $(".mapboxgl-ctrl-top-right").append(html);
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                //经纬度坐标转web墨卡托
+                const earthRad = 6378137.0;
+                const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+                const a = e.lngLat.lat * Math.PI / 180;
+                const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+                document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+            });
+        }
+
+        /**
+         * 执行多圈缓冲区分析
+         */
+        function multiBuffAnalysis() {
+            clearA();
+            //显示进度条
+            startPressBar();
+            //初始化Zondy.Object.FeatureGeometry对象
+            var regGeo = new Zondy.Object.FeatureGeometry();
+            //设置区要素的空间几何信息
+            var gReg = new Zondy.Object.GRegion([
+                new Zondy.Object.AnyLine([new Zondy.Object.Arc([
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.59, 30.67).x, lonLat2Mercator(112.59, 30.67).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.80, 30.83).x, lonLat2Mercator(112.80, 30.83).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.86, 30.70).x, lonLat2Mercator(112.86, 30.70).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(113.28, 30.90).x, lonLat2Mercator(113.28, 30.90).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(113.45, 30.63).x, lonLat2Mercator(113.45, 30.63).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(113.45, 30.38).x, lonLat2Mercator(113.45, 30.38).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.90, 30.56).x, lonLat2Mercator(112.90, 30.56).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.86, 30.50).x, lonLat2Mercator(112.86, 30.50).y),
+                    new Zondy.Object.Point2D(lonLat2Mercator(112.59, 30.67).x, lonLat2Mercator(112.59, 30.67).y)
+                ])])]);
+            //设置区要素几何信息
+            regGeo.setRegGeom([gReg]);
+            //实例化CAttStruct类
+            var regAttStr = new Zondy.Object.CAttStruct({
+                // 属性字段名称
+                FldName: ["ID", "面积", "周长", "LayerID"],
+                // 属性字段个数
+                FldNumber: 4,
+                // 属性字段类型
+                FldType: ["FldLong", "FldDouble", "FldDouble", "FldLong"]
+            });
+            var values = [1, 0.00058032464704422, 0.132101984752282, 8];
+            //创建属性信息对象
+            var valuesRow = new Zondy.Object.CAttDataRow(values, 3286);
+            //实例化FeatureBuffByMultiplyRing类，设置要素缓冲分析必要参数，输出分析结果到缓冲分析结果图层
+            var featureBufByMR = new Zondy.Service.FeatureBuffByMultiplyRing({
+                //IGServer所在ip地址
+                ip: `${ip}`,
+                //IGServer请求端口号
+                port: `${port}`,
+                //设置多圈缓冲分析的缓冲半径字符串
+                radiusStr: "1000,20000,30000"
+            });
+            /*设置缓冲分析参数*/
+            //设置几何信息
+            featureBufByMR.sfGeometryXML = JSON.stringify([regGeo]);
+            //设置属性结构
+            featureBufByMR.attStrctXML = JSON.stringify(regAttStr);
+            //设置属性值
+            featureBufByMR.attRowsXML = JSON.stringify([valuesRow]);
+            //设置追踪半径
+            featureBufByMR.traceRadius = 0.0001;
+            //设置缓冲结果的名称以及存放地址
+            var resultname = "multiBuffAnalysisResultLayer" + getCurentTime();
+            featureBufByMR.resultName = resultBaseUrl + resultname;
+            //调用Zondy.Service.AnalysisBase基类的execute方法执行要素缓冲分析，AnalysisSuccess为回调函数。
+            featureBufByMR.execute(AnalysisSuccess, "post", false, "json", AnalysisError);
+        }
+
+        /** 分析失败回调
+         */
+        function AnalysisError(e) {
+            //停止进度条
+            stopPressBar();
+        }
+
+        /**回调函数，处理显示结果信息
+         *  @param {object} data 获取结果对象
+         */
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
+            if (!data.succeed) {
+                alert("要素多圈缓冲分析失败，请检查参数！");
+            } else {
+                if (data.results.length != 0 && data.results != null) {
+                    //结果图层的URL
+                    var resultLayerUrl = data.results[0].Value;
+                    //将结果图层添加到地图视图中显示
+                    var resultLayer = new mapboxgl.Zondy.Map.MapVectorLayer(encodeURIComponent(resultLayerUrl), {
+                        //IGServer所在ip地址
+                        ip: `${ip}`,
+                        //IGServer请求端口号
+                        port: `${port}`,
+                        //图层guid
+                        guid: (new Date()).getTime().toString()
+                    });
+                    resultLayer.addToMap(map);
+                    layerId.push(resultLayer.layerID);
+                }
+            }
+        }
+
+        /** 清除客户端分析结果信息
+         */
+        function clearA() {
+            //停止进度条
+            stopPressBar();
+            //清除缓冲区的图层
+            if (layerId && layerId.length > 0) {
+                for (var i = layerId.length - 1; i >= 0; i--) {
+                    map.removeLayer(layerId[i]);
+                    layerId.pop();
+                }
+            }
+        }
+
+        /** 当前日期加时间(如:2009-06-12-120000)
+         */
+        function getCurentTime() {
+            var now = new Date();
+            //获取当前年份
+            var year = now.getFullYear();
+            //获取当前月份
+            var month = now.getMonth() + 1;
+            //获取当前日期
+            var day = now.getDate();
+            //获取当前时刻
+            var hh = now.getHours();
+            //获取当前分钟
+            var mm = now.getMinutes();
+            //获取当前秒钟
+            var ss = now.getSeconds();
+            //将当前的日期拼串
+            var clock = year + "-";
+            if (month < 10)
+                clock += "0";
+            clock += month + "-";
+            if (day < 10)
+                clock += "0";
+            clock += day + "-";
+            if (hh < 10)
+                clock += "0";
+            clock += hh;
+            if (mm < 10) clock += '0';
+            clock += mm;
+            if (ss < 10) clock += '0';
+            clock += ss;
+            return (clock);
+        }
+
+        /** 停止进度条
+         */
+        function stopPressBar() {
+            document.getElementById('preview').style.display = "none";
+        }
+
+        /** 开始进度条动画
+         */
+        function startPressBar() {
+            document.getElementById('preview').style.display = "";
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="preview"
+        style="display: none; text-align: center; padding-top: 250px; font-weight: bold;position: absolute;background: rgba(3, 3, 3, 0.1);color: #fff;float: left; width: 100%;height: 100%;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px;z-index: 20000;">
+        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在执行缓冲分析，请稍候</span>
+    </div>
+    <div id="map" style="width: 100%; height: 700px;">
+        <div id="mouse-position">
+        </div>
+    </div>
+</body>
+
+</html>
