@@ -29,6 +29,7 @@
             >
               <mapgis-3d-arcgis-tile-layer
                 :base-url="tileurl"
+                :tiling-scheme="tilingScheme"
                 :layer-style="layerStyle">
               </mapgis-3d-arcgis-tile-layer>
             </mapgis-web-scene>
@@ -38,6 +39,7 @@
                 el: '#app',
                 data() {
                     return {
+                        tilingScheme:"EPSG:3857",
                         tileurl:"http://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer",
                         layerStyle: {
                             visible: true,
