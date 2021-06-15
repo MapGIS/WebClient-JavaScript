@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-测量</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+        #toolbar-wrapper {
+            position: absolute;
+            z-index: 9999;
+            display: inline-flex;
+            overflow-x: hidden;
+            overflow-y: visible;
+            top: 20px;
+            left: 20px;
+        }
+        .toolbar-item {
+            background: #ffffff;
+            border: 1px dashed #666666;
+            text-align: center;
+            font-size: 20px;
+            line-height: 20px;
+            height: fit-content;
+            padding: 6px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene
+            lib-path="./static/libs/cdn/cesium/Cesium.js"
+            plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+            v-bind:animation="false"
+            v-bind:timeline="false"
+        >
+            <mapgis-3d-raster-layer :url="url"></mapgis-3d-raster-layer>
+            <mapgis-3d-igs-m3d
+                :auto-reset="autoReset"
+                :maximum-screen-space-error="maximumScreenSpaceError"
+                :url="m3dUrl">
+            </mapgis-3d-igs-m3d>
+            <mapgis-3d-measure
+                    @load="handleLoad"
+                    @measured="measured"
+            >
+                <div id="toolbar-wrapper">
+                    <div class="toolbar-item" v-on:click="measureLength">直线测量</div>
+                    <div class="toolbar-item" v-on:click="measureArea">面积测量</div>
+                    <div class="toolbar-item" v-on:click="measureTriangle">三角测量</div>
+                    <div class="toolbar-item" v-on:click="measureSlope">坡度测量</div>
+                    <div class="toolbar-item" v-on:click="deleteMeasure">删除</div>
+                </div>
+            </mapgis-3d-measure>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    url:
+                        "http://t0.tianditu.com/DataServer?T=vec_w&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752",
+                    m3dUrl: "http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels",
+                    autoReset: true,
+                    maximumScreenSpaceError: 8
+                };
+            },
+            methods: {
+                handleLoad(measure) {
+                    console.log('地图加初始化完毕！', measure);
+                    this.measure = measure;
+                },
+                measured(result){
+                    console.log("result",result)
+                },
+                measureLength() {
+                    this.measure && this.measure.enableMeasureLength();
+                },
+                measureArea() {
+                    this.measure && this.measure.enableMeasureArea();
+                },
+                measureTriangle() {
+                    this.measure && this.measure.enableMeasureTriangle();
+                },
+                measureSlope() {
+                    this.measure && this.measure.enableMeasureSlope();
+                },
+                deleteMeasure() {
+                    this.measure && this.measure.deleteMeasure();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

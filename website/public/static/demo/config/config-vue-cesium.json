@@ -214,6 +214,22 @@
                     "detail": "",
                     "icon": "compare.png",
                     "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "测量组件",
+                    "file": "measure",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure.png",
+                    "update": "最后更新时间：2021-06-10"
+                },
+                {
+                    "name": "测量组件-多屏",
+                    "file": "measureTwo",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measurescene.png",
+                    "update": "最后更新时间：2021-06-10"
                 }
             ]
         },
@@ -240,15 +256,6 @@
                     "update": "最后更新时间：2021-06-07"
                 }
             ]
-        },
-        {
-            "name": "可视化",
-            "iconfont": "iconeye",
-            "folder": "overlay",
-            "leaffolder": true,
-            "childs": [
-            ]
         }
-
     ]
 }

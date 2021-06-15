@@ -25,7 +25,7 @@
                 <mapgis-3d-ogc-wmts-layer
                     :base-url="baseUrl"
                     :wmts-layer="wmtsLayer"
-                    :srs="srs"
+                    :tiling-scheme="tilingScheme"
                     :tile-matrix-set="tileMatrixSet"
                     :format="format"
                     :layer-style="layerStyle"
@@ -41,7 +41,7 @@
                         baseUrl: 'http://t6.tianditu.gov.cn/vec_c/wmts?tk=9c157e9585486c02edf817d2ecbc7752',
                         wmtsLayer: 'vec',
                         tileMatrixSet: 'c',
-                        srs: 'EPSG:4326',
+                        tilingScheme: 'EPSG:4326',
                         format: 'tiles',
                         layerStyle: {
                             zIndex: 1

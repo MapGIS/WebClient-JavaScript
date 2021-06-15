@@ -251,7 +251,11 @@ import {
     QueryParameter,
     QueryParameterBase,
     QueryServiceBase,
-    QueryUnifyParameter
+    QueryUnifyParameter,
+    SQLParameter,
+    GeometryParameter,
+    FeatureService,
+    VFeature
 } from './Igserver/MRFS';
 
 export const MRFS = {
@@ -270,7 +274,11 @@ export const MRFS = {
     QueryParameter,
     QueryParameterBase,
     QueryServiceBase,
-    QueryUnifyParameter
+    QueryUnifyParameter,
+    SQLParameter,
+    GeometryParameter,
+    VFeature,
+    FeatureService
 };
 
 import {

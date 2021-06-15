@@ -386,22 +386,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "name": "可视化",
-            "iconfont": "iconeye",
-            "folder": "visualization",
-            "leaffolder": true,
-            "childs": [
-            ]
-        },
-        {
-            "name": "分析",
-            "iconfont": "iconsearch",
-            "folder": "analysis",
-            "leaffolder": true,
-            "childs": [
-            ]
         }
     ]
 }

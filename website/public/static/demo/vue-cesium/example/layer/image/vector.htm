@@ -17,8 +17,9 @@
 <body>
     <div id="app">
         <mapgis-web-scene
-                lib-path="./static/libs/cdn/cesium/Cesium.js"
-                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js">
+            lib-path="./static/libs/cdn/cesium/Cesium.js"
+            plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+        >
             <mapgis-3d-igs-vector-layer :gdbps="gdbps" :base-url="baseUrl"></mapgis-3d-igs-vector-layer>
         </mapgis-web-scene>
     </div>
