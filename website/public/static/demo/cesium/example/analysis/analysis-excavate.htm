@@ -96,10 +96,11 @@
                         latitude: 30.0262,
                         height: 0
                     });
+                    console.log("tileset",landscapeLayer[0]);
                     //analysisManager.startDynamicExcavate(dynaCut.planes[0], distance, planes, landscapeLayer[0].modelMatrix)
                     // 设置开挖的动态效果
                     dynaCut.planes[0].plane.plane = new Cesium.CallbackProperty(function (date) {
-                        console.log(planes);
+                        // console.log(planes);
                         for (var i = 0; i < planes.length; i++) {
                             if (i === planes.length - 1) {
                                 var plane = planes[i];

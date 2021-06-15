@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Map</title>
+        <script include="vue" exclude="plugin" src="./static/libs/include-mapboxgl-local.js"></script>
+        <style type="text/css">
+            body {
+                margin: 0px !important;
+            }
+            #app {
+                margin: 0 0;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapgis-web-map
+                    id="map"
+                    :map-style="mapStyle"
+                    :zoom="mapZoom"
+                    :access-token="accessToken"
+                    :center="outerCenter"
+                    v-on:load="handleMapLoad"
+            >
+            </mapgis-web-map>
+        </div>
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        mapStyle: 'mapbox://styles/mapbox/streets-v11', // 地图样式
+                        mapZoom: 3, // 地图初始化级数
+                        outerCenter:[114.321317, 30.398428],// 地图显示中心
+                        accessToken:'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA',
+                    };
+                },
+                methods: {
+                    handleMapLoad(payload) {
+                        this.map = payload.map;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

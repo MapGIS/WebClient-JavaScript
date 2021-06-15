@@ -4,233 +4,25 @@
     "mapmode": "vue-mapboxgl",
     "childs": [
         {
-            "name": "Vue-矢量",
+            "name": "地图",
             "iconfont": "iconvectordraw",
-            "folder": "vue-vector",
+            "folder": "map",
             "leaffolder": true,
             "childs": [
                 {
-                    "name": "点",
-                    "file": "circle",
+                    "name": "地图视图",
+                    "file": "mapbox",
                     "diffcult": "2",
                     "detail": "",
-                    "icon": "circle.png",
-                    "update": "最后更新时间：2021-01-08"
-                },
-                {
-                    "name": "线",
-                    "file": "line",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "line.png",
-                    "update": "最后更新时间：2021-01-08"
-                },
-                {
-                    "name": "区",
-                    "file": "fill",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "fill.png",
-                    "update": "最后更新时间：2021-01-08"
-                },
-                {
-                    "name": "面",
-                    "file": "fill-extrusion",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "fill-extrusion.png",
-                    "update": "最后更新时间：2021-01-08"
-                },
-                {
-                    "name": "注记",
-                    "file": "symbol",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "symbol.png",
+                    "icon": "mapbox.png",
                     "update": "最后更新时间：2021-01-08"
                 }
             ]
         },
         {
-            "name": "Vue-图层",
-            "iconfont": "icon_layers",
-            "folder": "vue-layer",
-            "leaffolder": true,
-            "childs": [
-                {
-                    "name": "GeoJSON图层",
-                    "file": "geojsonlayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "geojsonlayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                },
-                {
-                    "name": "图像图层",
-                    "file": "imagelayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "imagelayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                },
-                {
-                    "name": "画布图层",
-                    "file": "canvaslayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "canvaslayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                },
-                {
-                    "name": "视频图层",
-                    "file": "videolayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "videolayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                },
-                {
-                    "name": "栅格图层",
-                    "file": "rasterlayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "rasterlayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                }
-            ]
-        },
-        {
-            "name": "Vue-栅格",
-            "iconfont": "iconraster",
-            "folder": "vue-raster",
-            "leaffolder": true,
-            "childs": [
-                {
-                    "name": "地图文档",
-                    "file": "document",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "document.png",
-                    "update": "最后更新时间：2020-11-27"
-                },
-                {
-                    "name": "瓦片服务",
-                    "file": "tile",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "tile.png",
-                    "update": "最后更新时间：2020-11-27"
-                },
-                {
-                    "name": "通用瓦片",
-                    "file": "raster",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "raster.png",
-                    "update": "最后更新时间：2020-11-27"
-                },
-                {
-                    "name": "ArcGIS图层",
-                    "file": "arcgislayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "arcgislayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                },
-                {
-                    "name": "天地图图层",
-                    "file": "tdtlayer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "tdtlayer.png",
-                    "update": "最后更新时间：2021-01-07"
-                }
-            ]
-        },
-        {
-            "name": "Vue-矢量瓦片",
-            "iconfont": "iconraster",
-            "folder": "vue-vectortile",
-            "leaffolder": true,
-            "childs": [
-                {
-                    "name": "整体样式MVT",
-                    "file": "mvtstyle",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "mvtstyle.png",
-                    "update": "最后更新时间：2021-06-07"
-                },
-                {
-                    "name": "单图层",
-                    "file": "layer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "layer.png",
-                    "update": "最后更新时间：2021-06-07"
-                }
-            ]
-        },
-        {
-            "name": "Vue-OGC",
-            "iconfont": "icon_ogc",
-            "folder": "vue-ogc",
-            "leaffolder": true,
-            "childs": [
-                {
-                    "name": "WMTS瓦片",
-                    "file": "wmts",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "wmts.png",
-                    "update": "最后更新时间：2020-11-27"
-                },
-                {
-                    "name": "WMTS-深圳",
-                    "file": "wmts-arcgis",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "wmts-arcgis.png",
-                    "update": "最后更新时间：2020-11-27"
-                },
-                {
-                    "name": "WMS转置BBox",
-                    "file": "reversebbox",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "reversebbox.png",
-                    "update": "最后更新时间：2020-11-27"
-                }
-            ]
-        },
-        {
-            "name": "Vue-ArcGIS",
-            "iconfont": "icon_ogc",
-            "folder": "vue-arcgis",
-            "leaffolder": true,
-            "childs": [
-                {
-                    "name": "ArcGIS瓦片",
-                    "file": "arcgisTile",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "ArcgisTile.png",
-                    "update": "最后更新时间：2021-06-04"
-                },
-                {
-                    "name": "ArcGIS地图",
-                    "file": "arcgisMap",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "ArcgisMap.png",
-                    "update": "最后更新时间：2021-06-07"
-                }
-            ]
-        },
-        {
-            "name": "Vue-交互",
-            "iconfont": "iconhand_draw",
-            "folder": "vue-control",
+            "name": "地图子组件",
+            "iconfont": "iconcontrol1",
+            "folder": "mapChildComponents",
             "leaffolder": true,
             "childs": [
                 {
@@ -356,18 +148,242 @@
             ]
         },
         {
-            "name": "Vue-事件",
-            "iconfont": "icon_ogc",
-            "folder": "vue-event",
-            "leaffolder": true,
+            "name": "图层",
+            "iconfont": "iconlayer",
+            "folder": "layer",
+            "leaffolder": false,
             "childs": [
                 {
-                    "name": "图层事件",
-                    "file": "event-layer",
-                    "diffcult": "2",
-                    "detail": "",
-                    "icon": "event-layer.png",
-                    "update": "最后更新时间：2021-03-08"
+                    "name": "MapGIS",
+                    "iconfont": "iconserver1",
+                    "folder": "igserver",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "地图文档",
+                            "file": "document",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "document.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "瓦片服务",
+                            "file": "tile",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "tile.png",
+                            "update": "最后更新时间：2020-11-27"
+                        }
+                    ]
+                },
+                {
+                    "name": "OGC",
+                    "iconfont": "icon_ogc",
+                    "folder": "vue-ogc",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "WMTS瓦片",
+                            "file": "wmts",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "wmts.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "WMTS-深圳",
+                            "file": "wmts-arcgis",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "wmts-arcgis.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "WMS转置BBox",
+                            "file": "reversebbox",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "reversebbox.png",
+                            "update": "最后更新时间：2020-11-27"
+                        }
+                    ]
+                },
+                {
+                    "name": "互联网地图",
+                    "iconfont": "icon_ogc",
+                    "folder": "internetMap",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "ArcGIS图层",
+                            "file": "arcgislayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "arcgislayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "天地图图层",
+                            "file": "tdtlayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "tdtlayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        }
+                    ]
+                },
+                {
+                    "name": "ArcGIS",
+                    "iconfont": "iconserver1",
+                    "folder": "vue-arcgis",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "ArcGIS瓦片",
+                            "file": "arcgisTile",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "ArcgisTile.png",
+                            "update": "最后更新时间：2021-06-04"
+                        },
+                        {
+                            "name": "ArcGIS地图",
+                            "file": "arcgisMap",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "ArcgisMap.png",
+                            "update": "最后更新时间：2021-06-07"
+                        }
+                    ]
+                },
+                {
+                    "name": "通用图层",
+                    "iconfont": "iconvectordraw",
+                    "folder": "generalLayer",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "点",
+                            "file": "circle",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "circle.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "线",
+                            "file": "line",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "line.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "区",
+                            "file": "fill",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "fill.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "面",
+                            "file": "fill-extrusion",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "fill-extrusion.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "注记",
+                            "file": "symbol",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "symbol.png",
+                            "update": "最后更新时间：2021-01-08"
+                        },
+                        {
+                            "name": "GeoJSON图层",
+                            "file": "geojsonlayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "geojsonlayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "图像图层",
+                            "file": "imagelayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "imagelayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "画布图层",
+                            "file": "canvaslayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "canvaslayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "视频图层",
+                            "file": "videolayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "videolayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "栅格图层",
+                            "file": "rasterlayer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "rasterlayer.png",
+                            "update": "最后更新时间：2021-01-07"
+                        },
+                        {
+                            "name": "通用瓦片",
+                            "file": "raster",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "raster.png",
+                            "update": "最后更新时间：2020-11-27"
+                        },
+                        {
+                            "name": "图层事件",
+                            "file": "event-layer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "event-layer.png",
+                            "update": "最后更新时间：2021-03-08"
+                        }
+                    ]
+                },
+                {
+                    "name": "矢量瓦片",
+                    "iconfont": "iconraster",
+                    "folder": "vue-vectortile",
+                    "leaffolder": true,
+                    "childs": [
+                        {
+                            "name": "整体样式MVT",
+                            "file": "mvtstyle",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "mvtstyle.png",
+                            "update": "最后更新时间：2021-06-07"
+                        },
+                        {
+                            "name": "单图层",
+                            "file": "layer",
+                            "diffcult": "2",
+                            "detail": "",
+                            "icon": "layer.png",
+                            "update": "最后更新时间：2021-06-07"
+                        }
+                    ]
                 }
             ]
         }
