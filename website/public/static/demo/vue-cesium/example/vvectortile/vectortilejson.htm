@@ -22,7 +22,12 @@
                 lib-path="./static/libs/cdn/cesium/Cesium.js"
                 plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
             >
-                <mapgis-3d-vectortile-layer v-on:load="handleVectorTile" :vectortilejson="vectortilejson"></mapgis-3d-vectortile-layer>
+                <mapgis-3d-vectortile-layer 
+                    v-on:load="handleVectorTile" 
+                    :vectortilejson="vectortilejson"
+                    :tiling-scheme="tilingScheme"
+                >
+                </mapgis-3d-vectortile-layer>
             </mapgis-web-scene>
         </div>
         <script>
@@ -69,7 +74,8 @@
                             ],
                             id: '中国行政区-id',
                             crs: null
-                        }
+                        },
+                        tilingScheme: "EPSG:3857"
                     };
                 },
                 methods: {
