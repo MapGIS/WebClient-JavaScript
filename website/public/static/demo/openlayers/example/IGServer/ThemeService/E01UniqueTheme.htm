@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -20,7 +21,11 @@
         var themesInfoArr = null;
         //地图文档guid
         var guid;
-        var { protocol, ip, port } = window.webclient;
+        var {
+            protocol,
+            ip,
+            port
+        } = window.webclient;
 
         /** 初始化地图显示*/
         function init() {
@@ -30,7 +35,9 @@
             map = new ol.Map({
                 target: "mapCon",
                 view: new ol.View({
-                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
+                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) /
+                        2
+                    ],
                     zoom: 6,
                     projection: "EPSG:4326"
                 })
@@ -45,7 +52,7 @@
             //将地图文档图层加载到地图中
             map.addLayer(mapDocLayer);
             //初始化专题图服务类
-            ThemeOper = new Zondy.Service.ThemeOper(null,guid);
+            ThemeOper = new Zondy.Service.ThemeOper(guid, null);
             //设置ip地址
             ThemeOper.ip = `${ip}`;
             //设置端口号
@@ -69,7 +76,7 @@
             themesInfoArr[0].ThemeArr[0].IsBaseTheme = true;
             themesInfoArr[0].ThemeArr[0].Visible = true;
             themesInfoArr[0].ThemeArr[0].GeoInfoType = "Reg";
-            themesInfoArr[0].ThemeArr[0].Expression = "name";
+            themesInfoArr[0].ThemeArr[0].Expression = "NAME";
             //未分段值的图形信息设置
             themesInfoArr[0].ThemeArr[0].DefaultInfo = new Zondy.Object.Theme.CThemeInfo();
             themesInfoArr[0].ThemeArr[0].DefaultInfo.Caption = "未分类";
@@ -287,11 +294,10 @@
                 //删除专题图,onUniqueTheme为回调函数
                 ThemeOper.removeThemesInfo("Hubei4326", "1/0", onUniqueTheme);
                 themesInfoArr = null;
-            } 
+            }
         }
 
-        function onUniqueTheme(flg)
-        {
+        function onUniqueTheme(flg) {
             if (flg) {
                 //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
                 mapDocLayer.options.keepCache = false;
@@ -303,24 +309,25 @@
         }
     </script>
 </head>
+
 <body onload="init();">
     <div id="mapCon" style="position: absolute;width: 100%; height:95%;">
     </div>
     <div id="menuContain" class='menuContain'>
         <div id="tool-container">
-            <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+            <div id='dataSourceMenuID' class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
                 <span></span><i class="menuGroup">专题图</i><em></em>
             </div>
         </div>
     </div>
-    <div id="menu1" class="menuStrip" style='display:none' >
-        <ul  class="menuItems">
-            <li   onclick="addUniqueThemesInfo()"><span class="item1"></span><i >创建</i>
+    <div id="menu1" class="menuStrip" style='display:none'>
+        <ul class="menuItems">
+            <li onclick="addUniqueThemesInfo()"><span class="item1"></span><i>创建</i>
             </li>
-            <li   onclick="updateTheme()"><span class="item1"></span><i >更新</i>
+            <li onclick="updateTheme()"><span class="item1"></span><i>更新</i>
             </li>
             <li class="divider"></li>
-            <li  onclick="deleteTheme()"><span class="item3"></span><i>删除</i>
+            <li onclick="deleteTheme()"><span class="item3"></span><i>删除</i>
             </li>
         </ul>
     </div>
@@ -341,8 +348,7 @@
                             //显示菜单项
                             DisplayMenuItem(true, menuitemFrameID);
 
-                        }
-                        else {
+                        } else {
                             div.setAttribute("status", "unactive");
                             var tem_spans = div.getElementsByTagName("span");
                             var tem_ems = div.getElementsByTagName("em");
@@ -352,8 +358,7 @@
                             //隐藏菜单项
                             DisplayMenuItem(false, menuitemFrameID);
                         }
-                    }
-                    else {
+                    } else {
                         var status = temDivs[i].getAttribute("status");
                         if (status == "active") {
                             temDivs[i].setAttribute("status", "unactive");
@@ -367,7 +372,7 @@
             }
         }
 
-        function DisplayMenuItem (isDisplay, iframeID) {
+        function DisplayMenuItem(isDisplay, iframeID) {
             var menuItemFrame = document.getElementById(iframeID);
             if (menuItemFrame != null) {
                 if (isDisplay) {
@@ -377,11 +382,10 @@
                             if (temDivs[i] != menuItemFrame) {
                                 temDivs[i].style.display = "none";
                             }
-                        }   
+                        }
                     }
                     menuItemFrame.style.display = "";
-                }
-                else {
+                } else {
                     menuItemFrame.style.display = "none";
                 }
             }
@@ -390,4 +394,3 @@
 </body>
 
 </html>
-

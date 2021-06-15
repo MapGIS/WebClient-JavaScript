@@ -1,9 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>等级符号专题图</title>
+    <title>统计专题图</title>
     <!--导入外部样式表-->
     <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
     <!--必要的脚本引用-->
@@ -14,11 +15,11 @@
         'use strict'
         //定义地图文档图层和地图
         var mapDocLayer, map
-            //专题图操作对象
+        //专题图操作对象
         var ThemeOper
-            //专题图信息数组
+        //专题图信息数组
         var themesInfoArr = null
-            //地图文档guid
+        //地图文档guid
         var guid
         var {
             protocol,
@@ -30,29 +31,31 @@
         function init() {
             //随机生成一个guid
             guid = Math.floor(Math.random() * 10000000).toString()
-                //初始化地图容器
+            //初始化地图容器
             map = new ol.Map({
-                    target: 'mapCon',
-                    view: new ol.View({
-                        center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
-                        zoom: 7,
-                        projection: 'EPSG:4326',
-                    }),
-                })
-                //初始化地图文档图层对象
+                target: 'mapCon',
+                view: new ol.View({
+                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) /
+                        2
+                    ],
+                    zoom: 7,
+                    projection: 'EPSG:4326',
+                }),
+            })
+            //初始化地图文档图层对象
             mapDocLayer = new Zondy.Map.MapDocTileLayer('MapGIS IGS MapDocLayer', 'Hubei4326', {
-                    ip: `${ip}`,
-                    port: `${port}`,
-                    //文档guid
-                    guid: guid,
-                })
-                //将地图文档图层加载到地图中
+                ip: `${ip}`,
+                port: `${port}`,
+                //文档guid
+                guid: guid,
+            })
+            //将地图文档图层加载到地图中
             map.addLayer(mapDocLayer)
-                //初始化专题图服务类
-            ThemeOper = new Zondy.Service.ThemeOper(guid, null)
-                //设置ip地址
+            //初始化专题图服务类
+            ThemeOper = new Zondy.Service.ThemeOper(guid,null)
+            //设置ip地址
             ThemeOper.ip = `${ip}`
-                //设置端口号
+            //设置端口号
             ThemeOper.port = `${port}`
         }
 
@@ -60,26 +63,26 @@
         function createThemesInfoArr() {
             //专题图信息数组
             var themesInfoArr = []
-                //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
+            //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
             themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo()
-                //设置图层名层
+            //设置图层名层
             themesInfoArr[0].LayerName = '湖北省市级区划2'
-                //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
             themesInfoArr[0].ThemeArr = []
-                //实例化CChartTheme类
+            //实例化CChartTheme类
             themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CChartTheme()
-                //专题图名称
+            //专题图名称
             themesInfoArr[0].ThemeArr[0].Name = '统计专题图'
             themesInfoArr[0].ThemeArr[0].ChartType = Zondy.Object.Theme.CChartType.Bar3D
-                //ChartThemeInfoArr设置
-                //设置指定专题图的专题信息，专题图可以有多个专题信息
+            //ChartThemeInfoArr设置
+            //设置指定专题图的专题信息，专题图可以有多个专题信息
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr = []
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0] = new Zondy.Object.Theme.CChartThemeInfo()
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].Expression = 'GDP2016'
-                //必须要填写,否则会出错dcserver会挂掉
+            //必须要填写,否则会出错dcserver会挂掉
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].Caption = 'GDP2016'
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].IsVisible = true
-                //实例化CRegInfo类
+            //实例化CRegInfo类
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo = new Zondy.Object.Theme.CRegInfo()
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.Angle = 0
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[0].RegInfo.EndClr = 0
@@ -93,10 +96,10 @@
 
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1] = new Zondy.Object.Theme.CChartThemeInfo()
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1].Expression = 'GDP2015'
-                //必须要填写,否则会出错dcserver会挂掉
+            //必须要填写,否则会出错dcserver会挂掉
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1].Caption = 'GDP2015'
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1].IsVisible = true
-                //实例化CRegInfo类
+            //实例化CRegInfo类
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1].RegInfo = new Zondy.Object.Theme.CRegInfo()
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1].RegInfo.Angle = 0
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[1].RegInfo.EndClr = 0
@@ -110,10 +113,10 @@
 
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2] = new Zondy.Object.Theme.CChartThemeInfo()
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].Expression = 'GDP2014'
-                //必须要填写,否则会出错dcserver会挂掉
+            //必须要填写,否则会出错dcserver会挂掉
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].Caption = 'GDP2014'
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].IsVisible = true
-                //实例化CRegInfo类
+            //实例化CRegInfo类
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].RegInfo = new Zondy.Object.Theme.CRegInfo()
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].RegInfo.Angle = 0
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].RegInfo.EndClr = 0
@@ -124,32 +127,32 @@
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].RegInfo.PatHeight = 5
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].RegInfo.PatWidth = 5
             themesInfoArr[0].ThemeArr[0].ChartThemeInfoArr[2].RegInfo.OutPenW = 1
-                //RepresentInfo设置
+            //RepresentInfo设置
             themesInfoArr[0].ThemeArr[0].RepresentInfo = new Zondy.Object.Theme.CChartThemeRepresentInfo()
             themesInfoArr[0].ThemeArr[0].RepresentInfo.AnnInfoLabel = new Zondy.Object.Theme.CAnnInfo()
-                //标注(参数值)覆盖方式：覆盖
+            //标注(参数值)覆盖方式：覆盖
             themesInfoArr[0].ThemeArr[0].RepresentInfo.AnnInfoLabel.Ovprnt = true
-                //小数位数
+            //小数位数
             themesInfoArr[0].ThemeArr[0].RepresentInfo.DigitLabel = 7
-                //是否显示参数值
+            //是否显示参数值
             themesInfoArr[0].ThemeArr[0].RepresentInfo.IsDrawLabel = true
-                //参数值类型：真实值
+            //参数值类型：真实值
             themesInfoArr[0].ThemeArr[0].RepresentInfo.FormatLabel = Zondy.Object.Theme.CChartLabelFormat.Value
-                //直方图,折线图，点图属性设置
-                //最大高度
+            //直方图,折线图，点图属性设置
+            //最大高度
             themesInfoArr[0].ThemeArr[0].RepresentInfo.MaxLength = 60
-                //厚度
+            //厚度
             themesInfoArr[0].ThemeArr[0].RepresentInfo.ThickPersent = 10
-                //直方图中的宽度或折线图中的横向间隔
+            //直方图中的宽度或折线图中的横向间隔
             themesInfoArr[0].ThemeArr[0].RepresentInfo.Width = 2
-                //点图半径或折线图中的点半径
+            //点图半径或折线图中的点半径
             themesInfoArr[0].ThemeArr[0].RepresentInfo.PlotRadius = 2
-                //饼图属性设置
-                //最小半径
+            //饼图属性设置
+            //最小半径
             themesInfoArr[0].ThemeArr[0].RepresentInfo.MinRadius = 4
-                //角度
+            //角度
             themesInfoArr[0].ThemeArr[0].RepresentInfo.PieTiltedAngle = 30
-                //固定大小
+            //固定大小
             themesInfoArr[0].ThemeArr[0].RepresentInfo.PieSizeFixFlag = 1
             return themesInfoArr
         }
@@ -158,7 +161,7 @@
         function addUniqueThemesInfo() {
             deleteTheme()
             themesInfoArr = createThemesInfoArr()
-                //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
+            //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
             ThemeOper.addThemesInfo('Hubei4326', '1/0', themesInfoArr, onUniqueTheme)
         }
 
@@ -185,9 +188,9 @@
             if (flg) {
                 //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
                 mapDocLayer.options.keepCache = false
-                    //刷新图层，实时显示专题图
+                //刷新图层，实时显示专题图
                 mapDocLayer.refresh()
-                    //设置为读取缓存，以加快显示效率
+                //设置为读取缓存，以加快显示效率
                 mapDocLayer.options.keepCache = true
             }
         }
@@ -198,7 +201,8 @@
     <div id="mapCon" style="position: absolute;width: 100%; height:95%;"></div>
     <div id="menuContain" class="menuContain">
         <div id="tool-container">
-            <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">专题图</i><em></em></div>
+            <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">专题图</i><em></em></div>
         </div>
     </div>
     <div id="menu1" class="menuStrip" style="display:none">

@@ -1,55 +1,42 @@
-<!DOCTYPE html>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>客户端随机专题图</title>
-    <!--引入当前页面样式表-->
-    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <!--导入外部样式表-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <!--必要的脚本引用-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-openlayers-local.js"></script>
     <style>
-        body {
-            height: 700px;
-        }
-        
-        .panel-primary {
-            border-color: #337ab7;
-        }
-        
-        .panel {
-            margin-bottom: 20px;
-            background-color: #fff;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-        }
-        
         .panel-title {
             margin-top: 0;
             margin-bottom: 0;
             font-size: 16px;
             color: inherit;
         }
-        
+
         .text-center {
             text-align: center;
         }
-        
+
         .panel-heading {
             padding: 5px 15px;
             border-bottom: 1px solid transparent;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
-            background-color: #337ab7;
+            background-color: rgb(205, 255, 229);
             border-color: #337ab7;
         }
-        
+
         .panel-body {
             padding: 10px;
             background-color: #f0ffff;
         }
     </style>
+
     <script type="text/javascript">
         //使用严格模式
         "use strict";
@@ -76,8 +63,6 @@
             });
             map = new ol.Map({
                 target: 'ol_map',
-                //要添加地图容器的DIV的ID
-                //layers: [mapDocLayer],
                 //地图容器中要加载的图层列表
                 view: new ol.View({
                     center: center,
@@ -87,7 +72,7 @@
             });
             //地图的显示名称
             var name = "MapGIS IGS MapDocLayer";
-            var mapDocLayer = new Zondy.Map.MapDocTileLayer(name, docName, {
+            mapDocLayer = new Zondy.Map.MapDocTileLayer(name, docName, {
                 //IP地址
                 ip: ip,
                 //端口号
@@ -99,24 +84,27 @@
         /** 添加专题图*/
         function createThemeBtn() {
             startPressBar();
+            // 定义 Unique 单值专题图层
             var options = {
                 isHoverAble: true
             };
             options.map = map;
+
+            // 图层基础样式
             options.style = new Zondy.Map.ThemeStyle({
-                shadowBlur: 16,
-                shadowColor: "#000000",
-                fillColor: "#FFFFFF"
+                shadowBlur: 3,
+                shadowColor: "#000000", //专题图轮廓颜色
+                fillColor: "#FFFFFF"  //填充色ccffff
             });
 
             // hover 高亮样式
             options.highlightStyle = new Zondy.Map.ThemeStyle({
                 stroke: true,
-                strokeWidth: 4,
+                strokeWidth: 2,
                 strokeColor: 'blue',
-                fillColor: "#00EEEE",
+                fillColor: "#66ffff",  //鼠标移动高亮色
                 fillOpacity: 0.8
-            });
+            });           
 
             themeSource = new Zondy.Source.RandomThemeSource("ThemeLayer", options);
             addThemeFeatures(querySuccess);
@@ -124,7 +112,7 @@
             themeSource.on('mousemove', highLightLayer);
 
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -198,7 +186,9 @@
         /** 删除专题图*/
         function deleteTheme() {
             if (map != null && themeLayer != null) {
+                themeLayer.getSource().un('mousemove', highLightLayer);
                 map.removeLayer(themeLayer);
+                themeLayer = null;               
                 document.getElementById("infoBox").style.display = "none";
 
             }
@@ -206,35 +196,109 @@
 
         /** 开始进度条动画*/
         function startPressBar() {
-            document.getElementById('preview').style.display = "";
+            document.getElementById('mapCon').style.display = "";
         }
 
         /** 停止进度条动画*/
         function stopPressBar() {
-            document.getElementById('preview').style.display = "none";
+            document.getElementById('mapCon').style.display = "none";
         }
     </script>
 </head>
 
-<body style="width: 100%; height:100%; position:absolute;" onload="init();">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br/>
-        <br/>
-        <span>正在操作，请稍候</span>
+<body onload="init();">
+    <div id="mapCon" style="position: absolute;width: 100%; height:95%;">
+
     </div>
-    <div class="ToolLib" style="position:absolute;">
-        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
-        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+            <div id='dataSourceMenuID' class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">专题图</i><em></em>
+            </div>
+        </div>
     </div>
-    <div id="ol_map" style="width: 100%; height:95%; position:absolute;top:34px;background-color:#d8d4d4;">
+    <div id="menu1" class="menuStrip" style='display:none; z-index:999'>
+        <ul class="menuItems">
+            <li onclick="createThemeBtn()"><span class="item1"></span><i>创建</i>
+            </li>
+            <li class="divider"></li>
+            <li onclick="deleteTheme()"><span class="item3"></span><i>删除</i>
+            </li>
+        </ul>
     </div>
-    <div id="infoBox" class="panel panel-primary infoPane" style="width:272px;right: 10px;bottom: 0px;position: absolute;fontSize:14px;display: none;">
+    <div id="ol_map" style="width:100%;height:100%;position:absolute;top:0px;">
+
+    </div>
+
+    <div id="infoBox" class="panel panel-primary infoPane"
+        style="width:170px;right: 10px;bottom: 50px;right: 20px; position: absolute;fontSize:14px;display: none;">
         <div class="panel-heading">
             <h5 class='panel-title text-center'>属性</h5>
         </div>
         <div id="infoContent" class="panel-body content">
         </div>
     </div>
+
+    <script>
+        function switchMenuStatus(div, menuitemFrameID) {
+            var temDivs = document.getElementsByClassName('optmain');
+            if (temDivs.length > 0) {
+                for (var i = 0; i < temDivs.length; i++) {
+                    if (temDivs[i] === div) {
+                        var status = div.getAttribute("status");
+                        if (status == "unactive") {
+                            div.setAttribute("status", "active");
+                            var tem_spans = div.getElementsByTagName("span");
+                            var tem_ems = div.getElementsByTagName("em");
+                            tem_spans[0].className = "active";
+                            tem_ems[0].className = "active";
+
+                            //显示菜单项
+                            DisplayMenuItem(true, menuitemFrameID);
+
+                        } else {
+                            div.setAttribute("status", "unactive");
+                            var tem_spans = div.getElementsByTagName("span");
+                            var tem_ems = div.getElementsByTagName("em");
+                            tem_spans[0].className = "";
+                            tem_ems[0].className = "";
+
+                            //隐藏菜单项
+                            DisplayMenuItem(false, menuitemFrameID);
+                        }
+                    } else {
+                        var status = temDivs[i].getAttribute("status");
+                        if (status == "active") {
+                            temDivs[i].setAttribute("status", "unactive");
+                            var tem_spans = temDivs[i].getElementsByTagName("span");
+                            var tem_ems = temDivs[i].getElementsByTagName("em");
+                            tem_spans[0].className = "";
+                            tem_ems[0].className = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        function DisplayMenuItem(isDisplay, iframeID) {
+            var menuItemFrame = document.getElementById(iframeID);
+            if (menuItemFrame != null) {
+                if (isDisplay) {
+                    var temDivs = document.getElementsByClassName('menuStrip');
+                    if (temDivs.length > 0) {
+                        for (var i = 0; i < temDivs.length; i++) {
+                            if (temDivs[i] != menuItemFrame) {
+                                temDivs[i].style.display = "none";
+                            }
+                        }
+                    }
+                    menuItemFrame.style.display = "";
+                } else {
+                    menuItemFrame.style.display = "none";
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>

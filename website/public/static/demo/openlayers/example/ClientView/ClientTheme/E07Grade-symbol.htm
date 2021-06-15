@@ -4,14 +4,16 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>客户端等级符号专题图</title>
-    <!--引入当前页面样式表-->
-    <link href="./style.css" rel="stylesheet" type="text/css" />
+    <!--导入外部样式表-->
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+        <!--必要的脚本引用-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>    
     <script src="./static/libs/include-openlayers-local.js"></script>
     <style>
-        body {
+        /* body {
             height: 700px;
-        }
-        
+        } */
+
         .ol-popup {
             position: absolute;
             background-color: white;
@@ -24,7 +26,7 @@
             left: -50px;
             min-width: 150px;
         }
-        
+
         .ol-popup:after,
         .ol-popup:before {
             top: 100%;
@@ -35,14 +37,14 @@
             position: absolute;
             pointer-events: none;
         }
-        
+
         .ol-popup:after {
             border-top-color: white;
             border-width: 10px;
             left: 48px;
             margin-left: -10px;
         }
-        
+
         .ol-popup:before {
             border-top-color: #cccccc;
             border-width: 11px;
@@ -59,7 +61,7 @@
             protocol,
             ip,
             port
-        } = window.webclient;
+        } = window.webclient; 
         var ip = `${ip}`;
         var port = `${port}`;
         var docName = 'Hubei4326';
@@ -85,6 +87,7 @@
                     duration: 250
                 }
             }));
+            
             map = new ol.Map({
                 target: 'ol_map',
                 //要添加地图容器的DIV的ID
@@ -110,7 +113,7 @@
 
         /** 添加专题图*/
         function createThemeBtn() {
-            startPressBar();
+            //startPressBar();
             addThemeFeatures(gradeQuerySuccess);
         }
 
@@ -181,7 +184,7 @@
                 //专题图层 mousemove 事件
                 themeSource.on('mousemove', showInfoWin);
                 var pointerInteraction = new ol.interaction.Pointer({
-                    handleMoveEvent: function(event) {
+                    handleMoveEvent: function (event) {
                         themeSource.fire('mousemove', event);
                     }
                 });
@@ -192,7 +195,7 @@
                 themeLayer.setOpacity(0.8);
                 map.addLayer(themeLayer);
             }
-            stopPressBar();
+            //stopPressBar();
         }
 
         /** 删除专题图*/
@@ -236,33 +239,103 @@
             }
         }
 
-        /** 开始进度条动画*/
-        function startPressBar() {
-            document.getElementById('preview').style.display = "";
-        }
+        // /** 开始进度条动画*/
+        // function startPressBar() {
+        //     document.getElementById('preview').style.display = "";
+        // }
 
-        /** 停止进度条动画*/
-        function stopPressBar() {
-            document.getElementById('preview').style.display = "none";
-        }
+        // /** 停止进度条动画*/
+        // function stopPressBar() {
+        //     document.getElementById('preview').style.display = "none";
+        // }
     </script>
 </head>
 
-<body style="width: 100%; height:100%; position:absolute;" onload="init();">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br/>
-        <br/>
-        <span>正在操作，请稍候</span>
+<body onload="init();">
+    <div id="mapCon" style="position: absolute;width: 100%; height:95%;">
     </div>
-    <div class="ToolLib" style="position:absolute;">
-        <input type="button" class="ButtonLib" id="createThemeBtn" value="添加专题图" onclick="createThemeBtn()" />
-        <input type="button" class="ButtonLib" id="deleteThemeBtn" value="删除专题图" onclick="deleteTheme()" />
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+            <div id='dataSourceMenuID' class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">专题图</i><em></em>
+            </div>
+        </div>
     </div>
-    <div id="ol_map" style="width: 100%; height:95%; position:absolute;top:34px;background-color:#d8d4d4;">
+    <div id="menu1" class="menuStrip" style='display:none; z-index:999'>
+        <ul class="menuItems">
+            <li onclick="createThemeBtn()"><span class="item1"></span><i>创建</i>
+            </li>
+            <li class="divider"></li>
+            <li onclick="deleteTheme()"><span class="item3"></span><i>删除</i>
+            </li>
+        </ul>
+    </div>
+    <div id="ol_map" style="width:100%;height:100%;position:absolute;top:0px;">
+
     </div>
     <div id="popup" class="ol-popup">
         <div id="popup-content"></div>
     </div>
+    <script>
+        function switchMenuStatus(div, menuitemFrameID) {
+            var temDivs = document.getElementsByClassName('optmain');
+            if (temDivs.length > 0) {
+                for (var i = 0; i < temDivs.length; i++) {
+                    if (temDivs[i] === div) {
+                        var status = div.getAttribute("status");
+                        if (status == "unactive") {
+                            div.setAttribute("status", "active");
+                            var tem_spans = div.getElementsByTagName("span");
+                            var tem_ems = div.getElementsByTagName("em");
+                            tem_spans[0].className = "active";
+                            tem_ems[0].className = "active";
+
+                            //显示菜单项
+                            DisplayMenuItem(true, menuitemFrameID);
+
+                        } else {
+                            div.setAttribute("status", "unactive");
+                            var tem_spans = div.getElementsByTagName("span");
+                            var tem_ems = div.getElementsByTagName("em");
+                            tem_spans[0].className = "";
+                            tem_ems[0].className = "";
+
+                            //隐藏菜单项
+                            DisplayMenuItem(false, menuitemFrameID);
+                        }
+                    } else {
+                        var status = temDivs[i].getAttribute("status");
+                        if (status == "active") {
+                            temDivs[i].setAttribute("status", "unactive");
+                            var tem_spans = temDivs[i].getElementsByTagName("span");
+                            var tem_ems = temDivs[i].getElementsByTagName("em");
+                            tem_spans[0].className = "";
+                            tem_ems[0].className = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        function DisplayMenuItem(isDisplay, iframeID) {
+            var menuItemFrame = document.getElementById(iframeID);
+            if (menuItemFrame != null) {
+                if (isDisplay) {
+                    var temDivs = document.getElementsByClassName('menuStrip');
+                    if (temDivs.length > 0) {
+                        for (var i = 0; i < temDivs.length; i++) {
+                            if (temDivs[i] != menuItemFrame) {
+                                temDivs[i].style.display = "none";
+                            }
+                        }
+                    }
+                    menuItemFrame.style.display = "";
+                } else {
+                    menuItemFrame.style.display = "none";
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>

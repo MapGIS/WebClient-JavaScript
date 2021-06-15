@@ -1,9 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>统一专题图</title>
+    <title>四色专题图</title>
     <!--导入外部样式表-->
     <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
     <!--必要的脚本引用-->
@@ -34,7 +35,8 @@
             map = new ol.Map({
                 target: "mapCon",
                 view: new ol.View({
-                    center: [(114.125678154779 + 114.475830260539) / 2, (30.7083224461318 + 30.4575715847217) / 2],
+                    center: [(114.125678154779 + 114.475830260539) / 2, (30.7083224461318 +
+                        30.4575715847217) / 2],
                     zoom: 11,
                     projection: "EPSG:4326"
                 })
@@ -50,7 +52,7 @@
             map.addLayer(mapDocLayer);
             //初始化专题图服务类
             ThemeOper = new Zondy.Service.ThemeOper(guid, null)
-                //设置ip地址
+            //设置ip地址
             ThemeOper.ip = `${ip}`;
             //设置端口号
             ThemeOper.port = `${port}`;
@@ -89,7 +91,9 @@
         /** 更新专题图*/
         function updateTheme() {
             themesInfoArr = createThemesInfoArr();
-            themesInfoArr[0].ThemeArr[0].ClrInfo = [Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100)];
+            themesInfoArr[0].ThemeArr[0].ClrInfo = [Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math
+                .ceil(Math.random() * 100), Math.ceil(Math.random() * 100), Math.ceil(Math.random() * 100)
+            ];
             //更新专题图,onUniqueTheme为回调函数
             ThemeOper.updateThemesInfo("武汉市区行政区", "0/0", themesInfoArr, onUniqueTheme);
         }

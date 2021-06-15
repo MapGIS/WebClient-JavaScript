@@ -403,7 +403,7 @@
   ```
 
 <a href="http://develop.smaryun.com/#/demo/mapboxgl/internet/tianditu4326" target="\_blank">
-<img src="./img/dev/tianditu4326.png" alt="天地图经纬度"/>
+<img src="./static/demo/mapboxgl/source/img/dev/tianditu4326.png" alt="天地图经纬度"/>
 </a>
 
 ### OSM 地图
@@ -424,7 +424,7 @@
   ```
 
 <a href="http://develop.smaryun.com:8899/#/demo/mapboxgl/internet/osm">
-<img src="./img/dev/osm.png"/></a>
+<img src="./static/demo/mapboxgl/source/img/dev/osm.png"/></a>
 
 ### ArcGIS 地图
 
@@ -450,7 +450,7 @@
   ```
 
 <a href="http://develop.smaryun.com:8899/#/demo/mapboxgl/internet/arcgis">
-<img src="./img/dev/arcgis.png"/></a>
+<img src="./static/demo/mapboxgl/source/img/dev/arcgis.png"/></a>
 
 ## OGC 服务
 
@@ -497,7 +497,7 @@
   ```
 
 <a href="http://develop.smaryun.com:8899/#/demo/mapboxgl/ogc/wms">
-<img src="./img/dev/WMS.png"></a>
+<img src="./static/demo/mapboxgl/source/img/dev/WMS.png"></a>
 
 ### WMTS
 
@@ -531,7 +531,7 @@
   ```
 
 <a href="http://develop.smaryun.com:8899/#/demo/mapboxgl/ogc/wmts">
-<img src="./img/dev/WMTS.png"/></a>
+<img src="./static/demo/mapboxgl/source/img/dev/WMTS.png"/></a>
 
 ### WFS
 
@@ -574,7 +574,7 @@
   ```
 
 <a href="http://develop.smaryun.com:8899/#/demo/mapboxgl/ogc/wfs">
-<img src="./img/dev/WFS.png"/></a>
+<img src="./static/demo/mapboxgl/source/img/dev/WFS.png"/></a>
 
 ## 地图服务
 

@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -14,45 +15,41 @@
         'use strict'
         //定义地图文档图层和地图
         var mapDocLayer, map
-            //专题图操作对象
+        //专题图操作对象
         var ThemeOper
-            //专题图信息数组
+        //专题图信息数组
         var themesInfoArr = null
-            //地图文档guid
-        var guid;
-        var {
-            protocol,
-            ip,
-            port
-        } = window.webclient
+        //地图文档guid
+        var guid
+        var { protocol, ip, port } = window.webclient
 
         /** 初始化地图显示*/
         function init() {
             //随机生成一个guid
             guid = Math.floor(Math.random() * 10000000).toString()
-                //初始化地图容器
+            //初始化地图容器
             map = new ol.Map({
-                    target: 'mapCon',
-                    view: new ol.View({
-                        center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
-                        zoom: 7,
-                        projection: 'EPSG:4326',
-                    }),
-                })
-                //初始化地图文档图层对象
+                target: 'mapCon',
+                view: new ol.View({
+                    center: [(108.34341 + 116.150939561213) / 2, (29.0125822276524 + 33.2932017737021) / 2],
+                    zoom: 7,
+                    projection: 'EPSG:4326',
+                }),
+            })
+            //初始化地图文档图层对象
             mapDocLayer = new Zondy.Map.MapDocTileLayer('MapGIS IGS MapDocLayer', 'Hubei4326', {
-                    ip: `${ip}`,
-                    port: `${port}`,
-                    //文档guid
-                    guid: guid,
-                })
-                //将地图文档图层加载到地图中
+                ip: `${ip}`,
+                port: `${port}`,
+                //文档guid
+                guid: guid,
+            })
+            //将地图文档图层加载到地图中
             map.addLayer(mapDocLayer)
-                //初始化专题图服务类
+            //初始化专题图服务类
             ThemeOper = new Zondy.Service.ThemeOper(guid, null)
-                //设置ip地址
+            //设置ip地址
             ThemeOper.ip = `${ip}`
-                //设置端口号
+            //设置端口号
             ThemeOper.port = `${port}`
         }
 
@@ -61,23 +58,25 @@
             //初始化Zondy.Object.Theme.ThemesInfo，用于设置需添加的专题相关信息
             themesInfoArr = []
             themesInfoArr[0] = new Zondy.Object.Theme.ThemesInfo()
-                //设置图层名层
+            //设置图层名层
             themesInfoArr[0].LayerName = '湖北省市级区划2'
-                //初始化指定图层的专题图信息对象，之后再给该数组赋值
+            //初始化指定图层的专题图信息对象，之后再给该数组赋值
             themesInfoArr[0].ThemeArr = []
-                //实例化CGraduatedSymbolTheme类
+            //实例化CGraduatedSymbolTheme类
             themesInfoArr[0].ThemeArr[0] = new Zondy.Object.Theme.CGraduatedSymbolTheme()
-                //专题图名称
+            //专题图名称
             themesInfoArr[0].ThemeArr[0].Name = '等级符号专题图'
-                //单值专题图
+            //单值专题图
             themesInfoArr[0].ThemeArr[0].IsBaseTheme = false
-                //可见
+            //可见
             themesInfoArr[0].ThemeArr[0].Visible = true
             themesInfoArr[0].ThemeArr[0].Expression = '第一产业增加值2013'
-            themesInfoArr[0].ThemeArr[0].BaseValue = '3000'
-                //是否显示负值
+
+            //
+            themesInfoArr[0].ThemeArr[0].BaseValue = '100'
+            //是否显示负值
             themesInfoArr[0].ThemeArr[0].DispMinus = false
-                //是否显示零值
+            //是否显示零值
             themesInfoArr[0].ThemeArr[0].DispZero = false
 
             //正值子图符号信息
@@ -90,7 +89,7 @@
             themesInfoArr[0].ThemeArr[0].PlusPntInfo.Width = 0.5
             themesInfoArr[0].ThemeArr[0].PlusPntInfo.OutClr = [7, 7, 7]
             themesInfoArr[0].ThemeArr[0].PlusPntInfo.OutPenW = [0.05, 0.05, 0.05]
-            themesInfoArr[0].ThemeArr[0].PlusPntInfo.SymID = 1
+            themesInfoArr[0].ThemeArr[0].PlusPntInfo.SymID = 197
             return themesInfoArr
         }
 
@@ -98,7 +97,7 @@
         function addUniqueThemesInfo() {
             deleteTheme()
             themesInfoArr = createThemesInfoArr()
-                //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
+            //添加专题图（不是在原文档上添加，会重新生成一个专题图缓存文档）
             ThemeOper.addThemesInfo('Hubei4326', '1/0', themesInfoArr, onUniqueTheme)
         }
 
@@ -125,13 +124,12 @@
         }
 
         function onUniqueTheme(flg) {
-            console.log(flg);
             if (flg) {
                 //刷新图层前要进行此设置。加载之前的缓存文档,保证专题图能正常显示
                 mapDocLayer.options.keepCache = false
-                    //刷新图层，实时显示专题图
+                //刷新图层，实时显示专题图
                 mapDocLayer.refresh()
-                    //设置为读取缓存，以加快显示效率
+                //设置为读取缓存，以加快显示效率
                 mapDocLayer.options.keepCache = true
             }
         }
@@ -142,7 +140,8 @@
     <div id="mapCon" style="position: absolute;width: 100%; height:95%;"></div>
     <div id="menuContain" class="menuContain">
         <div id="tool-container">
-            <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">专题图</i><em></em></div>
+            <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
+                <span></span><i class="menuGroup">专题图</i><em></em></div>
         </div>
     </div>
     <div id="menu1" class="menuStrip" style="display:none">

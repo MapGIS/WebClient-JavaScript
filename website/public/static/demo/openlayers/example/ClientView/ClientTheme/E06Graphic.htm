@@ -4,6 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>客户端统计专题图</title>
+    
     <!--引入当前页面样式表-->
     <link href="./style.css" rel="stylesheet" type="text/css" />
     <script src="./static/libs/include-openlayers-local.js"></script>
@@ -11,7 +12,7 @@
         body {
             height: 700px;
         }
-        
+
         .editPane {
             position: absolute;
             right: 155px;
@@ -21,13 +22,13 @@
             border-radius: 4px;
             margin-top: 8px;
         }
-        
+
         .tooltip-inner {
             width: 68px;
             background-color: transparent;
             color: #515151;
         }
-        
+
         .graph {
             margin: 5px;
             width: 26px;
@@ -36,50 +37,50 @@
             border-radius: 4px;
             background-size: 100%;
         }
-        
+
         #bar {
             background-image: url("./static/assets/graphic-image/bar.png");
         }
-        
+
         #bar3d {
             background-image: url("./static/assets/graphic-image/bar3D.png");
         }
-        
+
         #line {
             background-image: url("./static/assets/graphic-image/ling.png");
         }
-        
+
         #point {
             background-image: url("./static/assets/graphic-image/point.png");
         }
-        
+
         #pie {
             background-image: url("./static/assets/graphic-image/pie.png");
         }
-        
+
         #ring {
             background-image: url("./static/assets/graphic-image/ring.png");
         }
-        
+
         .btn-default.active {
             color: rgb(51, 51, 51);
             background-color: rgb(230, 230, 230);
             border-color: rgb(173, 173, 173);
             background-image: none;
         }
-        
+
         .btn.active {
             background-image: none;
             box-shadow: rgba(0, 0, 0, 0.121569) 0px 3px 5px inset;
             outline: 0px;
         }
-        
+
         .btn-default {
             color: rgb(51, 51, 51);
             background-color: rgb(255, 255, 255);
             border-color: rgb(204, 204, 204);
         }
-        
+
         .btn {
             display: inline-block;
             margin-bottom: 0px;
@@ -101,7 +102,7 @@
             border-radius: 4px;
             background-color: transparent;
         }
-        
+
         .ol-popup {
             position: absolute;
             background-color: white;
@@ -114,7 +115,7 @@
             left: -50px;
             min-width: 150px;
         }
-        
+
         .ol-popup:after,
         .ol-popup:before {
             top: 100%;
@@ -125,14 +126,14 @@
             position: absolute;
             pointer-events: none;
         }
-        
+
         .ol-popup:after {
             border-top-color: white;
             border-width: 10px;
             left: 48px;
             margin-left: -10px;
         }
-        
+
         .ol-popup:before {
             border-top-color: #cccccc;
             border-width: 11px;
@@ -301,33 +302,33 @@
 
         /** 统计图事件绑定*/
         function bindEvent() {
-            document.getElementById('bar').addEventListener("click", function() {
+            document.getElementById('bar').addEventListener("click", function () {
                 initStatus();
                 document.getElementById('bar').className += ' active ';
                 addThemeFeatures(createBarThemeLayer);
             });
 
-            document.getElementById('bar3d').addEventListener("click", function() {
+            document.getElementById('bar3d').addEventListener("click", function () {
                 initStatus();
                 document.getElementById('bar3d').className += ' active ';
                 addThemeFeatures(createBar3DThemeLayer);
             });
-            document.getElementById('line').addEventListener("click", function() {
+            document.getElementById('line').addEventListener("click", function () {
                 initStatus();
                 document.getElementById('line').className += ' active ';
                 addThemeFeatures(createLineThemeLayer);
             });
-            document.getElementById('point').addEventListener("click", function() {
+            document.getElementById('point').addEventListener("click", function () {
                 initStatus();
                 document.getElementById('point').className += ' active ';
                 addThemeFeatures(createPointThemeLayer);
             });
-            document.getElementById('pie').addEventListener("click", function() {
+            document.getElementById('pie').addEventListener("click", function () {
                 initStatus();
                 document.getElementById('pie').className += ' active ';
                 addThemeFeatures(createPieThemeLayer);
             });
-            document.getElementById('ring').addEventListener("click", function() {
+            document.getElementById('ring').addEventListener("click", function () {
                 initStatus();
                 document.getElementById('ring').className += ' active ';
                 addThemeFeatures(createRingThemeLayer);
@@ -387,7 +388,7 @@
             //专题图层 mousemove 事件
             themeSource.on('mousemove', showInfoWin);
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -397,7 +398,7 @@
             });
             themeLayer.setOpacity(0.8);
             map.addLayer(themeLayer);
-            stopPressBar();
+            //stopPressBar();
         }
 
         /** 创建三维柱状图*/
@@ -439,7 +440,7 @@
             //专题图层 mousemove 事件
             themeSource.on('mousemove', showInfoWin);
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -463,7 +464,7 @@
             //专题图层 mousemove 事件
             themeSource.on('mousemove', showInfoWin);
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -487,7 +488,7 @@
             //专题图层 mousemove 事件
             themeSource.on('mousemove', showInfoWin);
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -510,7 +511,7 @@
             //专题图层 mousemove 事件
             themeSource.on('mousemove', showInfoWin);
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -534,7 +535,7 @@
             //专题图层 mousemove 事件
             themeSource.on('mousemove', showInfoWin);
             var pointerInteraction = new ol.interaction.Pointer({
-                handleMoveEvent: function(event) {
+                handleMoveEvent: function (event) {
                     themeSource.fire('mousemove', event);
                 }
             });
@@ -602,7 +603,7 @@
             if (statisticsData != null) {
                 onsuccess(statisticsData);
             } else {
-                startPressBar();
+                //startPressBar();
                 var queryStruct = new Zondy.Service.QueryFeatureStruct();
                 //是否包含几何图形信息
                 queryStruct.IncludeGeometry = true;
@@ -639,33 +640,36 @@
             }
         }
 
-        /** 开始进度条动画*/
-        function startPressBar() {
-            document.getElementById('preview').style.display = "";
-        }
+        // /** 开始进度条动画*/
+        // function startPressBar() {
+        //     document.getElementById('mapCon').style.display = "";
+        // }
 
-        /** 停止进度条动画*/
-        function stopPressBar() {
-            document.getElementById('preview').style.display = "none";
-        }
+        // /** 停止进度条动画*/
+        // function stopPressBar() {
+        //     document.getElementById('mapCon').style.display = "none";
+        // }
     </script>
 </head>
 
 <body onload="init();">
-    <div id="preview" style="display: none; text-align: center; padding-top: 250px; font-weight: bold">
-        <img src="./static/assets/graphic-image/39-1.gif" alt='' /><br/>
-        <br/>
-        <span>正在操作，请稍候</span>
+    <div id="mapCon" style="position: absolute;width: 100%; height:95%;">
     </div>
     <div class="editPane" role="group" aria-label="...">
-        <button type='button' class='btn btn-default graph' id='bar' data-toggle='tooltip' data-placement='bottom' title='柱状图'></button>
-        <button type='button' class='btn btn-default graph' id='bar3d' data-toggle='tooltip' data-placement='bottom' title='三维柱状图'></button>
-        <button type='button' class='btn btn-default graph' id='line' data-toggle='tooltip' data-placement='bottom' title='折线图'></button>
-        <button type='button' class='btn btn-default graph' id='point' data-toggle='tooltip' data-placement='bottom' title='点状图'></button>
-        <button type='button' class='btn btn-default graph' id='pie' data-toggle='tooltip' data-placement='bottom' title='饼图'></button>
-        <button type='button' class='btn btn-default graph' id='ring' data-toggle='tooltip' data-placement='bottom' title='环状图'></button>
+        <button type='button' class='btn btn-default graph' id='bar' data-toggle='tooltip' data-placement='bottom'
+            title='柱状图'></button>
+        <button type='button' class='btn btn-default graph' id='bar3d' data-toggle='tooltip' data-placement='bottom'
+            title='三维柱状图'></button>
+        <button type='button' class='btn btn-default graph' id='line' data-toggle='tooltip' data-placement='bottom'
+            title='折线图'></button>
+        <button type='button' class='btn btn-default graph' id='point' data-toggle='tooltip' data-placement='bottom'
+            title='点状图'></button>
+        <button type='button' class='btn btn-default graph' id='pie' data-toggle='tooltip' data-placement='bottom'
+            title='饼图'></button>
+        <button type='button' class='btn btn-default graph' id='ring' data-toggle='tooltip' data-placement='bottom'
+            title='环状图'></button>
     </div>
-    <div id="ol_map" style="position: absolute;width: 100%; height:95%;background-color:#d8d4d4;">
+    <div id="ol_map" style="position: absolute;width: 100%; height:95%;">
     </div>
     <div id="popup" class="ol-popup">
         <div id="popup-content"></div>
