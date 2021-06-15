@@ -32,7 +32,7 @@
                 :layers="showlayers"
                 :layer-style="layerStyle"
                 :options="options"
-                :srs="srs">
+                :tiling-scheme="tilingScheme">
               </mapgis-3d-arcgis-map-layer>
             </mapgis-web-scene>
         </div>
@@ -52,7 +52,7 @@
                             tileWidth:256,
                             tileHeight:256,
                         },
-                        srs:"EPSG:4326"
+                        tilingScheme:"EPSG:4326"
                     };
                 },
                 methods: {
