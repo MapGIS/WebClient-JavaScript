@@ -34,7 +34,7 @@
                 "title": "产品",
                 "icon": "iconchanpinjieshao",
                 "links": [["产品介绍"]],
-                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [
                     [
                         "/product/component/introduction",
@@ -57,13 +57,13 @@
                         "开发指南"
                     ]
                 ],
-                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [["/guide/component/development_component", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[true, true, true, true]],
+                "hightlights": [[false, false, false, false]],
                 "links": [
                     ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入"]
                 ],
@@ -87,14 +87,14 @@
                         "StoryBook-MapboxGL"
                     ]
                 ],
-                "hightlights": [[false, false, false]],
+                "hightlights": [[true, true, true]],
                 "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-vector", "/storybook/index.html"]]
             },
             {
                 "title": "开发API",
                 "icon": "iconsanfangAPI",
                 "links": [["Cesium-API", "MapboxGL-API"]],
-                "hightlights": [[false, false]],
+                "hightlights": [[true, true]],
                 "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892"]]
             }
         ]
@@ -107,7 +107,7 @@
                 "title": "产品",
                 "icon": "iconchanpinjieshao",
                 "links": [["产品介绍"]],
-                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [
                     [
                         "/product/cesium/produce_cesium",
@@ -130,7 +130,7 @@
                         "开发指南"
                     ]
                 ],
-                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [["/guide/cesium/development_cesium", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
@@ -220,7 +220,7 @@
                 "title": "产品",
                 "icon": "iconchanpinjieshao",
                 "links": [["产品介绍"]],
-                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [
                     [
                         "/product/mapboxgl/produce_mapboxgl",
@@ -243,13 +243,13 @@
                         "开发指南"
                     ]
                 ],
-                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [["/guide/mapboxgl/development_mapboxgl", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[true, true, true, true, true, true]],
+                "hightlights": [[false, false, false, false, false, false]],
                 "links": [
                     ["OGC-WMTS", "ArcServer-WMS", "ArcServer-要素图层", "矢量瓦片-介绍", "矢量瓦片-离线部署", "矢量瓦片-几何&符号"]
                 ],
@@ -268,7 +268,7 @@
             {
                 "title": "开发示例",
                 "icon": "iconzaixianshili",
-                "hightlights": [[false, false, true, false, false, false, false, false, false, false, true, true]],
+                "hightlights": [[false, false, true, false, false, false, false, false, false, false, false, false]],
                 "links": [
                     [
                         "互联网地图",
@@ -331,7 +331,7 @@
                 "title": "产品",
                 "icon": "iconchanpinjieshao",
                 "links": [["产品介绍"]],
-                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [
                     [
                         "/product/leaflet/produce_leaflet",
@@ -354,7 +354,7 @@
                         "开发指南"
                     ]
                 ],
-                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [["/guide/leaflet/development_leaflet", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
@@ -406,7 +406,7 @@
                 "title": "产品",
                 "icon": "iconchanpinjieshao",
                 "links": [["产品介绍"]],
-                "hightlights": [[true, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [
                     [
                         "/product/openlayers/produce_ol",
@@ -429,7 +429,7 @@
                         "开发指南"
                     ]
                 ],
-                "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false]],
+                "hightlights": [[true]],
                 "routes": [["/guide/openlayers/development_ol", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
