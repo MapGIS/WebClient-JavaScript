@@ -184,7 +184,7 @@
                     "leaffolder": true,
                     "childs": [
                         {
-                            "name": "WMTS瓦片",
+                            "name": "WMTS",
                             "file": "wmts",
                             "diffcult": "2",
                             "detail": "",

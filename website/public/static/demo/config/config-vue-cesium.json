@@ -43,7 +43,7 @@
                             "update": "最后更新时间：2021-06-07"
                         },
                         {
-                            "name": "WMTS瓦片",
+                            "name": "WMTS",
                             "file": "wmts",
                             "html": "",
                             "diffcult": "2",
@@ -52,7 +52,7 @@
                             "update": "最后更新时间：2020-11-23"
                         },
                         {
-                            "name": "WMS瓦片",
+                            "name": "WMS",
                             "file": "wms",
                             "html": "",
                             "diffcult": "2",
