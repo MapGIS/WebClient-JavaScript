@@ -7,7 +7,7 @@
                 "title": "概述",
                 "icon": "icongaishu",
                 "links": [["核心服务", "详细服务", "调用方式", "四大引擎选择", "下载"]],
-                "hightlights": [[false, false, false, false, false]],
+                "hightlights": [[false, false, false, false, true]],
                 "routes": [["/total/core", "/total/detail", "/total/use", "/total/select", "/total/download"]]
             },
             {
