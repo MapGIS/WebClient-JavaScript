@@ -12,14 +12,14 @@
                 <div class="header-menu-link" v-for="(l, j) in link" :key="j">
                     <div class="header-menu-link-text" v-if="isLink(menu.routes[i][j])">
                         <el-badge type="success" :is-dot="menu.hightlights[i][j]"  class="menu-badge">
-                            <a class="header-menu-link-text" :href="menu.routes[i][j]" target="_blank">
+                            <a :href="menu.routes[i][j]" target="_blank">
                                 <span :class="{ 'light-subtitle': light }">{{ l }}</span>
                             </a>
                         </el-badge>
                     </div>
                     <div class="header-menu-link-text" v-else-if="isDocs(menu.routes[i][j])">
                         <el-badge type="success" :is-dot="menu.hightlights[i][j]"  class="menu-badge">
-                            <a class="header-menu-link-text" :href="menu.routes[i][j]">
+                            <a :href="menu.routes[i][j]">
                                 <span :class="{ 'light-subtitle': light }">{{ l }}</span>
                             </a>
                         </el-badge>

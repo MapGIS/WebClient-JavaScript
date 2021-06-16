@@ -87,14 +87,14 @@
                         "StoryBook-MapboxGL"
                     ]
                 ],
-                "hightlights": [[false, false, false]],
+                "hightlights": [[true, false, false]],
                 "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-vector", "/storybook/index.html"]]
             },
             {
                 "title": "开发API",
                 "icon": "iconsanfangAPI",
                 "links": [["Cesium-API", "MapboxGL-API"]],
-                "hightlights": [[false, false]],
+                "hightlights": [[true, false]],
                 "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892"]]
             }
         ]
