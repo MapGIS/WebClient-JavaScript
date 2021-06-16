@@ -65,7 +65,8 @@ export default {
       markdown: "> `暂无说明`, 请检查该目录下的帮助说明是否存在",
       mode: "",
       isContentFinish: false,
-      isTocFinish: false
+      isTocFinish: false,
+      observer: undefined
     }
   },
   components: {
@@ -80,34 +81,53 @@ export default {
   },
   watch: {
     "$route.path"() {
+      this.clearScroll();
       this.initConfig();
+      this.initScroll();
       this.changeTabBackground();
     }
   },
   methods: {
+    clearScroll() {
+      let {observer} = this;  
+      if(observer) {
+        document.querySelectorAll('h2[id]').forEach((section) => {
+          observer.unobserve(section);
+        });
+        document.querySelectorAll('h3[id]').forEach((section) => {
+          observer.unobserve(section);
+        });
+        observer.disconnect();
+      }
+    },
     initScroll() {
+      const vm = this;
       /**
        *  目标元素和视窗viewport的交集的变化的方法API
        * @type {IntersectionObserver}
        */
-      const observer = new IntersectionObserver((entries) => {
+      this.observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           let id = entry.target.getAttribute('id');
           id = encodeURI(id);
           //intersectionRatio：目标元素出现在视窗的比例
           if (entry.intersectionRatio > 0) {
-            document.querySelector(`li a[href="#${id}"]`).parentElement.classList.add('active');
+            if (document.querySelector(`li a[href="#${id}"]`)) {
+              document.querySelector(`li a[href="#${id}"]`).parentElement.classList.add('active');
+            }
           } else {
-            document.querySelector(`li a[href="#${id}"]`).parentElement.classList.remove('active');
+            if (document.querySelector(`li a[href="#${id}"]`)) {
+              document.querySelector(`li a[href="#${id}"]`).parentElement.classList.remove('active');
+            }
           }
         });
       });
       //observer.observe():监听当前所有的h2[id]
       document.querySelectorAll('h2[id]').forEach((section) => {
-        observer.observe(section);
+        vm.observer.observe(section);
       });
       document.querySelectorAll('h3[id]').forEach((section) => {
-        observer.observe(section);
+        vm.observer.observe(section);
       });
     },
     initConfig() {
