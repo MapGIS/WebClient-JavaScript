@@ -70,7 +70,7 @@ export default {
       let se = key;
       return se;
     },
-    handleOpen (key) {
+    handleOpen (key,indexPath) {
       let href = window.location.href; // .split("/");
       let newHref = href.replace('/demo', '/gallery');
       const mapmode = this.$route.params.mapmode;
@@ -85,7 +85,7 @@ export default {
           match = `/gallery/${mapmode}`;
           matchIndex = newHref.indexOf(match);
           baseUrl = newHref.slice(0, matchIndex + match.length);
-          window.location.href = baseUrl + `#${key}`;
+          window.location.href = baseUrl + `#${indexPath[0]}` +`#${key}`;
         }
       } else {
         match = `/gallery/${mapmode}`;
