@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     clearScroll() {
-      let {observer} = this;  
+      let {observer} = this;
       if(observer) {
         document.querySelectorAll('h2[id]').forEach((section) => {
           observer.unobserve(section);
@@ -204,7 +204,7 @@ export default {
     markdownRendered() {
       this.isContentFinish = true;
       if (this.isTocFinish && this.isContentFinish) {
-        this.initScroll();
+        // this.initScroll();
       }
       this.$nextTick(() => {
         Prism.highlightAll();
@@ -216,7 +216,9 @@ export default {
     tocRendered() {
       this.isTocFinish = true;
       if (this.isTocFinish && this.isContentFinish) {
-        this.initScroll();
+        this.$nextTick(function () {
+          this.initScroll();
+        })
       }
     }
   }
