@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     clearScroll() {
-      let {observer} = this;  
+      let {observer} = this;
       if(observer) {
         document.querySelectorAll('h2[id]').forEach((section) => {
           observer.unobserve(section);
@@ -109,15 +109,28 @@ export default {
       this.observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           let id = entry.target.getAttribute('id');
+          let hrefContent = id;
           id = encodeURI(id);
           //intersectionRatio：目标元素出现在视窗的比例
+
           if (entry.intersectionRatio > 0) {
             if (document.querySelector(`li a[href="#${id}"]`)) {
+              if(hrefContent !== "产品介绍"
+                  && hrefContent !== "leaflet"
+                  && hrefContent !== "cesium"
+                  && hrefContent !== "mapboxgl"
+                  && hrefContent !== "openlayers"
+                  && hrefContent !== "vue组件开发"
+              ){
+                document.querySelector('li a[href="#'+ encodeURI('产品介绍')+'"]').parentElement.classList.remove('active');
+              }
               document.querySelector(`li a[href="#${id}"]`).parentElement.classList.add('active');
             }
           } else {
             if (document.querySelector(`li a[href="#${id}"]`)) {
-              document.querySelector(`li a[href="#${id}"]`).parentElement.classList.remove('active');
+              if(hrefContent.indexOf("产品介绍") < 0){
+                document.querySelector(`li a[href="#${id}"]`).parentElement.classList.remove('active');
+              }
             }
           }
         });
@@ -170,7 +183,6 @@ export default {
     resetHtml(mode, file, first) {
       this.loading = true;
       var self = this;
-
       var url = this.getHtmlUrl(mode, file, first);
       axios.get(url)
           .then(response => {
@@ -207,7 +219,10 @@ export default {
     markdownRendered() {
       this.isContentFinish = true;
       if (this.isTocFinish && this.isContentFinish) {
-        this.initScroll();
+        // this.$nextTick(function () {
+        //   // this.initScroll();
+        // })
+        // this.initScroll();
       }
       this.$nextTick(() => {
         Prism.highlightAll();
@@ -219,7 +234,10 @@ export default {
     tocRendered() {
       this.isTocFinish = true;
       if (this.isTocFinish && this.isContentFinish) {
-        this.initScroll();
+        // this.initScroll();
+        this.$nextTick(function () {
+          this.initScroll();
+        })
       }
     }
   }
