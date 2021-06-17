@@ -20,6 +20,9 @@ var popupsIdIndex = 0;
  * @param {String} [options.popupContentId] 本次popup对应的唯一内容id
  * @param {Boolean} [options.postRender=true] 是否实时渲染
  * @param {Boolean} [options.showClose=true]  是否显示关闭按钮
+ * @param {Object} [options.callback]
+ * @param {Function} [options.callback.onShow] 显示popup事件的回调
+ * @param {Function} [options.callback.onHide] 隐藏popup事件的回调
  * @param {Element|String} container 外部传入的div的字符串描述方式，一般是文字或者echarts的div;
  *
  * @example 这里唯一要注意的是我们中地数码的ceisum的右键事件不是放大缩小而是旋转视角
@@ -73,6 +76,12 @@ export default class PopupLayer {
         this.scene = map.scene;
         this.camera = map.camera;
         this.isShow = true;
+
+        if (options.callback) {
+            const { onShow, onHide } = options.callback;
+            this.onShow = onShow;
+            this.onHide = onHide
+        }
 
         let ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window['Cesium'].ScreenSpaceEventHandler;
 
@@ -215,6 +224,9 @@ export default class PopupLayer {
      */
     show() {
         this.isShow = true;
+        if (this.onShow) {
+            this.onShow(this.isShow);
+        }
         let node = window.document.getElementById(this.popupId);
         if (node && node.style) {
             node.style.display = 'block';
@@ -227,6 +239,9 @@ export default class PopupLayer {
      */
     hide() {
         this.isShow = false;
+        if (this.onHide) {
+            this.onHide(this.isShow);
+        }
         let node = window.document.getElementById(this.popupId);
         if (node && node.style) {
             node.style.display = 'none';
