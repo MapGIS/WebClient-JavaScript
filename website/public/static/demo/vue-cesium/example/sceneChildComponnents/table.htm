@@ -71,7 +71,7 @@
                     getData(){
                         let vm = this;
                         let inter = setInterval(function () {
-                            if(CesiumZondy.Query){
+                            if(Zondy.Catalog){
                                 clearInterval(inter);
                                 vm.query("0",10);
                             }
