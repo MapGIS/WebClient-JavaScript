@@ -175,7 +175,6 @@ export default {
       let asideUrl = "./static/demo/config/config-headers.json";
       // let url =  mode + "/helper/" + first + "/"+ second + "/" + file ;
       axios.get(asideUrl).then(response => {
-        debugger
         let temp = response.data;
         for (let i in temp) {
           if (mode === (temp[i].title).toLowerCase()) {
@@ -183,7 +182,6 @@ export default {
             break;
           } else {
             self.asideContent = temp[1];
-            break;
           }
         }
         let menus = self.asideContent.menus;
