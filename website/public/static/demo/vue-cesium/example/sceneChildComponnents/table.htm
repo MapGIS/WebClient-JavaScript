@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>Vue-表格</title>
+        <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+        <style type="text/css">
+            #map {
+                height: 100vh;
+                width: 100vw;
+            }
+            .mapgis-baseTable-toolbar{
+                bottom: 443px!important;
+            }
+            .ant-table-body{
+                height: 464px;
+            }
+            #app {
+                position: absolute;
+                bottom: 0;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <mapgis-web-scene
+                lib-path="./static/libs/cdn/cesium/Cesium.js"
+                plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+                v-bind:animation="false"
+                v-bind:timeline="false"
+            >
+                <mapgis-3d-igs-m3d :url="url"> </mapgis-3d-igs-m3d>
+                <mapgis-3d-table
+                        v-if="show"
+                        :data-source="dataSource"
+                        :pagination="pagination"
+                        @pagechanged="pageChanged"
+                        @selectall="selectAll"
+                        @fullscreen="fullScreen"
+                        @originscreen="originScreen"
+                        @edited="edited"
+                        @click="click"
+                        @deleted="deleted"
+                        @sorted="sorted"
+                        @selected="selected"
+                ></mapgis-3d-table>
+            </mapgis-web-scene>
+        </div>
+        <script>
+            var draw = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        url: 'http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels',
+                        dataSource: undefined,
+                        pagination:{
+                            total:0,
+                            pageSize:10
+                        },
+                        show: false
+                    };
+                },
+                mounted() {
+                    this.getData();
+                },
+                methods: {
+                    getData(){
+                        let vm = this;
+                        let inter = setInterval(function () {
+                            if(Zondy.Catalog){
+                                clearInterval(inter);
+                                vm.query("0",10);
+                            }
+                        },20);
+                    },
+                    query(page,pageCount,orderField,isAsc){
+                        let vm = this;
+                        //初始化参数对象
+                        let queryParam = new Zondy.Catalog.G3DMapDoc();
+                        //查询图层的URL路径
+                        queryParam.gdbp = "gdbp://MapGISLocalPlus/示例数据/ds/三维示例/sfcls/景观_建筑模型";
+                        //设置查询结果结构
+                        queryParam.structs = {'IncludeAttribute':true,'IncludeGeometry':false,'IncludeWebGraphic':false};
+                        //属性查询
+                        queryParam.where = "";
+                        //分页信息
+                        queryParam.page = page;
+                        queryParam.pageCount = pageCount;
+                        //服务器的ip
+                        queryParam.serverIp = "localhost"
+                        queryParam.serverPort = "6163";
+                        //排序设置
+                        queryParam.orderField = orderField ? orderField : "";
+                        queryParam.isAsc = isAsc ? isAsc : false;
+                        //查询服务
+                        queryParam.GetFeature(function(result) {
+                            console.log("result",result)
+                            vm.dataSource = result;
+                            vm.pagination.total = result.TotalCount;
+                            vm.show = true;
+                        }, function(e) {
+                            console.log("e",e)
+                        });
+                    },
+                    pageChanged(pagination, sorter){
+                        //分页事件
+                        console.log("pageChanged",pagination)
+                        this.query(pagination.current - 1,pagination.pageSize,sorter.orderField,sorter.isAsc);
+                    },
+                    selectAll(selectData){
+                        //全选事件
+                        console.log("selectAll",selectData);
+                    },
+                    selected(selectData,allDate){
+                        //选择单个数据事件
+                        console.log("selected",selectData);
+                        console.log("allDate",allDate);
+                    },
+                    fullScreen(pagination, sorter){
+                        //全屏事件
+                        this.pagination.pageSize = pagination.pageSize;
+                        this.query(pagination.current - 1,pagination.pageSize,sorter.orderField,sorter.isAsc);
+                    },
+                    originScreen(pagination, sorter){
+                        //还原屏幕事件
+                        this.pagination.pageSize = pagination.pageSize;
+                        this.query(pagination.current - 1,pagination.pageSize,sorter.orderField,sorter.isAsc);
+                    },
+                    edited(result){
+                        //编辑完成事件
+                        console.log("edited",result)
+                    },
+                    click(result, key){
+                        //单击事件
+                        console.log("click",result, key)
+                    },
+                    deleted(result){
+                        //删除事件
+                        console.log("deleted",result)
+                    },
+                    sorted(sorter, pagination){
+                        //排序事件
+                        this.query(pagination.current - 1,pagination.pageSize,sorter.orderField,sorter.isAsc);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
