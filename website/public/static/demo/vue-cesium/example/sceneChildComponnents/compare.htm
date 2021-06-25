@@ -16,7 +16,10 @@
 
 <body>
     <div id="app">
-        <mapgis-web-scene>
+        <mapgis-web-scene
+            lib-path="./static/libs/cdn/cesium/Cesium.js"
+            plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+        >
             <mapgis-3d-arcgis-map-layer :base-url="mapUrl2" :id="mapId2"></mapgis-3d-arcgis-map-layer>
             <mapgis-3d-arcgis-tile-layer :base-url="tileUrl" :id="tileId"></mapgis-3d-arcgis-tile-layer>
             <mapgis-3d-arcgis-map-layer :base-url="mapUrl1" :id="mapId1"></mapgis-3d-arcgis-map-layer>
