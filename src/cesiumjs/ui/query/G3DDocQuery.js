@@ -1,5 +1,5 @@
 import { CesiumZondy } from '../../core/Base';
-import axios from 'axios';
+import {IgsServiceBase} from "../../../service/baseserver";
 
 /**
  * @author IGServer-邬俊惠
@@ -167,22 +167,29 @@ export class G3DDocQuery {
         var postData = null;
         if (type && type.toLowerCase() === 'post') {
             postData = querystring;
-            axios.post(url, postData)
-                .then(res => {
-                    successCallback && successCallback(res.data, res, o.layerIndex);
-                })
-                .catch(error=>{
-                    errorCallback && errorCallback(error);
-                });
+            let service = new IgsServiceBase(url, {
+                eventListeners: {
+                    scope: o,
+                    processCompleted: successCallback,
+                    processFailed: errorCallback
+                }
+            });
+            service.processAsync({
+                method: "POST",
+                data: postData
+            });
         } else {
             url = url + "?" + querystring;
-            axios.get(url)
-                .then(res => {
-                    successCallback && successCallback(res.data, res, o.layerIndex);
-                })
-                .catch(error=>{
-                    errorCallback && errorCallback(error);
-                });
+            let service = new IgsServiceBase(url, {
+                eventListeners: {
+                    scope: o,
+                    processCompleted: successCallback,
+                    processFailed: errorCallback
+                }
+            });
+            service.processAsync({
+                method: "GET"
+            });
         }
     }    
 }
