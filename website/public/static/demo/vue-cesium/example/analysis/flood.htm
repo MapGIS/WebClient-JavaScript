@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-洪水淹没</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene
+                libPath="cesium/Cesium.js"
+                pluginPath="cesium/webclient-cesium-plugin.min.js"
+                v-on:load="handleLoad"
+        >
+            <mapgis-3d-ogc-wmts-layer
+                    :base-url="urlT"
+                    :wmts-layer="layer"
+                    :tile-matrix-set="tileMatrixSetID"
+                    :format="format"
+                    :tiling-scheme="srs"
+                    :token="token"
+            ></mapgis-3d-ogc-wmts-layer>
+            <mapgis-3d-terrain-provider :url="demUrl" :v-if="showDem"></mapgis-3d-terrain-provider>
+            <mapgis-3d-flood-no-slot
+                    :start-height="startHeight"
+                    :min-height="minHeight"
+                    :current-height="currentHeight"
+                    :max-height="maxHeight"
+                    :flood-color="floodColor"
+                    :flood-speed="floodSpeed"
+                    :specular-intensity="specularIntensity"
+                    :amplitude="amplitude"
+                    :animation-speed="animationSpeed"
+                    :frequency="frequency"
+                    v-on:load="load"
+            >
+            </mapgis-3d-flood-no-slot>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    //地形url
+                    demUrl: undefined,
+                    showDem: false,
+                    //天地图参数
+                    urlT: "http://t0.tianditu.gov.cn/img_c/wmts",
+                    tileMatrixSetID: "c",
+                    srs: "EPSG:4326",
+                    layer: "img",
+                    format: "tiles",
+                    token: {
+                        key: "tk",
+                        value: "f5347cab4b28410a6e8ba5143e3d5a35"
+                    },
+                    //初始淹没高度，淹没总高度为currentHeight - startHeight - minHeight
+                    startHeight: 0,
+                    //初始淹没点
+                    minHeight: 2800,
+                    //当前淹没高度
+                    currentHeight: 0,
+                    //最大淹没高度
+                    maxHeight: 6000,
+                    //淹没颜色
+                    floodColor: "#4e81bb",
+                    //洪水上涨速度
+                    floodSpeed: 300,
+                    //洪水反射光线强度
+                    specularIntensity: 1,
+                    //洪水水波高度
+                    amplitude: 10,
+                    //洪水水纹速度
+                    animationSpeed: 0.01,
+                    //洪水水纹频率
+                    frequency: 1000,
+                    //洪水分析组件对象
+                    floodAnalyse: undefined
+                };
+            },
+            methods: {
+                handleLoad(e) {
+                    const { component, Cesium } = e;
+                    Cesium.Ion.defaultAccessToken =
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiM2Q0ZGMxYy1iZGZkLTQ4OWItODlhMy1iOWNkMDE0M2U3YWEiLCJpZCI6NTEzNSwiaWF0IjoxNjA2MjE0OTkyfQ.2aktNrUASlLsPwSFtkgKBTQLJTAnOTyjgKDRQmnafiE';
+                    const { webGlobe } = component;
+                    webGlobe.viewer.camera.setView({
+                        direction: { x: 0.4680575394156845, y: -0.8267033643312148, z: 0.31222377744109403 },
+                        position: { x: -674271.5790185562, y: 5530042.656916835, z: 3232882.3357299212 }
+                    });
+                    //构造视图功能管理对象（视图）
+                    var sceneManager = new CesiumZondy.Manager.SceneManager({
+                        viewer: webGlobe.viewer
+                    });
+                    //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+                    sceneManager.flyToEx(94.73761648879076, 29.44177452960854, {
+                        height: 5900,
+                        heading: 60,
+                        pitch: -16,
+                        roll: 0
+                    });
+
+                    this.demUrl = new Cesium.IonResource.fromAssetId(1);
+                    this.showDem = true;
+
+                    console.log('地图加初始化完毕！', webGlobe.viewer.camera);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
