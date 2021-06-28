@@ -13,9 +13,9 @@
             {
                 "title": "插件",
                 "icon": "iconchajian",
-                "links": [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
+                "links": [["插件列表", "详细图表", "插件标签", "提交bug"]],
                 "hightlights": [[false, false, false, false, false]],
-                "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]]
+                "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit"]]
             },
             {
                 "title": "协议",
@@ -487,7 +487,7 @@
             {
                 "title": "开发API",
                 "icon": "iconsanfangAPI",
-                "links": [["地图服务", "OGC服务", "目录服务", "要素服务", "量算服务", "专题图服务", "分析服务", "客户端可视化"], ["OpenLayers"]],
+                "links": [["地图服务", "OGC服务", "目录服务", "要素服务", "专题图服务", "分析服务"], ["OpenLayers"]],
                 "hightlights": [[false, false, false, false, false, false, false, false], [false]],
                 "routes": [
                     [
@@ -495,10 +495,8 @@
                         "./docs/openlayers/module-OGC%25E6%259C%258D%25E5%258A%25A1.html",
                         "./docs/openlayers/module-%25E7%259B%25AE%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1.html",
                         "./docs/openlayers/module-%25E8%25A6%2581%25E7%25B4%25A0%25E6%259C%258D%25E5%258A%25A1.html",
-                        "./docs/openlayers/module-%25E9%2587%258F%25E7%25AE%2597%25E6%259C%258D%25E5%258A%25A1.html",
                         "./docs/openlayers/module-%25E4%25B8%2593%25E9%25A2%2598%25E5%259B%25BE%25E6%259C%258D%25E5%258A%25A1.html",
-                        "./docs/openlayers/module-%25E5%2588%2586%25E6%259E%2590%25E6%259C%258D%25E5%258A%25A1.html",
-                        "./docs/openlayers/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html"
+                        "./docs/openlayers/module-%25E5%2588%2586%25E6%259E%2590%25E6%259C%258D%25E5%258A%25A1.html"
                     ],
                     ["https://openlayers.org/en/latest/apidoc/"]
                 ]

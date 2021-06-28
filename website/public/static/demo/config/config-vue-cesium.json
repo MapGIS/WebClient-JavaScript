@@ -262,6 +262,14 @@
                     "detail": "",
                     "icon": "viewshed.png",
                     "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "洪水淹没分析",
+                    "file": "flood",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "flood.png",
+                    "update": "最后更新时间：2021-06-07"
                 }
             ]
         }
