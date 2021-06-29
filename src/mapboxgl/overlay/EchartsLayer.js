@@ -10,7 +10,7 @@ import {
 /**
  * mapboxgl的echars 4.0的实现
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
- * @class mapboxgl.zondy.EchartsLayer
+ * @class module:客户端可视化.EchartsLayer
  * @classdesc 基于mapboxgl的Layer对象进行的拓展
  * @param map - {Object} 传入的mapboxgl的地图对象
  * @param options - {Object} echarts.options 使用 option 来描述其对图表的各种需求，包括：有什么数据、要画什么图表、图表长什么样子、含有什么组件、组件能操作什么事情等等。简而言之，option 表述了：数据、数据如何映射成图形、交互行为。

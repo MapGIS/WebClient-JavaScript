@@ -8,11 +8,34 @@ import {
 /**
  * @origin author kyle / http://nikai.us/
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
- * @class openlayers.zondy.MapvLayer
+ * @class module:客户端可视化.MapvLayer
  * @classdesc 基于mapboxgl的Layer对象进行的拓展
  * @param map - {Object} 传入的mapboxgl的地图对象
  * @param dataset - {MapvDataSet} 传入的mapv的属性。 <br>
  * @param mapvoption - {MapvOption} 可选参数。<br>
+ * @see https://github.com/huiyan-fe/mapv/blob/master/API.md
+ * @example
+ * var options = {
+      size: 13,
+      gradient: {
+        0.25: "rgb(0,0,255)",
+        0.55: "rgb(0,255,0)",
+        0.85: "yellow",
+        1.0: "rgb(255,0,0)"
+      },
+      max: 60,
+      animation: {
+        type: 'time',
+        stepsRange: {
+          start: 0,
+          end: 100
+        },
+        trails: 10,
+        duration: 4,
+      },
+      draw: 'heatmap'
+    }
+    var mapvLayer = new L.zondy.MapvLayer(map, dataSet, options).addTo(map);
  */
 export class MapvLayer /* extends Layer */ {
 

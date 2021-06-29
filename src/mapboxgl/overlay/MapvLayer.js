@@ -5,7 +5,7 @@ import { MapvBaseLayer } from "./mapv/MapvBaseLayer";
 /**
  * @origin author kyle / http://nikai.us/
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
- * @class mapboxgl.zondy.MapvLayer
+ * @class module:客户端可视化.MapvLayer
  * @classdesc 基于mapboxgl的Layer对象进行的拓展
  * @param map - {Object} 传入的mapboxgl的地图对象
  * @param dataset - {MapvDataSet} 传入的mapv的属性。 <br>
