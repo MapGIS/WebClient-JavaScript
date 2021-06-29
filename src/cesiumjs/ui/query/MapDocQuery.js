@@ -1,5 +1,5 @@
 import { CesiumZondy } from '../../core/Base';
-import axios from 'axios';
+import {IgsServiceBase} from "../../../service/baseserver";
 
 /**
  * @author 技术支持-何振涛
@@ -165,13 +165,14 @@ export class MapDocQuery {
             queryString += '&rule=' + o.rule;
         let url = 'http://' + o.ip + ':' + o.port + '/igs/rest/mrfs/docs/' + o.docName + '/' + o.mapIndex + '/' + o.layerID + '/' + queryString;
 
-        axios.get(url)
-            .then(res => {
-                successCallback && successCallback(res.data, res, o);
-            })
-            .catch(error=>{
-                errorCallback && errorCallback(error);
-            });
+        let service = new IgsServiceBase(url, {
+            eventListeners: {
+                scope: o,
+                processCompleted: successCallback,
+                processFailed: errorCallback
+            }
+        });
+        service.processAsync();
     }
 }
 
