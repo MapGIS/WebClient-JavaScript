@@ -49,7 +49,6 @@
       document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
     });
     $.get('../../static/data/mapv/china.geojson', function (geojson) {
-      geojson = JSON.parse(geojson);
       var geojsonOptions = {
         gradient: {
           0: 'rgba(55, 50, 250, 0.4)',

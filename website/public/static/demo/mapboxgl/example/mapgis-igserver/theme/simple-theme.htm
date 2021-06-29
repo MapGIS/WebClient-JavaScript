@@ -145,7 +145,8 @@
             //显示进度条
             startPressBar();
             themesInfoArr = getDefaultThemesInfo();
-            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillClr = 5;
+            themesInfoArr[0].ThemeArr[0].DefaultInfo.RegInfo.FillClr = 4;
+            themesInfoArr.guid= 2724006;
             //更新专题图,onUniqueTheme为回调函数
             ThemeOper.updateThemesInfo("Hubei3857", "2/0", themesInfoArr, onUniqueTheme);
         }

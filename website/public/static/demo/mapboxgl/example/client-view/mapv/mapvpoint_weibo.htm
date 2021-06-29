@@ -48,7 +48,6 @@
       document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
     });
     $.get('../../static/data/mapv/weibo.geojson', function (rs) {
-      rs = JSON.parse(rs);
       var data1 = [];
       var data2 = [];
       var data3 = [];

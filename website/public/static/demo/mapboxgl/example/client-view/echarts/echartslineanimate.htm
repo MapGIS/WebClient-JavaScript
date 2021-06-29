@@ -51,7 +51,6 @@
 
     function updateView() {
       $.get('../../static/data/echarts/line-bus.geojson', function (data) {
-        data = JSON.parse(data);
         var hStep = 300 / (data.length - 1);
         busLines = [].concat.apply([], data.map(function (busLine, idx) {
           var prevPt;

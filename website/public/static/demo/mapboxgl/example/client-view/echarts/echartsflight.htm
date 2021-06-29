@@ -51,7 +51,6 @@
 
     function updateView() {
       $.get('../../static/data/echartsgl/lines/lines.geojson', function (data) {
-        data = JSON.parse(data);
         function getAirportCoord(idx) {
           return [data.airports[idx][3], data.airports[idx][4]];
         }
