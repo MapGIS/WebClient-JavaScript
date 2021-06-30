@@ -84,7 +84,7 @@
                     [
                         "Cesium示例",
                         "MapboxGL示例",
-                        "StoryBook-MapboxGL"
+                        "StoryBook"
                     ]
                 ],
                 "hightlights": [[true, true, true]],
