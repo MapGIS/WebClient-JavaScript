@@ -230,14 +230,6 @@
                     "detail": "",
                     "icon": "measurescene.png",
                     "update": "最后更新时间：2021-06-10"
-                },
-                {
-                    "name": "表格",
-                    "file": "table",
-                    "diffcult": "1",
-                    "detail": "",
-                    "icon": "table.png",
-                    "update": "最后更新时间：2021-06-18"
                 }
             ]
         },
