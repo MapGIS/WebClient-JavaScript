@@ -6,9 +6,9 @@ import qs from 'qs';
 
 /**
  * @author 基础平台-潘卓然
- * @class module:OGC服务.OGCService
+ * @class module:OGC服务.WFS
  * @classdesc OGC服务类
- * @description MapGIS.OGC.OGCService
+ * @description MapGIS.OGC.WFS
  * @extends  OGCService
  * @link https://www.ogc.org/standards/wfs
  * @param option - {Object} 属性键值对。<br>
