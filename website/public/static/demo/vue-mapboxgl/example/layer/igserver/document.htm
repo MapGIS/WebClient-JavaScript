@@ -66,7 +66,8 @@
                 <mapgis-igs-doc-layer
                     v-bind:layer-id="layerRasterId"
                     v-bind:source-id="sourceRasterId"
-                    v-bind:url="url"
+                    v-bind:base-url="baseUrl"
+                    v-bind:layers="layers"
                 >
                 </mapgis-igs-doc-layer>
             </mapgis-web-map>
@@ -101,7 +102,8 @@
 
                         layerRasterId: 'raster_layerId',
                         sourceRasterId: 'raster_sourceId',
-                        url:'http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市'
+                        baseUrl:'http://develop.smaryun.com:6163/igs/rest/mrms/docs/北京市',
+	                    layers:'show:0,1,2,3,4,5,6,7'
                     };
                 },
                 methods: {

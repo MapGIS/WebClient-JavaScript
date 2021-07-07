@@ -66,7 +66,7 @@
                 <mapgis-igs-tile-layer
                     v-bind:layer-id="layerRasterId"
                     v-bind:source-id="sourceRasterId"
-                    v-bind:url="url"
+                    v-bind:base-url="baseUrl"
                 >
                 </mapgis-igs-tile-layer>
             </mapgis-web-map>
@@ -101,7 +101,7 @@
 
                         layerRasterId: 'raster_layerId',
                         sourceRasterId: 'raster_sourceId',
-                        url:'http://develop.smaryun.com:6163/igs/rest/mrms/tile/北京市/{z}/{y}/{x}'
+                        baseUrl:'http://develop.smaryun.com:6163/igs/rest/mrms/tile/北京市'
                     };
                 },
                 methods: {
