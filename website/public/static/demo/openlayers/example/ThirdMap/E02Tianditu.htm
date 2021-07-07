@@ -15,8 +15,9 @@
             map = new ol.Map({
                 target: 'mapCon',
                 view: new ol.View({
-                    projection: ol.proj.get('EPSG:4326'),
-                    center: [110, 30],
+                    projection: ol.proj.get('EPSG:3857'),
+                    // center:[110,30],
+	                center: ol.proj.fromLonLat([104.912777, 34.730746]),
                     maxZoom: 14,
                     minZoom: 1,
                     zoom: 4
@@ -25,6 +26,8 @@
             tiandituLayer = new Zondy.Map.TianDiTu({
                 //图层类型
                 layerType: 'vec',
+                //天地图投影类型
+	            tileMatrixSet: 'w',
                 //最小显示等级
                 minZoom: 0,
                 //最大显示等级
@@ -39,6 +42,8 @@
             var tiandituLayer2 = new Zondy.Map.TianDiTu({
                 //图层类型
                 layerType: 'cva',
+	            //天地图投影类型
+	            tileMatrixSet: 'w',
                 //最小显示等级
                 minZoom: 0,
                 //最大显示等级
