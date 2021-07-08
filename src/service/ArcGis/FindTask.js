@@ -62,7 +62,7 @@ class ArcGisFindTask{
                 console.log(JSON.parse(data))
             });
  */
-ArcGisFindTask.prototype.execute = function (params, requestOptions) {
+ArcGisFindTask.prototype.execute = function (params) {
     let url = this.options.url,formatObj = {
         layerIds:"layers",
         outSpatialReference:"sr"

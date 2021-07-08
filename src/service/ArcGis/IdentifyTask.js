@@ -2,6 +2,7 @@ import {
     Zondy,extend,formatQuery
 } from '../common';
 import {ArcGisServiceBase} from "./ServiceBase";
+import {ArcGisExtent} from "./Extent";
 
 /**
  * @class module:ArcGis.ArcGisIdentifyTask
@@ -17,8 +18,16 @@ class ArcGisIdentifyTask {
             gdbVersion: null,
             url: null
         }
+        let mapInfoUrl = options.url.split("?")[0] + "?f=pjson";
         options.url = options.url + "/identify?f=json";
-        extend(this.options,options);
+        let service = new ArcGisServiceBase(),that = this;
+        service.get(mapInfoUrl,function (result) {
+            result = JSON.parse(result)
+            that.mapInfo = result;
+            extend(that.options,options);
+        },function (e) {
+            console.log(e);
+        },false)
     }
 }
 
@@ -45,7 +54,7 @@ class ArcGisIdentifyTask {
  * @param {Boolean} [params.returnZ]  可选项，是否返回Z值。
  * @param {String} [params.spatialReference]  可选项，指定空间坐标系。
  */
-ArcGisIdentifyTask.prototype.execute = function (params, requestOptions) {
+ArcGisIdentifyTask.prototype.execute = function (params) {
     let url = this.options.url,
         formatObj = {
             outSpatialReference:"sr"
@@ -56,7 +65,7 @@ ArcGisIdentifyTask.prototype.execute = function (params, requestOptions) {
     let firstChar = type.substr(0,1).toUpperCase();
     let lastCher = type.substr(1,type.length);
     params['geometryType'] = "esriGeometry" + firstChar + lastCher;
-    params['geometry'] = params['geometry'].toGeometryJSON();
+    params['geometry'] = encodeURIComponent(params['geometry'].toGeometryJSON());
     if(!trueParams['layers']){
         trueParams['layers'] = params['layerIds'] ? params['layerOption'] + ":" + String(params['layerIds']) : "layers=" + params['layerOption'];
         delete params['layerOption'];
@@ -67,6 +76,14 @@ ArcGisIdentifyTask.prototype.execute = function (params, requestOptions) {
         delete params['width'];
         delete params['height'];
         delete params['dpi'];
+    }
+    if(!params.hasOwnProperty("mapExtent") || !params.mapExtent){
+        params.mapExtent = new ArcGisExtent({
+            xmin: this.mapInfo.initialExtent.xmin,
+            ymin: this.mapInfo.initialExtent.ymin,
+            xmax: this.mapInfo.initialExtent.xmax,
+            ymax: this.mapInfo.initialExtent.ymax
+        });
     }
     extend(trueParams,params);
     url = formatQuery(trueParams,url,null,formatObj);
