@@ -36,7 +36,7 @@ var ArcGISLayer = window.L.TileLayer.extend({
     },
 
     initialize: function (options) {
-        options = options || {};
+        options = options || { };
         window.L.setOptions(this, options);
         window.L.stamp(this);
     },
