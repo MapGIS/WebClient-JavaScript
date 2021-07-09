@@ -31,7 +31,8 @@ var ArcGISLayer = window.L.TileLayer.extend({
         format: 'png',
         dpi: 96,
         transparent: true,
-        attribution: "ArcGIS"
+        attribution: "ArcGIS",
+        layers: ""
     },
 
     initialize: function (options) {
@@ -74,7 +75,8 @@ var ArcGISLayer = window.L.TileLayer.extend({
                 size: this.options.tileSize + ',' + this.options.tileSize,
                 bboxsr: this._crs.code.split(":")[1],
                 imagesr: this._crs.code.split(":")[1],
-                dpi: 96
+                dpi: 96,
+                layers: this.options.layers
             };
             var str = window.L.Util.getParamString(obj, url);
             str = str.slice(1, str.length);
