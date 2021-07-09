@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-动态剖切-自定义界面</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene
+                lib-path="cesium/Cesium.js"
+                plugin-path="cesium/webclient-cesium-plugin.min.js"
+        >
+            <mapgis-3d-igs-m3d :vue-index="vueIndex" :url="url"></mapgis-3d-igs-m3d>
+            <mapgis-3d-igs-m3d :vue-index="vueIndex1" :url="url2"></mapgis-3d-igs-m3d>
+            <mapgis-3d-dynamic-cutting
+                    :vue-index="vueIndex2"
+                    :start-distance="distance"
+                    :current-distance="currentDistance"
+                    :default-cut-index="defaultCutIndex"
+                    :color="color"
+                    :opacity="opacity"
+                    :direction="direction"
+                    @loaded="loaded"
+            >
+                <div>
+                    <!--自定义您的界面-->
+                    自定义您的界面
+                    <button @click="change">动态剖切</button>
+                </div>
+            </mapgis-3d-dynamic-cutting>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    //钻孔模型
+                    url: 'http://develop.smaryun.com:6163/igs/rest/g3d/钻孔_2_钻孔模型s',
+                    //钻孔分层点模型
+                    url2: 'http://develop.smaryun.com:6163/igs/rest/g3d/钻孔分层点_Sur_000_Ent',
+                    //钻孔模型的vueIndex
+                    vueIndex: 1,
+                    //钻孔分层点模型的vueIndex2，通过这个知道是要剖切哪一个模型
+                    vueIndex2: 2,
+                    //剖切最小距离，小于此距离剖切面不会移动，可为任意数字
+                    startDistance: -1000,
+                    //剖切方向，有left、right、forward、back、top、bottom六个方向，可参考笛卡尔坐标系
+                    direction: "right",
+                    //剖切面颜色，css的16进制颜色，例如‘#FFFFFF’
+                    color: "#ff0000",
+                    //透明度，css里的opacity属性，0到1的小数
+                    opacity: 0.3,
+                    //初始时，剖切面所在位置
+                    currentDistance: 2000,
+                    //动态剖切对象
+                    DynamicCutting: undefined
+                };
+            },
+            methods: {
+                loaded(DynamicCutting){
+                    //在这里拿到DynamicCutting组件对象
+                    this.DynamicCutting = DynamicCutting;
+                },
+                change(){
+                    //通过改变currentDistance的值，来改变剖切距离
+                    this.DynamicCutting.currentDistance = 1500;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
