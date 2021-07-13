@@ -1,5 +1,5 @@
 import {
-    extend,Zondy
+    extend, Zondy
 } from '../common';
 import {ArcGisBaseParam} from "./BaseParam";
 
@@ -8,7 +8,7 @@ import {ArcGisBaseParam} from "./BaseParam";
  * @description find查询参数对象
  * @author 基础平台-杨琨
  */
-class ArcGisIdentifyParameters extends ArcGisBaseParam{
+class ArcGisIdentifyParameters extends ArcGisBaseParam {
     constructor(options) {
         super();
         this.dpi = 96;
@@ -30,11 +30,11 @@ class ArcGisIdentifyParameters extends ArcGisBaseParam{
         this.returnZ = !1;
         this.spatialReference = null;
         this.timeExtent = null;
-        this.tolerance = null;
+        this.tolerance = 0;
         this.width = 400;
-        extend(this,options);
+        extend(this, options);
 
-        if(this.mapExtent){
+        if (this.mapExtent) {
             this.mapExtent = this.mapExtent.toString();
         }
     }

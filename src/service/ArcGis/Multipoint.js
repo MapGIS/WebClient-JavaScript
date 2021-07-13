@@ -1,5 +1,5 @@
 import {
-    Zondy,extend,cloneObject,returnPoint
+    Zondy,extend,returnPoint
 } from "../common";
 import {ArcGisGeometry} from "./Geometry";
 import {ArcGisPoint} from "./Point";

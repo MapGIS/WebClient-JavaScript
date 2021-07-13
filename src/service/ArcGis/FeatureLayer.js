@@ -131,7 +131,7 @@ class ArcGisFeatureLayer {
 
         //单个图层编辑
         this.applyEditsByLayer = function (edits,options) {
-            let url = this.url + "/applyEdits",dataStr="",me = this;
+            let url = this.url + "/applyEdits",dataStr="";
             options = options ? options : {
                 gdbVersion:[],
                 rollbackOnFailure: true,
@@ -666,7 +666,7 @@ ArcGisFeatureLayer.prototype.applyEdits = function (edits,options) {
  * @param options - {String} 可选项，是否取消异步操作。
  * @example 调用方法同queryObjectIds
  */
-ArcGisFeatureLayer.prototype.queryFeatureCount = function (query,options) {
+ArcGisFeatureLayer.prototype.queryFeatureCount = function (query) {
     query.returnCountOnly = true;
     return this[this._queryService](query);
 }
@@ -725,7 +725,7 @@ ArcGisFeatureLayer.prototype.queryFeatureCount = function (query,options) {
                        console.log(JSON.parse(data))
                    })
  */
-ArcGisFeatureLayer.prototype.queryObjectIds = function (query,options) {
+ArcGisFeatureLayer.prototype.queryObjectIds = function (query) {
     query.returnIdsOnly = true;
     return this[this._queryService](query);
 }

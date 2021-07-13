@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-填挖方分析-自定义界面</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene
+                libPath="cesium/Cesium.js"
+                pluginPath="cesium/webclient-cesium-plugin.min.js"
+                v-on:load="handleLoad"
+        >
+            <mapgis-3d-ogc-wmts-layer
+                    :base-url="url"
+                    :wmts-layer="layer"
+                    :tile-matrix-set="tileMatrixSet"
+                    :format="format"
+                    :tiling-scheme="tilingScheme"
+                    :token="token"
+            ></mapgis-3d-ogc-wmts-layer>
+            <mapgis-3d-terrain-provider :url="terrainUrl" :v-if="showTerrain"></mapgis-3d-terrain-provider>
+            <mapgis-3d-fill
+                    @loaded="loaded"
+            >
+                <div>
+                    <!--编写您的界面-->
+                    <button @click="startAnalyse">开始分析</button>
+                    <button @click="stopAnalyse">结束分析</button>
+                </div>
+            </mapgis-3d-fill>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    //天地图url
+                    url: "http://t0.tianditu.gov.cn/img_c/wmts",
+                    //天地图的矩阵集合
+                    tileMatrixSet: "c",
+                    //cesium切图方式
+                    tilingScheme: "EPSG:4326",
+                    //layer名称
+                    layer:"img",
+                    //图片返回格式
+                    format: "tiles",
+                    //天地图token
+                    token:{
+                        key: "tk",
+                        value: "9c157e9585486c02edf817d2ecbc7752"
+                    },
+                    //地形url，这里用Cesium的
+                    terrainUrl: '',
+                    //地形加载完毕，显示地形
+                    showTerrain: false,
+                    //填挖方分析对象
+                    analyse: undefined
+                };
+            },
+            methods: {
+                //填挖方分析组件加载完毕后，取得该组件对象
+                loaded(analyse){
+                    this.analyse = analyse;
+                },
+                //开始分析
+                startAnalyse(){
+                    //这里可自己指定分析类型(cut)、高度(100米)以及分析精度(x方向16，y方向16)，如果不指定，则取prop中传入的，最后取默认值
+                    this.analyse.startAnalyse("cut",100,16,16);
+                },
+                //停止分析
+                stopAnalyse(){
+                    this.analyse.stopAnalyse();
+                },
+                handleLoad(e) {
+                    const { component, Cesium } = e;
+                    Cesium.Ion.defaultAccessToken =
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiM2Q0ZGMxYy1iZGZkLTQ4OWItODlhMy1iOWNkMDE0M2U3YWEiLCJpZCI6NTEzNSwiaWF0IjoxNjA2MjE0OTkyfQ.2aktNrUASlLsPwSFtkgKBTQLJTAnOTyjgKDRQmnafiE';
+                    const { webGlobe } = component;
+                    webGlobe.viewer.camera.setView({
+                        direction: { x: 0.4680575394156845, y: -0.8267033643312148, z: 0.31222377744109403 },
+                        position: { x: -674271.5790185562, y: 5530042.656916835, z: 3232882.3357299212 }
+                    });
+                    //构造视图功能管理对象（视图）
+                    var sceneManager = new CesiumZondy.Manager.SceneManager({
+                        viewer: webGlobe.viewer
+                    });
+                    //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+                    sceneManager.flyToEx(94.73761648879076, 29.44177452960854, {
+                        height: 5900,
+                        heading: 60,
+                        pitch: -16,
+                        roll: 0
+                    });
+                    //取得地形url
+                    this.terrainUrl = new Cesium.IonResource.fromAssetId(1);
+                    //显示地形
+                    this.showTerrain = true;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
