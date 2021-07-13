@@ -15,6 +15,7 @@ import TileLayer
     from 'ol/layer/Tile.js';
 import * as ol_proj
     from 'ol/proj.js';
+import {createProjection} from "ol/proj";
 
 /**
  * 百度地图资源构造函数
@@ -417,7 +418,7 @@ Zondy.Map.GaoDeLayer = GaoDeLayer;
  * @param {String} [option.state = undefined] 状态
  * @param {String} [option.tilePixelRatio = ] 瓦片的像素分辨率
  * @param {Boolean} [option.wrapX = false] 通过wrapX:false限制图层在x轴方向重复
- * @param {String} [option.crossOrigin = null] crossOrigin="anonymous"为跨域调用
+ * @param {String} [option.crolssOrigin = nul] crossOrigin="anonymous"为跨域调用
  */
 var TiandituMapSource = function (option) {
     var options = option !== undefined ? option : {};
@@ -439,6 +440,11 @@ var TiandituMapSource = function (option) {
      * @default Zondy.Enum.Map.TiandituType.VEC
      */
     this.layerType = options.layerType !== undefined ? options.layerType : Zondy.Enum.Map.TiandituType.VEC;
+    /**
+     * @type {string}
+     * @description 天地图投影类型
+     */
+    this.tileMatrixSet = options.tileMatrixSet !== undefined ? options.tileMatrixSet : 'c';
 
     /**
      * @member Zondy.Source.TiandituMapSource.prototype.ip
@@ -485,17 +491,23 @@ var TiandituMapSource = function (option) {
      */
     this.maxResolution = null;
 
-    //根据投影获取地图范围
-    var tileProjection = options.projection !== undefined ? options.projection : null;
+    //根据投影获取地图范围:这里天地图根据tileMatrixSet参数判断投影类型
+    var projection;
+    if (this.tileMatrixSet === 'w'){
+        projection = "EPSG:3857";
+    }
+    // var tileProjection = options.projection !== undefined ? options.projection : null;
+    var tileProjection = createProjection(projection, "EPSG:4326");
 
     /**
      * @member Zondy.Source.TiandituMapSource.prototype.tileExtent
      * @type {Array}
      * @description 瓦片范围 [-180, -90, 180, 90]
      * @default [-180, -90, 180, 90]
+     * 注意:  EPSG:3857 的瓦片范围不是经纬度范围
      */
     this.tileExtent = [-180, -90, 180, 90];
-    if (tileProjection != null) {
+    if (tileProjection != null ) {
         this.tileExtent = tileProjection.getExtent();
     }
 
@@ -636,22 +648,39 @@ TiandituMapSource.prototype.tileUrlFunctionExtend = function (tileCoord, pixelRa
         else
             urlTemplate = this.custom.baseURL + "?SERVICE=WMTS&REQUEST=GetTile&VERSION=" + this.custom.version + "&LAYER=" + this.custom.layer + "&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
     } else {
+
         switch (this.layerType) {
             case Zondy.Enum.Map.TiandituType.VEC:
             case Zondy.Enum.TiandituType.VEC:
-                urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                if (this.tileMatrixSet === 'w') {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }else {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }
                 break;
             case Zondy.Enum.Map.TiandituType.IMG:
             case Zondy.Enum.TiandituType.IMG:
-                urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                if (this.tileMatrixSet === 'w') {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }else {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }
                 break;
             case Zondy.Enum.Map.TiandituType.CVA:
             case Zondy.Enum.TiandituType.CVA:
-                urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                if (this.tileMatrixSet === 'w') {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }else {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }
                 break;
             case Zondy.Enum.Map.TiandituType.CIA:
             case Zondy.Enum.TiandituType.CIA:
-                urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cia_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                if (this.tileMatrixSet === 'w') {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cia_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }else {
+                    urlTemplate = "http://t" + Math.round(Math.random() * 7) + ".tianditu.gov.cn/cia_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" + "&TILECOL=" + '{x}' + "&TILEROW=" + '{y}' + "&TILEMATRIX=" + '{z}';
+                }
                 break;
             case Zondy.Enum.Map.TiandituType.VEC_IGS:
             case Zondy.Enum.TiandituType.VEC_IGS:
