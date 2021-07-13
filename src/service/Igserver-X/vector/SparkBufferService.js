@@ -66,4 +66,4 @@ export class SparkBufferService extends IGServerXService {
 }
 
 export default SparkBufferService;
-Zondy.IGServerX.矢量大数据.SparkBufferService = SparkBufferService;
+Zondy.IGServerX.Vector.SparkBufferService = SparkBufferService;

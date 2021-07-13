@@ -26,6 +26,7 @@
         "cesium-plugin-release": "webpack --config src/config/opensource/cesium-plugin-release-config.js --progress",
         "service-debug": "webpack --config src/config/opensource/service-debug-config.js",
         "service-release": "webpack --config src/config/opensource/service-release-config.js --progress",
+        "build-docs-service": "jsdoc -c ./docs/jsdoc-config/service/docs.json -R ./docs/jsdoc-config/service/index.md -r",
         "build-docs-leaflet": "jsdoc -c ./docs/jsdoc-config/leaflet/docs.json -R ./docs/jsdoc-config/leaflet/index.md -r",
         "build-docs-mapboxgl": "jsdoc -c ./docs/jsdoc-config/mapboxgl/docs.json -R ./docs/jsdoc-config/mapboxgl/index.md -r",
         "build-docs-openlayers": "jsdoc -c ./docs/jsdoc-config/openlayers/docs.json -R ./docs/jsdoc-config/openlayers/index.md -r",

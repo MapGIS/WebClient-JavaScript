@@ -9,7 +9,7 @@
 /docs/cesium/
 
 /src/service/node_modules/
-
+/src/service/dist*/
 #/src/leaflet/theme/
 #/src/mapboxgl/theme/
 #/src/openlayers/theme/
@@ -23,6 +23,7 @@ src/config/opensource/output/
 /website/public/docs/leaflet/
 /website/public/docs/mapboxgl/
 /website/public/docs/openlayers/
+/website/public/docs/service/
 /website/public/docs/cesium/
 /website/public/static/data/
 /website/public/static/data/deckgl/
