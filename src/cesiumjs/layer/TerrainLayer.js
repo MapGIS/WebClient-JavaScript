@@ -28,6 +28,7 @@ export default class TerrainLayer extends BaseLayer {
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {Number} [optionsParam.scale = 1] 地形缩放比例
      * @param {Object} [optionsParam.range] 地形范围
+     * @param {Object} [optionsParam.requestVertexNormals] 是否请求法向
      * @returns {Object}  地形图层对象
      * @example
      * appendTerrainLayer(baseUrl, sceneIndex, layerIndex, {
@@ -41,12 +42,14 @@ export default class TerrainLayer extends BaseLayer {
         if (Cesium.defined(proxy)) {
             _proxy = new Cesium.DefaultProxy(proxy);
         }
-        const dataUrl = `${baseUrl}/GetTerrain?sceneIndex=${sceneIndex}&layerIndex=${layerIndex}&Level={z}&Row={x}&Col={y}&xdensity=65&ydensity=65&webGL=true`;
+        let requestVertexNormals = Cesium.defaultValue(options.requestVertexNormals, false);
+        const dataUrl = `${baseUrl}/GetTerrain?sceneIndex=${sceneIndex}&layerIndex=${layerIndex}&Level={z}&Row={x}&Col={y}&xdensity=65&ydensity=65&webGL=true&hasNormals=${requestVertexNormals}`;
         const terrainProvider = new Cesium.MapGISTerrainProvider({
             url: dataUrl,
             range: options.range,
             proxy: _proxy,
-            scale: options.scale
+            scale: options.scale,
+            requestVertexNormals: requestVertexNormals
         });
 
         this.viewer.terrainProvider = terrainProvider;
