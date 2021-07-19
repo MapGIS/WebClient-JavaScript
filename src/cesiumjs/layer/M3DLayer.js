@@ -78,6 +78,7 @@ export default class M3DLayer extends BaseLayer {
      * @param {Boolean}         [optionsParam.autoReset = true] 是否自动定位
      * @param {Boolean}         [optionsParam.synchronous = true] 是否异步请求
      * @param {Function}        [optionsParam.loaded = function] 回调函数
+     * @param {Function}        [options.getDocLayers = function] 回调函数，用于获取文档中的所有图层对象
      * @param {DefaultProxy}    [optionsParam.proxy = defaultProxy] 代理
      * @param {Boolean}         [optionsParam.showBoundingVolume = false] 是否显示包围盒
      * @param {Number}          [optionsParam.maximumScreenSpaceError = 16] 用于控制模型显示细节  值较大将会渲染更少的贴图,进而可以提高性能,而较低的值将提高视觉质量
@@ -95,12 +96,19 @@ export default class M3DLayer extends BaseLayer {
      * // layers=hide:0,1 表示只隐藏 layerIndex 为 0, 1 的图层
      *
      * let result = m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D, {
-     *  autoReset:false,
-     *  synchronous:true,
-     *  showBoundingVolume:false,
-     *  maximumScreenSpaceError:16,
-     *  layers:'layers=show:0',
-     *  loaded:callBackfunction
+     *      autoReset:false,
+     *      synchronous:true,
+     *      showBoundingVolume:false,
+     *      maximumScreenSpaceError:16,
+     *      layers:'layers=show:0',
+     *      loaded:callBackfunction
+     * });
+     *
+     * m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D', {
+     *      autoReset:false,
+     *      synchronous:true,
+     *      layers: 'layers=show:0',
+     *      getDocLayers: function (docLayers) { docLayers[0].flyTo(viewer); }
      * });
      *
      */
@@ -156,6 +164,10 @@ export default class M3DLayer extends BaseLayer {
             synchronous = Cesium.defaultValue(options.synchronous, true);
         }
 
+        const docReadyPromise = new Cesium.when.defer();
+
+        docReadyPromise.resolve(docLayers);
+
         const _callBack = (params) => {
             const _params = params;
             if (Cesium.defined(options.loaded) && typeof options.loaded === 'function') {
@@ -163,10 +175,18 @@ export default class M3DLayer extends BaseLayer {
             }
         };
 
+        const _callBack2 = (params) => {
+            const _params = params;
+            if (Cesium.defined(options.getDocLayers) && typeof options.getDocLayers === 'function') {
+                options.getDocLayers(_params);
+            }
+        };
+
         const parseDocInfo = (info) => {
             if (info !== undefined && info.sceneInfos.length > 0) {
                 const { layers } = info.sceneInfos[0];
-                layers.forEach((layer) => {
+                for (let i = 0; i < layers.length; i++) {
+                    const layer = layers[i];
                     const type = parseInt(layer.layerType, 10);
                     if (type === LayerType.M3DLAYER) {
                         const { layerRenderIndex, layerIndex, gdbpUrl, isVisible } = layer;
@@ -183,7 +203,10 @@ export default class M3DLayer extends BaseLayer {
                         docLayers.push(m3d);
                         m3d.readyPromise.then(_callBack);
                     }
-                });
+                }
+                if (docReadyPromise !== undefined) {
+                    docReadyPromise.then(_callBack2);
+                }
             }
         };
 
