@@ -30,7 +30,7 @@ class QueryByLayerParameter extends QueryParameter {
          * @type {String}
          * @description 图层URL
          */
-        this.gdbp = gdbp !== undefined ? encodeURI(gdbp) : null;
+        this.gdbp = gdbp !== undefined ? gdbp : null;
     }
 
     /**
