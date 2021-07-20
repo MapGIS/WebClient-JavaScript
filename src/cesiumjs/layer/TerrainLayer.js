@@ -28,7 +28,7 @@ export default class TerrainLayer extends BaseLayer {
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {Number} [optionsParam.scale = 1] 地形缩放比例
      * @param {Object} [optionsParam.range] 地形范围
-     * @param {Object} [optionsParam.requestVertexNormals] 是否请求法向
+     * @param {Boolean} [optionsParam.requestVertexNormals = false] 是否请求法向
      * @returns {Object}  地形图层对象
      * @example
      * appendTerrainLayer(baseUrl, sceneIndex, layerIndex, {
@@ -63,6 +63,7 @@ export default class TerrainLayer extends BaseLayer {
      * @param {Object} optionsParam 包含以下参数
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
+     * @param {Boolean} [optionsParam.requestVertexNormals = false] 是否请求法向
      * @returns 地形层对象
      * @example
      * let terrain = new TerrainLayer(viewer:viewer);
