@@ -262,6 +262,14 @@
                     "detail": "",
                     "icon": "flood.png",
                     "update": "最后更新时间：2021-06-07"
+                },
+                {
+                    "name": "控高分析",
+                    "file": "heightLimited",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "heightLimited.png",
+                    "update": "最后更新时间：2021-07-23"
                 }
             ]
         }
