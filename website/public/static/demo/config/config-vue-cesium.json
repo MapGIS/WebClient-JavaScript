@@ -270,6 +270,14 @@
                     "detail": "",
                     "icon": "heightLimited.png",
                     "update": "最后更新时间：2021-07-23"
+                },
+                {
+                    "name": "阴影分析",
+                    "file": "shadow",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "yinying.png",
+                    "update": "最后更新时间：2021-07-26"
                 }
             ]
         }
