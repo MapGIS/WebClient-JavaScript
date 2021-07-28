@@ -156,6 +156,20 @@ export default class TerrainLayer extends BaseLayer {
         });
         this.viewer.terrainProvider = terrainProviderMeshes;
     }
+     /**
+     * 删除地形图层
+     * @function module:客户端数据服务.TerrainLayer.prototype.deleteTerrain
+     * @example
+     * let terrain = new TerrainLayer(viewer:viewer);
+     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain');
+     * terrain.deleteTerrain();
+     */
+    deleteTerrain() {
+        if(Cesium.defined(this.viewer.terrainProvider)){
+            this.viewer.terrainProvider = null;
+        }
+        this.viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+    }
 }
 
 CesiumZondy.Layer.TerrainLayer = TerrainLayer;
