@@ -90,7 +90,7 @@ class GeoFeatureThemeLayer extends ThemeLayer {
             features: features
         });
 
-        if (features instanceof FeatureSet) {
+        if (features && (true || features instanceof FeatureSet)) {
             var attrs = null;
             var LabelDots = features.LabelDots;
             var attstruct = features.AttStruct;
