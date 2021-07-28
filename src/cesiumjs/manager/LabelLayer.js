@@ -236,8 +236,9 @@ export default class LabelLayer extends BaseLayer {
      * @param {String} [options.labelHorizontalOrigin]  文字注记相对于原点的水平位置 默认值: HorizontalOrigin.BOTTOM
      * @param {String} [options.attribute]              属性参数 默认值: undefined
      * @example
+     *  let labelLayer = new LabelLayer({viewer:viewer});
      *  const options = { iconUrl: '/car.png', text: '注记文本', font: '14pt 楷体', labelShowBackground: true, attribute: '这是属性信息查询时可以看到' }
-     *  const labelIcon = webGlobe.appendLabelIconEx(110, 33, 0, options);
+     *  const labelIcon = labelLayer.appendLabelIconEx(110, 33, 0, options);
      * @returns {Entity} labelIcon  图标注记对象 移除通过removeEntity(entity)
      */
     appendLabelIconEx(lon, lat, height, options) {
