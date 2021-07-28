@@ -190,7 +190,8 @@ import {
     MeshingParam,
     NetAnalyse,
     NetAnalysisExtent,
-    SlopLineParam
+    SlopLineParam,
+    RuleParse
 } from './Igserver/extend';
 
 export const Extend = {
@@ -201,7 +202,8 @@ export const Extend = {
     MeshingParam,
     NetAnalyse,
     NetAnalysisExtent,
-    SlopLineParam
+    SlopLineParam,
+    RuleParse
 };
 
 import { G3DMapDoc, G3DService } from './Igserver/G3D';
