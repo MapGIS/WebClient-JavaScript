@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>Vue-限高</title>
+    <title>Vue-阴影</title>
     <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
     <style type="text/css">
         #app {
@@ -25,7 +25,7 @@
         >
             <mapgis-3d-raster-layer :url="url"></mapgis-3d-raster-layer>
             <mapgis-3d-igs-m3d :autoReset="autoReset" :maximumScreenSpaceError="maximumScreenSpaceError" :url="m3dUrl" :vue-index="vueIndex"></mapgis-3d-igs-m3d>
-            <mapgis-3d-heightlimited :vue-index="vueIndex"></mapgis-3d-heightlimited>
+            <mapgis-3d-shadow :vue-index="vueIndex"></mapgis-3d-shadow>
         </mapgis-web-scene>
     </div>
 

@@ -470,7 +470,7 @@
                     //线要素符号参数信息。
                     LinInfo: clineInfo
                 });
-                resultLine.SFEleArray[0].graphicInfo = graphicInfo;
+                resultLine.SFEleArray[0].GraphicInfo = graphicInfo;
                 //设置要素属性信息(创建线图层时属性信息数组会自动添加两个属性信息，设置从第三个开始)
                 resultLine.SFEleArray[0].AttValue[2] = document.getElementById('ID').value;
                 resultLine.SFEleArray[0].AttValue[3] = document.getElementById('length').value;
@@ -492,11 +492,11 @@
             //修改点要素回调函数
             function onLineUpdateSuccess(data) {
                 if (data.succeed) {
-                    alert('修改点要素成功！');
+                    alert('修改线要素成功！');
                     //刷新图层
                     vectorLayer.refresh();
                 } else {
-                    alert('修改点要素失败！');
+                    alert('修改线要素失败！');
                 }
             }
 
