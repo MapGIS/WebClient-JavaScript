@@ -89,7 +89,7 @@
           draw: "simple",
         };
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(map, dataSet1, options);
+        var mapv1 = new CesiumZondy.Overlayer.MapvLayer(map, dataSet1, options);
         // 构建对应的dataset
         var dataSet2 = new mapv.DataSet(timeData);
         // https://github.com/huiyan-fe/mapv/blob/master/API.md
@@ -110,7 +110,7 @@
           draw: "simple",
         };
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(map, dataSet2, options);
+        var mapv2 = new CesiumZondy.Overlayer.MapvLayer(map, dataSet2, options);
       });
     }
   </script>

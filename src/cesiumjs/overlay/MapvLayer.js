@@ -65,6 +65,7 @@ export default class MapvLayer {
         this.canvas = this._creteWidgetCanvas(); //this._createCanvas();
 
         this.render = this.render.bind(this);
+        this.handler = undefined;
         this.postRenderTime = 0;
 
         let cesiumOpt = mapVOptions.cesium;
@@ -113,23 +114,23 @@ export default class MapvLayer {
         this.postStartEvent = this.postStartEvent.bind(this);
         this.postEndEvent = this.postEndEvent.bind(this);
 
-        var handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
         //handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         if (this.postRender) {
             // this.scene.postRender.addEventListener(this.postEventHandle);
             this.scene.camera.moveStart.addEventListener(this.postStartEvent, this);
             this.scene.camera.moveEnd.addEventListener(this.postEndEvent, this);
         } else {
+            var handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
+
             handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.WHEEL);
             handler.setInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
             handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.LEFT_UP);
             handler.setInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
             handler.setInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.RIGHT_UP);
 
-            map.scene.camera.moveEnd.addEventListener(function () {
-                //获取当前相机高度
-                self.innerMoveEnd();
-            });
+            map.scene.camera.moveEnd.addEventListener(this.innerMoveEnd(), this);
+
+            this.handler = handler;
         }
     }
 
@@ -137,6 +138,17 @@ export default class MapvLayer {
         if (this.postRender) {
             this.scene.camera.moveStart.removeEventListener(this.postStartEvent, this);
             this.scene.camera.moveEnd.removeEventListener(this.postEndEvent, this);
+        } else {
+            let handler = this.handler;    
+            if (handler) {
+                handler.removeInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.WHEEL);
+                handler.removeInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
+                handler.removeInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.LEFT_UP);
+                handler.removeInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.RIGHT_DOWN);
+                handler.removeInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.RIGHT_UP);
+                handler.destroy();
+            }
+            map.scene.camera.moveEnd.removeEventListener(this.innerMoveEnd(), this);
         }
     }
 
@@ -339,8 +351,8 @@ export default class MapvLayer {
      */
     remove() {
         if (this.mapvBaseLayer == undefined) return;
-        this.removeAllData();
         this.unbindEvent();
+        this.removeAllData();
         this.mapvBaseLayer.clear(this.mapvBaseLayer.getContext());
         this.mapvBaseLayer = undefined;
         var parent = this.canvas.parentElement;
