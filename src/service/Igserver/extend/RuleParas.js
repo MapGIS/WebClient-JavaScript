@@ -1,3 +1,14 @@
+export const MapRules = [
+    {
+        type: "mapboxgl",
+        rule: "{z}/{y}/{x}"
+    },
+    {
+        type: "cesium",
+        rule: "{z}/{y}/{x}"
+    }
+]
+
 export const IgserverRules = [
     {
         type: 'DynamicTile',
@@ -109,7 +120,7 @@ export class RuleParse {
      * let parse = new RuleParse();
      * let url = parse.get(10, 'localhost', '6163', '世界地图');
      */
-    get(id, ip, port, serverName, urlType = 'baseUrl', type = 'GetMap') {
+    get(id, ip, port, serverName, urlType = 'baseUrl', type = 'GetMap', map = "mapboxgl") {
         let find = undefined;
         if (typeof id === 'number') {
             find = IgserverRules.find((r) => {
@@ -125,6 +136,15 @@ export class RuleParse {
         url = url.replace('{ip}', ip);
         url = url.replace('{port}', port);
         url = url.replace('{serverName}', serverName);
+        let rule
+        switch(map) {
+            case "mapboxgl":
+                rule = MapRules.filter(item => item.type === "mapboxgl");
+                url = url.replace('{level}/{row}/{col}', rule[0].rule);
+            case "cesium":
+                rule = MapRules.filter(item => item.type === "cesium");
+                url = url.replace('{level}/{row}/{col}', rule[0].rule);
+        }
         return url;
     }
 
@@ -154,8 +174,8 @@ export class RuleParse {
      * let parse = new RuleParse();
      * let url = parse.GetMap(10, 'localhost', '6163', '世界地图');
      */
-    GetMap(id, ip, port, serverName, urlType = 'baseUrl') {
-        return get(id, ip, port, serverName, urlType, 'GetMap');
+    GetMap(id, ip, port, serverName, urlType = 'baseUrl', map = "mapboxgl") {
+        return this.get(id, ip, port, serverName, urlType, 'GetMap', map);
     }
 
     /**
