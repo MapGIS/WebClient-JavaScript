@@ -167,7 +167,7 @@
       };
 
       // 声明cesium的mapv图层并将其显示到三维球上
-      new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+      var mapv1 = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
       // 构建对应的dataset
       var dataSet = new mapv.DataSet(timeData);
 
@@ -188,7 +188,7 @@
         draw: "simple", // 基础绘制
       };
       // 声明cesium的mapv图层并将其显示到三维球上
-      new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+      var mapv2 = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);      
     }
   </script>
 </body>
