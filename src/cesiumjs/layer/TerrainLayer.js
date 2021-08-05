@@ -99,8 +99,6 @@ export default class TerrainLayer extends BaseLayer {
                 const { layers } = info.sceneInfos[0];
                 layers.forEach((layer) => {
                     const { layerType, layerRenderIndex, elevationScale, range, range3D , terrainLayer } = layer;
-                    // eslint-disable-next-line no-console
-                    console.log(range3D);
                     const { terrainColorTblInfo } = terrainLayer;
                     const type = parseInt(layerType, 10);
                     if (type === LayerType.TERRAINLAYER) {
