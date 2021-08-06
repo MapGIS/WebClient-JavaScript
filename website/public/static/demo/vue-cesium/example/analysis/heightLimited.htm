@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-限高</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+        .ant-btn-primary{
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <mapgis-web-scene
+            lib-path="./static/libs/cdn/cesium/Cesium.js"
+            plugin-path="./static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+        >
+            <mapgis-3d-raster-layer :url="url"></mapgis-3d-raster-layer>
+            <mapgis-3d-igs-m3d :autoReset="autoReset" :maximumScreenSpaceError="maximumScreenSpaceError" :url="m3dUrl" :vue-index="vueIndex"></mapgis-3d-igs-m3d>
+            <mapgis-3d-heightlimited :vue-index="vueIndex"></mapgis-3d-heightlimited>
+        </mapgis-web-scene>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    url:
+                        "http://t0.tianditu.com/DataServer?T=vec_w&L={z}&Y={y}&X={x}&tk=9c157e9585486c02edf817d2ecbc7752",
+                    m3dUrl: "http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels",
+                    autoReset: true,
+                    maximumScreenSpaceError: 8,
+	                vueIndex:22
+                };
+            },
+        })
+    </script>
+</body>
+
+</html>
