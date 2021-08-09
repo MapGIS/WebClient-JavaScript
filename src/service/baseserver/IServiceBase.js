@@ -44,7 +44,9 @@ class IgsServiceBase extends CommonServiceBase {
     serviceProcessCompleted(result) {
         var me = this;
         result = transformResult(result);
-        if (result.succeed) {
+        // bug 13893 后统改succeed 为 success，这就导致如果项目上的版本是用的这个节点前的igserver的版本
+        // webclient-es6-service只能使用10.5.4-1之前的版本，需要慎重处理
+        if (result.success) {
             me.events && me.events.triggerEvent('processCompleted', { result: result });
         } else {
             ////在没有token是返回的是200，但是其实是没有权限，所以这里也应该是触发失败事件
