@@ -51,11 +51,11 @@ vue.use(VueCesium);
 
 ### 局部引入
 ``` javascript
-import { CesiumWebGlobe } from '@mapgis/webclient-vue-cesium';
+import { MapgisWebScene } from '@mapgis/webclient-vue-cesium';
 
 export default {
   components: {
-    CesiumWebGlobe
+    MapgisWebScene
   },
 }
 ```
@@ -81,7 +81,7 @@ path/to/statics/cesium/webclient-cesium-plugin.min.js
 
 ``` javascript
 <template>
-  <cesium-web-globe
+  <mapgis-web-scene
     libPath="statics/cesium/Cesium.js"
     pluginPath="statics/cesium/webclient-cesium-plugin.min.js"
     @load="handleLoad"
@@ -96,11 +96,11 @@ path/to/statics/cesium/webclient-cesium-plugin.min.js
 </style>
 
 <script>
-import { CesiumWebGlobe } from '@mapgis/webclient-vue-cesium';
+import { MapgisWebScene } from '@mapgis/webclient-vue-cesium';
 
 export default {
   components: {
-    CesiumWebGlobe
+    MapgisWebScene
   },
   methods: {
     handleLoad(payload) {
