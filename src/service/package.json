@@ -1,17 +1,26 @@
 {
-  "name": "@mapgis/webclient-es6-service",
-  "version": "10.5.4",
-  "description": "中地数码基于ES6语法针对igserver的服务封装",
-  "main": "dist-libs/webclient-es6-service.min.js",
-  "module": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "mapgis",
-  "license": "Apache2",
-  "dependencies": {
-    "@turf/turf": "^6.3.0",
-    "fast-xml-parser": "^3.17.6",
-    "qs": "^6.9.4"
-  }
+    "name": "@mapgis/webclient-es6-service",
+    "version": "10.5.4",
+    "description": "中地数码基于ES6语法针对igserver的服务封装",
+    "main": "dist-libs/webclient-es6-service.min.js",
+    "module1": "index.js",
+    "scripts": {
+        "build": "build-debug && ",
+        "build-debug": "webpack --config webpack/service-debug-config.js",
+        "build-release": "webpack --config webpack/service-release-config.js"
+    },
+    "author": "mapgis",
+    "license": "Apache2",
+    "dependencies": {
+        "@turf/turf": "^6.3.0",
+        "fast-xml-parser": "^3.17.6",
+        "qs": "^6.9.4"
+    },
+    "devDependencies": {
+        "happypack": "^5.0.0",
+        "webpack": "4.19.1",
+        "webpack-cleanup-plugin": "0.4.2",
+        "webpack-cli": "2.1.5",
+        "webpack-parallel-uglify-plugin": "0.4.2"
+    }
 }

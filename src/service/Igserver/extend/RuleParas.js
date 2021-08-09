@@ -1,13 +1,13 @@
 export const MapRules = [
     {
-        type: "mapboxgl",
-        rule: "{z}/{y}/{x}"
+        type: 'mapboxgl',
+        rule: '{z}/{y}/{x}'
     },
     {
-        type: "cesium",
-        rule: "{z}/{y}/{x}"
+        type: 'cesium',
+        rule: '{z}/{y}/{x}'
     }
-]
+];
 
 export const IgserverRules = [
     {
@@ -33,7 +33,7 @@ export const IgserverRules = [
         description: 'IGServer自定义的二维文档REST服务',
         url: {
             GetCapabilities: '',
-            GetMap: 'http://{ip}:{port}/igs/rest/mrms/docs/{serverName}?bbox={bbox}&w={w}&h={h}&f={f}&layers={layers}&filters={filters}&style={style}&guid={guid}&proj={proj}',
+            GetMap: 'http://{ip}:{port}/igs/rest/mrms/docs/{serverName}?bbox={bbox}&w={w}&h={h}&f={f}',
             GetFeatureInfo: ''
         },
         baseUrl: {
@@ -81,7 +81,7 @@ export const IgserverRules = [
         description: 'OGC-WMTS服务',
         url: {
             GetCapabilities: 'http://{ip}:{port}/igs/rest/ogc/{serverName}/WMTSServer/1.0.0/WMTSCapabilities.xml',
-            GetMap: 'http://{ip}:{port}/igs/rest/ogc/WMTSServer/1.0.0/{serverName}:{serverName}/default/{tileMatrix}/{level}/{row}/{col}.png',
+            GetMap: 'http://{ip}:{port}/igs/rest/ogc/{serverName}/WMTSServer?service=WMTS&request=GetTile&version=1.0.0&style=default&format=image/png&layer={serverName}&tilematrix={tilematrix}&tilerow={tilerow}&tilecol={tilecol}',
             GetFeatureInfo: ''
         },
         baseUrl: {
@@ -120,7 +120,7 @@ export class RuleParse {
      * let parse = new RuleParse();
      * let url = parse.get(10, 'localhost', '6163', '世界地图');
      */
-    get(id, ip, port, serverName, urlType = 'baseUrl', type = 'GetMap', map = "mapboxgl") {
+    get(id, ip, port, serverName, urlType = 'baseUrl', type = 'GetMap', map = 'mapboxgl') {
         let find = undefined;
         if (typeof id === 'number') {
             find = IgserverRules.find((r) => {
@@ -135,14 +135,18 @@ export class RuleParse {
         let url = find[urlType][type];
         url = url.replace('{ip}', ip);
         url = url.replace('{port}', port);
-        url = url.replace('{serverName}', serverName);
-        let rule
-        switch(map) {
-            case "mapboxgl":
-                rule = MapRules.filter(item => item.type === "mapboxgl");
+        while (url.indexOf('{serverName}') >= 0) {
+            url = url.replace('{serverName}', serverName);
+        }
+        let rule;
+        switch (map) {
+            case 'mapboxgl':
+                rule = MapRules.filter((item) => item.type === 'mapboxgl');
                 url = url.replace('{level}/{row}/{col}', rule[0].rule);
-            case "cesium":
-                rule = MapRules.filter(item => item.type === "cesium");
+                url = url.replace('tilematrix={tilematrix}&tilerow={tilerow}&tilecol={tilecol}', 'tilematrix={z}&tilerow={y}&tilecol={x}');
+                url = url.replace('w={w}&h={h}&f={f}', 'w=512&h=512&f=png');
+            case 'cesium':
+                rule = MapRules.filter((item) => item.type === 'cesium');
                 url = url.replace('{level}/{row}/{col}', rule[0].rule);
         }
         return url;
@@ -174,7 +178,7 @@ export class RuleParse {
      * let parse = new RuleParse();
      * let url = parse.GetMap(10, 'localhost', '6163', '世界地图');
      */
-    GetMap(id, ip, port, serverName, urlType = 'baseUrl', map = "mapboxgl") {
+    GetMap(id, ip, port, serverName, urlType = 'baseUrl', map = 'mapboxgl') {
         return this.get(id, ip, port, serverName, urlType, 'GetMap', map);
     }
 
