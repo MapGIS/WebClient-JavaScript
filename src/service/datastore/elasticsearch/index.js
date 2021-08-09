@@ -10,3 +10,17 @@ import EsTableService from './EsTableService';
 import EsSpaceTimeQueryByAgg from './EsSpaceTimeQueryByAgg';
 
 export { EsCatlogType, EsCatlogName, EsGeoHashType, EsCatlogService, ESGeoCode, ESGeoDecode, ESQueryStats, EsTableService, EsSpaceTimeQueryByAgg };
+
+const ElasticSearch = {
+    EsCatlogType,
+    EsCatlogName,
+    EsGeoHashType,
+    EsCatlogService,
+    ESGeoCode,
+    ESGeoDecode,
+    ESQueryStats,
+    EsTableService,
+    EsSpaceTimeQueryByAgg
+};
+
+export default ElasticSearch;
