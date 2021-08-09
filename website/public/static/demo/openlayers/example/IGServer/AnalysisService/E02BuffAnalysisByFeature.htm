@@ -79,6 +79,7 @@
         //执行单圈缓冲区分析
         function bufferOneRing()
         {
+            startPressBar();
             //初始化Zondy.Object.FeatureGeometry对象
             var regGeo = new Zondy.Object.FeatureGeometry();
             //设置区要素的空间几何信息
@@ -130,6 +131,7 @@
 
         function bufferMulRings()
         {
+            startPressBar();
             //初始化Zondy.Object.FeatureGeometry对象
             var regGeo = new Zondy.Object.FeatureGeometry();
             //设置区要素的空间几何信息
@@ -175,6 +177,8 @@
 
          //分析成功后的回调
          function AnalysisSuccess(data) {
+             //停止进度条
+             stopPressBar();
             if (!data.results) {
                 alert("缓冲失败，请检查参数！");
             }
@@ -232,6 +236,17 @@
             clock += ss;
             return (clock);
         }
+
+
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById("preview").style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById("preview").style.display = "block";
+        }
     </script>
 </head>
 
@@ -258,6 +273,11 @@
          </li>
      </ul>
   </div>
+    <div id="preview">
+        <img src="static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在分析，请稍候</span>
+    </div>
  <script>
     function switchMenuStatus(div, menuitemFrameID) {
         var temDivs = document.getElementsByClassName('optmain');
