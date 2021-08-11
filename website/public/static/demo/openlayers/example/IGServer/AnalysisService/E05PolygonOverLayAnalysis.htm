@@ -8,6 +8,45 @@
     <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        /* 图层控件层样式设置 */
+        .layerControl {
+            position: absolute;
+            bottom: 5px;
+            min-width: 200px;
+            max-height: 123px;
+            right: 10px;
+            top: 80px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+            color: #ffffff;
+            background-color: #4c4e5a;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+        .layerTree{
+            padding-inline-start: 15px;
+        }
+        .layerTree li {
+            list-style: none;
+            margin: 5px 10px;
+            font-size: 12px;
+        }
+        li .layer{
+            position: absolute;
+            margin-top: 0px;
+        }
+    </style>
     <script type="text/javascript">
         var map = null;
         var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/"; //缓存结果图层的基地址
@@ -32,12 +71,12 @@
             var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
             //加载天地图瓦片图层数据
             map.addLayer(new ol.layer.Tile({
-                    title: "天地图矢量图层",
-                    source: new ol.source.XYZ({
-                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
-                        wrapX: false
-                    }),
-                    projection:"EPSG:4326"
+                title: "天地图矢量图层",
+                source: new ol.source.XYZ({
+                    url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                    wrapX: false
+                }),
+                projection:"EPSG:4326"
             }));
             map.addLayer(new ol.layer.Tile({
                     title: "天地图矢量注记图层",
@@ -48,7 +87,14 @@
                 })
             );
 
-    
+            map.addLayer(
+                new Zondy.Map.GdbpLayer("世界政区",["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区"], {
+                    ip: 'develop.smaryun.com',
+                    port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089
+                    //extent: extent,
+                })
+            );
+
             var vectorSource = new ol.source.Vector();
             //创建一个多变形
             var polygon = new ol.Feature({
@@ -68,56 +114,57 @@
             }));
             vectorSource.addFeatures([polygon]);
 
-             //创建一个图层
+            //创建一个图层
             var vectorLayer = new ol.layer.Vector({
                 source: vectorSource,
                 zIndex:0
             });
             //将绘制层添加到地图容器中
             map.addLayer(vectorLayer);
+            loadLayersControl(map, "layerTree");
         }
-    
+
         function polygonOverlay()
         {
             var resultname = resultBaseUrl + "overLayByPolyAnalysisResultLayer" + getCurentTime();
             //设置区要素的空间几何信息
             var gReg = new Zondy.Object.GRegion([
                 new Zondy.Object.AnyLine([new Zondy.Object.Arc([
-                        new Zondy.Object.Point2D(0.46, 30.1),
-                        new Zondy.Object.Point2D(11.48, 6.22),
-                        new Zondy.Object.Point2D(36.73, 7.6),
-                        new Zondy.Object.Point2D(58.77, 25.51),
-                        new Zondy.Object.Point2D(41.33, 49.39),
-                        new Zondy.Object.Point2D(0.46, 30.1)
-                    ])
+                    new Zondy.Object.Point2D(0.46, 30.1),
+                    new Zondy.Object.Point2D(11.48, 6.22),
+                    new Zondy.Object.Point2D(36.73, 7.6),
+                    new Zondy.Object.Point2D(58.77, 25.51),
+                    new Zondy.Object.Point2D(41.33, 49.39),
+                    new Zondy.Object.Point2D(0.46, 30.1)
+                ])
                 ])
             ]);
             var overlayParam = new Zondy.Service.OverlayByPolygon({
                 ip: "develop.smaryun.com",
                 port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
-                //设置被叠加图层URL 
+                //设置被叠加图层URL
                 srcInfo1: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区",
-                //设置结果URL  		
+                //设置结果URL
                 desInfo: resultname,
-                //设置多边形坐标序列化对象 	
+                //设置多边形坐标序列化对象
                 strGRegionXML: JSON.stringify(gReg),
-                //多边形字符串输入格式	 
+                //多边形字符串输入格式
                 inFormat: "json",
-                //设置结果图层的图形参数信息		
+                //设置结果图层的图形参数信息
                 infoOptType: 2,
-                //求交		
+                //求交
                 overType: 1,
-                //允许重算面积		    
+                //允许重算面积
                 isReCalculate: true,
-                //容差半径		
-                radius: 0.05				
+                //容差半径
+                radius: 0.05
             });
             //调用基类的execute方法，执行叠加分析， onSuccess为结果回调函数
             overlayParam.execute(AnalysisSuccess,"post",false,"json",()=>{});
         }
 
-         //分析成功后的回调
-         function AnalysisSuccess(data) {
+        //分析成功后的回调
+        function AnalysisSuccess(data) {
             if (!data.results) {
                 alert("叠加失败，请检查参数！");
             }
@@ -141,16 +188,16 @@
             while(resultLayerArr.length>0)
             {
                 map.removeLayer(resultLayerArr.pop());
-            } 
+            }
         }
 
         function getCurentTime() {
             var now = new Date();
             //获取当前年份
             var year = now.getFullYear();
-            //获取当前月份     
+            //获取当前月份
             var month = now.getMonth() + 1;
-            //获取当前日期   
+            //获取当前日期
             var day = now.getDate();
             //获取当前时刻
             var hh = now.getHours();
@@ -175,31 +222,106 @@
             clock += ss;
             return (clock);
         }
+        //map中的图层数组
+        var layerArr = new Array();
+        //图层名称数组
+        var layerNameArr = new Array('天地图矢量图层','天地图矢量注记图层','被叠加图层','几何图形');
+        //图层可见属性数组
+        var layerVisibilityArr = new Array();
+
+        /**
+         * 加载图层列表数据
+         * @param {ol.Map} map 地图对象
+         * @param {string} id 图层列表容器ID
+         */
+        function loadLayersControl(map, id) {
+            //图层目录容器
+            var treeContent = document.getElementById(id);
+            //获取地图中所有图层
+            var layers = map.getLayers();
+            for (var i = 0; i < layers.getLength() ; i++) {
+                //获取每个图层的名称、是否可见属性
+                layerArr[i] = layers.item(i);
+                // layerNameArr[i] = layerArr[i].get('name');
+                layerVisibilityArr[i] = layerArr[i].getVisible();
+                //新增li元素，用来承载图层项
+                var elementLi = document.createElement('li');
+                // 添加子节点
+                treeContent.appendChild(elementLi);
+                //创建复选框元素
+                var elementInput = document.createElement('input');
+                elementInput.type = "checkbox";
+                elementInput.name = "layers";
+                elementLi.appendChild(elementInput);
+                //创建label元素
+                var elementLable = document.createElement('label');
+                elementLable.className = "layer";
+                //设置图层名称
+                setInnerText(elementLable, layerNameArr[i]);
+                elementLi.appendChild(elementLable);
+                //设置图层默认显示状态
+                if (layerVisibilityArr[i]) {
+                    elementInput.checked = true;
+                }
+                //为checkbox添加变更事件
+                addChangeEvent(elementInput, layerArr[i]);
+            }
+        }
+        /**
+         * 为checkbox元素绑定变更事件
+         * @param {input} element checkbox元素
+         * @param {ol.layer.Layer} layer 图层对象
+         */
+        function addChangeEvent(element, layer) {
+            element.onclick = function () {
+                if (element.checked) {
+                    //显示图层
+                    layer.setVisible(true);
+                }
+                else {
+                    //不显示图层
+                    layer.setVisible(false);
+                }
+            };
+        }
+        /**
+         * 动态设置元素文本内容（兼容）
+         */
+        function setInnerText(element, text) {
+            if (typeof element.textContent == "string") {
+                element.textContent = text;
+            } else {
+                element.innerText = text;
+            }
+        }
     </script>
 </head>
 
 <body onload="init()">
-    <div id="mapCon">
+<div id="mapCon">
+    <div id="layerControl" class="layerControl">
+        <ul id="layerTree" class="layerTree"></ul>
     </div>
+</div>
 
-    <div id="menuContain" class='menuContain'>
-        <div id="tool-container">
-         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
-             <span></span><i class="menuGroup">叠加分析</i><em></em>
-         </div>
-      
-     </div>
- </div>
- <div id="menu1" class="menuStrip" style='display:none' >
-     <ul  class="menuItems">
-         <li   onclick="polygonOverlay()"><span class="item1"></span><i >多边形</i>
-         </li>
-         <li class="divider"></li>
-         <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
-         </li>
-     </ul>
-  </div>
- <script>
+<div id="menuContain" class='menuContain'>
+    <div id="tool-container">
+        <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+            <span></span><i class="menuGroup">叠加分析</i><em></em>
+        </div>
+
+    </div>
+</div>
+<div id="menu1" class="menuStrip" style='display:none' >
+    <ul  class="menuItems">
+        <li   onclick="polygonOverlay()"><span class="item1"></span><i >多边形</i>
+        </li>
+        <li class="divider"></li>
+        <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
+        </li>
+    </ul>
+</div>
+<script>
     function switchMenuStatus(div, menuitemFrameID) {
         var temDivs = document.getElementsByClassName('optmain');
         if (temDivs.length > 0) {
@@ -252,7 +374,7 @@
                         if (temDivs[i] != menuItemFrame) {
                             temDivs[i].style.display = "none";
                         }
-                    }   
+                    }
                 }
                 menuItemFrame.style.display = "";
             }
@@ -261,7 +383,7 @@
             }
         }
     };
- </script>
+</script>
 </body>
 
 </html>
