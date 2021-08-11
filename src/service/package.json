@@ -3,7 +3,7 @@
     "version": "10.5.4",
     "description": "中地数码基于ES6语法针对igserver的服务封装",
     "main": "dist-libs/webclient-es6-service.min.js",
-    "module1": "index.js",
+    "module": "index.js",
     "scripts": {
         "build": "npm run build-debug && npm run build-release",
         "build-debug": "webpack --config webpack/service-debug-config.js",
