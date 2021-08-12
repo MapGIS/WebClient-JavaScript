@@ -81,6 +81,8 @@ export default class TerrainLayer extends BaseLayer {
         let resource;
         let proxy;
         const docLayers = [];
+        let docReadyPromise = new Cesium.when.defer();
+        docReadyPromise.resolve(docLayers);
         if (Cesium.defined(options)) {
             if (Cesium.defined(options.proxy)) {
                 // 不放在defaultValue中 new 会影响性能
@@ -89,9 +91,16 @@ export default class TerrainLayer extends BaseLayer {
             Cesium.defaultValue(options.proxy, undefined);
             synchronous = Cesium.defaultValue(options.synchronous, true);
         }
-        const _callBack3 = () => {
-            if (Cesium.defined(options.getTerrainColor) && typeof options.getTerrainColor === 'function') {
-                options.getTerrainColor();
+        const _callBack = (params) => {
+            const _params = params;
+            if (Cesium.defined(options.loaded) && typeof options.loaded === 'function') {
+                options.loaded(_params);
+            }
+        };
+        const _callBack2 = (params) => {
+            const _params = params;
+            if (Cesium.defined(options.getDocLayers) && typeof options.getDocLayers === 'function') {
+                options.getDocLayers(_params);
             }
         };
         const parseDocInfo = (info) => {
@@ -118,9 +127,12 @@ export default class TerrainLayer extends BaseLayer {
                         // }
                         const layerRes = this.appendTerrainLayer(baseUrl, sceneIndex, layerRenderIndex, proxy, options);
                         docLayers.push(layerRes);
-                        layerRes.readyPromise.then(_callBack3);
+                        layerRes.readyPromise.then(_callBack);
                     }
                 });
+            }
+            if(Cesium.defined(docReadyPromise)) {
+                docReadyPromise.then(_callBack2(docLayers));
             }
         };
 
@@ -141,7 +153,6 @@ export default class TerrainLayer extends BaseLayer {
                 }
             }
         }
-
         return docLayers;
     }
 
