@@ -65,6 +65,8 @@ export default class TerrainLayer extends BaseLayer {
      * @param {Object} optionsParam 包含以下参数
      * @param {Boolean} [optionsParam.synchronous = true] 是否异步请求
      * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
+     * @param {Function} [optionsParam.loaded = function] 加载成功回调函数
+     * @param {Function} [optionsParam.getDocLayers = function] 回调获取图层对象
      * @param {Boolean} [optionsParam.requestVertexNormals = false] 是否请求法向
      * @returns 地形层对象
      * @example
