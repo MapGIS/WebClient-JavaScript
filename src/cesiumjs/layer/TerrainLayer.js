@@ -131,6 +131,9 @@ export default class TerrainLayer extends BaseLayer {
                     }
                 });
             }
+            if(Cesium.defined(docReadyPromise)) {
+                docReadyPromise.then(_callBack2(docLayers));
+            }
         };
 
         if (synchronous) {
@@ -149,9 +152,6 @@ export default class TerrainLayer extends BaseLayer {
                     parseDocInfo(info);
                 }
             }
-        }
-        if(Cesium.defined(docReadyPromise)) {
-            docReadyPromise.then(_callBack2(docLayers));
         }
         return docLayers;
     }
