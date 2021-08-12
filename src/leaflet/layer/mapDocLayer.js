@@ -9,7 +9,7 @@ import {newGuid} from '../../service/common/Util';
  * @extends L.TileLayer
  * @param serverName - {String} 必选。地图服务名
  * @param option - {Object} 属性键值对，地图属性字段。
- * @param {String} [option.domain = ''] 【domain和（networkProtocol，ip，port）二选一】。域名
+ * @param {String} [option.domain = ''] 【domain和（networkProtocol，ip，port）二选一】。域名,代理服务器不提供端口号时可采用传入domain的方式。例如：domain:`http://www.sgic.net.cn/CoCloud3`。
  * @param {String} [option.networkProtocol = location.protocol.split(":")[0] || "http"] 【domain和（networkProtocol，ip，port）二选一】。网络协议
  * @param {String} [option.ip = localhost] 【domain和（networkProtocol，ip，port）二选一】。地图服务ip
  * @param {String} [option.port = 6163] 【domain和（networkProtocol，ip，port）二选一】。地图服务端口

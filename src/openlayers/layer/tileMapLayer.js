@@ -212,8 +212,9 @@ Zondy.Source.TileLayerSource = TileLayerSource;
  * @param opt_name - {String} 可选项，显示瓦片地图的名称，无实际意义，可为NULL。
  * @param opt_hdfName - {String} 必选项，瓦片地图的名称(IGServer上发布的实际名称)
  * @param opt_options - {Object} 可选项，设置其他属性键值对对象。对象中的属性来自本类的属性。例如：{key1：value1, key2：value2 …}
- * @param {String} [opt_options.ip = ''] 必选项，服务器ip地址，本地为“127.0.0.1”或“localhost”。
- * @param {String} [opt_options.port = ''] 必选项，服务器端口号，默认为6163
+ * @param {String} [opt_options.ip = ''] 服务器ip地址，本地为“127.0.0.1”或“localhost”。
+ * @param {String} [opt_options.port = ''] 服务器端口号，默认为6163
+ * @param {String} [opt_options.domain = ''] 服务器域名，注意：传入ip、port和传入domain两种方式二选一，代理服务器不提供端口号时可采用传入domain的方式。例如：domain:`http://www.sgic.net.cn/CoCloud3`。
  * @param {ol.ProjectionLike} [opt_options.projection = ''] 必选项，瓦片地图投影信息，通过如下方法获得
  *          //projectionExtent为图层左下角到右上角坐标范围
  *          var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449];

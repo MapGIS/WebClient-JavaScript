@@ -102,7 +102,7 @@ export default class MapvLayer {
 
     bindEvent() {
         let self = this;
-        var map = this.map;
+        let map = this.map;
         //下面几个是cesium专属事件,clickEvent和mousemoveEvent是mapv内部自带的方法不放出来
         this.innerMoveStart = this.moveStartEvent.bind(this);
         this.innerMoveEnd = this.moveEndEvent.bind(this);
@@ -135,6 +135,7 @@ export default class MapvLayer {
     }
 
     unbindEvent() {
+        let map = this.map;
         if (this.postRender) {
             this.scene.camera.moveStart.removeEventListener(this.postStartEvent, this);
             this.scene.camera.moveEnd.removeEventListener(this.postEndEvent, this);
