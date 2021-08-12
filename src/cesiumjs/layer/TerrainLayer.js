@@ -71,7 +71,11 @@ export default class TerrainLayer extends BaseLayer {
      * @returns 地形层对象
      * @example
      * let terrain = new TerrainLayer(viewer:viewer);
-     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain');
+     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain'{
+     * requestVertexNormals:false,
+     * loaded:callBackfunction,
+     * getDocLayers:function (docLayers){}
+     * });
      */
     append(url, optionsParam) {
         if (!Cesium.defined(url)) {
