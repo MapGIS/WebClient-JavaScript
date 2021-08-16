@@ -129,7 +129,7 @@ class QueryServiceBase extends ServiceBase {
             way = requestType;
         }
         if (way.toUpperCase() === 'GET') {
-            fullRestUrl += '?' + this.queryParam.getParameterURL();
+            fullRestUrl += encodeURI('?' + this.queryParam.getParameterURL());
             // @date 20181022 邬俊惠 必须encodeURI,避免url中出现特殊字符导致请求出错
             // @date 20200925 潘卓然 这里由于原来的 fullRestUrl = this.getFullUrl(); 是encode的，
             // 导致上面的this.queryParam.getParameterURL()这部分没有编码，因此原来是在后面加了下面一行来确保编码
