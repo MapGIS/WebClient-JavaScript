@@ -1,17 +1,19 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
     <title></title>
     <!--当前示例页面样式表引用-->
-    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <script src="./static/libs/include-openlayers-local.js"></script>
-    <script type="text/javascript">
+    <link rel='stylesheet' href='./static/demo/openlayers/example/style.css' />
+    <script include='jquery' src='./static/libs/include-lib-local.js'></script>
+    <script src='./static/libs/include-openlayers-local.js'></script>
+    <script type='text/javascript'>
         var map = null;
-        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/"; //缓存结果图层的基地址
+        var resultBaseUrl = 'gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/'; //缓存结果图层的基地址
         var resultLayerArr = new Array();
+
         function init() {
             //初始化地图容器
             map = new ol.Map({
@@ -25,34 +27,34 @@
                     center: [54.54, 25],  //地图初始中心点
                     maxZoom: 28,     //最大瓦片显示级数
                     minZoom: 1,      //最小瓦片显示级数
-                    zoom: 3 ,         //地图初始显示级数
-                    projection:"EPSG:4326"
+                    zoom: 3,         //地图初始显示级数
+                    projection: 'EPSG:4326'
                 })
             });
-            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            var tdk = '4c27d6e0e8a90715b23a989d42272fd8';   //天地图密钥
             //加载天地图瓦片图层数据
             map.addLayer(new ol.layer.Tile({
-                    title: "天地图矢量图层",
-                    source: new ol.source.XYZ({
-                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
-                        wrapX: false
-                    }),
-                    projection:"EPSG:4326"
+                title: '天地图矢量图层',
+                source: new ol.source.XYZ({
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                    wrapX: false
+                }),
+                projection: 'EPSG:4326'
             }));
             map.addLayer(new ol.layer.Tile({
-                    title: "天地图矢量注记图层",
+                    title: '天地图矢量注记图层',
                     source: new ol.source.XYZ({
-                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk
+                        url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk
                     }),
-                    projection:"EPSG:4326"
+                    projection: 'EPSG:4326'
                 })
             );
 
-    
+
             var vectorSource = new ol.source.Vector();
             //创建一个多变形
             var polygon = new ol.Feature({
-                geometry: new ol.geom.Polygon([[[0.46, 30.1], [11.48, 6.22], [36.73, 7.6],[58.77, 25.51],[41.33, 49.39]]])
+                geometry: new ol.geom.Polygon([[[0.46, 30.1], [11.48, 6.22], [36.73, 7.6], [58.77, 25.51], [41.33, 49.39]]])
             });
             //设置区样式信息
             polygon.setStyle(new ol.style.Style({
@@ -83,68 +85,75 @@
                     width: 2
                 })
             }));
-            vectorSource.addFeatures([polygon,circle]);
+            vectorSource.addFeatures([polygon, circle]);
 
-             //创建一个图层
+            //创建一个图层
             var vectorLayer = new ol.layer.Vector({
                 source: vectorSource,
-                zIndex:1
+                zIndex: 1
             });
             //将绘制层添加到地图容器中
             map.addLayer(vectorLayer);
         }
+
         //执行圆裁剪分析
-        function circleClip()
-        {
-            var resultname = resultBaseUrl + "clipByCircleAnalysisResultLayer" + getCurentTime();
+        function circleClip() {
+            //显示进度条
+            startPressBar();
+            var resultname = resultBaseUrl + 'clipByCircleAnalysisResultLayer' + getCurentTime();
             //实例化Zondy.Service.ClipByCircle类
             var clipParam = new Zondy.Service.ClipByCircle({
-                ip: "develop.smaryun.com",
-                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                ip: 'develop.smaryun.com',
+                port: '6163',    //访问IGServer的端口号，.net版为6163，Java版为8089,
                 //设置圆心坐标
-                center: "88.62, 25.09",
+                center: '88.62, 25.09',
                 //设置圆半径长度    
                 radius: 15,
                 //设置被裁剪图层URL 	        
-                srcInfo: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区",
+                srcInfo: 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区',
                 //设置结果URL 		
-                desInfo: resultname    
+                desInfo: resultname
             });
             //调用基类的execute方法，执行圆裁剪分析。AnalysisSuccess为结果回调函数
-            clipParam.execute(AnalysisSuccess,"post",false,"json",()=>{});
-           
+            clipParam.execute(AnalysisSuccess, 'post', false, 'json', () => {
+            });
+
         }
+
         //执行多边形裁剪分析
-        function polygonClip()
-        {
-            var resultname = resultBaseUrl + "clipByPolyAnalysisResultLayer" + getCurentTime();
+        function polygonClip() {
+            //显示进度条
+            startPressBar();
+            var resultname = resultBaseUrl + 'clipByPolyAnalysisResultLayer' + getCurentTime();
             //实例化ClipByPolygon类
             var clipParam = new Zondy.Service.ClipByPolygon({
-                ip: "develop.smaryun.com",
-                port: "6163"    //访问IGServer的端口号，.net版为6163，Java版为8089
+                ip: 'develop.smaryun.com',
+                port: '6163'    //访问IGServer的端口号，.net版为6163，Java版为8089
             });
             //设置被裁剪图层URL
-            clipParam.srcInfo = "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区";
+            clipParam.srcInfo = 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区';
             //设置结果URL	
             clipParam.desInfo = resultname;
             //多边形点坐标串
-            clipParam.strPos = "0.46, 30.1,11.48, 6.22,36.73, 7.6,58.77, 25.51,41.33, 49.39, 0.46, 30.1";
+            clipParam.strPos = '0.46, 30.1,11.48, 6.22,36.73, 7.6,58.77, 25.51,41.33, 49.39, 0.46, 30.1';
             //调用基类的execute方法，执行多边形裁剪分析。AnalysisSuccess为结果回调函数
-            clipParam.execute(AnalysisSuccess, "post", false, "json", ()=>{});
+            clipParam.execute(AnalysisSuccess, 'post', false, 'json', () => {
+            });
         }
 
-         //分析成功后的回调
-         function AnalysisSuccess(data) {
+        //分析成功后的回调
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
             if (!data.results) {
-                alert("裁剪失败，请检查参数！");
-            }
-            else {
+                alert('裁剪失败，请检查参数！');
+            } else {
                 if (data.results.length != 0) {
                     var resultLayerUrl = data.results[0].Value || data.results[0].value;
                     //将结果图层添加到地图视图中显示
-                    var resultLayer = new Zondy.Map.GdbpLayer("MapGIS IGS BuffAnalyResultLayer", [resultBaseUrl+resultLayerUrl], {
-                        ip: "develop.smaryun.com",
-                        port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                    var resultLayer = new Zondy.Map.GdbpLayer('MapGIS IGS BuffAnalyResultLayer', [resultBaseUrl + resultLayerUrl], {
+                        ip: 'develop.smaryun.com',
+                        port: '6163',    //访问IGServer的端口号，.net版为6163，Java版为8089,
                         isBaseLayer: false
                     });
                     map.addLayer(resultLayer);
@@ -153,12 +162,10 @@
             }
         }
 
-        function deleteAll()
-        {
-            while(resultLayerArr.length>0)
-            {
+        function deleteAll() {
+            while (resultLayerArr.length > 0) {
                 map.removeLayer(resultLayerArr.pop());
-            } 
+            }
         }
 
         function getCurentTime() {
@@ -176,15 +183,15 @@
             //获取当前秒钟
             var ss = now.getSeconds();
             //将当前的日期拼串
-            var clock = year + "-";
+            var clock = year + '-';
             if (month < 10)
-                clock += "0";
-            clock += month + "-";
+                clock += '0';
+            clock += month + '-';
             if (day < 10)
-                clock += "0";
-            clock += day + "-";
+                clock += '0';
+            clock += day + '-';
             if (hh < 10)
-                clock += "0";
+                clock += '0';
             clock += hh;
             if (mm < 10) clock += '0';
             clock += mm;
@@ -192,76 +199,90 @@
             clock += ss;
             return (clock);
         }
+
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById('preview').style.display = 'none';
+        }
+
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById('preview').style.display = 'block';
+        }
     </script>
 </head>
 
-<body onload="init()">
-    <div id="mapCon">
-    </div>
+<body onload='init()'>
+<div id='mapCon'>
+</div>
 
-    <div id="menuContain" class='menuContain'>
-        <div id="tool-container">
-         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
-             <span></span><i class="menuGroup">几何裁剪</i><em></em>
-         </div>
-      
-     </div>
- </div>
- <div id="menu1" class="menuStrip" style='display:none' >
-     <ul  class="menuItems">
-         <li   onclick="circleClip()"><span class="item1"></span><i >圆</i>
-         </li>
-         <li   onclick="polygonClip()"><span class="item1"></span><i >多边形</i>
-         </li>
-         <li class="divider"></li>
-         <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
-         </li>
-     </ul>
-  </div>
- <script>
+<div id='menuContain' class='menuContain'>
+    <div id='tool-container'>
+        <div id='dataSourceMenuID' class='optmain' status='unactive' onclick="switchMenuStatus(this,'menu1')">
+            <span></span><i class='menuGroup'>几何裁剪</i><em></em>
+        </div>
+
+    </div>
+</div>
+<div id='menu1' class='menuStrip' style='display:none'>
+    <ul class='menuItems'>
+        <li onclick='circleClip()'><span class='item1'></span><i>圆</i>
+        </li>
+        <li onclick='polygonClip()'><span class='item1'></span><i>多边形</i>
+        </li>
+        <li class='divider'></li>
+        <li onclick='deleteAll()'><span class='item3'></span><i>清除</i>
+        </li>
+    </ul>
+</div>
+<div id='preview'>
+    <img src='static/assets/graphic-image/39-1.gif' alt='' /><br />
+    <br />
+    <span>正在分析，请稍候</span>
+</div>
+<script>
     function switchMenuStatus(div, menuitemFrameID) {
         var temDivs = document.getElementsByClassName('optmain');
         if (temDivs.length > 0) {
             for (var i = 0; i < temDivs.length; i++) {
                 if (temDivs[i] === div) {
-                    var status = div.getAttribute("status");
-                    if (status == "unactive") {
-                        div.setAttribute("status", "active");
-                        var tem_spans = div.getElementsByTagName("span");
-                        var tem_ems = div.getElementsByTagName("em");
-                        tem_spans[0].className = "active";
-                        tem_ems[0].className = "active";
+                    var status = div.getAttribute('status');
+                    if (status == 'unactive') {
+                        div.setAttribute('status', 'active');
+                        var tem_spans = div.getElementsByTagName('span');
+                        var tem_ems = div.getElementsByTagName('em');
+                        tem_spans[0].className = 'active';
+                        tem_ems[0].className = 'active';
 
                         //显示菜单项
                         DisplayMenuItem(true, menuitemFrameID);
 
-                    }
-                    else {
-                        div.setAttribute("status", "unactive");
-                        var tem_spans = div.getElementsByTagName("span");
-                        var tem_ems = div.getElementsByTagName("em");
-                        tem_spans[0].className = "";
-                        tem_ems[0].className = "";
+                    } else {
+                        div.setAttribute('status', 'unactive');
+                        var tem_spans = div.getElementsByTagName('span');
+                        var tem_ems = div.getElementsByTagName('em');
+                        tem_spans[0].className = '';
+                        tem_ems[0].className = '';
 
                         //隐藏菜单项
                         DisplayMenuItem(false, menuitemFrameID);
                     }
-                }
-                else {
-                    var status = temDivs[i].getAttribute("status");
-                    if (status == "active") {
-                        temDivs[i].setAttribute("status", "unactive");
-                        var tem_spans = temDivs[i].getElementsByTagName("span");
-                        var tem_ems = temDivs[i].getElementsByTagName("em");
-                        tem_spans[0].className = "";
-                        tem_ems[0].className = "";
+                } else {
+                    var status = temDivs[i].getAttribute('status');
+                    if (status == 'active') {
+                        temDivs[i].setAttribute('status', 'unactive');
+                        var tem_spans = temDivs[i].getElementsByTagName('span');
+                        var tem_ems = temDivs[i].getElementsByTagName('em');
+                        tem_spans[0].className = '';
+                        tem_ems[0].className = '';
                     }
                 }
             }
         }
     }
 
-    function DisplayMenuItem (isDisplay, iframeID) {
+    function DisplayMenuItem(isDisplay, iframeID) {
         var menuItemFrame = document.getElementById(iframeID);
         if (menuItemFrame != null) {
             if (isDisplay) {
@@ -269,18 +290,17 @@
                 if (temDivs.length > 0) {
                     for (var i = 0; i < temDivs.length; i++) {
                         if (temDivs[i] != menuItemFrame) {
-                            temDivs[i].style.display = "none";
+                            temDivs[i].style.display = 'none';
                         }
-                    }   
+                    }
                 }
-                menuItemFrame.style.display = "";
-            }
-            else {
-                menuItemFrame.style.display = "none";
+                menuItemFrame.style.display = '';
+            } else {
+                menuItemFrame.style.display = 'none';
             }
         }
     };
- </script>
+</script>
 </body>
 
 </html>

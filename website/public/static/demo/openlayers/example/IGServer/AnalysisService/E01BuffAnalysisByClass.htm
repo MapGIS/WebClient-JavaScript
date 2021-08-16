@@ -52,6 +52,8 @@
             }
             //执行单圈缓冲区分析
             function bufferOneRing() {
+                //显示进度条
+                startPressBar();
                 var clsBufBySR = new Zondy.Service.ClassBufferBySingleRing({
                     ip: 'develop.smaryun.com',
                     port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
@@ -72,6 +74,8 @@
             }
 
             function bufferMulRings() {
+                //显示进度条
+                startPressBar();
                 var clsBufByMR = new Zondy.Service.ClassBufferByMultiplyRing({
                     ip: 'develop.smaryun.com',
                     port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
@@ -88,6 +92,8 @@
 
             //分析成功后的回调
             function AnalysisSuccess(data) {
+                //停止进度条
+                stopPressBar();
                 if (!data.results) {
                     alert('缓冲失败，请检查参数！')
                 } else {
@@ -139,6 +145,16 @@
                 clock += ss
                 return clock
             }
+
+            /*===========================================进度条===================================================*/
+            //停止进度条
+            function stopPressBar() {
+                document.getElementById("preview").style.display = "none";
+            }
+            //开始进度条动画
+            function startPressBar() {
+                document.getElementById("preview").style.display = "block";
+            }
         </script>
     </head>
 
@@ -157,6 +173,11 @@
                 <li class="divider"></li>
                 <li onclick="deleteAll()"><span class="item3"></span><i>清除</i></li>
             </ul>
+        </div>
+        <div id="preview">
+            <img src="static/assets/graphic-image/39-1.gif" alt='' /><br />
+            <br />
+            <span>正在分析，请稍候</span>
         </div>
         <script>
             function switchMenuStatus(div, menuitemFrameID) {

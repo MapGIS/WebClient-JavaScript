@@ -4,13 +4,12 @@
     position: absolute;
 }
 
-.menuContain span,i,em
- {
+.menuContain span, i, em {
     float: left;
-    display:inline-block;
+    display: inline-block;
 }
-.menuContain em
-{
+
+.menuContain em {
     height: 20px;
     width: 20px;
     margin-left: 4px;
@@ -19,12 +18,12 @@
     background-repeat: no-repeat;
     background-position: -6px -6px;
 }
-.menuContain em.active
-{
+
+.menuContain em.active {
     background-position: -6px -168px;
 }
-.menuContain span
-{
+
+.menuContain span {
     position: relative;
     top: -4px;
     left: -3px;
@@ -35,21 +34,22 @@
     background-position: -40px -116px;
 
 }
+
 .menuContain span.active {
     background-position: -40px -48px;
 }
-#menuContain
-{
-	z-index:9999;
+
+#menuContain {
+    z-index: 9999;
     background-color: rgba(47, 41, 41, 0.75);
-	height:22px;
-	position: absolute;
-	top:10px;
-	width:100px;
-	right:100px;
+    height: 22px;
+    position: absolute;
+    top: 10px;
+    width: 100px;
+    right: 100px;
 }
-.menuGroup
-{
+
+.menuGroup {
     position: relative;
     margin-top: 3px;
     color: #fff;
@@ -57,21 +57,25 @@
 }
 
 #menu1 {
-   right: 100px;
+    right: 100px;
 }
+
 #menu2 {
-   right: 377px;
+    right: 377px;
 }
+
 #menu3 {
-   right: 257px;
+    right: 257px;
 }
+
 #menu4 {
-   right: 137px;
+    right: 137px;
 }
+
 .menuStrip {
     display: block;
     background: #fff;
-    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+    box-shadow: 1px 2px 1px rgba(0, 0, 0, .15);
     position: absolute;
     top: 35px;
     line-height: 10px;
@@ -81,7 +85,8 @@
     width: 100px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.menuStrip ul{
+
+.menuStrip ul {
     display: block;
     list-style-type: none;
     -webkit-margin-before: 1em;
@@ -89,9 +94,10 @@
     -webkit-margin-start: 0px;
     -webkit-margin-end: 0px;
     -webkit-padding-start: 40px;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
+
 .menuStrip .menuItems li {
     box-sizing: border-box;
     width: 100%;
@@ -102,6 +108,7 @@
     display: list-item;
     text-align: -webkit-match-parent;
 }
+
 .menuStrip .menuItems li:hover {
     background-color: #6389de;
     color: #fff;
@@ -117,15 +124,19 @@
     top: -4px;
     left: -3px;
 }
-.menuStrip .menuItems li .item1{
+
+.menuStrip .menuItems li .item1 {
     background-position: -80px -117px;
 }
-.menuStrip .menuItems li .item2{
+
+.menuStrip .menuItems li .item2 {
     background-position: -80px -168px;
 }
-.menuStrip .menuItems li .item3{
+
+.menuStrip .menuItems li .item3 {
     background-position: -163px -117px;
 }
+
 .menuStrip .menuItems i {
     float: left;
     font-size: 10px;
@@ -134,9 +145,28 @@
     line-height: 25px;
     display: inline-block;
 }
-.menuStrip .menuItems  .divider {
+
+.menuStrip .menuItems .divider {
     height: 1px;
     margin: 1px 0;
     overflow: hidden;
     background-color: #e5e5e5;
+}
+
+#preview {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    display: none;
+    text-align: center;
+    font-weight: bold;
+    left: 50%;
+    right: 0;
+    top: 50%;
+    bottom: 0;
+    margin-left: -50px;
+    margin-right: auto;
+    margin-top: -50px;
+    margin-bottom: auto;
+    z-index: 1000;
 }
