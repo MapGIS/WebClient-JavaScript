@@ -1,10 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
     <title></title>
     <!--当前示例页面样式表引用-->
+
     <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-openlayers-local.js"></script>
@@ -49,8 +51,9 @@
     </style>
     <script type="text/javascript">
         var map = null;
-        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/"; //缓存结果图层的基地址
+        var resultBaseUrl = 'gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/'; //缓存结果图层的基地址
         var resultLayerArr = new Array();
+
         function init() {
             //初始化地图容器
             map = new ol.Map({
@@ -64,27 +67,27 @@
                     center: [54.54, 25],  //地图初始中心点
                     maxZoom: 28,     //最大瓦片显示级数
                     minZoom: 1,      //最小瓦片显示级数
-                    zoom: 3 ,         //地图初始显示级数
-                    projection:"EPSG:4326"
+                    zoom: 3,         //地图初始显示级数
+                    projection: 'EPSG:4326'
                 })
             });
-            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            var tdk = '4c27d6e0e8a90715b23a989d42272fd8';   //天地图密钥
             //加载天地图瓦片图层数据
             map.addLayer(new ol.layer.Tile({
-                title: "天地图矢量图层",
+                title: '天地图矢量图层',
                 source: new ol.source.XYZ({
-                    url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
                     wrapX: false
                 }),
-                projection:"EPSG:4326"
+                projection: 'EPSG:4326'
             }));
             map.addLayer(new ol.layer.Tile({
-                    title: "天地图矢量注记图层",
+                    title: '天地图矢量注记图层',
                     source: new ol.source.XYZ({
-                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
                         wrapX: false
                     }),
-                    projection:"EPSG:4326"
+                    projection: 'EPSG:4326'
                 })
             );
             map.addLayer(
@@ -105,19 +108,18 @@
             loadLayersControl(map, "layerTree");
         }
 
-
-        function overlayByLayer()
-        {
-            var resultname = resultBaseUrl + "overLayByLayerAnalysisResultLayer" + getCurentTime();
+        function overlayByLayer() {
+            startPressBar();
+            var resultname = resultBaseUrl + 'overLayByLayerAnalysisResultLayer' + getCurentTime();
             //实例化OverlayByLayer类
             var overlayParam = new Zondy.Service.OverlayByLayer({
-                ip: "develop.smaryun.com",
-                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                ip: 'develop.smaryun.com',
+                port: '6163',    //访问IGServer的端口号，.net版为6163，Java版为8089,
                 //设置被叠加图层URL
-                srcInfo1: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流",
+                srcInfo1: 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流',
                 //设置叠加图层URL
-                srcInfo2: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区",
-                //设置结果URL
+                srcInfo2: 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区',
+                //设置结果URL  			
                 desInfo: resultname,
                 //设置结果图层的图形参数信息
                 infoOptType: 2,
@@ -125,25 +127,26 @@
                 overType: 1,
                 //允许重算面积
                 isReCalculate: true,
-                //容差半径
+                //容差半径		
                 radius: 0.05
             });
             //调用基类的execute方法，执行叠加分析， onSuccess为结果回调函数
-            overlayParam.execute(AnalysisSuccess,"post",false,"json", ()=>{});
+            overlayParam.execute(AnalysisSuccess, 'post', false, 'json', () => {
+            });
         }
 
         //分析成功后的回调
         function AnalysisSuccess(data) {
+            stopPressBar();
             if (!data.results) {
-                alert("裁剪失败，请检查参数！");
-            }
-            else {
+                alert('裁剪失败，请检查参数！');
+            } else {
                 if (data.results.length != 0) {
                     var resultLayerUrl = data.results[0].Value || data.results[0].value;
                     //将结果图层添加到地图视图中显示
-                    var resultLayer = new Zondy.Map.GdbpLayer("MapGIS IGS BuffAnalyResultLayer", [resultBaseUrl+resultLayerUrl], {
-                        ip: "develop.smaryun.com",
-                        port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                    var resultLayer = new Zondy.Map.GdbpLayer('MapGIS IGS BuffAnalyResultLayer', [resultBaseUrl + resultLayerUrl], {
+                        ip: 'develop.smaryun.com',
+                        port: '6163',    //访问IGServer的端口号，.net版为6163，Java版为8089,
                         isBaseLayer: false
                     });
                     map.addLayer(resultLayer);
@@ -152,10 +155,8 @@
             }
         }
 
-        function deleteAll()
-        {
-            while(resultLayerArr.length>0)
-            {
+        function deleteAll() {
+            while (resultLayerArr.length > 0) {
                 map.removeLayer(resultLayerArr.pop());
             }
         }
@@ -175,15 +176,15 @@
             //获取当前秒钟
             var ss = now.getSeconds();
             //将当前的日期拼串
-            var clock = year + "-";
+            var clock = year + '-';
             if (month < 10)
-                clock += "0";
-            clock += month + "-";
+                clock += '0';
+            clock += month + '-';
             if (day < 10)
-                clock += "0";
-            clock += day + "-";
+                clock += '0';
+            clock += day + '-';
             if (hh < 10)
-                clock += "0";
+                clock += '0';
             clock += hh;
             if (mm < 10) clock += '0';
             clock += mm;
@@ -191,6 +192,7 @@
             clock += ss;
             return (clock);
         }
+
         //map中的图层数组
         var layerArr = new Array();
         //图层名称数组
@@ -262,78 +264,92 @@
             } else {
                 element.innerText = text;
             }
+
+
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById('preview').style.display = 'none';
+        }
+
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById('preview').style.display = 'block';
+
         }
     </script>
 </head>
 
-<body onload="init()">
-<div id="mapCon">
-    <div id="layerControl" class="layerControl">
-        <ul id="layerTree" class="layerTree"></ul>
-    </div>
+
+<body onload='init()'>
+<div id='mapCon'>
 </div>
 
-<div id="menuContain" class='menuContain'>
-    <div id="tool-container">
-        <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
-            <span></span><i class="menuGroup">叠加分析</i><em></em>
+<div id='menuContain' class='menuContain'>
+    <div id='tool-container'>
+        <div id='dataSourceMenuID' class='optmain' status='unactive' onclick="switchMenuStatus(this,'menu1')">
+            <span></span><i class='menuGroup'>叠加分析</i><em></em>
         </div>
 
     </div>
 </div>
-<div id="menu1" class="menuStrip" style='display:none' >
-    <ul  class="menuItems">
-        <li   onclick="overlayByLayer()"><span class="item1"></span><i >图层叠加</i>
+<div id='menu1' class='menuStrip' style='display:none'>
+    <ul class='menuItems'>
+        <li onclick='overlayByLayer()'><span class='item1'></span><i>图层叠加</i>
         </li>
-        <li class="divider"></li>
-        <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
+        <li class='divider'></li>
+        <li onclick='deleteAll()'><span class='item3'></span><i>清除</i>
         </li>
     </ul>
 </div>
+<div id='preview'>
+    <img src='static/assets/graphic-image/39-1.gif' alt='' /><br />
+    <br />
+    <span>正在分析，请稍候</span>
+</div>
+
 <script>
     function switchMenuStatus(div, menuitemFrameID) {
         var temDivs = document.getElementsByClassName('optmain');
         if (temDivs.length > 0) {
             for (var i = 0; i < temDivs.length; i++) {
                 if (temDivs[i] === div) {
-                    var status = div.getAttribute("status");
-                    if (status == "unactive") {
-                        div.setAttribute("status", "active");
-                        var tem_spans = div.getElementsByTagName("span");
-                        var tem_ems = div.getElementsByTagName("em");
-                        tem_spans[0].className = "active";
-                        tem_ems[0].className = "active";
+                    var status = div.getAttribute('status');
+                    if (status == 'unactive') {
+                        div.setAttribute('status', 'active');
+                        var tem_spans = div.getElementsByTagName('span');
+                        var tem_ems = div.getElementsByTagName('em');
+                        tem_spans[0].className = 'active';
+                        tem_ems[0].className = 'active';
 
                         //显示菜单项
                         DisplayMenuItem(true, menuitemFrameID);
 
-                    }
-                    else {
-                        div.setAttribute("status", "unactive");
-                        var tem_spans = div.getElementsByTagName("span");
-                        var tem_ems = div.getElementsByTagName("em");
-                        tem_spans[0].className = "";
-                        tem_ems[0].className = "";
+                    } else {
+                        div.setAttribute('status', 'unactive');
+                        var tem_spans = div.getElementsByTagName('span');
+                        var tem_ems = div.getElementsByTagName('em');
+                        tem_spans[0].className = '';
+                        tem_ems[0].className = '';
 
                         //隐藏菜单项
                         DisplayMenuItem(false, menuitemFrameID);
                     }
-                }
-                else {
-                    var status = temDivs[i].getAttribute("status");
-                    if (status == "active") {
-                        temDivs[i].setAttribute("status", "unactive");
-                        var tem_spans = temDivs[i].getElementsByTagName("span");
-                        var tem_ems = temDivs[i].getElementsByTagName("em");
-                        tem_spans[0].className = "";
-                        tem_ems[0].className = "";
+                } else {
+                    var status = temDivs[i].getAttribute('status');
+                    if (status == 'active') {
+                        temDivs[i].setAttribute('status', 'unactive');
+                        var tem_spans = temDivs[i].getElementsByTagName('span');
+                        var tem_ems = temDivs[i].getElementsByTagName('em');
+                        tem_spans[0].className = '';
+                        tem_ems[0].className = '';
                     }
                 }
             }
         }
     }
 
-    function DisplayMenuItem (isDisplay, iframeID) {
+    function DisplayMenuItem(isDisplay, iframeID) {
         var menuItemFrame = document.getElementById(iframeID);
         if (menuItemFrame != null) {
             if (isDisplay) {
@@ -341,14 +357,13 @@
                 if (temDivs.length > 0) {
                     for (var i = 0; i < temDivs.length; i++) {
                         if (temDivs[i] != menuItemFrame) {
-                            temDivs[i].style.display = "none";
+                            temDivs[i].style.display = 'none';
                         }
                     }
                 }
-                menuItemFrame.style.display = "";
-            }
-            else {
-                menuItemFrame.style.display = "none";
+                menuItemFrame.style.display = '';
+            } else {
+                menuItemFrame.style.display = 'none';
             }
         }
     };

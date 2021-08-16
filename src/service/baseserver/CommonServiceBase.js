@@ -222,7 +222,7 @@ class CommonServiceBase {
      */
     serviceProcessFailed(result) {
         result = transformResult(result);
-        var error = result.error || result;
+        var error = result;
         this.events.triggerEvent("processFailed", {error: error});
     }
 
@@ -257,7 +257,7 @@ class CommonServiceBase {
             if (typeof text === "string" && (text.toLowerCase() === 'true' || text.toLowerCase() === 'false')) {
                 result = {};
                 if (text.toLowerCase() === 'true') {
-                    result.succeed = true;
+                    result.success = true;
                 }
                 else {
                     result.error = true;
@@ -287,14 +287,15 @@ class CommonServiceBase {
                     result = {value: result};
                 }
                 if (Object.prototype.toString.call(result) !== '[object Array]') {
-                    result.succeed = result.succeed === undefined ? true : result.succeed;
+                    result.success = result.success === undefined ? true : result.success;
                 }
                 else {
                     result = {
                         value: result,
-                        succeed: true
+                        success: true
                     };
                 }
+                
                 var success = (options.scope) ? bind(options.success, options.scope) : options.success;
                 success(result);
             }

@@ -119,6 +119,7 @@
         //执行单圈缓冲区分析
         function bufferOneRing()
         {
+            startPressBar();
             //初始化Zondy.Object.FeatureGeometry对象
             var regGeo = new Zondy.Object.FeatureGeometry();
             //设置区要素的空间几何信息
@@ -170,6 +171,7 @@
 
         function bufferMulRings()
         {
+            startPressBar();
             //初始化Zondy.Object.FeatureGeometry对象
             var regGeo = new Zondy.Object.FeatureGeometry();
             //设置区要素的空间几何信息
@@ -213,8 +215,10 @@
             featureBufByMR.execute(AnalysisSuccess,"post",false,"json", ()=>{});
         }
 
-        //分析成功后的回调
-        function AnalysisSuccess(data) {
+         //分析成功后的回调
+         function AnalysisSuccess(data) {
+             //停止进度条
+             stopPressBar();
             if (!data.results) {
                 alert("缓冲失败，请检查参数！");
             }
@@ -343,6 +347,16 @@
             } else {
                 element.innerText = text;
             }
+
+
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById("preview").style.display = "none";
+        }
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById("preview").style.display = "block";
         }
     </script>
 </head>
@@ -354,26 +368,33 @@
     </div>
 </div>
 
-<div id="menuContain" class='menuContain'>
-    <div id="tool-container">
-        <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
-            <span></span><i class="menuGroup">要素缓冲</i><em></em>
-        </div>
 
+    <div id="menuContain" class='menuContain'>
+        <div id="tool-container">
+         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
+             <span></span><i class="menuGroup">要素缓冲</i><em></em>
+         </div>
+      
+     </div>
+ </div>
+ <div id="menu1" class="menuStrip" style='display:none' >
+     <ul  class="menuItems">
+         <li   onclick="bufferOneRing()"><span class="item1"></span><i >单圈</i>
+         </li>
+         <li   onclick="bufferMulRings()"><span class="item1"></span><i >多圈</i>
+         </li>
+         <li class="divider"></li>
+         <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
+         </li>
+     </ul>
+  </div>
+    <div id="preview">
+        <img src="static/assets/graphic-image/39-1.gif" alt='' /><br />
+        <br />
+        <span>正在分析，请稍候</span>
     </div>
-</div>
-<div id="menu1" class="menuStrip" style='display:none' >
-    <ul  class="menuItems">
-        <li   onclick="bufferOneRing()"><span class="item1"></span><i >单圈</i>
-        </li>
-        <li   onclick="bufferMulRings()"><span class="item1"></span><i >多圈</i>
-        </li>
-        <li class="divider"></li>
-        <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
-        </li>
-    </ul>
-</div>
-<script>
+ <script>
+
     function switchMenuStatus(div, menuitemFrameID) {
         var temDivs = document.getElementsByClassName('optmain');
         if (temDivs.length > 0) {
