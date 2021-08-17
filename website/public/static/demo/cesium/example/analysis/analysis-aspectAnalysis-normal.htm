@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>坡向分析</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-cesium-local.js"></script>
+        <!--当前示例页面样式表引用-->
+        <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+        <script>
+            'use strict';
+            //定义三维视图的主要类
+            var webGlobe, aspectAnalysis, drawElement, viewer;
+            //地图初始化函数
+            function init() {
+                //构造三维视图类（视图容器div的id，三维视图设置参数）
+                webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                    terrainExaggeration: 1
+                });
+                viewer = webGlobe.viewer;
+                //构造第三方图层对象
+                var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载天地图
+                var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                    //天地图经纬度数据
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                    //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                    token: '9c157e9585486c02edf817d2ecbc7752',
+                    //地图类型 'vec'矢量 'img'影像 'ter'地形
+                    ptype: 'img'
+                });
+
+                //构造地形图层管理类
+                var terrain = new CesiumZondy.Layer.TerrainLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载三维地形地图文档（服务地址，配置参数）
+                var { protocol, ip, port } = window.webclient;
+                ip = '192.168.23.113';
+                port = '8089';
+                var terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {
+                    requestVertexNormals: true
+                });
+                //初始化视图功能管理类
+                var sceneManager = new CesiumZondy.Manager.SceneManager({
+                    viewer: webGlobe.viewer
+                });
+                //视点跳转
+                sceneManager.flyToEx(120.9819, 23.5307, {
+                    height: 9161,
+                    heading: 30,
+                    pitch: -10,
+                    roll: 0
+                });
+
+                let colors = ['#2d41d0', '#2d94d0', '#2dd0aa', '#2dd032', '#d0c32d', '#d03c2d'];
+                // let steps = [0.05, 0.25, 0.45, 0.65, 0.85, 0.95];
+
+                drawElement = new Cesium.DrawElement(viewer);
+                drawElement.startDrawingPolygon({
+                    // 绘制完成回调函数
+                    callback: (positions) => {
+                        remove();
+
+                        aspectAnalysis = new Cesium.TerrainAnalyse(viewer, {
+                            aspectRampColor: colors,
+                            // aspectRamp: steps
+                        });
+
+                        viewer.scene.globe.enableLighting = true;
+                        // 调高亮度
+                        const stages = viewer.scene.postProcessStages;
+                        viewer.scene.brightness = stages.add(new Cesium.PostProcessStageLibrary.createBrightnessStage());
+                        viewer.scene.brightness.enabled = true;
+                        viewer.scene.brightness.uniforms.brightness = 1.2;
+
+                        aspectAnalysis.enableContour(false);
+                        aspectAnalysis.updateMaterial('aspect');
+                        aspectAnalysis.changeAnalyseArea(positions);
+                    }
+                });
+            }
+
+            function remove() {
+                if (aspectAnalysis) {
+                    aspectAnalysis.updateMaterial('none');
+                    aspectAnalysis = null;
+                }
+                if (drawElement) {
+                    drawElement.stopDrawing();
+                    drawElement = null;
+                }
+
+                if (viewer.scene.brightness) {
+                    viewer.scene.globe.enableLighting = false;
+                    viewer.scene.brightness.enabled = false;
+                }
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="GlobeView"></div>
+    </body>
+</html>
