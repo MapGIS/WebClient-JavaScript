@@ -188,7 +188,7 @@
         });
         geojsonDataSet = new mapv.DataSet(data);
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(
+        var mapv1 = new CesiumZondy.Overlayer.MapvLayer(
           map,
           geojsonDataSet,
           geojsonOptions
@@ -208,7 +208,7 @@
           shadowBlur: 10,
         };
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(map, textDataSet, textOptions);
+        var mapv2 = new CesiumZondy.Overlayer.MapvLayer(map, textDataSet, textOptions);
 
         var lineDataSet = new mapv.DataSet(lineData);
         // https://github.com/huiyan-fe/mapv/blob/master/API.md
@@ -222,7 +222,7 @@
           draw: "simple",
         };
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(map, lineDataSet, lineOptions);
+        var mapv3 = new CesiumZondy.Overlayer.MapvLayer(map, lineDataSet, lineOptions);
         // https://github.com/huiyan-fe/mapv/blob/master/API.md
         var pointOptions = {
           context: "2d", //cesium必须设置画布为2d
@@ -236,7 +236,7 @@
 
         var pointDataSet = new mapv.DataSet(pointData);
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(map, pointDataSet, pointOptions);
+        var mapv4 = new CesiumZondy.Overlayer.MapvLayer(map, pointDataSet, pointOptions);
 
         var timeDataSet = new mapv.DataSet(timeData);
 
@@ -258,7 +258,14 @@
           draw: "simple",
         };
         // 声明cesium的mapv图层并将其显示到三维球上
-        new CesiumZondy.Overlayer.MapvLayer(map, timeDataSet, timeOptions);
+        var mapv5 = new CesiumZondy.Overlayer.MapvLayer(map, timeDataSet, timeOptions);
+        window.setTimeout(() => {
+          mapv1.remove();
+          mapv2.remove();
+          mapv3.remove();
+          mapv4.remove();
+          mapv5.remove();
+        }, 5000);
       });
     }
   </script>

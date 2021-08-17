@@ -49,7 +49,9 @@ export default class TerrainLayer extends BaseLayer {
             range: options.range,
             proxy: _proxy,
             scale: options.scale,
-            requestVertexNormals: requestVertexNormals
+            requestVertexNormals: requestVertexNormals,
+            terrainColorTblInfo:options.terrainColorTblInfo,
+            range3D: options.range3D
         });
 
         this.viewer.terrainProvider = terrainProvider;
@@ -79,7 +81,6 @@ export default class TerrainLayer extends BaseLayer {
         let resource;
         let proxy;
         const docLayers = [];
-
         if (Cesium.defined(options)) {
             if (Cesium.defined(options.proxy)) {
                 // 不放在defaultValue中 new 会影响性能
@@ -88,22 +89,36 @@ export default class TerrainLayer extends BaseLayer {
             Cesium.defaultValue(options.proxy, undefined);
             synchronous = Cesium.defaultValue(options.synchronous, true);
         }
-
+        const _callBack3 = () => {
+            if (Cesium.defined(options.getTerrainColor) && typeof options.getTerrainColor === 'function') {
+                options.getTerrainColor();
+            }
+        };
         const parseDocInfo = (info) => {
             if (info !== undefined && info.sceneInfos.length > 0) {
                 const { layers } = info.sceneInfos[0];
                 layers.forEach((layer) => {
-                    const { layerType, layerRenderIndex, elevationScale, range } = layer;
+                    const { layerType, layerRenderIndex, elevationScale, range, range3D , terrainLayer } = layer;
+                    const { terrainColorTblInfo } = terrainLayer;
                     const type = parseInt(layerType, 10);
                     if (type === LayerType.TERRAINLAYER) {
                         const sceneIndex = 0;
                         const opt = {
                             range,
+                            range3D,
+                            terrainColorTblInfo,
                             scale: elevationScale
                         };
                         Object.extend(options, opt);
+                        // if(Cesium.defined(terrainColorTblInfo)){
+                        //     options.terrainColorTblInfo=terrainColorTblInfo;
+                        // }
+                        // if(Cesium.defined(range3D)){
+                        //     options.range3D=range3D;
+                        // }
                         const layerRes = this.appendTerrainLayer(baseUrl, sceneIndex, layerRenderIndex, proxy, options);
                         docLayers.push(layerRes);
+                        layerRes.readyPromise.then(_callBack3);
                     }
                 });
             }
@@ -126,6 +141,7 @@ export default class TerrainLayer extends BaseLayer {
                 }
             }
         }
+
         return docLayers;
     }
 
@@ -155,6 +171,20 @@ export default class TerrainLayer extends BaseLayer {
             requestVertexNormals: true
         });
         this.viewer.terrainProvider = terrainProviderMeshes;
+    }
+     /**
+     * 删除地形图层
+     * @function module:客户端数据服务.TerrainLayer.prototype.deleteTerrain
+     * @example
+     * let terrain = new TerrainLayer(viewer:viewer);
+     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain');
+     * terrain.deleteTerrain();
+     */
+    deleteTerrain() {
+        if(Cesium.defined(this.viewer.terrainProvider)){
+            this.viewer.terrainProvider = null;
+        }
+        this.viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider();
     }
 }
 

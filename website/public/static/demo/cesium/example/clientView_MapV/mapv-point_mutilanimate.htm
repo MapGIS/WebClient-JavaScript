@@ -1,130 +1,118 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>点重叠播放</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
+        <!--引用示例页面样式表-->
+        <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    </head>
 
-<head>
-  <meta charset="utf-8" />
-  <title>点重叠播放</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-  <script include="mapv" src="./static/libs/include-cesium-local.js"></script>
-  <!--引用示例页面样式表-->
-  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
-</head>
+    <body>
+        <div id="GlobeView"></div>
+        <script>
+            var webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1
+            });
+            var blueImage = new Cesium.UrlTemplateImageryProvider({
+                url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                tilingScheme: new Cesium.WebMercatorTilingScheme(),
+                maximumLevel: 12
+            });
+            webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
 
-<body>
-  <div id="GlobeView"></div>
-  <script>
-    var webGlobe = new Cesium.WebSceneControl("GlobeView", {
-      terrainExaggeration: 1,
-    });
-    var blueImage = new Cesium.UrlTemplateImageryProvider({
-      url:
-        "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
-      tilingScheme: new Cesium.WebMercatorTilingScheme(),
-      maximumLevel: 12,
-    });
-    webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
+            var map = webGlobe.viewer;
 
-    var map = webGlobe.viewer;
+            initMap();
+            initMapv();
 
-    initMap();
-    initMapv();
+            function initMap() {
+                var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+                map.scene.camera.setView({
+                    destination: center
+                });
+            }
 
-    function initMap() {
-      var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
-      map.scene.camera.setView({
-        destination: center,
-      });
-    }
+            function initMapv() {
+                var randomCount = 1000;
 
-    function initMapv() {
-      var randomCount = 1000;
+                var data = [];
 
-      var data = [];
+                var citys = [
+                    '北京',
+                    '天津',
+                    '上海',
+                    '重庆',
+                    '石家庄',
+                    '太原',
+                    '呼和浩特',
+                    '哈尔滨',
+                    '长春',
+                    '沈阳',
+                    '济南',
+                    '南京',
+                    '合肥',
+                    '杭州',
+                    '南昌',
+                    '福州',
+                    '郑州',
+                    '武汉',
+                    '长沙',
+                    '广州',
+                    '南宁',
+                    '西安',
+                    '银川',
+                    '兰州',
+                    '西宁',
+                    '乌鲁木齐',
+                    '成都',
+                    '贵阳',
+                    '昆明',
+                    '拉萨',
+                    '海口'
+                ];
 
-      var citys = [
-        "北京",
-        "天津",
-        "上海",
-        "重庆",
-        "石家庄",
-        "太原",
-        "呼和浩特",
-        "哈尔滨",
-        "长春",
-        "沈阳",
-        "济南",
-        "南京",
-        "合肥",
-        "杭州",
-        "南昌",
-        "福州",
-        "郑州",
-        "武汉",
-        "长沙",
-        "广州",
-        "南宁",
-        "西安",
-        "银川",
-        "兰州",
-        "西宁",
-        "乌鲁木齐",
-        "成都",
-        "贵阳",
-        "昆明",
-        "拉萨",
-        "海口",
-      ];
-
-      // 构造数据
-      while (randomCount--) {
-        var cityCenter = mapv.utilCityCenter.getCenterByCityName(
-          citys[parseInt(Math.random() * citys.length)]
-        );
-        data.push({
-          geometry: {
-            type: "Point",
-            coordinates: [
-              cityCenter.lng - 2 + Math.random() * 4,
-              cityCenter.lat - 2 + Math.random() * 4,
-            ],
-          },
-          count: 30 * Math.random(),
-          time: 100 * Math.random(),
-        });
-      }
-      // 构建对应的dataset
-      var dataSet = new mapv.DataSet(data);
-      // 设置对应的参数
-      // https://github.com/huiyan-fe/mapv/blob/master/API.md
-      var options = {
-        context: "2d", //cesium必须设置画布为2d
-        cesium: {
-          postRender: true,
-          postRenderFrame: 60,
-        },
-        fillStyle: "rgba(55, 50, 250, 0.2)",
-        globalCompositeOperation: "lighter",
-        size: 10,
-        animation: {
-          type: "time",
-          stepsRange: {
-            start: 0,
-            end: 100,
-          },
-          trails: 10,
-          duration: 5,
-        },
-        draw: "simple",
-      };
-      // 声明cesium的mapv图层并将其显示到三维球上
-      var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(
-        map,
-        dataSet,
-        options
-      );
-    }
-  </script>
-</body>
-
+                // 构造数据
+                while (randomCount--) {
+                    var cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[parseInt(Math.random() * citys.length)]);
+                    data.push({
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [cityCenter.lng - 2 + Math.random() * 4, cityCenter.lat - 2 + Math.random() * 4]
+                        },
+                        count: 30 * Math.random(),
+                        time: 100 * Math.random()
+                    });
+                }
+                // 构建对应的dataset
+                var dataSet = new mapv.DataSet(data);
+                // 设置对应的参数
+                // https://github.com/huiyan-fe/mapv/blob/master/API.md
+                var options = {
+                    context: '2d', //cesium必须设置画布为2d
+                    cesium: {
+                        postRender: true,
+                        postRenderFrame: 60
+                    },
+                    fillStyle: 'rgba(55, 50, 250, 0.2)',
+                    globalCompositeOperation: 'lighter',
+                    size: 10,
+                    animation: {
+                        type: 'time',
+                        stepsRange: {
+                            start: 0,
+                            end: 100
+                        },
+                        trails: 10,
+                        duration: 5
+                    },
+                    draw: 'simple'
+                };
+                // 声明cesium的mapv图层并将其显示到三维球上
+                var mapvLayer = new CesiumZondy.Overlayer.MapvLayer(map, dataSet, options);
+            }
+        </script>
+    </body>
 </html>

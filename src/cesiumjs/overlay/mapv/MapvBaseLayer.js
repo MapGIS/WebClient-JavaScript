@@ -287,16 +287,18 @@ export class MapvBaseLayer extends BaseLayer {
             }
         });
         this.dataSet.set(newData);
-        this.update({
+        this.stopAniamation = true;
+        /* this.update({
             options: null
-        });
+        }); */
     }
 
     clearData() {
         this.dataSet && this.dataSet.clear();
-        this.update({
+        this.stopAniamation = true;
+        /* this.update({
             options: null
-        });
+        }); */
     }
 
     draw() {
