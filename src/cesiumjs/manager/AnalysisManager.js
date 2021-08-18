@@ -593,7 +593,7 @@ export default class AnalysisManager {
             for (let i = 0; i < planes.length; i += 1) {
                 const normal = planes[i].normal._cartesian3;
                 const planeEntity = this.viewer.entities.add({
-                    position: Cesium.CommFunction.getPointOntoPlane(center, normal, tileSet.boundingSphere.center, new Cesium.Cartesian3),
+                    position: Cesium.CommonFunction.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3),
                     plane: {
                         dimensions: new Cesium.Cartesian2(radius * scaleWidth, radius * scaleHeight),
                         material
