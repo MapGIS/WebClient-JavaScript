@@ -40,8 +40,6 @@
                 });
                 //加载三维地形地图文档（服务地址，配置参数）
                 var { protocol, ip, port } = window.webclient;
-                ip = '192.168.23.113';
-                port = '8089';
                 var terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {
                     requestVertexNormals: true
                 });
