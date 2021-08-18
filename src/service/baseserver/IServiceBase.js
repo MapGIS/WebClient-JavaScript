@@ -50,7 +50,7 @@ class IgsServiceBase extends CommonServiceBase {
             me.events && me.events.triggerEvent('processCompleted', { result: result });
         } else {
             ////在没有token是返回的是200，但是其实是没有权限，所以这里也应该是触发失败事件
-            me.events.triggerEvent('processFailed', { error: result });
+            me.events && me.events.triggerEvent('processFailed', { result: result });
         }
     }
 }

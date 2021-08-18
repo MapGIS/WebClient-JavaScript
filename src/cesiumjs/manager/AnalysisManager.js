@@ -560,13 +560,15 @@ export default class AnalysisManager {
      * @param {Number} [options.scaleHeight=2.5] 高度缩放比
      * @param {Number} [options.scaleWidth=2.5] 宽度缩放比
      * @param {Boolean} [options.interaction] 交互
+     * 
+     * @returns {Object} 返回对象
      */
     createDynamicCutting(tilesets, planes, options) {
         if (!Cesium.defined(tilesets) && tilesets.length > 0) {
             return undefined;
         }
-        var scaleHeight = defaultValue(options.scaleHeight, 2.5);
-        var scaleWidth = defaultValue(options.scaleWidth, 2.5);
+        var scaleHeight = Cesium.defaultValue(options.scaleHeight, 2.5);
+        var scaleWidth = Cesium.defaultValue(options.scaleWidth, 2.5);
         let material = Cesium.Color.WHITE.withAlpha(0.5);
         let interaction = false;
         const optionsParam = Cesium.defaultValue(options, {});

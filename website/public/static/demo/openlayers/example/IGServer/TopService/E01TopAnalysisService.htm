@@ -129,7 +129,23 @@
         }
         //分析成功后的回调
         function AnalysisSuccess(data) {
-            alert("两几何之间的拓扑关系为:"+data);
+            switch (data) {
+                case "Intersect":
+                    alert("两几何之间的拓扑关系为:相交");
+                    break;
+                case "Disjoin":
+                    alert("两几何之间的拓扑关系为:分离");
+                    break;
+                case "Include":
+                    alert("两几何之间的拓扑关系为:包含");
+                    break;
+                case "Adjacent":
+                    alert("两几何之间的拓扑关系为:邻接");
+                    break;
+                default:
+                    alert("两几何之间的拓扑关系为:未知");
+                    break;
+            }
         } 
 
         function changeData(val)
