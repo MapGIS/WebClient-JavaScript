@@ -9,6 +9,7 @@
 /docs/cesium/
 
 /src/service/node_modules/
+src/mapboxgl/node_modules/
 /src/service/dist*/
 #/src/leaflet/theme/
 #/src/mapboxgl/theme/
