@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>化简曲线</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script include="geohash,geojson,turf" src="./static/libs/include-mapboxgl-local.js"></script>
+        <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="map">
+            <div id="mouse-position"></div>
+        </div>
+        <script>
+            var originline, bezierline;
+            var tiandituKey = 'f5347cab4b28410a6e8ba5143e3d5a35';
+            var map = new mapboxgl.Map({
+                crs: 'EPSG:4326', //经纬度一定要设置crs参数
+                maxBounds: [
+                    [-180, -90],
+                    [180, 90]
+                ],
+                container: 'map',
+                style: {
+                    version: 8,
+                    sources: {
+                        'tianditu-4326-vector': {
+                            //来源类型为栅格瓦片
+                            type: 'raster',
+                            tiles: [
+                                //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                                'http://t' +
+                                    Math.round(Math.random() * 7) +
+                                    '.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                                    '&TILECOL=' +
+                                    '{x}' +
+                                    '&TILEROW=' +
+                                    '{y}' +
+                                    '&TILEMATRIX=' +
+                                    '{z}' +
+                                    '&tk=' +
+                                    tiandituKey
+                            ],
+                            //栅格瓦片的分辨率
+                            tileSize: 256
+                        },
+                        'tianditu-4326-symbol': {
+                            //来源类型为栅格瓦片
+                            type: 'raster',
+                            tiles: [
+                                //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                                'http://t' +
+                                    Math.round(Math.random() * 7) +
+                                    '.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles' +
+                                    '&TILECOL=' +
+                                    '{x}' +
+                                    '&TILEROW=' +
+                                    '{y}' +
+                                    '&TILEMATRIX=' +
+                                    '{z}' +
+                                    '&tk=' +
+                                    tiandituKey
+                            ],
+                            //栅格瓦片的分辨率
+                            tileSize: 256
+                        }
+                    },
+                    layers: [
+                        {
+                            id: 'tianditu-4326-vector',
+                            type: 'raster',
+                            source: 'tianditu-4326-vector',
+                            minzoom: 0,
+                            maxzoom: 22
+                        },
+                        {
+                            id: 'tianditu-4326-symbol',
+                            type: 'raster',
+                            source: 'tianditu-4326-symbol',
+                            minzoom: 0,
+                            maxzoom: 22
+                        }
+                    ]
+                },
+                zoom: 8,
+                center: [114.356018000000003, 30.5720059999999984]
+            });
+
+            map.on('load', function () {
+                loadData();
+            });
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                document.getElementById('mouse-position').innerHTML = '经度：' + e.lngLat.lng.toFixed(2) + '，纬度：' + e.lngLat.lat.toFixed(2);
+            });
+            function loadData() {
+                $.getJSON('../../static/data/geojson/wuhan_bounds.geojson', function (data) {
+                    console.log('geojson', data);
+                    originline = data;
+                    var options = { tolerance: 0.005, highQuality: false };
+                    let simples = data.features.map((f, i) => {
+                        let geometry;
+                        if (f.geometry.type == 'MultiPolygon') {
+                            geometry = turf.multiPolygon(f.geometry.coordinates);
+                        } else if (f.geometry.type == 'Polygon') {
+                            geometry = turf.polygon(f.geometry.coordinates);
+                        } else if (f.geometry.type == 'MultiLineString') {
+                            geometry = turf.multiLineString(f.geometry.coordinates);
+                        } else if (f.geometry.type == 'LineString') {
+                            geometry = turf.lineString(f.geometry.coordinates);
+                        }
+                        if (i > 13) return f;
+                        let simple = turf.simplify(geometry, options);
+                        return simple;
+                    });
+                    bezierline = {
+                        type: 'FeatureCollection',
+                        features: simples
+                    };
+                    updateView();
+                });
+            }
+
+            function updateView() {
+                map.addLayer({
+                    id: 'originline',
+                    type: 'line',
+                    source: {
+                        type: 'geojson',
+                        data: originline
+                    },
+                    paint: {
+                        /* 'line-dash': [5, 5], */
+                        'line-color': '#222',
+                        'line-width': 6
+                    }
+                });
+                map.addLayer({
+                    id: 'bezierline',
+                    type: 'line',
+                    source: {
+                        type: 'geojson',
+                        data: bezierline
+                    },
+                    paint: {
+                        'line-color': '#FF0000',
+                        'line-width': 3
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
