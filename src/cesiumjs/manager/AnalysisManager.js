@@ -556,7 +556,7 @@ export default class AnalysisManager {
      * @param {Object} tileset 图层集
      * @param {Array} planes 平面集
      * @param {Object} options 动态剖切参数
-     * @param {Object} [options.color=Color.WHITE.withAlpha(0.5)] 材质
+     * @param {Color} [options.color=Color.WHITE.withAlpha(0.5)] 材质
      * @param {Number} [options.scaleHeight=2.5] 高度缩放比
      * @param {Number} [options.scaleWidth=2.5] 宽度缩放比
      * @param {Boolean} [options.interaction] 交互
@@ -567,8 +567,8 @@ export default class AnalysisManager {
         if (!Cesium.defined(tilesets) && tilesets.length > 0) {
             return undefined;
         }
-        var scaleHeight = defaultValue(options.scaleHeight, 2.5);
-        var scaleWidth = defaultValue(options.scaleWidth, 2.5);
+        var scaleHeight = Cesium.defaultValue(options.scaleHeight, 2.5);
+        var scaleWidth = Cesium.defaultValue(options.scaleWidth, 2.5);
         let material = Cesium.Color.WHITE.withAlpha(0.5);
         let interaction = false;
         const optionsParam = Cesium.defaultValue(options, {});
@@ -593,7 +593,7 @@ export default class AnalysisManager {
             for (let i = 0; i < planes.length; i += 1) {
                 const normal = planes[i].normal._cartesian3;
                 const planeEntity = this.viewer.entities.add({
-                    position: Cesium.CommFunction.getPointOntoPlane(center, normal, tileSet.boundingSphere.center, new Cesium.Cartesian3),
+                    position: Cesium.CommonFunction.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3),
                     plane: {
                         dimensions: new Cesium.Cartesian2(radius * scaleWidth, radius * scaleHeight),
                         material
