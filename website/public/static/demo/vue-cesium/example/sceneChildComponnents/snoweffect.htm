@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-雪特效</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+        .changeShow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <mapgis-web-scene
+            lib-path="static/libs/cdn/cesium/Cesium.js"
+            plugin-path="static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+    >
+        <mapgis-3d-ogc-wmts-layer
+                :base-url="urlT"
+                :wmts-layer="layer"
+                :tile-matrix-set="tileMatrixSetID"
+                :format="format"
+                :tiling-scheme="srs"
+                :token="token"
+        ></mapgis-3d-ogc-wmts-layer>
+        <mapgis-3d-igs-m3d
+                :auto-reset="autoReset"
+                :maximum-screen-space-error="maximumScreenSpaceError"
+                :url="m3dUrl"
+        >
+        </mapgis-3d-igs-m3d>
+        <mapgis-3d-snow-effect :enable="enable"></mapgis-3d-snow-effect>
+        <a-button @click="changeShow" class="changeShow">改变显示</a-button>
+    </mapgis-web-scene>
+</div>
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                //天地图参数
+                urlT: "http://t0.tianditu.gov.cn/img_c/wmts",
+                tileMatrixSetID: "c",
+                srs: "EPSG:4326",
+                layer: "img",
+                format: "tiles",
+                token: {
+                    key: "tk",
+                    value: "f5347cab4b28410a6e8ba5143e3d5a35"
+                },
+                m3dUrl: "http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels",
+                autoReset: true,
+                maximumScreenSpaceError: 8,
+                enable:true,
+            };
+        },
+        methods:{
+            changeShow() {
+                let vm = this;
+                vm.enable = !(vm.enable);
+            }
+        }
+    })
+</script>
+</body>
+
+</html>
