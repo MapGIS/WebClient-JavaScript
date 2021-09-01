@@ -123,7 +123,7 @@
         function AnalysisSuccess(data) {
             //停止进度条
             stopPressBar();
-            if (!data.succeed) {
+            if (!data.success) {
                 alert("圆裁剪分析失败，请检查参数！");
             } else {
                 if (data.results && data.results.length != 0) {
