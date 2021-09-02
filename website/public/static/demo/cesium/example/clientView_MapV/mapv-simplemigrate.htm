@@ -259,13 +259,6 @@
         };
         // 声明cesium的mapv图层并将其显示到三维球上
         var mapv5 = new CesiumZondy.Overlayer.MapvLayer(map, timeDataSet, timeOptions);
-        window.setTimeout(() => {
-          mapv1.remove();
-          mapv2.remove();
-          mapv3.remove();
-          mapv4.remove();
-          mapv5.remove();
-        }, 5000);
       });
     }
   </script>
