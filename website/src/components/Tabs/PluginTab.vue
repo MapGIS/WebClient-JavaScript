@@ -26,12 +26,6 @@
                     <div class="triangle"></div>
                 </div>
             </router-link>
-            <router-link to="/total/other">
-                <div :class="['item', { select: $route.path === '/total/other' }]">
-                    其他
-                    <div class="triangle"></div>
-                </div>
-            </router-link>
         </div>
     </div>
 </template>
