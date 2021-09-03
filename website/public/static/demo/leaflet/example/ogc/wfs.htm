@@ -42,12 +42,10 @@
             }).addTo(map);
             //WFS服务地址
             var baseurl = `${protocol}://${ip}:${port}/igs/rest/ogc/doc/WorldJWVector/WFSServer?REQUEST=GetFeature&version=1.1.0&service=wfs&typename=WorldJWVector:主要城市&maxfeatures=600`;
-            //通过一般处理程序解决跨域
-            var url = './static/libs/cdn/zondyclient/ZDproxy.ashx?url=' + baseurl;
             //发送Ajax请求获取数据
             $.ajax({
                 type: 'get',
-                url: url,
+                url: baseurl,
                 dataType: 'xml',
                 contentType: "application/x-www-form-urlencoded",
                 success: function (result) {
