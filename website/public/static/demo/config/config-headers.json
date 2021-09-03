@@ -82,13 +82,11 @@
                 "icon": "iconzaixianshili",
                 "links": [
                     [
-                        "Cesium示例",
-                        "MapboxGL示例",
                         "StoryBook"
                     ]
                 ],
                 "hightlights": [[true, true, true]],
-                "routes": [["/gallery/vue-cesium#raster", "/gallery/vue-mapboxgl#vue-vector", "/storybook/index.html"]]
+                "routes": [["/storybook/index.html"]]
             },
             {
                 "title": "开发API",
