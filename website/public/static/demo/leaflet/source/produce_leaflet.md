@@ -18,7 +18,7 @@
 
 ### Leaflet
 
-&ensp;&ensp;&ensp;&ensp;Lefalet是一个为建设移动设备友好的互动地图而开发的现代的、开源的JavaScript库，目前发展为主流的开源GIS前端开发库之一。它是由VladimirAgafonkin带领一个专业贡献者团队开发，虽然代码仅有31KB，但它具有开发人员开发在线地图的大部分功能。Leaflet 设计坚持简便、高性能和可用性好的思想，在所有主要桌面和移动平台能高效运作，在现代浏览器上会利用HTML5和CSS3的优势，同时也支持旧的浏览器访问。基于插件开发理念，支持插件扩展，有一个友好、易于使用的API文档和一个简单的、可读的源代码。在GitHub平台上已发布了海量的Leaflet插件，可极大提升开发者的开发效率，节约开发成本。
+&ensp;&ensp;&ensp;&ensp;Leaflet是一个为建设移动设备友好的互动地图而开发的现代的、开源的JavaScript库，目前发展为主流的开源GIS前端开发库之一。它是由VladimirAgafonkin带领一个专业贡献者团队开发，虽然代码仅有31KB，但它具有开发人员开发在线地图的大部分功能。Leaflet 设计坚持简便、高性能和可用性好的思想，在所有主要桌面和移动平台能高效运作，在现代浏览器上会利用HTML5和CSS3的优势，同时也支持旧的浏览器访问。基于插件开发理念，支持插件扩展，有一个友好、易于使用的API文档和一个简单的、可读的源代码。在GitHub平台上已发布了海量的Leaflet插件，可极大提升开发者的开发效率，节约开发成本。
 
 >详情请参考<a href="https://leafletjs.com/" target="_blank">Leaflet官网</a>地址
 
@@ -121,6 +121,8 @@
 MapGIS Client for JavaScript（Leaflet）对接云GIS产品，提供地图显示、数据管理、查询、编辑、专题图、统计图、预案标绘、分析等全WebGIS功能，以及大数据与智能GIS功能。
 
 ### API 功能体系（功能导图）
+
+![webclient-leaflet-plugin](./img/webclient-leaflet-plugin.png)
 
 ### API 结构说明
 

@@ -27,14 +27,17 @@
         <div class="text">Npm</div>
       </div>
       <el-row>
-        <div class="warning">npm上的版本是release包，按需引入。</div>
+        <div class="warning">符合ES6语法规范的mapgis REST服务封装库</div>
         <div style="padding-left: 20px">
           <el-tag class="download-tag" effect="plain" type="info"> npm install @mapgis/webclient-es6-service</el-tag>
-          <p/>
+        </div>
+        <div class="warning">基于MapboxGL的二维vue组件库</div>
+        <div style="padding-left: 20px">
           <el-tag class="download-tag" effect="plain" type="info"> npm install @mapgis/webclient-vue-mapboxgl</el-tag>
-          <p/>
+        </div>
+        <div class="warning">基于Cesium的三维vue组件库</div>
+        <div style="padding-left: 20px">
           <el-tag class="download-tag" effect="plain" type="info"> npm install @mapgis/webclient-vue-cesium</el-tag>
-          <p/>
         </div>
       </el-row>
       <div class="title">
@@ -44,11 +47,21 @@
       <el-row>
         <div class="warning">
           <div class="urlCss">
-            <span>GitHub托管地址：<a href="https://github.com/MapGIS/WebClient-JavaScript">https://github.com/MapGIS/WebClient-JavaScript</a></span>
+            <span>GitHub托管地址：
+              </p>
+              <a href="https://github.com/MapGIS/WebClient-JavaScript" style="padding-left: 20px">https://github.com/MapGIS/WebClient-JavaScript</a><br/>
+              </p>
+              <a href="https://github.com/MapGIS/WebClient-Vue" style="padding-left: 20px">https://github.com/MapGIS/WebClient-Vue</a>
+            </span>
           </div>
           <br>
           <div>
-            <span>Gitee托管地址：<a href="https://gitee.com/osmapgis/WebClient-JavaScript">https://gitee.com/osmapgis/WebClient-JavaScript</a></span>
+            <span>Gitee托管地址：
+              </p>
+              <a href="https://gitee.com/osmapgis/WebClient-JavaScript" style="padding-left: 20px">https://gitee.com/osmapgis/WebClient-JavaScript</a><br/>
+              </p>
+              <a href="https://gitee.com/osmapgis/WebClient-Vue" style="padding-left: 20px">https://gitee.com/osmapgis/WebClient-Vue</a>
+            </span>
           </div>
         </div>
       </el-row>

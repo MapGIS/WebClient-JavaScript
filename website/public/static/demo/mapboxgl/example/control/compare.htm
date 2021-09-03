@@ -36,7 +36,6 @@
     <div id="wrapper">
         <div id="before" class="map"></div>
         <div id="after" class="map"></div>
-        <div class="controls" id="close-button">取消</div>
         <div id="mouse-position">
         </div>
     </div>
@@ -140,13 +139,6 @@
             // options
         );
 
-        var closeButton = document.getElementById('close-button');
-
-        closeButton.addEventListener('click', function (e) {
-            after.getContainer().style.display = 'none';
-            window.compare.remove();
-            after.remove();
-        });
         //注册鼠标移动事件
         before.on('mousemove', function (e) {
             document.getElementById('mouse-position').innerHTML = "经度：" + e.lngLat.lng.toFixed(2) + "，纬度：" + e.lngLat.lat.toFixed(2);
