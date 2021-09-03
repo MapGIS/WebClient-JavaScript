@@ -107,16 +107,20 @@
                     });
                     flood.floodColor = new Cesium.Color(1, 1, 0.4, 0.7);
                     //水纹频率 指波浪的个数
-                    flood.frequency = 100;
+                    let frequency = document.getElementById("frequency").value;
+                    flood.frequency = Number(frequency);
                     //水纹速度
-                    flood.animationSpeed = 0.01;
+                    let animationSpeed = document.getElementById("animationSpeed").value;
+                    flood.animationSpeed = Number(animationSpeed);
                     //水波的高度
-                    flood.amplitude = 10;
+                    let amplitude = document.getElementById("amplitude").value;
+                    flood.amplitude = Number(amplitude);
                     // 指定光线强度
                     flood.specularIntensity = 3.0;
                     viewer.scene.globe.depthTestAgainstTerrain = true;
                     //添加洪水淹没结果显示
                     webGlobe.scene.VisualAnalysisManager.add(flood);
+                    drawElement.stopDrawing();
                 }
             });
         }
