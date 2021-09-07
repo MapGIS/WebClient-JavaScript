@@ -1,7 +1,8 @@
 {
     "name": "@mapgis/webclient-es6-mapboxgl",
-    "version": "10.5.4",
+    "version": "10.5.5",
     "description": "",
+    "main": "dist-libs/webclient-mapboxgl-plugin.min.js",
     "module": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,11 +13,11 @@
         "&",
         "mapboxgl"
     ],
-    "author": "zondy",
-    "license": "ISC",
+    "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
+    "license": "Apache2",
     "dependencies": {
-        "@mapgis/webclient-es6-service": "^10.5.4",
-        "@mapgis/mapbox-gl": "^1.9.4",
+        "@mapgis/webclient-es6-service": "^10.5.5",
+        "@mapgis/mapbox-gl": "^1.9.9",
         "echarts": "^4.8.0",
         "mapv": "^2.0.56"
     }
