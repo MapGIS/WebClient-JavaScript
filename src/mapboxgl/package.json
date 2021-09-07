@@ -1,6 +1,6 @@
 {
     "name": "@mapgis/webclient-es6-mapboxgl",
-    "version": "10.5.4",
+    "version": "10.5.5",
     "description": "",
     "module": "index.js",
     "scripts": {
@@ -15,8 +15,8 @@
     "author": "zondy",
     "license": "ISC",
     "dependencies": {
-        "@mapgis/webclient-es6-service": "^10.5.4",
         "@mapgis/mapbox-gl": "^1.9.4",
+        "@mapgis/webclient-es6-service": "^10.5.5",
         "echarts": "^4.8.0",
         "mapv": "^2.0.56"
     }

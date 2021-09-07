@@ -1,10 +1,9 @@
 import mapboxgl from '@mapgis/mapbox-gl';
-import { Zondy } from '../../service/common/Base';
-import { LevelRenderer } from '../../common/overlay/levelRender/LevelRenderer';
-import { modifyDOMElement } from '../../service/common/Util';
-import { isArray } from '../../service/common/Util';
-import { indexOf } from '../../service/common/Util';
-import { newGuid } from '../../service/common';
+import { Common } from '@mapgis/webclient-es6-service';
+
+import { LevelRenderer } from './common/overlay/levelRender/LevelRenderer';
+
+const { modifyDOMElement, isArray, indexOf, newGuid, Zondy } = Common;
 
 /**
  * @class Zondy.Map.ThemeLayer

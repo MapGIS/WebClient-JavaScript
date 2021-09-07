@@ -1,9 +1,11 @@
 import mapboxgl from '@mapgis/mapbox-gl';
-import { Zondy } from '../../service/common/Base';
-import { copyAttributesWithClip } from '../../service/common/Util';
+import { Common } from '@mapgis/webclient-es6-service';
+
 import { GeoFeatureThemeLayer } from './GeoFeatureThemeLayer';
-import { ThemeVector } from '../../common/overlay/ThemeVector';
-import { ShapeFactory } from '../../common/overlay/feature/ShapeFactory';
+import { ThemeVector } from './common/overlay/ThemeVector';
+import { ShapeFactory } from './common/overlay/feature/ShapeFactory';
+
+const { copyAttributesWithClip, Zondy } = Common;
 
 /**
  * @class Zondy.Map.randomThemeLayer
