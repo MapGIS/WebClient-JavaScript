@@ -80,7 +80,7 @@ export default class PopupLayer {
         if (options.callback) {
             const { onShow, onHide } = options.callback;
             this.onShow = onShow;
-            this.onHide = onHide
+            this.onHide = onHide;
         }
 
         let ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window['Cesium'].ScreenSpaceEventHandler;
@@ -136,18 +136,37 @@ export default class PopupLayer {
         let infoDiv = window.document.createElement('div');
         infoDiv.id = this.popupId;
         infoDiv.style.display = 'none';
-        infoDiv.innerHTML =
-            '<div id="' +
-            this.popupContentId +
-            '" class="cesium-popup">' +
-            // '<a class="cesium-popup-close-button" href="javascript:void(0)" onClick="function remove(){self.remove()}">×</a>' +
-            '<div class="cesium-popup-content-wrapper">' +
-            this.container +
-            '</div>' +
-            '<div class="cesium-popup-tip-container">' +
-            '<div class="cesium-popup-tip" />' +
-            '</div>' +
-            '</div>';
+        if (typeof this.container === 'string') {
+            infoDiv.innerHTML =
+                '<div id="' +
+                this.popupContentId +
+                '" class="cesium-popup">' +
+                // '<a class="cesium-popup-close-button" href="javascript:void(0)" onClick="function remove(){self.remove()}">×</a>' +
+                '<div class="cesium-popup-content-wrapper">' +
+                this.container +
+                '</div>' +
+                '<div class="cesium-popup-tip-container">' +
+                '<div class="cesium-popup-tip" />' +
+                '</div>' +
+                '</div>';
+        } else {
+            let popupContentDiv = window.document.createElement('div');
+            popupContentDiv.id = this.popupContentId;
+            popupContentDiv.className = "cesium-popup";
+            let popupContentWrapperDiv = window.document.createElement('div');
+            popupContentWrapperDiv.className = "cesium-popup-content-wrapper";
+            popupContentWrapperDiv.appendChild(this.container);
+            popupContentDiv.appendChild(popupContentWrapperDiv);
+            
+            let tipContainerDiv = window.document.createElement('div');
+            tipContainerDiv.className = "cesium-popup-tip-container";
+            let tipDiv = window.document.createElement('div');
+            tipDiv.className = "cesium-popup-tip";
+            tipContainerDiv.appendChild(tipDiv);
+            popupContentDiv.appendChild(tipContainerDiv);
+            infoDiv.appendChild(popupContentDiv);
+        }
+
         let close = window.document.createElement('div');
         close.className = 'cesium-popup-close-button';
         close.addEventListener('click', () => self.hide());
