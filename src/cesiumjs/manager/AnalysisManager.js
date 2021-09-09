@@ -556,14 +556,20 @@ export default class AnalysisManager {
      * @param {Object} tileset 图层集
      * @param {Array} planes 平面集
      * @param {Object} options 动态剖切参数
-     * @param {Color} [options.color] 材质
+     * @param {Color} [options.color=Color.WHITE.withAlpha(0.5)] 材质
+     * @param {Number} [options.scaleHeight=2.5] 高度缩放比
+     * @param {Number} [options.scaleWidth=2.5] 宽度缩放比
      * @param {Boolean} [options.interaction] 交互
+     * 
+     * @returns {Object} 返回对象
      */
     createDynamicCutting(tilesets, planes, options) {
         if (!Cesium.defined(tilesets) && tilesets.length > 0) {
             return undefined;
         }
-        let material = Cesium.Color.WHITE.withAlpha(0.02);
+        var scaleHeight = Cesium.defaultValue(options.scaleHeight, 2.5);
+        var scaleWidth = Cesium.defaultValue(options.scaleWidth, 2.5);
+        let material = Cesium.Color.WHITE.withAlpha(0.5);
         let interaction = false;
         const optionsParam = Cesium.defaultValue(options, {});
 
@@ -585,10 +591,11 @@ export default class AnalysisManager {
             const center = new Cesium.Cartesian3();
             Cesium.Matrix4.getTranslation(transform, center);
             for (let i = 0; i < planes.length; i += 1) {
+                const normal = planes[i].normal._cartesian3;
                 const planeEntity = this.viewer.entities.add({
-                    position: center,
+                    position: Cesium.CommonFunction.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3),
                     plane: {
-                        dimensions: new Cesium.Cartesian2(radius * 250, radius * 2.5),
+                        dimensions: new Cesium.Cartesian2(radius * scaleWidth, radius * scaleHeight),
                         material
                     }
                 });

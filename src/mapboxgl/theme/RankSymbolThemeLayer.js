@@ -1,7 +1,10 @@
 import mapboxgl from '@mapgis/mapbox-gl';
-import { Zondy } from '../../service/common/Base';
-import { Theme as FeatureTheme } from '../../common/overlay/feature/Theme';
+import { Common } from '@mapgis/webclient-es6-service';
+
+import { Theme as FeatureTheme } from './common/overlay/feature/Theme';
 import { GraphThemeLayer } from './GraphThemeLayer';
+
+const { Zondy } = Common;
 
 /**
  * @class Zondy.Map.rankSymbolThemeLayer

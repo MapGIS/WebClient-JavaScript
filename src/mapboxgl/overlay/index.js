@@ -3,5 +3,6 @@
  */
 import { EchartsLayer } from './EchartsLayer';
 import { MapvLayer } from './MapvLayer';
+import { DeckglLayer } from './DeckglLayer';
 
-export { EchartsLayer, MapvLayer };
+export { EchartsLayer, MapvLayer,DeckglLayer };

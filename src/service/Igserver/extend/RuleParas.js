@@ -164,7 +164,7 @@ export class RuleParse {
      * let url = parse.GetCapabilities(10, 'localhost', '6163', '世界地图');
      */
     GetCapabilities(id, ip, port, serverName, urlType = 'baseUrl') {
-        return get(id, ip, port, serverName, urlType, 'GetCapabilities');
+        return this.get(id, ip, port, serverName, urlType, 'GetCapabilities');
     }
 
     /**
@@ -194,7 +194,7 @@ export class RuleParse {
      * let url = parse.GetFeatureInfo(10, 'localhost', '6163', '世界地图');
      */
     GetFeatureInfo(id, ip, port, serverName, urlType = 'baseUrl') {
-        return get(id, ip, port, serverName, urlType, 'GetFeatureInfo');
+        return this.get(id, ip, port, serverName, urlType, 'GetFeatureInfo');
     }
 }
 

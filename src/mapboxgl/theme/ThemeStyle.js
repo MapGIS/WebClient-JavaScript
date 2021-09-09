@@ -1,5 +1,6 @@
-import { Zondy } from '../../service/common/Base';
-import { extend } from '../../service/common/Util';
+import { Common } from '@mapgis/webclient-es6-service';
+
+const { extend, Zondy } = Common;
 
 /**
  * @class Zondy.Map.ThemeStyle

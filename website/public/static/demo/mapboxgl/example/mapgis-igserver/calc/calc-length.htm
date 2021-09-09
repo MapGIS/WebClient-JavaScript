@@ -44,7 +44,69 @@
                     line_string: true,
                     polygon: false,
                     trash: true
-                }
+                },
+                styles:[
+                    {
+                        'id': 'gl-draw-line-inactive',
+                        'type': 'line',
+                        'filter': ['all',
+                            ['==', 'active', 'false'],
+                            ['==', '$type', 'LineString'],
+                            ['!=', 'mode', 'static']
+                        ],
+                        'layout': {
+                            'line-cap': 'round',
+                            'line-join': 'round'
+                        },
+                        'paint': {
+                            'line-color': '#3bb2d0',
+                            'line-width': 2
+                        }
+                    },
+                    {
+                        'id': 'gl-draw-line-active',
+                        'type': 'line',
+                        'filter': ['all',
+                            ['==', '$type', 'LineString'],
+                            ['==', 'active', 'true']
+                        ],
+                        'layout': {
+                            'line-cap': 'round',
+                            'line-join': 'round'
+                        },
+                        'paint': {
+                            'line-color': '#fb3b3b',
+                            'line-dasharray': [0.2, 2],
+                            'line-width': 2
+                        }
+                    },
+                    {
+                        'id': 'gl-draw-polygon-and-line-vertex-stroke-inactive',
+                        'type': 'circle',
+                        'filter': ['all',
+                            ['==', 'meta', 'vertex'],
+                            ['==', '$type', 'Point'],
+                            ['!=', 'mode', 'static']
+                        ],
+                        'paint': {
+                            'circle-radius': 5,
+                            'circle-color': '#fff'
+                        }
+                    },
+                    {
+                        'id': 'gl-draw-polygon-and-line-vertex-inactive',
+                        'type': 'circle',
+                        'filter': ['all',
+                            ['==', 'meta', 'vertex'],
+                            ['==', '$type', 'Point'],
+                            ['!=', 'mode', 'static']
+                        ],
+                        'paint': {
+                            'circle-radius': 3,
+                            'circle-color': '#fb3b3b'
+                        }
+                    },
+                ],
             });
 
             map.addControl(navigationControl, 'top-left');//导航条

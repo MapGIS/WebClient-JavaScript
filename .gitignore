@@ -7,8 +7,9 @@
 /docs/mapboxgl/
 /docs/openlayers/
 /docs/cesium/
-
+dist-libs
 /src/service/node_modules/
+src/mapboxgl/node_modules/
 /src/service/dist*/
 #/src/leaflet/theme/
 #/src/mapboxgl/theme/

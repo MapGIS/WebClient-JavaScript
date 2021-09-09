@@ -1,137 +1,140 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns='http://www.w3.org/1999/xhtml'>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>点微博数据</title>
-  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-  <script include="language,proj4,mapv" src="./static/libs/include-mapboxgl-local.js"></script>
-  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+    <title>点微博数据</title>
+    <script include='jquery' src='./static/libs/include-lib-local.js'></script>
+    <script include='language,proj4,mapv' src='./static/libs/include-mapboxgl-local.js'></script>
+    <link href='./static/demo/mapboxgl/example/style.css' rel='stylesheet' type='text/css' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
-    #map {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-  <div id="map">
-    <div id="mouse-position">
+<div id='map'>
+    <div id='mouse-position'>
     </div>
-  </div>
-  <script>
+</div>
+<script>
     //一定要去mapbox注册一个key,这个key会失效的
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
     var map = new mapboxgl.Map({
-      container: 'map', // 绑定div
-      style: 'mapbox://styles/mapbox/dark-v9', // 使用MapBox官方的样式
-      center: [114.321317, 30.398428],
-      zoom: 3
+        container: 'map', // 绑定div
+        style: 'mapbox://styles/mapbox/dark-v9', // 使用MapBox官方的样式
+        center: [114.321317, 30.398428],
+        zoom: 3
     });
     map.addControl(new MapboxLanguage(), 'top-right');//中文支持
     map.addControl(new mapboxgl.NavigationControl(), 'top-left');
     //注册鼠标移动事件
-    map.on('mousemove', function (e) {
-      //经纬度坐标转web墨卡托
-      const earthRad = 6378137.0;
-      const x = e.lngLat.lng * Math.PI / 180 * earthRad;
-      const a = e.lngLat.lat * Math.PI / 180;
-      const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
-      document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+    map.on('mousemove', function(e) {
+        //经纬度坐标转web墨卡托
+        const earthRad = 6378137.0;
+        const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+        const a = e.lngLat.lat * Math.PI / 180;
+        const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+        document.getElementById('mouse-position').innerHTML = 'X轴：' + x.toFixed(2) + '，Y轴：' + y.toFixed(2);
     });
-    $.get('../../static/data/mapv/weibo.geojson', function (rs) {
-      var data1 = [];
-      var data2 = [];
-      var data3 = [];
-      var data4 = [];
-      for (var i = 0; i < rs[0].length; i++) {
-        var geoCoord = rs[0][i].geoCoord;
-        data1.push({
-          geometry: {
-            type: 'Point',
-            coordinates: geoCoord
-          }
-        });
-      }
-
-      for (var i = 0; i < rs[1].length; i++) {
-        var geoCoord = rs[1][i].geoCoord;
-        data2.push({
-          geometry: {
-            type: 'Point',
-            coordinates: geoCoord
-          },
-          time: Math.random() * 10
-        });
-      }
-
-      for (var i = 0; i < rs[2].length; i++) {
-        var geoCoord = rs[2][i].geoCoord;
-        data3.push({
-          geometry: {
-            type: 'Point',
-            coordinates: geoCoord
-          },
-        });
-      }
-
-      var dataSet = new mapv.DataSet(data1);
-      var options = {
-        context: '2d',
-        fillStyle: 'rgba(200, 200, 0, 0.8)',
-        bigData: 'Point',
-        size: 0.7,
-        draw: 'simple',
-      }
-      var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
-
-      var dataSet = new mapv.DataSet(data2);
-      var options = {
-        context: '2d',
-        fillStyle: 'rgba(255, 250, 0, 0.8)',
-        size: 0.7,
-        bigData: 'Point',
-        draw: 'simple',
-      }
-      var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
-
-      var dataSet = new mapv.DataSet(data3);
-      var options = {
-        context: '2d',
-        fillStyle: 'rgba(255, 250, 250, 0.6)',
-        size: 0.7,
-        bigData: 'Point',
-        draw: 'simple',
-      }
-      var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
-
-      var dataSet = new mapv.DataSet(data2);
-      var options = {
-        context: '2d',
-        fillStyle: 'rgba(255, 250, 250, 0.9)',
-        size: 1.1,
-        draw: 'simple',
-        bigData: 'Point',
-        animation: {
-          stepsRange: {
-            start: 0,
-            end: 10
-          },
-          trails: 1,
-          duration: 6,
+    $.get('../../static/data/mapv/weibo.geojson', function(rs) {
+        if (typeof rs === 'string') {
+            rs = JSON.parse(rs);
         }
-      }
-      var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
+        var data1 = [];
+        var data2 = [];
+        var data3 = [];
+        var data4 = [];
+        for (var i = 0; i < rs[0].length; i++) {
+            var geoCoord = rs[0][i].geoCoord;
+            data1.push({
+                geometry: {
+                    type: 'Point',
+                    coordinates: geoCoord
+                }
+            });
+        }
+
+        for (var i = 0; i < rs[1].length; i++) {
+            var geoCoord = rs[1][i].geoCoord;
+            data2.push({
+                geometry: {
+                    type: 'Point',
+                    coordinates: geoCoord
+                },
+                time: Math.random() * 10
+            });
+        }
+
+        for (var i = 0; i < rs[2].length; i++) {
+            var geoCoord = rs[2][i].geoCoord;
+            data3.push({
+                geometry: {
+                    type: 'Point',
+                    coordinates: geoCoord
+                }
+            });
+        }
+
+        var dataSet = new mapv.DataSet(data1);
+        var options = {
+            context: '2d',
+            fillStyle: 'rgba(200, 200, 0, 0.8)',
+            bigData: 'Point',
+            size: 0.7,
+            draw: 'simple'
+        };
+        var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
+
+        var dataSet = new mapv.DataSet(data2);
+        var options = {
+            context: '2d',
+            fillStyle: 'rgba(255, 250, 0, 0.8)',
+            size: 0.7,
+            bigData: 'Point',
+            draw: 'simple'
+        };
+        var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
+
+        var dataSet = new mapv.DataSet(data3);
+        var options = {
+            context: '2d',
+            fillStyle: 'rgba(255, 250, 250, 0.6)',
+            size: 0.7,
+            bigData: 'Point',
+            draw: 'simple'
+        };
+        var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
+
+        var dataSet = new mapv.DataSet(data2);
+        var options = {
+            context: '2d',
+            fillStyle: 'rgba(255, 250, 250, 0.9)',
+            size: 1.1,
+            draw: 'simple',
+            bigData: 'Point',
+            animation: {
+                stepsRange: {
+                    start: 0,
+                    end: 10
+                },
+                trails: 1,
+                duration: 6
+            }
+        };
+        var mapvLayer = new mapboxgl.zondy.MapvLayer(map, dataSet, options);
     });
-  </script>
+</script>
 
 
 </body>

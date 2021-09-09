@@ -160,6 +160,17 @@
                 //移除图层
                 map.removeLayer(Layers[i].id);
             }
+            switch (src){
+                default:
+                    document.querySelector("#dropdownMenu1").innerHTML='street&nbsp<span class="caret"></span>';
+                    break;
+                case 'imgsrc':
+                    document.querySelector("#dropdownMenu1").innerHTML='raster&nbsp<span class="caret"></span>';
+                    break;
+                case 'tersrc':
+                    document.querySelector("#dropdownMenu1").innerHTML='terrain&nbsp<span class="caret"></span>';
+                    break;
+            }
             //添加图层
             map.addLayer({
                 "id": src,
@@ -168,6 +179,7 @@
                 "minzoom": 0,
                 "maxzoom": 22
             });
+
             if (src == "vecsrc") {
                 map.addLayer(
                     {
@@ -189,6 +201,7 @@
                         "minzoom": 0,
                         "maxzoom": 22
                     });
+
             }
         }
     </script>

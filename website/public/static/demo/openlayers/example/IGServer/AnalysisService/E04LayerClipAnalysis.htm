@@ -1,17 +1,58 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
     <title></title>
     <!--当前示例页面样式表引用-->
     <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-openlayers-local.js"></script>
+    <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 95%;
+            position: absolute;
+        }
+        /* 图层控件层样式设置 */
+        .layerControl {
+            position: absolute;
+            bottom: 5px;
+            min-width: 200px;
+            max-height: 123px;
+            right: 10px;
+            top: 120px;
+            /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
+            z-index: 2001;
+            color: #ffffff;
+            background-color: #4c4e5a;
+            /*边缘的宽度*/
+            border-width: 10px;
+            /*圆角的大小 */
+            border-radius: 10px;
+            /*边框颜色*/
+            border-color: #000 #000 #000 #000;
+        }
+
+        .layerTree{
+            padding-inline-start: 15px;
+        }
+        .layerTree li {
+            list-style: none;
+            margin: 5px 10px;
+            font-size: 12px;
+        }
+        li .layer{
+            position: absolute;
+            margin-top: 0px;
+        }
+    </style>
     <script type="text/javascript">
         var map = null;
-        var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/"; //缓存结果图层的基地址
+        var resultBaseUrl = 'gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/'; //缓存结果图层的基地址
         var resultLayerArr = new Array();
+
         function init() {
             //初始化地图容器
             map = new ol.Map({
@@ -25,85 +66,198 @@
                     center: [54.54, 25],  //地图初始中心点
                     maxZoom: 28,     //最大瓦片显示级数
                     minZoom: 1,      //最小瓦片显示级数
-                    zoom: 3 ,         //地图初始显示级数
-                    projection:"EPSG:4326"
+                    zoom: 3,         //地图初始显示级数
+                    projection: 'EPSG:4326'
                 })
             });
-            var tdk = "4c27d6e0e8a90715b23a989d42272fd8";   //天地图密钥
+            var tdk = '4c27d6e0e8a90715b23a989d42272fd8';   //天地图密钥
             //加载天地图瓦片图层数据
             map.addLayer(new ol.layer.Tile({
-                    title: "天地图矢量图层",
-                    source: new ol.source.XYZ({
-                        url: "http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=" + tdk,
-                        wrapX: false
-                    }),
-                    projection:"EPSG:4326"
+                title: '天地图矢量图层',
+                source: new ol.source.XYZ({
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + tdk,
+                    wrapX: false
+                }),
+                projection: 'EPSG:4326'
+
             }));
             map.addLayer(new ol.layer.Tile({
-                    title: "天地图矢量注记图层",
+                    title: '天地图矢量注记图层',
                     source: new ol.source.XYZ({
-                        url: "http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=" + tdk,
+                        url: 'http://t0.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + tdk,
                         wrapX: false
                     }),
-                    projection:"EPSG:4326"
+                    projection: 'EPSG:4326'
                 })
             );
+            map.addLayer(
+                new Zondy.Map.GdbpLayer("世界政区",["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区"], {
+                    ip: 'develop.smaryun.com',
+                    port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089
+                    //extent: extent,
+                })
+            );
+            map.addLayer(
+                new Zondy.Map.GdbpLayer("世界河流",["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流"], {
+                    ip: 'develop.smaryun.com',
+                    port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089
+                    //extent: extent,
+                })
+            );
+            loadLayersControl(map, "layerTree");
         }
 
 
-        function clipByLayer()
-        {
-            var resultname = resultBaseUrl + "clipByLayerAnalysisResultLayer" + getCurentTime();
+        function clipByLayer() {
+            startPressBar();
+            var resultname = resultBaseUrl + 'clipByLayerAnalysisResultLayer' + getCurentTime();
             //实例化ClipByLayer类
             var clipParam = new Zondy.Service.ClipByLayer({
-                ip: "develop.smaryun.com",
-                port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
+                ip: 'develop.smaryun.com',
+                port: '6163',    //访问IGServer的端口号，.net版为6163，Java版为8089,
                 //源简单要素类的URL
-                srcInfo1: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流",
+                srcInfo1: 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流',
                 //裁剪框简单要素类的URL
-                srcInfo2: "gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区",
+                srcInfo2: 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界政区',
                 //设置结果URL
                 desInfo: resultname
             });
             //调用基类的execute方法，执行图层裁剪分析。AnalysisSuccess为结果回调函数
-            clipParam.execute(AnalysisSuccess, "post", false, "json", ()=>{});
+            clipParam.execute(AnalysisSuccess, 'post', false, 'json', () => {
+            });
         }
 
-         //分析成功后的回调
-         function AnalysisSuccess(data) {
+        //分析成功后的回调
+        function AnalysisSuccess(data) {
+
+            stopPressBar();
+
             if (!data.results) {
-                alert("裁剪失败，请检查参数！");
-            }
-            else {
+                alert('裁剪失败，请检查参数！');
+            } else {
                 if (data.results.length != 0) {
                     var resultLayerUrl = data.results[0].Value || data.results[0].value;
-                    //将结果图层添加到地图视图中显示
-                    var resultLayer = new Zondy.Map.GdbpLayer("MapGIS IGS BuffAnalyResultLayer", [resultBaseUrl+resultLayerUrl], {
-                        ip: "develop.smaryun.com",
-                        port: "6163",    //访问IGServer的端口号，.net版为6163，Java版为8089,
-                        isBaseLayer: false
-                    });
-                    map.addLayer(resultLayer);
-                    resultLayerArr.push(resultLayer);
+                    let gdbp = resultBaseUrl+resultLayerUrl;
+                    changeGdbpStyle(gdbp);
                 }
             }
         }
 
-        function deleteAll()
-        {
-            while(resultLayerArr.length>0)
-            {
+        function changeGdbpStyle(gdbp) {
+            var pointObj = new Array();
+            pointObj[0] = new Zondy.Object.Point2D(-180, 90);
+            pointObj[1] = new Zondy.Object.Point2D(180, 90);
+            pointObj[2] = new Zondy.Object.Point2D(180, -90);
+            pointObj[3] = new Zondy.Object.Point2D(-180, -90);
+            pointObj[4] = new Zondy.Object.Point2D(-180, 90);
+
+            var Polygon = new Zondy.Object.Polygon(pointObj);
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //指定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                //是否将要素的可见性计算在内
+                EnableDisplayCondition: false,
+                //是否完全包含
+                MustInside: false,
+                //是否仅比较要素的外包矩形
+                CompareRectOnly: false,
+                //是否相交
+                Intersect: true
+            });
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter(gdbp, {
+                geometry: Polygon,
+                resultFormat: 'json',
+                struct: queryStruct,
+                rule: rule
+            });
+
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 2000;
+            //实例化矢量图层查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: 'develop.smaryun.com',
+                port: '6163',
+            });
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query((res) => {
+                console.log('res', res);
+                let polygons = [];
+                let geojson = {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+                res.SFEleArray.forEach(f => {
+                    let dots = f.fGeom.LinGeom[0].Line.Arcs[0].Dots;
+                    let points = [];
+                    dots.forEach(d => {
+                        points.push([d.x, d.y])
+                    })
+                    let feature= {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {
+                            "type": "LineString" ,
+                            "coordinate":  [
+                                points
+                            ]
+                        }
+                    }
+                    geojson.features.push(feature);
+                    var polygon = new ol.Feature({
+                        geometry: new ol.geom.LineString(points)
+                    });
+                    //设置区样式信息
+                    polygon.setStyle(new ol.style.Style({
+                        //填充色
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 0, 0, 0.5)'
+                        }),
+                        //边线颜色
+                        stroke: new ol.style.Stroke({
+                            color: '#ffcc33',
+                            width: 2
+                        })
+                    }));
+                    polygons.push(polygon);
+                });
+
+                var vectorSource = new ol.source.Vector();
+                vectorSource.addFeatures(polygons);
+
+                //创建一个图层
+                var vectorLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    zIndex:5
+                });
+                //将绘制层添加到地图容器中
+                map.addLayer(vectorLayer);
+                resultLayerArr.push(vectorLayer);
+            }, () => {});
+        }
+
+        function deleteAll() {
+            while (resultLayerArr.length > 0) {
                 map.removeLayer(resultLayerArr.pop());
-            } 
+            }
         }
 
         function getCurentTime() {
             var now = new Date();
             //获取当前年份
             var year = now.getFullYear();
-            //获取当前月份     
+            //获取当前月份
             var month = now.getMonth() + 1;
-            //获取当前日期   
+            //获取当前日期
             var day = now.getDate();
             //获取当前时刻
             var hh = now.getHours();
@@ -112,15 +266,15 @@
             //获取当前秒钟
             var ss = now.getSeconds();
             //将当前的日期拼串
-            var clock = year + "-";
+            var clock = year + '-';
             if (month < 10)
-                clock += "0";
-            clock += month + "-";
+                clock += '0';
+            clock += month + '-';
             if (day < 10)
-                clock += "0";
-            clock += day + "-";
+                clock += '0';
+            clock += day + '-';
             if (hh < 10)
-                clock += "0";
+                clock += '0';
             clock += hh;
             if (mm < 10) clock += '0';
             clock += mm;
@@ -128,74 +282,166 @@
             clock += ss;
             return (clock);
         }
+
+
+        //map中的图层数组
+        var layerArr = new Array();
+        //图层名称数组
+        var layerNameArr = new Array('天地图矢量图层','天地图矢量注记图层','被裁减图层','裁剪图层');
+        //图层可见属性数组
+        var layerVisibilityArr = new Array();
+
+        /**
+         * 加载图层列表数据
+         * @param {ol.Map} map 地图对象
+         * @param {string} id 图层列表容器ID
+         */
+        function loadLayersControl(map, id) {
+            //图层目录容器
+            var treeContent = document.getElementById(id);
+            //获取地图中所有图层
+            var layers = map.getLayers();
+            for (var i = 0; i < layers.getLength() ; i++) {
+                //获取每个图层的名称、是否可见属性
+                layerArr[i] = layers.item(i);
+                // layerNameArr[i] = layerArr[i].get('name');
+                layerVisibilityArr[i] = layerArr[i].getVisible();
+                //新增li元素，用来承载图层项
+                var elementLi = document.createElement('li');
+                // 添加子节点
+                treeContent.appendChild(elementLi);
+                //创建复选框元素
+                var elementInput = document.createElement('input');
+                elementInput.type = "checkbox";
+                elementInput.name = "layers";
+                elementLi.appendChild(elementInput);
+                //创建label元素
+                var elementLable = document.createElement('label');
+                elementLable.className = "layer";
+                //设置图层名称
+                setInnerText(elementLable, layerNameArr[i]);
+                elementLi.appendChild(elementLable);
+                //设置图层默认显示状态
+                if (layerVisibilityArr[i]) {
+                    elementInput.checked = true;
+                }
+                //为checkbox添加变更事件
+                addChangeEvent(elementInput, layerArr[i]);
+            }
+        }
+        /**
+         * 为checkbox元素绑定变更事件
+         * @param {input} element checkbox元素
+         * @param {ol.layer.Layer} layer 图层对象
+         */
+        function addChangeEvent(element, layer) {
+            element.onclick = function () {
+                if (element.checked) {
+                    //显示图层
+                    layer.setVisible(true);
+                }
+                else {
+                    //不显示图层
+                    layer.setVisible(false);
+                }
+            };
+        }
+        /**
+         * 动态设置元素文本内容（兼容）
+         */
+        function setInnerText(element, text) {
+            if (typeof element.textContent == "string") {
+                element.textContent = text;
+            } else {
+                element.innerText = text;
+            }
+        }
+        /*===========================================进度条===================================================*/
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById('preview').style.display = 'none';
+        }
+
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById('preview').style.display = 'block';
+
+        }
     </script>
 </head>
 
-<body onload="init()">
-    <div id="mapCon">
+<body onload='init()'>
+<div id="mapCon">
+    <div id="layerControl" class="layerControl">
+        <ul id="layerTree" class="layerTree"></ul>
     </div>
+</div>
 
-    <div id="menuContain" class='menuContain'>
-        <div id="tool-container">
-         <div id='dataSourceMenuID'  class="optmain"  status="unactive" onclick="switchMenuStatus(this,'menu1')">
-             <span></span><i class="menuGroup">裁剪分析</i><em></em>
-         </div>
-      
-     </div>
- </div>
- <div id="menu1" class="menuStrip" style='display:none' >
-     <ul  class="menuItems">
-         <li   onclick="clipByLayer()"><span class="item1"></span><i >图层裁剪</i>
-         </li>
-         <li class="divider"></li>
-         <li  onclick="deleteAll()"><span class="item3"></span><i>清除</i>
-         </li>
-     </ul>
-  </div>
- <script>
+<div id='menuContain' class='menuContain'>
+    <div id='tool-container'>
+        <div id='dataSourceMenuID' class='optmain' status='unactive' onclick="switchMenuStatus(this,'menu1')">
+            <span></span><i class='menuGroup'>裁剪分析</i><em></em>
+        </div>
+
+    </div>
+</div>
+<div id='menu1' class='menuStrip' style='display:none'>
+    <ul class='menuItems'>
+        <li onclick='clipByLayer()'><span class='item1'></span><i>图层裁剪</i>
+        </li>
+        <li class='divider'></li>
+        <li onclick='deleteAll()'><span class='item3'></span><i>清除</i>
+        </li>
+    </ul>
+</div>
+<div id='preview'>
+    <img src='static/assets/graphic-image/39-1.gif' alt='' /><br />
+    <br />
+    <span>正在分析，请稍候</span>
+</div>
+
+<script>
     function switchMenuStatus(div, menuitemFrameID) {
         var temDivs = document.getElementsByClassName('optmain');
         if (temDivs.length > 0) {
             for (var i = 0; i < temDivs.length; i++) {
                 if (temDivs[i] === div) {
-                    var status = div.getAttribute("status");
-                    if (status == "unactive") {
-                        div.setAttribute("status", "active");
-                        var tem_spans = div.getElementsByTagName("span");
-                        var tem_ems = div.getElementsByTagName("em");
-                        tem_spans[0].className = "active";
-                        tem_ems[0].className = "active";
+                    var status = div.getAttribute('status');
+                    if (status == 'unactive') {
+                        div.setAttribute('status', 'active');
+                        var tem_spans = div.getElementsByTagName('span');
+                        var tem_ems = div.getElementsByTagName('em');
+                        tem_spans[0].className = 'active';
+                        tem_ems[0].className = 'active';
 
                         //显示菜单项
                         DisplayMenuItem(true, menuitemFrameID);
 
-                    }
-                    else {
-                        div.setAttribute("status", "unactive");
-                        var tem_spans = div.getElementsByTagName("span");
-                        var tem_ems = div.getElementsByTagName("em");
-                        tem_spans[0].className = "";
-                        tem_ems[0].className = "";
+                    } else {
+                        div.setAttribute('status', 'unactive');
+                        var tem_spans = div.getElementsByTagName('span');
+                        var tem_ems = div.getElementsByTagName('em');
+                        tem_spans[0].className = '';
+                        tem_ems[0].className = '';
 
                         //隐藏菜单项
                         DisplayMenuItem(false, menuitemFrameID);
                     }
-                }
-                else {
-                    var status = temDivs[i].getAttribute("status");
-                    if (status == "active") {
-                        temDivs[i].setAttribute("status", "unactive");
-                        var tem_spans = temDivs[i].getElementsByTagName("span");
-                        var tem_ems = temDivs[i].getElementsByTagName("em");
-                        tem_spans[0].className = "";
-                        tem_ems[0].className = "";
+                } else {
+                    var status = temDivs[i].getAttribute('status');
+                    if (status == 'active') {
+                        temDivs[i].setAttribute('status', 'unactive');
+                        var tem_spans = temDivs[i].getElementsByTagName('span');
+                        var tem_ems = temDivs[i].getElementsByTagName('em');
+                        tem_spans[0].className = '';
+                        tem_ems[0].className = '';
                     }
                 }
             }
         }
     }
 
-    function DisplayMenuItem (isDisplay, iframeID) {
+    function DisplayMenuItem(isDisplay, iframeID) {
         var menuItemFrame = document.getElementById(iframeID);
         if (menuItemFrame != null) {
             if (isDisplay) {
@@ -203,18 +449,17 @@
                 if (temDivs.length > 0) {
                     for (var i = 0; i < temDivs.length; i++) {
                         if (temDivs[i] != menuItemFrame) {
-                            temDivs[i].style.display = "none";
+                            temDivs[i].style.display = 'none';
                         }
-                    }   
+                    }
                 }
-                menuItemFrame.style.display = "";
-            }
-            else {
-                menuItemFrame.style.display = "none";
+                menuItemFrame.style.display = '';
+            } else {
+                menuItemFrame.style.display = 'none';
             }
         }
     };
- </script>
+</script>
 </body>
 
 </html>
