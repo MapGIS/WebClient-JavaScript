@@ -1,5 +1,5 @@
 {
-    "name": "@mapgis/webclient-es6-mapboxgl",
+    "name": "@mapgis/webclient-mapboxgl",
     "version": "10.5.5",
     "description": "",
     "main": "dist-libs/webclient-mapboxgl-plugin.min.js",
