@@ -8,6 +8,7 @@ import LabelLayer from "./LabelLayer";
 import MouseEventManager from "./MouseEventManager";
 import PopupController from "./PopupController";
 import SceneManager from "./SceneManager";
+import WebSceneControl from './WebSceneControl';
 
 export {
   AnalysisManager,
@@ -19,4 +20,5 @@ export {
   MouseEventManager,
   PopupController,
   SceneManager,
+  WebSceneControl
 };
