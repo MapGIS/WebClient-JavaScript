@@ -1,4 +1,3 @@
-import { CesiumZondy } from './core/Base';
 export { CesiumZondy } from './core/Base';
 
 export * from './ui';
