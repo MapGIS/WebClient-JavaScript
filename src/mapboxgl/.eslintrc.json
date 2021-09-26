@@ -1,0 +1,83 @@
+// Use this file as a starting point for your project's .eslintrc.
+// Copy this file, and add rule overrides as needed.
+//
+// Window 安装方法 eslit-aribnb安装地址https://www.npmjs.com/package/eslint-config-airbnb
+//
+// Mac 安装方法 转载地址 https://blog.csdn.net/m0_37068028/article/details/78548148
+// (
+//   export PKG=eslint-config-airbnb;
+//   npm info "$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs npm install --save-dev "$PKG@latest"
+// )
+// eslint + airbnb + prettier 维护代码风格
+// npm i eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-prettier babel-eslint babel-plugin-import  --save-dev
+// 'extends': ['airbnb', 'plugin:prettier/recommended'],
+
+{
+    /* "extends": ["airbnb", "plugin:prettier/recommended"], */
+    // 默认情况下，ESLint 会在所有父级目录里寻找配置文件，一直到根目录。如果你想要你所有项目都遵循一个特定的约定时，这将会很有用，
+    // 但有时候会导致意想不到的结果。为了将 ESLint 限制到一个特定的项目，在你项目根目录下的 package.json 文件或者 .eslintrc.* 文件里的
+    // eslintConfig 字段下设置 "root": true。ESLint 一旦发现配置文件中有 "root": true，它就会停止在父级目录中寻找。
+    "root": true,
+    // 脚本在执行期间访问的额外的全局变量
+    // 当访问未定义的变量时，no-undef 规则将发出警告。如果你想在一个文件里使用全局变量，推荐你定义这些全局变量，这样 ESLint 就不会发出警告了。你可以使用注释或在配置文件中定义全局变量。
+    "globals": {
+        "window": true,
+        "document": true,
+        "$": true,
+
+        // 可从外部导入
+        "Cesium": "readonly"
+    },
+    // 设置插件
+    // "plugins": [
+    //     'html'
+    // ],
+
+    // 设置解析器选项（必须设置这个属性）
+    "parserOptions": {
+        "ecmaVersion": 7,
+        "sourceType": "module",
+        "parser": "babel-eslint", //配置解析es6
+        "ecmaFeatures": {
+            "jsx": true
+            // "arrowFunctions": true,
+            // "experimentalObjectRestSpread": true,
+            // "classes": true,
+            // "modules": true,
+            // "defaultParams": true
+        }
+    },
+    // 启用的规则及各自的错误级别
+    "rules": {
+        // 禁止用console
+        "no-console": 1,
+        // 禁止用分号
+        // "semi": [2, "never"],
+        // "prettier/prettier": ["error", {}, { "usePrettierrc": true , "singleQuote": true, "parser": "flow" } ],
+        // 在同一个作用域中禁止多次重复定义
+        "no-redeclare": 1,
+
+        // 暂时去掉私有变量下划线的问题
+        "no-underscore-dangle": 0,
+
+        // 针对 MapGIS 67 的要素修改规则 将参数的修改放开 先不搞 工作量实在太大了
+        // 百度echarts 关键字 mapModel seriesModel
+        "no-param-reassign": ["error", {
+            "props": true,
+            "ignorePropertyModificationsForRegex": ["^mapModel", "^seriesModel"]
+        }],
+        // 针对百度echarts原型链的处理
+        "no-unused-vars": ["error", {
+            "varsIgnorePattern": "[iI]gnored",
+            "argsIgnorePattern": "^_"
+        }]
+        // 百度mapv源代码需要设置原型链条件，看情况放开
+        // "no-proto" : true
+    },
+    // 指定你想启用的环境
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    }
+}

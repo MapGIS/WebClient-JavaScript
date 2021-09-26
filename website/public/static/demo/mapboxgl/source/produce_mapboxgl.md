@@ -125,6 +125,8 @@ MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显�
 
 ### API 功能体系（导图）
 
+![webclient-mapbox-plugin](./img/webclient-mapbox-plugin.png)
+
 ### API 结构说明
 
 &ensp;&ensp;&ensp;&ensp;MapGIS Client for JavaScript（MapboxGL）的**核心库**为**webclient-mapboxgl-plugin.min.js**，此开发库实质上是在Web客户端层对调用MapGIS IGServer等云GIS服务器提供的服务的接口封装，通过简便的功能控件、接口便能直接获取使用云GIS服务器提供的数据与功能服务资源。

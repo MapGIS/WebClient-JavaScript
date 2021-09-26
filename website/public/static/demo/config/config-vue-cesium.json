@@ -230,6 +230,30 @@
                     "detail": "",
                     "icon": "measurescene.png",
                     "update": "最后更新时间：2021-06-10"
+                },
+                {
+                    "name": "雨组件",
+                    "file": "raineffect",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "rain.png",
+                    "update": "最后更新时间：2021-08-25"
+                },
+                {
+                    "name": "雪组件",
+                    "file": "snoweffect",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "snow.png",
+                    "update": "最后更新时间：2021-08-25"
+                },
+                {
+                    "name": "雾组件",
+                    "file": "fogeffect",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "fog.png",
+                    "update": "最后更新时间：2021-08-25"
                 }
             ]
         },

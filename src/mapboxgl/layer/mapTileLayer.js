@@ -74,28 +74,31 @@ MapTileLayer.prototype.addToMap = function (map) {
     this.map = map;
     this._initLayerUrl();
     var zoomOffset = this.options.zoomOffset;
+    //已将下列逻辑下沉到了@mapgis/mapbox-gl中
     //重写mapbox中CanonicalTileID的url类，以支持非标准裁剪的瓦片（这里的非标准不是指任意裁剪瓦片，而是当前瓦片的0级不是mapbox定义的瓦片的0级，中间相差zoomOffset级）
-    mapboxgl.CanonicalTileID.prototype.url = function (urls, scheme) {
-        const bbox = this.getTileBBox();
-        if (zoomOffset > this.z) {
-            zoomOffset = 0;
-        }
-        const quadkey = getQuadkey(this.z - zoomOffset, this.x, this.y);
+    // let mapboxgl = window.mapboxgl;
+    // mapboxgl.CanonicalTileID.prototype.url = function (urls, scheme) {
+    //     const bbox = this.getTileBBox();
+    //     if (zoomOffset > this.z) {
+    //         zoomOffset = 0;
+    //     }
+    //     const quadkey = getQuadkey(this.z - zoomOffset, this.x, this.y);
 
-        return urls[(this.x + this.y) % urls.length]
-            .replace('{prefix}', (this.x % 16).toString(16) + (this.y % 16).toString(16))
-            .replace('{z}', String(this.z - zoomOffset))
-            .replace('{x}', String(this.x))
-            .replace('{y}', String(scheme === 'tms' ? (Math.pow(2, this.z) - this.y - 1) : this.y))
-            .replace('{quadkey}', quadkey)
-            .replace('{bbox-epsg-3857}', bbox);
-    };
+    //     return urls[(this.x + this.y) % urls.length]
+    //         .replace('{prefix}', (this.x % 16).toString(16) + (this.y % 16).toString(16))
+    //         .replace('{z}', String(this.z - zoomOffset))
+    //         .replace('{x}', String(this.x))
+    //         .replace('{y}', String(scheme === 'tms' ? (Math.pow(2, this.z) - this.y - 1) : this.y))
+    //         .replace('{quadkey}', quadkey)
+    //         .replace('{bbox-epsg-3857}', bbox);
+    // };
     var sourceID = this.sourceID || "source_" + newGuid();
     var layerID = this.layerID || "layer_" + newGuid();
     var tile_source = {
         'type': 'raster',//数据源类型，因为wms返回图片数据，因此为该类型
         'tiles': [this._layerUrl],
-        'tileSize': this.options.tileSize || 512 //图片显示的大小，最好和上面大小保持一致
+        'tileSize': this.options.tileSize || 512, //图片显示的大小，最好和上面大小保持一致
+        mapgisOffset: zoomOffset
     };
     var mLayer = {
         'id': layerID,//图层ID
@@ -135,15 +138,15 @@ MapTileLayer.prototype._initLayerUrl = function () {
     this._layerUrl = layerUrl;
 };
 
-function getQuadkey(z, x, y) {
-    let quadkey = '',
-        mask;
-    for (let i = z; i > 0; i--) {
-        mask = 1 << (i - 1);
-        quadkey += ((x & mask ? 1 : 0) + (y & mask ? 2 : 0));
-    }
-    return quadkey;
-}
+// function getQuadkey(z, x, y) {
+//     let quadkey = '',
+//         mask;
+//     for (let i = z; i > 0; i--) {
+//         mask = 1 << (i - 1);
+//         quadkey += ((x & mask ? 1 : 0) + (y & mask ? 2 : 0));
+//     }
+//     return quadkey;
+// }
 
 export {MapTileLayer};
 Zondy.Map.MapTileLayer = MapTileLayer;

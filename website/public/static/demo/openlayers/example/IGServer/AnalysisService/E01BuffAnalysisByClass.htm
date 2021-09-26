@@ -1,10 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
     <!--当前示例页面样式表引用-->
-    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css"/>
     <script include="jquery" src="./static/libs/include-lib-local.js"></script>
     <script src="./static/libs/include-openlayers-local.js"></script>
     <style type="text/css">
@@ -20,7 +21,7 @@
             min-width: 200px;
             max-height: 102px;
             right: 10px;
-            top: 80px;
+            top: 120px;
             /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
             z-index: 2001;
             color: #ffffff;
@@ -33,7 +34,7 @@
             border-color: #000 #000 #000 #000;
         }
 
-        .layerTree{
+        .layerTree {
             padding-inline-start: 15px;
         }
         .layerTree li {
@@ -87,10 +88,9 @@
                     }),
                     projection: 'EPSG:4326',
                 })
-
             )
             map.addLayer(
-                new Zondy.Map.GdbpLayer("世界河流_1",["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流_1"], {
+                new Zondy.Map.GdbpLayer("世界河流_1", ["gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流_1"], {
                     ip: 'develop.smaryun.com',
                     port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089
                     //extent: extent,
@@ -98,6 +98,7 @@
             )
             loadLayersControl(map, "layerTree");
         }
+
         //执行单圈缓冲区分析
         function bufferOneRing() {
             var clsBufBySR = new Zondy.Service.ClassBufferBySingleRing({
@@ -116,47 +117,49 @@
             clsBufBySR.desInfo = resultBaseUrl + resultname
 
             //调用基类Zondy.Service.AnalysisBase的execute方法执行类缓冲分析，AnalysisSuccess为回调函数
-            clsBufBySR.execute(AnalysisSuccess, 'post', false, 'json', () => {})
+            clsBufBySR.execute(AnalysisSuccess, 'post', false, 'json', () => {
+            })
         }
 
-            function bufferMulRings() {
-                //显示进度条
-                startPressBar();
-                var clsBufByMR = new Zondy.Service.ClassBufferByMultiplyRing({
-                    ip: 'develop.smaryun.com',
-                    port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
-                    //多圈缓冲分析各圈的缓冲半径
-                    radiusStr: '0.01,0.05,0.1',
-                })
-                //调用Zondy.Service.ClassBufferBase基类公共属性
-                clsBufByMR.srcInfo = 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流_1'
-                var resultname = 'multiBuffAnalysisResultLayer' + getCurentTime()
-                clsBufByMR.desInfo = resultBaseUrl + resultname
-                //调用基类Zondy.Service.AnalysisBase的execute方法执行类缓冲分析，AnalysisSuccess为回调函数
-                clsBufByMR.execute(AnalysisSuccess, 'post', false, 'json', () => {})
-            }
+        function bufferMulRings() {
+            //显示进度条
+            startPressBar();
+            var clsBufByMR = new Zondy.Service.ClassBufferByMultiplyRing({
+                ip: 'develop.smaryun.com',
+                port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
+                //多圈缓冲分析各圈的缓冲半径
+                radiusStr: '0.01,0.05,0.1',
+            })
+            //调用Zondy.Service.ClassBufferBase基类公共属性
+            clsBufByMR.srcInfo = 'gdbp://MapGisLocal/OpenLayerVecterMap/ds/世界地图经纬度/sfcls/世界河流_1'
+            var resultname = 'multiBuffAnalysisResultLayer' + getCurentTime()
+            clsBufByMR.desInfo = resultBaseUrl + resultname
+            //调用基类Zondy.Service.AnalysisBase的execute方法执行类缓冲分析，AnalysisSuccess为回调函数
+            clsBufByMR.execute(AnalysisSuccess, 'post', false, 'json', () => {
+            })
+        }
 
-            //分析成功后的回调
-            function AnalysisSuccess(data) {
-                //停止进度条
-                stopPressBar();
-                if (!data.results) {
-                    alert('缓冲失败，请检查参数！')
-                } else {
-                    if (data.results.length != 0) {
-                        var resultLayerUrl = data.results[0].Value || data.results[0].value
-                        //将结果图层添加到地图视图中显示
-                        var resultLayer = new Zondy.Map.GdbpLayer('MapGIS IGS BuffAnalyResultLayer', [resultBaseUrl + resultLayerUrl], {
-                            ip: 'develop.smaryun.com',
-                            port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
-                            isBaseLayer: false,
-                        })
-                        map.addLayer(resultLayer)
-                        resultLayerArr.push(resultLayer)
-                    }
+        //分析成功后的回调
+        function AnalysisSuccess(data) {
+            //停止进度条
+            stopPressBar();
+            if (!data.results) {
+                alert('缓冲失败，请检查参数！')
+            } else {
+                if (data.results.length != 0) {
+                    var resultLayerUrl = data.results[0].Value || data.results[0].value
+                    //将结果图层添加到地图视图中显示
+                    var resultLayer = new Zondy.Map.GdbpLayer('MapGIS IGS BuffAnalyResultLayer', [resultBaseUrl + resultLayerUrl], {
+                        ip: 'develop.smaryun.com',
+                        port: '6163', //访问IGServer的端口号，.net版为6163，Java版为8089,
+                        isBaseLayer: false,
+                    })
+                    map.addLayer(resultLayer)
+                    resultLayerArr.push(resultLayer)
                 }
             }
         }
+
 
         function deleteAll() {
             while (resultLayerArr.length > 0) {
@@ -192,10 +195,11 @@
             clock += ss
             return clock
         }
+
         //map中的图层数组
         var layerArr = new Array();
         //图层名称数组
-        var layerNameArr = new Array('天地图矢量图层','天地图矢量注记图层','缓冲类');
+        var layerNameArr = new Array('天地图矢量图层', '天地图矢量注记图层', '缓冲类');
         //图层可见属性数组
         var layerVisibilityArr = new Array();
 
@@ -209,7 +213,7 @@
             var treeContent = document.getElementById(id);
             //获取地图中所有图层
             var layers = map.getLayers();
-            for (var i = 0; i < layers.getLength() ; i++) {
+            for (var i = 0; i < layers.getLength(); i++) {
                 //获取每个图层的名称、是否可见属性
                 layerArr[i] = layers.item(i);
                 // layerNameArr[i] = layerArr[i].get('name');
@@ -237,6 +241,7 @@
                 addChangeEvent(elementInput, layerArr[i]);
             }
         }
+
         /**
          * 为checkbox元素绑定变更事件
          * @param {input} element checkbox元素
@@ -247,13 +252,13 @@
                 if (element.checked) {
                     //显示图层
                     layer.setVisible(true);
-                }
-                else {
+                } else {
                     //不显示图层
                     layer.setVisible(false);
                 }
             };
         }
+
         /**
          * 动态设置元素文本内容（兼容）
          */
@@ -263,18 +268,21 @@
             } else {
                 element.innerText = text;
             }
+        }
 
-            /*===========================================进度条===================================================*/
-            //停止进度条
-            function stopPressBar() {
-                document.getElementById("preview").style.display = "none";
-            }
-            //开始进度条动画
-            function startPressBar() {
-                document.getElementById("preview").style.display = "block";
-            }
-        </script>
-    </head>
+        /*===========================================进度条===================================================*/
+
+        //停止进度条
+        function stopPressBar() {
+            document.getElementById("preview").style.display = "none";
+        }
+
+        //开始进度条动画
+        function startPressBar() {
+            document.getElementById("preview").style.display = "block";
+        }
+    </script>
+</head>
 
 <body onload="init()">
 <div id="mapCon">
@@ -282,37 +290,38 @@
         <ul id="layerTree" class="layerTree"></ul>
     </div>
 </div>
-        <div id="menuContain" class="menuContain">
-            <div id="tool-container">
-                <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')"><span></span><i class="menuGroup">类缓冲</i><em></em></div>
-            </div>
-        </div>
-        <div id="menu1" class="menuStrip" style="display:none">
-            <ul class="menuItems">
-                <li onclick="bufferOneRing()"><span class="item1"></span><i>单圈</i></li>
-                <li onclick="bufferMulRings()"><span class="item1"></span><i>多圈</i></li>
-                <li class="divider"></li>
-                <li onclick="deleteAll()"><span class="item3"></span><i>清除</i></li>
-            </ul>
-        </div>
-        <div id="preview">
-            <img src="static/assets/graphic-image/39-1.gif" alt='' /><br />
-            <br />
-            <span>正在分析，请稍候</span>
-        </div>
-        <script>
-            function switchMenuStatus(div, menuitemFrameID) {
-                var temDivs = document.getElementsByClassName('optmain')
-                if (temDivs.length > 0) {
-                    for (var i = 0; i < temDivs.length; i++) {
-                        if (temDivs[i] === div) {
-                            var status = div.getAttribute('status')
-                            if (status == 'unactive') {
-                                div.setAttribute('status', 'active')
-                                var tem_spans = div.getElementsByTagName('span')
-                                var tem_ems = div.getElementsByTagName('em')
-                                tem_spans[0].className = 'active'
-                                tem_ems[0].className = 'active'
+<div id="menuContain" class="menuContain">
+    <div id="tool-container">
+        <div id="dataSourceMenuID" class="optmain" status="unactive" onclick="switchMenuStatus(this,'menu1')">
+            <span></span><i class="menuGroup">类缓冲</i><em></em></div>
+    </div>
+</div>
+<div id="menu1" class="menuStrip" style="display:none">
+    <ul class="menuItems">
+        <li onclick="bufferOneRing()"><span class="item1"></span><i>单圈</i></li>
+        <li onclick="bufferMulRings()"><span class="item1"></span><i>多圈</i></li>
+        <li class="divider"></li>
+        <li onclick="deleteAll()"><span class="item3"></span><i>清除</i></li>
+    </ul>
+</div>
+<div id="preview">
+    <img src="static/assets/graphic-image/39-1.gif" alt=''/><br/>
+    <br/>
+    <span>正在分析，请稍候</span>
+</div>
+<script>
+    function switchMenuStatus(div, menuitemFrameID) {
+        var temDivs = document.getElementsByClassName('optmain')
+        if (temDivs.length > 0) {
+            for (var i = 0; i < temDivs.length; i++) {
+                if (temDivs[i] === div) {
+                    var status = div.getAttribute('status')
+                    if (status == 'unactive') {
+                        div.setAttribute('status', 'active')
+                        var tem_spans = div.getElementsByTagName('span')
+                        var tem_ems = div.getElementsByTagName('em')
+                        tem_spans[0].className = 'active'
+                        tem_ems[0].className = 'active'
 
                         //显示菜单项
                         DisplayMenuItem(true, menuitemFrameID)

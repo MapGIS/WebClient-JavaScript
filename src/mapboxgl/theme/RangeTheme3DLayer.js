@@ -1,6 +1,7 @@
-import { Zondy } from '../../service/common/Base';
+import { Common } from '@mapgis/webclient-es6-service';
 import { Theme3DLayer } from './Theme3DLayer';
-import { extend } from '../../service/common/Util';
+
+const { extend, Zondy } = Common;
 
 /**
  * @class RangeTheme3DLayer

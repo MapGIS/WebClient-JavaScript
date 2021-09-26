@@ -19,9 +19,9 @@
         "menus": [
           {
             "title": "插件详情",
-            "links": [["插件列表", "详细图表", "插件标签", "提交bug", "其他"]],
+            "links": [["插件列表", "详细图表", "插件标签", "提交bug"]],
             "hightlights": [[false, false, false, false, false]],
-            "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit", "/total/other"]]
+            "routes": [["/total/plugins", "/total/detailChart", "/total/pluginTags", "/total/bugCommit"]]
           }
         ]
       },

@@ -50,6 +50,9 @@
     var data = [];
 
     $.get('../../static/data/mapv/china-point.geojson', function (rs) {
+        if (typeof rs === "string"){
+            rs = JSON.parse(rs);
+        }
       for (var i = 0; i < rs[0].length; i++) {
         var geoCoord = rs[0][i].geoCoord;
         data.push({

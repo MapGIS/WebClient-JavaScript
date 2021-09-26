@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Vue-雨特效</title>
+    <script include="vue,antd" exclude="plugin,cesium" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #app {
+            height: 100vh;
+            width: 100vw;
+        }
+        .changeSpeed {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .changeAngle {
+            position: absolute;
+            top: 20px;
+            left: 200px;
+        }
+        .changeShow {
+            position: absolute;
+            top: 20px;
+            left: 400px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <mapgis-web-scene
+            lib-path="static/libs/cdn/cesium/Cesium.js"
+            plugin-path="static/libs/cdn/zondyclient/webclient-cesium-plugin.min.js"
+    >
+        <mapgis-3d-ogc-wmts-layer
+                :base-url="urlT"
+                :wmts-layer="layer"
+                :tile-matrix-set="tileMatrixSetID"
+                :format="format"
+                :tiling-scheme="srs"
+                :token="token"
+        ></mapgis-3d-ogc-wmts-layer>
+        <mapgis-3d-igs-m3d
+                :auto-reset="autoReset"
+                :maximum-screen-space-error="maximumScreenSpaceError"
+                :url="m3dUrl"
+        >
+        </mapgis-3d-igs-m3d>
+        <mapgis-3d-rain-effect :speed="speed" :angle="angle" :enable="enable" ref="rain">
+        </mapgis-3d-rain-effect>
+        <a-button @click="changeSpeed" class="changeSpeed">加快速度</a-button>
+        <a-button @click="changeAngle" class="changeAngle">改变角度</a-button>
+        <a-button @click="changeShow" class="changeShow">改变显示</a-button>
+    </mapgis-web-scene>
+</div>
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                //天地图参数
+                urlT: "http://t0.tianditu.gov.cn/img_c/wmts",
+                tileMatrixSetID: "c",
+                srs: "EPSG:4326",
+                layer: "img",
+                format: "tiles",
+                token: {
+                    key: "tk",
+                    value: "f5347cab4b28410a6e8ba5143e3d5a35"
+                },
+                m3dUrl: "http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels",
+                autoReset: true,
+                maximumScreenSpaceError: 8,
+                speed: 5.0,
+                angle:0,
+                enable:true,
+            };
+        },
+        methods: {
+            changeSpeed() {
+                this.speed += 5;
+            },
+            changeAngle(){
+                this.angle += 5;
+                console.log("angle",this.angle)
+            },
+            changeShow() {
+                let vm = this;
+                vm.enable = !(vm.enable);
+            }
+        }
+    })
+</script>
+</body>
+
+</html>

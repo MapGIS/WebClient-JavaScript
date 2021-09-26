@@ -23,7 +23,7 @@
             min-width: 200px;
             max-height: 123px;
             right: 10px;
-            top: 80px;
+            top: 120px;
             /*在地图容器中的层，要设置z-index的值让其显示在地图上层*/
             z-index: 2001;
             color: #ffffff;
@@ -143,16 +143,116 @@
             } else {
                 if (data.results.length != 0) {
                     var resultLayerUrl = data.results[0].Value || data.results[0].value;
-                    //将结果图层添加到地图视图中显示
-                    var resultLayer = new Zondy.Map.GdbpLayer('MapGIS IGS BuffAnalyResultLayer', [resultBaseUrl + resultLayerUrl], {
-                        ip: 'develop.smaryun.com',
-                        port: '6163',    //访问IGServer的端口号，.net版为6163，Java版为8089,
-                        isBaseLayer: false
-                    });
-                    map.addLayer(resultLayer);
-                    resultLayerArr.push(resultLayer);
+                    let gdbp = resultBaseUrl + resultLayerUrl;
+                    changeGdbpStyle(gdbp);
                 }
             }
+        }
+
+        function changeGdbpStyle(gdbp){
+            var pointObj = new Array();
+            pointObj[0] = new Zondy.Object.Point2D(-180, 90);
+            pointObj[1] = new Zondy.Object.Point2D(180, 90);
+            pointObj[2] = new Zondy.Object.Point2D(180, -90);
+            pointObj[3] = new Zondy.Object.Point2D(-180, -90);
+            pointObj[4] = new Zondy.Object.Point2D(-180, 90);
+
+            var Polygon = new Zondy.Object.Polygon(pointObj);
+            //初始化查询结构对象，设置查询结构包含几何信息
+            var queryStruct = new Zondy.Service.QueryFeatureStruct();
+            //是否包含几何图形信息
+            queryStruct.IncludeGeometry = true;
+            //是否包含属性信息
+            queryStruct.IncludeAttribute = true;
+            //是否包含图形显示参数
+            queryStruct.IncludeWebGraphic = false;
+            //指定查询规则
+            var rule = new Zondy.Service.QueryFeatureRule({
+                //是否将要素的可见性计算在内
+                EnableDisplayCondition: false,
+                //是否完全包含
+                MustInside: false,
+                //是否仅包比较要素的外矩形
+                CompareRectOnly: false,
+                //是否相交
+                Intersect: true
+            });
+            //实例化查询参数对象
+            var queryParam = new Zondy.Service.QueryByLayerParameter(gdbp, {
+                geometry: Polygon,
+                resultFormat: 'json',
+                struct: queryStruct,
+                rule: rule
+            });
+            //设置查询分页号
+            queryParam.pageIndex = 0;
+            //设置查询要素数目
+            queryParam.recordNumber = 2000;
+            //实例化矢量图层查询服务对象
+            var queryService = new Zondy.Service.QueryLayerFeature(queryParam, {
+                ip: 'develop.smaryun.com',
+                port: '6163',
+            });
+
+            //执行查询操作，querySuccess为查询回调函数
+            queryService.query((res) => {
+                console.log('res', res);
+                let polygons = [];
+                let geojson = {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+                res.SFEleArray.forEach(f => {
+                    let dots = f.fGeom.LinGeom[0].Line.Arcs[0].Dots;
+                    let points = [];
+                    dots.forEach(d => {
+                        points.push([d.x, d.y])
+                    })
+                    let feature = {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinate": [
+                                points
+                            ]
+                        }
+                    }
+                    geojson.features.push(feature);
+                    var polygon = new ol.Feature({
+                        geometry: new ol.geom.LineString(
+                            points
+                        )
+                    });
+                    //设置区样式信息
+                    polygon.setStyle(new ol.style.Style({
+                        //填充色
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 0, 0, 0.5)'
+                        }),
+                        //边线颜色
+                        stroke: new ol.style.Stroke({
+                            color: '#ffcc33',
+                            width: 2
+                        })
+                    }));
+                    polygons.push(polygon);
+                });
+
+                var vectorSource = new ol.source.Vector();
+                debugger
+                vectorSource.addFeatures(polygons);
+
+                // 创建一个图层
+                var vectorLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                    zIndex: 5
+                });
+                map.addLayer(vectorLayer);
+                resultLayerArr.push(vectorLayer);
+            }, (error) => {
+                console.log('error', error)
+            });
         }
 
         function deleteAll() {
@@ -264,7 +364,7 @@
             } else {
                 element.innerText = text;
             }
-
+        }
 
         /*===========================================进度条===================================================*/
         //停止进度条
@@ -282,7 +382,10 @@
 
 
 <body onload='init()'>
-<div id='mapCon'>
+<div id="mapCon">
+    <div id="layerControl" class="layerControl">
+        <ul id="layerTree" class="layerTree"></ul>
+    </div>
 </div>
 
 <div id='menuContain' class='menuContain'>

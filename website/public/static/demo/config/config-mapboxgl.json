@@ -858,6 +858,14 @@
                     "update": "最后更新时间：2019-11-07"
                 },
                 {
+                    "name": "化简曲线",
+                    "file": "dp",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "dp.png",
+                    "update": "最后更新时间：2021-08-21"
+                },
+                {
                     "name": "求交判断",
                     "file": "intersect",
                     "diffcult": "3",

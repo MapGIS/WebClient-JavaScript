@@ -1,14 +1,14 @@
-﻿import {Zondy} from "../common/Base";
-import {extend}  from  "../common/Util";
-import {isArray}  from  "../common/Util";
-import {isInTheSameDomain}  from  "../common/Util";
-import {transformResult}  from  "../common/Util";
-import {urlAppend}  from  "../common/Util";
-import {getParameterString}  from  "../common/Util";
-import {bind}  from  "../common/Util";
-import {Events}  from  "./Events";
-import {JSONFormat}  from  "./JSONFormat";
-import {FetchRequest}  from  "./FetchRequest";
+﻿import { Zondy } from '../common/Base';
+import { extend } from '../common/Util';
+import { isArray } from '../common/Util';
+import { isInTheSameDomain } from '../common/Util';
+import { transformResult } from '../common/Util';
+import { urlAppend } from '../common/Util';
+import { getParameterString } from '../common/Util';
+import { bind } from '../common/Util';
+import { Events } from './Events';
+import { JSONFormat } from './JSONFormat';
+import { FetchRequest } from './FetchRequest';
 
 /**
  * @private
@@ -22,7 +22,7 @@ import {FetchRequest}  from  "./FetchRequest";
 class CommonServiceBase {
     constructor(url, options) {
         var me = this;
-        this.EVENT_TYPES = ["processCompleted", "processFailed"];
+        this.EVENT_TYPES = ['processCompleted', 'processFailed'];
 
         this.events = null;
         this.eventListeners = null;
@@ -142,7 +142,6 @@ class CommonServiceBase {
         me._processSuccess(result);
     }
 
-
     /**
      * @function CommonServiceBase.prototype.getUrlFailed
      * @description 请求失败后执行此方法。
@@ -157,7 +156,6 @@ class CommonServiceBase {
             me._processFailed(result);
         }
     }
-
 
     /**
      *
@@ -175,7 +173,6 @@ class CommonServiceBase {
         me.options.isInTheSameDomain = isInTheSameDomain(url);
         me._commit(me.options);
     }
-
 
     /**
      * @function CommonServiceBase.prototype.calculatePollingTimes
@@ -195,7 +192,6 @@ class CommonServiceBase {
                     me.totalTimes = me.times;
                 }
             }
-
         } else {
             if (me.totalTimes > me.POLLING_TIMES) {
                 me.totalTimes = me.POLLING_TIMES;
@@ -204,7 +200,6 @@ class CommonServiceBase {
         me.totalTimes--;
     }
 
-
     /**
      * @function CommonServiceBase.prototype.serviceProcessCompleted
      * @description 状态完成，执行此方法。
@@ -212,7 +207,7 @@ class CommonServiceBase {
      */
     serviceProcessCompleted(result) {
         result = transformResult(result);
-        this.events.triggerEvent("processCompleted", {result: result});
+        this.events.triggerEvent('processCompleted', { result: result });
     }
 
     /**
@@ -223,14 +218,13 @@ class CommonServiceBase {
     serviceProcessFailed(result) {
         result = transformResult(result);
         var error = result;
-        this.events.triggerEvent("processFailed", {error: error});
+        this.events.triggerEvent('processFailed', { error: error });
     }
 
     _commit(options) {
-        if (options.method === "POST" || options.method === "PUT") {
+        if (options.method === 'POST' || options.method === 'PUT') {
             if (options.params) {
-                options.url = urlAppend(options.url,
-                    getParameterString(options.params || {}));
+                options.url = urlAppend(options.url, getParameterString(options.params || {}));
             }
             options.params = options.data;
         }
@@ -240,67 +234,106 @@ class CommonServiceBase {
             timeout: options.async ? 0 : null,
             proxy: options.proxy
         })
-        .then(function (response) {
-            if (response.text) {
-                return response.text();
-            }
-            return response.json();
-        })
-        .catch(function(error) {
-            let result = {error: true, value: {}};
-            var failure = (options.scope) ? bind(options.failure, options.scope) : options.failure;
-            failure(result);
-        })
-        .then(function (text) {
-            if (!text) return;
-            var result = null;
-            if (typeof text === "string" && (text.toLowerCase() === 'true' || text.toLowerCase() === 'false')) {
-                result = {};
-                if (text.toLowerCase() === 'true') {
-                    result.success = true;
-                }
-                else {
-                    result.error = true;
-                }
-            }
-            else if (typeof text === "string") {
-                result = new JSONFormat().read(text);
-            }
-
-
-            if ((!result && isNaN(result)) || result.error) {
-                if (result && result.error) {
-                    result = {error: result.error};
+            .then(function (response) {
+                // console.log('【服务】【基础服务】【抽象类Fetch返回状态】', response);
+                let check;
+                if (response.text) {
+                    check = () => response.text();
                 } else {
-                    result = {error: true};
+                    check = () => response.json();
                 }
-            }
-            if (result.error) {
-                var failure = (options.scope) ? bind(options.failure, options.scope) : options.failure;
+                if (response.status == 200) {
+                    return new Promise(
+                        (resolve) => {
+                            check().then(function (text) {
+                                if (!text) return;
+                                var result = null;
+                                if (typeof text === 'string' && (text.toLowerCase() === 'true' || text.toLowerCase() === 'false')) {
+                                    result = {};
+                                    if (text.toLowerCase() === 'true') {
+                                        result.succeed = true;
+                                    } else {
+                                        result.succeed = false;
+                                        result.error = true;
+                                    }
+                                } else if (typeof text === 'string') {
+                                    result = new JSONFormat().read(text);
+                                }
+
+                                if ((!result && isNaN(result)) || result.error) {
+                                    if (result && result.error) {
+                                        result = { error: result.error };
+                                    } else {
+                                        result = { error: true };
+                                    }
+                                }
+                                if (result.error) {
+                                    var failure = options.scope ? bind(options.failure, options.scope) : options.failure;
+                                    failure(result);
+                                } else {
+                                    if (!isNaN(result)) {
+                                        //为数字
+                                        result = { value: result };
+                                    }
+                                    if (typeof result === 'string') {
+                                        result = { value: result };
+                                    }
+                                    if (Object.prototype.toString.call(result) !== '[object Array]') {
+                                        result.succeed = result.succeed === undefined ? true : result.succeed;
+                                    } else {
+                                        result = {
+                                            value: result,
+                                            succeed: true
+                                        };
+                                    }
+
+                                    var success = options.scope ? bind(options.success, options.scope) : options.success;
+                                    success(result);
+                                }
+                            });
+                            resolve(response.status);
+                        },
+                        (reject) => {
+                            console.log('【服务】【基础服务】【抽象类Fetch返回异常】', reject);
+                        }
+                    );
+                } else {
+                    return new Promise(                        
+                        (resolve) => {
+                            // console.log('【服务】【基础服务】【抽象类Fetch异常信息：4xx/5xx-resoleve】');        
+                            check().then(function (text) {
+                                // console.log('【服务】【基础服务】【抽象类Fetch异常信息：4xx/5xx】', text);
+                                if (!text) return;
+                                var result = null;
+                                if (typeof text === 'string' && (text.toLowerCase() === 'true' || text.toLowerCase() === 'false')) {
+                                    result = {};
+                                    result.succeed = false;
+                                } else if (typeof text === 'string') {
+                                    result = new JSONFormat().read(text);
+                                }
+
+                                if ((!result && isNaN(result)) || !result.success) {
+                                    result = { succeed: false };
+                                }
+
+                                var failure = options.scope ? bind(options.failure, options.scope) : options.failure;
+                                failure(result);
+                            });
+                            resolve(response.status);
+                        },
+                        (reject) => {
+                            console.log('【服务】【基础服务】【抽象类Fetch返回异常】', reject);
+                        }
+                    );
+                }
+            })
+            .catch(function (error) {
+                let result = { error: true, value: {} };
+                var failure = options.scope ? bind(options.failure, options.scope) : options.failure;
                 failure(result);
-            } else {
-                if (!isNaN(result))  //为数字
-                {
-                    result = {value: result};
-                }
-                if (typeof result === "string") {
-                    result = {value: result};
-                }
-                if (Object.prototype.toString.call(result) !== '[object Array]') {
-                    result.success = result.success === undefined ? true : result.success;
-                }
-                else {
-                    result = {
-                        value: result,
-                        success: true
-                    };
-                }
-                
-                var success = (options.scope) ? bind(options.success, options.scope) : options.success;
-                success(result);
-            }
-        });
+            })
+            .then(function (text, status) {});
     }
 }
-export {CommonServiceBase};
+export { CommonServiceBase };
 Zondy.Service.CommonServiceBase = CommonServiceBase;
