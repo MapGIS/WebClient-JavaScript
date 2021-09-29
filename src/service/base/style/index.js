@@ -1,3 +1,6 @@
+// 枚举
+import { Enum } from './Enum';
+
 // 原子级样式
 import { Symbol } from './Symbol';
 import { Shadow } from './Shadow';
@@ -10,4 +13,4 @@ import { LineStyle } from './LineStyle';
 import { FillStyle } from './PolygonStyle';
 import { TextStyle } from './TextStyle';
 
-export { Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle };
+export { Enum, Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle };

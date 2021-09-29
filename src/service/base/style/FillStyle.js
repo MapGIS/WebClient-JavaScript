@@ -1,6 +1,7 @@
 import { extend } from '../Util';
 import { mapgis } from '../Base';
 import { VectorStyle } from './VectorStyle';
+import { Symbol } from './Symbol';
 
 /**
  * 多边形样式
@@ -13,15 +14,16 @@ import { VectorStyle } from './VectorStyle';
  * @param {Object} [symbolStyle = undefined] 填充图案样式，默认undefined
  * @param {Object} [outlineSymbolStyle = undefined] 多边形外边线填充图案样式，默认undefined
  */
- export default class FillStyle extends VectorStyle {
+export default class FillStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
+        const { symbol } = option;
         this.outlineWidth = 1;
         this.outlineColor = '#FFFFFF';
         this.outlineDashArray = 'line';
         this.shadowStyle = undefined;
-        this.symbolStyle = undefined;
+        this.symbolStyle = symbol || new Symbol();
         this.outlineSymbolStyle = undefined;
         extend(this, options);
     }

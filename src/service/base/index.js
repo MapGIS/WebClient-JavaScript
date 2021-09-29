@@ -1,3 +1,3 @@
-import { Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle } from './style';
+import { Enum, Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle } from './style';
 
-export { Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle };
+export { Enum, Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle };
