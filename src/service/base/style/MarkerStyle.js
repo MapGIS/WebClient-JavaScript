@@ -1,7 +1,7 @@
 import { extend } from '../Util';
 import { mapgis } from '../Base';
 import { VectorStyle } from './VectorStyle';
-import { SymbolStyle } from './SymbolStyle';
+import { Symbol } from './Symbol';
 
 /**
  * 点样式
@@ -14,7 +14,7 @@ export default class MarkerStyle extends VectorStyle {
         super();
         var options = option ? option : {};
         const { symbol } = option;
-        this.symbol = symbol || new SymbolStyle();
+        this.symbol = symbol || new Symbol();
         extend(this, options);
     }
 }

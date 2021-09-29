@@ -2,6 +2,7 @@ import { extend } from '../../common/Util';
 import { mapgis } from '../../common/Base';
 import { VectorStyle } from './VectorStyle';
 import { LineCap, LineJoin } from './Enum';
+import { Symbol } from './Symbol';
 
 /**
  * 线样式
@@ -17,12 +18,13 @@ export default class LineStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
+        const { symbol } = option;
         this.width = 1;
         this.dashArray = 'line';
         this.cap = LineCap.butt;
         this.join = LineJoin.miter;
         this.shadowStyle = undefined;
-        this.symbolStyle = undefined;
+        this.symbolStyle = symbol || new Symbol();
         extend(this, options);
     }
 }
