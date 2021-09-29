@@ -54,6 +54,14 @@ import {
  import { Tangram } from  './Tangram';
  import { VectCls } from  './VectCls';
  import { WebGraphicsInfo } from  './WebGraphicsInfo';
+import {
+	LineStyle,
+	PointStyle,
+	PolygonStyle,
+	ShadowStyle,
+	SymbolStyle,
+	TextStyle
+} from  './symbol';
  import {
  	extend ,
  	isArray,
@@ -197,4 +205,12 @@ export {
 	formatPoints,
 	notNULL
  } ;
+ export {
+	 LineStyle,
+	 PointStyle,
+	 PolygonStyle,
+	 ShadowStyle,
+	 SymbolStyle,
+	 TextStyle
+ }
 
