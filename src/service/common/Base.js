@@ -5,7 +5,7 @@ Zondy.Event = Zondy.Event || {};
 Zondy.Object = Zondy.Object || {};
 Zondy.Object.ContourAnalyse = Zondy.Object.ContourAnalyse || {};
 Zondy.Object.Theme = Zondy.Object.Theme || {};
-Zondy.Theme = Zondy.Theme || {} // 客户端专题图
+Zondy.Theme = Zondy.Theme || {}; // 客户端专题图
 
 Zondy.Service = Zondy.Service || {};
 Zondy.Socket = Zondy.Socket || {};
@@ -55,3 +55,8 @@ Zondy.IGServerX = Zondy.IGServerX || {};
 Zondy.IGServerX.Vector = Zondy.IGServerX.Vector || {};
 
 export { Zondy };
+
+// 新版本的设计框架
+var mapgis = (window.mapgis = window.mapgis || {});
+mapgis.style = mapgis.style || {};
+export { mapgis };

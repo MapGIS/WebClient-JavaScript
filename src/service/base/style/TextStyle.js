@@ -1,10 +1,11 @@
-import {extend} from "../Util";
-import {Zondy} from "../Base";
-import {VectorStyle} from "./VectorStyle";
+import { extend } from '../Util';
+import { mapgis } from '../Base';
+import { VectorStyle } from './VectorStyle';
+import { TextPlacement, Align } from './Enum';
 
 /**
  * 点样式
- * @class Zondy.Object.TextStyle
+ * @class mapgis.style.TextStyle
  * @classdesc 文字样式
  * @param {String} [fontFamily = 宋体] 字体
  * @param {String} [fontColor = #000000] 字体颜色，16进制颜色或rgb值或rgba值，默认#000000，黑色
@@ -21,12 +22,12 @@ import {VectorStyle} from "./VectorStyle";
  * @param {Number} [haloWidth = 0] 描边宽度
  * @param {String} [placement = point] 文字放置位置，默认point，按点的方式放置
  */
-class TextStyle extends VectorStyle{
+export default class TextStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
-        this.fontFamily = "宋体";
-        this.fontColor = "#000000";
+        this.fontFamily = '宋体';
+        this.fontColor = '#000000';
         this.fontSize = 12;
         this.spacing = 0;
         this.rotate = 0;
@@ -34,16 +35,14 @@ class TextStyle extends VectorStyle{
         this.yOffset = 0;
         this.lineHeight = 1.2;
         this.maxWidth = 10;
-        this.align = "center";
+        this.align = Align.center;
         this.haloBlur = 0;
-        this.haloColor = "#000000";
+        this.haloColor = '#000000';
         this.haloWidth = 0;
-        this.placement = "point";
+        this.placement = TextPlacement.point;
         extend(this, options);
     }
 }
 
-export {
-    TextStyle
-};
-Zondy.Object.TextStyle = TextStyle;
+export { TextStyle };
+mapgis.style.TextStyle = TextStyle;

@@ -1,33 +1,34 @@
-import {extend} from "../Util";
-import {Zondy} from "../Base";
-import {VectorStyle} from "./VectorStyle";
+import { extend } from '../Util';
+import { mapgis } from '../Base';
+import { Anchor } from './Enum';
 
 /**
  * 符号样式
- * @class Zondy.Object.SymbolStyle
+ * @class mapgis.style.SymbolStyle
  * @classdesc 符号样式
  * @param {String} [symbol = ""] 符号名称或url
+ * @param {Number} [opacity = 1] 透明度，0~1之间的值，默认为1，不透明
+ * @param {String} [color = #FFFFFF] 颜色，十六进制或RGB，默认为#FFFFFF，白色
  * @param {Number} [size = 1] 符号大小
  * @param {Number} [rotate = 0] 旋转角度，0~360度
  * @param {Number} [xOffset = 0] X轴偏移
  * @param {Number} [yOffset = 0] Y轴偏移
  * @param {String} [anchor = center] 锚点
  */
-class SymbolStyle extends VectorStyle {
+export default class Symbol {
     constructor(option) {
-        super();
         var options = option ? option : {};
-        this.symbol = "";
+        this.symbol = '';
+        this.opacity = 1;
+        this.color = '#FFFFFF';
         this.size = 1;
         this.rotate = 0;
         this.xOffset = 0;
         this.yOffset = 0;
-        this.anchor = "center";
+        this.anchor = Anchor.center;
         extend(this, options);
     }
 }
 
-export {
-    SymbolStyle
-};
-Zondy.Object.SymbolStyle = SymbolStyle;
+export { Symbol };
+mapgis.style.SymbolStyle = Symbol;
