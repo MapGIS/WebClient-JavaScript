@@ -113,8 +113,8 @@ export default class TerrainLayer extends BaseLayer {
             if (info !== undefined && info.sceneInfos.length > 0) {
                 const { layers } = info.sceneInfos[0];
                 layers.forEach((layer) => {
-                    const { layerType, layerRenderIndex, elevationScale, range, range3D , terrainLayer } = layer;
-                    const { terrainColorTblInfo } = terrainLayer;
+                    const { layerType, layerRenderIndex, range, range3D , terrainLayer } = layer;
+                    const { terrainColorTblInfo, elevationScale } = terrainLayer;
                     const type = parseInt(layerType, 10);
                     if (type === LayerType.TERRAINLAYER) {
                         const sceneIndex = 0;
