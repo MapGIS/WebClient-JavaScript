@@ -1,5 +1,5 @@
-import { extend } from '../Util';
-import { mapgis } from '../Base';
+import { extend } from '../../common/Util';
+import { mapgis } from '../common/base';
 import { VectorStyle } from './VectorStyle';
 import { TextPlacement, Align } from './Enum';
 

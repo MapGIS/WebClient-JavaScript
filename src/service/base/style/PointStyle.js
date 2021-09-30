@@ -1,5 +1,5 @@
 import { extend } from '../../common/Util';
-import { mapgis } from '../../common/Base';
+import { mapgis } from '../common/base';
 import { VectorStyle } from './VectorStyle';
 import { Anchor } from './Enum';
 
@@ -16,11 +16,29 @@ export default class PointStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
-        this.radius = 0;
-        this.outlineColor = '#FFFFFF';
-        this.outlineWidth = 0;
-        this.anchor = Anchor.center;
+        const { radius = 5, outlineColor = '#FFFFFF', outlineWidth = 0, anchor = Anchor.center } = options;
+        this.radius = radius;
+        this.outlineColor = outlineColor;
+        this.outlineWidth = outlineWidth;
+        this.anchor = anchor;
         extend(this, options);
+    }
+
+    /**
+     * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#circle
+     * @returns MapboxGL点格式的样式
+     */
+    toMapboxStyle() {
+        const { color, opacity, radius, outlineColor, outlineWidth } = this;
+        return {
+            paint: {
+                'circle-radius': radius,
+                'circle-color': color,
+                'circle-opacity': opacity,
+                'circle-stroke-width': outlineWidth,
+                'circle-stroke-color': outlineColor
+            }
+        };
     }
 }
 
