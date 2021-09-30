@@ -65,6 +65,7 @@ export default class FillStyle extends VectorStyle {
         if (offsetX || offsetY) {
             style.paint['fill-translate'] = [offsetX, offsetY];
         }
+<<<<<<< HEAD
         if (highlight) {
             // mapbox 区高亮用的是line的样式，因此此处不做处理
             style.paint['fill-color'] = ['case', ['boolean', ['feature-state', 'hover'], false], color, 'rgba(0,0,0,0)'];
@@ -83,6 +84,10 @@ export default class FillStyle extends VectorStyle {
         let outline = new Cesium.Color.fromCssColorString(outlineColor);
         return { material, outlineColor: outline };
     }
+=======
+        return style;
+    }
+>>>>>>> 40afe0b2 (【SDK】【服务】【新增拉伸区样式&优化显示细节】)
 }
 
 export { FillStyle };
