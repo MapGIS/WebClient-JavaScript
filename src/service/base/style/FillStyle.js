@@ -62,6 +62,17 @@ export default class FillStyle extends VectorStyle {
         }
         return style;
     }
+
+    /**
+     * @link https://sandcastle.cesium.com/index.html?src=Polygon.html
+     * @returns Cesium区格式的样式
+     */
+    toCesiumStyle(Cesium) {
+        let { color, opacity, outlineColor } = this;
+        let material = new Cesium.ColorMaterialProperty(Cesium.Color.fromCssColorString(color).withAlpha(opacity));
+        let outline = new Cesium.Color.fromCssColorString(outlineColor);
+        return { material, outlineColor: outline };
+    }
 }
 
 export { FillStyle };

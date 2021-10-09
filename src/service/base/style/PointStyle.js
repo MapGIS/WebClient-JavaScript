@@ -40,6 +40,22 @@ export default class PointStyle extends VectorStyle {
             }
         };
     }
+
+    /**
+     * @link https://sandcastle.cesium.com/index.html?src=Circles%20and%20Ellipses.html&label=Geometries
+     * @returns Cesium点格式的样式
+     */
+    toCesiumStyle(Cesium) {
+        let material;
+        let outline = false;
+        let { color, opacity, radius, outlineColor, outlineWidth } = this;
+        if (outlineWidth > 0) {
+            outline = true;
+        }
+        material = new Cesium.ColorMaterialProperty(Cesium.Color.fromCssColorString(color).withAlpha(opacity));
+
+        return { material, radius, outline, outlineColor, outlineWidth };
+    }
 }
 
 export { PointStyle };

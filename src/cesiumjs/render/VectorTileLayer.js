@@ -4,7 +4,6 @@ import { getLayers, getFonts, getVectorTileSource, getSpritePng } from './vector
 import VectorTileProvider from './vectortile/VectorTileProvider';
 import VectorTileStyle from './vectortile/MapgisVectorTileStyle';
 import axios from 'axios';
-import { find } from 'ol/array';
 
 /**
  * @author 基础平台/创新中心 潘卓然 ParnDeedlit
@@ -136,6 +135,10 @@ export class VectorTileLayer {
                 this.addLayer(this.styleData);
             }.bind(this)
         );
+    }
+
+    getLayer() {
+        return self.provider ? self.provider : undefined;
     }
 
     /**
