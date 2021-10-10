@@ -25,12 +25,16 @@ export default class PointStyle extends VectorStyle {
     }
 
     /**
+     * @param  {Boolean} [highlight = false] 是否激活高亮样式
      * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#circle
      * @returns MapboxGL点格式的样式
      */
-    toMapboxStyle() {
+    toMapboxStyle(options) {
+        options = options || {};
+        const { highlight = false } = options;
         const { color, opacity, radius, outlineColor, outlineWidth } = this;
-        return {
+        let style = {
+            filter: ['==', '$type', 'Point'],
             paint: {
                 'circle-radius': radius,
                 'circle-color': color,
@@ -39,6 +43,11 @@ export default class PointStyle extends VectorStyle {
                 'circle-stroke-color': outlineColor
             }
         };
+        if (highlight) {
+            style.paint['circle-color'] = ['case', ['boolean', ['feature-state', 'hover'], false], color, 'rgba(0, 0, 0, 0)'];
+            style.paint['circle-stroke-width'] = ['case', ['boolean', ['feature-state', 'hover'], false], outlineWidth, 0];
+        }
+        return style;
     }
 
     /**

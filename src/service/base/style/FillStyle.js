@@ -41,12 +41,16 @@ export default class FillStyle extends VectorStyle {
     }
 
     /**
+     * @param  {Boolean} [highlight = false] 是否激活高亮样式
      * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#fill
      * @returns MapboxGL线格式的样式
      */
-    toMapboxStyle() {
+    toMapboxStyle(options) {
+        options = options || {};
+        const { highlight = false } = options;
         let { color, opacity, outlineColor, symbolStyle, offsetX, offsetY } = this;
         let style = {
+            filter: ['==', '$type', 'Polygon'],
             paint: {
                 'fill-antialias': true, //抗锯齿，true表示针对边界缝隙进行填充
                 'fill-color': color,
@@ -59,6 +63,11 @@ export default class FillStyle extends VectorStyle {
         }
         if (offsetX || offsetY) {
             style.paint['fill-translate'] = [offsetX, offsetY];
+        }
+        if (highlight) {
+            // mapbox 区高亮用的是line的样式，因此此处不做处理
+            style.paint['fill-color'] = ['case', ['boolean', ['feature-state', 'hover'], false], color, 'rgba(0,0,0,0)'];
+            style.paint['fill-outline-color'] = ['case', ['boolean', ['feature-state', 'hover'], false], outlineColor, 'rgba(0,0,0,0)'];
         }
         return style;
     }

@@ -44,16 +44,20 @@ export default class LineStyle extends VectorStyle {
     }
 
     /**
+     * @param  {Boolean} [highlight = false] 是否激活高亮样式
      * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#line
      * @returns MapboxGL线格式的样式
      */
-    toMapboxStyle() {
+    toMapboxStyle(options) {
+        options = options || {};
+        const { highlight = false } = options;
         let { color, opacity, width, cap, join, blur, dashArray, shadowStyle, symbolStyle } = this;
         if (shadowStyle) {
             blur = shadowStyle.blur;
             width = width + blur;
         }
         let style = {
+            filter: ['==', '$type', 'LineString'],
             layout: {
                 'line-cap': cap,
                 'line-join': join
@@ -70,6 +74,9 @@ export default class LineStyle extends VectorStyle {
         }
         if (dashArray) {
             style.paint['line-dasharray'] = dashArray;
+        }
+        if (highlight) {
+            style.paint['line-width'] = ['case', ['boolean', ['feature-state', 'hover'], false], width, 0];
         }
         return style;
     }
