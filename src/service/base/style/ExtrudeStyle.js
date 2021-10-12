@@ -18,6 +18,7 @@ export default class ExtrudeStyle extends VectorStyle {
         super();
         var options = option ? option : {};
         const { symbol } = options;
+        this.type = 'extrude';
         this.outlineWidth = 1;
         this.outlineColor = '#FFFFFF';
         this.shadowStyle = undefined;

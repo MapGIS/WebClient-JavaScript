@@ -29,6 +29,7 @@ export default class FillStyle extends VectorStyle {
             symbol,
             outlineSymbolStyle
         } = options;
+        this.type = 'fill';
         this.outlineWidth = outlineWidth;
         this.outlineColor = outlineColor;
         this.outlineDashArray = outlineDashArray;

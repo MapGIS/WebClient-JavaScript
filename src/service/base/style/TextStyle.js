@@ -26,6 +26,7 @@ export default class TextStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
+        this.type = 'text';
         this.fontFamily = '宋体';
         this.fontColor = '#000000';
         this.fontSize = 12;

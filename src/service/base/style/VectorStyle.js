@@ -12,6 +12,7 @@ export default class VectorStyle {
     constructor(option) {
         var options = option ? option : {};
         const { opacity = 1, color = '#FFFFFF' } = options;
+        this.type = undefined;
         this.opacity = opacity;
         this.color = color;
         extend(this, options);

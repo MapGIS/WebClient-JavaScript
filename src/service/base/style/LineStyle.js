@@ -32,6 +32,7 @@ export default class LineStyle extends VectorStyle {
             shadow,
             symbol
         } = options;
+        this.type = 'line';
         this.width = width;
         this.dashArray = dashArray;
         this.cap = cap;

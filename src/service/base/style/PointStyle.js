@@ -17,6 +17,7 @@ export default class PointStyle extends VectorStyle {
         super();
         var options = option ? option : {};
         const { radius = 5, outlineColor = '#FFFFFF', outlineWidth = 0, anchor = Anchor.center } = options;
+        this.type = 'point';
         this.radius = radius;
         this.outlineColor = outlineColor;
         this.outlineWidth = outlineWidth;

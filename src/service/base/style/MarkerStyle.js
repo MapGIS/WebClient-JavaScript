@@ -18,6 +18,7 @@ export default class MarkerStyle extends VectorStyle {
         super();
         var options = option ? option : {};
         const { symbol, size = 1.0 } = options;
+        this.type = 'marker';
         this.size = size;
         this.symbol = symbol || new Symbol({ symbol: DefaultMarkerImagePlotting });
         extend(this, options);
