@@ -116,7 +116,6 @@ yarn build
 ### 1. Windows
 
 > 对于 Windows 2008 后（包括 2008）的版本，直接使用 IIS 将 website/dist 目录发布到 IIS 服务中即可正常使用。
-
 #### MIME
 
 | 后缀     | 类型                                 |
@@ -140,6 +139,7 @@ yarn build
 #### IIS WebConfig
 
 > 为了解决 jsdoc 在 window 下的`IIS请求筛选模块被配置为拒绝包含双重转义序列的请求`，需要设置以下安全策略
+web.config 文件如下：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
