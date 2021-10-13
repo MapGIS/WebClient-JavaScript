@@ -1,6 +1,5 @@
 //-------命名空间 mapgis 开始-----
 import * as Style from './base/style';
-
 //-------命名空间 mapgis 结束-----
 
 //-------命名空间 Zondy 开始-----
@@ -25,12 +24,28 @@ import PostGIS from './datastore/postgis';
 import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
 
-export { Common, BaseServer, Extend, G3D, MRCS, MRFS, MRFWS, MRGS, MRMS, Info, OGC, ElasticSearch, PostGIS, CloudDisk, ArcGis };
+export {
+    Common,
+    BaseServer,
+    Extend,
+    G3D,
+    MRCS,
+    MRFS,
+    MRFWS,
+    MRGS,
+    MRMS,
+    Info,
+    OGC,
+    ElasticSearch,
+    PostGIS,
+    CloudDisk,
+    ArcGis
+};
 //-------命名空间 Zondy 结束-----
 
 const All = {
     //-------命名空间 mapgis 开始-----
-    Style,
+    // Style,
     //-------命名空间 mapgis 结束-----
     //-------命名空间 Zondy 开始-----
     Common,

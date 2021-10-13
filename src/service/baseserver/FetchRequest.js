@@ -1,4 +1,3 @@
-import { extend }  from  "../common/Util";
 import "./PromisePolyfill"
 import './fetch'
 
