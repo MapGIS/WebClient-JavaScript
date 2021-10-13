@@ -1,6 +1,5 @@
 //-------命名空间 mapgis 开始-----
-// import * as Style from './bsae/style';
-
+import * as Style from './base/style';
 //-------命名空间 mapgis 结束-----
 
 //-------命名空间 Zondy 开始-----

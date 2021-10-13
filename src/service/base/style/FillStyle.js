@@ -1,5 +1,5 @@
-import { extend } from '../Util';
-import { mapgis } from '../Base';
+import { extend } from '../../common';
+import { mapgis } from '../../common/Base';
 import { VectorStyle } from './VectorStyle';
 import { Symbol } from './Symbol';
 
