@@ -1,4 +1,4 @@
-import { extend } from '../../common/Util';
+import { extend } from '../../common';
 import { mapgis } from '../../common/Base';
 import { VectorStyle } from './VectorStyle';
 import { Anchor } from './Enum';

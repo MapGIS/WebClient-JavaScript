@@ -10,7 +10,7 @@ import { VectorStyle } from './VectorStyle';
 import { PointStyle } from './PointStyle';
 import { MarkerStyle } from './MarkerStyle';
 import { LineStyle } from './LineStyle';
-import { FillStyle } from './PolygonStyle';
+import { FillStyle } from './FillStyle';
 import { TextStyle } from './TextStyle';
 
 export { Enum, Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, TextStyle };
