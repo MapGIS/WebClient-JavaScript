@@ -51,7 +51,7 @@ export class PortalServiceParse {
             });
         } else if (typeof id === 'string') {
             find = PortalServiceType.find((r) => {
-                return r.title == id;
+                return r.title == id || r.type == id;
             });
         }
         if (!find) return undefined;
