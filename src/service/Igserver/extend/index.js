@@ -9,7 +9,6 @@ import { MeshingParam } from './MeshingParam';
 import { NetAnalyse } from './NetAnalyse';
 import { NetAnalysisExtent } from './NetAnalysisExtent';
 import { SlopLineParam } from './SlopLineParam';
-import { RuleParse } from './RuleParas';
 
 export { ContourNoteParam };
 export { ContourParam };
@@ -19,4 +18,3 @@ export { MeshingParam };
 export { NetAnalyse };
 export { NetAnalysisExtent };
 export { SlopLineParam };
-export { RuleParse };

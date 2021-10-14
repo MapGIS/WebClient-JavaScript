@@ -27,6 +27,7 @@ import ArcGis from './ArcGis';
 
 export {
     Style,
+    Util,
     Crs,
     Common,
     BaseServer,
@@ -50,6 +51,7 @@ const All = {
     //-------命名空间 mapgis 开始-----
     Style,
     Crs,
+    Util,
     //-------命名空间 mapgis 结束-----
     //-------命名空间 Zondy 开始-----
     Common,
