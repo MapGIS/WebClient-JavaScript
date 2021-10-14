@@ -4,12 +4,15 @@
  */
 import mapboxgl from '@mapgis/mapbox-gl';
 
-export var Zondy = (window.Zondy = window.Zondy || {})
+window.mapboxgl = mapboxgl;
+mapboxgl.zondy = window.mapboxgl.zondy || {};
 
-Zondy.Util = Zondy.Util || {}
-Zondy.Network = Zondy.Network || {}
+var Zondy = window.mapboxgl.zondy || {};
+Zondy.Map = Zondy.Map || {};
+Zondy.Util = Zondy.Util || {};
+Zondy.Network = Zondy.Network || {};
+Zondy.Event = Zondy.Event || {};
+Zondy.Socket = Zondy.Socket || {};
 
-Zondy.Event = Zondy.Event || {}
-Zondy.Socket = Zondy.Socket || {}
-
-mapboxgl.zondy = mapboxgl.zondy || {}
+export { Zondy };
+export { mapboxgl };
