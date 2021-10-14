@@ -25,12 +25,15 @@ import PostGIS from './datastore/postgis';
 import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
 
-export { Style, Common, BaseServer, Extend, G3D, MRCS, MRFS, MRFWS, MRGS, MRMS, Info, OGC, ElasticSearch, PostGIS, CloudDisk, ArcGis };
+import * as Util from './utils';
+
+export { Style, Util, Common, BaseServer, Extend, G3D, MRCS, MRFS, MRFWS, MRGS, MRMS, Info, OGC, ElasticSearch, PostGIS, CloudDisk, ArcGis };
 //-------命名空间 Zondy 结束-----
 
 const All = {
     //-------命名空间 mapgis 开始-----
     Style,
+    Util,
     //-------命名空间 mapgis 结束-----
     //-------命名空间 Zondy 开始-----
     Common,
