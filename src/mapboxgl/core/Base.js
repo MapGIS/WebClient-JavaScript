@@ -5,9 +5,8 @@
 import mapboxgl from '@mapgis/mapbox-gl';
 
 window.mapboxgl = mapboxgl;
-mapboxgl.zondy = window.mapboxgl.zondy || {};
-
-var Zondy = window.mapboxgl.zondy || {};
+mapboxgl.Zondy = window.mapboxgl.Zondy || {};
+var Zondy = window.mapboxgl.Zondy || {};
 Zondy.Map = Zondy.Map || {};
 Zondy.Util = Zondy.Util || {};
 Zondy.Network = Zondy.Network || {};
