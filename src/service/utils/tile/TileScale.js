@@ -3,11 +3,13 @@
  * @description 针对不同比例尺来计算对应的瓦片错级
  */
 export class TileScale {
-    /**
-     * key：瓦片尺寸  “256,512,1024”
-     * val: 层级与分辨关系数组
-     */
-    levelScales = {};
+    constructor() {
+        /**
+         * key：瓦片尺寸  “256,512,1024”
+         * val: 层级与分辨关系数组
+         */
+        levelScales = {};
+    }
 
     // 赤道周长（单位：m）
     static get ZERO_SCALE() {

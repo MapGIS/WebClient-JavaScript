@@ -3,11 +3,13 @@
  * @description 针对不同分辨率来计算对应的瓦片错级
  */
 export class TileResolution {
-    /**
-     * key：瓦片尺寸  “256,512,1024”
-     * val: 层级与分辨关系数组
-     */
-    levelResolutionToTileSizes = {};
+    constructor() {
+        /**
+         * key：瓦片尺寸  “256,512,1024”
+         * val: 层级与分辨关系数组
+         */
+        this.levelResolutionToTileSizes = {};
+    }
 
     // 赤道周长（单位：m）
     static get EQUATOR_PERIMTER() {
