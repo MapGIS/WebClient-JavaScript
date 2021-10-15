@@ -183,7 +183,7 @@ class VFeature {
       featureSet = featureSet.concat(feature);
     }
     let geojson = {
-      type: "feature",
+      type: "FeatureCollection",
       features: featureSet
     };
     return geojson;
@@ -198,13 +198,16 @@ class VFeature {
       feature = {};
       //处理数据coordinates
       if (geomArr[i].type === "Polygon") {
-        geomArr[i].coordinates = geomArr[i].coordinates.concat(
-          geomArr[i].exterior,
-          geomArr[i].interior
-        );
+        geomArr[i].coordinates = [
+          geomArr[i].coordinates.concat(
+              geomArr[i].exterior,
+              geomArr[i].interior
+          )
+        ];
       }
       feature.geometry = geomArr[i];
       feature.properties = properties;
+      feature.type = "Feature";
       features.push(feature);
     }
     return features;
