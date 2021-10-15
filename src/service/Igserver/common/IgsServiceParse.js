@@ -51,7 +51,7 @@ export class IgsServiceParse {
             });
         } else if (typeof id === 'string') {
             find = IgsServiceType.find((r) => {
-                return r.title == id || r.type == id;
+                return r.id == id  || r.title == id || r.type == id;
             });
         }
         if (!find) return undefined;
