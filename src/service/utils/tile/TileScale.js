@@ -8,7 +8,7 @@ export class TileScale {
          * key：瓦片尺寸  “256,512,1024”
          * val: 层级与分辨关系数组
          */
-        levelScales = {};
+        this.levelScales = {};
     }
 
     // 赤道周长（单位：m）
