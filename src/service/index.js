@@ -53,6 +53,7 @@ const All = {
     Style,
     Crs,
     Util,
+    Crs,
     //-------命名空间 mapgis 结束-----
     //-------命名空间 Zondy 开始-----
     Common,
