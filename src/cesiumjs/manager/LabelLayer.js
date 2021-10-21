@@ -159,7 +159,7 @@ export default class LabelLayer extends BaseLayer {
      * @example
      * //更多参数设置可以使用appendLabelIconComm方法
      * let labelLayer = new LabelLayer({viewer:viewer});
-     * let labelIcon = labelLayer.appendLabelIcon('注记文本',110,33,0,'14pt 楷体','/car.png',64,64,10000000,1,bottom,'这是属性信息查询时可以看到');
+     * let labelIcon = labelLayer.appendLabelIcon('注记文本',110,33,0,'14pt 楷体',Color.RED,'/car.png',64,64,10000000,1,bottom,'这是属性信息查询时可以看到');
      */
     appendLabelIcon(text, lon, lat, height, font, fillColor, iconUrl, iconWidth, iconHeight, farDist, nearDist, txtPosParam, attribute) {
         let txtPos = Cesium.VerticalOrigin.BOTTOM;
