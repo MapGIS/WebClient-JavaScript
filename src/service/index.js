@@ -1,4 +1,5 @@
 //-------命名空间 mapgis 开始-----
+import * as Util from './utils';
 import * as Style from './base/style';
 import * as Crs from './base/crs';
 //-------命名空间 mapgis 结束-----
