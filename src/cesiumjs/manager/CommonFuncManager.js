@@ -138,8 +138,16 @@ export default class CommonFuncManager {
      * //res.toPng();
      */
     outputImageObj() {
+        let isAn = true;
+        if (this.viewer.shouldAnimate === false) {
+            this.viewer.shouldAnimate === true;
+            isAn = false;
+        }
         this.viewer.render();
-        return Cesium.reimg.fromCanvas(this.viewer.canvas);
+        if (!isAn) {
+            this.viewer.shouldAnimate === false;
+        }
+        return Cesium.ReImg.fromCanvas(this.viewer.canvas);
     }
 
     /**
@@ -153,7 +161,7 @@ export default class CommonFuncManager {
      */
     outputImageFile(fileName) {
         this.viewer.render();
-        Cesium.reimg.fromCanvas(this.viewer.canvas).downloadPng(fileName);
+        Cesium.ReImg.fromCanvas(this.viewer.canvas).downloadPng(fileName);
     }
 
     /**
@@ -195,6 +203,13 @@ export default class CommonFuncManager {
      * @function module:客户端公共方法.CommonFuncManager.prototype.getSceneRange
      * @param {String} 视图元素ID
      * @returns {Array[]} 场景范围（单位：经纬度）Array<[lon,lat]>
+     * @example
+     * var viewer = new Cesium.Viewer('GlobeView1', {
+     *     terrainExaggeration: 1,
+     *     requestRenderMode: true
+     * });
+     * let id = 'GlobeView1';
+     * cfm.getSceneRange(id);
      */
     getSceneRange(elementID) {
         const controlDiv = document.getElementById(elementID);
@@ -442,15 +457,33 @@ export default class CommonFuncManager {
         let carCenter = new Cesium.Cartographic();
         carCenter = Cesium.Cartographic.fromCartesian(center, this.ellipsoid, carCenter);
         carCenter.height = 0;
-        const centerUse = Cesium.Cartesian3.fromRadians(carCenter.longitude, carCenter.latitude, carCenter.height, this.ellipsoid, new Cesium.Cartesian3());
-        const centerUseEx = Cesium.Cartesian3.fromRadians(carCenter.longitude, carCenter.latitude + 0.1, carCenter.height, this.ellipsoid, new Cesium.Cartesian3());
+        const centerUse = Cesium.Cartesian3.fromRadians(
+            carCenter.longitude,
+            carCenter.latitude,
+            carCenter.height,
+            this.ellipsoid,
+            new Cesium.Cartesian3()
+        );
+        const centerUseEx = Cesium.Cartesian3.fromRadians(
+            carCenter.longitude,
+            carCenter.latitude + 0.1,
+            carCenter.height,
+            this.ellipsoid,
+            new Cesium.Cartesian3()
+        );
         let tempdir = Cesium.Cartesian3.subtract(centerUseEx, centerUse, new Cesium.Cartesian3());
         tempdir = Cesium.Cartesian3.normalize(tempdir, tempdir);
 
         let carTarget = new Cesium.Cartographic();
         carTarget = Cesium.Cartographic.fromCartesian(target, this.ellipsoid, carTarget);
         carTarget.height = 0;
-        const targetUse = Cesium.Cartesian3.fromRadians(carTarget.longitude, carTarget.latitude, carTarget.height, this.ellipsoid, new Cesium.Cartesian3());
+        const targetUse = Cesium.Cartesian3.fromRadians(
+            carTarget.longitude,
+            carTarget.latitude,
+            carTarget.height,
+            this.ellipsoid,
+            new Cesium.Cartesian3()
+        );
 
         let tarDir = Cesium.Cartesian3.subtract(targetUse, centerUse, new Cesium.Cartesian3());
         tarDir = Cesium.Cartesian3.normalize(tarDir, tarDir);
@@ -496,8 +529,8 @@ export default class CommonFuncManager {
      * let drawElement = new Cesium.DrawElement(viewer);
      * let commfun = new CommonFun({viewer:viewer});
      * drawElement.startDrawingPolyline({
-     *               callback: function(positions){
-     *                   let simplify = commfun.simplifyLine(positions);
+     *               callback: function(result){
+     *                   let simplify = commfun.simplifyLine(result.positions);
      *                   polyline = new Cesium.DrawElement.PolylinePrimitive({
      *                       positions: simplify,
      *                       width: 1,
@@ -520,7 +553,11 @@ export default class CommonFuncManager {
             }
             for (let i = 0; i <= posCopy.length - 3; i += 1) {
                 const isVertice = !((posCopy[i].z - posCopy[i + 1].z) * (posCopy[i + 1].z - posCopy[i + 2].z) > 0);
-                const angle = calAngleOf3Pnt([posCopy[i].x, posCopy[i].y, posCopy[i].z], [posCopy[i + 1].x, posCopy[i + 1].y, posCopy[i + 1].z], [posCopy[i + 2].x, posCopy[i + 2].y, posCopy[i + 2].z]);
+                const angle = calAngleOf3Pnt(
+                    [posCopy[i].x, posCopy[i].y, posCopy[i].z],
+                    [posCopy[i + 1].x, posCopy[i + 1].y, posCopy[i + 1].z],
+                    [posCopy[i + 2].x, posCopy[i + 2].y, posCopy[i + 2].z]
+                );
 
                 if (angle > 175 && !isVertice) {
                     posCopy = posCopy.slice(0, i + 1).concat(posCopy.slice(i + 2));
@@ -555,7 +592,10 @@ export default class CommonFuncManager {
     static calcParabola(options) {
         // 方程 y=-(4h/L^2)*x^2+h h:顶点高度 L：横纵间距较大者
         const h = options.height && options.height > 5000 ? options.height : 5000;
-        const L = Math.abs(options.position1.lon - options.position2.lon) > Math.abs(options.position1.lat - options.position2.lat) ? Math.abs(options.position1.lon - options.position2.lon) : Math.abs(options.position1.lat - options.position2.lat);
+        const L =
+            Math.abs(options.position1.lon - options.position2.lon) > Math.abs(options.position1.lat - options.position2.lat)
+                ? Math.abs(options.position1.lon - options.position2.lon)
+                : Math.abs(options.position1.lat - options.position2.lat);
         const num = options.num && options.num > 50 ? options.num : 50;
         const result = [];
         let dlt = L / num;
@@ -713,7 +753,7 @@ export default class CommonFuncManager {
             });
      */
     createNavigationTool(options) {
-        this.viewer.extend(Cesium.viewerCesiumNavigationMixin, options);
+        this.viewer.extend(Cesium.NavigationTool, options);
         return this.viewer.cesiumNavigation;
     }
 }
