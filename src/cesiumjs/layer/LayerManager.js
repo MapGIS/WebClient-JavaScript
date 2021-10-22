@@ -5,7 +5,7 @@ import M3DLayer from './M3DLayer';
 import TerrainLayer from './TerrainLayer';
 import TilesLayer from './TilesLayer';
 import BaseLayer from './BaseLayer';
-import { tileLayer } from 'leaflet';
+// import { tileLayer } from 'leaflet';
 
 /**
  * @author 三维基础平台研发中心·冯桂英
@@ -90,10 +90,6 @@ export default class LayerManager extends BaseLayer {
                             const layerRes = terrainLayer.appendTerrainLayer(baseUrl, 0, layerRenderIndex, proxy, options);
                             docLayers.push(layerRes);
                             break;
-                        }
-                        case LayerType.VECTORLAYER: {
-                            tileLayer.append2DDocTile(uri, {});
-                            break
                         }
                         case LayerType.TILEIMAGELAYER: {
                             const tileLayer = new TilesLayer({
