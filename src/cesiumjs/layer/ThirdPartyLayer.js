@@ -65,7 +65,7 @@ export default class ThirdPartyLayer extends BaseLayer {
         let _url = `http://mt{s}.google.cn/vt/lyrs={type}&hl=zh-CN${offsetLabel}&x={x}&y={y}&z={z}&s=Galileo`;
         _url = _url.replace('{type}', options.ptype);
         const googleMap = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.GoogleMapProvider({
+            new Cesium.GoogleMapImageryProvider({
                 url: _url
             })
         );
@@ -89,7 +89,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * let tilelayer = thirdLayer.appendGoogleMapExt({ptype:'s'});
      */
     appendGoogleMapExt(optionsParam) {
-        const googleMap = this.viewer.imageryLayers.addImageryProvider(new Cesium.GoogleMapProvider(optionsParam));
+        const googleMap = this.viewer.imageryLayers.addImageryProvider(new Cesium.GoogleMapImageryProvider(optionsParam));
         return googleMap;
     }
 
@@ -140,7 +140,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * let tilelayer = thirdLayer.appendBaiduMap({ptype:'sate'});
      */
     appendBaiduMap(optionsParam) {
-        const baiduProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduMapProvider(optionsParam));
+        const baiduProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduMapImagerProvider(optionsParam));
         return baiduProvider;
     }
 
@@ -178,7 +178,7 @@ export default class ThirdPartyLayer extends BaseLayer {
             default:
                 break;
         }
-        const openWeatherProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.OpenWeatherMapProvider(options));
+        const openWeatherProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.OpenWeatherImageryProvider(options));
         return openWeatherProvider;
     }
 
@@ -201,40 +201,11 @@ export default class ThirdPartyLayer extends BaseLayer {
         if (!Cesium.defined(options.token)) {
             Cesium.deprecationWarning('http://www.tianditu.gov.cn', '请到天地图官网自行申请开发token，自带token仅做功能验证随时可能失效');
         }
-        const url = 'http://t0.tianditu.gov.cn/DataServer?';
-        const row = '_c&X={x}&Y={y}&L={l}';
-        switch (options.ptype) {
-            case 'vec':
-                options.url = `${url}T=vec${row}`;
-                break;
-            case 'img':
-                options.url = `${url}T=img${row}`;
-                break;
-            case 'ter':
-                options.url = `${url}T=ter${row}`;
-                break;
-            case 'cia':
-                options.url = `${url}T=cia${row}`;
-                break;
-            case 'cva':
-                options.url = `${url}T=cva${row}`;
-                break;
-            case 'eia':
-                options.url = `${url}T=eia${row}`;
-                break;
-            case 'eva':
-                options.url = `${url}T=eva${row}`;
-                break;
-            case 'ibo':
-                options.url = `${url}T=ibo${row}`;
-                break;
-            case 'cta':
-                options.url = `${url}T=cta${row}`;
-                break;
-            default:
-                break;
-        }
-        const TDTuProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.TiandituMapProvider(options));
+        options.url = 'http://t0.tianditu.gov.cn/DataServer';
+
+        options.tileType = Cesium.defaultValue(options.ptype, 'vec');
+
+        const TDTuProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.TiandituImageryProvider(options));
         return TDTuProvider;
     }
 

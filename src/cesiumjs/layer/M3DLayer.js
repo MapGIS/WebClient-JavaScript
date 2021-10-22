@@ -94,6 +94,8 @@ export default class M3DLayer extends BaseLayer {
      * // layers 属性类似二维服务
      * // layers=show:0,1 表示只显示 layerIndex 为 0, 1 的图层
      * // layers=hide:0,1 表示只隐藏 layerIndex 为 0, 1 的图层
+     * 
+     * let m3d = new CesiumZondy.Layer.M3DLayer({ viewer: viewer });
      *
      * let result = m3d.append('http://develop.smaryun.com:6163/igs/rest/g3d/ModelM3D, {
      *      autoReset:false,

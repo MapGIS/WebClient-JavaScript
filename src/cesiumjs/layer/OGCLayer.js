@@ -26,7 +26,7 @@ export default class OGCLayer extends BaseLayer {
      * @param {String} [optionsParam.proxy=null]  代理
      * @returns {ImageryLayer} 瓦片层对象
      * @example
-     * let ogcLayer = new OGCLayer({viewer:viewer});  
+     * let ogcLayer = new CesiumZondy.Layer.OGCLayer({viewer:viewer});  
      * let layer = ogcLayer.appendWMSTile("http://develop.smaryun.com:6163/igs/rest/ogc/doc/北京市/WMSServer",
                 //图层名
                 '北京市:北京市,绿地_1,绿地_2,绿地_3,水域_1,水域_2,水域_3,住宅用地,医院,商业用地,铁路_1,铁路_2,铁路_3', {
@@ -119,7 +119,7 @@ export default class OGCLayer extends BaseLayer {
      * @param {String} [optionsParam.proxy] 代理服务器地址
      * @returns {ImageryLayer} 返回瓦片图层对象
      * @example
-     * let ogcLayer = new OGCLayer({viewer:viewer});
+     * let ogcLayer = new CesiumZondy.Layer.OGCLayer({viewer:viewer});
      * let wmtsLayer = new ogcLayer.appendWMTSTileExt('localhost:6163/igs/rest/ogc/WMTSServer',{
      * serverName:'dd',
      * proxy:'/Handler.ashx',

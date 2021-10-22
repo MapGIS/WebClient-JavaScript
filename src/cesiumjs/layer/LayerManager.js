@@ -5,6 +5,7 @@ import M3DLayer from './M3DLayer';
 import TerrainLayer from './TerrainLayer';
 import TilesLayer from './TilesLayer';
 import BaseLayer from './BaseLayer';
+import { tileLayer } from 'leaflet';
 
 /**
  * @author 三维基础平台研发中心·冯桂英
@@ -30,7 +31,7 @@ export default class LayerManager extends BaseLayer {
      * @param {Function} [optionsParam.loaded = function] 回调函数
      * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
      * @example
-     * let layerManager = new LayerManager(view);
+     * let layerManager = new Cesium.Layer.LayerManager({viewer:viewer});
      * function callBackfunction(layer){
      * console.log(layer)
      * }
@@ -89,6 +90,10 @@ export default class LayerManager extends BaseLayer {
                             const layerRes = terrainLayer.appendTerrainLayer(baseUrl, 0, layerRenderIndex, proxy, options);
                             docLayers.push(layerRes);
                             break;
+                        }
+                        case LayerType.VECTORLAYER: {
+                            tileLayer.append2DDocTile(uri, {});
+                            break
                         }
                         case LayerType.TILEIMAGELAYER: {
                             const tileLayer = new TilesLayer({
