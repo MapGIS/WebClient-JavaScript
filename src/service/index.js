@@ -1,5 +1,6 @@
 //-------命名空间 mapgis 开始-----
 import * as Style from './base/style';
+import * as Crs from './base/crs';
 //-------命名空间 mapgis 结束-----
 
 //-------命名空间 Zondy 开始-----
@@ -25,6 +26,8 @@ import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
 
 export {
+    Style,
+    Crs,
     Common,
     BaseServer,
     Extend,
@@ -45,7 +48,8 @@ export {
 
 const All = {
     //-------命名空间 mapgis 开始-----
-    // Style,
+    Style,
+    Crs,
     //-------命名空间 mapgis 结束-----
     //-------命名空间 Zondy 开始-----
     Common,
