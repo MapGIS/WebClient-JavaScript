@@ -188,7 +188,7 @@ export default class M3DLayer extends BaseLayer {
                 for (let i = 0; i < layers.length; i++) {
                     const layer = layers[i];
                     const type = parseInt(layer.layerType, 10);
-                    if (type === LayerType.M3DLAYER) {
+                    if (type === LayerType.M3DLAYER || type === LayerType.MODELLAYER) {
                         const { layerRenderIndex, layerIndex, gdbpUrl, isVisible } = layer;
 
                         let isShow = true;
