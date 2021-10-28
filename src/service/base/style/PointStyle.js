@@ -16,13 +16,6 @@ export default class PointStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
-<<<<<<< HEAD
-        const { radius = 5, outlineColor = '#FFFFFF', outlineWidth = 0, anchor = Anchor.center } = options;
-        this.type = 'point';
-        this.radius = radius;
-        this.outlineColor = outlineColor;
-        this.outlineWidth = outlineWidth;
-=======
         const { radius = 5, opacity = 1, outlineColor = '#FFFFFF', outlineWidth = 0, anchor = Anchor.center, outlineOpacity = 1 } = options;
         this.type = 'point';
         this.radius = radius;
@@ -30,7 +23,6 @@ export default class PointStyle extends VectorStyle {
         this.outlineColor = outlineColor;
         this.outlineWidth = outlineWidth;
         this.outlineOpacity = outlineOpacity;
->>>>>>> 056b02d0653423014740da3bda9fe33cd072961c
         this.anchor = anchor;
         extend(this, options);
     }
@@ -66,33 +58,6 @@ export default class PointStyle extends VectorStyle {
      * @returns Cesium点格式的样式
      */
     toCesiumStyle(Cesium) {
-<<<<<<< HEAD
-        let material;
-        let outline = false;
-        let { color, opacity, radius, outlineColor, outlineWidth } = this;
-        if (outlineWidth > 0) {
-            outline = true;
-        }
-        material = new Cesium.ColorMaterialProperty(Cesium.Color.fromCssColorString(color).withAlpha(opacity));
-
-        return { material, radius, outline, outlineColor, outlineWidth };
-    }
-
-    /**
-     * @link https://sandcastle.cesium.com/index.html?src=Circles%20and%20Ellipses.html&label=Geometries
-     * @returns Cesium点格式的样式
-     */
-    toCesiumStyle(Cesium) {
-        let material;
-        let outline = false;
-        let { color, opacity, radius, outlineColor, outlineWidth } = this;
-        if (outlineWidth > 0) {
-            outline = true;
-        }
-        material = new Cesium.ColorMaterialProperty(Cesium.Color.fromCssColorString(color).withAlpha(opacity));
-
-        return { material, radius, outline, outlineColor, outlineWidth };
-=======
         let { color = "#FFFFFF", opacity = 1, radius, outlineColor = "#000000", outlineWidth = 1, outlineOpacity = 1 } = this;
         return {
             pixelSize: radius,
@@ -100,7 +65,6 @@ export default class PointStyle extends VectorStyle {
             outlineWidth: outlineWidth,
             outlineColor: Cesium.Color.fromCssColorString(outlineColor).withAlpha(outlineOpacity),
         };
->>>>>>> 056b02d0653423014740da3bda9fe33cd072961c
     }
 }
 

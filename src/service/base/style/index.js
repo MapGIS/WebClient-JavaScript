@@ -17,8 +17,4 @@ import { TextStyle } from './TextStyle';
 
 export { Align, Anchor, LineCap, LineJoin, TextPlacement };
 export { Symbol, Shadow };
-<<<<<<< HEAD
-export { VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, ExtrudeStyle, TextStyle };
-=======
 export { VectorStyle, PointStyle, MarkerStyle, ModelStyle, LineStyle, FillStyle, ExtrudeStyle, TextStyle };
->>>>>>> 056b02d0653423014740da3bda9fe33cd072961c
