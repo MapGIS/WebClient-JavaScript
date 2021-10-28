@@ -23,6 +23,51 @@ export default class MarkerStyle extends VectorStyle {
         this.symbol = symbol || new Symbol({ symbol: DefaultMarkerImagePlotting });
         extend(this, options);
     }
+
+    /**
+     * @link https://sandcastle.cesium.com/index.html?src=Circles%20and%20Ellipses.html&label=Geometries
+     * @returns Cesium点格式的样式
+     */
+    toCesiumStyle(options, feature, Cesium) {
+        const {
+            field = "", scale = 1, backgroundColor = "#FFFFFF", backgroundOpacity = 0, color = "#FFFFFF", opacity = 1,
+            outlineColor = "#FFFFFF", outlineOpacity = 1, outlineWidth = 0,xOffset = 0 , yOffset = 0, text
+        } = options;
+        const {
+            url = "", rotation = 0, imageScale = 1, width, height
+        } = options;
+        let labelText;
+        if(field && feature.properties && feature.properties[field]){
+            labelText = feature.properties[field];
+        }
+        if(text){
+            labelText = text;
+        }
+        let billboard = {
+            image: url,
+            rotation: rotation,
+            scale: imageScale
+        }
+        if(width){
+            billboard.width = width;
+        }
+        if(height){
+            billboard.height = height;
+        }
+        return {
+            label: {
+                text: labelText,
+                scale: scale,
+                showBackground: true,
+                fillColor: Cesium.Color.fromCssColorString(color).withAlpha(opacity),
+                outlineColor: Cesium.Color.fromCssColorString(outlineColor).withAlpha(outlineOpacity),
+                outlineWidth: outlineWidth,
+                backgroundColor: Cesium.Color.fromCssColorString(backgroundColor).withAlpha(backgroundOpacity),
+                pixelOffset: new Cesium.Cartesian2(xOffset, yOffset * -1),
+            },
+            billboard: billboard
+        };
+    }
 }
 
 export { MarkerStyle };
