@@ -1,6 +1,7 @@
 //-------命名空间 mapgis 开始-----
 import * as Util from './utils';
 import * as Style from './base/style';
+import * as geoJSON from './base/format/geojson';
 import * as Crs from './base/crs';
 //-------命名空间 mapgis 结束-----
 
@@ -27,8 +28,9 @@ import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
 
 export {
-    Style,
     Util,
+    Style,
+    geoJSON,
     Crs,
     Common,
     BaseServer,
@@ -51,8 +53,9 @@ export {
 const All = {
     //-------命名空间 mapgis 开始-----
     Style,
-    Crs,
+    geoJSON,
     Util,
+    Crs,
     //-------命名空间 mapgis 结束-----
     //-------命名空间 Zondy 开始-----
     Common,
