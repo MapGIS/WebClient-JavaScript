@@ -35,7 +35,7 @@ MapGIS Client for JavaScript：是增强的MapGIS Web开发平台，集成Openla
 ## 一、开始
 
 ### 1、司马云
-[MapGIS Client for JavaScript](http://develop.smaryun.com:8899/)
+[MapGIS Client for JavaScript](http://develop.smaryun.com/)
 
 > 本脚本所有的示例都在对应的演示站点有详细的说明教程
 
