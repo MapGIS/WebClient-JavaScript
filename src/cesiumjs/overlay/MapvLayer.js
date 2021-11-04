@@ -274,10 +274,19 @@ export default class MapvLayer {
         canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = this.mapVOptions.zIndex || 100;
 
-        canvas.width = parseInt(this.map.canvas.width);
-        canvas.height = parseInt(this.map.canvas.height);
-        canvas.style.width = this.map.canvas.style.width;
-        canvas.style.height = this.map.canvas.style.height;
+        // canvas.width = parseInt(this.map.canvas.width);
+        // canvas.height = parseInt(this.map.canvas.height);
+        // canvas.style.width = this.map.canvas.style.width;
+        // canvas.style.height = this.map.canvas.style.height;
+        canvas.width =
+            parseInt(this.map.canvas.width) ||
+            parseInt(this.map.container.offsetWidth);
+        canvas.height =
+            parseInt(this.map.canvas.height) ||
+            parseInt(this.map.container.offsetHeight);
+        canvas.style.width = parseInt(this.map.container.offsetWidth) + "px";
+        canvas.style.height = parseInt(this.map.container.offsetHeight) + "px";
+
         var devicePixelRatio = this.devicePixelRatio;
         if (this.mapVOptions.context == '2d') {
             canvas.getContext(this.mapVOptions.context).scale(devicePixelRatio, devicePixelRatio);
@@ -296,10 +305,19 @@ export default class MapvLayer {
         canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = this.mapVOptions.zIndex || 100;
 
-        canvas.width = parseInt(this.map.canvas.width);
-        canvas.height = parseInt(this.map.canvas.height);
-        canvas.style.width = this.map.canvas.style.width;
-        canvas.style.height = this.map.canvas.style.height;
+        // canvas.width = parseInt(this.map.canvas.width);
+        // canvas.height = parseInt(this.map.canvas.height);
+        // canvas.style.width = this.map.canvas.style.width;
+        // canvas.style.height = this.map.canvas.style.height;
+        canvas.width =
+            parseInt(this.map.canvas.width) ||
+            parseInt(this.map.container.offsetWidth);
+        canvas.height =
+            parseInt(this.map.canvas.height) ||
+            parseInt(this.map.container.offsetHeight);
+        canvas.style.width = parseInt(this.map.container.offsetWidth) + "px";
+        canvas.style.height = parseInt(this.map.container.offsetHeight) + "px";
+
         var devicePixelRatio = this.devicePixelRatio;
         if (this.mapVOptions.context == '2d') {
             canvas.getContext('2d').scale(devicePixelRatio, devicePixelRatio);
