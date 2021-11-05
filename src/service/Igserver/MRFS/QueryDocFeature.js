@@ -53,6 +53,8 @@ import {QueryServiceBase}  from  "./QueryServiceBase";
                  ip: "develop.smaryun.com",
                  //端口号
                  port: "6163"
+                 //请求方式 GET|POST
+                 requestType:"GET"
              });
  //执行查询操作，querySuccess为成功回调，queryError为失败回调
  queryService.query(function (res) {
