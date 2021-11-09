@@ -138,16 +138,13 @@ export default class PopupLayer {
         infoDiv.style.display = 'none';
         if (typeof this.container === 'string') {
             infoDiv.innerHTML =
-                '<div id="' +
-                this.popupContentId +
-                '" class="cesium-popup">' +
-                // '<a class="cesium-popup-close-button" href="javascript:void(0)" onClick="function remove(){self.remove()}">×</a>' +
-                '<div class="cesium-popup-content-wrapper">' +
-                this.container +
-                '</div>' +
-                '<div class="cesium-popup-tip-container">' +
-                '<div class="cesium-popup-tip" />' +
-                '</div>' +
+                '<div id="' + this.popupContentId + '" class="cesium-popup">' +
+                    '<div class="cesium-popup-content-wrapper">' +
+                            this.container +
+                    '</div>' +
+                    '<div class="cesium-popup-tip-container">' +
+                        '<div class="cesium-popup-tip" />' +
+                     '</div>' +
                 '</div>';
         } else {
             let popupContentDiv = window.document.createElement('div');
