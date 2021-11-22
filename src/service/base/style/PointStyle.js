@@ -16,7 +16,7 @@ export default class PointStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
-        const { radius = 5, opacity = 1, outlineColor = '#FFFFFF', outlineWidth = 0, anchor = Anchor.center, outlineOpacity = 1 } = options;
+        const { radius = 5, opacity = 1, outlineColor = '#FFFFFF', outlineWidth = 0, anchor = Anchor.center, outlineOpacity = 1, show = true } = options;
         this.type = 'point';
         this.radius = radius;
         this.opacity = opacity;
@@ -24,6 +24,7 @@ export default class PointStyle extends VectorStyle {
         this.outlineWidth = outlineWidth;
         this.outlineOpacity = outlineOpacity;
         this.anchor = anchor;
+        this.show = show;
         extend(this, options);
     }
 
@@ -58,8 +59,9 @@ export default class PointStyle extends VectorStyle {
      * @returns Cesium点格式的样式
      */
     toCesiumStyle(Cesium) {
-        let { color = "#FFFFFF", opacity = 1, radius, outlineColor = "#000000", outlineWidth = 1, outlineOpacity = 1 } = this;
+        let { color = "#FFFFFF", opacity = 1, radius, outlineColor = "#000000", outlineWidth = 1, outlineOpacity = 1, show = true } = this;
         return {
+            show: show,
             pixelSize: radius,
             color: Cesium.Color.fromCssColorString(color).withAlpha(opacity),
             outlineWidth: outlineWidth,
