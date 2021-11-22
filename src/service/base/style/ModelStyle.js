@@ -16,10 +16,11 @@ export default class ModelStyle extends VectorStyle {
     constructor(option) {
         super();
         let options = option ? option : {};
-        const { scale = 1, url } = options;
+        const { scale = 1, url, show = true } = options;
         this.type = 'model';
         this.url = url;
         this.scale = scale;
+        this.show = show;
         extend(this, options);
     }
 
@@ -31,9 +32,10 @@ export default class ModelStyle extends VectorStyle {
      * @returns Cesium点格式的样式
      */
     toCesiumStyle(Cesium) {
-        let { url, scale } = this;
+        let { url, scale, show = true } = this;
         return {
             uri: url,
+            show: show,
             scale: scale
         };
     }

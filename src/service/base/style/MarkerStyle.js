@@ -17,8 +17,9 @@ export default class MarkerStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
-        const { symbol, size = 1.0 } = options;
+        const { symbol, size = 1.0, show = true } = options;
         this.type = 'marker';
+        this.show = show;
         this.size = size;
         this.symbol = symbol || new Symbol({ symbol: DefaultMarkerImagePlotting });
         extend(this, options);
@@ -31,7 +32,7 @@ export default class MarkerStyle extends VectorStyle {
     toCesiumStyle(options, feature, Cesium) {
         const {
             field = "", scale = 1, backgroundColor = "#FFFFFF", backgroundOpacity = 0, color = "#FFFFFF", opacity = 1,
-            outlineColor = "#FFFFFF", outlineOpacity = 1, outlineWidth = 0,xOffset = 0 , yOffset = 0, text
+            outlineColor = "#FFFFFF", outlineOpacity = 1, outlineWidth = 0,xOffset = 0 , yOffset = 0, text, show = true
         } = options;
         const {
             url = "", rotation = 0, imageScale = 1, width, height
@@ -44,6 +45,7 @@ export default class MarkerStyle extends VectorStyle {
             labelText = text;
         }
         let billboard = {
+            show: show,
             image: url,
             rotation: rotation,
             scale: imageScale
@@ -56,6 +58,7 @@ export default class MarkerStyle extends VectorStyle {
         }
         return {
             label: {
+                show: show,
                 text: labelText,
                 scale: scale,
                 showBackground: true,
