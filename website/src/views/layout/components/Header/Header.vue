@@ -3,7 +3,7 @@
         <router-link to="/">
             <div class="mapgis-webclient-header">
                 <img :src="logo" class="mapgis-webclient-logo" />
-                <span v-if="!mobile" class="mapgis-webclient-text"> Client for JavaScript </span>
+                <span v-if="!mobile" class="mapgis-webclient-text"> MapGIS Client for JavaScript </span>
             </div>
         </router-link>
         <IconFont :style="style" type="iconicon_commonly_barmenu" class="mapgis-webclient-menu-icon" @click="isShowMenu = !isShowMenu" />
@@ -46,7 +46,7 @@ export default {
     data() {
         return {
             mobile: isMobile(),
-            logo: './static/assets/logo/mapgis_blue.png',
+            logo: './static/assets/logo/mapgis_logo.png',
             activeMenu: '',
             activeTabs: {},
             urls: ['config-headers.json', 'config-headers-sub.json', 'config-headers-mobile.json', 'config-headers-sub-mobile.json'],
@@ -169,7 +169,8 @@ export default {
         display: flex;
 
         .mapgis-webclient-logo {
-            margin-left: 81px;
+            margin-left: 11px;
+            margin-top: -2px;
             height: 38px;
         }
         .mapgis-webclient-text {
