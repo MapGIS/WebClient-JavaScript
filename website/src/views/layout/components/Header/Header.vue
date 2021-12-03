@@ -3,7 +3,7 @@
         <router-link to="/">
             <div class="mapgis-webclient-header">
                 <img :src="logo" class="mapgis-webclient-logo" />
-                <span v-if="!mobile" class="mapgis-webclient-text"> Client for JavaScript </span>
+                <span v-if="!mobile" class="mapgis-webclient-text"> MapGIS Client for JavaScript </span>
             </div>
         </router-link>
         <IconFont :style="style" type="iconicon_commonly_barmenu" class="mapgis-webclient-menu-icon" @click="isShowMenu = !isShowMenu" />
