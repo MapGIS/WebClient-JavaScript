@@ -128,7 +128,7 @@ export default {
   data () {
     return {
       mobile: isMobile(),
-      logo: './static/assets/logo/mapgis_blue.png',
+      logo: './static/assets/logo/mapgis_logo.png',
       common: CommonUrls,
       link: CommonLinks,
       code: {
@@ -176,7 +176,7 @@ export default {
     border-right: 0px solid rgba(255, 255, 255, 0.3);
   }
   .logo {
-    width: 133px;
+    width: 38px;
     height: 38px;
   }
   .icp {
