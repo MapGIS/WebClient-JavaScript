@@ -11,7 +11,7 @@ import '../../core/Base';
  * @param options - {Object} mapv.options
  * @param options.zoom - {Number} 最大的`聚类级别`
  * @param options.title - {Number} 单个聚类点的`标题` 内容
-  * @param options.field - {String} 选择对应的字段，该字段必须是`数字型`的字段，用来计算大小和颜色
+ * @param options.field - {String} 选择对应的字段，该字段必须是`数字型`的字段，用来计算大小和颜色
  *
  * @example
  *  $.get('./static/data/geojson/point.json', function (json) {
@@ -38,7 +38,7 @@ export var MarkerClusterLayer = L.Layer.extend({
     initialize: function (map, geojson, options) {
         this.map = map;
 
-        let { field } = options;
+        let {field} = options;
         this.field = field;
 
         this.options = options;
@@ -95,9 +95,9 @@ export var MarkerClusterLayer = L.Layer.extend({
             var label = point.properties[title];
             var marker = L.marker(
                 L.latLng(point.geometry.coordinates[1], point.geometry.coordinates[0]),
-                { title: label }
+                {title: label}
             );
-            marker.bindPopup(count);
+            marker.bindPopup(String(count)).openPopup();
             this.layer.addLayer(marker);
         }
         map.addLayer(this.layer)
