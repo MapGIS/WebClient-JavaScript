@@ -1,11 +1,13 @@
 {
-    "name": "@mapgis/webclient-mapboxgl",
-    "version": "10.5.5",
+    "name": "@mapgis/webclient-es6-mapboxgl",
+    "version": "10.5.5-2",
     "description": "",
     "main": "dist-libs/webclient-mapboxgl-plugin.min.js",
     "module": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "npm run build-debug && npm run build-release",
+        "build-debug": "webpack --config webpack/mapbox-es6-debug-config.js",
+        "build-release": "webpack --config webpack/mapbox-es6-release-config.js"
     },
     "keywords": [
         "zondy",
@@ -14,10 +16,10 @@
         "mapboxgl"
     ],
     "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "dependencies": {
-        "@mapgis/webclient-es6-service": "^10.5.5",
         "@mapgis/mapbox-gl": "^1.9.9",
+        "@mapgis/webclient-es6-service": "10.5.5-3",
         "echarts": "^4.8.0",
         "mapv": "^2.0.56"
     }
