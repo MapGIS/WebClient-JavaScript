@@ -35,7 +35,7 @@
         "test-init": "node ./node_modules/karma/bin/karma init karma.conf.js"
     },
     "author": "mapgis",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "devDependencies": {
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
