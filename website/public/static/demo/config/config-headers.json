@@ -65,14 +65,15 @@
                 "icon": "iconchangjianwenti",
                 "hightlights": [[false, false, false, false]],
                 "links": [
-                    ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入"]
+                    ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入", "MapboxGL-发布矢量瓦片地图（JAVA版）"]
                 ],
                 "routes": [
                     [
                         "/helper/vue-cesium/vue/import/index",
                         "/helper/vue-cesium/vue/memery/index",
                         "/helper/vue-cesium/vue/route/index",
-                        "/helper/vue-mapboxgl/vue/import"
+                        "/helper/vue-mapboxgl/vue/import",
+                        "/helper/vue-mapboxgl/vue/vectotLayer"
                     ]
                 ],
                 "type":"helper"
