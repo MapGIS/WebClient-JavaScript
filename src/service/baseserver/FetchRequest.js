@@ -1,6 +1,5 @@
-import "./PromisePolyfill"
-import './fetch'
-
+import "./PromisePolyfill";
+import 'fetch-ie8';
 
 var fetch = window.fetch;
 
