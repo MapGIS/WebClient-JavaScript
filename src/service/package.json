@@ -1,9 +1,9 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version": "10.5.5",
+    "version": "10.5.5-1",
     "description": "中地数码基于ES6语法针对igserver的服务封装",
     "main": "dist-libs/webclient-es6-service.min.js",
-    "module": "index.js",
+    "module1": "index.js",
     "scripts": {
         "build": "npm run build-debug && npm run build-release",
         "build-debug": "webpack --config webpack/service-debug-config.js",
