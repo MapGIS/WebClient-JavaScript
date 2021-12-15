@@ -63,9 +63,9 @@
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[false, false, false, false]],
+                "hightlights": [[false, false, false, false, true]],
                 "links": [
-                    ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入", "MapboxGL-发布矢量瓦片地图（JAVA版）"]
+                    ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入", "MapboxGL-JAVA版IGS", "MapboxGL-地图模糊"]
                 ],
                 "routes": [
                     [
@@ -73,7 +73,8 @@
                         "/helper/vue-cesium/vue/memery/index",
                         "/helper/vue-cesium/vue/route/index",
                         "/helper/vue-mapboxgl/vue/import",
-                        "/helper/vue-mapboxgl/vue/vectotLayer"
+                        "/helper/vue-mapboxgl/vue/vectotLayer",
+                        "/helper/vue-mapboxgl/tilesize/tilesize"
                     ]
                 ],
                 "type":"helper"
@@ -248,12 +249,13 @@
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[false, false, false, false, false, false, true]],
+                "hightlights": [[true, false, false, false, false, false, false, true]],
                 "links": [
-                    ["OGC-WMTS", "ArcServer-WMS", "ArcServer-要素图层", "矢量瓦片-介绍", "矢量瓦片-离线部署", "矢量瓦片-几何&符号", "矢量瓦片-发布"]
+                    ["底图模糊", "OGC-WMTS", "ArcServer-WMS", "ArcServer-要素图层", "矢量瓦片-介绍", "矢量瓦片-离线部署", "矢量瓦片-几何&符号", "矢量瓦片-发布"]
                 ],
                 "routes": [
                     [
+                        "/helper/mapboxgl/tilesize/tilesize",    
                         "/helper/mapboxgl/ogc/wmts/WMTS",
                         "/helper/mapboxgl/arcserver/wms/index",
                         "/helper/mapboxgl/arcserver/featurelayer/index",
