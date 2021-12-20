@@ -249,9 +249,9 @@
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[true, false, false, false, false, false, false, true]],
+                "hightlights": [[true, false, false, false, false, false, false, true, true]],
                 "links": [
-                    ["底图模糊", "OGC-WMTS", "ArcServer-WMS", "ArcServer-要素图层", "矢量瓦片-介绍", "矢量瓦片-离线部署", "矢量瓦片-几何&符号", "矢量瓦片-发布"]
+                    ["底图模糊", "OGC-WMTS", "ArcServer-WMS", "ArcServer-要素图层", "矢量瓦片-介绍", "矢量瓦片-离线部署", "矢量瓦片-几何&符号", "矢量瓦片-发布", "矢量瓦片-MBTiles"]
                 ],
                 "routes": [
                     [
@@ -262,7 +262,8 @@
                         "/helper/mapboxgl/vectortile/index",
                         "/helper/mapboxgl/vectortile/deploy",
                         "/helper/mapboxgl/vectortile/style",
-                        "/helper/mapboxgl/vectortile/publish"
+                        "/helper/mapboxgl/vectortile/publish",
+                        "/helper/mapboxgl/vectortile/mbtiles"
                     ]
                 ],
                 "type":"helper"
