@@ -2,5 +2,5 @@ import { Enum, Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, 
 
 export { Enum, Symbol, Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, ExtrudeStyle, TextStyle, ModelStyle, TrackStyle };
 
-import {decodeGeoHash, decodeGeoHashToPolygon, encodeGeoHash} from "./format/geojson"
-export {decodeGeoHash, decodeGeoHashToPolygon, encodeGeoHash}
+import { decodeGeoHash, decodeGeoHashToPolygon, encodeGeoHash } from './format/geojson';
+export { decodeGeoHash, decodeGeoHashToPolygon, encodeGeoHash };

@@ -1,7 +1,6 @@
 import { CesiumZondy } from '../core/Base';
 
 import { updataPopupPosition } from './popup/popup';
-import Cesium from '../../../node_modules/cesium/Source/Cesium';
 
 var popupsIdIndex = 0;
 
@@ -72,6 +71,7 @@ export default class PopupLayer {
         this.popupContentId = options.popupContentId || 'cesium-popup-content-id-' + popupsIdIndex++;
 
         this.options.postRender = this.options.postRender === undefined ? true : this.options.postRender;
+        this.Cesium = options.Cesium || window['Cesium'];
 
         this.scene = map.scene;
         this.camera = map.camera;
@@ -83,7 +83,7 @@ export default class PopupLayer {
             this.onHide = onHide;
         }
 
-        let ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler || window['Cesium'].ScreenSpaceEventHandler;
+        let ScreenSpaceEventHandler = this.Cesium.ScreenSpaceEventHandler || window['Cesium'].ScreenSpaceEventHandler;
 
         this.handler = new ScreenSpaceEventHandler(this.scene.canvas);
 
@@ -96,7 +96,7 @@ export default class PopupLayer {
         this.cartesian =
             this.cartesian ||
             this.position.cartesian ||
-            Cesium.Cartesian3.fromDegrees(this.position.longitude, this.position.latitude, this.position.height);
+            this.Cesium.Cartesian3.fromDegrees(this.position.longitude, this.position.latitude, this.position.height);
 
         let vc = this.map.container;
         let cesumWidgetContainer = undefined;
@@ -149,16 +149,16 @@ export default class PopupLayer {
         } else {
             let popupContentDiv = window.document.createElement('div');
             popupContentDiv.id = this.popupContentId;
-            popupContentDiv.className = "cesium-popup";
+            popupContentDiv.className = 'cesium-popup';
             let popupContentWrapperDiv = window.document.createElement('div');
-            popupContentWrapperDiv.className = "cesium-popup-content-wrapper";
+            popupContentWrapperDiv.className = 'cesium-popup-content-wrapper';
             popupContentWrapperDiv.appendChild(this.container);
             popupContentDiv.appendChild(popupContentWrapperDiv);
-            
+
             let tipContainerDiv = window.document.createElement('div');
-            tipContainerDiv.className = "cesium-popup-tip-container";
+            tipContainerDiv.className = 'cesium-popup-tip-container';
             let tipDiv = window.document.createElement('div');
-            tipDiv.className = "cesium-popup-tip";
+            tipDiv.className = 'cesium-popup-tip';
             tipContainerDiv.appendChild(tipDiv);
             popupContentDiv.appendChild(tipContainerDiv);
             infoDiv.appendChild(popupContentDiv);
@@ -179,7 +179,7 @@ export default class PopupLayer {
 
     bindEvent() {
         let self = this;
-        this.handler.setInputAction(this.movement, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        this.handler.setInputAction(this.movement, this.Cesium.ScreenSpaceEventType.LEFT_CLICK);
         if (!this.map) {
             return;
         }
@@ -188,8 +188,8 @@ export default class PopupLayer {
             this.map.scene.postRender.addEventListener(() => self.update());
         } else {
             this.map.camera.changed.addEventListener(() => self.update());
-            this.handler.setInputAction(this.moveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
-            this.handler.setInputAction(this.moveEnd, Cesium.ScreenSpaceEventType.LEFT_UP);
+            this.handler.setInputAction(this.moveStart, this.Cesium.ScreenSpaceEventType.LEFT_DOWN);
+            this.handler.setInputAction(this.moveEnd, this.Cesium.ScreenSpaceEventType.LEFT_UP);
             this.map.scene.camera.moveEnd.addEventListener(() => self.update());
         }
     }
@@ -211,8 +211,8 @@ export default class PopupLayer {
 
     movement(movement) {
         var pickedPrimitive = this.map.scene.pick(movement.position);
-        var pickedEntity = Cesium.defined(pickedPrimitive) ? pickedPrimitive.id : undefined;
-        if (Cesium.defined(pickedEntity) /* && Cesium.defined(pickedEntity.billboard) */) {
+        var pickedEntity = this.Cesium.defined(pickedPrimitive) ? pickedPrimitive.id : undefined;
+        if (this.Cesium.defined(pickedEntity) /* && Cesium.defined(pickedEntity.billboard) */) {
             if (this.position && this.position.entity) {
                 pickedPrimitive.id === this.position.entity.id;
                 this.show();

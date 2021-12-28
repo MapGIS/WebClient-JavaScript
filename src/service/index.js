@@ -28,8 +28,8 @@ import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
 
 export {
-    Style,
     Util,
+    Style,
     geoJSON,
     Crs,
     Common,
