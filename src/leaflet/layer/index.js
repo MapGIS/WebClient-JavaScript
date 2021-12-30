@@ -1,5 +1,7 @@
 ﻿import {MapDocLayer} from './mapDocLayer';
 import {MapTileLayer} from  './mapTileLayer';
+import {MapLayer} from  './MapLayer';
+import {TileLayer} from  './TileLayer';
 import {MapWMTSLayer} from  './mapWmtsLayer';
 import {GeneralWMTSLayer} from  './generalWmtsLayer';
 import {MapVectorLayer} from  './mapVectorLayer';
@@ -20,6 +22,8 @@ import {
 
 export {MapDocLayer};
 export {MapTileLayer};
+export {MapLayer};
+export {TileLayer};
 export {MapWMTSLayer};
 export {GeneralWMTSLayer};
 export {MapVectorLayer};
