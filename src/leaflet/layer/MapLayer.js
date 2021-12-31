@@ -1,3 +1,4 @@
+import {newGuid} from '../../service/common/Util';
 import { L } from '../core/Base.js';
 
 /**
@@ -38,6 +39,7 @@ var MapLayer = L.TileLayer.extend({
         imageFormat: null,
         imageHeight: 512,
         imageWidth: 512,
+        guid:null,
         imageTransparent: null,
         filters: null,
         styles: null,
@@ -52,7 +54,7 @@ var MapLayer = L.TileLayer.extend({
      * @param {String} [options.imageFormat = 'png'] 可选，图片的格式，支持png|jpg|gif。
      * @param {Object} [options.filters = null] 可选，图层的过滤信息。例如，{"0":{"where":"Floor>10"}}。
      * @param {Object} [options.styles = null] 可选，图层的样式。例如，{"0":{"displayRegionBorder":true}}。
-     * @param {String} [option.layers = null]  可选，指定需要被取图的图层序列号。格式：show/hide/include/exclude: layerid1,layerid2。
+     * @param {String} [options.layers = null]  可选，指定需要被取图的图层序列号。格式：show/hide/include/exclude: layerid1,layerid2。
      1 show：仅仅显示指定了图层序号的图层
      2 hide ：显示除hide参数指定图层外所有的图层
      3 include：除显示默认图层（地图文档内图层状态为可见的图层）外，另追加这些被指定的图 层显示，追加的这些图层必须为地图中包含的图层。
@@ -62,6 +64,7 @@ var MapLayer = L.TileLayer.extend({
      * @param {Number} [options.imageWidth = 512] 可选，图片的宽度。
      * @param {Boolean} [options.isAntialiasing = false] 可选，返回的图片是否抗锯齿。
      * @param {Boolean} [options.imageTransparent = true] 可选，返回的图片是否透明。
+     * @param {String} [options.guid = newGuid()] 可选。唯一ID，用户标识地图文档。
      *
      */
     initialize: function (url, options) {
@@ -100,6 +103,9 @@ var MapLayer = L.TileLayer.extend({
         var imageHeight = this.options.imageHeight;
         var imageWidth = this.options.imageWidth;
         params.push('size=' + imageWidth + ',' + imageHeight);
+
+        var guid = options.guid || newGuid();
+        params.push("clientId=" + guid);
 
         if (options.imageFormat) {
             params.push('format=' + options.imageFormat);
