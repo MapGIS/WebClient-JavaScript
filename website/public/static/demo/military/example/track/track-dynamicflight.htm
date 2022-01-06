@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>动态航线</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        var dynamicLine;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //动画效果需开启计时
+            webGlobe.viewer.clock.shouldAnimate = true; //开启计时
+
+            //构造高级分析功能管理对象
+            var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                viewer: webGlobe.viewer
+            });
+            //创建动态航线
+            dynamicLine = advancedAnalysisManager.createDynamicPolyline(
+                //航线起始城市经纬度
+                {
+                    lon: 114.302312702,
+                    lat: 30.598026044
+                },
+                //航线终点城市数组，经纬度
+                [{
+                    "lon": 115.028495718,
+                    "lat": 30.200814617
+                }, {
+                    "lon": 110.795000473,
+                    "lat": 32.638540762
+                }, {
+                    "lon": 111.267729446,
+                    "lat": 30.698151246
+                }, {
+                    "lon": 112.126643144,
+                    "lat": 32.058588576
+                }, {
+                    "lon": 114.885884938,
+                    "lat": 30.395401912
+                }, {
+                    "lon": 112.190419415,
+                    "lat": 31.043949588
+                }, {
+                    "lon": 113.903569642,
+                    "lat": 30.932054050
+                }, {
+                    "lon": 112.226648859,
+                    "lat": 30.367904255
+                }, {
+                    "lon": 114.861716770,
+                    "lat": 30.468634833
+                }, {
+                    "lon": 114.317846048,
+                    "lat": 29.848946148
+                }, {
+                    "lon": 113.371985426,
+                    "lat": 31.704988330
+                }, {
+                    "lon": 109.468884533,
+                    "lat": 30.289012191
+                }, {
+                    "lon": 113.414585069,
+                    "lat": 30.368350431
+                }, {
+                    "lon": 112.892742589,
+                    "lat": 30.409306203
+                }, {
+                    "lon": 113.160853710,
+                    "lat": 30.667483468
+                }, {
+                    "lon": 110.670643354,
+                    "lat": 31.748540780
+                }], {
+                    //是否已经添加动态航线
+                    isAdd: false,
+                    //航线颜色：默认红色
+                    color: new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1)
+                }
+            );
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(113.55672006469078, 27.94876106440203, {
+                height: 186565,
+                heading: -5,
+                pitch: -30,
+                roll: 0
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id="GlobeView"></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

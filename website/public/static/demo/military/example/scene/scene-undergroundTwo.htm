@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>地下模式</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //大气显示
+            webGlobe.viewer.scene.skyAtmosphere.show = false;
+            //大气显示
+            webGlobe.viewer.scene.skyAtmosphere.showGroundAtmosphere = false;
+            //透明度
+            webGlobe.viewer.scene.enableTransparent = true;
+            //背景颜色
+            webGlobe.viewer.scene.baseColor = new Cesium.Color(1, 1, 1, 0.0001);
+            webGlobe.viewer.scene.globe.imageryLayers.get(0).alpha = 0;
+            webGlobe.viewer.scene.globe.imageryLayers.get(1).alpha = 0;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+</body>
+
+</html>

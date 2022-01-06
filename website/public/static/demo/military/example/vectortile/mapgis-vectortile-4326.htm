@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>地层分析</title>
+        <!--引用第三方的jQuery脚本库-->
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <!--引用Cesium脚本库文件-->
+        <script src="./static/libs/include-cesium-local.js"></script>
+        <!--引用示例页面样式表-->
+        <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+        <style>
+            .vectortile-control-wrapper {
+                position: absolute;
+                z-index: 9999;
+                top: 20px;
+                left: 20px;
+            }
+            .item {
+                margin-top: 12px;
+                padding: 4px;
+                background: #ffffff;
+            }
+        </style>
+        <script>
+            //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+            'use strict';
+
+            //定义三维场景控件对象
+            var webGlobe;
+            //定义M3D图层对象
+            var vectortileLayer;
+            var chinaLayer;
+
+            //地图初始化函数
+            function init() {
+                //构造三维视图类（视图容器div的id，三维视图设置参数）
+                webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+                //设置鼠标位置信息（经纬度、高程、视角高度）展示控件
+                webGlobe.showPosition('coordinate_location');
+                webGlobe.viewer.imageryLayers.removeAll();
+                webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(255 / 255, 255 / 255, 255 / 255, 1.0);
+
+                var tianditu = new Cesium.WebMapTileServiceImageryProvider({
+                    url:
+                        'http://t5.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&TILEMATRIXSET=c&tk=f5347cab4b28410a6e8ba5143e3d5a35',
+                    layer: 'vec',
+                    style: 'default',
+                    tileMatrixSetID: 'w',
+                    maximumLevel: 9,
+                    format: 'tiles'
+
+                    // tilingScheme: new Cesium.GeographicTilingScheme()
+                });
+                webGlobe.viewer.imageryLayers.addImageryProvider(tianditu);
+                loopMvt();
+            }
+
+            function loopMvt(index) {
+                var { protocol, ip, port } = window.webclient;
+                //构造矢量瓦片图层对象
+                vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+                    //视图
+                    webGlobe.viewer,
+                    {
+                        //样式json文件路径
+                        styleUrl: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/OSM全中国经纬度.json`,
+                        //第三方需要的token
+                        token: '',
+                        //是否可见
+                        show: true,
+                        tilingScheme: new Cesium.GeographicTilingScheme({
+                            numberOfLevelZeroTilesX: 2,
+                            numberOfLevelZeroTilesY: 1
+                        }),
+                        callback: handleLayerAdd
+                    }
+                );
+            }
+
+            function handleLayerAdd(payload) {
+                const { imageryLayer } = payload;
+                window.setTimeout(() => {
+                    imageryLayer.alpha = 0.5;
+                }, 5000);
+            }
+
+            function onLayoutChange() {
+                vectortileLayer.setLayoutProperty('背景图', 'visibility', 'none');
+            }
+
+            function onPaintChange() {
+                vectortileLayer.setPaintProperty('省级行政区', 'fill-color', 'rgba(0,0,0,1.0)');
+            }
+
+            function onFilterChange() {
+                vectortileLayer.setFilter('省级行政区', ['all', ['==', '省名', '甘肃']]);
+            }
+
+            function onStyleChange() {
+                $.ajax({
+                    url: `./static/data/mapbox/changestyle.json`,
+                    success: function (json) {
+                        vectortileLayer.updateStyle(json);
+                    }
+                });
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="GlobeView"></div>
+        <!--坐标容器-->
+        <div id="coordinateDiv" class="coordinateClass">
+            <label id="coordinate_location"></label>
+            <label id="coordinate_height"></label>
+        </div>
+        <div class="vectortile-control-wrapper">
+            <div class="item" onclick="onLayoutChange()">改变布局属性</div>
+            <div class="item" onclick="onPaintChange()">改变画笔属性</div>
+            <div class="item" onclick="onFilterChange()">改变过滤属性</div>
+            <div class="item" onclick="onStyleChange()">改变整体样式</div>
+        </div>
+    </body>
+</html>

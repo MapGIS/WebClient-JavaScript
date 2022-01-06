@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <title>渐进线-纽约街道</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+  <script include="echarts" src="./static/libs/include-cesium-local.js"></script>
+  <!--当前示例页面样式表引用-->
+  <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+</head>
+
+<body>
+  <div id='GlobeView'></div>
+  <script>
+    var webGlobe, map;
+
+    initMap();
+    initEcharts();
+
+    function initMap() {
+      webGlobe = new Cesium.WebSceneControl('GlobeView', {
+        terrainExaggeration: 1,
+      });
+      //显示鼠标位置控件
+      webGlobe.showPosition('coordinate_location');
+      map = webGlobe.viewer;
+      var blueImage = new Cesium.UrlTemplateImageryProvider({
+        url:
+          "https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}",
+        tilingScheme: new Cesium.WebMercatorTilingScheme(),
+        maximumLevel: 12,
+      });
+      webGlobe.viewer.imageryLayers.addImageryProvider(blueImage);
+
+      var center = Cesium.Cartesian3.fromDegrees(-74.04327099998152, 40.86737600240287, 200000.0);
+      map.scene.camera.setView({
+        destination: center
+      });
+
+    }
+
+    initEcharts();
+
+    var CHUNK_COUNT = 32;
+    var dataCount = 0;
+    var layer;
+
+    function fetchData(idx) {
+      if (idx >= CHUNK_COUNT) {
+        return;
+      }
+      var dataURL = `./static/data/echarts/line/links_ny_${idx}.bin`;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', dataURL, true);
+      xhr.responseType = 'arraybuffer';
+
+      xhr.onload = function (e) {
+        var rawData = new Float32Array(this.response);
+        var data = new Float64Array(rawData.length - 2);
+        var offsetX = rawData[0];
+        var offsetY = rawData[1];
+        var off = 0;
+        var addedDataCount = 0;
+        for (var i = 2; i < rawData.length;) {
+          var count = rawData[i++];
+          data[off++] = count;
+          for (var k = 0; k < count; k++) {
+            var x = rawData[i++] + offsetX;
+            var y = rawData[i++] + offsetY;
+            data[off++] = x;
+            data[off++] = y;
+
+            addedDataCount++;
+          }
+        }
+
+        layer.chart.appendData({
+          seriesIndex: 0,
+          data: data
+        });
+
+        dataCount += addedDataCount;
+
+        fetchData(idx + 1);
+      }
+
+      xhr.send();
+    }
+
+    function initEcharts() {
+      // options参数请参考百度echarts-options
+      // https://echarts.apache.org/zh/option.html#title
+      var option = {
+        progressive: 2000,  // 一次渲染20000点
+        //backgroundColor: '#111',
+        cesium: {
+          roam: true
+        },
+        series: [{
+          type: 'lines',
+
+          coordinateSystem: 'cesium', // 设置cesium坐标系
+
+          blendMode: 'lighter',
+
+          dimensions: ['value'],
+
+          data: new Float64Array(), // 关键点： 数据必须处理成Float64Array格式，否则超出浏览器内存
+          polyline: true,
+          large: true,
+
+          lineStyle: {
+            color: 'red',
+            width: 0.5,
+            opacity: 0.3
+          }
+        }]
+      }
+      // 声明cesium的echarts图层并将其显示到三维球上
+      layer = new CesiumZondy.Overlayer.EchartsLayer(map, option).addTo(map);
+
+      fetchData(0);
+    }
+  </script>
+
+</body>
+
+</html>

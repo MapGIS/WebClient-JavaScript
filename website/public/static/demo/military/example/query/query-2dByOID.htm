@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>加载IGServer二维矢量地图服务</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //定义矢量类
+        var vecDoc;
+        //服务地址，配置参数
+        var {
+            protocol,
+            ip,
+            port
+        } = window.webclient;
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //视点跳转
+            webGlobe.viewer.camera.flyTo({
+                //定位到范围中心点
+                destination: Cesium.Cartesian3.fromDegrees(116.348, 40.236, 200000),
+                orientation: {
+                    heading: Cesium.Math.toRadians(-1),
+                    pitch: Cesium.Math.toRadians(-90),
+                    roll: 0
+                },
+                complete: function() {
+                    //构造瓦片图层管理对象（视图）
+                    var layer = new CesiumZondy.Layer.TilesLayer({
+                        viewer: webGlobe.viewer
+                    });
+                    vecDoc = layer.append2DDocTile(
+                        `${protocol}://${ip}:${port}/igs/rest/mrms/docs/北京市`, {
+                            guid: "__readonly_user__"
+                        }
+                    );
+                }
+            });
+        }
+
+        function query() {
+            var queryParam = new CesiumZondy.Query.MapDocQuery();
+            //查询图层的URL路径
+            //queryParam.gdbp = encodeURI("gdbp://MapGisLocal/北京市/ds/行政区/sfcls/北京市");
+            queryParam.docName = "北京市";
+            queryParam.mapIndex = 0;
+            queryParam.layerID = 0;
+            queryParam.structs = '{"IncludeAttribute":true,"IncludeGeometry":true,"IncludeWebGraphic":false}';
+            queryParam.objectIds = "30";
+            //服务器的ip
+            queryParam.ip = ip
+            queryParam.port = port;
+            queryParam.beginQuery(function(result) {
+                if (result != null) {
+                    document.getElementById("code").value = result.SFEleArray[0].AttValue[2];
+                    document.getElementById("name").value = result.SFEleArray[0].AttValue[3];
+                    document.getElementById("spell").value = result.SFEleArray[0].AttValue[4];
+                    document.getElementById("population").value = result.SFEleArray[0].AttValue[40];
+                    var GeompointArray = new Array();
+                    for (var pointlength = 0; pointlength < result.SFEleArray[0].fGeom.RegGeom[0].Rings[0].Arcs[0].Dots.length; pointlength++) {
+                        var PntCartesian3 = Cesium.Cartesian3.fromDegrees(result.SFEleArray[0].fGeom.RegGeom[0].Rings[0].Arcs[0].Dots[pointlength].x, result.SFEleArray[0].fGeom.RegGeom[0].Rings[0].Arcs[0].Dots[pointlength].y, 10);
+                        GeompointArray.push(PntCartesian3);
+                    }
+                    GeompointArray.push(GeompointArray[0]);
+                    //构造几何绘制控制对象
+                    var entityController = new CesiumZondy.Manager.EntityController({
+                        viewer: webGlobe.viewer
+                    });
+                    //构造区对象
+                    var polygon = {
+                        name: "立体区",
+                        polygon: {
+                            //坐标点
+                            hierarchy: GeompointArray,
+                            //是否指定各点高度
+                            perPositionHeight: true,
+                            //颜色
+                            material: new Cesium.Color(33 / 255, 150 / 255, 243 / 255, 0.5),
+                            //轮廓线是否显示
+                            outline: true,
+                            //轮廓线颜色
+                            outlineColor: Cesium.Color.BLACK,
+                        }
+                    };
+                    //绘制图形通用方法：对接Cesium原生特性
+                    var stericPolygon = entityController.appendGraphics(polygon);
+                }
+            }, function quryError(err) {
+                alert(err);
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'>
+        <div class='message'>
+            <button onclick="query()">OID查询</button>
+        </div>
+        <div class='message' style="left:unset;right: 10px;">
+            <p>查询结果</p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>行政区代码：</td>
+                        <td>
+                            <input type="text" id="code" value="无">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>省名：</td>
+                        <td>
+                            <input type="text" id="name" value="无">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>拼音：</td>
+                        <td>
+                            <input type="text" id="spell" value="无">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>人口数</td>
+                        <td>
+                            <input type="text" id="population" value="无">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

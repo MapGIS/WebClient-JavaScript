@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>属性查询</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //服务地址，配置参数
+        var {
+            protocol,
+            ip,
+            port
+        } = window.webclient;
+        //定义三维视图的主要类
+        var webGlobe;
+        var landscapeLayerArr;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+
+            landscapeLayerArr = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ModelM3D`, {
+                //是否自动定位到数据位置
+                autoReset: true,
+                //模型细节显示控制参数：较大值可提高渲染性能，较低值可提高视觉质量
+                maximumScreenSpaceError: 8,
+                loaded: function(layer) {
+                    query();
+                }
+            });
+        }
+
+        function query() {
+            var queryParam = new CesiumZondy.Query.G3DDocQuery();
+            //查询图层的URL路径
+            queryParam.gdbp = encodeURI("gdbp://MapGisLocal/示例数据/ds/三维示例/sfcls/景观_模型");
+            // queryParam.docName = "ModelM3D";
+            // queryParam.layerIndex = 0;
+            //设置查询结果结构
+            queryParam.structs = '{"IncludeAttribute":true,"IncludeGeometry":true,"IncludeWebGraphic":false}';
+            //属性查询
+            queryParam.where = "test='19.6'";
+            //服务器的ip
+            queryParam.serverIp = ip
+            queryParam.serverPort = port;
+            queryParam.queryG3DFeature(function(result) {
+                if (result != null) {
+                    document.getElementById("floor").value = result.SFEleArray[0].AttValue[3];
+                    document.getElementById("height").value = result.SFEleArray[0].AttValue[4];
+                    document.getElementById("type").value = result.SFEleArray[0].AttValue[5];
+                    document.getElementById("test").value = result.SFEleArray[0].AttValue[6];
+                    var fidArray = new Array();
+                    for (var resultlength = 0; resultlength < result.SFEleArray.length; resultlength++) {
+                        fidArray.push(result.SFEleArray[resultlength].FID);
+                    }
+                    //构建参数：设置颜色
+                    var options = {
+                            //高亮颜色
+                            color: Cesium.Color.INDIANRED,
+                            //高亮模式：REPLACE为替换
+                            colorBlendMode: Cesium.Cesium3DTileColorBlendMode.REPLACE
+                        }
+                        //构造分析功能管理对象
+                    var analysisManager = new CesiumZondy.Manager.AnalysisManager({
+                        viewer: webGlobe.viewer
+                    });
+                    //结束闪烁
+                    analysisManager.stopCustomDisplay(landscapeLayerArr);
+                    //开始闪烁查找到的模型
+                    analysisManager.startCustomDisplay(landscapeLayerArr, fidArray, options);
+                }
+            }, function(e) {
+                alert("error");
+            }, 'post');
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class='message' style="left:unset;right: 10px;">
+            <p>查询结果</p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>楼层：</td>
+                        <td>
+                            <input type="text" id="floor" value="无">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>层高：</td>
+                        <td>
+                            <input type="text" id="height" value="无">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>房屋类型：</td>
+                        <td>
+                            <input type="text" id="type" value="无">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>test:</td>
+                        <td>
+                            <input type="text" id="test" value="无">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

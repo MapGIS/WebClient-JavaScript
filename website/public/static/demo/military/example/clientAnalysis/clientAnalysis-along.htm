@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--Cesium脚本库文件引用-->
+    <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+</head>
+
+<body>
+    <!--地图容器-->
+    <div id='GlobeView'></div>
+    <script>
+        //定义三维视图的主要类变量
+        var webGlobe, map;
+        //var geojson;
+        //坐标点数组
+        var origin = [89.341, 30.92];
+        //坐标点数组
+        var destination = [133.989, 30.92];
+        //起点
+        var startPoint = [];
+        //终点
+        var endPoint = [];
+        //路线对象
+        var route = {
+            //类型
+            "type": "FeatureCollection",
+            //要素
+            "features": [{
+                //要素类型
+                "type": "Feature",
+                //要素几何结构
+                "geometry": {
+                    //几何类型
+                    "type": "LineString",
+                    //坐标数组
+                    "coordinates": [
+                        origin,
+                        destination
+                    ]
+                }
+            }]
+        };
+        //线对象
+        var simpleLine = {
+            //类型
+            "type": "FeatureCollection",
+            //要素
+            "features": [{
+                //要素类型
+                "type": "Feature",
+                //要素几何结构
+                "geometry": {
+                    //几何类型
+                    "type": "LineString",
+                    //坐标数组
+                    "coordinates": [
+                        origin,
+                        destination
+                    ]
+                }
+            }]
+        };
+        //加载三维场景控件
+        initMap();
+        //插值计算
+        alongLine();
+        //更新视图
+        updateView();
+        //加载三维场景控件函数
+        function initMap() {
+            //定义三维视图的主要类
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+            //获取三维场景视图对象
+            map = webGlobe.viewer;
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //经纬度坐标转世界坐标
+            var center = Cesium.Cartesian3.fromDegrees(114, 30, 5000000.0);
+            //场景定位跳转
+            map.scene.camera.setView({
+                destination: center
+            });
+        }
+        //插值计算函数
+        function alongLine() {
+            //计算距离
+            var lineDistance = turf.distance(origin, destination, {
+                units: 'kilometers'
+            });
+            //完成插值的点数组
+            var arc = [];
+            //插入点数量
+            var count = 100;
+            //将线长度均分
+            var clip = lineDistance / count;
+            //将均分线插值
+            for (var i = 0; i < lineDistance; i += clip) {
+                //计算对应第i个插值点的位置
+                var segment = turf.along(route.features[0], i, {
+                    units: 'kilometers'
+                });
+                //将插值点加入到原始数据中
+                arc.push(segment.geometry.coordinates);
+            }
+            //添加终点
+            arc.push(destination);
+            //更新数据
+            route.features[0].geometry.coordinates = arc;
+        }
+        //更新视图函数
+        function updateView() {
+            //添加路线显示
+            var routedatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(route, {
+                //线颜色
+                stroke: Cesium.Color.GRAY,
+                //填充色
+                fill: Cesium.Color.GRAY,
+                //线宽
+                strokeWidth: 5
+            }));
+            //添加简单线显示
+            var simpledatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(simpleLine, {
+                //线颜色
+                stroke: Cesium.Color.RED,
+                //填充色
+                fill: Cesium.Color.RED,
+                //线宽
+                strokeWidth: 5
+            }));
+            //跳转至路线
+            map.flyTo(routedatasource);
+        }
+    </script>
+
+</body>
+
+</html>

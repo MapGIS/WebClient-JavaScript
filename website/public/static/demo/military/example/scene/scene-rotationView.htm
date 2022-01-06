@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>绕点旋转</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var commfun;
+        var update;
+        var m3dLayer;
+        var obliqueLayer;
+        //设置旋转点
+        var opt = {
+            position: Cesium.Cartesian3.fromDegrees(108.96044700955785, 34.21796237686321, 60.99772929683282),
+            pitch: -15,
+            distance: 700,
+            duration: 10,
+            ClockRange: Cesium.ClockRange.CLAMPED
+        };
+
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //构造M3D模型层管理对象（视图）
+            m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
+            obliqueLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/DaYanTa`, {});
+
+            //实例化通用功能管理类对象
+            commfun = new CesiumZondy.Manager.CommonFuncManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        function startRotationView() {
+            stopRotationView();
+            //创建绕点旋转对象
+            update = commfun.rotationView('rotationAroundPos', opt);
+            //设置开始绕点旋转
+            commfun.startRotationAroundPos(update);
+        }
+
+        function pauseRotationView() {
+            //设置暂停绕点旋转
+            commfun.pauseRotationView(update);
+
+        }
+
+        function stopRotationView() {
+            //设置移除绕点旋转
+            commfun.removeRotationView(update);
+        }
+
+        function gohome() {
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(108.96044700955785, 34.21796237686321, {
+                height: 60.99772929683282,
+                heading: -38.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message">
+            <button id="startRotationView" onclick="startRotationView()">开启旋转</button>
+            <button id="pauseRotationView" onclick="pauseRotationView()">暂停旋转</button>
+            <button id="stopRotationView" onclick="stopRotationView()">停止旋转</button>
+            <button id="goHome" onclick="gohome()">复位</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>地层分析</title>
+	<!--引入第三方的jquery脚本库-->
+	<script include="jquery" src="./static/libs/include-lib-local.js"></script>
+	<script include="vectortile" src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+	<script>
+		//在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+		"use strict";
+
+		//定义三维场景控件对象
+		var webGlobe;
+		//定义M3D图层对象
+		var vectortileLayer;
+		var chinaLayer;
+
+		//地图初始化函数
+		function init() {
+			//构造三维视图类（视图容器div的id，三维视图设置参数）
+			webGlobe = new Cesium.WebSceneControl("GlobeView", {});
+			//设置鼠标位置信息（经纬度、高程、视角高度）展示控件
+			webGlobe.showPosition("coordinate_location");
+			webGlobe.viewer.imageryLayers.removeAll();
+			// ccc4c4
+			webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(204 / 255, 196 / 255, 196 / 255, 1.0);
+			loopMvt();
+		}
+
+		function loopMvt(index) {
+			var { protocol, ip, port } = window.webclient;
+			vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+				webGlobe.viewer,
+				{
+					styleUrl:
+						`${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/街道-墨卡托.json`,
+					token: "",
+					show: true,
+				}
+			);
+
+			window.setTimeout(() => {
+				chinaLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+					webGlobe.viewer,
+					{
+						styleUrl:
+							`${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/中国行政区.json`,
+						token: "",
+						show: true,
+					}
+				);
+				console.warn("chinaLayer", chinaLayer);
+			}, 2000);
+		}
+	</script>
+</head>
+
+<body onload="init()">
+	<div id="GlobeView"></div>
+	<!--坐标容器-->
+	<div id="coordinateDiv" class="coordinateClass">
+		<label id="coordinate_location"></label>
+		<label id="coordinate_height"></label>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Measure distances</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="geohash,geojson,turf" src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+</head>
+
+<body>
+
+    <div id='GlobeView'></div>
+    <script>
+        var webGlobe, map;
+        var geojson;
+
+        initMap();
+        loadData();
+
+        function initMap() {
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+
+            map = webGlobe.viewer;
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            var center = Cesium.Cartesian3.fromDegrees(114.289398, 30.59418345, 500000);
+            map.scene.camera.setView({
+                destination: center
+            });
+        }
+
+        function loadData() {
+            $.getJSON('./static/data/client-analysis/point.json', function(data) {
+                convertDataToGeoJson(data);
+                updateView(geojson);
+            });
+        }
+
+        function convertDataToGeoJson(origindata) {
+            var points = origindata;
+            geojson = turf.tin(points);
+        }
+
+        function updateView(data) {
+            var tindatasource = map.dataSources.add(Cesium.GeoJsonDataSource.load(data, {
+                stroke: Cesium.Color.BLACK,
+                fill: Cesium.Color.GRAY,
+                strokeWidth: 15
+            }));
+            map.flyTo(tindatasource);
+        }
+    </script>
+
+</body>
+
+</html>

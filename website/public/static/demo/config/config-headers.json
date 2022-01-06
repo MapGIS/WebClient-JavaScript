@@ -136,11 +136,12 @@
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[false]],
-                "links": [["OGC-WMTS"]],
+                "hightlights": [[false, true]],
+                "links": [["OGC-WMTS", "三维模型"]],
                 "routes": [
                     [
-                        "/helper/cesium/ogc/wmts/WMTS"
+                        "/helper/cesium/ogc/wmts/WMTS",
+                        "/helper/cesium/model/gltf"
                     ]
                 ],
                 "type":"helper"

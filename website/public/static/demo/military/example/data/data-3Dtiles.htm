@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>3DTile数据加载</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维视图的主要类
+        var webGlobe;
+        var thirdPartyLayer;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造第三方图层对象
+            thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            var osm = thirdPartyLayer.appendOsmMap();
+
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
+                viewer: webGlobe.viewer
+            });
+            var path = './static/data/3DTile/Tileset/tileset.json';
+            // 加载3DTile数据
+            var tiles = commonDataManager.append3DTile(
+                //3DTile数据路径
+                path,
+                //成功回调函数
+                load
+            );
+
+            function load(layer) {
+                //加载成功后定位跳转
+                webGlobe.viewer.flyTo(layer);
+                console.log("这是一个加载成功回调");
+            }
+
+            //通过remove3DTile方法移除
+            //commonDataManager.remove3DTile(tiles);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+</body>
+
+</html>
