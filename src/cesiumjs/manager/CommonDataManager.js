@@ -111,7 +111,7 @@ export default class CommonDataManager extends LayerManager {
      * @returns {Object} model 移除通过 removeModel()
      * @example
      *   let modelUrl = '../../../../../../static/data/CesiumAir/Cesium_Air.gltf';
-            cesiumFun.appendModel('1', modelUrl, 114, 28, 200, 100000, {
+            cesiumFun.appendModels('1', modelUrl, 114, 28, 200, 100000, {
                 color: Cesium.Color.RED,
                 colorBlendMode: Cesium.ColorBlendMode.MIX,//  MIX是混合 Cesium.ColorBlendMode.HIGHLIGHT, HIGHLIGHT是高亮
                 colorBlendAmount: 0.4 //这个是程度
@@ -160,7 +160,7 @@ export default class CommonDataManager extends LayerManager {
 
     /**
      * 通过文件批量添加模型
-     * @function module:客户端公共方法.CommonDataManager.prototype.appendModelsByFile
+     * @function module:客户端公共方法.CommonDataManager.prototype.appendModels
      * @param  {String} filePath 模型组织文件
      * @param {Function} successCall 成功后的回调
      * @returns {Object} 模型层对象

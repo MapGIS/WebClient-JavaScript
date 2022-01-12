@@ -422,22 +422,12 @@ export default class EntityController extends BaseLayer {
                     positions: simplifyPnts,
                     width: 1,
                     geodesic: true,
-                    id: name,
-                    vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
+                    id: name
                 };
-                var color = Cesium.defaultValue(options.color,Cesium.Color.BLUE);
                 if (Cesium.defined(options)) {
                     Object.extend(para, options);
                 }
-                var polyline = new Cesium.Primitive({
-                    geometryInstances : new Cesium.GeometryInstance({
-                        geometry : new Cesium.PolylineGeometry(para),
-                        attributes: {
-                            color: Cesium.ColorGeometryInstanceAttribute.fromColor(color)
-                        }
-                    }),
-                    appearance: new Cesium.PolylineColorAppearance()
-                })
+                const polyline = new Cesium.PathTool.PolylinePrimitive(para);
                 this.scene.primitives.add(polyline);
                 if (typeof callback === 'function') {
                     callback(polyline);
