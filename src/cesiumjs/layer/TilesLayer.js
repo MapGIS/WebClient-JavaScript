@@ -72,7 +72,8 @@ export default class TilesLayer extends BaseLayer {
      * @param {Rectangle} [optionsParam.tileRange=Rectangle.fromDegrees(-180,-90,180,90)] 默认范围为全球范围
      * @param {Number} [optionsParam.colNum=2] 瓦片初始级的列数 默认为2
      * @param {Number} [optionsParam.rowNum=1] 瓦片初始级的列数 默认为1
-     * @param {Number} [optionsParam.maxLevel=19] 瓦片最大显示级数 默认为19
+     * @param {Number} [options.minimumLevel=0] 瓦片最小级别
+     * @param {Number} [options.maximumLevel=19] 瓦片最大级别
      * @param {String} [optionsParam.proxy] 转发代理
      * @param {Array}  [options.gdbps] gdbps地址数组
      * @param {String} [options.layers] layers参数，用于过滤图层
