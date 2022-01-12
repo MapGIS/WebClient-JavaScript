@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>贴地多边形绘制</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        var groundPolygon;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //添加贴地多边形
+            add();
+        }
+
+        //添加贴地多边形
+        function add() {
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
+                viewer: webGlobe.viewer
+            });
+
+            //坐标点数组（经纬度）
+            var point_out = [
+                70, 0,
+                150, 0,
+                150, 60,
+                70, 60,
+                70, 0
+            ];
+            //填充颜色
+            var color = new Cesium.ColorGeometryInstanceAttribute(255 / 255, 255 / 255, 0 / 255, 0.5);
+
+            //根据给定点画贴地多边形
+            groundPolygon = webGlobe.appendGroundPolygon(
+                //外圈坐标数组（经纬度）
+                point_out,
+                //内圈坐标数组（经纬度）
+                null,
+                //填充颜色
+                color,
+                //附加属性
+                {}
+            );
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

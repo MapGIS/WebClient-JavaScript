@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>拉伸区绘制</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        var polygon1, polygon2;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.41243367089355, 30.470592159402656, {
+                height: 320,
+                heading: -38,
+                pitch: -22,
+                roll: 0
+            });
+
+            //添加区
+            add();
+        }
+
+        //添加区
+        function add() {
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
+                viewer: webGlobe.viewer
+            });
+
+            //点数组1（三维点）
+            var pointArr1 = [
+                114.40328987990017, 30.479789358042233, 100,
+                114.40255973680176, 30.473707285934392, 100,
+                114.40905754990294, 30.473938016458956, 100,
+                114.40971219770601, 30.479196348500707, 100,
+                114.40328987990017, 30.479789358042233, 100
+            ];
+            //点数组2（二维点）
+            var pointArr2 = [
+                114.40993798035257, 30.47917084653805,
+                114.4093239347542, 30.473893768825484,
+                114.41091821047152, 30.473773818562865,
+                114.41146570646127, 30.479026171029727,
+                114.40993798035257, 30.47917084653805
+            ];
+
+            //填充颜色
+            var fillColor = new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 0.5);
+            //边线颜色
+            var outLineColor = new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1);
+
+            //绘制立体拉伸区（名称、点数组、区填充色、外框线颜色、是否传入三维点、附加属性）
+            polygon1 = entityController.appendPolygon(
+                '三维区',
+                pointArr1,
+                fillColor,
+                outLineColor,
+                true, {
+                    //多边形相对于地球表面的高度
+                    extrudedHeight: 50,
+                    //是否指定各点高度
+                    perPositionHeight: true
+                }
+            );
+
+            //绘制平面区（名称、点数组、区填充色、外框线颜色、是否指定各点高度）
+            polygon2 = entityController.appendPolygon(
+                '三维区',
+                pointArr2,
+                fillColor,
+                outLineColor,
+                false
+            );
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

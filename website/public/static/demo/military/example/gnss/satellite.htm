@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Along</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'></div>
+    <script>
+        var viewer = new Cesium.Viewer('map');
+
+        var entityPromise = viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/GEO3-ECI.czml'));
+
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/IGSO1-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/IGSO2-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/IGSO3-ECI.czml'));
+
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO1-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO2-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO3-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO4-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO5-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO6-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO7-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO8-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO9-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO10-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO11-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO12-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO13-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO14-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO15-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO16-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO17-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO18-ECI.czml'));
+        viewer.dataSources.add(Cesium.CzmlDataSource.load('./static/data/czml/satellite/MEO19-ECI.czml'));
+
+        viewer.flyTo(entityPromise);
+    </script>
+
+</body>
+
+</html>

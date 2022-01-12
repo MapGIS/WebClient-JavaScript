@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>M3D-地质钻孔数据展示</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //定义图层类
+        var assiseLayerArr;
+        var drillLayerArr;
+
+        var vm = this;
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            if (assiseLayerArr) webGlobe.removeM3dLayer(assiseLayerArr);
+            if (drillLayerArr) webGlobe.removeM3dLayer(drillLayerArr);
+
+            webGlobe.viewer.imageryLayers.removeAll();
+
+            //设置地下模式
+            webGlobe.viewer.scene.globe.undergroundMode = true;
+            //大气显示
+            webGlobe.viewer.scene.skyAtmosphere.show = false;
+            //大气显示
+            webGlobe.viewer.scene.skyAtmosphere.showGroundAtmosphere = false;
+            //透明度
+            webGlobe.viewer.scene.globe.enableTransparent = true;
+            webGlobe.viewer.scene.globe.transparent = 0.0;
+            webGlobe.viewer.scene.globe.baseColor = new Cesium.Color(0 / 255, 0 / 255, 0 / 255, 0.00001);
+            //开启地形深度检测
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+
+            // 亮度设置
+            var stages = webGlobe.viewer.scene.postProcessStages;
+            webGlobe.viewer.scene.brightness = webGlobe.viewer.scene.brightness || stages.add(Cesium.PostProcessStageLibrary.createBrightnessStage());
+            webGlobe.viewer.scene.brightness.enabled = true;
+            webGlobe.viewer.scene.brightness.uniforms.brightness = Number(1.3);
+
+            // 修改场景时间
+            var utc = Cesium.JulianDate.fromDate(new Date("2020/7/04 24:00:00"));
+            webGlobe.viewer.clock.currentTime = Cesium.JulianDate.addHours(utc, 0, new Cesium.JulianDate());
+
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+
+            var { protocol, ip, port } = window.webclient;
+            assiseLayerArr = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔分层点_Sur_000_Ent`,
+                {
+                    loaded: function (layer) { },
+                }
+            );
+            drillLayerArr = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔_2_钻孔模型s`,
+                {
+                    loaded: function (layer) { },
+                    autoReset: true,
+                }
+            );
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(112.94845170512113, 30.004246325952618, {
+                height: 2600,
+                heading: 67,
+                pitch: -30,
+                roll: 0
+            });
+
+            initPick();
+        }
+
+        function initPick() {
+            let handler = new Cesium.ScreenSpaceEventHandler(
+                webGlobe.viewer.scene.canvas
+            );
+            handler.setInputAction(
+                handleClick.bind(this),
+                Cesium.ScreenSpaceEventType.LEFT_DOWN
+            );
+        }
+
+        function handleClick(screenPosition) {
+            const viewer = webGlobe.viewer;
+            const scene = webGlobe.viewer.scene;
+            const { position } = screenPosition;
+
+            var pickedFeature = viewer.scene.pick(position);
+            var name = pickedFeature.getProperty("name");
+            var fields = name.split("_");
+            var batchId = fields[fields.length - 2];
+            var oId = fields[fields.length - 1];
+
+            console.warn("screenPosition", pickedFeature, batchId, oId);
+        }
+
+        // window.clearInterval(cutTime);
+        var cutTime = undefined;
+        var curDis = 10;
+        var g_planeTerTile = new Cesium.ClippingPlane(
+            new Cesium.Cartesian3(0.0, 1.0, 0.0),
+            -200.0
+        );
+        var g_planeDiziti = new Cesium.ClippingPlane(
+            new Cesium.Cartesian3(0.0, 1.0, 0.0),
+            -200.0
+        );
+        window.setTimeout(() => {
+            vm.initCut();
+        }, 5000);
+        function initCut() {
+            assiseLayerArr[0].clippingPlanes = new Cesium.ClippingPlaneCollection({
+                modelMatrix: assiseLayerArr[0].modelMatrix,
+                planes: [g_planeDiziti],
+                enabled: true,
+            });
+            var transformCenter = Cesium.Matrix4.getTranslation(
+                assiseLayerArr[0].root.transform,
+                new Cesium.Cartesian3()
+            );
+            webGlobe.scene.globe.clippingPlanes = new Cesium.ClippingPlaneCollection(
+                {
+                    modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
+                        transformCenter
+                    ),
+                    planes: [g_planeTerTile],
+                    enabled: true,
+                }
+            );
+
+            cutTime = window.setInterval(function () {
+                curDis++;
+                if (curDis >= 500) curDis = 500;
+                cutLayer(curDis);
+            }, 100);
+        }
+        function cutLayer(index) {
+            let distance = -1 * index * 20;
+            g_planeTerTile.distance = distance;
+            g_planeDiziti.distance = distance;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

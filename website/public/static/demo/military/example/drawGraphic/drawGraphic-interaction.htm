@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>交互式图形绘制</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //定义M3D图层对象
+        var layers;
+        //定义几何绘制控制对象
+        var entityController;
+        //定义鼠标事件管理对象
+        var mouseEventManager;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
+            layers = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
+                //是否自动定位到数据位置
+                autoReset: false,
+                //模型细节显示控制参数：较大值可提高渲染性能，较低值可提高视觉质量
+                maximumScreenSpaceError: 8
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                height: 100.85856618500283,
+                heading: -45.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+
+            //构造几何绘制控制对象
+            entityController = new CesiumZondy.Manager.EntityController({
+                viewer: webGlobe.viewer
+            });
+
+            //构造鼠标事件管理对象
+            mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        /*绘制点*/
+        function interactionDrawPnt() {
+            //清除绘制的内容
+            removeEntities();
+            //注册鼠标左键单击事件
+            mouseEventManager.registerMouseEvent('LEFT_CLICK', function(movement) {
+                //屏幕坐标转笛卡尔坐标
+                var cartesian = webGlobe.viewer.getCartesian3Position(movement.position, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                var height = cartographic.height; //模型高度
+                //添加点：经度、纬度、高程、名称、像素大小、颜色、外边线颜色、边线宽度
+                entityController.appendPoint(lng, lat, height, '点', 10, new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 1), new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 1), 2);
+            });
+            //注册鼠标右键单击事件
+            mouseEventManager.registerMouseEvent('RIGHT_CLICK', function(e) {
+                mouseEventManager.unRegisterMouseEvent('LEFT_CLICK');
+                mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
+            });
+        }
+
+        /*绘制线*/
+        function interactionDraw() {
+            //清除绘制的内容
+            removeEntities();
+
+            var pointArray = new Array();
+            var allPoint = new Array();
+            //注册鼠标左键单击事件
+            mouseEventManager.registerMouseEvent('LEFT_CLICK', function(e) {
+                //屏幕坐标转笛卡尔坐标
+                var cartesian = webGlobe.viewer.getCartesian3Position(e.position, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                pointArray.push(lng);
+                allPoint.push(lng);
+
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                pointArray.push(lat);
+                allPoint.push(lat);
+
+                //模型高度
+                var height = cartographic.height;
+                pointArray.push(height);
+                allPoint.push(height);
+
+                //添加点
+                if (pointArray.length > 3) {
+                    //绘制线（名称、点数组、线宽、线颜色、是否识别带高度的坐标、是否贴地形、附加属性）
+                    entityController.appendLine('不贴地线', pointArray, 2, new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 0.8), true, false, {});
+                    pointArray = new Array();
+                    pointArray.push(lng);
+                    pointArray.push(lat);
+                    pointArray.push(height);
+                    webGlobe.viewer.entities.removeById('moveline');
+                }
+            });
+            //注册鼠标移动事件
+            mouseEventManager.registerMouseEvent('MOUSE_MOVE', function(e) {
+                webGlobe.viewer.entities.removeById('moveline');
+                if (pointArray.length < 3) {
+                    return;
+                }
+                var cartesian = webGlobe.viewer.getCartesian3Position(e.endPosition, cartesian);
+                var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                var height = cartographic.height;
+                var firstPosition = Cesium.Cartesian3.fromDegrees(pointArray[0], pointArray[1], pointArray[2]);
+                var movePosition = Cesium.Cartesian3.fromDegrees(lng, lat, height);
+                console.log("f" + firstPosition);
+                console.log("m" + movePosition);
+                var redBox = webGlobe.viewer.entities.add({
+                    id: 'moveline',
+                    polyline: {
+                        positions: [firstPosition, movePosition],
+                        width: 2,
+                        material: Cesium.Color.YELLOW
+                    }
+                });
+            });
+            //注册鼠标右键单击事件
+            mouseEventManager.registerMouseEvent('RIGHT_CLICK', function(e) {
+                //移除所有实体
+                entityController.removeAllEntities();
+                if (allPoint.length > 3) {
+                    //绘制线（名称、点数组、线宽、线颜色、是否识别带高度的坐标、是否贴地形、附加属性）
+                    entityController.appendLine('不贴地线', allPoint, 2, new Cesium.Color(255 / 255, 0 / 255, 0 / 255, 0.8), true, false, {});
+                }
+                pointArray = new Array();
+                allPoint = new Array();
+                //注销鼠标各项事件
+                mouseEventManager.unRegisterMouseEvent('LEFT_CLICK');
+                mouseEventManager.unRegisterMouseEvent('MOUSE_MOVE');
+                mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
+            });
+        }
+
+        /*绘制多边形*/
+        function interactionDrawPolygon() {
+            //清除绘制的内容
+            removeEntities();
+            //创建区绘制工具
+            var tool = new Cesium.DrawPolygonTool(webGlobe.viewer, getDrawResult);
+            //激活工具
+            tool.activeTool();
+        }
+        /*绘制结果回调函数*/
+        function getDrawResult(entity) {
+            if (entity) {
+                console.log(entity);
+                var pointArr = new Array();
+                //坐标转换、处理
+                for (let i = 0; i < entity._points.length; i++) {
+                    let point = entity._points[i];
+                    var ellipsoid = webGlobe.viewer.scene.globe.ellipsoid;
+                    var cartesian3 = new Cesium.Cartesian3(point.x, point.y, point.z);
+                    var cartographic = ellipsoid.cartesianToCartographic(cartesian3);
+                    var lat = Cesium.Math.toDegrees(cartographic.latitude);
+                    var lng = Cesium.Math.toDegrees(cartographic.longitude);
+                    var alt = cartographic.height;
+                    pointArr.push(lng, lat, alt);
+                }
+
+                //移除所有实体
+                entityController.removeAllEntities();
+
+                //构造区对象
+                var polygon = {
+                    name: "立体区",
+                    polygon: {
+                        //坐标点
+                        hierarchy: Cesium.Cartesian3.fromDegreesArrayHeights(pointArr),
+                        //是否指定各点高度
+                        perPositionHeight: true,
+                        //颜色
+                        material: new Cesium.Color(33 / 255, 150 / 255, 243 / 255, 0.5),
+                        //轮廓线是否显示
+                        outline: true,
+                        //轮廓线颜色
+                        outlineColor: Cesium.Color.BLACK,
+                    }
+                };
+                //绘制图形通用方法：对接Cesium原生特性
+                var polygon2 = entityController.appendGraphics(polygon);
+                //清除
+                pointArr = new Array();
+            }
+        }
+
+        /*移除绘制图形 */
+        function removeEntities() {
+            //注销鼠标各项事件
+            mouseEventManager.unRegisterMouseEvent('LEFT_CLICK');
+            mouseEventManager.unRegisterMouseEvent('MOUSE_MOVE');
+            mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
+            //移除所有实体
+            entityController.removeAllEntities();
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'>
+        <div class="message" style="top: 10px; left: 10px;">
+            <button class="ButtonLib" id="drawpnt" onclick="interactionDrawPnt()">绘制点</button>
+            <button class="ButtonLib" id="drawline" onclick="interactionDraw()">绘制线</button>
+            <button class="ButtonLib" id="drawpolygon" onclick="interactionDrawPolygon()">绘制区</button>
+            <button class="ButtonLib" id="remove" onclick="removeEntities()">移除</button>
+        </div>
+    </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

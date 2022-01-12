@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>跳转定位</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        var sceneManager;
+        var Layer1, Layer2;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            var options = {
+                tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+                //瓦片初始级的列数 默认为2
+                colNum: 2,
+                //瓦片初始级的行数 默认为2
+                rowNum: 1,
+                //瓦片最大显示级数 默认为19
+                maxLevel: 19,
+                // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
+                //如瓦片裁的不是256,则需设置下面两个参数
+                tileWidth: 256,
+                tileHeight: 256
+            };
+            //添加MapGISIGServer发布的瓦片
+            var { protocol, ip, port } = window.webclient;
+            var tilelayer = new CesiumZondy.Layer.TilesLayer({
+                viewer: webGlobe.viewer
+            });
+            tilelayer.appendMapGISTile(`${protocol}://${ip}:${port}/igs/rest/mrms/tile/北京市`, options);
+
+            //构造M3D模型层管理对象
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            Layer1 = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
+                autoReset: false,
+                maximumScreenSpaceError: 8
+            });
+
+            //加载M3D地图文档（服务地址，配置参数）
+            Layer2 = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/buildings1`, {
+                autoReset: false,
+                //模型细节显示控制参数：较大值可提高渲染性能，较低值可提高视觉质量
+                maximumScreenSpaceError: 0
+            });
+
+            //初始化视图功能管理类
+            sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        function flyto() {
+            //跳转视图（北京）
+            sceneManager.flyTo(116.348, 40.236, 300000, 2);
+        }
+        function flytoComm() {
+            //跳转视图（武汉）
+            sceneManager.flyToComm(114.3, 30.6, 100000);
+        }
+        function flytoEx() {
+            //视点跳转（中地科技园）
+            sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                height: 100.85856618500283,
+                heading: -45.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+        }
+
+        function flyToFeature() {
+            sceneManager.goHome();//复位
+            //视点跳转-根据ID飞行到特定要素位置（上海）
+            sceneManager.flyToFeatureById(Layer2, 1, {
+                height: 700,
+                heading: 22,
+                pitch: -30,
+                roll: 0,
+                //调整相机角度
+                offset: new Cesium.HeadingPitchRange(
+                    Cesium.Math.toRadians(0),
+                    Cesium.Math.toRadians(-30),
+                    500
+                )
+            });
+        }
+
+        function gohome() {
+            sceneManager.goHome();//复位
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message">
+            <button id="flytoBJ" onclick="flyto()">跳转到北京</button>
+            <button id="flytoWH" onclick="flytoComm()">跳转到武汉</button>
+            <button id="flytoZD" onclick="flytoEx()">跳转到中地</button>
+            <button id="flytoSH" onclick="flyToFeature()">跳转到上海</button>
+            <button id="goHome" onclick="gohome()">复位</button>
+        </div>
+    </div>
+</body>
+
+</html>

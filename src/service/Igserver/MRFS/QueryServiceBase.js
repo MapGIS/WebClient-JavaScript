@@ -74,7 +74,7 @@ class QueryServiceBase extends ServiceBase {
      * @param restUrl - {String} 查询路径。
      * @param dataObject - {Object} 数据对象。<br>
      * @param onSuccess - {Function} 查询成功回调函数。<br>
-     * @param way - {String} 请求方式。<br>
+     * @param way - {String} 请求方式 GET|POST<br>
      * @param onError - {Function} 查询失败回调函数。<br>
      * @param resultFormat - {String} 结果返回格式。
      */
@@ -104,7 +104,7 @@ class QueryServiceBase extends ServiceBase {
      * @function   Zondy.Service.QueryServiceBase.prototype.query
      * @param onSuccess - {Function} 查询成功回调函数。
      * @param onError - {Function} 查询失败回调函数。
-     * @param requestType - {Boolean} 响应类型。
+     * @param requestType - {Boolean} 请求类型，根据Boolean判断走GET还是POST请求。
      */
     query(onSuccess, onError, requestType) {
         if (this.queryParam === null) {

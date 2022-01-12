@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>绘制带洞区</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        var holePolygon;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.40709090146727, 30.46987411408923, {
+                height: 740,
+                heading: -10,
+                pitch: -45,
+                roll: 0
+            });
+
+            //添加带洞多边形
+            add();
+        }
+
+        //添加带洞多边形
+        function add() {
+            //构造几何绘制控制对象
+            var entityController = new CesiumZondy.Manager.EntityController({
+                viewer: webGlobe.viewer
+            });
+
+            //外圈坐标点
+            var point_out = [
+                114.40328987990017, 30.479789358042233,
+                114.40255973680176, 30.473707285934392,
+                114.40905754990294, 30.473938016458956,
+                114.40971219770601, 30.479196348500707,
+                114.40328987990017, 30.479789358042233
+            ];
+
+            //内圈坐标点（可添加多圈内圈坐标点）
+            var point_in = [
+                [
+                    114.40788399535329, 30.47712432587247,
+                    114.4077781482791, 30.47586494219165,
+                    114.407971362571, 30.475534472070013,
+                    114.40835212785893, 30.47555861799931,
+                    114.40896422122259, 30.475521571235394,
+                    114.40919532034856, 30.47700722872353,
+                    114.40788399535329, 30.47712432587247
+                ],
+                [
+                    114.40582893901652, 30.478599513299535,
+                    114.40570115301699, 30.47795978731544,
+                    114.40505627000938, 30.477630222019666,
+                    114.40486536202492, 30.47709916143748,
+                    114.40521792438165, 30.47629621854226,
+                    114.40716037319945, 30.475827147089674,
+                    114.40768415656134, 30.475899923632234,
+                    114.40779762420539, 30.477127659311506,
+                    114.40724413974097, 30.477249619644148,
+                    114.40686286571515, 30.477703200065765,
+                    114.40655655628692, 30.478318639933967,
+                    114.40582893901652, 30.478599513299535
+                ]
+            ];
+
+            //添加带洞多边形
+            holePolygon = entityController.appendHolePolygon(
+                //名称
+                "带洞区",
+                //外圈坐标
+                point_out,
+                //内圈坐标
+                point_in, {
+                    //颜色
+                    material: new Cesium.Color(0 / 255, 0 / 255, 255 / 255, 0.5),
+                    //多边形相对于地球表面的高度
+                    extrudedHeight: 100
+                }
+            );
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

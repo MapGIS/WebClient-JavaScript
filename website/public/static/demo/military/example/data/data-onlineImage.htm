@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>添加在线图片数据</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+            var options = {
+                tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+                //瓦片初始级的列数 默认为2
+                colNum: 2,
+                //瓦片初始级的行数 默认为2
+                rowNum: 1,
+                //瓦片最大显示级数 默认为19
+                maxLevel: 19,
+                // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
+                //如瓦片裁的不是256,则需设置下面两个参数
+                tileWidth: 256,
+                tileHeight: 256
+            };
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //显示鼠标位置控件
+            sceneManager.showPosition("coordinateDiv");
+
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
+                viewer: webGlobe.viewer
+            });
+
+            //通过地址添加图片，支持本地图片和网络图片
+            var imgObj = commonDataManager.appendImageByUrl(
+                //图片URL
+                'http://5b0988e595225.cdn.sohucs.com/images/20180917/455c51316ec24a97958a254dc66c18f6.jpeg',
+                //东经
+                114.3473,
+                //北纬
+                30.5479,
+                //西经
+                114.4637,
+                //南纬
+                30.6120
+            );
+            //定位跳转
+            sceneManager.flyToComm(114.4, 30.55, 30000);
+
+            //通过removeImage()删除
+            //commonDataManager.removeImage(imgObj,false);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <div id="coordinateDiv" class="coordinateClass">
+</body>
+
+</html>

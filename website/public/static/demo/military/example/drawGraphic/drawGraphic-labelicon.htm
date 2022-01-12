@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>地标绘制</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        var labelIcon1, labelIcon2;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "vec"
+            });
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.36538636970745, 30.557492022519625, {
+                height: 428.679040624451,
+                heading: 0,
+                pitch: -42,
+                roll: 0
+            });
+
+            //添加地标
+            add();
+        }
+
+        //添加地标
+        function add() {
+            //构造注记图层管理对象
+            var labelLayer = new CesiumZondy.Manager.LabelLayer({
+                viewer: webGlobe.viewer
+            });
+
+            //方法一
+            labelIcon1 = labelLayer.appendLabelIcon(
+                //文本内容
+                "湖北省老年大学",
+                //经度、纬度、高度
+                114.3645, 30.5618, 0,
+                //文字大小、字体
+                "16pt 宋体",
+                //文字颜色
+                new Cesium.Color(0 / 255, 0 / 255, 0 / 255, 0.8),
+                //图片地址
+                "./static/data/picture/icon.png",
+                //图片宽度、高度
+                50, 50,
+                //最远显示距离：相机到注记的距离大于该值 注记不显示
+                10000000,
+                //最近显示距离：相机到注记的距离小于该值 注记不显示
+                1,
+                //图片位置：'center','top','bottom'
+                'center'
+            );
+
+            //位置（x、y、z）
+            var position = Cesium.Cartesian3.fromDegrees(114.3664, 30.5631, 10);
+            //图片对象
+            var billboardGraphics = new Cesium.BillboardGraphics({
+                //图片地址
+                image: "./static/data/picture/icon.png",
+                //图片宽度
+                width: 64,
+                //图片高度
+                height: 64,
+                //随远近缩放
+                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(1.5e5, 3.0, 1.5e7, 0.5),
+                //随远近隐藏
+                translucencyByDistance: new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0),
+            });
+            //文本对象
+            var labelGraphics = new Cesium.LabelGraphics({
+                //文本
+                text: "湖北省博物馆",
+                //文字大小、字体
+                font: "20pt 宋体",
+                //文字颜色
+                fillColor: Cesium.Color.BLACK,
+                //文本垂直位置
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                //文本水平位置
+                horizontalOrigin: Cesium.HorizontalOrigin.BOTTOM,
+                //偏移量
+                pixelOffset: new Cesium.Cartesian2(0.0, -64 / 4), //x,y方向偏移 相对于屏幕
+                //随远近缩放
+                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
+                //随远近隐藏
+                translucencyByDistance: new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0)
+            });
+            //方法二：添加图标注记（文字内容、描述、位置、图片对象、文本对象）
+            labelIcon2 = labelLayer.appendLabelIconComm(
+                "湖北省博物馆",
+                "坐落于湖北省武汉市武昌区东湖风景区",
+                position,
+                billboardGraphics,
+                labelGraphics
+            );
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

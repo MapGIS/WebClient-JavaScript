@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>瓦片延申</title>
+  <script src="./static/libs/include-mapboxgl-local.js"></script>
+  <link href="./static/demo/mapboxgl/example/style.css" rel="stylesheet" type="text/css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map">
+    <div id="mouse-position">
+    </div>
+  </div>
+  <script>
+    var { protocol, ip, port } = window.webclient;
+    var map = new mapboxgl.Map({
+      container: 'map', // 绑定div
+      style: {
+        "version": 8,
+        "name": "世界行政区 Style",
+        "sources": {
+          "世界行政区": {
+            "type": "vector",
+            "tiles": [
+              "http://develop.smaryun.com:6163/igs/rest/mrms/tile/世界行政区/{z}/{y}/{x}?type=cpbf"
+            ],
+            "minZoom": 0,
+            "maxZoom": 4
+          }
+        },
+        "sprite": "http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/sprite",
+        "glyphs": "http://develop.smaryun.com:6163/igs/rest/mrms/vtiles/fonts/{fontstack}/{range}.pbf",
+        "layers": [
+          {
+            "id": "背景",
+            "type": "background",
+            "paint": {
+              "background-color": "rgba(247, 247, 247, 1)"
+            }
+          },
+          {
+            "id": "世界海洋",
+            "type": "fill",
+            "source": "世界行政区",
+            "source-layer": "世界海洋",
+            "minzoom": 0,
+            "maxzoom": 4,
+            "layout": {
+              "visibility": "visible"
+            },
+            "paint": {
+              "fill-outline-color": "rgba(221, 92, 92, 1)",
+              "fill-color": "rgba(241, 109, 122, 1)"
+            }
+          },
+          {
+            "id": "世界行政区",
+            "type": "fill",
+            "source": "世界行政区",
+            "source-layer": "世界行政区",
+            "minzoom": 0,
+            "maxzoom": 4,
+            "layout": {
+              "visibility": "visible"
+            },
+            "paint": {
+              "fill-outline-color": "rgba(221, 92, 92, 1)",
+              "fill-color": "rgba(184, 241, 237, 1)"
+            }
+          },
+          {
+            "id": "中国",
+            "type": "fill",
+            "source": "世界行政区",
+            "source-layer": "中国",
+            "minzoom": 0,
+            "maxzoom": 8, //往后延申设置4级为8级
+            "layout": {
+              "visibility": "visible"
+            },
+            "paint": {
+              "fill-outline-color": "rgba(221, 92, 92, 1)",
+              "fill-color": "rgba(225, 98, 47, 1)"
+            }
+          }
+        ],
+        "id": "世界行政区-id",
+        "crs": null,
+        "path": "D:\\平台二次开发部门资源\\阿里云服务器数据\\new\\webClient\\世界行政区\\世界行政区"
+      },
+      center: [106.563777, 29.578285],
+      zoom: 3
+    });
+    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+    //注册鼠标移动事件
+    map.on('mousemove', function (e) {
+      //经纬度坐标转web墨卡托
+      const earthRad = 6378137.0;
+      const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+      const a = e.lngLat.lat * Math.PI / 180;
+      const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+      document.getElementById('mouse-position').innerHTML = "X轴：" + x.toFixed(2) + "，Y轴：" + y.toFixed(2);
+    });
+  </script>
+
+
+</body>
+
+</html>

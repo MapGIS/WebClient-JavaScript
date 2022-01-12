@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>常用控件</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //显示鼠标位置控件
+            sceneManager.showPosition("coordinateDiv");
+
+            //初始化通用功能管理类
+            var commFun = new CesiumZondy.Manager.CommonFuncManager({
+                viewer: webGlobe.viewer
+            });
+            //显示导航控件（罗盘、场景导航、比例尺）
+            var navigation = commFun.createNavigationTool({
+                enableCompass: true,
+                enableZoomControls: true,
+                enableDistanceLegend: true,
+                enableCompassOuterRing: true
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <div id="coordinateDiv" class="coordinateClass"> </div>
+</body>
+
+</html>

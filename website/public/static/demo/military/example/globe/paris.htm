@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var terrainlayer = undefined;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl("GlobeView", {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition("coordinate_location");
+            if (terrainlayer) webGlobe.removeLayer(terrainlayer);
+            terrainlayer = webGlobe.append(
+                "http://localhost:6163/igs/rest/g3d/250DEM_3D", {}
+            );
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            builddnglayer2 = webGlobe.append(
+                "http://localhost:6163/igs/rest/g3d/巴黎", {
+                    autoReset: true,
+                    loaded: function(layer) {
+                        var boundingSphere = layer.boundingSphere;
+
+                        var cartographic = new Cesium.Cartographic.fromCartesian(
+                            layer.boundingSphere.center
+                        );
+                        var surface = new Cesium.Cartesian3.fromRadians(
+                            cartographic.longitude,
+                            cartographic.latitude,
+                            0.0
+                        );
+                        var offset = new Cesium.Cartesian3.fromRadians(
+                            cartographic.longitude + 0.000125,
+                            cartographic.latitude - 0.00001, -20
+                        );
+                        var translation = new Cesium.Cartesian3.subtract(
+                            offset,
+                            surface,
+                            new Cesium.Cartesian3()
+                        );
+                        layer.modelMatrix = new Cesium.Matrix4.fromTranslation(
+                            translation
+                        );
+                    },
+                }
+            );
+
+            initLabel();
+            initBounds();
+
+            webGlobe.flyToEx(2.339970699590168, 48.84334916984258, {
+                height: 1000,
+                heading: 30,
+                pitch: -40,
+                roll: 0,
+            });
+        }
+
+        function initBounds() {
+            webGlobe.viewer.dataSources.add(
+                Cesium.GeoJsonDataSource.load(
+                    "./static/data/geojson/paris_bounds.geojson", {
+                        stroke: Cesium.Color.HOTPINK,
+                        fill: Cesium.Color.PINK.withAlpha(0.4),
+                        strokeWidth: 3,
+                    }
+                )
+            );
+        }
+
+        function initLabel() {
+            var height, color;
+            const colors = [
+                Cesium.Color.ORANGE.withAlpha(0.7),
+                Cesium.Color.GREEN.withAlpha(0.7),
+                Cesium.Color.GREY.withAlpha(0.7),
+            ];
+            $.get("./static/data/geojson/paris_point.geojson", function(
+                geojson
+            ) {
+                for (var i = 0; i < geojson.features.length; i += 50) {
+                    point = geojson.features[i].geometry.coordinates;
+                    label = geojson.features[i].properties.name;
+                    height = 500 * Math.random();
+                    color = (Math.random() * 100) % 3;
+                    color = color.toFixed();
+
+                    webGlobe.viewer.entities.add({
+                        name: "1",
+                        position: new Cesium.Cartesian3.fromDegrees(
+                            point[0],
+                            point[1],
+                            height
+                        ),
+                        label: {
+                            text: label,
+                            showBackground: true,
+                            font: "20px 楷体",
+                            //style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                            backgroundColor: colors[color],
+                            scale: 0.8,
+                            //outlineColor: Cesium.Color.BLACK.withAlpha(0.5),
+                            //outlineWidth: 1.0,
+                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                            show: true,
+                        },
+                        polyline: {
+                            positions: [
+                                Cesium.Cartesian3.fromDegrees(point[0], point[1], 0),
+                                Cesium.Cartesian3.fromDegrees(point[0], point[1], height),
+                            ],
+                            material: new Cesium.PolylineDashMaterialProperty({
+                                color: colors[color],
+                                dashLength: 8.0,
+                            }),
+                            width: 2.0,
+                            show: true,
+                        },
+                        point: {
+                            show: true,
+                        },
+                    });
+                }
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

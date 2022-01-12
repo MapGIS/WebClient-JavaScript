@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>M3D数据单体查询</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //定义三维瓦片类
+        var layerList;
+        //定义鼠标事件管理对象
+        var mouseEventManager;
+        //定义分析功能管理对象
+        var analysisManager;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
+            layerList = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/buildings1`, {
+                    maximumScreenSpaceError: 1
+                }
+            );
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(120.99547335130228, 31.347765222296907, {
+                height: 190,
+                heading: 155,
+                pitch: -20,
+                roll: 0
+            });
+
+            pickModel();
+        }
+
+        function pickModel() {
+            //构造鼠标事件管理对象
+            mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+                viewer: webGlobe.viewer
+            });
+            //注册鼠标左键单击事件
+            mouseEventManager.registerMouseEvent('LEFT_CLICK', highlightPicking);
+            //注册鼠标右键单击事件
+            mouseEventManager.registerMouseEvent("RIGHT_CLICK", stopPick);
+
+            //构造分析功能管理对象
+            analysisManager = new CesiumZondy.Manager.AnalysisManager({
+                viewer: webGlobe.viewer
+            });
+        }
+
+        //单体化模型信息对象
+        var current = {
+            feature: undefined,
+            originalColor: new Cesium.Color()
+        }
+        var currentLayer;
+
+        /*鼠标左键单击事件回调：模型高亮*/
+        function highlightPicking(movement) {
+            //根据鼠标点击位置选择对象
+            var pickedFeature = webGlobe.scene.pick(movement.position);
+
+            //判断current对象中要素有值，该值和鼠标点击位置不相同
+            if (Cesium.defined(current.feature) && (current.feature !== pickedFeature)) {
+                //获取要素的瓦片集
+                currentLayer = [current.feature.tileset];
+                //获取名称属性
+                var title = current.feature.getProperty('name');
+                //采用_分割
+                var values = title.split('_');
+                //获取数组中第三个数值，即为要素的ID
+                var vlueNumber = parseInt(values[2]);
+                //构建数组
+                var idList = [vlueNumber];
+                //结束闪烁
+                analysisManager.stopCustomDisplay(currentLayer);
+                current.feature = undefined;
+            }
+
+            //判断点击位置是否有值，该值和鼠标点击位置不相同
+            if (Cesium.defined(pickedFeature) && (current.feature !== pickedFeature)) {
+                current.feature = pickedFeature;
+                //获取要素的瓦片集
+                currentLayer = [current.feature.tileset];
+                //获取名称属性
+                var title = current.feature.getProperty('name');
+                //采用_分割
+                var values = title.split('_');
+                //获取数组中第三个数值，即为要素的ID
+                var vlueNumber = parseInt(values[2]);
+                //构建数组
+                var idList = [vlueNumber];
+                //构建参数：设置颜色
+                var options = {
+                        //高亮颜色
+                        color: new Cesium.Color(255 / 255, 255 / 255, 0 / 255, 1),
+                        //高亮模式：REPLACE为替换
+                        colorBlendMode: Cesium.Cesium3DTileColorBlendMode.REPLACE
+                    }
+                    //结束闪烁
+                analysisManager.stopCustomDisplay(currentLayer);
+                //开始闪烁查找到的模型
+                analysisManager.startCustomDisplay(currentLayer, idList, options);
+            }
+        }
+
+        function stopPick() {
+            if (currentLayer) {
+                //结束闪烁
+                analysisManager.stopCustomDisplay(currentLayer);
+                //屏蔽鼠标单击事件
+                mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

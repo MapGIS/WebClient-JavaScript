@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>交互式移动M3D数据</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //定义三维瓦片类
+        var modelLayers;
+        // 视图模型
+        var viewModel;
+        //定义鼠标事件管理对象
+        var mouseEventManager;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //开启地形深度检测
+            webGlobe.viewer.scene.globe.depthTestAgainstTerrain = true;
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //构造M3D模型层管理对象（视图）
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
+            modelLayers = m3dLayer.append(
+                `${protocol}://${ip}:${port}/igs/rest/g3d/钻孔分层点_Sur_000_Ent`, {
+                    maximumScreenSpaceError: 1
+                }
+            );
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(113.15093599393954, 29.914165584257123, {
+                height: 6155,
+                heading: -40,
+                pitch: -23,
+                roll: 0
+            });
+
+            //移动模型
+            movelModel();
+        }
+
+        function movelModel() {
+            //构造鼠标事件管理对象
+            mouseEventManager = new CesiumZondy.Manager.MouseEventManager({
+                viewer: webGlobe.viewer
+            });
+            //注册鼠标左键单击事件
+            mouseEventManager.registerMouseEvent('LEFT_CLICK', leftClick);
+        }
+
+        /*移动模型*/
+        function leftClick(movement) {
+            if (Cesium.defined(viewModel)) {
+                return;
+            }
+            //创建平移编辑器
+            var transformEditor = new Cesium.TransformEditor({
+                container: webGlobe.viewer.container,
+                scene: webGlobe.viewer.scene,
+                transform: modelLayers[0]._root.transform,
+                boundingSphere: modelLayers[0].boundingSphere
+            });
+            //获取模型视图对象
+            viewModel = transformEditor.viewModel;
+            //设置模型视图平移
+            viewModel.setModeTranslation();
+            //激活工具
+            viewModel.activate();
+
+            //注册鼠标右键单击事件
+            mouseEventManager.registerMouseEvent('RIGHT_CLICK', rightClick);
+        }
+
+        function rightClick(movement) {
+            if (Cesium.defined(viewModel)) {
+                //停用工具
+                viewModel.deactivate();
+                //销毁
+                viewModel.destroy();
+                viewModel = undefined;
+            }
+            //注销鼠标右键单击事件
+            mouseEventManager.unRegisterMouseEvent('RIGHT_CLICK');
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'> </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

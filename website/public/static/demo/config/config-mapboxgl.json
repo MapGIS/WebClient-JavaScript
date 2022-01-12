@@ -453,6 +453,14 @@
                             "detail": "",
                             "icon": "mapboxquery.png",
                             "update": "最后更新时间：2021-04-07"
+                        },
+                        {
+                            "name": "瓦片延申",
+                            "file": "tiledelay",
+                            "diffcult": "1",
+                            "detail": "",
+                            "icon": "tiledelay.png",
+                            "update": "最后更新时间：2021-12-16"
                         }
                     ]
                 },

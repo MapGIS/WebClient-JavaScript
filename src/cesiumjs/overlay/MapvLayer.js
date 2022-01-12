@@ -15,7 +15,7 @@ var idIndex = 0;
  * @param {Boolean} [mapVOptions.cesium.postRender=false] 是否实时渲染
  * @param {Boolean} [mapVOptionscesium.cesium.postRenderFrame=30] 每间隔多少帧渲染一次
  * @param container - {Element} 外部传入的div;外接的方式使用mapv
- * @example 
+ * @example
  *  // 构建对应的dataset
     var dataSet = new mapv.DataSet(data);
 
@@ -140,7 +140,7 @@ export default class MapvLayer {
             this.scene.camera.moveStart.removeEventListener(this.postStartEvent, this);
             this.scene.camera.moveEnd.removeEventListener(this.postEndEvent, this);
         } else {
-            let handler = this.handler;    
+            let handler = this.handler;
             if (handler) {
                 handler.removeInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.WHEEL);
                 handler.removeInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);
@@ -274,10 +274,19 @@ export default class MapvLayer {
         canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = this.mapVOptions.zIndex || 100;
 
-        canvas.width = parseInt(this.map.canvas.width);
-        canvas.height = parseInt(this.map.canvas.height);
-        canvas.style.width = this.map.canvas.style.width;
-        canvas.style.height = this.map.canvas.style.height;
+        // canvas.width = parseInt(this.map.canvas.width);
+        // canvas.height = parseInt(this.map.canvas.height);
+        // canvas.style.width = this.map.canvas.style.width;
+        // canvas.style.height = this.map.canvas.style.height;
+        canvas.width =
+            parseInt(this.map.canvas.width) ||
+            parseInt(this.map.container.offsetWidth) * this.devicePixelRatio;
+        canvas.height =
+            parseInt(this.map.canvas.height) ||
+            parseInt(this.map.container.offsetHeight) * this.devicePixelRatio;
+        canvas.style.width = parseInt(this.map.container.offsetWidth) + 'px';
+        canvas.style.height = parseInt(this.map.container.offsetHeight) + 'px';
+
         var devicePixelRatio = this.devicePixelRatio;
         if (this.mapVOptions.context == '2d') {
             canvas.getContext(this.mapVOptions.context).scale(devicePixelRatio, devicePixelRatio);
@@ -296,10 +305,19 @@ export default class MapvLayer {
         canvas.style.pointerEvents = 'none';
         canvas.style.zIndex = this.mapVOptions.zIndex || 100;
 
-        canvas.width = parseInt(this.map.canvas.width);
-        canvas.height = parseInt(this.map.canvas.height);
-        canvas.style.width = this.map.canvas.style.width;
-        canvas.style.height = this.map.canvas.style.height;
+        // canvas.width = parseInt(this.map.canvas.width);
+        // canvas.height = parseInt(this.map.canvas.height);
+        // canvas.style.width = this.map.canvas.style.width;
+        // canvas.style.height = this.map.canvas.style.height;
+        canvas.width =
+            parseInt(this.map.canvas.width) ||
+            parseInt(this.map.container.offsetWidth) * this.devicePixelRatio;
+        canvas.height =
+            parseInt(this.map.canvas.height) ||
+            parseInt(this.map.container.offsetHeight) * this.devicePixelRatio;
+        canvas.style.width = parseInt(this.map.container.offsetWidth) + 'px';
+        canvas.style.height = parseInt(this.map.container.offsetHeight) + 'px';
+
         var devicePixelRatio = this.devicePixelRatio;
         if (this.mapVOptions.context == '2d') {
             canvas.getContext('2d').scale(devicePixelRatio, devicePixelRatio);
@@ -378,10 +396,18 @@ export default class MapvLayer {
         canvas.style.position = 'absolute';
         canvas.style.top = '0px';
         canvas.style.left = '0px';
-        canvas.width = parseInt(this.map.canvas.width);
-        canvas.height = parseInt(this.map.canvas.height);
+        // canvas.width = parseInt(this.map.canvas.width);
+        // canvas.height = parseInt(this.map.canvas.height);
         //canvas.style.width = this.map.canvas.style.width;
         //canvas.style.height = this.map.canvas.style.height;
+        canvas.width =
+            parseInt(this.map.canvas.width) ||
+            parseInt(this.map.container.offsetWidth) * this.devicePixelRatio;
+        canvas.height =
+            parseInt(this.map.canvas.height) ||
+            parseInt(this.map.container.offsetHeight) * this.devicePixelRatio;
+        canvas.style.width = parseInt(this.map.container.offsetWidth) + 'px';
+        canvas.style.height = parseInt(this.map.container.offsetHeight) + 'px';
         var devicePixelRatio = this.devicePixelRatio;
         if (this.mapVOptions.context == '2d') {
             canvas.getContext('2d').scale(devicePixelRatio, devicePixelRatio);

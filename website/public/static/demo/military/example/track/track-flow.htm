@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>模型漫游</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        //模型实体
+        var modelEntity;
+        //分析功能管理对象
+        var analysisManager;
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //漫游轨迹点
+            var positionArr = [
+                [114.39359797975894, 30.507575995556643],
+                [114.39395405768722, 30.507631458402837],
+                [114.39421539834098, 30.507786032454288],
+                [114.39439956698448, 30.50798799370223],
+                [114.39450246598494, 30.50825683754713],
+                [114.39448633170721, 30.50855374173589],
+                [114.39437547384766, 30.508800606909116],
+                [114.39413300267934, 30.509014030609567],
+                [114.39376685148125, 30.509143038857484],
+                [114.39330617072123, 30.509135232363864],
+                [114.3929675541167, 30.508945633393413],
+                [114.39278399763425, 30.508710167384862],
+                [114.39268850456028, 30.508379845847685],
+                [114.39273528017995, 30.508116159245535],
+                [114.39287374070548, 30.507861867309476],
+                [114.39318742456749, 30.507657376880317],
+                [114.39359797975894, 30.507575995556643]
+            ];
+
+            //初始化分析功能管理类
+            analysisManager = new CesiumZondy.Manager.AnalysisManager({
+                viewer: webGlobe.viewer
+            });
+            //模型漫游
+            modelEntity = analysisManager.cruiseModel(
+                //模型URL地址
+                './static/data/model/GroundVehicle.glb',
+                //漫游点集
+                positionArr,
+                //是否显示漫游路径
+                true,
+                //漫游时钟频率
+                10
+            );
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(114.39362878111456, 30.50652200986956, {
+                height: 280,
+                heading: -1,
+                pitch: -60,
+                roll: 0
+            });
+
+            /*开始漫游*/
+            analysisManager.startCruiseModel();
+            for (var length = 0; length < modelEntity.length - 1; length++) {
+                modelEntity[length]._show = false;
+            }
+            modelEntity[modelEntity.length - 1]._path._material._color._value = new Cesium.Color(0.3, 0.4, 0.5, 0.8);
+            modelEntity[modelEntity.length - 1]._path._material._glowPower._value = 3;
+        }
+
+        /*停止漫游*/
+        function stopCruiseModel() {
+            analysisManager.stopCruiseModel();
+        }
+
+        /*清空漫游*/
+        function clearCruiseModel() {
+            if (modelEntity) {
+                analysisManager.clearCruiseModel(modelEntity);
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id="GlobeView">
+    </div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>

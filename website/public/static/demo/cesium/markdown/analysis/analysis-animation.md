@@ -1,5 +1,18 @@
 ## 动画漫游
 
+### 常见问题
+1. 轨迹出来了，模型不移动
+  ![speed](../../static/demo/cesium/markdown/analysis/bug/speed.png)
+2. 轨迹出来了，模型看不见
+   1. 模型太大，还在网络传输中
+   ![speed](../../static/demo/cesium/markdown/analysis/bug/delay.png)
+   2. 缺失模型，网络报错
+   ![speed](../../static/demo/cesium/markdown/analysis/bug/nofind.png)
+3. 模型下载地址
+   1. [MapGIS默认模型](/#/total/download)
+   2. https://sketchfab.com/3d-models?date=week&features=downloadable&sort_by=-likeCount 
+   3. https://free3d.com/zh/ 
+
 ### 示例功能
 
 &ensp;&ensp;&ensp;&ensp;此功能用于在三维场景中实现动画漫游功能，即让模型沿着路径漫游，默认为第一人称漫游，可修改动画漫游方式。本示例实现让飞机模型按既定的路径漫游。在实际应用中，可结合具体应用场景开发，如绘制路径进行动画漫游等功能需求等。

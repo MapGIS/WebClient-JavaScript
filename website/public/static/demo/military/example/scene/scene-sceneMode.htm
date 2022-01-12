@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>场景视图模式</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!-- Cesium脚本库文件引用 -->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var webGlobe;
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+        }
+
+        function changeSceneMode() {
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            let mode = document.getElementById("modeSelect").value;
+            //根据选择切换场景视图模式
+            if (mode == '3D') {
+                //切换场景模式为三维球面
+                sceneManager.changeSceneMode('3D', 1);
+
+            } else if (mode === '3DC') {
+                //切换场景模式为三维平面
+                sceneManager.changeSceneMode('COLUMBUS_VIEW', 1);
+
+            } else if (mode === '2D') {
+                //切换场景模式为二维地图
+                sceneManager.changeSceneMode('2D', 1);
+            }
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <!-- 菜单 -->
+        <div id="menu" class="message">
+            <select name="changeMode" id="modeSelect" onchange="changeSceneMode()">
+                <option value="3D">三维球面</option>
+                <option value="3DC">三维平面</option>
+                <option value="2D">二维模式</option>
+            </select>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>批量添加Gltf模型</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误
+        'use strict';
+
+        //定义三维场景控件对象
+        var webGlobe;
+        var modelSource = [];
+
+        //加载三维场景
+        function init() {
+            //构造三维视图对象（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {});
+
+            //构造视图功能管理对象（视图）
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //设置鼠标位置信息展示控件：经纬度、高程、视角高度（容器div的id）
+            sceneManager.showPosition('coordinate_location');
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            var osm = thirdPartyLayer.appendOsmMap();
+
+            //视点跳转（经度，纬度，视角高度，方位角，俯仰角，翻滚角）
+            sceneManager.flyToEx(118.04234916552755, 42.6372939021426, {
+                height: 80,
+                heading: -103,
+                pitch: -4,
+                roll: 0
+            });
+
+            //添加模型
+            add();
+        }
+
+        //添加模型
+        function add() {
+            //开启动画：如果模型自带动画，需开启此参数
+            webGlobe.viewer.clock.shouldAnimate = true;
+
+            //多个模型
+            var models = [{
+                "id": "document",
+                "name": "Models",
+                "version": "1.0"
+            }, {
+                //模型的ID
+                "id": "aerogenerator1",
+                //模型的名字
+                "name": "风机1",
+                //模型要添加的坐标位置
+                "position": {
+                    "cartographicDegrees": [118.0385, 42.6374, -5]
+                },
+                //模型文件参数
+                "model": {
+                    //模型文件的路径
+                    "gltf": "./static/data/model/donghua.gltf",
+                    //模型的比例
+                    "scale": 50,
+                    //模型最小显示的像素
+                    "minimumPixelSize": 16
+                },
+                //描述
+                "description": "这是1号风机"
+            }, {
+                //模型的ID
+                "id": "aerogenerator2",
+                //模型的名字
+                "name": "风机2",
+                //模型要添加的坐标位置
+                "position": {
+                    "cartographicDegrees": [118.0356, 42.6354, -5]
+                },
+                //模型文件参数
+                "model": {
+                    //模型文件的路径
+                    "gltf": "./static/data/model/donghua.gltf",
+                    //模型的比例
+                    "scale": 50,
+                    //模型最小显示的像素
+                    "minimumPixelSize": 16
+                },
+                //描述
+                "description": "这是2号风机"
+            }, {
+                //模型的ID
+                "id": "aerogenerator3",
+                //模型的名字
+                "name": "风机3",
+                //模型要添加的坐标位置
+                "position": {
+                    "cartographicDegrees": [118.0329, 42.6333, -5]
+                },
+                //模型文件参数
+                "model": {
+                    //模型文件的路径
+                    "gltf": "./static/data/model/donghua.gltf",
+                    //模型的比例
+                    "scale": 50,
+                    //模型最小显示的像素
+                    "minimumPixelSize": 16
+                },
+                //描述
+                "description": "这是3号风机"
+            }];
+
+            //构造通用数据管理对象
+            var commonDataManager = new CesiumZondy.Manager.CommonDataManager({
+                viewer: webGlobe.viewer
+            });
+            //添加多个模型
+            modelSource = commonDataManager.appendModels(models);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id='GlobeView'></div>
+    <!--位置信息容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+    </div>
+</body>
+
+</html>
