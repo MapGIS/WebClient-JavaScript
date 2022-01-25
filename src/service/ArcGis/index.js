@@ -16,6 +16,7 @@ import { ArcGisMultipoint } from './Multipoint';
 import { ArcGisPolyline } from './Polyline';
 import { ArcGisGraphic } from './Graphic';
 import { ArcGisExtent } from './Extent';
+import {ArcGisCircle} from "./Circle";
 
 export {
     ArcGisFeatureLayer,
@@ -30,6 +31,7 @@ export {
     ArcGisMultipoint,
     ArcGisPolyline,
     ArcGisPolygon,
+    ArcGisCircle,
     ArcGisGraphic,
     ArcGisExtent
 };
@@ -47,6 +49,7 @@ const ArcGis = {
     ArcGisMultipoint,
     ArcGisPolyline,
     ArcGisPolygon,
+    ArcGisCircle,
     ArcGisGraphic,
     ArcGisExtent
 };
