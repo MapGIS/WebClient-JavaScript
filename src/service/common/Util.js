@@ -1057,11 +1057,17 @@ var formatQuery = function (query,url,paramArr,formatObj) {
                     if(param.type === "polyline"){
                         geometry["paths"] = query[key]["paths"];
                     }
+                    if(param.type === "circle"){
+                        param.type = "polygon";
+                        geometry["rings"] = query[key]["rings"];
+                    }
                     geometry["spatialReference"] = query[key]["spatialReference"];
                     param = geometry;
                     url += "&geometryType=esriGeometry" + query[key]["type"].charAt(0).toUpperCase() + query[key]["type"].slice(1);
+                    param = encodeURI(JSON.stringify(param));
+                }else {
+                    param = JSON.stringify(param);
                 }
-                param = JSON.stringify(param);
             }
             if(formatObj && formatObj.hasOwnProperty(key)){
                 keyStr = formatObj[key];
