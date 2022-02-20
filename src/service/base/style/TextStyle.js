@@ -1,7 +1,8 @@
 import { extend } from '../../common/Util';
 import { mapgis } from '../common/base';
+import { FontStyle } from './FontStyle';
 import { VectorStyle } from './VectorStyle';
-import { TextPlacement, Align } from './Enum';
+import { TextPlacement, HorizontalAlignment, VerticalAlignment } from './Enum';
 
 /**
  * 点样式
@@ -10,6 +11,7 @@ import { TextPlacement, Align } from './Enum';
  * @param {String} [fontFamily = 宋体] 字体
  * @param {String} [fontColor = #000000] 字体颜色，16进制颜色或rgb值或rgba值，默认#000000，黑色
  * @param {Number} [fontSize = 12] 字体大小，默认12
+ * @param {Number} [angle = 0] 文字角度，默认0
  * @param {String} [spacing = 0] 文字间距，默认0
  * @param {Number} [rotate = 0] 文字间距，默认0
  * @param {Number} [xOffset = 0] X轴偏移，默认0
@@ -26,22 +28,88 @@ export default class TextStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
+        const { angle = 0, color = '#000000', font } = options;
+        const { backgroundColor, borderLineColor, borderLineSize } = options;
+        const { haloColor = '#000000', haloSize = 0, horizontalAlignment = HorizontalAlignment.center } = options;
+        const { kerning = true, lineHeight = 1.0, lineWidth = 192 } = options;
+        const { rotated = false, text = '', type = 'text', verticalAlignment = VerticalAlignment.baseline } = options;
+        const { xoffset = 0, yoffset = 0 } = options;
+
+        this.angle = angle;
+        this.backgroundColor = backgroundColor;
+        this.borderLineColor = borderLineColor;
+        this.borderLineSize = borderLineSize;
+        this.color = color;
+        this.font = font || new FontStyle();
+        this.haloColor = haloColor;
+        this.haloSize = haloSize;
+        this.horizontalAlignment = horizontalAlignment;
+        this.kerning = kerning;
+        this.lineHeight = lineHeight;
+        this.lineWidth = lineWidth;
+        this.rotated = rotated;
+        this.text = text;
         this.type = 'text';
-        this.fontFamily = '宋体';
-        this.fontColor = '#000000';
-        this.fontSize = 12;
-        this.spacing = 0;
-        this.rotate = 0;
-        this.xOffset = 0;
-        this.yOffset = 0;
-        this.lineHeight = 1.2;
-        this.maxWidth = 10;
-        this.align = Align.center;
-        this.haloBlur = 0;
-        this.haloColor = '#000000';
-        this.haloWidth = 0;
-        this.placement = TextPlacement.point;
+        this.verticalAlignment = verticalAlignment;
+        this.xoffset = xoffset;
+        this.yoffset = yoffset;
+
         extend(this, options);
+    }
+
+    /**
+     * @param  {Boolean} [highlight = false] 是否激活高亮样式
+     * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#circle
+     * @returns MapboxGL点格式的样式
+     */
+    toMapboxStyle(options) {
+        options = options || {};
+        const { highlight = false } = options;
+        const { angle, color, font } = this;
+        const { family, size, style, weight } = font;
+        const { backgroundColor, borderLineColor, borderLineSize } = this;
+        const { haloColor, haloSize, horizontalAlignment } = this;
+        const { kerning, lineHeight, lineWidth } = this;
+        const { rotated, text, type, verticalAlignment } = this;
+        const { xoffset, yoffset } = this;
+
+        let mapstyle = {
+            paint: {
+                'text-color': color,
+                'text-halo-color': haloColor,
+                'text-halo-width': haloSize
+            },
+            layout: {
+                'text-rotate': angle,
+                'text-font': [family, family],
+                'text-line-height': lineHeight,
+                'text-max-width': lineWidth,
+                'text-field': text,
+                'text-offset': [xoffset, yoffset],
+                'text-size': size
+            }
+        };
+        if (highlight) {
+            let highsize = size * 1.5;
+            mapstyle.paint['text-color'] = ['case', ['boolean', ['feature-state', 'hover'], false], color, 'rgba(0, 0, 0, 0)'];
+            // mapstyle.layout['text-size'] = ['case', ['boolean', ['feature-state', 'hover'], false], highsize, 0];
+        }
+        return mapstyle;
+    }
+
+    /**
+     * @link https://sandcastle.cesium.com/index.html?src=Circles%20and%20Ellipses.html&label=Geometries
+     * @returns Cesium点格式的样式
+     */
+    toCesiumStyle(Cesium) {
+        let { color = '#FFFFFF', opacity = 1, radius, outlineColor = '#000000', outlineWidth = 1, outlineOpacity = 1, show = true } = this;
+        return {
+            show: show,
+            pixelSize: radius,
+            color: Cesium.Color.fromCssColorString(color).withAlpha(opacity),
+            outlineWidth: outlineWidth,
+            outlineColor: Cesium.Color.fromCssColorString(outlineColor).withAlpha(outlineOpacity)
+        };
     }
 }
 

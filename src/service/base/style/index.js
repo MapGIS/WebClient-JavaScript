@@ -15,7 +15,8 @@ import { LineStyle } from './LineStyle';
 import { FillStyle } from './FillStyle';
 import { ExtrudeStyle } from './ExtrudeStyle';
 import { TextStyle } from './TextStyle';
+import { FontStyle } from './FontStyle';
 
 export { Align, Anchor, LineCap, LineJoin, TextPlacement };
 export { Symbol, Shadow };
-export { VectorStyle, PointStyle, MarkerStyle, ModelStyle, LineStyle, FillStyle, ExtrudeStyle, TextStyle, TrackStyle };
+export { VectorStyle, PointStyle, MarkerStyle, ModelStyle, LineStyle, FillStyle, ExtrudeStyle, TextStyle, FontStyle, TrackStyle };
