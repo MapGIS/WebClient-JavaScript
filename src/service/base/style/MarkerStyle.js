@@ -26,22 +26,63 @@ export default class MarkerStyle extends VectorStyle {
     }
 
     /**
+     * @param  {Boolean} [highlight = false] 是否激活高亮样式
+     * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#symbol
+     * @returns MapboxGL点格式的样式
+     */
+    toMapboxStyle(options) {
+        options = options || {};
+        const { highlight = false } = options;
+        const { symbol } = this;
+        const { allowOverlap, color, pattern, opacity } = symbol;
+        const { size, rotate, xoffset, yoffset } = symbol;
+
+        let mapstyle = {
+            paint: {
+                'icon-color': color,
+                'icon-opacity': opacity
+            },
+            layout: {
+                'icon-allow-overlap': allowOverlap,
+                'icon-offset': [xoffset, yoffset],
+                'icon-size': size,
+                'icon-rotate': rotate
+            }
+        };
+        if (pattern) {
+            mapstyle.layout['icon-image'] = pattern;
+        }
+        if (highlight) {
+        }
+        return mapstyle;
+    }
+
+    /**
      * @link https://sandcastle.cesium.com/index.html?src=Circles%20and%20Ellipses.html&label=Geometries
      * @returns Cesium点格式的样式
      */
     toCesiumStyle(options, feature, Cesium) {
         const {
-            field = "", scale = 1, backgroundColor = "#FFFFFF", backgroundOpacity = 0, color = "#FFFFFF", opacity = 1,
-            outlineColor = "#FFFFFF", outlineOpacity = 1, outlineWidth = 0,xOffset = 0 , yOffset = 0, text, show = true
+            field = '',
+            scale = 1,
+            backgroundColor = '#FFFFFF',
+            backgroundOpacity = 0,
+            color = '#FFFFFF',
+            opacity = 1,
+            outlineColor = '#FFFFFF',
+            outlineOpacity = 1,
+            outlineWidth = 0,
+            xOffset = 0,
+            yOffset = 0,
+            text,
+            show = true
         } = options;
-        const {
-            url = "", rotation = 0, imageScale = 1, width, height
-        } = options;
+        const { url = '', rotation = 0, imageScale = 1, width, height } = options;
         let labelText;
-        if(field && feature.properties && feature.properties[field]){
+        if (field && feature.properties && feature.properties[field]) {
             labelText = feature.properties[field];
         }
-        if(text){
+        if (text) {
             labelText = text;
         }
         let billboard = {
@@ -49,11 +90,11 @@ export default class MarkerStyle extends VectorStyle {
             image: url,
             rotation: rotation,
             scale: imageScale
-        }
-        if(width){
+        };
+        if (width) {
             billboard.width = width;
         }
-        if(height){
+        if (height) {
             billboard.height = height;
         }
         return {
@@ -66,7 +107,7 @@ export default class MarkerStyle extends VectorStyle {
                 outlineColor: Cesium.Color.fromCssColorString(outlineColor).withAlpha(outlineOpacity),
                 outlineWidth: outlineWidth,
                 backgroundColor: Cesium.Color.fromCssColorString(backgroundColor).withAlpha(backgroundOpacity),
-                pixelOffset: new Cesium.Cartesian2(xOffset, yOffset * -1),
+                pixelOffset: new Cesium.Cartesian2(xOffset, yOffset * -1)
             },
             billboard: billboard
         };

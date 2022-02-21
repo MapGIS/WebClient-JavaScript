@@ -28,13 +28,15 @@ export default class TextStyle extends VectorStyle {
     constructor(option) {
         super();
         var options = option ? option : {};
-        const { angle = 0, color = '#000000', font } = options;
+        const { angle = 0, allowOverlap = false } = options;
         const { backgroundColor, borderLineColor, borderLineSize } = options;
+        const { color = '#000000', font } = options;
         const { haloColor = '#000000', haloSize = 0, horizontalAlignment = HorizontalAlignment.center } = options;
         const { kerning = true, lineHeight = 1.0, lineWidth = 192 } = options;
         const { rotated = false, text = '', type = 'text', verticalAlignment = VerticalAlignment.baseline } = options;
         const { xoffset = 0, yoffset = 0 } = options;
 
+        this.allowOverlap = allowOverlap;
         this.angle = angle;
         this.backgroundColor = backgroundColor;
         this.borderLineColor = borderLineColor;
@@ -59,13 +61,13 @@ export default class TextStyle extends VectorStyle {
 
     /**
      * @param  {Boolean} [highlight = false] 是否激活高亮样式
-     * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#circle
+     * @link https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#symbol
      * @returns MapboxGL点格式的样式
      */
     toMapboxStyle(options) {
         options = options || {};
         const { highlight = false } = options;
-        const { angle, color, font } = this;
+        const { angle, allowOverlap, color, font } = this;
         const { family, size, style, weight } = font;
         const { backgroundColor, borderLineColor, borderLineSize } = this;
         const { haloColor, haloSize, horizontalAlignment } = this;
@@ -86,7 +88,8 @@ export default class TextStyle extends VectorStyle {
                 'text-max-width': lineWidth,
                 'text-field': text,
                 'text-offset': [xoffset, yoffset],
-                'text-size': size
+                'text-size': size,
+                'text-allow-overlap': allowOverlap
             }
         };
         if (highlight) {
