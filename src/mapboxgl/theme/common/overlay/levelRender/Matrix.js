@@ -31,7 +31,6 @@ class Matrix {
      */
     create() {
         var ArrayCtor = this.ArrayCtor;
-
         var out = new ArrayCtor(6);
         this.identity(out);
 

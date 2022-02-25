@@ -215,19 +215,19 @@ Zondy.Source.TileLayerSource = TileLayerSource;
  * @param {String} [opt_options.ip = ''] 服务器ip地址，本地为“127.0.0.1”或“localhost”。
  * @param {String} [opt_options.port = ''] 服务器端口号，默认为6163
  * @param {String} [opt_options.domain = ''] 服务器域名，注意：传入ip、port和传入domain两种方式二选一，代理服务器不提供端口号时可采用传入domain的方式。例如：domain:`http://www.sgic.net.cn/CoCloud3`。
- * @param {ol.ProjectionLike} [opt_options.projection = ''] 必选项，瓦片地图投影信息，通过如下方法获得
+ * @param {ol.ProjectionLike} [opt_options.projection = ''] 可选项，瓦片地图投影信息，通过如下方法获得
  *          //projectionExtent为图层左下角到右上角坐标范围
  *          var projectionExtent = [114.12567815477894, 30.457571584721734, 114.47583026053915, 30.708389893334449];
  *          var projection = new ol.proj.Projection({
                 units: ol.proj.Units.DEGREES,
                 extent: projectionExtent
             });
- * @param {Boolean} [opt_options.isAutoConfig = 'true'] 可选项，是否自动配置，默认为true
+ * @param {Boolean} [opt_options.isAutoConfig = 'true'] 可选项，是否自动配置瓦片服务参数，默认为true，注意：该参数为true时调用GetMapInfoService，获取瓦片的范围、分辨率等参数，为false时需要手动添加这些参数，且参数列表中必须指定projection，否则瓦片无法正常显示
  * @param {Boolean} [opt_options.cache = 'false'] 可选项，瓦片地图是否为地图文档发布动态裁图方式，默认为false
  * @param {String} [opt_options.token = ''] 可选项，服务访问控制，如果在 MapGIS Server Manager 服务管理中开启token，须设置此项，其key值可在设置处获取。
  * @param {Number} [opt_options.maxResolution = ''] 可选项，最大分辨率
- * @param {Number} [opt_options.minZoom = ''] 可选项，最小分辨率
- * @param {Number} [opt_options.maxZoom = ''] 可选项，最大分辨率
+ * @param {Number} [opt_options.minZoom = ''] 可选项，最小缩放级别
+ * @param {Number} [opt_options.maxZoom = ''] 可选项，最大缩放级别
  * @param {String} [opt_options.tileOriginType = 'leftTop'] 可选项，瓦片裁剪方式，是左上还是左下的方式，即是新瓦片裁剪的方式还是旧瓦片。一般无需设置此参数，直接由原点和中心点进行判断，只有在某些特殊的裁剪的瓦片中需要用到。例如若裁剪瓦片时以左下角为原点，方式却是新瓦片的方式则需要设置此参数为leftTop。
  * @param {Number} [opt_options.tileSize = '256'] 可选项，地图图片大小
  * @example1

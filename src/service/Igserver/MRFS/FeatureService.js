@@ -22,7 +22,7 @@ import {
 } from "../../common";
 
 class FeatureService {
-    static get(url, fn, error) {
+    static get(url, fn, error, option) {
         // XMLHttpRequest对象用于在后台与服务器交换数据
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
@@ -30,13 +30,13 @@ class FeatureService {
             // readyState == 4说明请求已完成
             if ((xhr.readyState == 4 && xhr.status == 200) || xhr.status == 304) {
                 // 从服务器获得数据
-                fn.call(this, xhr.responseText);
+                fn.call(this, xhr.responseText, option);
             } else if (
                 xhr.readyState === 4 &&
                 xhr.status !== 200 &&
                 xhr.status !== 304
             ) {
-                error.call(this, xhr.responseText);
+                error.call(this, xhr.responseText, option);
             }
         };
         xhr.send();

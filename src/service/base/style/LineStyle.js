@@ -14,8 +14,6 @@ import { Symbol } from './Symbol';
  * @param {String} [dashArray = [5, 5]] 虚实组合关系
  * @param {String} [cap = butt] 线头样式，默认butt
  * @param {String} [join = miter] 拐角样式，默认miter
- * @param {Number} [outlineWidth = 0] 边线宽度，默认为1
- * @param {String} [outlineColor = #FFFFFF] 边线颜色，16进制颜色或rgb值或rgba值，默认#FFFFFF，白色*
  * @param {Object} [shadowStyle = undefined] 阴影样式，默认undefined
  */
 export default class LineStyle extends VectorStyle {
@@ -27,8 +25,6 @@ export default class LineStyle extends VectorStyle {
             dashArray,
             cap = LineCap.butt,
             join = LineJoin.miter,
-            outlineWidth = 0,
-            outlineColor = '#FFFFFF',
             shadow,
             symbol
         } = options;
@@ -37,8 +33,6 @@ export default class LineStyle extends VectorStyle {
         this.dashArray = dashArray;
         this.cap = cap;
         this.join = join;
-        this.outlineWidth = outlineWidth;
-        this.outlineColor = outlineColor;
         this.shadowStyle = shadow || new Shadow();
         this.symbolStyle = symbol || new Symbol();
         extend(this, options);
@@ -88,7 +82,7 @@ export default class LineStyle extends VectorStyle {
      */
     toCesiumStyle(Cesium) {
         let material;
-        let { dashArray, shadowStyle, color, opacity, width, outlineWidth, outlineColor } = this;
+        let { dashArray, shadowStyle, color, opacity, width } = this;
         // PolylineArrowMaterialProperty
         if (dashArray) {
             material = new Cesium.PolylineDashMaterialProperty({
@@ -100,12 +94,6 @@ export default class LineStyle extends VectorStyle {
                 glowPower: 0.2,
                 taperPower: 0.5,
                 color: Cesium.Color.fromCssColorString(shadowStyle.color)
-            });
-        } else if (outlineWidth > 0) {
-            material = new Cesium.PolylineOutlineMaterialProperty({
-                color: Cesium.Color.fromCssColorString(color),
-                outlineWidth: outlineWidth,
-                outlineColor: Cesium.Color.fromCssColorString(outlineColor)
             });
         } else {
             material = new Cesium.ColorMaterialProperty(Cesium.Color.fromCssColorString(color).withAlpha(opacity));

@@ -1,26 +1,31 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version": "10.5.5-2",
+    "version": "10.5.5-3",
     "description": "中地数码基于ES6语法针对igserver的服务封装",
     "main": "dist-libs/webclient-es6-service.min.js",
-    "module1": "index.js",
+    "module": "index.js",
     "scripts": {
         "build": "npm run build-debug && npm run build-release",
         "build-debug": "webpack --config webpack/service-debug-config.js",
         "build-release": "webpack --config webpack/service-release-config.js"
     },
     "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "dependencies": {
         "@turf/turf": "^6.3.0",
+        "core-js": "3.15.0",
         "fast-xml-parser": "^3.17.6",
+        "fetch-ie8": "^1.5.0",
         "qs": "^6.9.4"
     },
     "devDependencies": {
-        "happypack": "^5.0.0",
-        "webpack": "4.19.1",
-        "webpack-cleanup-plugin": "0.4.2",
-        "webpack-cli": "2.1.5",
-        "webpack-parallel-uglify-plugin": "0.4.2"
+        "@babel/core": "^7.16.0",
+        "@babel/preset-env": "^7.16.4",
+        "babel-loader": "^8.2.3",
+        "css-loader": "^6.5.1",
+        "sass-loader": "^12.4.0",
+        "style-loader": "^3.3.1",
+        "ts-loader": "^9.2.6",
+        "webpack": "^5.65.0"
     }
 }

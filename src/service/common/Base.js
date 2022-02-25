@@ -55,8 +55,3 @@ Zondy.IGServerX = Zondy.IGServerX || {};
 Zondy.IGServerX.Vector = Zondy.IGServerX.Vector || {};
 
 export { Zondy };
-
-// 新版本的设计框架
-var mapgis = (window.mapgis = window.mapgis || {});
-mapgis.style = mapgis.style || {};
-export { mapgis };

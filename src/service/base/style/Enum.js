@@ -24,6 +24,27 @@ export const Align = {
 };
 
 /**
+ * @enum HorizontalAlignment
+ * @description 水平对齐方向
+ */
+export const HorizontalAlignment = {
+    left: 'left',
+    center: 'center',
+    right: 'right'
+};
+
+/**
+ * @enum VerticalAlignment
+ * @description 竖直对齐方向
+ */
+export const VerticalAlignment = {
+    baseline: 'baseline',
+    top: 'top',
+    middle: 'middle',
+    bottom: 'bottom'
+};
+
+/**
  * @enum LineCap
  * @description 线头类型
  */

@@ -35,7 +35,7 @@
         "test-init": "node ./node_modules/karma/bin/karma init karma.conf.js"
     },
     "author": "mapgis",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "devDependencies": {
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
@@ -86,7 +86,7 @@
         "@mapgis/mapbox-gl": "^1.9.0",
         "@turf/turf": "^6.3.0",
         "axios": "^0.18.0",
-        "cesium": "^1.70.1",
+        "cesium": "1.84.0",
         "d3": "^5.16.0",
         "echarts": "^4.4.0",
         "fast-xml-parser": "^3.17.6",

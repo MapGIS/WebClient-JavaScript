@@ -63,9 +63,9 @@
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[false, false, false, false, true]],
+                "hightlights": [[false, false, false, false, true, true]],
                 "links": [
-                    ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入", "MapboxGL-JAVA版IGS", "MapboxGL-地图模糊"]
+                    ["Cesium-基本引入", "Cesium-内存溢出", "Cesium-路由切换", "MapboxGL-基本引入", "MapboxGL-JAVA版IGS", "MapboxGL-地图模糊", "MapboxGL-绘制溢出"]
                 ],
                 "routes": [
                     [
@@ -74,7 +74,8 @@
                         "/helper/vue-cesium/vue/route/index",
                         "/helper/vue-mapboxgl/vue/import",
                         "/helper/vue-mapboxgl/vue/vectotLayer",
-                        "/helper/vue-mapboxgl/tilesize/tilesize"
+                        "/helper/vue-mapboxgl/tilesize/tilesize",
+                        "/helper/vue-mapboxgl/draw/overflow"
                     ]
                 ],
                 "type":"helper"

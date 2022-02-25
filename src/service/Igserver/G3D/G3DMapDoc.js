@@ -1,7 +1,7 @@
-import {Zondy} from "../../common/Base";
-import {newGuid} from "../../common/Util";
-import {G3DService} from "./G3DService";
-import {IgsServiceBase} from "../../baseserver/IServiceBase";
+import { Zondy } from '../../common/Base';
+import { newGuid } from '../../common/Util';
+import { G3DService } from './G3DService';
+import { IgsServiceBase } from '../../baseserver/IServiceBase';
 
 /**
  * @author 基础平台/产品2部 龚跃健
@@ -29,6 +29,7 @@ import {IgsServiceBase} from "../../baseserver/IServiceBase";
  * @param {String} [option.format=json] 回结果的格式,缺省xml(json / xml)
  * @param {String} [option.systemLib=null] 系统库名称或者guid
  * @param {String} [option.layerRenderIndex=0] 图层layerRenderIndex
+ * @param {String} [option.extendedPropKeys=null] 扩展属性的key列表，多个用","分隔，"*"为获取所有,缺省为null
  */
 class G3DMapDoc extends G3DService {
     constructor(option) {
@@ -218,6 +219,15 @@ class G3DMapDoc extends G3DService {
          * @default null
          */
         this.layerRenderIndex = options.layerRenderIndex || 0;
+
+        /**
+         * @private
+         * @member Zondy.Catalog.G3DMapDoc.prototype.extendedPropKeys
+         * @type {String}
+         * @description 扩展属性的key列表，多个用","分隔，"*"为获取所有,缺省为""
+         * @default null
+         */
+        this.extendedKeys = option.extendedPropKeys || null;
     }
 
     /**
@@ -239,7 +249,7 @@ class G3DMapDoc extends G3DService {
      */
     GetDocList(onSuccess, onError) {
         var me = this;
-        me.partUrl = "GetDocList";
+        me.partUrl = 'GetDocList';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -256,6 +266,7 @@ class G3DMapDoc extends G3DService {
      * @function Zondy.Catalog.G3DMapDoc.prototype.GetDocInfo
      * @param option - {Object} 属性键值对，地图属性字段。<br>
      * @param {String} [option.docName = null] 【必选】三维服务名称
+     * @param {String} [option.extendedPropKeys=""] 扩展属性的key列表，多个用","分隔，"*"为获取所有,缺省为""
      * @param onSuccess - {Function} 成功回调函数。
      * @param onError - {Function} 失败回调函数。
      * @example
@@ -273,7 +284,11 @@ class G3DMapDoc extends G3DService {
      */
     GetDocInfo(onSuccess, onError) {
         var me = this;
-        me.partUrl = me.docName + "/GetDocInfo?&f=json";
+        me.partUrl = me.docName + '/GetDocInfo?&f=json';
+
+        if (me.extendedKeys) {
+            me.partUrl += '&extendedKeys=' + me.extendedKeys;
+        }
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -311,18 +326,18 @@ class G3DMapDoc extends G3DService {
      */
     GetLayerInfo(onSuccess, onError) {
         var me = this;
-        var str = "layerinfo?gdbp=" + this.gdbp;
+        var str = 'layerinfo?gdbp=' + this.gdbp;
         if (me.proj) {
-            str += "&proj=" + me.proj;
+            str += '&proj=' + me.proj;
         }
         if (me.f) {
-            str += "&f=" + me.f;
+            str += '&f=' + me.f;
         }
         if (me.guid) {
-            str += "&guid=" + me.guid;
+            str += '&guid=' + me.guid;
         }
         if (me.encryptPassword) {
-            str += "&encryptPassword=" + me.encryptPassword;
+            str += '&encryptPassword=' + me.encryptPassword;
         }
         me.partUrl = str;
         var url = me.getFullUrl();
@@ -372,64 +387,63 @@ class G3DMapDoc extends G3DService {
      */
     GetFeature(onSuccess, onError) {
         var me = this;
-        var str = "getFeature?";
+        var str = 'getFeature?';
         if (me.gdbp && me.gdbp !== '') {
-            str += "gdbp=" + me.gdbp;
+            str += 'gdbp=' + me.gdbp;
         } else if (me.docName) {
-            str += "docName=" + me.docName + "&layerindex=" + me.layerindex;
+            str += 'docName=' + me.docName + '&layerindex=' + me.layerindex;
         }
 
-
         if (me.geometryType) {
-            str += "&geometryType=" + me.geometryType;
+            str += '&geometryType=' + me.geometryType;
         }
 
         if (me.geometry) {
-            str += "&geometry=" + me.geometry;
+            str += '&geometry=' + me.geometry;
         }
 
         if (me.where) {
-            str += "&where=" + me.where;
+            str += '&where=' + me.where;
         }
 
         if (me.structs) {
-            str += "&structs=" + JSON.stringify(me.structs);
+            str += '&structs=' + JSON.stringify(me.structs);
         }
 
         if (me.page) {
-            str += "&page=" + me.page;
+            str += '&page=' + me.page;
         }
 
         if (me.pageCount) {
-            str += "&pageCount=" + me.pageCount;
+            str += '&pageCount=' + me.pageCount;
         }
 
         if (me.objectIds) {
-            str += "&objectIds=" + me.objectIds;
+            str += '&objectIds=' + me.objectIds;
         }
 
         if (me.orderField) {
-            str += "&orderField=" + me.orderField;
+            str += '&orderField=' + me.orderField;
         }
 
         if (me.rtnLabel) {
-            str += "&rtnLabel=" + me.rtnLabel;
+            str += '&rtnLabel=' + me.rtnLabel;
         }
 
         if (me.isAsc) {
-            str += "&isAsc=" + me.isAsc;
+            str += '&isAsc=' + me.isAsc;
         }
 
         if (me.guid) {
-            str += "&guid=" + me.guid;
+            str += '&guid=' + me.guid;
         }
 
         if (me.format) {
-            str += "&format=" + me.format;
+            str += '&format=' + me.format;
         }
 
         if (me.f) {
-            str += "&f=" + me.f;
+            str += '&f=' + me.f;
         }
 
         me.partUrl = str;
@@ -444,7 +458,6 @@ class G3DMapDoc extends G3DService {
         });
         service.processAsync();
     }
-
 
     /**
      * @function Zondy.Catalog.G3DMapDoc.prototype.SetSystemLibraryByDoc
@@ -472,13 +485,13 @@ class G3DMapDoc extends G3DService {
      */
     SetSystemLibraryByDoc(onSuccess, onError) {
         var me = this;
-        var str = me.docName + "/setSystemLibrary?systemLib=" + me.systemLib + "&layerRenderIndex=" + me.layerRenderIndex;
+        var str = me.docName + '/setSystemLibrary?systemLib=' + me.systemLib + '&layerRenderIndex=' + me.layerRenderIndex;
 
         if (me.f) {
-            str += "&f=" + me.f;
+            str += '&f=' + me.f;
         }
         if (me.guid) {
-            str += "&guid=" + me.guid;
+            str += '&guid=' + me.guid;
         }
         me.partUrl = str;
         var url = me.getFullUrl();
@@ -493,5 +506,5 @@ class G3DMapDoc extends G3DService {
     }
 }
 
-export {G3DMapDoc};
+export { G3DMapDoc };
 Zondy.Catalog.G3DMapDoc = G3DMapDoc;
