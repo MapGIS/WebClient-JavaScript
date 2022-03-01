@@ -1,4 +1,4 @@
-import "./PromisePolyfill";
+import 'promise-polyfill/dist/polyfill';
 import 'fetch-ie8';
 
 var fetch = window.fetch;

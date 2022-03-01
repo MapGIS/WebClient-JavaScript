@@ -1,9 +1,9 @@
 {
   "name": "@mapgis/webclient-es6-mapboxgl",
-  "version": "10.5.5-2",
+  "version": "10.5.7",
   "description": "",
   "main": "dist-libs/webclient-mapboxgl-plugin.min.js",
-  "module": "index.js",
+  "module1": "index.js",
   "scripts": {
     "build": "npm run build-debug && npm run build-release",
     "build-debug": "webpack --config webpack/mapbox-es6-debug-config.js",
@@ -19,7 +19,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@mapgis/mapbox-gl": "^1.9.9",
-    "@mapgis/webclient-es6-service": "10.5.5-3",
+    "@mapgis/webclient-es6-service": "^10.5.7",
     "core-js": "3.15.0",
     "echarts": "^4.8.0",
     "mapv": "^2.0.56"

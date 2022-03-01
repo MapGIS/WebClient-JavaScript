@@ -12,6 +12,8 @@ MapGIS Client for JavaScript - Service：是增强的MapGIS Web开发平台，�
 
 [在线文档](http://develop.smaryun.com/docs/mapboxgl/index.html)
 
+## 环境
+> 由于core-js2和core-js3的在vue-cli4的不同的前置依赖导致了在vue2的环境下core-js不能把对应的依赖版本加入到package.json中，但是实际上package.json中引用的是core-js3的版本，一旦显示的描述会导致所有引用webclient-vue-ui的库的库都会强行自动升级core-js3，导致整个环境冲突问题。这个问题只能通过升级vue3来解决。
 ## 目录
 针对MapGIS提供的IGServer/IGServer-X/IGServer-S/DataStore/ArcGIS等多种服务进行封装
 ``` js
