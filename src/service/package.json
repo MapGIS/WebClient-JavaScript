@@ -12,6 +12,7 @@
     "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
     "license": "Apache-2.0",
     "dependencies": {
+        "core-js": "^3.6.5",
         "@turf/turf": "^6.5.0",
         "fast-xml-parser": "^3.17.6",
         "fetch-ie8": "^1.5.0",
