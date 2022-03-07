@@ -49,6 +49,18 @@ export var extend = function(destination, source) {
   return destination
 }
 
+export var newGuid = function () {
+  /// <summary>生成一个guid</summary>
+  var guid = "";
+  for (var i = 1; i <= 32; i++) {
+      var n = Math.floor(Math.random() * 16.0).toString(16);
+      guid += n;
+      if ((i == 8) || (i == 12) || (i == 16) || (i == 20))
+          guid += "-";
+  }
+  return guid;
+};
+
 /**
  * @description 给url追加参数。
  * @param url - {string} 待追加参数的url字符串。
