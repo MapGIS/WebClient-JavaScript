@@ -89,7 +89,8 @@ export default class MarkerStyle extends VectorStyle {
             show: show,
             image: url,
             rotation: rotation,
-            scale: imageScale
+            scale: imageScale,
+            pixelOffset: new Cesium.Cartesian2(xOffset, yOffset)
         };
         if (width) {
             billboard.width = width;
