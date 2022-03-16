@@ -1,12 +1,6 @@
-﻿import {
-    Zondy
-} from './Base';
-import {
-    extend
-} from "./Util";
-import {
-    DynShowStyle
-} from './DynShowStyle'
+﻿import { Zondy } from './Base';
+import { extend } from './Util';
+import { DynShowStyle } from './DynShowStyle';
 
 /**
  * 地图文档显示样式对象
@@ -26,11 +20,23 @@ import {
  * @param {Boolean} [option.ShowCoordPnt = false] 显示坐标点
  * @param {Boolean} [option.ShowElemRect = false] 显示元素的外包矩形
  * @param {Array} [option.ShowStyle = null] 图层显示参数 Array,  {@link Zondy.Object.DynShowStyle}
+ * @param {Array} [option.LayerStyles = null] 图层显示参数 Map,  {@link Zondy.Object.DynShowStyle}
  * @param {Boolean} [option.SymbleShow = false] 是否进行还原显示
  * @see Zondy.Service.GetDocImageService
+ * @example 
+ * var layerStyle = new Zondy.Object.DynShowStyle({
+                    Alpha: 50
+                });
+                var style = new Zondy.Object.CDisplayStyle({
+                    LayerStyles: {
+                        0: layerStyle,
+                        1: layerStyle,
+                        '2-0': layerStyle
+                    }
+                });
  */
 var CDisplayStyle = function (option) {
-    var options = (option !== undefined) ? option : {};
+    var options = option !== undefined ? option : {};
     extend(this, options);
 
     /**
@@ -40,7 +46,7 @@ var CDisplayStyle = function (option) {
      * @description 注记符号大小固定
      * @default false
      */
-    this.AnnSizeFixed = (options.AnnSizeFixed !== undefined) ? options.AnnSizeFixed : false;
+    this.AnnSizeFixed = options.AnnSizeFixed !== undefined ? options.AnnSizeFixed : false;
 
     /**
      * @private
@@ -49,7 +55,7 @@ var CDisplayStyle = function (option) {
      * @description 图像质量</summary>可选值为：1（低）、2（中）、3（高）
      * @default 0
      */
-    this.DriverQuality = (options.DriverQuality !== undefined) ? options.DriverQuality : 0;
+    this.DriverQuality = options.DriverQuality !== undefined ? options.DriverQuality : 0;
 
     /**
      * @private
@@ -58,7 +64,7 @@ var CDisplayStyle = function (option) {
      * @description 是否动态投影
      * @default false
      */
-    this.DynProjFlag = (options.DynProjFlag !== undefined) ? options.DynProjFlag : false;
+    this.DynProjFlag = options.DynProjFlag !== undefined ? options.DynProjFlag : false;
 
     /**
      * @private
@@ -67,7 +73,7 @@ var CDisplayStyle = function (option) {
      * @description 符号是否跟随显示放大（该属性已过时，请使用各个要素类的大小固定及线宽固定）
      * @default false
      */
-    this.FollowScale = (options.FollowScale !== undefined) ? options.FollowScale : false;
+    this.FollowScale = options.FollowScale !== undefined ? options.FollowScale : false;
 
     /**
      * @private
@@ -76,7 +82,7 @@ var CDisplayStyle = function (option) {
      * @description 线状符号线宽固定
      * @default false
      */
-    this.LinPenWidFixed = (options.LinPenWidFixed !== undefined) ? options.LinPenWidFixed : false;
+    this.LinPenWidFixed = options.LinPenWidFixed !== undefined ? options.LinPenWidFixed : false;
 
     /**
      * @private
@@ -85,7 +91,7 @@ var CDisplayStyle = function (option) {
      * @description 线状符号大小固定
      * @default false
      */
-    this.LinSizeFixed = (options.LinSizeFixed !== undefined) ? options.LinSizeFixed : false;
+    this.LinSizeFixed = options.LinSizeFixed !== undefined ? options.LinSizeFixed : false;
 
     /**
      * @private
@@ -94,7 +100,7 @@ var CDisplayStyle = function (option) {
      * @description 点状符号线宽固定
      * @default false
      */
-    this.PntPenWidFixed = (options.PntPenWidFixed !== undefined) ? options.PntPenWidFixed : false;
+    this.PntPenWidFixed = options.PntPenWidFixed !== undefined ? options.PntPenWidFixed : false;
 
     /**
      * @private
@@ -103,7 +109,7 @@ var CDisplayStyle = function (option) {
      * @description 点状符号大小固定
      * @default false
      */
-    this.PntSizeFixed = (options.PntSizeFixed !== undefined) ? options.PntSizeFixed : false;
+    this.PntSizeFixed = options.PntSizeFixed !== undefined ? options.PntSizeFixed : false;
 
     /**
      * @private
@@ -112,7 +118,7 @@ var CDisplayStyle = function (option) {
      * @description 填充符号线宽固定
      * @default false
      */
-    this.RegPenWidFixed = (options.RegPenWidFixed !== undefined) ? options.RegPenWidFixed : false;
+    this.RegPenWidFixed = options.RegPenWidFixed !== undefined ? options.RegPenWidFixed : false;
 
     /**
      * @private
@@ -121,7 +127,7 @@ var CDisplayStyle = function (option) {
      * @description 填充符号大小固定
      * @default false
      */
-    this.RegSizeFixed = (options.RegSizeFixed !== undefined) ? options.RegSizeFixed : false;
+    this.RegSizeFixed = options.RegSizeFixed !== undefined ? options.RegSizeFixed : false;
 
     /**
      * @private
@@ -130,7 +136,7 @@ var CDisplayStyle = function (option) {
      * @description 显示坐标点
      * @default false
      */
-    this.ShowCoordPnt = (options.ShowCoordPnt !== undefined) ? options.ShowCoordPnt : false;
+    this.ShowCoordPnt = options.ShowCoordPnt !== undefined ? options.ShowCoordPnt : false;
 
     /**
      * @private
@@ -139,7 +145,7 @@ var CDisplayStyle = function (option) {
      * @description 显示元素的外包矩形
      * @default false
      */
-    this.ShowElemRect = (options.ShowElemRect !== undefined) ? options.ShowElemRect : false;
+    this.ShowElemRect = options.ShowElemRect !== undefined ? options.ShowElemRect : false;
 
     /**
      * @private
@@ -148,7 +154,16 @@ var CDisplayStyle = function (option) {
      * @description 图层显示参数Array<{@link Zondy.Object.DynShowStyle}>
      * @default null
      */
-    this.ShowStyle = (options.ShowStyle !== undefined) ? options.ShowStyle : null;
+    this.ShowStyle = options.ShowStyle !== undefined ? options.ShowStyle : null;
+
+    /**
+     * @private
+     * @member Zondy.Object.CDisplayStyle.prototype.LayerStyles
+     * @type {Map}
+     * @description 图层显示参数Map<{@link Zondy.Object.DynShowStyle}>
+     * @default null
+     */
+    this.LayerStyles = options.LayerStyles !== undefined ? options.LayerStyles : null;
 
     /**
      * @private
@@ -157,10 +172,8 @@ var CDisplayStyle = function (option) {
      * @description 是否进行还原显示
      * @default false
      */
-    this.SymbleShow = (options.SymbleShow !== undefined) ? options.SymbleShow : false;
+    this.SymbleShow = options.SymbleShow !== undefined ? options.SymbleShow : false;
 };
 
-export {
-    CDisplayStyle
-};
+export { CDisplayStyle };
 Zondy.Object.CDisplayStyle = CDisplayStyle;
