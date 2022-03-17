@@ -1,0 +1,271 @@
+{
+    "name": "cesium-new",
+    "title": "MapGIS WebClinet-Cesium",
+    "mapmode": "cesium-new",
+    "childs": [
+        {
+            "name": "M3D协议-2.0",
+            "iconfont": "iconlayer",
+            "folder": "m3d",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "实例化",
+                    "file": "m3d-instance",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "m3d-instance.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "单体拾取",
+                    "file": "m3d-pick",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "m3d-pick.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "拾取高亮",
+                    "file": "m3d-highlight",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "m3d-highlight.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "单体OID",
+                    "file": "m3d-oid",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "m3d-oid.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "多模态切换",
+                    "file": "m3d-model",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "m3d-model.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        },  
+        {
+            "name": "地形",
+            "iconfont": "iconterrain",
+            "folder": "terrian",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "MapGIS-常规地形",
+                    "file": "mapgis-terrian-common",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-terrian-common.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "MapGIS-法向地形",
+                    "file": "mapgis-terrian-normal",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-terrian-normal.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "Cesium-常规地形",
+                    "file": "cesium-terrian-common",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "cesium-terrian-common.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "Cesium-STK地形",
+                    "file": "cesium-terrian-stk",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "cesium-terrian-stk.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        },        
+        {
+            "name": "分析",
+            "iconfont": "icon_analysis",
+            "folder": "analysis",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "洪水淹没分析",
+                    "file": "analysis-floor",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-floor.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "可视域分析",
+                    "file": "analysis-visiblerange",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-visiblerange.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "视频投放",
+                    "file": "analysis-sceneprojection",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-sceneprojection.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "天际线分析",
+                    "file": "analysis-skyline",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-skyline.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "开挖分析",
+                    "file": "analysis-excavate",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-excavate.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "动态剖切",
+                    "file": "analysis-dynamiccut",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-dynamiccut.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "卷帘分析",
+                    "file": "analysis-rollershutters",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-rollershutters.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "模型压平",
+                    "file": "analysis-modelflatten",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-modelflatten.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "通视分析",
+                    "file": "analysis-visibility",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-visibility.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "填挖方计算",
+                    "file": "analysis-cube",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-cube.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "坡向分析",
+                    "file": "analysis-aspectAnalysis",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-aspectAnalysis.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "坡度分析",
+                    "file": "analysis-slopeAnalysis",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-slopeAnalysis.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "坡向分析-法向地形",
+                    "file": "analysis-aspectAnalysis-normal",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "analysis-aspectAnalysis-normal.png",
+                    "update": "最后更新时间:2021-08-17"
+                },
+                {
+                    "name": "坡度分析-法向地形",
+                    "file": "analysis-slopeAnalysis-normal",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "analysis-slopeAnalysis-normal.png",
+                    "update": "最后更新时间:2021-08-17"
+                },
+                {
+                    "name": "动画漫游",
+                    "file": "analysis-animation",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "analysis-animation.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        },
+        {
+            "name": "工具",
+            "iconfont": "icon_calc",
+            "folder": "tool",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "标绘工具",
+                    "file": "tool-plot",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "模型编辑",
+                    "file": "tool-edit",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-edit.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "交互绘制",
+                    "file": "tool-interact",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-interact.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "裁剪工具",
+                    "file": "tool-cult",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-cult.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "截图",
+                    "file": "tool-screenprint",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-screenprint.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        }
+    ]
+}

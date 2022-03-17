@@ -153,7 +153,7 @@
                 "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false, false, false]],
                 "links": [
                     [
-                        "图层M3D",
+                        "M3D协议",
                         "互联网地图",
                         "OGC服务",
                         "MapGIS地图服务",
@@ -185,6 +185,27 @@
                         "/gallery/cesium#clientView_Echarts",
                         "/gallery/cesium#clientView_MapV",
                         "/gallery/cesium#clientAnalysis"
+                    ]
+                ]
+            },
+            {
+                "title": "开发示例-新",
+                "icon": "iconzaixianshili",
+                "hightlights": [[true, true, true, true]],
+                "links": [
+                    [
+                        "M3D协议-2.0",
+                        "工具",
+                        "数据加载",
+                        "分析"
+                    ]
+                ],
+                "routes": [
+                    [
+                        "/gallery/cesium-new#m3d",
+                        "/gallery/cesium-new#tool",
+                        "/gallery/cesium-new#data",
+                        "/gallery/cesium-new#analysis"
                     ]
                 ]
             },

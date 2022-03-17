@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>模型压平</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        'use script';
+        var webGlobe;
+        //定义三维瓦片类
+        var landscapeLayer;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                terrainExaggeration: 1,
+            });
+
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+
+            //初始化视图功能管理类
+            var sceneManager = new CesiumZondy.Manager.SceneManager({
+                viewer: webGlobe.viewer
+            });
+            //视点跳转
+            sceneManager.flyToEx(114.40298522106733, 30.465568703723072, {
+                height: 100.85856618500283,
+                heading: -45.4940479913348135,
+                pitch: -15,
+                roll: 0
+            });
+            //构造M3D模型层管理对象
+            var m3dLayer = new CesiumZondy.Layer.M3DLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载M3D地图文档（服务地址，配置参数）
+            var {
+                protocol,
+                ip,
+                port
+            } = window.webclient;
+            landscapeLayer = m3dLayer.append(`${protocol}://${ip}:${port}/igs/rest/g3d/ZondyModels`, {
+                autoReset: false,
+                maximumScreenSpaceError: 8,
+                loaded: function(layer) {
+                    ///绘制结果回调函数
+                    function getDrawResult(positions) {
+                        //获取绘制多边形区域的定点（这是三维的点xyz）
+                        positionsArray = positions;
+                        /*对绘制区域的顶点循环处理一下，以便用于模型压平参数的赋值*/
+                        var array = [];
+                        for (let i = 0; i < positionsArray.length; i++) {
+                            let point = positionsArray[i];
+                            let resPoint = new Cesium.Cartesian3;
+                            let invserTran = new Cesium.Matrix4;
+                            Cesium.Matrix4.inverse(landscapeLayer[0]._root.transform, invserTran);
+                            Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
+                            resPoint.y = -resPoint.y;
+                            array.push(new Cesium.Cartesian2(resPoint.x, resPoint.y));
+                        }
+                        array.push(array[0]);
+                        //初始化高级分析功能管理类
+                        var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                            viewer: webGlobe.viewer
+                        });
+                        advancedAnalysisManager.createModelFlatten(landscapeLayer[0], {
+                            //是否进行压平。值为true时执行压平
+                            isFlatten: true,
+                            //将高度压到0
+                            height: 0,
+                            //压平多边形的顶点序列长度
+                            arrayLength: positionsArray.length,
+                            //顶点序列。顶点序列需要闭合，也就是说，例如一个矩形是四个顶点ABCD，那序列就应该是【ABCDA】
+                            array: array
+                        });
+                        //场景渲染（渲染最新的压平效果）
+                        webGlobe.viewer.scene.requestRender();
+                    }
+                    ///交互式绘制压平区域
+                    //定义绘制区域的图形顶点
+                    var positionsArray;
+                    //创建交互式绘制工具
+                    var tool = new Cesium.DrawElement(webGlobe.viewer);
+                    //激活交互式绘制工具
+                    tool.startDrawingPolygon({
+                        callback: getDrawResult
+                    });
+                }
+            });
+
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>
