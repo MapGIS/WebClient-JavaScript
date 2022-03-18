@@ -89,7 +89,7 @@
                     ]
                 ],
                 "hightlights": [[true, true, true]],
-                "routes": [["/storybook/index.html"]]
+                "routes": [["/storybook/index.html?path=/story/基础介绍-0-介绍--page"]]
             },
             {
                 "title": "开发API",
