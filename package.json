@@ -90,11 +90,13 @@
         "d3": "^5.16.0",
         "echarts": "^4.4.0",
         "fast-xml-parser": "^3.17.6",
+        "fetch-ie8": "^1.5.0",
         "jsdoc": "^3.6.3",
         "leaflet": "^1.7.1",
         "mapv": "^2.0.40",
         "ol": "5.3.3",
         "proj4": "2.3.15",
+        "promise-polyfill": "^8.2.3",
         "qs": "^6.9.4",
         "webfont-matcher": "^1.1.0"
     }
