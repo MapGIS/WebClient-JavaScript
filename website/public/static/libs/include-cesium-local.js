@@ -48,10 +48,19 @@
         var httpUrl = getInitPath();
 
         if (!inArray(excludes, 'cesium')) {
-            inputCSS(httpUrl + '/cdn/cesium/Widgets/widgets.css');
-            inputCSS(httpUrl + '/cdn/cesium/MapGIS/css/mapgis.css');
-            inputScript(httpUrl + '/cdn/cesium/Cesium.js');
+            if (inArray(includes, 'cesium-1.59')) {
+                // 引入Cesium1.59版本 对应10.5.2 ~ 10.5.5之间的版本
+                inputCSS(httpUrl + '/cdn/cesium-old/Widgets/widgets.css');
+                inputCSS(httpUrl + '/cdn/cesium-old/MapGIS/css/mapgis.css');
+                inputScript(httpUrl + '/cdn/cesium-old/Cesium.js');
+            } else {
+                // 引入Cesium1.84版本 对应10.5.6之间的版本
+                inputCSS(httpUrl + '/cdn/cesium/Widgets/widgets.css');
+                inputCSS(httpUrl + '/cdn/cesium/MapGIS/css/mapgis.css');
+                inputScript(httpUrl + '/cdn/cesium/Cesium.js');
+            }
         }
+        
         // if (!inArray(includes, 'wmts')) {
         //    inputScript("http://" + ip + ":" + socket + "/cdn/leaflet plugins/leaflet-tilelayer-wmts.js");
         // }
