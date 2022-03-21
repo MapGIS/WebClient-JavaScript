@@ -12,8 +12,24 @@ export class TileScale {
     }
 
     // 赤道周长（单位：m）
-    static get ZERO_SCALE() {
-        return 295829355.45 * 2;
+    static ZERO_SCALE(tileschame) {
+        let scale = 295829355.45 * 2;
+
+        switch (tileschame) {
+            case 'EPSG:3857':
+            case '3857':
+                scale = 295829355.45 * 2
+                break;
+            case 'EPSG:4326':
+            case '4326':
+            case 'EPSG:4490':
+            case '4490':
+            case 'EPSG:4610':
+            case '4610':
+                scale = 295829355.45;
+                break;
+        }
+        return scale;
     }
 
     /**
@@ -21,11 +37,11 @@ export class TileScale {
      * @param {*} tileSize 瓦片尺寸，三维用的瓦片尺寸为512的levelResolution数组
      * @returns 层级与分辨关系的数组
      */
-    getLevelScale(tileSize) {
+    getLevelScale(tileSize, tileschame) {
         if (!this.levelScales[tileSize]) {
             const arr = [];
             for (let level = 0; level <= 24; level++) {
-                const zero = TileScale.ZERO_SCALE;
+                const zero = TileScale.ZERO_SCALE(tileschame);
                 const resolutionOnTheEquator = zero / 2 ** level;
                 arr.push({
                     level,
@@ -41,8 +57,8 @@ export class TileScale {
      * 获取cesium层级与分辨率关系的数组
      * @returns 层级与分辨率关系的数组
      */
-    getLevelScaleCesium() {
-        return this.getLevelScale(512);
+    getLevelScaleCesium(tileschame) {
+        return this.getLevelScale(512, tileschame);
     }
 
     /**
@@ -80,7 +96,7 @@ export class TileScale {
      * @param {boolean} isCesium 如果是三维图层，则不需要通过size去计算层级与瓦片的数组
      * @returns 偏移量
      */
-    getZoomOffsetByTileInfo(tileInfo, isCesium = false, tileSize = 256) {
+    getZoomOffsetByTileInfo(tileInfo, isCesium = false, tileSize = 256, tileschame = 'EPSG:3857') {
         let levelResolutions = [];
         const lodBegin = tileInfo.lods[0];
         if (!isCesium) {
@@ -88,9 +104,9 @@ export class TileScale {
             if (tileInfo.size && tileInfo.size.length > 0) {
                 tileSize = tileInfo.size[0];
             }
-            levelResolutions = this.getLevelScale(tileSize);
+            levelResolutions = this.getLevelScale(tileSize, tileschame);
         } else {
-            levelResolutions = this.getLevelScaleCesium();
+            levelResolutions = this.getLevelScaleCesium(tileschame);
         }
         let zoomOffset = this.getZoomOffsetByScale({
             resolution: lodBegin.resolution,
