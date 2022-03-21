@@ -116,6 +116,7 @@ export default class TilesLayer extends BaseLayer {
      * @param {Number} [optionsParam.tileWidth=2] 瓦片宽度 默认为256
      * @param {Number} [optionsParam.tileHeigh=1] 瓦片高度 默认为256
      * @param {Number} [optionsParam.maxLevel=19] 瓦片最大显示级数 默认为19
+     * @param {Number} [optionsParam.mapgisOffset=0] 瓦片错级数，默认为0
      * @param {String} [optionsParam.proxy] 转发代理
      * @returns {ImageryLayer} 瓦片层对象
      * @example
@@ -153,7 +154,8 @@ export default class TilesLayer extends BaseLayer {
                 tileWidth: options.tileWidth,
                 tileHeight: options.tileHeight,
                 proxy,
-                mapStyle: options.mapStyle
+                mapStyle: options.mapStyle,
+                mapgisOffset: options.mapgisOffset
             })
         );
         return mapGisTile;
