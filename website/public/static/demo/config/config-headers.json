@@ -52,13 +52,9 @@
             {
                 "title": "开发指南",
                 "icon": "iconkaifazhinan",
-                "links": [
-                    [
-                        "开发指南"
-                    ]
-                ],
-                "hightlights": [[true]],
-                "routes": [["/guide/component/development_component", "", "", "", "", "", "", "", "", "", "", ""]]
+                "links": [["Vue-Cesium", "Vue-MapboxGL", "Vue-UI"]],
+                "hightlights": [[true, false, true]],
+                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892", "http://120.78.82.242:8893"]]
             },
             {
                 "title": "常见问题",
@@ -90,13 +86,6 @@
                 ],
                 "hightlights": [[true, true, true]],
                 "routes": [["/storybook/index.html?path=/story/基础介绍-0-介绍--page"]]
-            },
-            {
-                "title": "开发API",
-                "icon": "iconsanfangAPI",
-                "links": [["Cesium-API", "MapboxGL-API", "UI-API"]],
-                "hightlights": [[true, false, true]],
-                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892", "http://120.78.82.242:8893"]]
             }
         ]
     },
@@ -108,7 +97,7 @@
                 "title": "产品",
                 "icon": "iconchanpinjieshao",
                 "links": [["产品介绍"]],
-                "hightlights": [[true]],
+                "hightlights": [[false]],
                 "routes": [
                     [
                         "/product/cesium/produce_cesium",
@@ -131,7 +120,7 @@
                         "开发指南"
                     ]
                 ],
-                "hightlights": [[true]],
+                "hightlights": [[false]],
                 "routes": [["/guide/cesium/development_cesium", "", "", "", "", "", "", "", "", "", "", ""]]
             },
             {
@@ -149,7 +138,22 @@
                 "type":"helper"
             },
             {
-                "title": "开发示例",
+                "title": "开发示例(新)",
+                "icon": "iconzaixianshili",
+                "hightlights": [[true, true, true, true]],
+                "links": [
+                    [
+                        "沙盒示例"
+                    ]
+                ],
+                "routes": [
+                    [
+                        "http://120.78.82.242:8891"
+                    ]
+                ]
+            },
+            {
+                "title": "开发示例(旧)",
                 "icon": "iconzaixianshili",
                 "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false, false, false]],
                 "links": [
@@ -190,48 +194,21 @@
                 ]
             },
             {
-                "title": "开发示例-新",
-                "icon": "iconzaixianshili",
-                "hightlights": [[true, true, true, true]],
-                "links": [
-                    [
-                        "M3D协议-2.0",
-                        "工具",
-                        "数据加载",
-                        "分析"
-                    ]
-                ],
-                "routes": [
-                    [
-                        "/gallery/cesium-new#m3d",
-                        "/gallery/cesium-new#tool",
-                        "/gallery/cesium-new#data",
-                        "/gallery/cesium-new#analysis"
-                    ]
-                ]
-            },
-            {
                 "title": "开发API",
                 "icon": "iconsanfangAPI",
                 "links": [
-                    ["客户端数据服务", "客户端可视化", "客户端渲染", "客户端事件管理", "客户端公共方法", "客户端视图管理", "客户端可视化分析"],
-                    ["Cesium", "TurfJs"]
+                    ["Cesium-1.59-Plugin", "Cesium-1.59", "Cesium-1.84", "TurfJs"]
                 ],
                 "hightlights": [
-                    [false, false, false, false, false, false, false],
-                    [false, false]
+                    [false, false, true, false]
                 ],
                 "routes": [
                     [
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E6%2595%25B0%25E6%258D%25AE%25E6%259C%258D%25E5%258A%25A1.html",
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596.html",
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E6%25B8%25B2%25E6%259F%2593.html",
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E4%25BA%258B%25E4%25BB%25B6%25E7%25AE%25A1%25E7%2590%2586.html",
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%2585%25AC%25E5%2585%25B1%25E6%2596%25B9%25E6%25B3%2595.html",
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E8%25A7%2586%25E5%259B%25BE%25E7%25AE%25A1%25E7%2590%2586.html",
-                        "/docs/cesium/module-%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AF%25E5%258F%25AF%25E8%25A7%2586%25E5%258C%2596%25E5%2588%2586%25E6%259E%2590.html"
-                    ],
-                    ["/docs/other/mapgis-cesium/index.html", "http://turfjs.org/"]
+                        "http://localhost:8080/docs/cesium/index.html",
+                        "/docs/other/mapgis-cesium/index.html", 
+                        "/docs/other/mapgis-cesium-old/index.html", 
+                        "http://turfjs.org/"
+                    ]
                 ]
             }
         ]
