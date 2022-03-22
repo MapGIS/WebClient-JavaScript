@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>加载WMS服务</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="cesium-1.59" src="./static/libs/include-cesium-local.js"></script>
+    <style type="text/css">
+        #GlobeView {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var webGlobe;
+        //定义图层类
+        var terrainlayer = undefined;
+        //地图初始化函数
+        function init() {
+            //实例化要加载的source来源对象（世界矢量地图）
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            webGlobe = new Cesium.WebSceneControl("GlobeView", {
+                terrainExaggeration: 1,
+            });
+            //显示鼠标位置控件
+            webGlobe.showPosition("coordinate_location");
+            if (terrainlayer) webGlobe.removeLayer(terrainlayer);
+            terrainlayer = webGlobe.append(
+                "http://192.168.10.186:6163/igs/rest/g3d/250DEM_3D", {}
+            );
+            //构造第三方图层对象
+            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                viewer: webGlobe.viewer
+            });
+            //加载天地图
+            var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                //天地图经纬度数据
+                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                token: "9c157e9585486c02edf817d2ecbc7752",
+                //地图类型 'vec'矢量 'img'影像 'ter'地形
+                ptype: "img"
+            });
+            webGlobe.flyToEx(94.9885, 30.6695, {
+                height: 9161,
+                heading: 30,
+                pitch: -10,
+                roll: 0,
+            });
+            /* var options = {
+              tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+              //瓦片初始级的列数 默认为2
+              colNum: 2,
+              //瓦片初始级的行数 默认为2
+              rowNum: 1,
+              //瓦片最大显示级数 默认为19
+              maxLevel: 5,
+              // proxy: '/ZDproxy.ashx',//如不存在跨域可不设置
+              //如瓦片裁的不是256,则需设置下面两个参数
+              tileWidth: 256,
+              tileHeight: 256,
+            };
+            //添加MapGISIGServer发布的瓦片
+            tilelayer = webGlobe.appendMapGISTile(
+              "http://192.168.10.186:6163/igs/rest/mrms/tile/250DEM",
+              options
+            ); */
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView"></div>
+    <!--坐标容器-->
+    <div id="coordinateDiv" class="coordinateClass">
+        <label id="coordinate_location"></label>
+        <label id="coordinate_height"></label>
+    </div>
+</body>
+
+</html>

@@ -90,7 +90,63 @@
                     "update": "最后更新时间:2022-03-14"
                 }
             ]
-        },        
+        },
+                {
+            "name": "MapGIS地图服务",
+            "iconfont": "icon_igs",
+            "folder": "mapgis",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "二维矢量图层服务",
+                    "file": "mapgis-2d-layer",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-2d-layer.png",
+                    "update": "最后更新时间：2021-05-14"
+                },
+                {
+                    "name": "二维地图文档服务",
+                    "file": "mapgis-2d-doc",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-2d-doc.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "二维瓦片地图服务",
+                    "file": "mapgis-2d-tile",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-2d-tile.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "地形高程",
+                    "file": "mapgis-terrain",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-terrain.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "栅格地形",
+                    "file": "mapgis-dem",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "mapgis-dem.png",
+                    "update": "最后更新时间：2020-06-17"
+                },
+                {
+                    "name": "地形影像",
+                    "file": "mapgis-raster",
+                    "diffcult": "2",
+                    "detail": "250精度的地形显示,数据来源SRTM,需要翻墙",
+                    "icon": "mapgis-raster.png",
+                    "update": "最后更新时间：2020-06-17"
+                }
+            ]
+        },
         {
             "name": "分析",
             "iconfont": "icon_analysis",

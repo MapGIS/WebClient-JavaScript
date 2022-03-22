@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <title>加载IGServer二维瓦片地图服务</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <script>
+     //在JS脚本开发中使用严格代码规范模式，及时捕获一些不规范的行为，从而避免编程错误        'use strict';
+     //定义三维视图的主要类
+     var viewer;
+     // 设置太阳时间
+     var utc = Cesium.JulianDate.fromDate(new Date('2021/05/04 12:00:00')); //UTC
+
+     //加载地图
+     function init() {
+         //构造三维视图对象（视图容器div的id，三维视图设置参数）
+         viewer = new Cesium.Viewer('mapgis-3d-viewer', {});
+         viewer.clockViewModel.currentTime = Cesium.JulianDate.addHours(utc, 8, new Cesium.JulianDate()); //北京时间=UTC+8=GMT+8
+         viewer.showPosition();
+
+         var { protocol, ip, port } = window.webclient;
+         //参数
+         var options = {
+             tileRang: Cesium.Rectangle.fromDegrees(-180, -90, 180, 90),
+             //瓦片初始级的列数 默认为2
+             colNum: 2,
+             //瓦片初始级的行数 默认为1
+             rowNum: 1,
+             //瓦片最大显示级数 默认为19
+             maxLevel: 19,
+             //如瓦片裁的不是256,则需设置下面两个参数
+             //瓦片宽度
+             tileWidth: 256,
+             //瓦片高度
+             tileHeight: 256
+             // proxy: '/ZDproxy.ashx' //如不存在跨域可不设置
+         };
+
+         var otherOptions ={
+             mapgisOffset: 10
+         };
+         var mapGisTile = viewer.scene.layers.appendImageryLayer(`${protocol}://${ip}:${port}/igs/rest/mrms/tile/EPSG_4326_WORLD_TILE`, otherOptions);
+
+             viewer.camera.flyTo({
+             destination: Cesium.Cartesian3.fromDegrees(116.4, 39.9, 1000000),
+             duration: 2,
+             orientation: {
+                 heading: Cesium.Math.toRadians(0),  //绕垂直于地心的轴旋转 ,相当于头部左右转
+                 pitch: Cesium.Math.toRadians(-15),  //绕经度线旋转， 相当于头部上下
+                 roll: Cesium.Math.toRadians(0) //绕纬度线旋转 ，面对的一面瞬时针转
+             }
+         });
+     }
+    </script>
+</head>
+
+<body onload="init()">
+    <!--三维场景容器-->
+    <div id="mapgis-3d-viewer">
+    </div>
+</body>
+
+</html>
