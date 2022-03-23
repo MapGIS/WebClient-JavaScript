@@ -143,12 +143,14 @@
                 "hightlights": [[true, true, true, true]],
                 "links": [
                     [
-                        "沙盒示例"
+                        "沙盒示例",
+						"地形分析"
                     ]
                 ],
                 "routes": [
                     [
-                        "http://120.78.82.242:8891"
+                        "http://120.78.82.242:8891",
+						"/gallery/cesium-new#terrian"
                     ]
                 ]
             },
