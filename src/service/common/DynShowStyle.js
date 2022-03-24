@@ -1,31 +1,17 @@
-﻿import {
-    Zondy
-} from './Base';
-import {
-    extend
-} from "./Util";
-import {
-    CDynNoteInfo
-} from "./CDynNoteInfo";
-import {
-    ISShowArc
-} from "./EnumComm";
-import {
-    CLineInfo
-} from "./CLineInfo";
-import {
-    CPointInfo
-} from "./CPointInfo";
-import {
-    CRegionInfo
-} from "./CRegionInfo";
+﻿import { Zondy } from './Base';
+import { extend } from './Util';
+import { CDynNoteInfo } from './CDynNoteInfo';
+import { ISShowArc } from './EnumComm';
+import { CLineInfo } from './CLineInfo';
+import { CPointInfo } from './CPointInfo';
+import { CRegionInfo } from './CRegionInfo';
 
 /**
  * 图层动态显示样式对象
  * @class Zondy.Object.DynShowStyle
  * @classdesc 地图文档显示样式对象构造函数
  * @param {Object} option 属性键值对
- * @param {Number} [option.Alpha = 0] 透明度
+ * @param {Number} [option.Alpha = 0] 透明度（0-100）,0表示全部显示，100表示隐藏，50表示半透明
  * @param {Boolean} [option.BugSpare = false] 是否使用错误处理符号
  * @param {Boolean} [option.CustomRender = false] 是否自绘驱动
  * @param {String} [option.CustomRenderPath = false] 自绘驱动路径设置
@@ -47,7 +33,7 @@ import {
  * @see Zondy.Object.CDisplayStyle
  */
 var DynShowStyle = function (option) {
-    var options = (option !== undefined) ? option : {};
+    var options = option !== undefined ? option : {};
     extend(this, options);
 
     /**
@@ -56,7 +42,7 @@ var DynShowStyle = function (option) {
      * @description 透明度
      * @default 0
      */
-    this.Alpha = (options.Alpha !== undefined) ? options.Alpha : 0;
+    this.Alpha = options.Alpha !== undefined ? options.Alpha : 0;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.BugSpare
@@ -64,7 +50,7 @@ var DynShowStyle = function (option) {
      * @description 是否使用错误处理符号
      * @default false
      */
-    this.BugSpare = (options.BugSpare !== undefined) ? options.BugSpare : false;
+    this.BugSpare = options.BugSpare !== undefined ? options.BugSpare : false;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.CustomRender
@@ -72,7 +58,7 @@ var DynShowStyle = function (option) {
      * @description 是否自绘驱动
      * @default false
      */
-    this.CustomRender = (options.CustomRender !== undefined) ? options.CustomRender : false;
+    this.CustomRender = options.CustomRender !== undefined ? options.CustomRender : false;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.CustomRenderPath
@@ -80,7 +66,7 @@ var DynShowStyle = function (option) {
      * @description 自绘驱动路径设置
      * @default null
      */
-    this.CustomRenderPath = (options.CustomRenderPath !== undefined) ? options.CustomRenderPath : null;
+    this.CustomRenderPath = options.CustomRenderPath !== undefined ? options.CustomRenderPath : null;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.DirectionLineClr
@@ -88,7 +74,7 @@ var DynShowStyle = function (option) {
      * @description 显示的线方向线符号(只适用于其颜色)
      * @default 0
      */
-    this.DirectionLineClr = (options.DirectionLineClr !== undefined) ? options.DirectionLineClr : 0;
+    this.DirectionLineClr = options.DirectionLineClr !== undefined ? options.DirectionLineClr : 0;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.DynNoteFlag
@@ -96,7 +82,7 @@ var DynShowStyle = function (option) {
      * @description 是否动态注记
      * @default false
      */
-    this.DynNoteFlag = (options.DynNoteFlag !== undefined) ? options.DynNoteFlag : false;
+    this.DynNoteFlag = options.DynNoteFlag !== undefined ? options.DynNoteFlag : false;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.DynNoteInfo
@@ -104,7 +90,7 @@ var DynShowStyle = function (option) {
      * @description 动态注记参数
      * @default null
      */
-    this.DynNoteInfo = (options.DynNoteInfo !== undefined) ? options.DynNoteInfo : null;
+    this.DynNoteInfo = options.DynNoteInfo !== undefined ? options.DynNoteInfo : null;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.IsShowArc
@@ -113,7 +99,7 @@ var DynShowStyle = function (option) {
      *  取值范围： 1（Zondy.Enum.ISShowArc.Reg）,2（Zondy.Enum.ISShowArc.Arc）,3（Zondy.Enum.ISShowArc.All）
      * @default 0
      */
-    this.IsShowArc = (options.IsShowArc !== undefined) ? options.IsShowArc : 0;
+    this.IsShowArc = options.IsShowArc !== undefined ? options.IsShowArc : 0;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.ISShowLineDirection
@@ -121,7 +107,7 @@ var DynShowStyle = function (option) {
      * @description 是否显示线方向
      * @default false
      */
-    this.ISShowLineDirection = (options.ISShowLineDirection !== undefined) ? options.ISShowLineDirection : false;
+    this.ISShowLineDirection = options.ISShowLineDirection !== undefined ? options.ISShowLineDirection : false;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.LineInfo
@@ -129,7 +115,7 @@ var DynShowStyle = function (option) {
      * @description 显示的弧段样式(只适用于其颜色)
      * @default null
      */
-    this.LineInfo = (options.LineInfo !== undefined) ? options.LineInfo : null;
+    this.LineInfo = options.LineInfo !== undefined ? options.LineInfo : null;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.MaxScale
@@ -137,7 +123,7 @@ var DynShowStyle = function (option) {
      * @description 最大显示比率
      * @default 0.00
      */
-    this.MaxScale = (options.MaxScale !== undefined) ? options.MaxScale : 0.00;
+    this.MaxScale = options.MaxScale !== undefined ? options.MaxScale : 0.0;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.MinScale
@@ -145,7 +131,7 @@ var DynShowStyle = function (option) {
      * @description 最小显示比率
      * @default 0.00
      */
-    this.MinScale = (options.MinScale !== undefined) ? options.MinScale : 0.00;
+    this.MinScale = options.MinScale !== undefined ? options.MinScale : 0.0;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.ShowCoordPnt
@@ -153,7 +139,7 @@ var DynShowStyle = function (option) {
      * @description 显示坐标点
      * @default false
      */
-    this.ShowCoordPnt = (options.ShowCoordPnt !== undefined) ? options.ShowCoordPnt : false;
+    this.ShowCoordPnt = options.ShowCoordPnt !== undefined ? options.ShowCoordPnt : false;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.SpareLineInfo
@@ -161,7 +147,7 @@ var DynShowStyle = function (option) {
      * @description 错误处理线符号
      * @default null
      */
-    this.SpareLineInfo = (options.SpareLineInfo !== undefined) ? options.SpareLineInfo : null;
+    this.SpareLineInfo = options.SpareLineInfo !== undefined ? options.SpareLineInfo : null;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.SparePointInfo
@@ -169,7 +155,7 @@ var DynShowStyle = function (option) {
      * @description 错误处理点符号
      * @default null
      */
-    this.SparePointInfo = (options.SparePointInfo !== undefined) ? options.SparePointInfo : null;
+    this.SparePointInfo = options.SparePointInfo !== undefined ? options.SparePointInfo : null;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.SpareRegInfo
@@ -177,7 +163,7 @@ var DynShowStyle = function (option) {
      * @description 错误处理区符号
      * @default null
      */
-    this.SpareRegInfo = (options.SpareRegInfo !== undefined) ? options.SpareRegInfo : null;
+    this.SpareRegInfo = options.SpareRegInfo !== undefined ? options.SpareRegInfo : null;
 
     /**
      * @member Zondy.Object.DynShowStyle.prototype.SymbleScale
@@ -185,9 +171,7 @@ var DynShowStyle = function (option) {
      * @description 符号显示比例
      * @default 0.00
      */
-    this.SymbleScale = (options.SymbleScale !== undefined) ? options.SymbleScale : 0.00;
+    this.SymbleScale = options.SymbleScale !== undefined ? options.SymbleScale : 0.0;
 };
-export {
-    DynShowStyle
-};
+export { DynShowStyle };
 Zondy.Object.DynShowStyle = DynShowStyle;
