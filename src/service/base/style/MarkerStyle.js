@@ -75,7 +75,8 @@ export default class MarkerStyle extends VectorStyle {
             xOffset = 0,
             yOffset = 0,
             text,
-            show = true
+            show = true,
+            scaleByDistance = new Cesium.NearFarScalar(100000, 1.0, 1000000, 0)
         } = options;
         const { url = '', rotation = 0, imageScale = 1, width, height } = options;
         let labelText;
@@ -108,7 +109,8 @@ export default class MarkerStyle extends VectorStyle {
                 outlineColor: Cesium.Color.fromCssColorString(outlineColor).withAlpha(outlineOpacity),
                 outlineWidth: outlineWidth,
                 backgroundColor: Cesium.Color.fromCssColorString(backgroundColor).withAlpha(backgroundOpacity),
-                pixelOffset: new Cesium.Cartesian2(xOffset, yOffset * -1)
+                pixelOffset: new Cesium.Cartesian2(xOffset, yOffset * -1),
+                scaleByDistance: scaleByDistance
             },
             billboard: billboard
         };
