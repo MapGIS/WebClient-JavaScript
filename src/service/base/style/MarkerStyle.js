@@ -101,7 +101,7 @@ export default class MarkerStyle extends VectorStyle {
         return {
             label: {
                 show: show,
-                text: labelText,
+                text: String(labelText),
                 scale: scale,
                 showBackground: true,
                 fillColor: Cesium.Color.fromCssColorString(color).withAlpha(opacity),
