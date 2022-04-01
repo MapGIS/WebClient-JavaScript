@@ -206,9 +206,9 @@
                 ],
                 "routes": [
                     [
-                        "http://localhost:8080/docs/cesium/index.html",
-                        "/docs/other/mapgis-cesium/index.html", 
+                        "/docs/cesium/index.html",
                         "/docs/other/mapgis-cesium-old/index.html", 
+                        "/docs/other/mapgis-cesium/index.html", 
                         "http://turfjs.org/"
                     ]
                 ]
