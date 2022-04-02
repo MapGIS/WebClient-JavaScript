@@ -282,8 +282,16 @@
             "leaffolder": true,
             "childs": [
                 {
-                    "name": "标绘工具",
-                    "file": "tool-plot",
+                    "name": "标绘工具(2D)",
+                    "file": "graohic-layer-2d",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "标绘工具(2D)-进阶",
+                    "file": "graohic-layer-2d-advance",
                     "diffcult": "1",
                     "detail": "",
                     "icon": "measure-plot.png",

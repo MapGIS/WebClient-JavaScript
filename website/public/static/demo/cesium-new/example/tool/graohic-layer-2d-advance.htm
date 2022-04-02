@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>标绘工具（二维）- 进阶</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <style>
+        .mapgis-3d-button{
+            padding: 10px;
+            border-radius: 4px;
+            background: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+      'use strict';
+      //定义三维视图的主要类
+      var viewer;
+      // 设置太阳时间
+      //UTC
+      var utc = Cesium.JulianDate.fromDate(new Date('2021/05/04 12:00:00'));
+      //北京时间=UTC+8=GMT+8
+      viewer.clockViewModel.currentTime = Cesium.JulianDate.addHours(utc, 8, new Cesium.JulianDate());
+
+      //标绘图层对象
+      var graphicsLayer;
+      //绘制参数
+      var drawOptions;
+      //绘制类型
+      var drawType;
+
+      //地图初始化函数
+      function init() {
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer('mapgis-3d-viewer', {});
+        viewer.showPosition();
+
+        //加载楼房数据
+        var url = 'http://192.168.88.204:8089/M3D/1.0/ks_buildings_result/ks_buildings_result.mcj';
+        var options = {
+          debugWireframe: false,
+          debugShowBoundingVolume: false,
+          maximumScreenSpaceError: 4
+        };
+        viewer.scene.layers.appendM3DLayer(url, options);
+
+        //初始化编辑结束函数
+        function finishEdit(result) {
+          console.log('finishEdit:', result);
+        }
+        //初始化绘制结束函数
+        function getGraphic(result) {
+          console.log('绘制结束:', result);
+        }
+        //初始化标绘图层
+        graphicsLayer = new Cesium.GraphicsLayer(viewer, { finishEdit: finishEdit, getGraphic: getGraphic });
+      }
+
+      //选择绘制类型
+      function selectDrawType() {
+        drawType = $('select  option:selected').val();
+      }
+
+      //开始绘制
+      function startDraw() {
+        drawType = drawType || 'loopPolyline';
+        //停止上一次绘制
+        graphicsLayer.stopDrawing();
+        switch (drawType){
+          //绘制曲线
+          case 'loopPolyline':
+            graphicsLayer.startDrawing({
+              type: 'polyline',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.CHARTREUSE,
+                //线宽
+                width: 3,
+                //是否为三次样条插值曲线
+                isHermiteSpline: true,
+              },
+            });
+            break
+        }
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer">
+</div>
+<select class="mapgis-3d-button" onchange="selectDrawType()">
+    <option value ="loopPolyline">绘制曲线</option>
+</select>
+<div onclick="startDraw()" style="left: 130px" class="mapgis-3d-button">开始绘制</div>
+</body>
+
+</html>
