@@ -36,7 +36,7 @@
       //绘制参数
       var drawOptions;
       //绘制类型
-      var drawType;
+      var advanceDrawType;
 
       //地图初始化函数
       function init() {
@@ -67,17 +67,17 @@
 
       //选择绘制类型
       function selectDrawType() {
-        drawType = $('select  option:selected').val();
+        advanceDrawType = $('select  option:selected').val();
       }
 
       //开始绘制
       function startDraw() {
-        drawType = drawType || 'loopPolyline';
+        advanceDrawType = advanceDrawType || 'splinePolyline';
         //停止上一次绘制
         graphicsLayer.stopDrawing();
-        switch (drawType){
+        switch (advanceDrawType){
           //绘制曲线
-          case 'loopPolyline':
+          case 'splinePolyline':
             graphicsLayer.startDrawing({
               type: 'polyline',
               style: {
@@ -89,7 +89,120 @@
                 isHermiteSpline: true,
               },
             });
-            break
+            break;
+          //绘制闭环线
+          case 'loopPolyline':
+            graphicsLayer.startDrawing({
+              type: 'polyline',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.BROWN,
+                //线宽
+                width: 3,
+                //是否为闭环线
+                loop: true,
+              },
+            });
+            break;
+          //绘制虚线
+          case 'dottedPolyline':
+            graphicsLayer.startDrawing({
+              type: 'polyline',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.BROWN,
+                //线宽
+                width: 3,
+                //指定材质为虚线
+                materialType: 'PolylineDash',
+              },
+            });
+            break;
+          //绘制箭头线
+          case 'arrowPolyline':
+            graphicsLayer.startDrawing({
+              type: 'polyline',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.BROWN,
+                //线宽
+                width: 3,
+                //指定材质为箭头线
+                materialType: 'PolylineArrow',
+              },
+            });
+            break;
+          //绘制动态圆波
+          case 'circleWave':
+            graphicsLayer.startDrawing({
+              type: 'circle',
+              style: {
+                //指定材质为CircleWaveMaterial
+                materialType: 'CircleWaveMaterial',
+                material: {
+                  //持续时间，越大圆波扩散越慢
+                  duration: 5000,
+                  //渐变
+                  gradient: 0.5,
+                  //颜色
+                  color: Cesium.Color.CYAN.withAlpha(0.7),
+                  //圆波数量
+                  count: 4
+                }
+              },
+            });
+            break;
+          //绘制雷达波
+          case 'circleRadar':
+            graphicsLayer.startDrawing({
+              type: 'circle',
+              style: {
+                //指定材质为CircleWaveMaterial
+                materialType: 'RadarMaterial',
+                material: {
+                  //颜色
+                  color: Cesium.Color.DARKORANGE,
+                  //雷达速度
+                  speed: 1
+                }
+              },
+            });
+            break;
+          //通过矩形绘制文字
+          case 'rectangleText':
+            graphicsLayer.startDrawing({
+              type: 'rectangle',
+              style: {
+                //指定材质为text
+                materialType: 'text',
+                //设置材质
+                material: {
+                  font: '30px 微软雅黑',
+                  text: '中地数码',
+                  fillColor: Cesium.Color.LIGHTSKYBLUE
+                }
+              },
+            });
+            break;
+          //通过矩形绘制图片
+          case 'rectangleImage':
+            graphicsLayer.startDrawing({
+              type: 'rectangle',
+              style: {
+                //指定材质为Image
+                materialType: 'Image',
+                //设置材质
+                material: {
+                  //图片链接
+                  image: 'http://develop.smaryun.com/static/assets/bane/banner.png',
+                  //图片XY轴重复次数
+                  repeat: new Cesium.Cartesian2(1, 1)
+                },
+                //图片旋转角度
+                stRotation: 0
+              },
+            });
+            break;
         }
       }
     </script>
@@ -99,9 +212,16 @@
 <div id="mapgis-3d-viewer">
 </div>
 <select class="mapgis-3d-button" onchange="selectDrawType()">
-    <option value ="loopPolyline">绘制曲线</option>
+    <option value ="splinePolyline">绘制曲线</option>
+    <option value ="loopPolyline">绘制闭环线</option>
+    <option value ="dottedPolyline">绘制虚线</option>
+    <option value ="arrowPolyline">绘制箭头线</option>
+    <option value ="circleWave">绘制动态圆波</option>
+    <option value ="circleRadar">绘制雷达波</option>
+    <option value ="rectangleText">通过矩形绘制文字</option>
+    <option value ="rectangleImage">通过矩形绘制图片</option>
 </select>
-<div onclick="startDraw()" style="left: 130px" class="mapgis-3d-button">开始绘制</div>
+<div onclick="startDraw()" style="left: 180px" class="mapgis-3d-button">开始绘制</div>
 </body>
 
 </html>
