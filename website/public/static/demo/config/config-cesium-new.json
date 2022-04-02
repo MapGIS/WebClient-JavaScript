@@ -298,6 +298,14 @@
                     "update": "最后更新时间:2022-03-14"
                 },
                 {
+                    "name": "标绘工具(3D)",
+                    "file": "graohic-layer-3d",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "measure-plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
                     "name": "模型编辑",
                     "file": "tool-edit",
                     "diffcult": "1",
