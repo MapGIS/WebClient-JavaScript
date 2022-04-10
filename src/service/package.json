@@ -1,6 +1,6 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version": "10.5.14",
+    "version": "15.6.1",
     "description": "中地数码基于ES6语法针对igserver的服务封装",
     "main1": "dist-libs/webclient-es6-service.min.js",
     "module": "index.js",
@@ -12,7 +12,6 @@
     "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
     "license": "Apache-2.0",
     "dependencies": {
-        "core-js": "^3.6.5",
         "@turf/turf": "^6.5.0",
         "axios": "^0.26.0",
         "core-js": "^3.21.1",
