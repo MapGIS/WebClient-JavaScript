@@ -1,8 +1,8 @@
-﻿import {Zondy} from "../../common/Base";
-import {toJSON}  from  "../../common/Util";
-import {newGuid}  from  "../../common/Util";
-import {CatalogService}  from  "./CatalogService";
-import {IgsServiceBase}  from  "../../baseserver/IServiceBase";
+﻿import { Zondy } from '../../common/Base';
+import { toJSON } from '../../common/Util';
+import { newGuid } from '../../common/Util';
+import { CatalogService } from './CatalogService';
+import { IgsServiceBase } from '../../baseserver/IServiceBase';
 
 /**
  * @author 基础平台/产品2部 龚跃健
@@ -66,7 +66,7 @@ class MapDoc extends CatalogService {
          * @description 指定地图文档相关信息的结构，默认includeDetails为true ,includeSubs为false
          * @default {includeDetails:true,includeSubs:false}
          */
-        this.include = options.include !== undefined ? options.include : "{includeDetails:true,includeSubs:false}";
+        this.include = options.include !== undefined ? options.include : '{includeDetails:true,includeSubs:false}';
 
         /**
          * @private
@@ -108,7 +108,7 @@ class MapDoc extends CatalogService {
      */
     getMapDocList(onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs?v=" + this.version + "&f=json";
+        me.partUrl = 'docs?v=' + this.version + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -142,17 +142,17 @@ class MapDoc extends CatalogService {
      */
     getMapDocInfo(onSuccess, details, subs, onError, returnFullStyle) {
         var me = this;
-        if (typeof (returnFullStyle) === "boolean") {
+        if (typeof returnFullStyle === 'boolean') {
             me.returnFullStyle = returnFullStyle;
         }
-        if (typeof (details) === "boolean" || typeof (subs) === "boolean") {
+        if (typeof details === 'boolean' || typeof subs === 'boolean') {
             var includeObj = {
-                includeDetails: (typeof (details) === "boolean") ? details : true,
-                includeSubs: (typeof (subs) === "boolean") ? subs : false
+                includeDetails: typeof details === 'boolean' ? details : true,
+                includeSubs: typeof subs === 'boolean' ? subs : false
             };
             me.include = toJSON(includeObj);
         }
-        me.partUrl = "docs/" + me.docName + "?include=" + me.include + "&returnFullStyle=" + me.returnFullStyle + "&guid=" + me.guid + "&f=json";
+        me.partUrl = 'docs/' + me.docName + '?include=' + me.include + '&returnFullStyle=' + me.returnFullStyle + '&guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -178,16 +178,16 @@ class MapDoc extends CatalogService {
                 });
      mapdoc.getMapInfo(function(res){
                     console.log(res)
-                },false,false,function (error) {
+                },false,function (error) {
                     console.log(error)
                 });
      */
     getMapInfo(onSuccess, returnFullStyle, onError) {
         var me = this;
-        if (typeof (returnFullStyle) === "boolean") {
+        if (typeof returnFullStyle === 'boolean') {
             me.returnFullStyle = returnFullStyle;
         }
-        me.partUrl = "docs/" + me.docName + "/" + me.mapIndex + "?returnFullStyle=" + me.returnFullStyle + "&guid=" + me.guid + "&f=json";
+        me.partUrl = 'docs/' + me.docName + '/' + me.mapIndex + '?returnFullStyle=' + me.returnFullStyle + '&guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -218,7 +218,7 @@ class MapDoc extends CatalogService {
      */
     getMapDocTree(onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs/" + me.docName + "?tree=true&guid=" + me.guid + "&f=json";
+        me.partUrl = 'docs/' + me.docName + '?tree=true&guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -229,7 +229,6 @@ class MapDoc extends CatalogService {
         });
         service.processAsync();
     }
-
 
     /**
      * 获取指定地图下指定图层的相关信息
@@ -251,7 +250,8 @@ class MapDoc extends CatalogService {
      */
     getLayerInfo(onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs/" + me.docName + "/" + me.mapIndex + "/" + me.layerID + "?returnFullStyle=" + me.returnFullStyle + "&guid=" + me.guid + "&f=json";
+        me.partUrl =
+            'docs/' + me.docName + '/' + me.mapIndex + '/' + me.layerID + '?returnFullStyle=' + me.returnFullStyle + '&guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -282,7 +282,7 @@ class MapDoc extends CatalogService {
      */
     getLayersInfo(onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs/" + me.docName + "/" + me.mapIndex + "/layers?f=json";
+        me.partUrl = 'docs/' + me.docName + '/' + me.mapIndex + '/layers?f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -315,7 +315,7 @@ class MapDoc extends CatalogService {
      */
     deleteLayer(onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs/" + me.docName + "/" + me.mapIndex + "/layers/delete?layerIDs=" + me.layerID + "&guid=" + me.guid + "&f=json";
+        me.partUrl = 'docs/' + me.docName + '/' + me.mapIndex + '/layers/delete?layerIDs=' + me.layerID + '&guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -356,7 +356,7 @@ class MapDoc extends CatalogService {
      */
     addLayer(addLayerInfos, onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs/" + me.docName + "/" + me.mapIndex + "/layers/add?guid=" + me.guid + "&f=json";
+        me.partUrl = 'docs/' + me.docName + '/' + me.mapIndex + '/layers/add?guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -368,7 +368,7 @@ class MapDoc extends CatalogService {
         service.processAsync({
             method: 'POST',
             data: JSON.stringify(addLayerInfos),
-            headers: {'Content-Type': 'text/plain;charset=UTF-8'}
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
         });
     }
 
@@ -393,7 +393,7 @@ class MapDoc extends CatalogService {
      */
     changeIndex(newIndexArray, onSuccess, onError) {
         var me = this;
-        me.partUrl = "docs/" + me.docName + "/" + me.mapIndex + "/layers/index?guid=" + me.guid + "&f=json";
+        me.partUrl = 'docs/' + me.docName + '/' + me.mapIndex + '/layers/index?guid=' + me.guid + '&f=json';
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -405,7 +405,7 @@ class MapDoc extends CatalogService {
         service.processAsync({
             method: 'POST',
             data: JSON.stringify(newIndexArray),
-            header: {'Content-Type': 'text/plain;charset=UTF-8'}
+            header: { 'Content-Type': 'text/plain;charset=UTF-8' }
         });
     }
 
@@ -431,7 +431,7 @@ class MapDoc extends CatalogService {
      */
     getLegendInfo(layerIDs, fields, onSuccess, onError) {
         var me = this;
-        me.partUrl = "legendInfo/" + me.docName + "?f=json&layerIndexes=" + layerIDs + "&fields=" + fields;
+        me.partUrl = 'legendInfo/' + me.docName + '?f=json&layerIndexes=' + layerIDs + '&fields=' + fields;
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
@@ -443,5 +443,5 @@ class MapDoc extends CatalogService {
         service.processAsync();
     }
 }
-export {MapDoc};
+export { MapDoc };
 Zondy.Catalog.MapDoc = MapDoc;
