@@ -338,6 +338,22 @@
                     "update": "最后更新时间:2022-03-14"
                 }
             ]
+        },
+        {
+            "name": "可视化",
+            "iconfont": "icon_clientview",
+            "folder": "view",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "专题图",
+                    "file": "theme-layer",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "theme-layer.png",
+                    "update": "最后更新时间:2022-04-13"
+                }
+            ]
         }
     ]
 }
