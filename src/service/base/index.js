@@ -12,7 +12,7 @@ import {
     FontStyle,
     ModelStyle,
     TrackStyle
-} from './style';
+} from './symbols';
 
 export {
     Enum,

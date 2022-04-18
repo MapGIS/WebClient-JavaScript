@@ -4,7 +4,7 @@ import { Anchor } from './Enum';
 
 /**
  * 符号样式
- * @class mapgis.style.SymbolStyle
+ * @class mapgis.style.GraphicStyle
  * @classdesc 符号样式
  * @param {String} [pattern = ""] 符号名称或url
  * @param {Number} [opacity = 1] 透明度，0~1之间的值，默认为1，不透明
@@ -15,7 +15,7 @@ import { Anchor } from './Enum';
  * @param {Number} [offsetY = 0] Y轴偏移
  * @param {String} [anchor = center] 锚点
  */
-export default class Symbol {
+export default class Graphic {
     constructor(option) {
         var options = option ? option : {};
         const { pattern = undefined, opacity = 1.0, allowOverlap = false } = options;
@@ -36,5 +36,5 @@ export default class Symbol {
     }
 }
 
-export { Symbol };
-mapgis.style.SymbolStyle = Symbol;
+export { Graphic };
+mapgis.style.GraphicStyle = Graphic;

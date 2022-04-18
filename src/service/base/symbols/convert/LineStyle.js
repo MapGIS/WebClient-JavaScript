@@ -3,7 +3,7 @@ import { mapgis } from '../common/base';
 import { VectorStyle } from './VectorStyle';
 import { LineCap, LineJoin } from './Enum';
 import { Shadow } from './Shadow';
-import { Symbol } from './Symbol';
+import { Graphic } from './Graphic';
 
 /**
  * 线样式
@@ -34,7 +34,7 @@ export default class LineStyle extends VectorStyle {
         this.cap = cap;
         this.join = join;
         this.shadowStyle = shadow || new Shadow();
-        this.symbolStyle = symbol || new Symbol();
+        this.symbolStyle = symbol || new Graphic();
         extend(this, options);
     }
 
