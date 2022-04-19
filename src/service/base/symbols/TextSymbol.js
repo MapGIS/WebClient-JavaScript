@@ -1,5 +1,6 @@
 import { mapgis } from '../common/base';
 
+import { HorizontalAlignment, VerticalAlignment } from './Enum';
 import Symbol from './Symbol';
 import Font from './Font';
 
@@ -17,13 +18,13 @@ import Font from './Font';
  * @param {Font} [font] 文本符号字体
  * @param {String} [haloColor] 文本符号光晕颜色
  * @param {Number} [haloSize] 文本符号光晕大小
- * @param {String} [horizontalAlignment='center'] 文本符号水平方向，可选"left"|"right"|"center"
+ * @param {HorizontalAlignment} [horizontalAlignment='center'] 文本符号水平方向，可选"left"|"right"|"center"
  * @param {Boolean} [kerning=true] 文本符号空格间距
  * @param {Number} [lineHeight=1.0] 文本符号行高
  * @param {Number} [lineWidth=192] 文本符号行宽
  * @param {Boolean} [rotated=false] 文本符号是否旋转
  * @param {String} [text] 文本符号显示内容
- * @param {String} [verticalAlignment='baseline'] 文本符号垂直对齐,可选"baseline"|"top"|"middle"|"bottom"
+ * @param {VerticalAlignment} [verticalAlignment='baseline'] 文本符号垂直对齐,可选"baseline"|"top"|"middle"|"bottom"
  * @param {Number} [xoffset=0] 文本符号x偏移
  * @param {Number} [yoffset=0] 文本符号y偏移
  */
@@ -33,7 +34,7 @@ export default class TextSymbol extends Symbol {
         var options = option ? option : {};
         const { angle = 0, backgroundColor, borderLineColor, borderLineSize } = options;
         const { color = 'rgb(0,0,0)', font, haloColor, haloSize } = options;
-        const { horizontalAlignment = 'center', verticalAlignment = 'baseline' } = options;
+        const { horizontalAlignment = HorizontalAlignment.center, verticalAlignment = VerticalAlignment.baseline } = options;
         const { kerning = true, lineHeight = 1.0, lineWidth = 192, rotated = false } = options;
         const { text, xoffset = 0, yoffset = 0 } = options;
 
@@ -67,7 +68,7 @@ export default class TextSymbol extends Symbol {
         const { type = 'text' } = json;
         const { angle = 0, backgroundColor, borderLineColor, borderLineSize } = json;
         const { color = 'rgb(0,0,0)', font, haloColor, haloSize } = json;
-        const { horizontalAlignment = 'center', verticalAlignment = 'baseline' } = json;
+        const { horizontalAlignment = HorizontalAlignment.center, verticalAlignment = VerticalAlignment.baseline } = json;
         const { kerning = true, lineHeight = 1.0, lineWidth = 192, rotated = false } = json;
         const { text, xoffset = 0, yoffset = 0 } = json;
 

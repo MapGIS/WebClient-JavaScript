@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 
 import MarkerSymbol from './MarkerSymbol';
 import SimpleLineSymbol from './SimpleLineSymbol';
+import { MarkStyle } from './Enum';
 
 /**
  * 简单标记符号
@@ -15,7 +16,7 @@ import SimpleLineSymbol from './SimpleLineSymbol';
  * @param {SimpleLineSymbol} [outline] 简单标记轮廓线符号
  * @param {Number} [path] 简单标记SVG路径
  * @param {Number} [size = 12] 简单标记大小，默认为12像素
- * @param {Number} [style = 'circle'] 简单标记样式类型，可选"circle"|"square"|"cross"|"x"|"diamond"|"triangle"|"path"
+ * @param {MarkStyle} [style = 'circle'] 简单标记样式类型，可选"circle"|"square"|"cross"|"x"|"diamond"|"triangle"|"path"
  * @param {Number} [xoffset = 0] 简单标记x偏移，默认为0像素
  * @param {Number} [yoffset = 0] 简单标记y偏移，默认为0像素
  */
@@ -24,7 +25,7 @@ export default class SimpleMarkerSymbol extends MarkerSymbol {
         super(option);
         var options = option ? option : {};
         const { angle = 0.0, color = 'rgba(255, 255, 255, 0.25)', outline = undefined } = options;
-        const { path = undefined, size = 12, style = 'circle' } = options;
+        const { path = undefined, size = 12, style = MarkStyle.circle } = options;
         const { xoffset = 0, yoffset = 0 } = options;
         this.type = 'simple-marker';
 
@@ -54,7 +55,7 @@ export default class SimpleMarkerSymbol extends MarkerSymbol {
         const { type = 'simple-marker' } = json;
         const { opacity = 1.0 } = json;
         const { angle = 0.0, color = 'rgba(255, 255, 255, 0.25)', outline = 0 } = json;
-        const { path = undefined, size = 12, style = 'circle' } = json;
+        const { path = undefined, size = 12, style = MarkStyle.circle } = json;
         const { xoffset = 0, yoffset = 0 } = json;
 
         // 基类属性Symbol.fromJSON

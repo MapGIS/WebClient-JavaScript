@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 
 import { FillSymbol } from './FillSymbol';
 import SimpleLineSymbol from './SimpleLineSymbol';
+import { FillStyle } from './Enum';
 
 /**
  * 简单标记符号
@@ -12,13 +13,13 @@ import SimpleLineSymbol from './SimpleLineSymbol';
  * @param {String} [type = 'simple-fill'] 简单填充符号类型，只能是simple-line
  * @param {String} [color = 'rgba(0, 0, 0, 0.25)'] 简单填充符号颜色，默认为'rgba(0, 0, 0, 0.25)'
  * @param {SimpleLineSymbol} [outline] 简单填充符号轮廓
- * @param {Number} [style = 'solid'] 简单填充符号样式类型，可选"backward-diagonal"|"cross"|"diagonal-cross"|"forward-diagonal"|"horizontal"|"none"|"solid"|"vertical"
+ * @param {FillStyle} [style = 'solid'] 简单填充符号样式类型，可选"backward-diagonal"|"cross"|"diagonal-cross"|"forward-diagonal"|"horizontal"|"none"|"solid"|"vertical"
  */
 export default class SimpleFillSymbol extends FillSymbol {
     constructor(option) {
         super(option);
         var options = option ? option : {};
-        const { color = 'rgba(0, 0, 0, 0.25)', outline = undefined, style = 'solid' } = options;
+        const { color = 'rgba(0, 0, 0, 0.25)', outline = undefined, style = FillStyle.solid } = options;
 
         this.type = 'simple-fill';
 
@@ -42,7 +43,7 @@ export default class SimpleFillSymbol extends FillSymbol {
         json = json || {};
         const { type = 'simple-marker' } = json;
         const { opacity = 1 } = json;
-        const { color = 'rgba(0, 0, 0, 0.25)', outline = undefined, style = 'solid' } = options;
+        const { color = 'rgba(0, 0, 0, 0.25)', outline = undefined, style = FillStyle.solid } = options;
 
         // 基类属性Symbol.fromJSON
         this.opacity = opacity;

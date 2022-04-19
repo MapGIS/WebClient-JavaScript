@@ -1,5 +1,7 @@
 import { mapgis } from '../common/base';
 
+import { FontStyle, FontWeight } from './Enum';
+
 /**
  * 字体
  * @author 基础平台-潘卓然
@@ -8,14 +10,14 @@ import { mapgis } from '../common/base';
  * @param {String} [decoration = 'none'] 字体装饰，可选"underline"|"line-through"|"none"
  * @param {String} [family = '宋体'] 字号
  * @param {Number} [size = 9] 字体大小
- * @param {Number} [style = 'normal'] 字体样式, 可选"normal"|"italic"|"oblique"
- * @param {Number} [weight = 'normal'] 字体粗细, 可选"normal"|"bold"|"bolder"|"lighter"
+ * @param {FontStyle} [style = 'normal'] 字体样式, 可选"normal"|"italic"|"oblique"
+ * @param {FontWeight} [weight = 'normal'] 字体粗细, 可选"normal"|"bold"|"bolder"|"lighter"
  */
 export default class Font {
     constructor(option) {
         var options = option ? option : {};
         const { decoration = 'none', family = '宋体' } = options;
-        const { size = 9, style = 'normal', weight = 'normal' } = options;
+        const { size = 9, style = FontStyle.normal, weight = FontWeight.normal } = options;
 
         this.decoration = decoration;
         this.family = family;
@@ -38,7 +40,7 @@ export default class Font {
     fromJSON(json) {
         json = json || {};
         const { decoration = 'none', family = '宋体' } = json;
-        const { size = 9, style = 'normal', weight = 'normal' } = json;
+        const { size = 9, style = FontStyle.normal, weight = FontWeight.normal } = json;
 
         this.decoration = decoration;
         this.family = family;

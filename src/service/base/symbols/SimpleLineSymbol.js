@@ -2,6 +2,7 @@ import { mapgis } from '../common/base';
 import { cloneDeep } from 'lodash';
 
 import { LineSymbol } from './LineSymbol';
+import { Cap, Join, LineStyle } from './Enum';
 
 /**
  * 简单标记符号
@@ -9,22 +10,22 @@ import { LineSymbol } from './LineSymbol';
  * @class mapgis.symbols.PointStyle
  * @classdesc 简单线符号
  * @param {String} [type = 'simple-line'] 简单线符号类型，只能是simple-line
- * @param {String} [cap = 'round'] 简单线符号线头类型，默认为圆头round, 可选"butt" 平头 |"round" 圆头 |"square" 方头
+ * @param {Cap} [cap = 'round'] 简单线符号线头类型，默认为圆头round, 可选"butt" 平头 |"round" 圆头 |"square" 方头
  * @param {String} [color = 'rgb(0, 0, 0)'] 简单线符号颜色，默认为'rgb(0, 0, 0)'
- * @param {String} [join = 'bevel'] 简单线符号拐角类型,可选"miter" 尖角 |"round" 圆角 |"bevel" 平角
+ * @param {Join} [join = 'bevel'] 简单线符号拐角类型,可选"miter" 尖角 |"round" 圆角 |"bevel" 平角
  * @param {LineSymbolMarker} [marker] 简单线符号标注类型
  * @param {Number} [miterLimit = 2] 简单线符号最大挂角宽度，默认为2
- * @param {Number} [style = 'solid'] 简单线符号样式类型，可选"dash"|"dash-dot"|"dot"|"long-dash"|"long-dash-dot"|"long-dash-dot-dot"|"none"|"short-dash"|"short-dash-dot"|"short-dash-dot-dot"|"short-dot"|"solid"
+ * @param {LineStyle} [style = 'solid'] 简单线符号样式类型，可选"dash"|"dash-dot"|"dot"|"long-dash"|"long-dash-dot"|"long-dash-dot-dot"|"none"|"short-dash"|"short-dash-dot"|"short-dash-dot-dot"|"short-dot"|"solid"
  * @param {Number} [width = 0.75] 简单线符号宽度，默认为0.75
  */
 export default class SimpleLineSymbol extends LineSymbol {
     constructor(option) {
         super(option);
         var options = option ? option : {};
-        const { cap = 'round', color = 'rgb(0, 0, 0)', join = 'bevel'} = options;
-        const { marker = undefined, miterLimit = 2, style = 'solid' } = options;
-        const { width = 0.75} = options;
-        
+        const { cap = Cap.round, color = 'rgb(0, 0, 0)', join = Join.bevel } = options;
+        const { marker = undefined, miterLimit = 2, style = LineStyle.solid } = options;
+        const { width = 0.75 } = options;
+
         this.type = 'simple-line';
 
         this.cap = cap;
@@ -49,10 +50,10 @@ export default class SimpleLineSymbol extends LineSymbol {
      */
     fromJSON(json) {
         json = json || {};
-        const { type = 'simple-marker' } = json;
-        const { angle = 0.0, color = 'rgba(255, 255, 255, 0.25)', outline = 0 } = json;
-        const { path = undefined, size = 12, style = 'circle' } = json;
-        const { xoffset = 0, yoffset = 0 } = json;
+        const { type = 'simple-line' } = json;
+        const { cap = Cap.round, color = 'rgb(0, 0, 0)', join = Join.bevel } = json;
+        const { marker = undefined, miterLimit = 2, style = LineStyle.solid } = json;
+        const { width = 0.75 } = json;
 
         // 基类属性Symbol.fromJSON
         this.opacity = opacity;
