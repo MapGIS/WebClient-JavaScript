@@ -10,23 +10,23 @@ import Font from './Font';
  * @class mapgis.symbols.PointStyle
  * @classdesc 文本符号
  * @param {String} [type = 'text'] marker类型:只能是"text"
- * @param {Number} [angle = 0] 文本符号角度
- * @param {String} [backgroundColor] 文本符号背景颜色
- * @param {String} [borderLineColor] 文本符号边界颜色
- * @param {Number} [borderLineSize] 文本符号边界宽度
- * @param {String} [color='rgb(0,0,0)'] 文本符号颜色
- * @param {Font} [font] 文本符号字体
- * @param {String} [haloColor] 文本符号光晕颜色
- * @param {Number} [haloSize] 文本符号光晕大小
- * @param {HorizontalAlignment} [horizontalAlignment='center'] 文本符号水平方向，可选"left"|"right"|"center"
- * @param {Boolean} [kerning=true] 文本符号空格间距
- * @param {Number} [lineHeight=1.0] 文本符号行高
- * @param {Number} [lineWidth=192] 文本符号行宽
- * @param {Boolean} [rotated=false] 文本符号是否旋转
- * @param {String} [text] 文本符号显示内容
- * @param {VerticalAlignment} [verticalAlignment='baseline'] 文本符号垂直对齐,可选"baseline"|"top"|"middle"|"bottom"
- * @param {Number} [xoffset=0] 文本符号x偏移
- * @param {Number} [yoffset=0] 文本符号y偏移
+ * @param {Number} [angle = 0] 角度
+ * @param {String} [backgroundColor] 背景颜色
+ * @param {String} [borderLineColor] 边界颜色
+ * @param {Number} [borderLineSize] 边界宽度
+ * @param {String} [color='rgb(0,0,0)'] 颜色
+ * @param {Font} [font] 字体
+ * @param {String} [haloColor] 光晕颜色
+ * @param {Number} [haloSize] 光晕大小
+ * @param {HorizontalAlignment} [horizontalAlignment='center'] 水平方向，可选"left"|"right"|"center"
+ * @param {Boolean} [kerning=true] 空格间距
+ * @param {Number} [lineHeight=1.0] 行高
+ * @param {Number} [lineWidth=192] 行宽
+ * @param {Boolean} [rotated=false] 是否旋转
+ * @param {String} [text] 显示内容
+ * @param {VerticalAlignment} [verticalAlignment='baseline'] 垂直对齐,可选"baseline"|"top"|"middle"|"bottom"
+ * @param {Number} [xoffset=0] x偏移
+ * @param {Number} [yoffset=0] y偏移
  */
 export default class TextSymbol extends Symbol {
     constructor(option) {

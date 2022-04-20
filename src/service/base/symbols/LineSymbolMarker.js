@@ -14,7 +14,6 @@ import { LineMarkerStyle, LineMarkerPlacement } from './Enum';
  */
 export default class LineSymbolMarker {
     constructor(option) {
-        super(option);
         var options = option ? option : {};
         const { color = 'rgb(0,0,0)', placement = LineMarkerPlacement.begin_end, style = LineMarkerStyle.arrow } = options;
         this.type = 'line-marker';

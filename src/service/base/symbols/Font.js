@@ -1,6 +1,6 @@
 import { mapgis } from '../common/base';
 
-import { FontStyle, FontWeight } from './Enum';
+import { FontDecoration, FontStyle, FontWeight } from './Enum';
 
 /**
  * 字体
@@ -16,7 +16,7 @@ import { FontStyle, FontWeight } from './Enum';
 export default class Font {
     constructor(option) {
         var options = option ? option : {};
-        const { decoration = 'none', family = '宋体' } = options;
+        const { decoration = FontDecoration.none, family = '宋体' } = options;
         const { size = 9, style = FontStyle.normal, weight = FontWeight.normal } = options;
 
         this.decoration = decoration;
@@ -39,7 +39,7 @@ export default class Font {
      */
     fromJSON(json) {
         json = json || {};
-        const { decoration = 'none', family = '宋体' } = json;
+        const { decoration = FontDecoration.none, family = '宋体' } = json;
         const { size = 9, style = FontStyle.normal, weight = FontWeight.normal } = json;
 
         this.decoration = decoration;

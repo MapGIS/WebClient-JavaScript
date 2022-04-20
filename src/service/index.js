@@ -1,6 +1,6 @@
 //-------命名空间 mapgis 开始-----
 import * as Util from './utils';
-import * as Style from './base/style';
+import * as Symbol from './base/symbols';
 import * as geoJSON from './base/format/geojson';
 import * as Crs from './base/crs';
 //-------命名空间 mapgis 结束-----
@@ -29,7 +29,7 @@ import ArcGis from './ArcGis';
 
 export {
     Util,
-    Style,
+    Symbol,
     geoJSON,
     Crs,
     Common,
@@ -52,7 +52,7 @@ export {
 
 const All = {
     //-------命名空间 mapgis 开始-----
-    Style,
+    Symbol,
     geoJSON,
     Util,
     Crs,

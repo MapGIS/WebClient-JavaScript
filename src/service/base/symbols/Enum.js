@@ -17,16 +17,16 @@ export const MarkStyle = {
  */
 export const LineStyle = {
     dash: 'dash',
-    dash_dot: 'dash-dot',
+    'dash-dot': 'dash-dot',
     dot: 'dot',
-    long_dash: 'long-dash',
-    long_dash_dot: 'long-dash-dot',
-    long_dash_dot_dot: 'long-dash-dot-dot',
+    'long-dash': 'long-dash',
+    'long-dash-dot': 'long-dash-dot',
+    'long-dash-dot-dot': 'long-dash-dot-dot',
     none: 'none',
-    short_dash: 'short-dash',
-    short_dash_dot: 'short-dash-dot',
-    short_dash_dot_dot: 'short-dash-dot-dot',
-    short_dot: 'short-dot',
+    'short-dash': 'short-dash',
+    'short-dash-dot': 'short-dash-dot',
+    'short-dash-dot-dot': 'short-dash-dot-dot',
+    'short-dot': 'short-dot',
     solid: 'solid'
 };
 
@@ -48,10 +48,10 @@ export const LineMarkerStyle = {
  * @description 填充样式
  */
 export const FillStyle = {
-    backward_diagonal: 'backward-diagonal',
+    'backward-diagonal': 'backward-diagonal',
     cross: 'cross',
-    diagonal_cross: 'diagonal-cross',
-    forward_diagonal: 'forward-diagonal',
+    'diagonal-cross': 'diagonal-cross',
+    'forward-diagonal': 'forward-diagonal',
     horizontal: 'horizontal',
     none: 'none',
     solid: 'solid',
@@ -77,6 +77,16 @@ export const FontWeight = {
     bold: 'bold',
     bolder: 'bolder',
     lighter: 'lighter'
+};
+
+/**
+ * @enum FontDecoration
+ * @description 字体权重
+ */
+export const FontDecoration = {
+    underline: 'underline',
+    'line-through': 'line-through',
+    none: 'none'
 };
 
 /**
@@ -116,7 +126,11 @@ export const Cap = {
     /**
      * 平头
      */
-    square: 'square'
+    square: 'square',
+    /**
+     * 无，仅三维生效
+     */
+    none: 'none'
 };
 
 /**
@@ -145,7 +159,7 @@ export const Join = {
 export const LineMarkerPlacement = {
     begin: 'begin',
     end: 'end',
-    begin_end: 'begin-end'
+    'begin-end': 'begin-end'
 };
 
 /**
@@ -161,7 +175,9 @@ export const Anchor = {
     'top-left': 'top-left',
     'top-right': 'top-right',
     'bottom-left': 'bottom-left',
-    'bottom-right': 'bottom-right'
+    'bottom-right': 'bottom-right',
+    origin: 'origin',
+    relative: 'relative'
 };
 /**
  * @enum Align

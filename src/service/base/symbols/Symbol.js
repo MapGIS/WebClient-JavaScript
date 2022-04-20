@@ -4,7 +4,7 @@ import { mapgis } from '../common/base';
  * 符号基类
  * @author 基础平台-潘卓然
  * @class mapgis.symbols.Symbol
- * @classdesc 矢量样式基类
+ * @classdesc 符号基类
  * @param {Number} [opacity = 1] 透明度，0~1之间的值，默认为1，不透明
  * @param {String} [color = #FFFFFF] 颜色，十六进制或RGB，默认为#FFFFFF，白色
  */

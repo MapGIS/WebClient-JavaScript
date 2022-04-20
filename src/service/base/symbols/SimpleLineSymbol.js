@@ -9,14 +9,14 @@ import { Cap, Join, LineStyle } from './Enum';
  * @author 基础平台-潘卓然
  * @class mapgis.symbols.PointStyle
  * @classdesc 简单线符号
- * @param {String} [type = 'simple-line'] 简单线符号类型，只能是simple-line
- * @param {Cap} [cap = 'round'] 简单线符号线头类型，默认为圆头round, 可选"butt" 平头 |"round" 圆头 |"square" 方头
- * @param {String} [color = 'rgb(0, 0, 0)'] 简单线符号颜色，默认为'rgb(0, 0, 0)'
- * @param {Join} [join = 'bevel'] 简单线符号拐角类型,可选"miter" 尖角 |"round" 圆角 |"bevel" 平角
- * @param {LineSymbolMarker} [marker] 简单线符号标注类型
- * @param {Number} [miterLimit = 2] 简单线符号最大挂角宽度，默认为2
- * @param {LineStyle} [style = 'solid'] 简单线符号样式类型，可选"dash"|"dash-dot"|"dot"|"long-dash"|"long-dash-dot"|"long-dash-dot-dot"|"none"|"short-dash"|"short-dash-dot"|"short-dash-dot-dot"|"short-dot"|"solid"
- * @param {Number} [width = 0.75] 简单线符号宽度，默认为0.75
+ * @param {String} [type = 'simple-line'] 类型，只能是simple-line
+ * @param {Cap} [cap = 'round'] 线头类型，默认为圆头round, 可选"butt" 平头 |"round" 圆头 |"square" 方头
+ * @param {String} [color = 'rgb(0, 0, 0)'] 符号颜色，默认为'rgb(0, 0, 0)'
+ * @param {Join} [join = 'bevel'] 拐角类型,可选"miter" 尖角 |"round" 圆角 |"bevel" 平角
+ * @param {LineSymbolMarker} [marker] 标注类型
+ * @param {Number} [miterLimit = 2] 最大挂角宽度，默认为2
+ * @param {LineStyle} [style = 'solid'] 样式类型，可选"dash"|"dash-dot"|"dot"|"long-dash"|"long-dash-dot"|"long-dash-dot-dot"|"none"|"short-dash"|"short-dash-dot"|"short-dash-dot-dot"|"short-dot"|"solid"
+ * @param {Number} [width = 0.75] 宽度，默认为0.75
  */
 export default class SimpleLineSymbol extends LineSymbol {
     constructor(option) {
