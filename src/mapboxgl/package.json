@@ -1,39 +1,39 @@
 {
-  "name": "@mapgis/webclient-es6-mapboxgl",
-  "version": "10.5.16",
-  "description": "",
-  "main1": "dist-libs/webclient-mapboxgl-plugin.min.js",
-  "module": "index.js",
-  "scripts": {
-    "build": "npm run build-debug && npm run build-release",
-    "build-debug": "webpack --config webpack/mapbox-es6-debug-config.js",
-    "build-release": "webpack --config webpack/mapbox-es6-release-config.js"
-  },
-  "keywords": [
-    "zondy",
-    "service",
-    "&",
-    "mapboxgl"
-  ],
-  "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
-  "license": "Apache-2.0",
-  "dependencies": {
-    "@mapgis/mapbox-gl": "^1.9.9",
-    "@mapgis/webclient-es6-service": "^10.5.7",
-    "core-js": "^3.21.1",
-    "echarts": "^4.8.0",
-    "mapv": "^2.0.56"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
-    "babel-loader": "^8.2.3",
-    "babel-plugin-add-module-exports": "^1.0.4",
-    "css-loader": "^6.5.1",
-    "html-webpack-plugin": "^5.5.0",
-    "sass-loader": "^12.4.0",
-    "style-loader": "^3.3.1",
-    "ts-loader": "^9.2.6",
-    "webpack": "^5.65.0"
-  }
+    "name": "@mapgis/webclient-es6-mapboxgl",
+    "version": "15.6.1",
+    "description": "",
+    "main1": "dist-libs/webclient-mapboxgl-plugin.min.js",
+    "module": "index.js",
+    "scripts": {
+        "build": "npm run build-debug && npm run build-release",
+        "build-debug": "webpack --config webpack/mapbox-es6-debug-config.js",
+        "build-release": "webpack --config webpack/mapbox-es6-release-config.js"
+    },
+    "keywords": [
+        "zondy",
+        "service",
+        "&",
+        "mapboxgl"
+    ],
+    "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@mapgis/mapbox-gl": "^1.9.9",
+        "@mapgis/webclient-es6-service": "^10.5.7",
+        "core-js": "^3.21.1",
+        "echarts": "^4.8.0",
+        "mapv": "^2.0.56"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.16.0",
+        "@babel/preset-env": "^7.16.4",
+        "babel-loader": "^8.2.3",
+        "babel-plugin-add-module-exports": "^1.0.4",
+        "css-loader": "^6.5.1",
+        "html-webpack-plugin": "^5.5.0",
+        "sass-loader": "^12.4.0",
+        "style-loader": "^3.3.1",
+        "ts-loader": "^9.2.6",
+        "webpack": "^5.65.0"
+    }
 }
