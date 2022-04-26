@@ -1,4 +1,20 @@
 import {
+    Shadow,
+    VectorStyle,
+    PointStyle,
+    MarkerStyle,
+    LineStyle,
+    FillStyle,
+    ExtrudeStyle,
+    TextStyle,
+    FontStyle,
+    ModelStyle,
+    TrackStyle
+} from './style';
+
+export { Shadow, VectorStyle, PointStyle, MarkerStyle, LineStyle, FillStyle, ExtrudeStyle, TextStyle, FontStyle, ModelStyle, TrackStyle };
+
+import {
     Enum,
     Symbol,
     Symbol3D,
