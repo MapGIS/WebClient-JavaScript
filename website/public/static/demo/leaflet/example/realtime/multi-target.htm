@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>WFS地图显示</title>
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script include="mapv,mouseposition" src="./static/libs/include-leaflet-local.js"></script>
+        <script type="text/javascript">
+            'use strict';
+
+            /**显示地图
+             */
+            var map;
+            var data = [],
+                imgs = [],
+                icons = [],
+                layers = [];
+
+            function init() {
+                //地图容器
+                map = L.map('leaf_map', {
+                    //参考坐标系，默认是墨卡托坐标系（EPSG3857），EPSG4326为经纬度坐标系
+                    crs: L.CRS.EPSG4326,
+                    //显示中心
+                    // center: [39.9293, 116.40564],
+                    center: [39.6393, 112.30564],
+                    //最小显示等级
+                    minZoom: 0,
+                    //最大显示等级
+                    maxZoom: 19,
+                    //当前显示等级
+                    zoom: 5,
+                    //限制显示地理范围
+                    maxBounds: L.latLngBounds(L.latLng(-180, -180), L.latLng(180, 180))
+                });
+                //添加鼠标位置控件
+                L.control.mousePosition().addTo(map);
+                var layer3 = new Zondy.Map.TDTLayer({
+                    //图层类型
+                    layerType: 'vec',
+                    //最小显示等级
+                    minZoom: 0,
+                    //最大显示等级
+                    maxZoom: 20,
+                    //key
+                    token: '4c27d6e0e8a90715b23a989d42272fd8',
+                    //设置地图不连续显示
+                    noWrap: true
+                });
+                layer3.addTo(map);
+
+                imgs = [];
+                icons = [
+                    '../../static/data/picture/graphics/101.png',
+                    '../../static/data/picture/graphics/102.png',
+                    '../../static/data/picture/graphics/103.png',
+                    '../../static/data/picture/graphics/104.png',
+                    '../../static/data/picture/graphics/g25.png',
+                    '../../static/data/picture/graphics/g126.png',
+                    '../../static/data/picture/graphics/g141.png',
+                    '../../static/data/picture/graphics/g150.png'
+                ];
+                var promises = icons.map(
+                    (icon, index) =>
+                        new Promise((res, rej) => {
+                            var img = new Image();
+                            img.src = icon;
+                            img.onload = function () {
+                                imgs.push({ image: img, index: index });
+                                res();
+                            };
+                        })
+                );
+                $.get('../../static/data/geojson/10000_point.json', function (geojson) {
+                    Promise.all(promises).then((res) => {
+                        imgs.sort((a, b) => {
+                            return a.index - b.index;
+                        });
+                        data = geojson.features.map((f, i) => {
+                            var icon_index = i % imgs.length;
+                            f.icon = imgs[icon_index].image;
+                            f.deg = 360 * Math.random();
+                            return f;
+                        });
+                        icons.forEach((icon, i) => {
+                            drawLayer(data, i);
+                        });
+                        startAnimate();
+                    });
+                });
+            }
+
+            function drawLayer(data, index) {
+                var datafilter = data.filter((d, i) => i % imgs.length === index);
+                var dataSet = new mapv.DataSet(datafilter);
+                var height = 32,
+                    width = 32;
+                switch (index) {
+                    case 0:
+                        height = 16;
+                        width = 16;
+                        break;
+                    case 1:
+                        height = 40;
+                        width = 50;
+                        break;
+                    case 2:
+                        height = 20;
+                        width = 120;
+                        break;
+                    case 3:
+                        height = 60;
+                        width = 100;
+                        break;
+                    case 4:
+                        height = 60;
+                        width = 60;
+                        break;
+                    case 5:
+                        height = 60;
+                        width = 90;
+                        break;
+                    case 6:
+                        height = 55;
+                        width = 84;
+                        break;
+                    case 7:
+                        height = 65;
+                        width = 95;
+                        break;
+                }
+                var options = {
+                    draw: 'icon',
+                    height: height / 4,
+                    width: width / 4
+                };
+                var layer = new L.zondy.MapvLayer(map, dataSet, options).addTo(map);
+                layers.push(layer);
+            }
+
+            function animateLayer(data) {
+                var random = Math.random() * 0.005;
+                data.forEach((d) => {
+                    d.geometry.coordinates[0] += random;
+                    d.geometry.coordinates[1] -= random;
+                });
+
+                layers.forEach((layer, index) => {
+                    var datafilter = data.filter((d, i) => i % imgs.length === index);
+                    layer.updateData(datafilter);
+                });
+            }
+
+            var clock;
+            function startAnimate() {
+                clock = window.setInterval(() => {
+                    animateLayer(data);
+                }, 1 * 1000);
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="leaf_map" style="width: 100%; height: 98vh"></div>
+    </body>
+</html>

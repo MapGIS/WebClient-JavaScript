@@ -4,6 +4,22 @@
     "mapmode": "cesium-new",
     "childs": [
         {
+            "name": "符号库",
+            "iconfont": "symbol",
+            "folder": "symbols",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "三维点符号",
+                    "file": "point-symbol-3d",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "point-symbol-3d.png",
+                    "update": "最后更新时间:2022-04-20"
+                }
+            ]
+        },
+        {
             "name": "M3D协议-2.0",
             "iconfont": "iconlayer",
             "folder": "m3d",
@@ -50,7 +66,7 @@
                     "update": "最后更新时间:2022-03-14"
                 }
             ]
-        },  
+        },
         {
             "name": "地形",
             "iconfont": "iconterrain",
@@ -91,7 +107,7 @@
                 }
             ]
         },
-                {
+        {
             "name": "MapGIS地图服务",
             "iconfont": "icon_igs",
             "folder": "mapgis",
