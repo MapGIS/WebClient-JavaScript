@@ -11,7 +11,10 @@ import { PathElement } from "./PathElement.js";
 import { QuadraticBezierCurve } from "../../../PlotUtilBase/Curves";
 
 export default class RectElement extends PathElement {
-  type = "rect";
+  constructor() {
+    super();
+    this.type = "rect";
+  }
 
   _getCoords(matrix) {
     const x = this.getAttribute("x").getNumber();

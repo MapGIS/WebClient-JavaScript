@@ -8,19 +8,19 @@ import { DefaultLinePathParser } from "../Default/DefaultLine";
 import { ExtendLineElement } from "../extend/ExtendLineElement";
 
 export class RegularLine2 extends BaseRegularElement {
-  type = "msbl_regularline2";
   /**
    * aboveAxisIDs
    * axis2_Y
    * mainLine
    * isExtendLine
    */
-  static extendElementAttributes = ["axis2_Y"];
   constructor(node) {
     super(node);
     this.aboveAxisIDs = [];
     this.axis2_Y = 0.5;
     this.initBaseAttributes(node);
+    this.type = "msbl_regularline2";
+    this.extendElementAttributes = ["axis2_Y"];
   }
 
   initBaseAttributes(node) {

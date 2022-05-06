@@ -13,8 +13,6 @@
  */
 
 export class BasePlotPrimitive {
-  // 只存储本身的属性样式
-  static extendPrimitiveAttributes = ["dimModHeight"];
   constructor(options) {
     Cesium.Check.defined("options", options);
     Cesium.Check.defined("options.element", options.element);
@@ -36,7 +34,7 @@ export class BasePlotPrimitive {
 
     this._positions = [];
 
-    const { positions } = this._elem;
+    const {positions} = this._elem;
     for (let i = 0; i < positions.length; i += 1) {
       const tempPos = this._elem.positions[i];
       this._positions.push(Cesium.Cartesian3.fromDegrees(tempPos.x, tempPos.y));
@@ -44,6 +42,8 @@ export class BasePlotPrimitive {
 
     if (positions.length < 1) this._update = false;
     this._elem.propsUpdateSignal.add(this._elemPropsUpdateHandler, this);
+
+    this.extendPrimitiveAttributes = ["dimModHeight"];
   }
 
   _elemPropsUpdateHandler(event) {
@@ -60,6 +60,7 @@ export class BasePlotPrimitive {
 
     this._update = true;
   }
+
   set positions(positions) {
     this._elem.positions = positions;
   }
@@ -72,6 +73,7 @@ export class BasePlotPrimitive {
     this._selected = selected;
     this._update = true;
   }
+
   /**
    * @description: 修改调整的scale比例
    * @param {*} number
@@ -123,15 +125,15 @@ export class BasePlotPrimitive {
   }
 
   destroy() {
-    if(this._primitive){
+    if (this._primitive) {
       this._primitive.destroy();
-      this._primitive.pickedPrimitive=null
-      this._primitive=undefined
+      this._primitive.pickedPrimitive = null
+      this._primitive = undefined
     }
-    this._primitives.forEach((s)=>{
-      if(s){
+    this._primitives.forEach((s) => {
+      if (s) {
         s.destroy()
-        s.pickedPrimitive=null
+        s.pickedPrimitive = null
       }
     })
     return Cesium.destroyObject(this);
@@ -177,6 +179,7 @@ export class BasePlotPrimitive {
       this._update = true;
     }
   }
+
   /**
    * @description: geojson to object
    * @param {*} geoJson
@@ -204,6 +207,7 @@ export class BasePlotPrimitive {
       new Error("GeoJSON类型错误!");
     }
   }
+
   /**
    * @description: 初始化保存属性（必须和extend扩展数组对应）
    * @param {*}
@@ -221,6 +225,7 @@ export class BasePlotPrimitive {
   getPrimitiveBaseSaveAttributes() {
     return BasePlotPrimitive.extendPrimitiveAttributes.concat([]);
   }
+
   /**
    * @description: 获取需要保存的属性组对象
    * @param {*}
@@ -235,6 +240,7 @@ export class BasePlotPrimitive {
 
     return v;
   }
+
   /**
    * @description: 检验是否需要开启透明度渲染
    * @param {*} geomInstances
@@ -246,6 +252,7 @@ export class BasePlotPrimitive {
     }
     return false;
   }
+
   /**
    * @description: 实体转换
    * @param {*} instances
@@ -268,13 +275,14 @@ export class BasePlotPrimitive {
       });
     }
   }
+
   /**
    * @description: 墙实体转换
    * @param {*} wallInstances
    * @return {*}
    */
   wallInstancesToPrimitive(wallInstances) {
-    if(this._wallPrimitive){
+    if (this._wallPrimitive) {
       this._wallPrimitive.destroy()
     }
     this._wallPrimitive = undefined;
@@ -293,7 +301,7 @@ export class BasePlotPrimitive {
                 [wallColor, WallGradColor],
                 true
               ),
-              repeat: { x: 1, y: 1 },
+              repeat: {x: 1, y: 1},
             },
           },
         }),
@@ -312,6 +320,7 @@ export class BasePlotPrimitive {
       asynchronous: false,
     });
   }
+
   /**
    * @description: 更新实体状态
    * @param {*} flag
@@ -325,6 +334,7 @@ export class BasePlotPrimitive {
     }
     this._wallPrimitive && this._wallPrimitive.update(flag);
   }
+
   /**
    * @description: 作用选中后透明度效果
    * @param {*} geomInstances

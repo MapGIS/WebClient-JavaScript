@@ -11,7 +11,10 @@ import { DoubleArrow } from "../../../../../PlotUtilBase/Geometry/Arrow/Double_A
 import { Point } from "../../../../../PlotUtilBase/Geometry/Point";
 
 export class DoubleArrowGeometry extends BaseIrregularElement{
-    type='msbl_doublearrow'
+    constructor() {
+        super();
+        this.type='msbl_doublearrow';
+    }
     _insertGeometry(points){
         const pnts= points.map((s)=> [s.x,s.y])
         const exPnts= new DoubleArrow(pnts).getPoints();

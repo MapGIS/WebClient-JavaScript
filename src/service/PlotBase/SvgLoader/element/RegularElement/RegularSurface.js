@@ -8,7 +8,6 @@ import { NoUseElement } from "../extend/NoUseElement";
 import { GElement } from "..";
 
 export class RegularSurface extends BaseRegularElement {
-  type = "msbl_regularsurface";
 
   /**
    * mainBorderElement
@@ -16,11 +15,12 @@ export class RegularSurface extends BaseRegularElement {
    * fillElementArr
    * fillImg
    */
-  fillImg = null;
   constructor(node) {
     super(node);
     // 填充img
     this.initBaseAttributes(node);
+    this.type = "msbl_regularsurface";
+    this.fillImg = null;
   }
 
   // base

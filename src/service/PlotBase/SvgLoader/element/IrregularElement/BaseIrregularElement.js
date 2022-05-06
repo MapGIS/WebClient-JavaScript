@@ -11,11 +11,11 @@ import { Bounds } from "../../../../PlotUtilBase/Geometry/Bound";
 import { Point } from "../../../../PlotUtilBase/Geometry/Point";
 
 export class BaseIrregularElement extends BasePlotElement {
-  type = "irregular";
   constructor(node) {
     super(node);
     this.m_coords = [];
     this._tempRegularPath = this._children[0];
+    this.type = "irregular";
   }
   // 遍历节点
   _traverNodes(node) {

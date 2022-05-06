@@ -12,9 +12,8 @@ import {RegularLine2ElementInstance} from "../ElementInstance/RegularLine2Elemen
 export class RegularLine2Primitive extends RegularLine1Primitive {
   constructor() {
     super();
+    this.extendPrimitiveAttributes = ['dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor'];
   }
-
-  static extendPrimitiveAttributes = ['dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor']
 
   _elementInstance(ele) {
     const instances = new RegularLine2ElementInstance(ele, {

@@ -11,7 +11,10 @@ import { AttackArrow } from "../../../../../PlotUtilBase/Geometry/Arrow/Attack_A
 import { Point } from "../../../../../PlotUtilBase/Geometry/Point";
 
 export class SimpleArrowGeometry extends BaseIrregularElement {
-  type = "msbl_singleArrow";
+  constructor() {
+    super();
+    this.type = "msbl_singleArrow";
+  }
   _insertGeometry(points) {
     const pnts = points.map((s) => [s.x, s.y]);
     const exPnts = new AttackArrow(pnts).getPoints();

@@ -9,9 +9,10 @@
 import { RenderedElement } from "./RenderedElement";
 
 export class SvgElement extends RenderedElement {
-  type = "svg";
   constructor(node) {
     super(node);
+
+    this.type = "svg";
 
     const widthProps = this.getAttribute("width");
     if (widthProps.hasValue()) {

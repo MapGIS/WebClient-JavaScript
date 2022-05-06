@@ -10,7 +10,10 @@ import { BaseIrregularElement } from "./BaseIrregularElement";
 import { CombinationalCircle } from "../../../../PlotUtilBase/Geometry/CombinationalCircle";
 
 export class CombinationalCircleGeometry extends BaseIrregularElement{
-    type='msbl_CombinationalCircle'
+  constructor() {
+    super();
+    this.type='msbl_CombinationalCircle';
+  }
     _insertGeometry(points){
       let radius
       if(this._is3d){

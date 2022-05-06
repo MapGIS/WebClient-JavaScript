@@ -9,7 +9,11 @@
 import { MainElement } from "./MainElement";
 
 export class MainBorderElement extends MainElement {
-  type = "mainborder";
+  constructor(props) {
+    super(props);
+    this.type = "mainborder";
+  }
+
   _clone(cloneObject){
     super._clone(cloneObject);
     cloneObject._pathParser=this._pathParser?this._pathParser.clone():null

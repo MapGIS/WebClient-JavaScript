@@ -15,9 +15,8 @@ export class RegularPointPrimitive extends BaseRegularPrimitive {
     this._modelMatrix = Cesium.Matrix4.clone(Cesium.Matrix4.IDENTITY);
     // 平移刷新
     this._isTranslate = false;
+    this.extendPrimitiveAttributes = ["dimModHeight", "dimModAttitude"];
   }
-
-  static extendPrimitiveAttributes = ["dimModHeight", "dimModAttitude"];
 
   set modelMatrix(modalMatrix){
     this._modelMatrix=modalMatrix

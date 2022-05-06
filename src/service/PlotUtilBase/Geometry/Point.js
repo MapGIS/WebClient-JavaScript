@@ -17,10 +17,6 @@ export class Point {
     this.y = defaultValue(y,0);
   }
 
-  x = null;
-
-  y = null;
-
   static parse(strPnt, defaultValue = 0) {
     const [x = defaultValue, y = defaultValue] = StringUtil.toNumbers(strPnt);
 

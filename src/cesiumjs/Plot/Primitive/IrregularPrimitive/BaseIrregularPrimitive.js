@@ -14,16 +14,14 @@ import {IrregularElementInstance} from "../ElementInstance/IrregularElementInsta
 export class BaseIrregularPrimitive extends BasePlotPrimitive {
   constructor() {
     super();
+    this.extendPrimitiveAttributes = [
+      "dimModHeight",
+      "isOpenWall",
+      "isWallGradColor",
+      "wallColor",
+      "wallGradColor",
+    ];
   }
-
-  // 只存储本身的属性样式
-  static extendPrimitiveAttributes = [
-    "dimModHeight",
-    "isOpenWall",
-    "isWallGradColor",
-    "wallColor",
-    "wallGradColor",
-  ];
 
   update(frameState) {
     if (!this._elem || !this._elem.show) {

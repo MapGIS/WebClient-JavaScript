@@ -6,7 +6,7 @@
  * @Author: xinxiao
  * @LastEditors: Do not edit
  */
-import $ from "jquery";
+// import $ from "jquery";
 import { ElementFactory } from "../SvgLoader/element";
 import { defined } from "../../PlotUtilBase/Check";
 import { LogTool } from "../../PlotUtilBase/Log/LogTool";
@@ -89,13 +89,13 @@ export class SymbolNode extends SymbolBase {
    */
   getSvg() {
     const url = this.src;
-    const res = $.ajax({
-      url,
-      type: "get",
-      async: false,
-      dataType: "text",
-      timeout: 1000,
-    });
+    // const res = $.ajax({
+    //   url,
+    //   type: "get",
+    //   async: false,
+    //   dataType: "text",
+    //   timeout: 1000,
+    // });
 
     const xml = new DOMParser().parseFromString(
       res.responseText,

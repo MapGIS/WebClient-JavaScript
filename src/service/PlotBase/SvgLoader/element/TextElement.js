@@ -9,7 +9,6 @@
 import { RenderedElement } from "./RenderedElement";
 
 export class TextElement extends RenderedElement {
-  type='text'
   constructor(node) {
     super(node);
 
@@ -21,6 +20,7 @@ export class TextElement extends RenderedElement {
     if (dxAttr.hasValue()) this._x += dxAttr.getPixels();
 
     if (dyAttr.hasValue()) this._y += dyAttr.getPixels();
+    this.type='text'
   }
   _clone(cloneObject){
     super._clone(cloneObject)

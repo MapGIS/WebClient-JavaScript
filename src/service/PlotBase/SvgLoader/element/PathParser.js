@@ -10,16 +10,6 @@ import { SVGPathData } from "svg-pathdata";
 import { Point } from "../../../PlotUtilBase/Geometry/Point";
 
 export class PathParser extends SVGPathData {
-  control = null;
-  start = null;
-  current = null;
-  command = null;
-  commands = this.commands;
-  _i = -1;
-  _previousCommand = null;
-  _points = [];
-  _angles = [];
-
   constructor(path) {
     super(
       path
@@ -29,6 +19,15 @@ export class PathParser extends SVGPathData {
         .replace(/[^MmZzLlHhVvCcSsQqTtAae\d\s.,+-].*/g, "")
     );
     this._basePath= path.replace(/([+\-.])\s+/gm, "$1").replace(/[^MmZzLlHhVvCcSsQqTtAae\d\s.,+-].*/g, "")
+    this.control = null;
+    this.start = null;
+    this.current = null;
+    this.command = null;
+    this.commands = this.commands;
+    this._i = -1;
+    this._previousCommand = null;
+    this._points = [];
+    this._angles = [];
   }
 
   reset() {

@@ -19,11 +19,11 @@ export class SymbolManager {
       SymbolManager.instance = this;
     }
 
+    this._symbols = null;
+    this._symbolsUrl = "";
+
     return SymbolManager.instance;
   }
-
-  _symbols = null;
-  _symbolsUrl = "";
 
   async getSymbols() {
     if (this._symbols) return this._symbols;

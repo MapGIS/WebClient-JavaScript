@@ -10,7 +10,10 @@ import { BaseIrregularElement } from "./BaseIrregularElement";
 import { Kidney } from "../../../../PlotUtilBase/Geometry/Kidney";
 
 export class KidneyGeometry extends BaseIrregularElement {
-  type = "msbl_Kidney";
+  constructor() {
+    super();
+    this.type = "msbl_Kidney";
+  }
   _insertGeometry(points) {
     if (this._is3d && points.length===2) {
       points.reverse();

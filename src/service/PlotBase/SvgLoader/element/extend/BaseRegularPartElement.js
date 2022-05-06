@@ -12,11 +12,10 @@ import {PathParser} from "../PathParser";
 export class BaseRegularPartElement extends PathElement {
   constructor() {
     super();
+    this.type = "mainline";
+    this.m_scaleX = 100;
+    this.m_scaleY = 100;
   }
-
-  type = "mainline";
-  m_scaleX = 100;
-  m_scaleY = 100;
 
   // 适应主轴的几何
   applyMainGeo(mainGeo) {

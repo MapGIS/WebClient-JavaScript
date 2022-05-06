@@ -10,7 +10,10 @@ import { BaseIrregularElement } from "../BaseIrregularElement";
 import { MultiArrow } from '../../../../../PlotUtilBase/Geometry/Arrow/MultiArrow';
 
 export class MultiArrowGeometry extends BaseIrregularElement{
-    type='msbl_MultiArrow'
+  constructor() {
+    super();
+    this.type='msbl_MultiArrow';
+  }
     _insertGeometry(points){
       return  [new MultiArrow({
             ctrlpnts: points,

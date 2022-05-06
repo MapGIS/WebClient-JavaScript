@@ -6,15 +6,15 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\GElement.js
  */
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
-import { Element } from "./Element";
-import { Transform } from "../transform";
+import {Point} from "../../../PlotUtilBase/Geometry/Point";
+import {Element} from "./Element";
+import {Transform} from "../transform";
 
 export class GElement extends Element {
-  type='g'
   constructor(node) {
     super(node);
     this._matrix = Transform.getTransfromFrmElement(this);
+    this.type = 'g';
   }
 
   getOriginPoint() {
@@ -28,8 +28,9 @@ export class GElement extends Element {
     }
     return origin;
   }
-  _clone(cloneObject){
+
+  _clone(cloneObject) {
     super._clone(cloneObject)
-    cloneObject._matrix=this._matrix?this._matrix.clone():null
+    cloneObject._matrix = this._matrix ? this._matrix.clone() : null
   }
 }

@@ -8,8 +8,6 @@ import { BaseArrow } from "./BaseArrow";
  * 突击箭头
  */
 export class AssaultArrow extends BaseArrow {
-  mScaleValues = [];
-
   constructor(options) {
     super(options);
     this.mScaleValues = [];
