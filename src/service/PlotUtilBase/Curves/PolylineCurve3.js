@@ -1,6 +1,6 @@
 import { Vector3 } from "../Math/Vector3";
 import { Matrix4 } from "../Math/Matrix4";
-export class PolylineCurve3 {
+export default class PolylineCurve3 {
   constructor(pnts) {
     this._pnts = [];
     if (!pnts) return;

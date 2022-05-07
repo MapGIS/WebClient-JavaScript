@@ -2,7 +2,7 @@ function getCurTime() {
   const date = new Date(Date.now());
   return date.toLocaleString() + ":" + date.getMilliseconds();
 }
-export class LogBase {
+export default class LogBase {
   log() {
     console.log(getCurTime(), ...arguments);
   }

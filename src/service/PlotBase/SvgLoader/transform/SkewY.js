@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\transform\SkewY.js
  */
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
-import { Property } from "../element/Property";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
+import Property from "../element/Property";
 
-export class SkewY{
+export default class SkewY{
     constructor(skew,transformOrigin) {
         const matrix=new Matrix3();
         const skewMatrix=new Matrix3();

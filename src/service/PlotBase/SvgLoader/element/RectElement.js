@@ -6,8 +6,8 @@
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Document\RectElement.ts
  */
-import { Point } from "../../../PlotUtilBase/Geometry/Point.js";
-import { PathElement } from "./PathElement.js";
+import Point from "../../../PlotUtilBase/Geometry/Point.js";
+import PathElement from "./PathElement.js";
 import { QuadraticBezierCurve } from "../../../PlotUtilBase/Curves";
 
 export default class RectElement extends PathElement {

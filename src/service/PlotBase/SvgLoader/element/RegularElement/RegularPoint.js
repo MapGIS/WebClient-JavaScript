@@ -6,31 +6,32 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
  */
-import { Matrix3 } from "../../../../PlotUtilBase/Math/Matrix3";
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
-import { BaseRegularElement } from "./BaseRegularElement";
-import { GElement } from "../GElement";
-import { ReplacedGroupElement } from "../extend/ReplacedGroupElement";
-import { Bounds } from "../../../../PlotUtilBase/Geometry/Bound";
+import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
+import BaseRegularElement from "./BaseRegularElement";
+import GElement from "../GElement";
+import ReplacedGroupElement from "../extend/ReplacedGroupElement";
+import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
 
-export class RegularPoint extends BaseRegularElement {
-  type = "msbl_regularpoint";
-  poly = [new Point(0, 0)];
-  transformAngle = 0;
-  transformSizeX = 1;
-  transformSizeY = 1;
-  currentReplaceIndex = null;
-  static extendElementAttributes = [
-    "transformAngle",
-    "transformSizeX",
-    "transformSizeY",
-    "currentReplaceIndex",
-  ];
+export default class RegularPoint extends BaseRegularElement {
   constructor(node) {
     super(node);
+    this.type = "msbl_regularpoint";
+    this.poly = [new Point(0, 0)];
+    this.transformAngle = 0;
+    this.transformSizeX = 1;
+    this.transformSizeY = 1;
+    this.currentReplaceIndex = null;
+    this.extendElementAttributes = [
+      "transformAngle",
+      "transformSizeX",
+      "transformSizeY",
+      "currentReplaceIndex",
+    ];
     this.initBaseAttributes(node);
     this.traverChildren();
   }
+
   set tranAngle(value) {
     this.transformAngle = value;
     this._propsUpdateSignal.dispatch({
@@ -114,7 +115,7 @@ export class RegularPoint extends BaseRegularElement {
   }
 
   _applyElementTransfrom(element) {
-    const { poly } = this;
+    const {poly} = this;
     if (!poly || poly.length === 0) {
       element.isAllowCoords = false;
       return;
@@ -141,6 +142,7 @@ export class RegularPoint extends BaseRegularElement {
     );
     element._transformMatrix = matrix;
   }
+
   _clone(cloneObject) {
     super._clone(cloneObject);
     cloneObject.originPoint = new Point(this.originPoint.x, this.originPoint.y);
@@ -148,7 +150,7 @@ export class RegularPoint extends BaseRegularElement {
   }
 
   getBounds() {
-    const { width, height, originPoint, poly } = this;
+    const {width, height, originPoint, poly} = this;
     if (poly.length === 0) return new Bounds();
     const pnt = poly[0];
     const offsetX = pnt.x - originPoint.x;

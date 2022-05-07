@@ -1,13 +1,17 @@
-import { DefaultLinePathParser } from "../Default/DefaultLine";
-import { PathParser } from "../PathParser";
-import { MainElement } from "./MainElement";
-import { ShapePath } from "../../../../PlotUtilBase/Path2D/ShapePath";
+import DefaultLinePathParser from "../Default/DefaultLine";
+import PathParser from "../PathParser";
+import MainElement from "./MainElement";
+import {ShapePath} from "../../../../PlotUtilBase/Path2D/ShapePath";
 
-export class MainLineElement extends MainElement {
-  type = "mainline";
-  flag = true;
+export default class MainLineElement extends MainElement {
+  constructor() {
+    super();
+    this.type = "mainline";
+    this.flag = true;
+  }
 
   /* --------------------------------处理默认线 ------------------------------- */
+
   // 获取默认线对象
   getDefaultLine() {
     if (!this.getAttribute("d").hasValue()) return;
@@ -19,6 +23,7 @@ export class MainLineElement extends MainElement {
     const rateArr = this.deleteArr(mainLine, width, scale, defaultLine);
     this.applyRateArr(rateArr, mainLine);
   }
+
   // 构建删除区段数组
   deleteArr(mainLine, width, scale, defaultLine, flag = this.flag) {
     const start = defaultLine.getStart();
@@ -26,7 +31,7 @@ export class MainLineElement extends MainElement {
     const firstWidth = start.x * scale;
     const limitWidth = (start.x + width - end.x) * scale;
     const clip = defaultLine.getClip(width);
-    const { lengthArr } = mainLine;
+    const {lengthArr} = mainLine;
     const lengthTotal = mainLine.lengthArr.reduce((total, i) => total + i);
     const middleRate = (lengthTotal - limitWidth) / lengthTotal;
 
@@ -107,8 +112,8 @@ export class MainLineElement extends MainElement {
   }
 
   applyRateArr(arr, mainLine) {
-    const { beziPoint } = mainLine;
-    const { lengthArr } = mainLine;
+    const {beziPoint} = mainLine;
+    const {lengthArr} = mainLine;
     const lengthMax = lengthArr.length;
     const eObj = {};
     // 排序
@@ -177,8 +182,9 @@ export class MainLineElement extends MainElement {
     }
     this._pathParser = new PathParser(path);
   }
+
   _getRatePathStr(i, arr, mainLine) {
-    const { beziPoint } = mainLine;
+    const {beziPoint} = mainLine;
     const s = beziPoint[i];
     let path = "";
     arr.forEach((t) => {
@@ -269,10 +275,12 @@ export class MainLineElement extends MainElement {
     super.applyMainGeo(mainGeo);
     this._setDashLine(this.mainGeometry, width);
   }
+
   applyMapScale(x, y, width) {
     super.applyMapScale(x, y);
     this._setDashLine(this.mainGeometry, width);
   }
+
   _setDashLine(mainGeometry, width) {
     if (mainGeometry) {
       const defaultLine = this.getDefaultLine();
@@ -281,6 +289,7 @@ export class MainLineElement extends MainElement {
       }
     }
   }
+
   _clone(cloneObject) {
     super._clone(cloneObject);
     cloneObject.flag = this.flag;
@@ -288,13 +297,14 @@ export class MainLineElement extends MainElement {
       ? this._pathParser.clone()
       : null;
   }
+
   getCoords() {
-    let pointNumber=40
+    let pointNumber = 40
     // 处理主轴点数过少导致墙与线不贴合
-    if(this.mainGeometry){
-      const len= this.mainGeometry.getTotalLength()
-      if(len>10000000){
-        pointNumber=Math.round(len/10000000)*40
+    if (this.mainGeometry) {
+      const len = this.mainGeometry.getTotalLength()
+      if (len > 10000000) {
+        pointNumber = Math.round(len / 10000000) * 40
       }
     }
 

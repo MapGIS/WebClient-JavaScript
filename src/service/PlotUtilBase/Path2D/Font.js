@@ -1,4 +1,4 @@
-import { LogTool } from "../Log/LogTool";
+import LogTool from "../Log/LogTool";
 import { ShapePath } from "./ShapePath";
 
 function createPaths(text, size, data) {
@@ -96,7 +96,7 @@ function createPath(char, scale, offsetX, offsetY, data) {
 /**
  * Font类，用于根据truetype字体生成文字几何
  */
-export class Font {
+export default class Font {
   /**
    *
    * @param {*} data json文件 可以使用https://gero3.github.io/facetype.js/将windows字体转换为json格式数据

@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Object\Default\DefaultLine.ts
  */
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
 
-import { PathParser } from "../PathParser";
+import PathParser from "../PathParser";
 
-export class DefaultLinePathParser extends PathParser {
+export default class DefaultLinePathParser extends PathParser {
   constructor(path) {
     super(path);
     this.pathStr=path

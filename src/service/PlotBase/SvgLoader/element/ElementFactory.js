@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element-factory.js
  */
-export class ElementFactory {
+export default class ElementFactory {
   static register(type, proto) {
     ElementFactory._elementTypes[type] = proto;
   }

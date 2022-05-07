@@ -1,9 +1,9 @@
-import { LogBase } from "./LogBase";
+import LogBase from "./LogBase";
 
 /**
  * 日志工具类
  */
-export class LogTool{
+export default class LogTool{
     static error()
     {
         LogTool.logger.error(...arguments);

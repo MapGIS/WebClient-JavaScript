@@ -1,12 +1,12 @@
 import { defaultValue } from "../Check";
-import { StringUtil } from "../Util/StringUtil";
-import { MathUtil } from "../Util/MathUtil";
+import StringUtil from "../Util/StringUtil";
+import MathUtil from "../Util/MathUtil";
 /**
  * Point类
  * @property x x坐标
  * @property y y坐标
  */
-export class Point {
+export default class Point {
   /**
    *
    * @param {Number} [x=0] x坐标
@@ -27,7 +27,7 @@ export class Point {
    * 克隆当前点对象
    * @function
    *
-   * @returns {Point}
+   * @returns Point
    */
   clone() {
     return new Point(this.x, this.y);
@@ -35,7 +35,7 @@ export class Point {
 
   /**
    * 计算当前点对象和点pnt之间距离
-   * @param {Point} pnt
+   * @param Point pnt
    * @returns {Number} 两点之间距离
    */
   distanceTo(pnt) {
@@ -51,7 +51,7 @@ export class Point {
    * 判断当前点对象与点pnt是否重合
    * @function
    *
-   * @param {Point} pnt 点对象
+   * @param Point pnt 点对象
    * @param {Number} tolerance 容差
    * @returns {Boolean} 两点重合返回true,否则返回false
    */
@@ -78,7 +78,7 @@ export class Point {
    * 计算当前点对象与点point形成线段与x轴夹角
    * @function
    *
-   * @param {Point} point 点对象
+   * @param Point point 点对象
    * @returns {Number} 角度
    */
   angleTo(point) {
@@ -90,7 +90,7 @@ export class Point {
    * @function
    *
    * @param {Matrix3} m matrix3对象
-   * @returns {Point} this对象，方便连续调用
+   * @returns Point this对象，方便连续调用
    */
   applyMatrix3(m) {
     const x = this.x,

@@ -7,9 +7,9 @@
  * @FilePath: \MapGISPlotBase\src\svg-loader\PathParser.js
  */
 import { SVGPathData } from "svg-pathdata";
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
+import Point from "../../../PlotUtilBase/Geometry/Point";
 
-export class PathParser extends SVGPathData {
+export default class PathParser extends SVGPathData {
   constructor(path) {
     super(
       path

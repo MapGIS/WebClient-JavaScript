@@ -8,12 +8,12 @@
 
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
-import { Bounds } from "../../../PlotUtilBase/Geometry/Bound";
-import { Property } from "./Property";
-import { ElementFactory } from "./ElementFactory";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
+import Bounds from "../../../PlotUtilBase/Geometry/Bound";
+import Property from "./Property";
+import ElementFactory from "./ElementFactory";
 
-import { GElement } from "./index";
+import GElement from "./index";
 
 const SVGDEFAULTSTYLE = {
   fill: "none",
@@ -39,10 +39,10 @@ const SVGDEFAULTSTYLE = {
   "text-anchor": "inherit",
 };
 
-export class Element {
-  type = "element";
+export default class Element {
   // 基础属性
   constructor(node) {
+    this.type = "element";
     this._init(node);
   }
   /**

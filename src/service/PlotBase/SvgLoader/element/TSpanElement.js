@@ -7,13 +7,13 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element\TSapnElement.js
  */
-import { Bounds } from "../../../PlotUtilBase/Geometry/Bound";
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
+import Bounds from "../../../PlotUtilBase/Geometry/Bound";
+import Point from "../../../PlotUtilBase/Geometry/Point";
 import { Matrix4 } from "../../../PlotUtilBase/Math/Matrix4";
-import { StringUtil } from "../../../PlotUtilBase/Util/StringUtil";
-import { TextElement } from "./TextElement";
+import StringUtil from "../../../PlotUtilBase/Util/StringUtil";
+import TextElement from "./TextElement";
 import { FontCache } from "./FontCache";
-import { BaseRegularElement } from "./RegularElement/BaseRegularElement";
+import BaseRegularElement from "./RegularElement/BaseRegularElement";
 import { defined } from "../../../PlotUtilBase/Check";
 import FontStyleClass from "./PropertyClass/BaseCanvasClass/FontStyleClass";
 import FillStyleClass from "./PropertyClass/BaseCanvasClass/FillStyleClass";
@@ -21,11 +21,11 @@ import StrokeStyleClass from "./PropertyClass/BaseCanvasClass/StrokeStyleClass";
 import PropertyClass from "./PropertyClass/PropertyClass";
 
 
-export class TSpanElement extends TextElement {
-  type = "tspan";
-  static styleClassArray = [FillStyleClass,FontStyleClass,StrokeStyleClass];
+export default class TSpanElement extends TextElement {
   constructor(node) {
     super(node);
+    this.type = "tspan";
+    this.styleClassArray = [FillStyleClass,FontStyleClass,StrokeStyleClass];
     this._text = this._getTextFrmNode(node);
     this._fontMetrics = null;
     this._textGeoBounds = null;

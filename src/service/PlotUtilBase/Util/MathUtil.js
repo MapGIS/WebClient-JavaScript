@@ -17,7 +17,7 @@ export function byteArrToInt32Arr(bytes) {
   return result;
 }
 
-export class MathUtil {
+export default class MathUtil {
   static EqualFuzzy(a, b, tolerance) {
     if (!tolerance) tolerance = MathUtil.DEFAULT_TOLERANCE;
     return Math.abs(a - b) <= tolerance;

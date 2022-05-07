@@ -5,11 +5,11 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-04-01 15:46:06
  */
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
+import Point from "../../../PlotUtilBase/Geometry/Point";
 import Spline from "../../../PlotUtilBase/Geometry/Spline";
-import { PlotBaseAnimation } from "./PlotBaseAnimation";
+import PlotBaseAnimation from "./PlotBaseAnimation";
 
-export class PlotGrowAnimation extends PlotBaseAnimation {
+export default class PlotGrowAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options);
     // animation type

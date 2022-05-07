@@ -7,14 +7,14 @@
  * @FilePath: \MapGISPlotBase\src\svg-loader\transform\index.js
  */
 import { TransformFactory } from "./TransfromFactory";
-import { Translate } from "./Translate";
-import { Scale } from "./Scale";
-import { Rotate } from "./Rotate";
-import { SkewX } from "./SkewX";
-import { SkewY } from "./SkewY";
-import { Matrix } from "./Matrix";
+import Translate from "./Translate";
+import Scale from "./Scale";
+import Rotate from "./Rotate";
+import SkewX from "./SkewX";
+import SkewY from "./SkewY";
+import Matrix from "./Matrix";
 
-import { Transform } from "./Transform";
+import Transform from "./Transform";
 
 TransformFactory.register("translate", Translate);
 TransformFactory.register("scale", Scale);

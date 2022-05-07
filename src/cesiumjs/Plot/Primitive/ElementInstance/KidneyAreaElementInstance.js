@@ -6,9 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\KidneyAreaElementInstance.js
  */
-import { RegularLine1ElementInstance } from "./RegularLine1ElementInstance";
-import { CesiumGeomUtil } from "../../Utils/CesiumUtil";
-export class KidneyAreaElementInstance extends RegularLine1ElementInstance {
+import RegularLine1ElementInstance from "./RegularLine1ElementInstance";
+import CesiumGeomUtil from "../../Utils/CesiumUtil";
+export default class KidneyAreaElementInstance extends RegularLine1ElementInstance {
   transfromGeoCesium(elem, cesgeo, options) {
     CesiumGeomUtil.degreesWithHeightToWorldCoords(
         cesgeo,

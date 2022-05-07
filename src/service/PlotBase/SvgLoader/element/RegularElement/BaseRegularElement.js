@@ -6,22 +6,26 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularElement\BaseRegularElement.js
  */
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
-import { MsblElement } from "../MsblElement";
-import { ElementFactory } from "../ElementFactory";
-import { PathElement } from "../PathElement";
-import { Element } from "../Element";
-import { drawTypes } from "../index";
-import { MainElement } from "../extend/MainElement";
-import { BasePlotElement } from "../BasePlotElement";
-import { Bounds } from "../../../../PlotUtilBase/Geometry/Bound";
-import { TSpanElement } from "../TSpanElement";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
+import MsblElement from "../MsblElement";
+import ElementFactory from "../ElementFactory";
+import PathElement from "../PathElement";
+import Element from "../Element";
+import {drawTypes} from "../index";
+import MainElement from "../extend/MainElement";
+import BasePlotElement from "../BasePlotElement";
+import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
+import TSpanElement from "../TSpanElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 
-export class BaseRegularElement extends BasePlotElement {
-  type = "regular";
-  poly = [];
-  animationPoly = [];
+export default class BaseRegularElement extends BasePlotElement {
+  constructor() {
+    super();
+    this.type = "regular";
+    this.poly = [];
+    this.animationPoly = [];
+  }
+
   /**
    * @description: 初始化符号参数
    * @param {*} node
@@ -48,6 +52,7 @@ export class BaseRegularElement extends BasePlotElement {
       this.angle = parseInt(angleProps.getValue(), 10);
     }
   }
+
   // 遍历子节点
   _addChild(childNode) {
     const child =
@@ -67,6 +72,7 @@ export class BaseRegularElement extends BasePlotElement {
   traverChildren() {
     this._traverChildren(this._children);
   }
+
   // 替换子元素
   _replaceChild(node, ele) {
     return ele;
@@ -101,13 +107,16 @@ export class BaseRegularElement extends BasePlotElement {
    * @param {*} child
    * @return {*}
    */
-  _applyMainElement(child) {}
+  _applyMainElement(child) {
+  }
+
   /**
    * @description: 作用非主轴节点
    * @param {*} child
    * @return {*}
    */
-  _applyElementTransfrom(child) {}
+  _applyElementTransfrom(child) {
+  }
 
   /**
    * @description: 作用线宽
@@ -137,9 +146,11 @@ export class BaseRegularElement extends BasePlotElement {
     }
     this._runScale(matrix, origin, 1, -1);
   }
+
   _runMapScale(matrix, mapScalePoint, scaleX, scaleY) {
     this._runScale(matrix, mapScalePoint, scaleX, scaleY);
   }
+
   /**
    * @description: 作用scale
    * @param {*} matrix
@@ -153,6 +164,7 @@ export class BaseRegularElement extends BasePlotElement {
     matrix = matrix.scale(scaleX, scaleY);
     matrix = matrix.translate(origin.x, origin.y);
   }
+
   /**
    * @description: 作用旋转
    * @param {*} matrix
@@ -165,6 +177,7 @@ export class BaseRegularElement extends BasePlotElement {
     matrix = matrix.rotate(rad);
     matrix = matrix.translate(origin.x, origin.y);
   }
+
   /**
    * @description: 作用平移
    * @param {*} matrix
@@ -174,6 +187,7 @@ export class BaseRegularElement extends BasePlotElement {
   _runTranslate(matrix, translatePoint) {
     matrix = matrix.translate(translatePoint.x, translatePoint.y);
   }
+
   /**
    * @description: 处理非三维部分transfrom
    * @param {*} matrix 矩阵
@@ -271,6 +285,7 @@ export class BaseRegularElement extends BasePlotElement {
     }
     return mainNode;
   }
+
   /**
    * @description: 克隆
    * @param {*} cloneObject
@@ -297,6 +312,7 @@ export class BaseRegularElement extends BasePlotElement {
     this._setCorrectBounds(this._children, _bounds);
     return _bounds;
   }
+
   /**
    * @description: 设置真实外包边界
    * @param {*} children 子数组
@@ -312,7 +328,9 @@ export class BaseRegularElement extends BasePlotElement {
       this._setCorrectBounds(child._children, bound);
     });
   }
+
   /* -------------------控制点操作------------------*/
+
   // 控制点修改
   setPoints(points) {
     const pnts = [];
@@ -322,6 +340,7 @@ export class BaseRegularElement extends BasePlotElement {
     this.poly = pnts;
     this.traverChildren();
   }
+
   /* -------------------缩放 二三维坐标转换参数------------------ */
   changeAttributeStatus(is3d, scaleX, scaleY) {
     super.changeAttributeStatus(is3d, scaleX, scaleY);

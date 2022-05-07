@@ -1,13 +1,13 @@
 /* eslint-disable default-case */
-import { Matrix3 } from "../../../../PlotUtilBase/Math/Matrix3";
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
-import { BaseRegularElement } from "./BaseRegularElement";
-import { GElement } from "../GElement";
+import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
+import BaseRegularElement from "./BaseRegularElement";
+import GElement from "../GElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
-import { DefaultLinePathParser } from "../Default/DefaultLine";
-import { ExtendLineElement } from "../extend/ExtendLineElement";
+import DefaultLinePathParser from "../Default/DefaultLine";
+import ExtendLineElement from "../extend/ExtendLineElement";
 
-export class RegularLine2 extends BaseRegularElement {
+export default class RegularLine2 extends BaseRegularElement {
   /**
    * aboveAxisIDs
    * axis2_Y

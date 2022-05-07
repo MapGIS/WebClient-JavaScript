@@ -5,7 +5,7 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-07 15:38:10
  */
-import { defined } from "@/PlotUtilBase/Check";
+import { defined } from "./Check";
 export default class FontStyle {
   constructor(fontStyle, fontVariant, fontWeight, fontSize, fontFamily) {
     // normal\italic\oblique\inherit

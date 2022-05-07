@@ -7,7 +7,7 @@
  * @FilePath: \MapGISPlotBase\src\base\Draw\index.js
  */
 
-import { DrawObject } from "./DrawObject";
+import DrawObject from "./DrawObject";
 import { DrawPlotObjectFactory } from "./DrawObjectFactory";
 
 export default{

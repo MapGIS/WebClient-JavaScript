@@ -7,8 +7,8 @@
  * @FilePath: \MapGISPlotBase\src\FontCache.js
  */
 
-import { LogTool } from "../../../PlotUtilBase/Log/LogTool";
-import { Font } from "../../../PlotUtilBase/Path2D/Font";
+import LogTool from "../../../PlotUtilBase/Log/LogTool";
+import Font from "../../../PlotUtilBase/Path2D/Font";
 
 class FontCache {
   constructor() {

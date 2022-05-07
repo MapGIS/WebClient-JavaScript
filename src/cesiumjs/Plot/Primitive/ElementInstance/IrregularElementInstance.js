@@ -6,10 +6,10 @@
  * @LastEditTime: 2022-03-31 10:31:38
  */
 import { defined } from "../../../../service/PlotUtilBase/Check";
-import { RegularLineElementInstance } from "./RegularLineElementInstance";
-import { GeomUtil } from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
+import RegularLineElementInstance from "./RegularLineElementInstance";
+import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
 
-export class IrregularElementInstance extends RegularLineElementInstance {
+export default class IrregularElementInstance extends RegularLineElementInstance {
   svgToGeomInstances(elem, options) {
     const instances = this.pathElemToGeomInstance(elem, options);
     let wallGeomInstances;

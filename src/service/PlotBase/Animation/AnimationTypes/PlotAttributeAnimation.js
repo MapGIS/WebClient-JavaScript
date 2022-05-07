@@ -5,11 +5,11 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-04-01 15:46:20
  */
-import { AnimationUtil } from "../utils/AnimationUtil";
-import { GradientColor } from "../utils/GradientColor";
-import { PlotBaseAnimation } from "./PlotBaseAnimation";
+import AnimationUtil from "../utils/AnimationUtil";
+import GradientColor from "../utils/GradientColor";
+import PlotBaseAnimation from "./PlotBaseAnimation";
 
-export class PlotAttributeAnimation extends PlotBaseAnimation {
+export default class PlotAttributeAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options);
     this._attrsItems = this.resloveAttrsItems(options.attrsItems);

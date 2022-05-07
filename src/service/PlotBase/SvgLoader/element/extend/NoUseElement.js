@@ -1,5 +1,8 @@
-import { Element } from ".."
+import Element from ".."
 
-export class NoUseElement extends Element{
-     type='nouse'
+export default class NoUseElement extends Element {
+  constructor() {
+    super();
+    this.type = 'nouse';
+  }
 }

@@ -1,5 +1,5 @@
 import { defined } from "../Check";
-import { ArrayUtil } from "../Util/ArrayUtil";
+import ArrayUtil from "../Util/ArrayUtil";
 import { byteArrToInt32Arr } from "../Util/MathUtil";
 import { convertBytesToHex,convertHexToBytes } from 'PlotUtilBase/Util/StringUtil'
 

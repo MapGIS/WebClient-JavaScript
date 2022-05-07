@@ -6,9 +6,8 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\index.js
  */
-import { SymbolManager3D } from './SymbolManager3D';
-import { PlotCanvas3D } from './PlotCanvas3D';
-import './Primitive/index';
+import SymbolManager3D from './SymbolManager3D';
+import PlotCanvas3D from './PlotCanvas3D';
 
 export {
    SymbolManager3D,

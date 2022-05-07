@@ -8,14 +8,14 @@
  */
 import { Vector2 } from "../../../../service/PlotUtilBase/Math/Vector2";
 import { Vector3 } from "../../../../service/PlotUtilBase/Math/Vector3";
-import { PolylineCurve3 } from "../../../../service/PlotUtilBase/Curves/PolylineCurve3";
-import { CesiumGeomUtil } from "../../Utils/CesiumUtil";
+import PolylineCurve3 from "../../../../service/PlotUtilBase/Curves/PolylineCurve3";
+import {CesiumGeomUtil} from "../../Utils/CesiumUtil";
 import { defined } from "../../../../service/PlotUtilBase/Check";
-import { GeomUtil } from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
+import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
 import { ExtrudeGeometryUtil } from "../../Utils/ExtrudeGeometryUtil";
 import { Shape } from "../../../../service/PlotUtilBase/Path2D/Shape";
 
-export class SvgElementInstance {
+export default class SvgElementInstance {
   constructor(elem, options = {}) {
     this._elem = elem;
     this.globelScale=options.globelScale || 100

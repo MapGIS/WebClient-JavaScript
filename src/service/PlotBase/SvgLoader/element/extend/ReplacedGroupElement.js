@@ -7,11 +7,11 @@
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\extend\ReplacedGroupElement.js
  */
 import { defined } from "../../../../PlotUtilBase/Check";
-import { GElement } from "../GElement";
-import { SymbolManager } from "../../../SymbolManager/SymbolManager";
-import { ElementFactory } from "..";
+import GElement from "../GElement";
+import SymbolManager from "../../../SymbolManager/SymbolManager";
+import ElementFactory from "..";
 
-export class ReplacedGroupElement extends GElement {
+export default class ReplacedGroupElement extends GElement {
   constructor(node) {
     super(node);
 

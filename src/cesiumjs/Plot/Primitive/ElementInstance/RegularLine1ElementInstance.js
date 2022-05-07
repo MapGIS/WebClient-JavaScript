@@ -8,10 +8,10 @@
  */
 
 import { CesiumGeomUtil, CesiumUtil } from "../../Utils/CesiumUtil";
-import { MainElement } from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
-import { RegularLineElementInstance } from "./RegularLineElementInstance";
+import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
+import RegularLineElementInstance from "./RegularLineElementInstance";
 
-export class RegularLine1ElementInstance extends RegularLineElementInstance {
+export default class RegularLine1ElementInstance extends RegularLineElementInstance {
   pathElemToWallGeomInstance(pathElem, options) {
     if (!(pathElem instanceof MainElement)) return undefined;
     return super.pathElemToWallGeomInstance(pathElem, options);

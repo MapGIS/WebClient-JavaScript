@@ -1,7 +1,7 @@
 /**
  * 队列类
  */
-export class Queue {
+export default class Queue {
   
   constructor() {
     this.que = []

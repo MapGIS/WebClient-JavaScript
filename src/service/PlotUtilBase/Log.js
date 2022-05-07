@@ -15,7 +15,7 @@ export function warn(){
   console.warn(getCurTime(),...arguments);
 }
 
-export class TimeCounter {
+export default class TimeCounter {
   constructor() {
     this.total = 0;
   }

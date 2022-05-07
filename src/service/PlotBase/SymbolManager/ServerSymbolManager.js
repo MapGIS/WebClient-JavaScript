@@ -1,11 +1,11 @@
 import { defined } from "../../PlotUtilBase/Check";
-import { LogTool } from "../../PlotUtilBase/Log/LogTool";
-import { SymbolCatalog } from "./SymbolCatalog";
+import LogTool from "../../PlotUtilBase/Log/LogTool";
+import  SymbolCatalog from "./SymbolCatalog";
 
 /**
  * 服务端符号管理器
  */
-export class ServerSymbolManager {
+export default class ServerSymbolManager {
   getSymbols() {
     if (this._symbols) return this._symbols;
 

@@ -1,53 +1,35 @@
-import { Point } from '../Point';
-import { GeomUtil } from '../GeomUtil';
-import { MathUtil } from '../../Util/MathUtil';
-import { PlottingUtil } from './PlottingUtil';
-import { Path2D } from './Path2D';
+import Point from '../Point';
+import GeomUtil from '../GeomUtil';
+import MathUtil from '../../Util/MathUtil';
+import PlottingUtil from './PlottingUtil';
+import Path2D from './Path2D';
 
-export class MultiArrow {
-  MIN_PTCNT_PERARROW = 3
-
-  MIN_GEOPT_CNT = 2
-
-  ATL_DIV_ABL_1 = 0.18
-
-  ATL_DIV_ABL = 0.12
-
-  AML_DIV_ATL = 0.7
-
-  AHL_DIV_AML = 0.148
-
-  AL_SCALE = 1.25
-
-  AB_CTRLPNT_RATE1 = 0
-
-  AB_CTRLPNT_RATE2 = 3
-
-  AB_CTRLPNT_RATE3 = 0.5
-
-  AEW_DIV_ATL = 0.4
-
-  AEL_DIV_ATL = 0.3
-
-  ArrowWoCtrl = 0.6
-
-  AJCTRL = 0.6
-
-  SV1_defaultATLenDivABLen = 0
-
-  SV2_defaultAYPosScale = 0.65
-
-  ctrlpnts = []
-
-  scaleValues = []
-
+export default class MultiArrow {
   constructor(options) {
     this.ctrlpnts = options.ctrlpnts || []
+    this.MIN_PTCNT_PERARROW = 3
+    this.MIN_GEOPT_CNT = 2
+    this.ATL_DIV_ABL_1 = 0.18
+    this.ATL_DIV_ABL = 0.12
+    this.AML_DIV_ATL = 0.7
+    this.AHL_DIV_AML = 0.148
+    this.AL_SCALE = 1.25
+    this.AB_CTRLPNT_RATE1 = 0
+    this.AB_CTRLPNT_RATE2 = 3
+    this.AB_CTRLPNT_RATE3 = 0.5
+    this.AEW_DIV_ATL = 0.4
+    this.AEL_DIV_ATL = 0.3
+    this.ArrowWoCtrl = 0.6
+    this.AJCTRL = 0.6
+    this.SV1_defaultATLenDivABLen = 0
+    this.SV2_defaultAYPosScale = 0.65
+    this.ctrlpnts = []
+    this.scaleValues = []
   }
 
   generateArrowBody(pnts, e, h) {
     const pntNum = pnts.length - 1
-    if (pntNum < 2) return { dATLenDivABLen: 0, arrowBodyPts: [] }
+    if (pntNum < 2) return {dATLenDivABLen: 0, arrowBodyPts: []}
 
     const leftArrowPnts = []
     const rightArrowPnts = []
@@ -98,7 +80,7 @@ export class MultiArrow {
         arrowWidsLen[i] =
           arrowHeadLen +
           (arrowTailLen - arrowHeadLen) *
-            ((tempWid - tempLen) / tempWid) ** this.AL_SCALE
+          ((tempWid - tempLen) / tempWid) ** this.AL_SCALE
       }
     }
 

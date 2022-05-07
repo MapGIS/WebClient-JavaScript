@@ -1,14 +1,15 @@
-import { Vector3 } from "../../../service/PlotUtilBase/Math/Vector3";
-import { MathUtil } from "../../../service/PlotUtilBase/Util/MathUtil";
-import { defined, Check } from "../../../service/PlotUtilBase/Check";
+import {Vector3} from "../../../service/PlotUtilBase/Math/Vector3";
+import MathUtil from "../../../service/PlotUtilBase/Util/MathUtil";
+import {defined, Check} from "../../../service/PlotUtilBase/Check";
 
 const gWebMercatorProjection = new Cesium.WebMercatorProjection();
 const gCartographic = new Cesium.Cartographic();
 const gCartesian3 = new Cesium.Cartesian3();
+
 /**
  * cesium工具类
  */
-export class CesiumUtil {
+class CesiumUtil {
   /**
    * 自定义用户交互处理程序
    * @function
@@ -105,14 +106,14 @@ export class CesiumUtil {
    * @param {*} x x坐标
    * @param {*} y y坐标
    */
-  static WebMercatorUnProject(x, y,res) {
+  static WebMercatorUnProject(x, y, res) {
     gCartesian3.x = x;
     gCartesian3.y = y;
     gCartesian3.z = 0;
 
     gWebMercatorProjection.unproject(gCartesian3, gCartographic);
-    if(!defined(res))
-      res=new Vector3();
+    if (!defined(res))
+      res = new Vector3();
 
     res.x = MathUtil.toDegrees(gCartographic.longitude);
     res.y = MathUtil.toDegrees(gCartographic.latitude);
@@ -120,10 +121,11 @@ export class CesiumUtil {
     return res;
   }
 }
+
 /**
  * CesiumGeom工具类
  */
-export class CesiumGeomUtil {
+class CesiumGeomUtil {
   /**
    * 平移
    * @param {Cesium.Geometry} geometry
@@ -420,6 +422,7 @@ export class CesiumGeomUtil {
 
     return geometry;
   }
+
   /**
    * 合并geometry
    *
@@ -473,8 +476,7 @@ export class CesiumGeomUtil {
     return CesiumGeomUtil._mergeGeometries(geometries);
   }
 
-  static createCesiumGeomByExtrudeGeom(extrudeGeom)
-  {
+  static createCesiumGeomByExtrudeGeom(extrudeGeom) {
     const attributes = {};
     const attrName = "position";
     attributes[attrName] = new Cesium.GeometryAttribute({
@@ -496,3 +498,5 @@ export class CesiumGeomUtil {
     return cesGeometry;
   }
 }
+
+export {CesiumUtil, CesiumGeomUtil}

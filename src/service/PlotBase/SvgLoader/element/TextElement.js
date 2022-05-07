@@ -6,9 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element\TextElement.js
  */
-import { RenderedElement } from "./RenderedElement";
+import RenderedElement from "./RenderedElement";
 
-export class TextElement extends RenderedElement {
+export default class TextElement extends RenderedElement {
   constructor(node) {
     super(node);
 

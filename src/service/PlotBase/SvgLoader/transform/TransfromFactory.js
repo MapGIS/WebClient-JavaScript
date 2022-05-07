@@ -6,6 +6,6 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\transform\TransfromFactory.js
  */
-import { SimpleFactory } from "../../../PlotUtilBase/SimpleFactory";
+import SimpleFactory from "../../../PlotUtilBase/SimpleFactory";
 
 export const TransformFactory = new SimpleFactory();

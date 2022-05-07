@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularPointPrimitive.js
  */
-import { BaseRegularPrimitive } from "./BaseRegularPrimitive";
-import { RegularPointElementInstance } from "../ElementInstance/RegularPointElementInstance";
+import BaseRegularPrimitive from "./BaseRegularPrimitive";
+import RegularPointElementInstance from "../ElementInstance/RegularPointElementInstance";
 
-export class RegularPointPrimitive extends BaseRegularPrimitive {
+export default class RegularPointPrimitive extends BaseRegularPrimitive {
   constructor(options) {
     super(options);
     this._modelMatrix = Cesium.Matrix4.clone(Cesium.Matrix4.IDENTITY);

@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularSurfaceElementInstance.js
  */
-import { Bounds } from "../../../../service/PlotUtilBase/Geometry/Bound";
-import { CesiumUtil } from "../../Utils/CesiumUtil";
-import { SvgElementInstance } from "./SvgElementInstance";
+import Bounds from "../../../../service/PlotUtilBase/Geometry/Bound";
+import {CesiumUtil} from "../../Utils/CesiumUtil";
+import SvgElementInstance from "./SvgElementInstance";
 
-export class RegularSurfaceElementInstance extends SvgElementInstance {
+export default class RegularSurfaceElementInstance extends SvgElementInstance {
   svgToGeomInstances(elem,options) {
     const { surfaceBorderWidth }=options
     this.polylineOutInstance = null;

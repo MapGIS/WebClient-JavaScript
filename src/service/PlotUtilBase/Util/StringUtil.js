@@ -32,7 +32,7 @@ export function convertBytesToHex(bytes) {
 /**
  * 字符串工具类
  */
-export class StringUtil {
+export default class StringUtil {
   /**
    * 字符串转数字
    * @function

@@ -1,9 +1,9 @@
 import axios from "axios";
 import { Check, defined } from "../../../service/PlotUtilBase/Check";
-import { CesiumUtil } from "../Utils/CesiumUtil";
-import { BasePlotPrimitive } from "../Primitive/BasePlotPrimitive";
+import {CesiumUtil} from "../Utils/CesiumUtil";
+import BasePlotPrimitive from "../Primitive/BasePlotPrimitive";
 
-export class LineEditTool {
+export default class LineEditTool {
   constructor(plotViewer) {
     Check.defined(plotViewer);
     this._plotViewer = plotViewer;
@@ -127,7 +127,7 @@ export class LineEditTool {
     // 控制点移除边界外，导致无法获取点
     try {
       cartographic = Cesium.Cartographic.fromCartesian(endPosition);
-    } catch {
+    } catch(e) {
       cartographic = undefined;
     }
     if (!cartographic) return;

@@ -6,6 +6,6 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
-import { RegularLineElementInstance } from "./RegularLineElementInstance";
+import RegularLineElementInstance from "./RegularLineElementInstance";
 
-export class RegularLine2ElementInstance extends RegularLineElementInstance {}
+export default class RegularLine2ElementInstance extends RegularLineElementInstance {}

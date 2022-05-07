@@ -6,6 +6,6 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\PrimitiveFactory.js
  */
-import { SimpleFactory } from "../../../service/PlotUtilBase/SimpleFactory";
+import SimpleFactory from "../../../service/PlotUtilBase/SimpleFactory";
 
 export const PrimitiveFactory = new SimpleFactory();

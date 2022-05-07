@@ -7,6 +7,6 @@
  * @FilePath: \MapGISPlotBase\src\base\Draw\DrawObjectFactory.js
  */
 
-import { SimpleFactory } from "../../PlotUtilBase/SimpleFactory";
+import SimpleFactory from "../../PlotUtilBase/SimpleFactory";
 
 export const DrawPlotObjectFactory = new SimpleFactory();

@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\GElement.js
  */
-import {Point} from "../../../PlotUtilBase/Geometry/Point";
-import {Element} from "./Element";
+import Point from "../../../PlotUtilBase/Geometry/Point";
+import Element from "./Element";
 import {Transform} from "../transform";
 
-export class GElement extends Element {
+export default class GElement extends Element {
   constructor(node) {
     super(node);
     this._matrix = Transform.getTransfromFrmElement(this);

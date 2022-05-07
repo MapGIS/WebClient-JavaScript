@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\transform\matrix.js
  */
-import { StringUtil } from "../../../PlotUtilBase/Util/StringUtil";
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
+import StringUtil from "../../../PlotUtilBase/Util/StringUtil";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
 
-export class Matrix {
+export default class Matrix {
   constructor(matrixArr, transformOrigin) {
     const [t1, t2, t3, t4, t5, t6] = StringUtil.toNumbers(matrixArr);
 

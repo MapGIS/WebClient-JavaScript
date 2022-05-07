@@ -5,7 +5,7 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-01-25 15:00:52
  */
-import { SymbolManager } from './SymbolManager/SymbolManager'
+import SymbolManager from './SymbolManager/SymbolManager'
 
 export default{
     SymbolManager

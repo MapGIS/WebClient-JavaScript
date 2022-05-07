@@ -6,10 +6,10 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\extend\BaseRegularPartElement.js
  */
-import {PathElement} from "../PathElement";
-import {PathParser} from "../PathParser";
+import PathElement from "../PathElement";
+import PathParser from "../PathParser";
 
-export class BaseRegularPartElement extends PathElement {
+export default class BaseRegularPartElement extends PathElement {
   constructor() {
     super();
     this.type = "mainline";

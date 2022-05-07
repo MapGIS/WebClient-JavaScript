@@ -6,7 +6,7 @@
  * @LastEditTime: 2022-04-01 17:44:25
  */
 
-export class PlotBaseAnimation {
+export default class PlotBaseAnimation {
   constructor(options) {
     // copy options
     this._options=options

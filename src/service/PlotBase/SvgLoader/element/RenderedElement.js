@@ -6,12 +6,12 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\Render.js
  */
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
-import { Element } from "./Element";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
+import Point from "../../../PlotUtilBase/Geometry/Point";
+import Element from "./Element";
 import { Transform } from "../transform";
-import { DimModal } from "./DimModal";
-import { Bounds } from "../../../PlotUtilBase/Geometry/Bound";
+import DimModal from "./DimModal";
+import Bounds from "../../../PlotUtilBase/Geometry/Bound";
 import { createGuid } from "../../../PlotUtilBase/Util/Guid";
 import StrokeStyleClass from "./PropertyClass/BaseCanvasClass/StrokeStyleClass";
 import FillStyleClass from "./PropertyClass/BaseCanvasClass/FillStyleClass";
@@ -19,15 +19,14 @@ import PropertyClass from "./PropertyClass/PropertyClass";
 
 const PSEUDO_ZERO = 0.00000001;
 
-export class RenderedElement extends Element {
-  // 基础attributes样式属性 this._attributes[attr]（放在子节点）
-  static baseSVGAttributes = [];
-  // 基础属性 this[attr]（放在子节点）
-  static extendElementAttributes = [];
-  static styleClassArray = [StrokeStyleClass, FillStyleClass];
-
+export default class RenderedElement extends Element {
   constructor(node) {
     super(node);
+    // 基础attributes样式属性 this._attributes[attr]（放在子节点）
+    this.baseSVGAttributes = [];
+    // 基础属性 this[attr]（放在子节点）
+    this.extendElementAttributes = [];
+    this.styleClassArray = [StrokeStyleClass, FillStyleClass];
     this._matrix = Transform.getTransfromFrmElement(this);
     this._transformMatrix = new Matrix3();
     this._dimModal = new DimModal();

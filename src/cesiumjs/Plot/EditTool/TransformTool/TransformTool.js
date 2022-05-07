@@ -1,5 +1,5 @@
-import { CesiumUtil } from "../../Utils/CesiumUtil";
-import { TranslateTool } from "./TranslateTool";
+import CesiumUtil from "../../Utils/CesiumUtil";
+import TranslateTool from "./TranslateTool";
 
 function onSelected(event) {
     if (!Cesium.defined(this._curTool))
@@ -35,7 +35,7 @@ function onLeftUp(event) {
     this._dragging = false;
 }
 
-export class TransformTool {
+export default class TransformTool {
     constructor(plotViewer) {
         if (!Cesium.defined(plotViewer)) {
             throw new Error("plotViewer 未初始化");

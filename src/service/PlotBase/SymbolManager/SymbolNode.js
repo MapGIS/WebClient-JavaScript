@@ -7,12 +7,12 @@
  * @LastEditors: Do not edit
  */
 // import $ from "jquery";
-import { ElementFactory } from "../SvgLoader/element";
+import {ElementFactory} from "../SvgLoader/element";
 import { defined } from "../../PlotUtilBase/Check";
-import { LogTool } from "../../PlotUtilBase/Log/LogTool";
-import { SymbolBase } from "./SymbolBase";
+import LogTool from "../../PlotUtilBase/Log/LogTool";
+import SymbolBase from "./SymbolBase";
 
-export class SymbolNode extends SymbolBase {
+export default class SymbolNode extends SymbolBase {
   constructor() {
     super();
     this._src = "";

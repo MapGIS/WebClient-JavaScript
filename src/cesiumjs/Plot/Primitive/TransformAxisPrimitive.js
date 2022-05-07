@@ -149,7 +149,7 @@ AxisLinePrimitive.prototype.destroy = function () {
     return Cesium.destroyObject(this);
 };
 
-export class TransformAxis {
+export default class TransformAxis {
     static getValue(axis) {
         if (axis === TransformAxis.X) {
             return Cesium.Cartesian3.UNIT_X;

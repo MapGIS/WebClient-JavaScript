@@ -7,12 +7,12 @@
  * @LastEditors: Do not edit
  */
 import {defined} from "../../PlotUtilBase/Check";
-import {LogTool} from "../../PlotUtilBase/Log/LogTool";
-import {SymbolCatalog} from "./SymbolCatalog";
+import LogTool from "../../PlotUtilBase/Log/LogTool";
+import SymbolCatalog from "./SymbolCatalog";
 import {getAction} from "../Util/request";
 import axios from "axios";
 
-export class SymbolManager {
+export default class SymbolManager {
   constructor(symbolsUrl) {
     if (!SymbolManager.instance) {
       this._symbolsUrl = symbolsUrl;

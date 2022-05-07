@@ -1,5 +1,5 @@
 import { defaultValue, defined } from "../Check";
-import { Point } from './Point';
+import Point from './Point';
 
 /**
  * 矩形范围类
@@ -8,7 +8,7 @@ import { Point } from './Point';
  * @property right   右边界
  * @property top     上边界
  */
-export class Bounds {
+export default class Bounds {
   /**
    *
    * @param {Number} [left=Number.POSITIVE_INFINITY]     左边界
@@ -22,14 +22,6 @@ export class Bounds {
     this.right = defaultValue(right, Number.NEGATIVE_INFINITY);
     this.top = defaultValue(top, Number.NEGATIVE_INFINITY);
   }
-
-  left = 0;
-
-  bottom = 0;
-
-  right = 0;
-
-  top = 0;
 
   /**
    * 克隆当前矩形范围对象
@@ -87,7 +79,7 @@ export class Bounds {
    * 获取矩形范围中心
    * @function
    *
-   * @returns {Point}
+   * @returns Point
    */
   getCenter() {
     const x = (this.right + this.left) / 2;

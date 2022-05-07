@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\Arrow\SimpleArrow.js
  */
-import { BaseIrregularElement } from "../BaseIrregularElement";
-import { AttackArrow } from "../../../../../PlotUtilBase/Geometry/Arrow/Attack_Arrow";
-import { Point } from "../../../../../PlotUtilBase/Geometry/Point";
+import BaseIrregularElement from "../BaseIrregularElement";
+import AttackArrow from "../../../../../PlotUtilBase/Geometry/Arrow/Attack_Arrow";
+import Point from "../../../../../PlotUtilBase/Geometry/Point";
 
-export class SimpleArrowGeometry extends BaseIrregularElement {
+export default class SimpleArrowGeometry extends BaseIrregularElement {
   constructor() {
     super();
     this.type = "msbl_singleArrow";

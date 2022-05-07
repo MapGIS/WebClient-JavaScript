@@ -1,13 +1,13 @@
-import { MathUtil } from "../../Util/MathUtil";
-import { GeomUtil } from "../GeomUtil";
-import { PlottingUtil } from "./PlottingUtil";
-import { ArrowUtil } from "./ArrowUtil";
-import { BaseArrow } from "./BaseArrow";
+import MathUtil from "../../Util/MathUtil";
+import GeomUtil from "../GeomUtil";
+import PlottingUtil from "./PlottingUtil";
+import ArrowUtil from "./ArrowUtil";
+import BaseArrow from "./BaseArrow";
 
 /**
  * 突击箭头
  */
-export class AssaultArrow extends BaseArrow {
+export default class AssaultArrow extends BaseArrow {
   constructor(options) {
     super(options);
     this.mScaleValues = [];

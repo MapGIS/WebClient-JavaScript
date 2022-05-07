@@ -1,13 +1,13 @@
-import { MathUtil } from "../../Util/MathUtil";
-import { Point } from "../Point";
-import { Path2D } from "./Path2D";
-import { GeomUtil } from "../GeomUtil";
-import { PlottingUtil } from "./PlottingUtil";
+import MathUtil from "../../Util/MathUtil";
+import Point from "../Point";
+import Path2D from "./Path2D";
+import GeomUtil from "../GeomUtil";
+import PlottingUtil from "./PlottingUtil";
 
 /**
  * 箭头生成工具类
  */
-export class ArrowUtil {
+export default class ArrowUtil {
   static correctPnts(pnts) {
     const clonePnts = GeomUtil.PolylinClone(pnts);
     if (clonePnts.length === 3) {

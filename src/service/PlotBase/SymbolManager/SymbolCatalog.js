@@ -1,11 +1,11 @@
 import { defined } from "../../PlotUtilBase/Check";
-import { SymbolBase } from "./SymbolBase";
-import { SymbolNode } from "./SymbolNode";
+import SymbolBase from "./SymbolBase";
+import SymbolNode from "./SymbolNode";
 
 /**
  * 符号目录类
  */
-export class SymbolCatalog extends SymbolBase {
+export default class SymbolCatalog extends SymbolBase {
   constructor() {
     super();
     this._children = [];
@@ -23,7 +23,7 @@ export class SymbolCatalog extends SymbolBase {
   fromJson(json) {
     super.fromJson(json);
     const children = json.children;
-    
+
     if (!defined(children)) return false;
 
     const length = children.length;

@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularLine1Primitive.js
  */
-import {RegularLine2Primitive} from "./RegularLine2Primitive";
-import {KidneyAreaElementInstance} from "../ElementInstance/KidneyAreaElementInstance";
+import RegularLine2Primitive from "./RegularLine2Primitive";
+import KidneyAreaElementInstance from "../ElementInstance/KidneyAreaElementInstance";
 
-export class KidneyAreaPrimitive extends RegularLine2Primitive {
+export default class KidneyAreaPrimitive extends RegularLine2Primitive {
   constructor() {
     super();
   }

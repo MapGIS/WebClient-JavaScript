@@ -1,8 +1,8 @@
 import { defaultValue, Check } from "../Check";
-import { MathUtil } from "../Util/MathUtil";
-import { Circle } from "./Circle";
-import { GeomUtil } from "./GeomUtil";
-import { Point } from "./Point";
+import MathUtil from "../Util/MathUtil";
+import Circle from "./Circle";
+import GeomUtil from "./GeomUtil";
+import Point from "./Point";
 import * as turfHelp from "@turf/helpers";
 import polygonize from "@turf/polygonize";
 
@@ -14,7 +14,7 @@ function adjustAngle(angle) {
 /**
  * 组合圆
  */
-export class CombinationalCircle {
+export default class CombinationalCircle {
   constructor(options) {
     Check.defined(options.controlPoints);
     this._controlPoints = options.controlPoints;
@@ -216,7 +216,7 @@ export class CombinationalCircle {
             (s) => new Point(s[0], s[1])
           );
         });
-      } catch {}
+      } catch(e) {}
     }
 
     return pnts.concat(allCirclePnts);

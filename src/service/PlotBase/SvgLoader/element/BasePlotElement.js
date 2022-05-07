@@ -5,15 +5,15 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-28 12:03:50
  */
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
-import { createGuid } from "/../../../PlotUtilBase/Util/Guid";
-import { SvgElement } from "./SvgElement";
-import { Signal } from "../../../PlotUtilBase/Signal/Signal";
-import { PathElement } from "./PathElement";
-import { TSpanElement } from "./TSpanElement";
+import Point from "../../../PlotUtilBase/Geometry/Point";
+import { createGuid } from "../../../PlotUtilBase/Util/Guid";
+import SvgElement from "./SvgElement";
+import Signal from "../../../PlotUtilBase/Signal/Signal";
+import PathElement from "./PathElement";
+import TSpanElement from "./TSpanElement";
 import { drawTypes } from "./index";
-import { GElement } from "./GElement";
-import { TextElement } from "./TextElement";
+import GElement from "./GElement";
+import TextElement from "./TextElement";
 import PropertyClass from "./PropertyClass/PropertyClass";
 
 /**
@@ -21,38 +21,37 @@ import PropertyClass from "./PropertyClass/PropertyClass";
  * @property propsUpdateSignal 属性更新信号
  * @property positions 经纬度坐标数组
  */
-export class BasePlotElement extends SvgElement {
-  // 需要存储在根节点的属性
-  static extendElementAttributes = [
-    "show",
-    "featureId",
-    "isScaleByMap",
-    "compareLine",
-    "compareLineWidth",
-    "compareLineColor",
-  ];
-  static baseSVGAttributes = [];
-  static styleClassArray = [];
-  // 三维转换坐标系选项
-  _is3d = true;
-  m_scaleX = 100;
-  m_scaleY = 100;
-  // 是否开启点组缓存
-  isOpenCoordsCache = true;
-  // 是否进行样式文件压缩合并
-  isSmartStyle = true;
-  // 是否显示或隐藏对象
-  show = true;
-  // 是否随图缩放
-  isScaleByMap = true;
-  // 衬线
-  compareLine = 0;
-  compareLineWidth = 6;
-  compareLineColor = "#099563";
-  compareLineOpacity = 1;
-
+export default class BasePlotElement extends SvgElement {
   constructor(node) {
     super(node);
+    // 需要存储在根节点的属性
+    this.extendElementAttributes = [
+      "show",
+      "featureId",
+      "isScaleByMap",
+      "compareLine",
+      "compareLineWidth",
+      "compareLineColor",
+    ];
+    this.baseSVGAttributes = [];
+    this.styleClassArray = [];
+    // 三维转换坐标系选项
+    this._is3d = true;
+    this.m_scaleX = 100;
+    this.m_scaleY = 100;
+    // 是否开启点组缓存
+    this.isOpenCoordsCache = true;
+    // 是否进行样式文件压缩合并
+    this.isSmartStyle = true;
+    // 是否显示或隐藏对象
+    this.show = true;
+    // 是否随图缩放
+    this.isScaleByMap = true;
+    // 衬线
+    this.compareLine = 0;
+    this.compareLineWidth = 6;
+    this.compareLineColor = "#099563";
+    this.compareLineOpacity = 1;
     // 控制点数组，统一为经纬度
     this._pnts = [];
     // 符号节点

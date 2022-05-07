@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\transform\Translate.js
  */
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
+import Point from "../../../PlotUtilBase/Geometry/Point";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
 
-export class Translate{
+export default class Translate{
     constructor(strPnt) {
         const pnt = Point.parse(strPnt);
         const matrix=new Matrix3();

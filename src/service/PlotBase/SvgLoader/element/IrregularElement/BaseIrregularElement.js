@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\BaseIrregularElement.js
  */
-import { BasePlotElement } from "../BasePlotElement";
-import { Bounds } from "../../../../PlotUtilBase/Geometry/Bound";
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
+import BasePlotElement from "../BasePlotElement";
+import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
 
-export class BaseIrregularElement extends BasePlotElement {
+export default class BaseIrregularElement extends BasePlotElement {
   constructor(node) {
     super(node);
     this.m_coords = [];

@@ -1,7 +1,7 @@
 /**
  * 事件模型基类，负责事件监听和发送
  */
- export class Observable {
+ export default class Observable {
 
   constructor() { }
 
@@ -9,7 +9,7 @@
    * 发送事件
    * @param { String } eventName 事件名称
    * @param { Object } options   事件参数
-   * @returns { Observable } this对象
+   * @returns Observable this对象
    */
   fire(eventName, options) {
       if (!this._eventListeners) {

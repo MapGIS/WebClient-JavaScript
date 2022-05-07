@@ -6,12 +6,12 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
-import { SvgElementInstance } from "./SvgElementInstance";
+import SvgElementInstance from "./SvgElementInstance";
 import { CesiumGeomUtil, CesiumUtil } from "../../Utils/CesiumUtil";
-import { MainElement } from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
+import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
 import { defined } from "../../../../service/PlotUtilBase/Check";
 
-export class RegularLineElementInstance extends SvgElementInstance {
+export default class RegularLineElementInstance extends SvgElementInstance {
   svgToGeomInstances(elem, options) {
     const instances = super.svgToGeomInstances(elem, options);
     const wallGeomInstances = this.generateWallGeometryInstances(elem, options);

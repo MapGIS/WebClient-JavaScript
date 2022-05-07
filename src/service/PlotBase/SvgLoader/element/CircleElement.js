@@ -6,11 +6,11 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\CircleElement.js
  */
-import { Point } from "../../../PlotUtilBase/Geometry/Point.js";
-import { PathElement } from "./PathElement.js";
+import Point from "../../../PlotUtilBase/Geometry/Point.js";
+import PathElement from "./PathElement.js";
 import { EllipseCurve } from "../../../PlotUtilBase/Curves";
 
-export class CircleElement extends PathElement {
+export default class CircleElement extends PathElement {
   constructor() {
     super();
     this.type = "circle";

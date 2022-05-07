@@ -8,9 +8,9 @@
  * @FilePath: \TypeScript-Babel-Starter\src\Geometry\Util\PoltUtils.ts
  */
 
-import { MathUtil } from 'PlotUtilBase/Util/MathUtil'
+import MathUtil from '../Util/MathUtil'
 
-import { GeomUtil } from './GeomUtil'
+import GeomUtil from './GeomUtil'
 
 const FITTING_COUNT=100;
 

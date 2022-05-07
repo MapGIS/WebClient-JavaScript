@@ -12,7 +12,7 @@
  * @property show 是否显示
  */
 
-export class BasePlotPrimitive {
+export default class BasePlotPrimitive {
   constructor(options) {
     Cesium.Check.defined("options", options);
     Cesium.Check.defined("options.element", options.element);

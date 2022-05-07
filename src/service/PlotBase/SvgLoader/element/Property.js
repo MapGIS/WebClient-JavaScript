@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\Property.js
  */
-import { StringUtil } from "../../../PlotUtilBase/Util/StringUtil";
+import StringUtil from "../../../PlotUtilBase/Util/StringUtil";
 import { colorRgba,rgbToRgba } from "../../../PlotUtilBase/Color";
 
 function normalizeColor(color) {
@@ -22,11 +22,10 @@ function normalizeColor(color) {
   return normalizedColor;
 }
 
-export class Property {
-  _isNormalizedColor = false;
-
+export default class Property {
   constructor(value) {
     this._value = value;
+    this._isNormalizedColor = false;
   }
 
   hasValue(zeroIsValue) {

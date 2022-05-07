@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\transform\Scale.js
  */
-import { StringUtil } from "../../../PlotUtilBase/Util/StringUtil";
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
+import StringUtil from "../../../PlotUtilBase/Util/StringUtil";
+import Point from "../../../PlotUtilBase/Geometry/Point";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
 
-export class Scale {
+export default class Scale {
   constructor(scale, transformOrigin) {
     const [x = 1, y = x] = StringUtil.toNumbers(scale);
 

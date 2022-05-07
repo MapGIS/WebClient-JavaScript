@@ -3,7 +3,7 @@
  * @property positions 坐标信息
  * @property show 是否显示
  */
-import { BasePlotPrimitive } from "../BasePlotPrimitive";
+import BasePlotPrimitive from "../BasePlotPrimitive";
 
-export class BaseRegularPrimitive extends BasePlotPrimitive{
+export default class BaseRegularPrimitive extends BasePlotPrimitive{
 }

@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularLine1Primitive.js
  */
-import {BaseRegularPrimitive} from "./BaseRegularPrimitive";
-import {RegularLine1ElementInstance} from "../ElementInstance/RegularLine1ElementInstance";
+import BaseRegularPrimitive from "./BaseRegularPrimitive";
+import RegularLine1ElementInstance from "../ElementInstance/RegularLine1ElementInstance";
 
-export class RegularLine1Primitive extends BaseRegularPrimitive {
+export default class RegularLine1Primitive extends BaseRegularPrimitive {
   constructor() {
     super();
     this.extendPrimitiveAttributes = [

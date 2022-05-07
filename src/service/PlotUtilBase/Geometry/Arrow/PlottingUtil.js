@@ -1,8 +1,8 @@
-import { MathUtil } from '../../Util/MathUtil';
-import { GeomUtil } from '../GeomUtil';
-import { Point } from '../Point';
+import MathUtil from '../../Util/MathUtil';
+import GeomUtil from '../GeomUtil';
+import Point from '../Point';
 
-export class PlottingUtil {
+export default class PlottingUtil {
   static clonePolyline(pnts) {
     const newPnts = []
     for (let i = 0; i < pnts.length; i += 1) {

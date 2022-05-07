@@ -1,12 +1,12 @@
 import { Check } from "../Check";
-import { MathUtil } from "../Util/MathUtil";
-import { GeomUtil } from "./GeomUtil";
-import { Point } from "./Point";
+import MathUtil from "../Util/MathUtil";
+import GeomUtil from "./GeomUtil";
+import Point from "./Point";
 
 /**
  * 肾脏区
  */
-export class Kidney {
+export default class Kidney {
   constructor(options) {
     Check.defined(options.positions);
     this._positions = options.positions;

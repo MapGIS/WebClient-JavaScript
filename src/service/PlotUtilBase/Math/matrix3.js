@@ -1,4 +1,4 @@
-export class Matrix3 {
+export default class Matrix3 {
   constructor() {
     this.elements = [1, 0, 0, 0, 1, 0, 0, 0, 1];
   }

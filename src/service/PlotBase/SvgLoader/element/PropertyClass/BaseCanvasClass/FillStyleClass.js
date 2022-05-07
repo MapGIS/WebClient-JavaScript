@@ -6,15 +6,19 @@
  * @LastEditTime: 2022-03-08 10:14:58
  */
 import BaseStyleObject from "./BaseStyleObjectClass";
-import { Property } from "../../Property";
+import Property from "../../Property";
 
 export default class FillStyleClass extends BaseStyleObject {
-  static SVGSTYLENAMES = "fill,fill-rule,fill-opacity".split(",");
-  static STYLENAMES =
-    "fillStyleType,fillGradType,fillStyle,fillGradColor".split(",");
-  static isCanCreate = (elem) => {
-    return true;
-  };
+  constructor() {
+    super();
+    this.SVGSTYLENAMES = "fill,fill-rule,fill-opacity".split(",");
+    this.STYLENAMES =
+      "fillStyleType,fillGradType,fillStyle,fillGradColor".split(",");
+    this.isCanCreate = (elem) => {
+      return true;
+    };
+  }
+
   createStyleObject() {
     const elem = this._elem;
     const style = {};
@@ -55,13 +59,14 @@ export default class FillStyleClass extends BaseStyleObject {
 
       style.fillStyleType = fillStyleType;
       style.fillGradType = fillGradType;
-      style.fillGradColor = fillGradColor==='none'?"rgba(0,0,0,0)": fillGradColor;
+      style.fillGradColor = fillGradColor === 'none' ? "rgba(0,0,0,0)" : fillGradColor;
       style.fillStyle = fillStyle;
       style.fillRule = fillRule;
     }
 
     return style;
   }
+
   getBaseClass() {
     return FillStyleClass;
   }

@@ -10,30 +10,34 @@ import FontStyle from "../../../../../PlotUtilBase/FontClass";
 
 
 export default class FontStyleClass extends BaseStyleObject {
-  static SVGSTYLENAMES =
-    "font,font-style,font-variant,font-size,font-weight,font-family".split(",");
-  static STYLENAMES = "fontSize,fontWeight,fontFamily".split(",");
-  static isCanCreate = (elem) => {
+  constructor(props) {
+    super(props);
+    this.SVGSTYLENAMES =
+      "font,font-style,font-variant,font-size,font-weight,font-family".split(",");
+    this.STYLENAMES = "fontSize,fontWeight,fontFamily".split(",");
+    this.isCanCreate = (elem) => {
       return true
-  };
+    };
+  }
+
   createStyleObject() {
     const elem = this._elem;
     let style = {};
 
     const fontStyleProp = elem.getStyle("font");
     const fontStyleProp1 = elem.getStyle("font-style");
-        
-    if (fontStyleProp.hasValue() && fontStyleProp.getString()!=='none') {
+
+    if (fontStyleProp.hasValue() && fontStyleProp.getString() !== 'none') {
       style = FontStyle.parse(fontStyleProp.getString()).getFontObject();
     } else if (
-      fontStyleProp1.hasValue() 
+      fontStyleProp1.hasValue()
     ) {
       const fontStyleStyleProp = elem.getStyle("font-style");
       const fontVariantStyleProp = elem.getStyle("font-variant");
       const fontWeightStyleProp = elem.getStyle("font-weight");
       const fontSizeStyleProp = elem.getStyle("font-size");
       const fontFamilyStyleProp = elem.getStyle("font-family");
-      
+
       style = new FontStyle(
         fontStyleStyleProp.getString(),
         fontVariantStyleProp.getString(),
@@ -44,6 +48,7 @@ export default class FontStyleClass extends BaseStyleObject {
     }
     return style;
   }
+
   getBaseClass() {
     return FontStyleClass;
   }

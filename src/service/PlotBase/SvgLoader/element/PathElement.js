@@ -8,13 +8,13 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\PathElement.js
  */
-import {Point} from "../../../PlotUtilBase/Geometry/Point";
-import {Bounds} from "../../../PlotUtilBase/Geometry/Bound";
+import Point from "../../../PlotUtilBase/Geometry/Point";
+import Bounds from "../../../PlotUtilBase/Geometry/Bound";
 import {Vector2} from "../../../PlotUtilBase/Math/Vector2";
 import {ShapePath} from "../../../PlotUtilBase/Path2D/ShapePath";
-import {RenderedElement} from "./RenderedElement";
-import {PathParser} from "./PathParser";
-import {Matrix3} from "../../../PlotUtilBase/Math/Matrix3";
+import RenderedElement from "./RenderedElement";
+import PathParser from "./PathParser";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
 
 function vectorMagnitude(v) {
   // eslint-disable-next-line no-restricted-properties
@@ -31,13 +31,12 @@ function vectorsAngle(u, v) {
   return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vectorsRatio(u, v));
 }
 
-export class PathElement extends RenderedElement {
+export default class PathElement extends RenderedElement {
   constructor(node) {
     super(node);
+    this.type = "path";
     this._pathParser = new PathParser(this.getAttribute("d").getString());
   }
-
-  type = "path";
 
   _pathPnts() {
     const pathParser = this._pathParser;
@@ -225,7 +224,7 @@ export class PathElement extends RenderedElement {
 
   pathM(ctx) {
     const pathParser = this._pathParser;
-    const {point} = PathElement.pathM(pathParser);
+    const Point = PathElement.pathM(pathParser);
 
     pathParser.addMarker(point);
 

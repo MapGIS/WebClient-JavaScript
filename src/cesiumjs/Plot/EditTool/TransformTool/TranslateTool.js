@@ -1,7 +1,7 @@
-import { CesiumUtil } from "../../Utils/CesiumUtil";
-import { TransformAxis } from "../../Primitive/TransformAxisPrimitive";
+import CesiumUtil from "../../Utils/CesiumUtil";
+import TransformAxis from "../../Primitive/TransformAxisPrimitive";
 
-export class TranslateTool {
+export default class TranslateTool {
   constructor(plotViewer) {
     this._plotViewer = plotViewer;
     this.onSelected = this._onSelected.bind(this);

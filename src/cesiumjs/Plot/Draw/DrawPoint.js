@@ -7,11 +7,11 @@
  * @FilePath: \MapGISPlotBase\src\3DPlot\Draw\DrawRegularPoint.js
  */
 
-import { DrawObject } from "../../../service/PlotBase/Draw/DrawObject";
+import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
 import { PrimitiveFactory } from "../Primitive/PrimitiveFactory";
-import { CesiumUtil } from "../Utils/CesiumUtil";
+import CesiumUtil from "../Utils/CesiumUtil";
 
-export class DrawPoint extends DrawObject {
+export default class DrawPoint extends DrawObject {
   constructor(viewer, symbol) {
     super();
     this._viewer = viewer;

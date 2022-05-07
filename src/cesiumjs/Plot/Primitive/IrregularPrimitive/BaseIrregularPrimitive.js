@@ -6,12 +6,12 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\IrregularPrimitive\BaseIrregularPrimitive.js
  */
-import {Point} from "../../../../service/PlotUtilBase/Geometry/Point";
+import Point from "../../../../service/PlotUtilBase/Geometry/Point";
 import {Vector2} from "../../../../service/PlotUtilBase/Math/Vector2";
-import {BasePlotPrimitive} from "../BasePlotPrimitive";
-import {IrregularElementInstance} from "../ElementInstance/IrregularElementInstance";
+import BasePlotPrimitive from "../BasePlotPrimitive";
+import IrregularElementInstance from "../ElementInstance/IrregularElementInstance";
 
-export class BaseIrregularPrimitive extends BasePlotPrimitive {
+export default class BaseIrregularPrimitive extends BasePlotPrimitive {
   constructor() {
     super();
     this.extendPrimitiveAttributes = [

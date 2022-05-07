@@ -6,9 +6,9 @@
  * @LastEditTime: 2022-03-29 11:26:18
  */
 
-import { AnimationUtil } from "./AnimationUtil";
-import { AnimationColorUtil } from "./ColorUtil";
-export class GradientColor {
+import {AnimationUtil} from "./AnimationUtil";
+import AnimationColorUtil from "./ColorUtil";
+export default class GradientColor {
   constructor(colorArr, isOpacity = true) {
     this._colorArr = colorArr;
     this._isOpacity = isOpacity;

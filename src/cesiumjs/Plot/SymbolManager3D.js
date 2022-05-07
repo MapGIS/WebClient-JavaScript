@@ -8,6 +8,8 @@
  */
 import  base from '../../service/PlotBase/index.js'
 
-export class SymbolManager3D extends base.SymbolManager{
-
+export default class SymbolManager3D extends base.SymbolManager{
+  constructor() {
+    super();
+  }
 }

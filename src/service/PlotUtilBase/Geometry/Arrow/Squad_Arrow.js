@@ -6,16 +6,20 @@
  * @Description: In User Settings Edit
  * @FilePath: \leaflet-mark-dtis\src\Component\Geometry\Squad_Arrow.js
  */
-import { AttackArrow } from './Attack_Arrow'
-import { PlotUtils } from '../PoltUtils'
-import { MathUtil } from 'PlotUtilBase/Util/MathUtil'
+import AttackArrow from './Attack_Arrow'
+import {PlotUtils} from '../PoltUtils'
+import MathUtil from '../../Util/MathUtil'
 
-export class SquadArrow  extends AttackArrow {
-  headHeightFactor= 0.18
-  headWidthFactor=0.3
-  neckHeightFactor= 0.85
-  neckWidthFactor=0.15
-  tailWidthFactor= 0.1
+export default class SquadArrow extends AttackArrow {
+  constructor(props) {
+    super(props);
+    this.headHeightFactor = 0.18
+    this.headWidthFactor = 0.3
+    this.neckHeightFactor = 0.85
+    this.neckWidthFactor = 0.15
+    this.tailWidthFactor = 0.1
+  }
+
   insertPoints(points) {
     const count = points.length
     if (count < 2) {

@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularSurfacePrimitive.js
  */
-import {RegularSurfaceElementInstance} from "../ElementInstance/RegularSurfaceElementInstance";
-import {RegularLine1Primitive} from "./RegularLine1Primitive";
+import RegularSurfaceElementInstance from "../ElementInstance/RegularSurfaceElementInstance";
+import RegularLine1Primitive from "./RegularLine1Primitive";
 
-export class RegularSurfacePrimitive extends RegularLine1Primitive {
+export default class RegularSurfacePrimitive extends RegularLine1Primitive {
   constructor() {
     super();
     this.extendPrimitiveAttributes = ["surfaceBorderWidth"];

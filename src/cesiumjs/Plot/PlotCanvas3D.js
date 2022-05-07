@@ -7,11 +7,11 @@
  * @FilePath: \MapGISPlotBase\src\3DPlot\PlotCanvas3D.js
  */
 import { defined } from "../../service/PlotUtilBase/Check";
-import { SymbolManager } from "../../service/PlotBase/SymbolManager/SymbolManager";
+import SymbolManager from "../../service/PlotBase/SymbolManager/SymbolManager";
 import { DrawPlotObjectFactory3D } from "./Draw";
-import { CesiumUtil } from "./Utils/CesiumUtil";
-import { Observable } from "../../service/PlotUtilBase/Observable";
-import { LineEditTool } from "./EditTool/LineEditTool";
+import {CesiumUtil} from "./Utils/CesiumUtil";
+import Observable from "../../service/PlotUtilBase/Observable";
+import LineEditTool from "./EditTool/LineEditTool";
 import { PrimitiveFactory } from "./Primitive/PrimitiveFactory";
 
 function onLeftClick(clickEvent) {
@@ -31,7 +31,7 @@ function onLeftClick(clickEvent) {
   this.fire("selected", { target: this._selected });
 }
 
-export class PlotCanvas3D extends Observable {
+export default class PlotCanvas3D extends Observable {
   constructor(viewer) {
     super();
     this._viewer = viewer;

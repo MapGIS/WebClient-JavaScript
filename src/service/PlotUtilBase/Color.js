@@ -10,7 +10,7 @@ const rgbaMatcher =
  * @property blue   蓝色值
  * @property alpha  透明度
  */
-export class Color {
+export default class Color {
   /**
    *
    * @param {Number} [red=0]     红色值

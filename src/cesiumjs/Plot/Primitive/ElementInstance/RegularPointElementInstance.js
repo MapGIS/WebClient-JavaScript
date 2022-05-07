@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularPointElementInstance.js\
  */
-import { SvgElementInstance } from "./SvgElementInstance";
-import { CesiumGeomUtil } from "../../Utils/CesiumUtil";
+import SvgElementInstance from "./SvgElementInstance";
+import {CesiumGeomUtil} from "../../Utils/CesiumUtil";
 
-export class RegularPointElementInstance extends SvgElementInstance {
+export default class RegularPointElementInstance extends SvgElementInstance {
 
   transfromGeoCesium(elem,cesgeo, options) {
     const { dimModHeight, dimModAttitude } = options;

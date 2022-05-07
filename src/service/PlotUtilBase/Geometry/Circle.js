@@ -1,16 +1,16 @@
 import { defaultValue } from "../Check";
-import { MathUtil } from "../Util/MathUtil";
-import { Point } from "./Point";
+import MathUtil from "../Util/MathUtil";
+import Point from "./Point";
 
 /**
  * 圆
  * @property center  圆心
  * @property radius  半径
  */
-export class Circle{
+export default class Circle{
     /**
      * 
-     * @param {Point} [center={x:0,y:0}] 圆心 
+     * @param Point [center={x:0,y:0}] 圆心 
      * @param {Number} [radius=10]       半径
      */
     constructor(center,radius)

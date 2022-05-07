@@ -5,10 +5,10 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-29 09:10:10
  */
-import { PlotAttributeAnimation } from "./PlotAttributeAnimation";
-import { PlotBaseAnimation } from "./PlotBaseAnimation";
-import { PlotGrowAnimation } from "./PlotGrowAnimation";
-import { PlotVisibleAnimation } from "./PlotVisibleAnimation";
+import PlotAttributeAnimation from "./PlotAttributeAnimation";
+import PlotBaseAnimation from "./PlotBaseAnimation";
+import PlotGrowAnimation from "./PlotGrowAnimation";
+import PlotVisibleAnimation from "./PlotVisibleAnimation";
 class AnimationReg {
   static getAnimation(type) {
     if (type === 0 || type === "base-animation") {

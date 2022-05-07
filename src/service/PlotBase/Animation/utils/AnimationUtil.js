@@ -5,7 +5,7 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-29 12:01:30
  */
-export class AnimationUtil {
+class AnimationUtil {
   static getNumberRate(numberArr, rate) {
     if (numberArr.length === 1) return numberArr[0];
     const lengthArr = [];
@@ -47,7 +47,8 @@ export class AnimationUtil {
     }
   }
 }
-export const is = {
+
+const is = {
   arr: function (a) {
     return Array.isArray(a);
   },
@@ -88,7 +89,7 @@ export const is = {
   //   return /^hsl/.test(a);
   // },
   col: function (a) {
-    return is.hex(a) || is.rgb(a) ;
+    return is.hex(a) || is.rgb(a);
   },
   key: function (a) {
     return (
@@ -99,3 +100,5 @@ export const is = {
     );
   },
 };
+
+export {AnimationUtil, is}

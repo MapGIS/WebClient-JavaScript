@@ -6,9 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\Transform.js
  */
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
 import { TransformFactory } from "./TransfromFactory";
-import { StringUtil } from '../../../PlotUtilBase/Util/StringUtil';
+import StringUtil from '../../../PlotUtilBase/Util/StringUtil';
 
 function parseTransforms(transform) {
 	return StringUtil.compressSpaces(transform)
@@ -30,7 +30,7 @@ function parseTransform(transform) {
 	];
 }
 
-export class Transform{
+export default class Transform{
     static getTransfromFrmElement(element){
         const transformStyle = element.getStyle('transform', false, true);
 		const [

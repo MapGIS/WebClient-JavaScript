@@ -5,18 +5,15 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-02-24 11:40:25
  */
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
-import { Matrix3 } from "../../../../PlotUtilBase/Math/Matrix3";
-import { BaseRegularElement } from "./BaseRegularElement";
-import { MainLineElement } from "../extend/MainLineElement";
-import { DefaultLinePathParser } from "../Default/DefaultLine";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
+import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
+import BaseRegularElement from "./BaseRegularElement";
+import MainLineElement from "../extend/MainLineElement";
+import DefaultLinePathParser from "../Default/DefaultLine";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
-import { TSpanElement } from "../TSpanElement";
+import TSpanElement from "../TSpanElement";
 
-export class RegularLine1 extends BaseRegularElement {
-  type = "msbl_regularline1";
-  flag = true;
-
+export default class RegularLine1 extends BaseRegularElement {
   /**
    *  belowAxisIDs
    *  aboveAxisIDs
@@ -29,6 +26,8 @@ export class RegularLine1 extends BaseRegularElement {
     this.belowAxisIDs = [];
     this.aboveAxisIDs = [];
     this.initBaseAttributes(node);
+    this.type = "msbl_regularline1";
+    this.flag = true;
   }
 
   _traverNodes(node) {

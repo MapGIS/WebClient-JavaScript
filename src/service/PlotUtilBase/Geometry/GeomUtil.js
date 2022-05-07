@@ -1,12 +1,12 @@
 import { isArray } from "../Check";
-import { MathUtil } from "../Util/MathUtil";
-import { Point } from "./Point";
-import { Bounds } from "./Bound";
+import MathUtil from "../Util/MathUtil";
+import Point from "./Point";
+import Bounds from "./Bound";
 
 /**
  * geometry工具类
  */
-export class GeomUtil {
+export default class GeomUtil {
   /**
    * 判断两点是否重合
    * @function
@@ -33,8 +33,8 @@ export class GeomUtil {
    *
    * @static
    *
-   * @param {Point} pnt0
-   * @param {Point} pnt1
+   * @param Point pnt0
+   * @param Point pnt1
    * @returns {Number} 两点距离
    */
   static Distance(pnt0, pnt1) {
@@ -66,8 +66,8 @@ export class GeomUtil {
    * 
    * @static
    * 
-   * @param {Point} pnt0 
-   * @param {Point} pnt1 
+   * @param Point pnt0 
+   * @param Point pnt1 
    * @returns {Number}
    */
   static Radian(pnt0,pnt1){
@@ -108,9 +108,9 @@ export class GeomUtil {
    *
    * @static
    *
-   * @param {Point} pnt1
-   * @param {Point} pnt2
-   * @returns {Point}
+   * @param Point pnt1
+   * @param Point pnt2
+   * @returns Point
    */
   static SegMid(pnt1, pnt2) {
     if (isArray(pnt1)) {

@@ -1,10 +1,10 @@
 import { defined } from "../../PlotUtilBase/Check";
-import { LogTool } from "../../PlotUtilBase/Log/LogTool";
+import LogTool from "../../PlotUtilBase/Log/LogTool";
 
 /**
  * 符号基类
  */
-export class SymbolBase {
+export default class SymbolBase {
   constructor() {
     this._id="";
     this._name="";

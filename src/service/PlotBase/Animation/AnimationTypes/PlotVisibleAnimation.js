@@ -5,12 +5,12 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-04-01 15:46:12
  */
-import { PlotBaseAnimation } from "./PlotBaseAnimation";
-import { AnimationColorUtil } from "../utils/ColorUtil";
+import PlotBaseAnimation from "./PlotBaseAnimation";
+import AnimationColorUtil from "../utils/ColorUtil";
 import { AnimationUtil, is } from "../utils/AnimationUtil";
 
 const _ = require("lodash");
-export class PlotVisibleAnimation extends PlotBaseAnimation {
+export default class PlotVisibleAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options);
     // animation type

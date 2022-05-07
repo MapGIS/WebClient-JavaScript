@@ -7,11 +7,11 @@
  * @FilePath: \MapGISPlotBase\src\3DPlot\Draw\DrawRegularPoint.js
  */
 
-import { DrawObject } from "../../../service/PlotBase/Draw/DrawObject";
+import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
 import { PrimitiveFactory } from "../Primitive/PrimitiveFactory";
-import { CesiumUtil } from "../Utils/CesiumUtil";
-import { GeomUtil } from "../../../service/PlotUtilBase/Geometry/GeomUtil";
-import { Point } from "../../../service/PlotUtilBase/Geometry/Point";
+import CesiumUtil from "../Utils/CesiumUtil";
+import GeomUtil from "../../../service/PlotUtilBase/Geometry/GeomUtil";
+import Point from "../../../service/PlotUtilBase/Geometry/Point";
 
 function look(viewer, center, offset) {
   if (!viewer) {
@@ -31,7 +31,7 @@ function look(viewer, center, offset) {
   }, 100);
 }
 
-export class DrawPolyline extends DrawObject {
+export default class DrawPolyline extends DrawObject {
   constructor(viewer, symbol) {
     super();
     this.m_coords = [];

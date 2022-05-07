@@ -6,8 +6,8 @@
  * @LastEditTime: 2022-03-10 10:47:19
  */
 export default class PropertyClass {
-  type = "property";
   constructor(elem, classArr) {
+    this.type = "property";
     this._elem = elem;
     this.styleObjectArr = classArr
       .map((s) => {

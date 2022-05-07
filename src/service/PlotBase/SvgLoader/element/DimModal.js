@@ -1,4 +1,4 @@
-import { Point } from "../../../PlotUtilBase/Geometry/Point";
+import Point from "../../../PlotUtilBase/Geometry/Point";
 /*
  * @Description: element维度转换
  * @Author: zk
@@ -6,7 +6,7 @@ import { Point } from "../../../PlotUtilBase/Geometry/Point";
  * @LastEditors: Do not edit
  * @LastEditTime: 2021-11-16 14:16:03
  */
-export class DimModal {
+export default class DimModal {
   constructor() {
     this._3d = false;
     this.lineAngle = null;

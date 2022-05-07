@@ -1,5 +1,5 @@
 
-import { Queue } from './Queue'
+import Queue from './Queue'
 
 class Node {
   constructor(value) {
@@ -21,7 +21,7 @@ class Edge {
   }
 }
 
-export class Graph {
+export default class Graph {
   constructor() {
     this.nodes = []
   }

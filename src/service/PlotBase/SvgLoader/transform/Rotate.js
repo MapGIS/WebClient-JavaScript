@@ -6,11 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\transform\Rotate.js
  */
-import { StringUtil } from "../../../PlotUtilBase/Util/StringUtil";
-import { Matrix3 } from "../../../PlotUtilBase/Math/Matrix3";
-import { Property } from "../element/Property";
+import StringUtil from "../../../PlotUtilBase/Util/StringUtil";
+import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
+import Property from "../element/Property";
 
-export class Rotate {
+export default class Rotate {
   constructor(rotate, transformOrigin) {
     const numbers = StringUtil.toNumbers(rotate);
 

@@ -8,7 +8,7 @@ import { defined } from "../Check";
  * @Author: xinxiao
  * @LastEditors: xinxiao
  */
-export class ArrayUtil {
+export default class ArrayUtil {
   static isArray(obj) {
     return Object.prototype.toString.call(obj) === "[object Array]";
   }

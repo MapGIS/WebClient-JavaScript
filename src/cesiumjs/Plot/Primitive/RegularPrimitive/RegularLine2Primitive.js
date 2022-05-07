@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularLine1Primitive.js
  */
-import {RegularLine1Primitive} from "./RegularLine1Primitive";
-import {RegularLine2ElementInstance} from "../ElementInstance/RegularLine2ElementInstance";
+import RegularLine1Primitive from "./RegularLine1Primitive";
+import RegularLine2ElementInstance from "../ElementInstance/RegularLine2ElementInstance";
 
-export class RegularLine2Primitive extends RegularLine1Primitive {
+export default class RegularLine2Primitive extends RegularLine1Primitive {
   constructor() {
     super();
     this.extendPrimitiveAttributes = ['dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor'];

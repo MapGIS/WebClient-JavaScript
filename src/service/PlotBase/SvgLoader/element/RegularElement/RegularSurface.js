@@ -1,13 +1,13 @@
-import { Matrix3 } from "../../../../PlotUtilBase/Math/Matrix3";
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
-import { Bounds } from "../../../../PlotUtilBase/Geometry/Bound";
-import { BaseRegularElement } from "./BaseRegularElement";
-import { MainBorderElement } from "../extend/MainBorderElement";
+import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
+import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
+import BaseRegularElement from "./BaseRegularElement";
+import MainBorderElement from "../extend/MainBorderElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
-import { NoUseElement } from "../extend/NoUseElement";
-import { GElement } from "..";
+import NoUseElement from "../extend/NoUseElement";
+import GElement from "..";
 
-export class RegularSurface extends BaseRegularElement {
+export default class RegularSurface extends BaseRegularElement {
 
   /**
    * mainBorderElement

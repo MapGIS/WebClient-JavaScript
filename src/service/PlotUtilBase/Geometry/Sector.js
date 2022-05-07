@@ -8,10 +8,9 @@
  * @FilePath: \TypeScript-Babel-Starter\src\Geometry\Attack_Arrow.js
  */
 import { PlotUtils } from "./PoltUtils";
-import { GeomUtil } from "./GeomUtil";
+import GeomUtil from "./GeomUtil";
 
-export class Sector {
-  points = [];
+export default class Sector {
   constructor(points, options) {
     this.points = points;
     this.angleInverse = options.angleInverse || false;

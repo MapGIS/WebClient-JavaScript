@@ -5,10 +5,10 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-01-04 13:31:43
  */
-import { param } from "jquery";
+// import { param } from "jquery";
 import { defaultValue } from "../Check";
 
-export class SignalBinding {
+export default class SignalBinding {
   constructor(signal, listener, isOnce, context, priority) {
     this._listener = listener;
     this._isOnce = isOnce;

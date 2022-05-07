@@ -4,7 +4,7 @@ import { warn } from "./Log";
 /**
  * 简单工厂方法
  */
-export class SimpleFactory {
+export default class SimpleFactory {
   constructor() {
     this._type2Protos = {};
   }

@@ -1,9 +1,9 @@
-import { SignalBinding } from "./SignalBinding";
+import SignalBinding from "./SignalBinding";
 
 /**
  * 自定义事件监听发送
  */
-export class Signal {
+export default class Signal {
   constructor() {
     this._bindings = [];
     this._shouldPropagate = true;

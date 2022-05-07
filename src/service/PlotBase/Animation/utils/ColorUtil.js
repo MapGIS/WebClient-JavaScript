@@ -5,7 +5,7 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-29 11:24:56
  */
-export class AnimationColorUtil {
+export default class AnimationColorUtil {
   static colorRgb(sColor) {
     var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
     var sColor = sColor.toLowerCase();

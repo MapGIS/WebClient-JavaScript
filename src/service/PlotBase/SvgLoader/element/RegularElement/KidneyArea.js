@@ -6,17 +6,16 @@
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Object\RegularElement\RegularSurface.ts
  */
-import { Matrix3 } from "../../../../PlotUtilBase/Math/Matrix3";
-import { Point } from "../../../../PlotUtilBase/Geometry/Point";
-import { calculatePolygonGravityCenter } from "../../../../PlotUtilBase/Math/MathUtils";
-import { BaseRegularElement } from "./BaseRegularElement";
-import { TSpanElement } from "../TSpanElement";
-import { MainBorderElement } from "../extend/MainBorderElement";
+import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
+import Point from "../../../../PlotUtilBase/Geometry/Point";
+import {calculatePolygonGravityCenter} from "../../../../PlotUtilBase/Math/MathUtils";
+import BaseRegularElement from "./BaseRegularElement";
+import TSpanElement from "../TSpanElement";
+import MainBorderElement from "../extend/MainBorderElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
-import { Bounds } from "../../../../PlotUtilBase/Geometry/Bound";
+import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
 
-export class KidneyArea extends BaseRegularElement {
-  type = "msbl_KidneyArea";
+export default class KidneyArea extends BaseRegularElement {
   /**
    * border_ID
    * muti_scaleX
@@ -26,7 +25,9 @@ export class KidneyArea extends BaseRegularElement {
     super(node);
     this.muti_scaleX = 1;
     this.muti_scaleY = 1;
+    this.type = "msbl_KidneyArea";
   }
+
   // base
   _traverNodes(node) {
     // 获取主轴id
@@ -59,9 +60,9 @@ export class KidneyArea extends BaseRegularElement {
       this._getKidneyElementAttribute(element);
 
     let matrix = new Matrix3();
-    const { mainBorder } = this;
+    const {mainBorder} = this;
 
-    const { poly } = this;
+    const {poly} = this;
 
     if (!poly || poly.length <= 2 || !mainBorder) {
       element.isAllowCoords = false;
@@ -82,24 +83,24 @@ export class KidneyArea extends BaseRegularElement {
       const [point, kAngle] = mainBorder.getTransfromByRate(partRate);
 
       let tempAngle = 0;
-      let tempKAngle =-kAngle;
+      let tempKAngle = -kAngle;
 
       if (direction === "AdhereToBorder_Outward") {
         tempAngle = 270;
       } else {
         tempAngle = -270;
       }
-    
-      if(!this._is3d){
-        tempAngle=-tempAngle
-      }else{
-        if(angle==90 || angle===270){
-          tempAngle+=180
+
+      if (!this._is3d) {
+        tempAngle = -tempAngle
+      } else {
+        if (angle == 90 || angle === 270) {
+          tempAngle += 180
         }
       }
-      
+
       translatePoint = new Point(point[0] - origin.x, point[1] - origin.y);
-      rotateAngle =tempKAngle-angle+tempAngle;
+      rotateAngle = tempKAngle - angle + tempAngle;
 
 
     } else if (direction === "Upward") {
@@ -145,12 +146,13 @@ export class KidneyArea extends BaseRegularElement {
       rotateAngle,
       this.muti_scaleX,
       this.muti_scaleY,
-      this.m_scaleX ,
-      this.m_scaleY 
+      this.m_scaleX,
+      this.m_scaleY
     );
 
     element._transformMatrix = matrix;
   }
+
   _applyMainElement(child) {
     child.applyMainGeo(this.mainBorder);
     child.applyMapScale(this.m_scaleX, this.m_scaleY);
@@ -194,6 +196,7 @@ export class KidneyArea extends BaseRegularElement {
     this.muti_scaleX = _muti_scaleX;
     this.muti_scaleY = _muti_scaleY;
   }
+
   /**
    * @description: 获取kidney对象基础参数
    * @param {*} element

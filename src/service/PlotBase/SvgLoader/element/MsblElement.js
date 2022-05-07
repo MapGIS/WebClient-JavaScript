@@ -6,9 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Object\Element\MsblElement.ts
  */
-import { Element } from "./Element";
+import Element from "./Element";
 
-export class MsblElement extends Element {
+export default class MsblElement extends Element {
   constructor() {
     super();
     this.type = "msbl";

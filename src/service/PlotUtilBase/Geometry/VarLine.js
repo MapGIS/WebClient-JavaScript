@@ -7,7 +7,7 @@
  * @LastEditors: xinxiao
  */
 
-import { Point } from './Point'
+import Point from './Point'
 
 function lineIntersects(
   line1StartX,
@@ -64,7 +64,7 @@ function lineIntersects(
   return false
 }
 
-export class Varlin {
+export default class Varlin {
   constructor() {
     this.pnts = []
   }

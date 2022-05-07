@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LogTool } from "../../PlotUtilBase/Log/LogTool";
+import LogTool from "../../PlotUtilBase/Log/LogTool";
 
 const apiBaseUrl = "http://localhost:8082";
 

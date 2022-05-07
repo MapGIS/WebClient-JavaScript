@@ -1,15 +1,8 @@
-
-import { Point } from '../Point';
-import { GeomUtil } from '../GeomUtil';
-import { Bounds } from '../Bound';
+import Point from '../Point';
+import GeomUtil from '../GeomUtil';
+import Bounds from '../Bound';
 
 class Element {
-  m_x = null
-
-  m_y = null
-
-  m_type = null
-
   constructor(x, y, type) {
     this.m_x = x
     this.m_y = y
@@ -70,19 +63,13 @@ class Element {
 }
 
 class Path2DData {
-  cStart = 0
-
-  require_StartNewFigure = true
-
-  isBoundsDirty = true
-
-  bounds = null
-
-  ref = 0
-
-  elements = []
-
   constructor(t) {
+    this.cStart = 0
+    this.require_StartNewFigure = true
+    this.isBoundsDirty = true
+    this.bounds = null
+    this.ref = 0
+    this.elements = []
     if (t) {
       this.cStart = t.cStart
       this.require_StartNewFigure = t.require_StartNewFigure
@@ -114,9 +101,7 @@ class Path2DData {
   }
 }
 
-export class Path2D {
-  m_pData = null
-
+export default class Path2D {
   constructor() {
     this.m_pData = null
   }

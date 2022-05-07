@@ -6,9 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\Draw\DrawObject.js
  */
-import { Observable } from "../../PlotUtilBase/Observable";
+import Observable from "../../PlotUtilBase/Observable";
 
-export class DrawObject extends Observable {
+export default class DrawObject extends Observable {
   constructor() {
     super();
     this._enabled = false;

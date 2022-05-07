@@ -6,11 +6,11 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\Arrow\DoubleArrow.js
  */
-import { BaseIrregularElement } from "../BaseIrregularElement";
-import { DoubleArrow } from "../../../../../PlotUtilBase/Geometry/Arrow/Double_Arrow";
-import { Point } from "../../../../../PlotUtilBase/Geometry/Point";
+import BaseIrregularElement from "../BaseIrregularElement";
+import DoubleArrow from "../../../../../PlotUtilBase/Geometry/Arrow/Double_Arrow";
+import Point from "../../../../../PlotUtilBase/Geometry/Point";
 
-export class DoubleArrowGeometry extends BaseIrregularElement{
+export default class DoubleArrowGeometry extends BaseIrregularElement{
     constructor() {
         super();
         this.type='msbl_doublearrow';

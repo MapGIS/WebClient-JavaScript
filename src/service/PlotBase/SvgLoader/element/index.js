@@ -6,31 +6,31 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
  */
-import { Element } from "./Element";
-import { PathElement } from "./PathElement";
-import { GElement } from "./GElement";
-import { SvgElement } from "./SvgElement";
-import { ElementFactory } from "./ElementFactory";
-import { TextElement } from "./TextElement";
-import { TSpanElement } from "./TSpanElement";
-import { RegularPoint } from "./RegularElement/RegularPoint.js";
-import { RegularLine1 } from "./RegularElement/RegularLine1";
-import { MsblElement } from "./MsblElement";
-import { CircleElement } from "./CircleElement";
-import { RegularLine2 } from "./RegularElement/RegularLine2";
-import { KidneyArea } from "./RegularElement/KidneyArea";
-import { RegularSurface } from "./RegularElement/RegularSurface";
+import Element from "./Element";
+import PathElement from "./PathElement";
+import GElement from "./GElement";
+import SvgElement from "./SvgElement";
+import ElementFactory from "./ElementFactory";
+import TextElement from "./TextElement";
+import TSpanElement from "./TSpanElement";
+import RegularPoint from "./RegularElement/RegularPoint.js";
+import RegularLine1 from "./RegularElement/RegularLine1";
+import MsblElement from "./MsblElement";
+import CircleElement from "./CircleElement";
+import RegularLine2 from "./RegularElement/RegularLine2";
+import KidneyArea from "./RegularElement/KidneyArea";
+import RegularSurface from "./RegularElement/RegularSurface";
 import RectElement from "./RectElement";
-import { AssaultArrowGeometry } from "./IrregularElement/Arrow/AssaultArrowGeometry";
-import { MultiArrowGeometry } from "./IrregularElement/Arrow/MultiArrowGeometry";
-import { CombinationalCircleGeometry } from "./IrregularElement/CombinationalCircleGeometry";
-import { KidneyGeometry } from "./IrregularElement/KidneyGeometry";
-import { DoubleArrowGeometry } from "./IrregularElement/Arrow/DoubleArrowGeometry";
-import { SimpleArrowGeometry } from "./IrregularElement/Arrow/SimpleArrowGeometry";
-import { SquadArrowGeometry } from "./IrregularElement/Arrow/SquadArrowGeometry";
-import { FigureFanGeometry } from "./IrregularElement/FigureFanGeometry";
+import AssaultArrowGeometry from "./IrregularElement/Arrow/AssaultArrowGeometry";
+import MultiArrowGeometry from "./IrregularElement/Arrow/MultiArrowGeometry";
+import CombinationalCircleGeometry from "./IrregularElement/CombinationalCircleGeometry";
+import KidneyGeometry from "./IrregularElement/KidneyGeometry";
+import DoubleArrowGeometry from "./IrregularElement/Arrow/DoubleArrowGeometry";
+import SimpleArrowGeometry from "./IrregularElement/Arrow/SimpleArrowGeometry";
+import SquadArrowGeometry from "./IrregularElement/Arrow/SquadArrowGeometry";
+import FigureFanGeometry from "./IrregularElement/FigureFanGeometry";
 
-export const drawTypes = [
+const drawTypes = [
   "path",
   "mainline",
   "tspan",
@@ -72,4 +72,4 @@ ElementFactory.register("msbl_singleArrow", SimpleArrowGeometry);
 ElementFactory.register("msbl_squadarrow", SquadArrowGeometry);
 ElementFactory.register("msbl_FigureFan", FigureFanGeometry);
 
-export { Element, SvgElement, ElementFactory, GElement };
+export { Element, SvgElement, ElementFactory, GElement, drawTypes };
