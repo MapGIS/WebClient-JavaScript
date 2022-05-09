@@ -11,6 +11,7 @@ import {ElementFactory} from "../SvgLoader/element";
 import { defined } from "../../PlotUtilBase/Check";
 import LogTool from "../../PlotUtilBase/Log/LogTool";
 import SymbolBase from "./SymbolBase";
+import axios from "axios";
 
 export default class SymbolNode extends SymbolBase {
   constructor() {
@@ -66,8 +67,8 @@ export default class SymbolNode extends SymbolBase {
    *
    * @returns {Element}
    */
-  getElement() {
-    const elem = ElementFactory.createInstance(this.getSvg(), this.type);
+  async getElement() {
+    const elem = ElementFactory.createInstance(await this.getSvg(), this.type);
     elem.symbolManager(this);
     return elem;
   }
@@ -87,18 +88,18 @@ export default class SymbolNode extends SymbolBase {
   /**
    * 获取符号对应svg
    */
-  getSvg() {
+  async getSvg() {
     const url = this.src;
-    // const res = $.ajax({
-    //   url,
-    //   type: "get",
-    //   async: false,
-    //   dataType: "text",
-    //   timeout: 1000,
-    // });
+    const res = await axios({
+      method: 'get',
+      url: url,
+      dataType: "text",
+    });
 
-    const xml = new DOMParser().parseFromString(
-      res.responseText,
+    console.log("url--------------",url)
+    console.log("res--------------",res)
+    const xml = await new DOMParser().parseFromString(
+      res.data,
       "image/svg+xml"
     );
     return xml.documentElement;

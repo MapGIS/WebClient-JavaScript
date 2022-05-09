@@ -11,8 +11,8 @@ import BaseIrregularElement from "./BaseIrregularElement";
 import Sector from "../../../../PlotUtilBase/Geometry/Sector";
 
 export default class FigureFanGeometry extends BaseIrregularElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = 'msbl_FigureFan';
   }
 

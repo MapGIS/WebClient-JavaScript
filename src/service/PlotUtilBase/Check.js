@@ -64,7 +64,7 @@ class DeveloperError extends Error {
   }
 
   toString() {
-    const str = this.name + ": " + this.message;
+    let str = this.name + ": " + this.message;
 
     if (defined(this.stack)) {
       str += "\n" + this.stack.toString();

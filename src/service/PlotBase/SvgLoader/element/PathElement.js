@@ -224,7 +224,7 @@ export default class PathElement extends RenderedElement {
 
   pathM(ctx) {
     const pathParser = this._pathParser;
-    const Point = PathElement.pathM(pathParser);
+    const {point} = PathElement.pathM(pathParser);
 
     pathParser.addMarker(point);
 

@@ -9,8 +9,8 @@
 import MainLineElement from "./MainLineElement";
 
 export default class ExtendLineElement extends MainLineElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "extendline";
   }
 

@@ -1,4 +1,4 @@
-import CesiumUtil from "../../Utils/CesiumUtil";
+import {CesiumUtil} from "../../Utils/CesiumUtil";
 import TranslateTool from "./TranslateTool";
 
 function onSelected(event) {

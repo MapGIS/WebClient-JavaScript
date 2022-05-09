@@ -27,6 +27,8 @@ import ElasticSearch from './datastore/elasticsearch';
 import PostGIS from './datastore/postgis';
 import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
+import SymbolManager from "./PlotBase/index"
+import {PlotCanvas3D} from "./3DPlot/index"
 
 export {
     Util,
@@ -48,7 +50,9 @@ export {
     ElasticSearch,
     PostGIS,
     CloudDisk,
-    ArcGis
+    ArcGis,
+    SymbolManager,
+    PlotCanvas3D
 };
 //-------命名空间 Zondy 结束-----
 
@@ -77,7 +81,9 @@ const All = {
     ElasticSearch,
     PostGIS,
     CloudDisk,
-    ArcGis
+    ArcGis,
+    SymbolManager,
+    PlotCanvas3D
     //-------命名空间 Zondy 结束-----
 };
 

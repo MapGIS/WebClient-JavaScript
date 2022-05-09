@@ -7,20 +7,13 @@
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\IrregularPrimitive\BaseIrregularPrimitive.js
  */
 import Point from "../../../../service/PlotUtilBase/Geometry/Point";
-import {Vector2} from "../../../../service/PlotUtilBase/Math/Vector2";
+import {Vector2} from "../../../PlotUtilBase/Math/Vector2";
 import BasePlotPrimitive from "../BasePlotPrimitive";
 import IrregularElementInstance from "../ElementInstance/IrregularElementInstance";
 
-export default class BaseIrregularPrimitive extends BasePlotPrimitive {
-  constructor() {
-    super();
-    this.extendPrimitiveAttributes = [
-      "dimModHeight",
-      "isOpenWall",
-      "isWallGradColor",
-      "wallColor",
-      "wallGradColor",
-    ];
+class BaseIrregularPrimitive extends BasePlotPrimitive {
+  constructor(options) {
+    super(options);
   }
 
   update(frameState) {
@@ -98,3 +91,13 @@ export default class BaseIrregularPrimitive extends BasePlotPrimitive {
     return BaseIrregularPrimitive.extendPrimitiveAttributes.concat([]);
   }
 }
+
+BaseIrregularPrimitive.extendPrimitiveAttributes = [
+  "dimModHeight",
+  "isOpenWall",
+  "isWallGradColor",
+  "wallColor",
+  "wallGradColor",
+];
+
+export default BaseIrregularPrimitive;

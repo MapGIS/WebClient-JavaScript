@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\index.js
  */
-import SymbolManager3D from './SymbolManager3D';
+// import SymbolManager3D from './SymbolManager3D';
 import PlotCanvas3D from './PlotCanvas3D';
 
 export {
-   SymbolManager3D,
+   // SymbolManager3D,
    PlotCanvas3D
 }

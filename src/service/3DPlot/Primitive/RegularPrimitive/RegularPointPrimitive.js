@@ -9,13 +9,12 @@
 import BaseRegularPrimitive from "./BaseRegularPrimitive";
 import RegularPointElementInstance from "../ElementInstance/RegularPointElementInstance";
 
-export default class RegularPointPrimitive extends BaseRegularPrimitive {
+class RegularPointPrimitive extends BaseRegularPrimitive {
   constructor(options) {
     super(options);
     this._modelMatrix = Cesium.Matrix4.clone(Cesium.Matrix4.IDENTITY);
     // 平移刷新
     this._isTranslate = false;
-    this.extendPrimitiveAttributes = ["dimModHeight", "dimModAttitude"];
   }
 
   set modelMatrix(modalMatrix){
@@ -121,3 +120,7 @@ export default class RegularPointPrimitive extends BaseRegularPrimitive {
     }
   }
 }
+
+RegularPointPrimitive.extendPrimitiveAttributes = ["dimModHeight", "dimModAttitude"];
+
+export default RegularPointPrimitive;

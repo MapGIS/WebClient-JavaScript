@@ -9,17 +9,9 @@
 import BaseRegularPrimitive from "./BaseRegularPrimitive";
 import RegularLine1ElementInstance from "../ElementInstance/RegularLine1ElementInstance";
 
-export default class RegularLine1Primitive extends BaseRegularPrimitive {
-  constructor() {
-    super();
-    this.extendPrimitiveAttributes = [
-      "dimModHeight",
-      "dimModAttitude",
-      "isOpenWall",
-      "isWallGradColor",
-      "wallColor",
-      "wallGradColor",
-    ];
+class RegularLine1Primitive extends BaseRegularPrimitive {
+  constructor(options) {
+    super(options);
   }
 
   update(frameState) {
@@ -76,3 +68,14 @@ export default class RegularLine1Primitive extends BaseRegularPrimitive {
     return RegularLine1Primitive.extendPrimitiveAttributes.concat([]);
   }
 }
+
+RegularLine1Primitive.extendPrimitiveAttributes = [
+  "dimModHeight",
+  "dimModAttitude",
+  "isOpenWall",
+  "isWallGradColor",
+  "wallColor",
+  "wallGradColor",
+];
+
+export default RegularLine1Primitive;

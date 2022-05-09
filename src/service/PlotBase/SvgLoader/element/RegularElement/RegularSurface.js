@@ -5,7 +5,7 @@ import BaseRegularElement from "./BaseRegularElement";
 import MainBorderElement from "../extend/MainBorderElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 import NoUseElement from "../extend/NoUseElement";
-import GElement from "..";
+import GElement from "../GElement";
 
 export default class RegularSurface extends BaseRegularElement {
 

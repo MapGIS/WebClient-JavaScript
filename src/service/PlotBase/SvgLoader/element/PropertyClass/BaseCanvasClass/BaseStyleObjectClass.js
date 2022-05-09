@@ -5,16 +5,11 @@
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-04 16:10:39
  */
-export default class BaseStyleObject {
+class BaseStyleObject {
   constructor(elem) {
     this._elem = elem;
     this.defineSVGStylesValue()
     this.styleObject = this.createStyleObject();
-    this.SVGSTYLENAMES = [];
-    this.STYLENAMES = [];
-    this.isCanCreate = () => {
-      return true;
-    }
   }
 
   createStyleObject() {
@@ -51,3 +46,11 @@ export default class BaseStyleObject {
     return this.styleObject;
   }
 }
+
+BaseStyleObject.SVGSTYLENAMES = [];
+BaseStyleObject.STYLENAMES = [];
+BaseStyleObject.isCanCreate = () => {
+  return true;
+};
+
+export default BaseStyleObject;

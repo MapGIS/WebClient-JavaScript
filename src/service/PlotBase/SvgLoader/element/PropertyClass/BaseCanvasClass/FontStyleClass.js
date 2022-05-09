@@ -9,15 +9,9 @@ import FontStyle from "../../../../../PlotUtilBase/FontClass";
  */
 
 
-export default class FontStyleClass extends BaseStyleObject {
-  constructor(props) {
-    super(props);
-    this.SVGSTYLENAMES =
-      "font,font-style,font-variant,font-size,font-weight,font-family".split(",");
-    this.STYLENAMES = "fontSize,fontWeight,fontFamily".split(",");
-    this.isCanCreate = (elem) => {
-      return true
-    };
+class FontStyleClass extends BaseStyleObject {
+  constructor(elem) {
+    super(elem);
   }
 
   createStyleObject() {
@@ -53,3 +47,12 @@ export default class FontStyleClass extends BaseStyleObject {
     return FontStyleClass;
   }
 }
+
+FontStyleClass.SVGSTYLENAMES =
+  "font,font-style,font-variant,font-size,font-weight,font-family".split(",");
+FontStyleClass.STYLENAMES = "fontSize,fontWeight,fontFamily".split(",");
+FontStyleClass.isCanCreate = (elem) => {
+  return true
+};
+
+export default FontStyleClass;

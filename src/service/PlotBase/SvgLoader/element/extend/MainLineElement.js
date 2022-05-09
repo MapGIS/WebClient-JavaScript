@@ -4,8 +4,8 @@ import MainElement from "./MainElement";
 import {ShapePath} from "../../../../PlotUtilBase/Path2D/ShapePath";
 
 export default class MainLineElement extends MainElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "mainline";
     this.flag = true;
   }

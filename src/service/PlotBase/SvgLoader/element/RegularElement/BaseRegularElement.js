@@ -19,8 +19,8 @@ import TSpanElement from "../TSpanElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 
 export default class BaseRegularElement extends BasePlotElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "regular";
     this.poly = [];
     this.animationPoly = [];

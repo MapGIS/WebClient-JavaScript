@@ -1,4 +1,4 @@
-import CesiumUtil from "../../Utils/CesiumUtil";
+import {CesiumUtil} from "../../Utils/CesiumUtil";
 import TransformAxis from "../../Primitive/TransformAxisPrimitive";
 
 export default class TranslateTool {

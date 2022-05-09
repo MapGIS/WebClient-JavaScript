@@ -13,7 +13,7 @@ import GElement from "../GElement";
 import ReplacedGroupElement from "../extend/ReplacedGroupElement";
 import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
 
-export default class RegularPoint extends BaseRegularElement {
+class RegularPoint extends BaseRegularElement {
   constructor(node) {
     super(node);
     this.type = "msbl_regularpoint";
@@ -22,12 +22,6 @@ export default class RegularPoint extends BaseRegularElement {
     this.transformSizeX = 1;
     this.transformSizeY = 1;
     this.currentReplaceIndex = null;
-    this.extendElementAttributes = [
-      "transformAngle",
-      "transformSizeX",
-      "transformSizeY",
-      "currentReplaceIndex",
-    ];
     this.initBaseAttributes(node);
     this.traverChildren();
   }
@@ -169,3 +163,12 @@ export default class RegularPoint extends BaseRegularElement {
     }
   }
 }
+
+RegularPoint.extendElementAttributes = [
+  "transformAngle",
+  "transformSizeX",
+  "transformSizeY",
+  "currentReplaceIndex",
+];
+
+export default RegularPoint;

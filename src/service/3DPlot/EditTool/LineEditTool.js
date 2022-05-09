@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Check, defined } from "../../../service/PlotUtilBase/Check";
+import { Check, defined } from "../../PlotUtilBase/Check";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 import BasePlotPrimitive from "../Primitive/BasePlotPrimitive";
 
@@ -150,6 +150,7 @@ export default class LineEditTool {
   }
 
   _onLeftUp(event) {
+
     if (!this._dragging) return;
 
     this._plotViewer.enableCameraInputs();

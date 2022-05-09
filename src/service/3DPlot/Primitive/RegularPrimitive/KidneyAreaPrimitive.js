@@ -10,8 +10,8 @@ import RegularLine2Primitive from "./RegularLine2Primitive";
 import KidneyAreaElementInstance from "../ElementInstance/KidneyAreaElementInstance";
 
 export default class KidneyAreaPrimitive extends RegularLine2Primitive {
-  constructor() {
-    super();
+  constructor(options) {
+    super(options);
   }
 
   _elementInstance(ele) {

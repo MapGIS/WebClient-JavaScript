@@ -6,4 +6,7 @@
 import BasePlotPrimitive from "../BasePlotPrimitive";
 
 export default class BaseRegularPrimitive extends BasePlotPrimitive{
+  constructor(options) {
+    super(options);
+  }
 }

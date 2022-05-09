@@ -11,8 +11,8 @@ import PathElement from "./PathElement.js";
 import { EllipseCurve } from "../../../PlotUtilBase/Curves";
 
 export default class CircleElement extends PathElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "circle";
   }
   _getCoords(matrix) {

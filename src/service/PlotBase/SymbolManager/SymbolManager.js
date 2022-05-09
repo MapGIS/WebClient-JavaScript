@@ -14,13 +14,13 @@ import axios from "axios";
 
 export default class SymbolManager {
   constructor(symbolsUrl) {
+    this._symbols = null;
+    this._symbolsUrl = "";
+
     if (!SymbolManager.instance) {
       this._symbolsUrl = symbolsUrl;
       SymbolManager.instance = this;
     }
-
-    this._symbols = null;
-    this._symbolsUrl = "";
 
     return SymbolManager.instance;
   }

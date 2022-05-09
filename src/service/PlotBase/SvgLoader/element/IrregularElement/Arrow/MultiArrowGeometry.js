@@ -10,8 +10,8 @@ import BaseIrregularElement from "../BaseIrregularElement";
 import MultiArrow from '../../../../../PlotUtilBase/Geometry/Arrow/MultiArrow';
 
 export default class MultiArrowGeometry extends BaseIrregularElement{
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type='msbl_MultiArrow';
   }
     _insertGeometry(points){

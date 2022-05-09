@@ -11,8 +11,8 @@ import DoubleArrow from "../../../../../PlotUtilBase/Geometry/Arrow/Double_Arrow
 import Point from "../../../../../PlotUtilBase/Geometry/Point";
 
 export default class DoubleArrowGeometry extends BaseIrregularElement{
-    constructor() {
-        super();
+    constructor(node) {
+        super(node);
         this.type='msbl_doublearrow';
     }
     _insertGeometry(points){

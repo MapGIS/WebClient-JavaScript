@@ -9,10 +9,9 @@
 import RegularLine1Primitive from "./RegularLine1Primitive";
 import RegularLine2ElementInstance from "../ElementInstance/RegularLine2ElementInstance";
 
-export default class RegularLine2Primitive extends RegularLine1Primitive {
-  constructor() {
-    super();
-    this.extendPrimitiveAttributes = ['dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor'];
+class RegularLine2Primitive extends RegularLine1Primitive {
+  constructor(options) {
+    super(options);
   }
 
   _elementInstance(ele) {
@@ -36,3 +35,7 @@ export default class RegularLine2Primitive extends RegularLine1Primitive {
     return attrs.concat(RegularLine2Primitive.extendPrimitiveAttributes);
   }
 }
+
+RegularLine2Primitive.extendPrimitiveAttributes = ['dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor'];
+
+export default RegularLine2Primitive;

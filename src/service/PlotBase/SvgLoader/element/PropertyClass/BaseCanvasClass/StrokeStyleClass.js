@@ -7,20 +7,9 @@ import Property from "../../Property";
  * @LastEditors: Do not edit
  * @LastEditTime: 2022-03-07 09:24:59
  */
-export default class StrokeStyleClass extends BaseStyleObject {
+class StrokeStyleClass extends BaseStyleObject {
   constructor(elem) {
     super(elem)
-    this.SVGSTYLENAMES =
-      "stroke,stroke-width,stroke-linecap,stroke-linejoin,stroke-opacity,stroke-miterlimit".split(
-        ","
-      );
-    this.STYLENAMES = "strokeStyle,lineWidth,lineCap,lineJoin,miterLimit".split(
-      ","
-    );
-    this.isCanCreate = (elem) => {
-      const strokeStyleProp = elem.getStyle("stroke");
-      return !!strokeStyleProp.hasValue();
-    };
     this.lineWidth = elem.getStyle("stroke-width").getNumber()
   }
 
@@ -76,6 +65,21 @@ export default class StrokeStyleClass extends BaseStyleObject {
   }
 
   getStyle() {
-    return {...this.styleObject}
+    return Object.assign({}, this.styleObject);
   }
 }
+
+StrokeStyleClass.SVGSTYLENAMES = "stroke,stroke-width,stroke-linecap,stroke-linejoin,stroke-opacity,stroke-miterlimit".split(
+  ","
+);
+
+StrokeStyleClass.STYLENAMES = "strokeStyle,lineWidth,lineCap,lineJoin,miterLimit".split(
+  ","
+);
+
+StrokeStyleClass.isCanCreate = (elem) => {
+  const strokeStyleProp = elem.getStyle("stroke");
+  return !!strokeStyleProp.hasValue();
+};
+
+export default StrokeStyleClass;

@@ -11,8 +11,8 @@ import PathElement from "./PathElement.js";
 import { QuadraticBezierCurve } from "../../../PlotUtilBase/Curves";
 
 export default class RectElement extends PathElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "rect";
   }
 

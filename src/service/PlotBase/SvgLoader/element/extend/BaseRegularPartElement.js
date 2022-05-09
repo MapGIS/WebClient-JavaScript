@@ -10,8 +10,8 @@ import PathElement from "../PathElement";
 import PathParser from "../PathParser";
 
 export default class BaseRegularPartElement extends PathElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "mainline";
     this.m_scaleX = 100;
     this.m_scaleY = 100;

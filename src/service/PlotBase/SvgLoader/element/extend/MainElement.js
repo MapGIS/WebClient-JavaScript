@@ -9,8 +9,8 @@
 import BaseRegularPartElement from "./BaseRegularPartElement";
 
 export default class MainElement extends BaseRegularPartElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "mainelement";
   }
 }

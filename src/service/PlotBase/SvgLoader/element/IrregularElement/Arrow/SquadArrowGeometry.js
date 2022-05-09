@@ -11,8 +11,8 @@ import SquadArrow from "../../../../../PlotUtilBase/Geometry/Arrow/Squad_Arrow";
 import Point from "../../../../../PlotUtilBase/Geometry/Point";
 
 export default class SquadArrowGeometry extends BaseIrregularElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = 'msbl_squadarrow';
   }
 

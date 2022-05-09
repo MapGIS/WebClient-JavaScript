@@ -9,7 +9,7 @@
 import { defined } from "../../../../PlotUtilBase/Check";
 import GElement from "../GElement";
 import SymbolManager from "../../../SymbolManager/SymbolManager";
-import ElementFactory from "..";
+import ElementFactory from "../ElementFactory";
 
 export default class ReplacedGroupElement extends GElement {
   constructor(node) {

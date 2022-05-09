@@ -20,12 +20,10 @@ import FillStyleClass from "./PropertyClass/BaseCanvasClass/FillStyleClass";
 import StrokeStyleClass from "./PropertyClass/BaseCanvasClass/StrokeStyleClass";
 import PropertyClass from "./PropertyClass/PropertyClass";
 
-
-export default class TSpanElement extends TextElement {
+class TSpanElement extends TextElement {
   constructor(node) {
     super(node);
     this.type = "tspan";
-    this.styleClassArray = [FillStyleClass,FontStyleClass,StrokeStyleClass];
     this._text = this._getTextFrmNode(node);
     this._fontMetrics = null;
     this._textGeoBounds = null;
@@ -233,3 +231,7 @@ export default class TSpanElement extends TextElement {
     return attrNames;
   }
 }
+
+TSpanElement.styleClassArray = [FillStyleClass,FontStyleClass,StrokeStyleClass];
+
+export default TSpanElement;

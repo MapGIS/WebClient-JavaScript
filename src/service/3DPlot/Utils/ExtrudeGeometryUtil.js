@@ -1,8 +1,8 @@
-import { ArrayBufferVector3 } from "../../../service/PlotUtilBase/BufferArray";
-import { defined, defaultValue } from "../../../service/PlotUtilBase/Check";
+import { ArrayBufferVector3 } from "../../PlotUtilBase/BufferArray";
+import { defined, defaultValue } from "../../PlotUtilBase/Check";
 import LogTool from "../../../service/PlotUtilBase/Log/LogTool";
-import { Vector3 } from "../../../service/PlotUtilBase/Math/Vector3";
-import { ShapeUtils } from "../../../service/PlotUtilBase/Path2D/ShapeUtils";
+import { Vector3 } from "../../PlotUtilBase/Math/Vector3";
+import { ShapeUtils } from "../../PlotUtilBase/Path2D/ShapeUtils";
 import ArrayUtil from "../../../service/PlotUtilBase/Util/ArrayUtil";
 
 let _vec3$ = new Vector3();

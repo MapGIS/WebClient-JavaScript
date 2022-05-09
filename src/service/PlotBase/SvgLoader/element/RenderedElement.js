@@ -19,14 +19,9 @@ import PropertyClass from "./PropertyClass/PropertyClass";
 
 const PSEUDO_ZERO = 0.00000001;
 
-export default class RenderedElement extends Element {
+class RenderedElement extends Element {
   constructor(node) {
     super(node);
-    // 基础attributes样式属性 this._attributes[attr]（放在子节点）
-    this.baseSVGAttributes = [];
-    // 基础属性 this[attr]（放在子节点）
-    this.extendElementAttributes = [];
-    this.styleClassArray = [StrokeStyleClass, FillStyleClass];
     this._matrix = Transform.getTransfromFrmElement(this);
     this._transformMatrix = new Matrix3();
     this._dimModal = new DimModal();
@@ -287,3 +282,9 @@ export default class RenderedElement extends Element {
     return RenderedElement;
   }
 }
+
+RenderedElement.baseSVGAttributes = [];
+RenderedElement.extendElementAttributes = [];
+RenderedElement.styleClassArray = [StrokeStyleClass, FillStyleClass];
+
+export default RenderedElement;

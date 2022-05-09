@@ -9,8 +9,8 @@
 import Element from "./Element";
 
 export default class MsblElement extends Element {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "msbl";
   }
 }

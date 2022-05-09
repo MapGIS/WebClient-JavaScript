@@ -26,7 +26,8 @@ export default class PropertyClass {
   getStyle() {
     let style = {};
     this.styleObjectArr.forEach((t) => {
-      style = { ...style, ...t.getStyle() };
+      let newStyle = t.getStyle();
+      style = Object.assign(style, newStyle);
     });
     return style;
   }

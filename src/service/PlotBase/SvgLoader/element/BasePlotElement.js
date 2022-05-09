@@ -21,24 +21,14 @@ import PropertyClass from "./PropertyClass/PropertyClass";
  * @property propsUpdateSignal 属性更新信号
  * @property positions 经纬度坐标数组
  */
-export default class BasePlotElement extends SvgElement {
+class BasePlotElement extends SvgElement {
   constructor(node) {
     super(node);
-    // 需要存储在根节点的属性
-    this.extendElementAttributes = [
-      "show",
-      "featureId",
-      "isScaleByMap",
-      "compareLine",
-      "compareLineWidth",
-      "compareLineColor",
-    ];
-    this.baseSVGAttributes = [];
-    this.styleClassArray = [];
     // 三维转换坐标系选项
     this._is3d = true;
     this.m_scaleX = 100;
     this.m_scaleY = 100;
+    this.adjustScale = 1;
     // 是否开启点组缓存
     this.isOpenCoordsCache = true;
     // 是否进行样式文件压缩合并
@@ -78,6 +68,19 @@ export default class BasePlotElement extends SvgElement {
 
   get propsUpdateSignal() {
     return this._propsUpdateSignal;
+  }
+
+  /**
+   * @description: 设置调整的缩放比
+   * @param {Number} num
+   * @return {*}
+   */
+  setAdjustScale(num) {
+    this.adjustScale = num;
+  }
+
+  getAdjustScale() {
+    return this.adjustScale;
   }
 
   // 设置scale 比例尺
@@ -175,11 +178,12 @@ export default class BasePlotElement extends SvgElement {
     };
   }
   _createProperties() {
-    const properties = {
+    let json = this.toJson();
+    let properties = {
       symbolId: this._symbol.id,
-      symbolName: this._symbol.name,
-      ...this.toJson(),
+      symbolName: this._symbol.name
     };
+    properties = Object.assign(properties, json);
     // 存储样式节点属性
     properties.symbolNodes = this.getNodesAttributes();
     return properties;
@@ -459,3 +463,17 @@ export default class BasePlotElement extends SvgElement {
     return null;
   }
 }
+
+BasePlotElement.extendElementAttributes = [
+  "show",
+  "featureId",
+  "isScaleByMap",
+  "compareLine",
+  "compareLineWidth",
+  "compareLineColor",
+];
+
+BasePlotElement.baseSVGAttributes = [];
+BasePlotElement.styleClassArray = [];
+
+export default BasePlotElement;

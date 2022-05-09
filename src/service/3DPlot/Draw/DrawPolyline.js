@@ -8,8 +8,8 @@
  */
 
 import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
-import { PrimitiveFactory } from "../Primitive/PrimitiveFactory";
-import CesiumUtil from "../Utils/CesiumUtil";
+import PrimitiveFactory from "../Primitive/index";
+import {CesiumUtil} from "../Utils/CesiumUtil";
 import GeomUtil from "../../../service/PlotUtilBase/Geometry/GeomUtil";
 import Point from "../../../service/PlotUtilBase/Geometry/Point";
 
@@ -51,39 +51,44 @@ export default class DrawPolyline extends DrawObject {
         viewer.scene
       );
 
+      let that = this;
+      
       if (!worldPos) return;
 
-      if (!this._primitive) {
-        const primitive = PrimitiveFactory.createInstance(symbol.type, {
-          positions: this.m_coords,
-          element: symbol.getElement(),
-        });
-        this._primitive = primitive;
-        viewer.scene.primitives.add(this._primitive);
-      }
-
-      const lnglat = CesiumUtil.cartesian3ToDegrees(
-        viewer.scene.globe.ellipsoid,
-        worldPos
-      );
-      this.m_coords.push(lnglat);
-
-      if (this.m_coords.length >= 2) {
-        const len = this.m_coords.length;
-        const v1 = this.m_coords[len - 2];
-        const v2 = this.m_coords[len - 1];
-        if (v1.equals(v2)) {
-          this.m_coords.splice(len - 1, 1);
+      symbol.getElement().then(function (res) {
+        if (!that._primitive) {
+          const primitive = PrimitiveFactory.createInstance(symbol.type, {
+            positions: that.m_coords,
+            element: res,
+          });
+          console.log("primitive",primitive)
+          that._primitive = primitive;
+          viewer.scene.primitives.add(that._primitive);
         }
-      }
 
-      if (this.m_coords.length >= 2) {
-        // 去除重复点
-        const coords = this.m_coords.map((s) => new Point(s.x, s.y));
-        GeomUtil.ClearSamePts(coords);
-        this.m_coords = coords.map((s) => new Cesium.Cartesian2(s.x, s.y));
-        this._primitive.positions = this.m_coords;
-      }
+        const lnglat = CesiumUtil.cartesian3ToDegrees(
+          viewer.scene.globe.ellipsoid,
+          worldPos
+        );
+        that.m_coords.push(lnglat);
+
+        if (that.m_coords.length >= 2) {
+          const len = that.m_coords.length;
+          const v1 = that.m_coords[len - 2];
+          const v2 = that.m_coords[len - 1];
+          if (v1.equals(v2)) {
+            that.m_coords.splice(len - 1, 1);
+          }
+        }
+
+        if (that.m_coords.length >= 2) {
+          // 去除重复点
+          const coords = that.m_coords.map((s) => new Point(s.x, s.y));
+          GeomUtil.ClearSamePts(coords);
+          that.m_coords = coords.map((s) => new Cesium.Cartesian2(s.x, s.y));
+          that._primitive.positions = that.m_coords;
+        }
+      });
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     handler.setInputAction((event) => {

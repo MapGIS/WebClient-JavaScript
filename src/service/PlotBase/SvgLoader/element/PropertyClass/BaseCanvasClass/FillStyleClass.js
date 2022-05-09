@@ -8,15 +8,9 @@
 import BaseStyleObject from "./BaseStyleObjectClass";
 import Property from "../../Property";
 
-export default class FillStyleClass extends BaseStyleObject {
-  constructor() {
-    super();
-    this.SVGSTYLENAMES = "fill,fill-rule,fill-opacity".split(",");
-    this.STYLENAMES =
-      "fillStyleType,fillGradType,fillStyle,fillGradColor".split(",");
-    this.isCanCreate = (elem) => {
-      return true;
-    };
+class FillStyleClass extends BaseStyleObject {
+  constructor(elem) {
+    super(elem);
   }
 
   createStyleObject() {
@@ -71,3 +65,12 @@ export default class FillStyleClass extends BaseStyleObject {
     return FillStyleClass;
   }
 }
+
+FillStyleClass.SVGSTYLENAMES = "fill,fill-rule,fill-opacity".split(",");
+FillStyleClass.STYLENAMES =
+  "fillStyleType,fillGradType,fillStyle,fillGradColor".split(",");
+FillStyleClass.isCanCreate = (elem) => {
+  return true;
+};
+
+export default FillStyleClass;

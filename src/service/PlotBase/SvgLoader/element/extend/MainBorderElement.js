@@ -9,8 +9,8 @@
 import MainElement from "./MainElement";
 
 export default class MainBorderElement extends MainElement {
-  constructor(props) {
-    super(props);
+  constructor(node) {
+    super(node);
     this.type = "mainborder";
   }
 

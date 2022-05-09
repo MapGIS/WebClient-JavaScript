@@ -1,10 +1,6 @@
-import {Vector3} from "../../../service/PlotUtilBase/Math/Vector3";
+import {Vector3} from "../../PlotUtilBase/Math/Vector3";
 import MathUtil from "../../../service/PlotUtilBase/Util/MathUtil";
-import {defined, Check} from "../../../service/PlotUtilBase/Check";
-
-const gWebMercatorProjection = new Cesium.WebMercatorProjection();
-const gCartographic = new Cesium.Cartographic();
-const gCartesian3 = new Cesium.Cartesian3();
+import {defined, Check} from "../../PlotUtilBase/Check";
 
 /**
  * cesium工具类
@@ -19,8 +15,9 @@ class CesiumUtil {
    * @param {Cesium.Scene} scene 场景对象
    * @returns {Cesium.ScreenSpaceEventHandler}
    */
-  static createEventHandler(type, callback, scene) {
-    const handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+  static createEventHandler(type, callback, scene, cesium) {
+    cesium =  Cesium || cesium;
+    const handler = new cesium.ScreenSpaceEventHandler(scene.canvas);
     handler.setInputAction(callback, type);
 
     return handler;
@@ -91,14 +88,14 @@ class CesiumUtil {
    * @param {*} x x坐标
    * @param {*} y y坐标
    */
-  static WebMercatorProject(lng, lat, x, y) {
-    gCartographic.longitude = MathUtil.toRad(lng);
-    gCartographic.latitude = MathUtil.toRad(lat);
-    gCartographic.height = 0;
+  static WebMercatorProject(lng, lat, x, y, webMercatorProjection, cartographic, cartesian3) {
+    cartographic.longitude = MathUtil.toRad(lng);
+    cartographic.latitude = MathUtil.toRad(lat);
+    cartographic.height = 0;
 
-    gWebMercatorProjection.project(gCartographic, gCartesian3);
-    x = gCartesian3.x;
-    y = gCartesian3.y;
+    webMercatorProjection.project(cartographic, cartesian3);
+    x = cartesian3.x;
+    y = cartesian3.y;
   }
 
   /**
@@ -106,17 +103,17 @@ class CesiumUtil {
    * @param {*} x x坐标
    * @param {*} y y坐标
    */
-  static WebMercatorUnProject(x, y, res) {
-    gCartesian3.x = x;
-    gCartesian3.y = y;
-    gCartesian3.z = 0;
+  static WebMercatorUnProject(x, y, res, webMercatorProjection, cartographic, cartesian3) {
+    cartesian3.x = x;
+    cartesian3.y = y;
+    cartesian3.z = 0;
 
-    gWebMercatorProjection.unproject(gCartesian3, gCartographic);
+    webMercatorProjection.unproject(cartesian3, cartographic);
     if (!defined(res))
       res = new Vector3();
 
-    res.x = MathUtil.toDegrees(gCartographic.longitude);
-    res.y = MathUtil.toDegrees(gCartographic.latitude);
+    res.x = MathUtil.toDegrees(cartographic.longitude);
+    res.y = MathUtil.toDegrees(cartographic.latitude);
 
     return res;
   }
@@ -144,9 +141,8 @@ class CesiumGeomUtil {
     }
   }
 
-  static _rotate(geometry, matrix4) {
+  static _rotate(geometry, matrix4, cartesian3) {
     const pos = geometry.attributes.position.values;
-    const cartesian3 = new Cesium.Cartesian3();
     for (let i = 0; i < pos.length; i += 3) {
       cartesian3.x = pos[i];
       cartesian3.y = pos[i + 1];

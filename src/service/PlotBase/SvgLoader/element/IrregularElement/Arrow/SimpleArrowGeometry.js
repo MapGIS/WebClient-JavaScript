@@ -11,8 +11,8 @@ import AttackArrow from "../../../../../PlotUtilBase/Geometry/Arrow/Attack_Arrow
 import Point from "../../../../../PlotUtilBase/Geometry/Point";
 
 export default class SimpleArrowGeometry extends BaseIrregularElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "msbl_singleArrow";
   }
   _insertGeometry(points) {

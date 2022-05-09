@@ -10,8 +10,8 @@ import BaseIrregularElement from "./BaseIrregularElement";
 import CombinationalCircle from "../../../../PlotUtilBase/Geometry/CombinationalCircle";
 
 export default class CombinationalCircleGeometry extends BaseIrregularElement{
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type='msbl_CombinationalCircle';
   }
     _insertGeometry(points){

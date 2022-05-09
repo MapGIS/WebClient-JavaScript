@@ -9,10 +9,9 @@
 import RegularSurfaceElementInstance from "../ElementInstance/RegularSurfaceElementInstance";
 import RegularLine1Primitive from "./RegularLine1Primitive";
 
-export default class RegularSurfacePrimitive extends RegularLine1Primitive {
-  constructor() {
-    super();
-    this.extendPrimitiveAttributes = ["surfaceBorderWidth"];
+class RegularSurfacePrimitive extends RegularLine1Primitive {
+  constructor(options) {
+    super(options);
   }
 
   update(frameState) {
@@ -94,3 +93,7 @@ export default class RegularSurfacePrimitive extends RegularLine1Primitive {
     return RegularSurfacePrimitive.extendPrimitiveAttributes.concat([]);
   }
 }
+
+RegularSurfacePrimitive.extendPrimitiveAttributes = ["surfaceBorderWidth"];
+
+export default RegularSurfacePrimitive;

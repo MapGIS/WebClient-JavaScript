@@ -10,8 +10,8 @@ import BaseIrregularElement from "../BaseIrregularElement";
 import AssaultArrow from "../../../../../PlotUtilBase/Geometry/Arrow/AssaultArrow";
 
 export default class AssaultArrowGeometry extends BaseIrregularElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = 'msbl_AssaultArrow';
   }
 

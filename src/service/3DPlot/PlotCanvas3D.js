@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\PlotCanvas3D.js
  */
-import { defined } from "../../service/PlotUtilBase/Check";
+import { defined } from "../PlotUtilBase/Check";
 import SymbolManager from "../../service/PlotBase/SymbolManager/SymbolManager";
 import { DrawPlotObjectFactory3D } from "./Draw";
 import {CesiumUtil} from "./Utils/CesiumUtil";
@@ -32,8 +32,9 @@ function onLeftClick(clickEvent) {
 }
 
 export default class PlotCanvas3D extends Observable {
-  constructor(viewer) {
+  constructor(Cesium, viewer) {
     super();
+
     this._viewer = viewer;
     this._enableSelect = false;
     this._onLeftClick = onLeftClick.bind(this);
@@ -44,7 +45,6 @@ export default class PlotCanvas3D extends Observable {
 
   DrawSymbol(symbol) {
     const viewer = this._viewer;
-
     if (this.drawTool) {
       this.drawTool.disable();
     }

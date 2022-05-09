@@ -7,7 +7,7 @@ import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 import DefaultLinePathParser from "../Default/DefaultLine";
 import ExtendLineElement from "../extend/ExtendLineElement";
 
-export default class RegularLine2 extends BaseRegularElement {
+class RegularLine2 extends BaseRegularElement {
   /**
    * aboveAxisIDs
    * axis2_Y
@@ -20,7 +20,6 @@ export default class RegularLine2 extends BaseRegularElement {
     this.axis2_Y = 0.5;
     this.initBaseAttributes(node);
     this.type = "msbl_regularline2";
-    this.extendElementAttributes = ["axis2_Y"];
   }
 
   initBaseAttributes(node) {
@@ -321,3 +320,7 @@ export default class RegularLine2 extends BaseRegularElement {
     }
   }
 }
+
+RegularLine2.extendElementAttributes = ["axis2_Y"];
+
+export default RegularLine2;

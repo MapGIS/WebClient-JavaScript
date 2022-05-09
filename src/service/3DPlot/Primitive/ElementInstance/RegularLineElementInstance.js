@@ -9,7 +9,7 @@
 import SvgElementInstance from "./SvgElementInstance";
 import { CesiumGeomUtil, CesiumUtil } from "../../Utils/CesiumUtil";
 import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
-import { defined } from "../../../../service/PlotUtilBase/Check";
+import { defined } from "../../../PlotUtilBase/Check";
 
 export default class RegularLineElementInstance extends SvgElementInstance {
   svgToGeomInstances(elem, options) {

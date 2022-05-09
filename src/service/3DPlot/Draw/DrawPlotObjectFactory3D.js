@@ -7,8 +7,8 @@
  * @FilePath: \MapGISPlotBase\src\base\Draw\DrawObjectFactory.js
  */
 import SimpleFactory from "../../../service/PlotUtilBase/SimpleFactory";
-import { DrawPoint } from "./DrawPoint";
-import { DrawPolyline } from "./DrawPolyline";
+import DrawPoint from "./DrawPoint";
+import DrawPolyline from "./DrawPolyline";
 
 const DrawPlotObjectFactory3D = new SimpleFactory();
 

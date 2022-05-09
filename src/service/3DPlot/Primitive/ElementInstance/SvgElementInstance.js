@@ -6,14 +6,14 @@
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\SvgElementInstance.js
  */
-import { Vector2 } from "../../../../service/PlotUtilBase/Math/Vector2";
-import { Vector3 } from "../../../../service/PlotUtilBase/Math/Vector3";
+import { Vector2 } from "../../../PlotUtilBase/Math/Vector2";
+import { Vector3 } from "../../../PlotUtilBase/Math/Vector3";
 import PolylineCurve3 from "../../../../service/PlotUtilBase/Curves/PolylineCurve3";
 import {CesiumGeomUtil} from "../../Utils/CesiumUtil";
-import { defined } from "../../../../service/PlotUtilBase/Check";
+import { defined } from "../../../PlotUtilBase/Check";
 import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
 import { ExtrudeGeometryUtil } from "../../Utils/ExtrudeGeometryUtil";
-import { Shape } from "../../../../service/PlotUtilBase/Path2D/Shape";
+import { Shape } from "../../../PlotUtilBase/Path2D/Shape";
 
 export default class SvgElementInstance {
   constructor(elem, options = {}) {

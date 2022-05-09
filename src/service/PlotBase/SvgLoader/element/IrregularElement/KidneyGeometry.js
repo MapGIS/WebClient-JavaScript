@@ -10,8 +10,8 @@ import BaseIrregularElement from "./BaseIrregularElement";
 import Kidney from "../../../../PlotUtilBase/Geometry/Kidney";
 
 export default class KidneyGeometry extends BaseIrregularElement {
-  constructor() {
-    super();
+  constructor(node) {
+    super(node);
     this.type = "msbl_Kidney";
   }
   _insertGeometry(points) {
