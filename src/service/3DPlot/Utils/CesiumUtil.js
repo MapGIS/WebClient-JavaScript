@@ -103,17 +103,20 @@ class CesiumUtil {
    * @param {*} x x坐标
    * @param {*} y y坐标
    */
-  static WebMercatorUnProject(x, y, res, webMercatorProjection, cartographic, cartesian3) {
-    cartesian3.x = x;
-    cartesian3.y = y;
-    cartesian3.z = 0;
+  static WebMercatorUnProject(x, y, res) {
+    let gWebMercatorProjection = new Cesium.WebMercatorProjection();
+    let gCartographic = new Cesium.Cartographic();
+    let gCartesian3 = new Cesium.Cartesian3();
+    gCartesian3.x = x;
+    gCartesian3.y = y;
+    gCartesian3.z = 0;
 
-    webMercatorProjection.unproject(cartesian3, cartographic);
+    gWebMercatorProjection.unproject(gCartesian3, gCartographic);
     if (!defined(res))
       res = new Vector3();
 
-    res.x = MathUtil.toDegrees(cartographic.longitude);
-    res.y = MathUtil.toDegrees(cartographic.latitude);
+    res.x = MathUtil.toDegrees(gCartographic.longitude);
+    res.y = MathUtil.toDegrees(gCartographic.latitude);
 
     return res;
   }
@@ -141,8 +144,9 @@ class CesiumGeomUtil {
     }
   }
 
-  static _rotate(geometry, matrix4, cartesian3) {
+  static _rotate(geometry, matrix4) {
     const pos = geometry.attributes.position.values;
+    let cartesian3 = new Cesium.Cartesian3();
     for (let i = 0; i < pos.length; i += 3) {
       cartesian3.x = pos[i];
       cartesian3.y = pos[i + 1];

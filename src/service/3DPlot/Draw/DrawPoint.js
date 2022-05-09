@@ -24,6 +24,7 @@ export default class DrawPoint extends DrawObject {
     const viewer = this._viewer;
     const symbol = this._symbol;
     const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+    let that = this;
     handler.setInputAction((event) => {
       const worldPos = viewer.scene.globe.pick(
         viewer.camera.getPickRay(event.position),
@@ -32,23 +33,23 @@ export default class DrawPoint extends DrawObject {
 
       if (!worldPos) return;
 
-      this._primitive = PrimitiveFactory.createInstance(symbol.type, {
-        positions: this.m_coords,
-        element: symbol.getElement(),
+      symbol.getElement().then(function (res) {
+        that._primitive = PrimitiveFactory.createInstance(symbol.type, {
+          positions: that.m_coords,
+          element: res
+        });
+
+        const lnglat = CesiumUtil.cartesian3ToDegrees(
+          viewer.scene.globe.ellipsoid,
+          worldPos
+        );
+        that.m_coords.push(lnglat);
+        viewer.scene.primitives.add(that._primitive);
+
+        that._primitive.positions = that.m_coords;
+        that.disable();
+        that.fireFinishEvent({ plotObj3D: that._primitive });
       });
-
-      const lnglat = CesiumUtil.cartesian3ToDegrees(
-        viewer.scene.globe.ellipsoid,
-        worldPos
-      );
-      this.m_coords.push(lnglat);
-
-      viewer.scene.primitives.add(this._primitive);
-
-      this._primitive.positions = this.m_coords;
-      this.disable();
-      this.fireFinishEvent({ plotObj3D: this._primitive });
-
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     this._handler = handler;
@@ -56,7 +57,7 @@ export default class DrawPoint extends DrawObject {
 
   removeHooks() {
     const handler = this._handler;
-    handler.removeInputAction();
+    // handler.removeInputAction();
     handler.destroy();
     this._handler = null;
   }

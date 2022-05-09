@@ -96,8 +96,6 @@ export default class SymbolNode extends SymbolBase {
       dataType: "text",
     });
 
-    console.log("url--------------",url)
-    console.log("res--------------",res)
     const xml = await new DOMParser().parseFromString(
       res.data,
       "image/svg+xml"

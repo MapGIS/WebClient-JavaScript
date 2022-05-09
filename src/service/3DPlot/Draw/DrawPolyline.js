@@ -106,7 +106,7 @@ export default class DrawPolyline extends DrawObject {
       look(this.viewer, this.m_coords[this.m_coords.length - 1], 1000);
     }
 
-    handler.removeInputAction();
+    // handler.removeInputAction();
     handler.destroy();
     this._handler = null;
   }

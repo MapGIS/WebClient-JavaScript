@@ -13,7 +13,7 @@ import Bounds from "../../../PlotUtilBase/Geometry/Bound";
 import Property from "./Property";
 import ElementFactory from "./ElementFactory";
 
-import GElement from "./index";
+import {GElement} from "./index";
 
 const SVGDEFAULTSTYLE = {
   fill: "none",
