@@ -620,7 +620,13 @@ class VectorLayer extends GDBInfo {
      */
     getLayerInfo(gdbpUrl, onSuccess, onError, encryptPassword) {
         var me = this;
-        me.partUrl = 'layerinfo?gdbpUrl=' + gdbpUrl + '&f=json' + '&encryptPassword=' + encryptPassword + '&proj=' + this.proj;
+        me.partUrl = 'layerinfo?gdbpUrl=' + gdbpUrl + '&f=json';
+        if (encryptPassword) {
+            me.partUrl += '&encryptPassword=' + encryptPassword;
+        }
+        if (this.proj) {
+            me.partUrl += '&proj=' + this.proj;
+        }
         var url = me.getFullUrl();
         var service = new IgsServiceBase(url, {
             eventListeners: {
