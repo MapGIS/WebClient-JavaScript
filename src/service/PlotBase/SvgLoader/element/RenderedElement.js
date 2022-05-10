@@ -281,6 +281,9 @@ class RenderedElement extends Element {
   getBaseClass() {
     return RenderedElement;
   }
+  getInsertGeometryPoint(number){
+    return number
+  }
 }
 
 RenderedElement.baseSVGAttributes = [];

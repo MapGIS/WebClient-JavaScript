@@ -84,6 +84,8 @@ export default class BaseRegularElement extends BasePlotElement {
    * @return {*}
    */
   _traverChildren(children) {
+    const insert = this._calcInsertGeometry();
+    this.geometryInsertRate = insert;
     children.forEach((child) => {
       if (drawTypes.indexOf(child.type) > -1) {
         child.isAllowCoords = true;
@@ -92,7 +94,9 @@ export default class BaseRegularElement extends BasePlotElement {
         } else {
           this._applyMainElement(child);
         }
-        this._applyScaleWidth(child)
+        this._applyScaleWidth(child);
+
+        child.geometryInsertRate = insert;
         // 几何对象点组缓存
         if (this.isOpenCoordsCache && child instanceof PathElement) {
           child.cacheCoords = child.getCoords();
@@ -107,16 +111,14 @@ export default class BaseRegularElement extends BasePlotElement {
    * @param {*} child
    * @return {*}
    */
-  _applyMainElement(child) {
-  }
+  _applyMainElement(child) {}
 
   /**
    * @description: 作用非主轴节点
    * @param {*} child
    * @return {*}
    */
-  _applyElementTransfrom(child) {
-  }
+  _applyElementTransfrom(child) {}
 
   /**
    * @description: 作用线宽

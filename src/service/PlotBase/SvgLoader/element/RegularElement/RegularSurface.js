@@ -236,7 +236,10 @@ export default class RegularSurface extends BaseRegularElement {
   setPoints(points, options) {
     super.setPoints(points, options);
     if (this.poly.length > 1) {
-      this.mainBorder = new Spline(this.poly, true);
+      this.mainBorder = new Spline(this.poly, {
+        close:true,
+        maxPoint:this.getInsertGeometryPoint(10)
+      });
       this.traverChildren();
     }
   }
