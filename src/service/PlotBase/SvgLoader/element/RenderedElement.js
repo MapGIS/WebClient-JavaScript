@@ -30,6 +30,8 @@ class RenderedElement extends Element {
     // 后续自动生成
     this.cacheCoords = null;
     this.styleObject=null
+    // 几何控制点
+    this.geometryInsertRate=1
     this._initBaseAttrs()
   }
   _initBaseAttrs() {

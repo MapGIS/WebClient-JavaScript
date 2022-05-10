@@ -35,12 +35,16 @@ export default class ReplacedGroupElement extends GElement {
 
     const symbol = symbolManager.getLeafByID(parseInt(id,10));
 
-    this._children = ElementFactory.createInstance(symbol.getSvg(), symbol.type)._children;
+    var that = this;
+    
+    symbol.getSvg().then(function (res) {
+      that._children = ElementFactory.createInstance(res, symbol.type)._children;
 
-    for(let i=0;i<this._children.length;i+=1)
-    {
-        this._children[i]._parent=this;
-    }
+      for(let i=0;i<that._children.length;i+=1)
+      {
+        that._children[i]._parent=that;
+      }
+    });
   }
   _clone(cloneObject){
     super._clone(cloneObject)

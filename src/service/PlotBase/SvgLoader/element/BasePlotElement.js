@@ -178,12 +178,11 @@ class BasePlotElement extends SvgElement {
     };
   }
   _createProperties() {
-    let json = this.toJson();
-    let properties = {
+    const properties = {
       symbolId: this._symbol.id,
-      symbolName: this._symbol.name
+      symbolName: this._symbol.name,
+      ...this.toJson(),
     };
-    properties = Object.assign(properties, json);
     // 存储样式节点属性
     properties.symbolNodes = this.getNodesAttributes();
     return properties;
@@ -208,7 +207,7 @@ class BasePlotElement extends SvgElement {
         pnts.push(new Point(s[0], s[1]));
       });
       this.positions = pnts;
-      this.initProperties(geojson.properties)
+      this.initProperties(geojson.properties);
     } else {
       // eslint-disable-next-line no-new
       new Error("GeoJSON类型错误!");
@@ -227,7 +226,6 @@ class BasePlotElement extends SvgElement {
     }
     return styleObject;
   }
-
   _getStyles(children, styleObject) {
     children.forEach((child) => {
       if (child instanceof GElement) {
@@ -253,9 +251,38 @@ class BasePlotElement extends SvgElement {
    * @return {*}
    */
   setNodeAttrObj(nodeStyleObject) {
-    this.initNodeStyles(nodeStyleObject);
-    //  发送属性变更事件
-    this._propsUpdateSignal.dispatch({});
+    const { baseSVGAttributes, extendElementAttributes } =
+      this.getSaveBaseAttributes();
+    const baseSVGStyleAttributes = this.styleObject.getSVGStyleNameArr();
+
+    let val = value;
+
+    if (type === "text") {
+      const idArr = childIds.split(",");
+      val = value.split(",");
+      idArr.forEach((s, index) => {
+        const ele = this._getElementById(s);
+        if (ele) {
+          ele.setText(val[index]);
+        }
+      });
+      //  发送属性变更事件
+      this._propsUpdateSignal.dispatch({});
+    } else if (
+      extendElementAttributes.indexOf(type) > -1 ||
+      baseSVGAttributes.indexOf(type) > -1 ||
+      baseSVGStyleAttributes.indexOf(this.jsToCss(type)) > -1
+    ) {
+      this._setNodeAttr(this, type, value);
+    } else {
+      const idArr = childIds.split(",");
+      idArr.forEach((s) => {
+        const ele = this._getElementById(s);
+        if (ele) {
+          this._setNodeAttr(ele, type, value);
+        }
+      });
+    }
   }
   setNodeAttr(childIds, type, value) {
     const { baseSVGAttributes, extendElementAttributes } =
@@ -305,7 +332,6 @@ class BasePlotElement extends SvgElement {
     } else if (child && extendElementAttributes.indexOf(key) > -1) {
       child[key] = value;
     }
-
     //  发送属性变更事件
     this._propsUpdateSignal.dispatch({
       type: key,
@@ -461,6 +487,18 @@ class BasePlotElement extends SvgElement {
       }
     }
     return null;
+  }
+  /**
+   * @description: 计算插值比例
+   * @param {*}
+   * @return {*}
+   */
+  _calcInsertGeometry() {
+    if (this._is3d) {
+      return 0.3;
+    } else {
+      return this.m_scaleY*0.3;
+    }
   }
 }
 
