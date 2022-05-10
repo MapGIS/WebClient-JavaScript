@@ -217,7 +217,14 @@ class BasePlotElement extends SvgElement {
     this.initPlotAttributes(properties);
     this.initNodeStyles(properties.symbolNodes);
   }
-  /**   样式属性控制   */
+
+
+  /**   子节点样式   */
+  /**
+   * @description: 获取子节点样式
+   * @param {*}
+   * @return {*}
+   */
   getNodesAttributes() {
     const styleObject = {};
     this._getStyles(this._children, styleObject);
@@ -246,11 +253,42 @@ class BasePlotElement extends SvgElement {
   }
 
   /**
-   * @description: 更新child节点样式
+   * @description: 修改子节点样式
    * @param {*} nodeStyleObject
    * @return {*}
    */
-  setNodeAttrObj(nodeStyleObject) {
+  setNodesAttributes(nodeStyleObject) {
+    this.initNodeStyles(nodeStyleObject);
+    //  发送属性变更事件
+    this._propsUpdateSignal.dispatch({});
+  }
+  /**   属性节点     */
+  /**
+   * @description:修改属性对象
+   * @param {*} properties
+   * @return {*}
+   */
+  setAllAttributes(properties){
+    this.initProperties(properties)
+    //  发送属性变更事件
+    this._propsUpdateSignal.dispatch({});  
+  }
+  /**
+   * @description: 获取属性对象
+   * @param {*}
+   * @return {*}
+   */
+  getAllAttributes(){
+    return this._createProperties()
+  }
+  /**
+   * @description: 修改单个属性值
+   * @param {*} type
+   * @param {*} value
+   * @param {*} childIds
+   * @return {*}
+   */
+  setNodeAttr(type, value, childIds) {
     const { baseSVGAttributes, extendElementAttributes } =
       this.getSaveBaseAttributes();
     const baseSVGStyleAttributes = this.styleObject.getSVGStyleNameArr();
@@ -284,41 +322,6 @@ class BasePlotElement extends SvgElement {
       });
     }
   }
-  setNodeAttr(childIds, type, value) {
-    const { baseSVGAttributes, extendElementAttributes } =
-      this.getSaveBaseAttributes();
-    const baseSVGStyleAttributes = this.styleObject.getSVGStyleNameArr();
-
-    let val = value;
-
-    if (type === "text") {
-      const idArr = childIds.split(",");
-      val = value.split(",");
-      idArr.forEach((s, index) => {
-        const ele = this._getElementById(s);
-        if (ele) {
-          ele.setText(val[index]);
-        }
-      });
-      //  发送属性变更事件
-      this._propsUpdateSignal.dispatch({});
-    } else if (
-      extendElementAttributes.indexOf(type) > -1 ||
-      baseSVGAttributes.indexOf(type) > -1 ||
-      baseSVGStyleAttributes.indexOf(this.jsToCss(type)) > -1
-    ) {
-      this._setNodeAttr(this, type, value);
-    } else {
-      const idArr = childIds.split(",");
-      idArr.forEach((s) => {
-        const ele = this._getElementById(s);
-        if (ele) {
-          this._setNodeAttr(ele, type, value);
-        }
-      });
-    }
-  }
-
   _setNodeAttr(child, key, value) {
     const { baseSVGAttributes, extendElementAttributes } =
       child.getSaveBaseAttributes();

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:22:31
- * @LastEditTime: 2021-11-12 16:33:12
+ * @LastEditTime: 2022-05-10 15:55:52
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
@@ -17,6 +17,7 @@ import RegularPoint from "./RegularElement/RegularPoint.js";
 import RegularLine1 from "./RegularElement/RegularLine1";
 import MsblElement from "./MsblElement";
 import CircleElement from "./CircleElement";
+import EllipseElement  from "./EllipseElement";
 import RegularLine2 from "./RegularElement/RegularLine2";
 import KidneyArea from "./RegularElement/KidneyArea";
 import RegularSurface from "./RegularElement/RegularSurface";
@@ -47,6 +48,7 @@ ElementFactory.register("text", TextElement);
 ElementFactory.register("tspan", TSpanElement);
 ElementFactory.register("msbl", MsblElement);
 ElementFactory.register("circle", CircleElement);
+ElementFactory.register("ellipse", EllipseElement);
 ElementFactory.register("rect", RectElement);
 
 // 规则符号

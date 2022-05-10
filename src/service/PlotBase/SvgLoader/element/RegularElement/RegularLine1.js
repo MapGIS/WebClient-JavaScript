@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-02-17 19:03:38
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-02-24 11:40:25
+ * @LastEditTime: 2022-05-10 17:07:14
  */
 import Point from "../../../../PlotUtilBase/Geometry/Point";
 import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
@@ -25,9 +25,9 @@ export default class RegularLine1 extends BaseRegularElement {
     super(node);
     this.belowAxisIDs = [];
     this.aboveAxisIDs = [];
-    this.initBaseAttributes(node);
     this.type = "msbl_regularline1";
     this.flag = true;
+    this.initBaseAttributes(node);
   }
 
   _traverNodes(node) {
@@ -257,7 +257,9 @@ export default class RegularLine1 extends BaseRegularElement {
   setPoints(points) {
     super.setPoints(points);
     if (points.length > 1) {
-      this.mainLine = new Spline(this.poly);
+      this.mainLine = new Spline(this.poly,{
+        maxPoint:this.getInsertGeometryPoint(10)
+      });
       this.traverChildren();
     }
   }

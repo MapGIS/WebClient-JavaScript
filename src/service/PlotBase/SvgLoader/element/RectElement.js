@@ -49,7 +49,7 @@ export default class RectElement extends PathElement {
         new Point(x + width - rx + KAPPA * rx, y),
         new Point(x + width, y + ry - KAPPA * ry),
         new Point(x + width, y + ry)
-      ).getPoints(20);
+      ).getPoints(this.getInsertGeometryPoint(15));
 
       s = s.concat(t1);
     }
@@ -60,7 +60,7 @@ export default class RectElement extends PathElement {
         new Point(x + width, y + height - ry + KAPPA * ry),
         new Point(x + width - rx + KAPPA * rx, y + height),
         new Point(x + width - rx, y + height)
-      ).getPoints(20);
+      ).getPoints(this.getInsertGeometryPoint(15));
 
       s = s.concat(t2);
     }
@@ -70,7 +70,7 @@ export default class RectElement extends PathElement {
         new Point(x + rx - KAPPA * rx, y + height),
         new Point(x, y + height - ry + KAPPA * ry),
         new Point(x, y + height - ry)
-      ).getPoints(20);
+      ).getPoints(this.getInsertGeometryPoint(15));
 
       s = s.concat(t3);
     }
@@ -81,7 +81,7 @@ export default class RectElement extends PathElement {
         new Point(x, y + ry - KAPPA * ry),
         new Point(x + rx - KAPPA * rx, y),
         new Point(x + rx, y)
-      ).getPoints(20);
+      ).getPoints(this.getInsertGeometryPoint(15));
 
       s = s.concat(t4);
     }

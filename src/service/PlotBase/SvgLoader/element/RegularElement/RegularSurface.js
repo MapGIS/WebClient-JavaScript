@@ -17,10 +17,10 @@ export default class RegularSurface extends BaseRegularElement {
    */
   constructor(node) {
     super(node);
-    // 填充img
-    this.initBaseAttributes(node);
     this.type = "msbl_regularsurface";
+    // 填充img
     this.fillImg = null;
+    this.initBaseAttributes(node);
   }
 
   // base

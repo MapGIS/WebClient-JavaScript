@@ -1,11 +1,23 @@
 /*
- * @Description:
+ * @Description:动画工具类
  * @Author: zk
  * @Date: 2022-03-23 13:37:34
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-29 12:01:30
+ * @LastEditTime: 2022-04-25 11:00:05
  */
-class AnimationUtil {
+export class AnimationUtil {
+  /**
+   * @description: 确定定义值
+   * @param {any} v
+   * @param {any} def
+   * @return {*}
+   */
+  static defineValue(v,def){
+    if(typeof v ==="undefined"){
+      return def
+    }
+    return v
+  }
   static getNumberRate(numberArr, rate) {
     if (numberArr.length === 1) return numberArr[0];
     const lengthArr = [];
@@ -46,9 +58,15 @@ class AnimationUtil {
       return expNum;
     }
   }
-}
 
-const is = {
+  static minMax(val, min, max) {
+    return Math.min(Math.max(val, min), max);
+  }
+
+  
+  
+}
+export const is = {
   arr: function (a) {
     return Array.isArray(a);
   },
@@ -89,7 +107,7 @@ const is = {
   //   return /^hsl/.test(a);
   // },
   col: function (a) {
-    return is.hex(a) || is.rgb(a);
+    return is.hex(a) || is.rgb(a) ;
   },
   key: function (a) {
     return (
@@ -100,5 +118,3 @@ const is = {
     );
   },
 };
-
-export {AnimationUtil, is}

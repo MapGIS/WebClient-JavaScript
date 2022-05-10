@@ -3,12 +3,12 @@
  * @Author: zk
  * @Date: 2022-03-28 10:46:58
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-29 11:26:18
+ * @LastEditTime: 2022-04-15 14:21:44
  */
 
-import {AnimationUtil} from "./AnimationUtil";
-import AnimationColorUtil from "./ColorUtil";
-export default class GradientColor {
+import { AnimationUtil } from "./AnimationUtil";
+import { AnimationColorUtil } from "./ColorUtil";
+export class GradientColor {
   constructor(colorArr, isOpacity = true) {
     this._colorArr = colorArr;
     this._isOpacity = isOpacity;
@@ -33,10 +33,10 @@ export default class GradientColor {
       }
     });
     let currentAlpha = this._isOpacity
-      ? parseFloat(AnimationUtil.getNumberRate(alpha, rate)).toFixed(2)
+      ? parseFloat(AnimationUtil.getNumberRate(alpha, rate)).toFixed(3)
       : rate === 0
       ? 0
-      : rate.toFixed(2);
+      : rate.toFixed(3);
 
     const hex = AnimationColorUtil.colorHex(
       "rgba(" +

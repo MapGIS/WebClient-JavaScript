@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-18 09:13:48
- * @LastEditTime: 2022-03-07 13:34:23
+ * @LastEditTime: 2022-05-10 16:12:18
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\BaseIrregularElement.js
@@ -43,8 +43,6 @@ export default class BaseIrregularElement extends BasePlotElement {
   }
   /**
    * @description: 计算真实外包边界
-   * @param {*}
-   * @return {*}
    */
   getBounds() {
     const _bounds = new Bounds();
@@ -73,8 +71,7 @@ export default class BaseIrregularElement extends BasePlotElement {
 
   /**
    * @description:获取要素点
-   * @param {*}
-   * @return {*} 要素点数组
+   * @return {Array<Point>} 要素点数组
    */
   getCoords() {
     const _expCoords = this._insertGeometry(this.m_coords);
@@ -86,25 +83,30 @@ export default class BaseIrregularElement extends BasePlotElement {
   }
   /**
    * @description:修改要素点数组
-   * @param {*}
-   * @return {*}
+   * @param {Array<Point>} points 点组
    */
-  setPoints(points) {
+   setPoints(points) {
     if (points && Array.isArray(points)) {
       this.m_coords = points.slice(0);
-
-      if (this.isOpenCoordsCache) {
-        this.cacheCoords = this.getCoords();
-      }
-      // 作用随图缩放
-      if (this._tempRegularPath) {
-        this._tempRegularPath.setMapScale(this.m_scaleY)
-      }
+      this.traverChildren();
     } else {
       // eslint-disable-next-line no-new
       new Error("非规则几何对象参数错误！");
       this.m_coords = [];
     }
+  }
+  /**
+   * @description: 遍历子节点
+   */
+  traverChildren() {
+    if (this.isOpenCoordsCache) {
+      this.cacheCoords = this.getCoords();
+    }
+    // 作用随图缩放
+    if (this._tempRegularPath) {
+      this._tempRegularPath.setMapScale(this.m_scaleY);
+    }
+    this._tempRegularPath.geometryInsertRate=this._calcInsertGeometry()
   }
 
   _clone(cloneObject) {

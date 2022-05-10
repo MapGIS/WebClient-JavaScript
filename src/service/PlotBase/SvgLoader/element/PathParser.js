@@ -117,7 +117,6 @@ export default class PathParser extends SVGPathData {
 
     // if the last angle isn't filled in because we didn't have this point yet ...
     if (priorTo && angles.length > 0 && !angles[angles.length - 1]) {
-      console.log("points[points.length - 1]",points[points.length - 1])
       angles[angles.length - 1] = points[points.length - 1].angleTo(priorTo);
     }
 

@@ -250,16 +250,6 @@ export default class Element {
     });
     return boundingBox;
   }
-  // 根节点属性获取
-  getSourceAttribute(name, createIfNotExists = false) {
-    if (
-      !this.getAttribute(name, createIfNotExists).hasValue() &&
-      this._parent
-    ) {
-      return this._parent.getSourceAttribute(name, createIfNotExists);
-    }
-    return this.getAttribute(name, createIfNotExists);
-  }
   _cloneAttributes(obj) {
     const keys = Object.keys(obj);
     const temp = {};

@@ -3,28 +3,35 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-02 14:28:18
+ * @LastEditTime: 2022-04-24 11:48:49
  */
+
+/**
+   * tip:不通过时间轴来控制动画的原因
+   * 时间轴控制帧动画时，某一帧承载的压力过大，导致动画性能严重降低。
+     因此时间轴只做用作动画组的概念，所有操作都下放
+   */
+
 import { AnimationReg } from "../AnimationTypes";
 export default class TimeLine {
   constructor(canvas, options) {
     this._canvas = canvas;
     this._timeLineName = options.timeLineName || "";
-    this._totalTime = options.totalTime || 20;
+    this._totalTime = options.totalTime || 20000;
     // 动画对象的队列
     this.handleRender = function () {
       canvas.requestRenderAll ? canvas.requestRenderAll() : null;
     };
     this._animationArr = [];
-    this._animationItems=[]
+    this._animationItems = [];
   }
   addAnimationObject(item) {
-    const t = (item.startTime + item.duration) * 1000;
+    const t = (item.startTime + item.duration);
     if (t > this._totalTime) {
       this._totalTime = t;
     }
-    this._animationArr.push(this._getAnimationObject(item)) 
-    this._animationItems.push(item)
+    this._animationArr.push(this._getAnimationObject(item));
+    this._animationItems.push(item);
   }
   _getAnimationObject(item) {
     const animation = AnimationReg.getAnimation(item.type);
@@ -46,47 +53,66 @@ export default class TimeLine {
     this._timeLineName = json.timeLineName;
     this._totalTime = json.totalTime;
     this._animationArr = json.animations.map((s) => {
-      this._animationItems.push(s)
-      return this._getAnimationObject(s)
+      this._animationItems.push(s);
+      return this._getAnimationObject(s);
     });
   }
+
   play() {
-    const totalTime = this._totalTime * 1000;
-    this._animationArr.forEach((s) => {
-      s.play(totalTime);
-    });
+    const totalTime = this._totalTime;
+    this.animationAction((t) => t.play(totalTime))();
   }
   reset() {
-    this._animationArr.forEach((s) => {
-      s.reset()
-    });
-    this._animationArr.forEach((s) => {
-      s.render(0.001)
-    });
+    this.animationAction((t) => t.reset())();
+    this.animationAction((t) => {
+      t.render(0.001);
+    })();
     this.handleRender();
   }
   pause() {
-    this._animationArr.forEach((s) => {
-      s.pause();
-    });
+    this.animationAction((t) => t.pause())();
   }
-  clear(){
-    this._animationArr=[]
-    this.reset()
+  clear() {
+    this._animationArr = [];
+    this.reset();
   }
-  restore(){
-    this._animationArr.forEach((s) => {
-      s.restore();
-    });
+  restore() {
+    this.animationAction((t) => t.restore())();
     this.handleRender();
   }
-  save(){
-    const t={
-      timeLineName:this._timeLineName,
-      totalTime:this._totalTime/1000,
-      animations:this._animationItems
+  save() {
+    const t = {
+      timeLineName: this._timeLineName,
+      totalTime: this._totalTime,
+      animations: this._animationItems,
+    };
+    return t;
+  }
+  animationAction(func) {
+    const that = this;
+    return function () {
+      that._animationArr.forEach((ani) => {
+        func(ani);
+      });
+    };
+  }
+  
+  /**
+   * @description: 时间轴跳转
+   * @param {number} time
+   * @return {*}
+   */
+  jumpTo(time){
+    let _time 
+    if(time>this._totalTime){
+      _time=this._totalTime
+    }else if(time<0){
+      _time=0
+    }else {
+      _time=time
     }
-    return t
+    
+    this.animationAction((s)=>s.jumpTo(_time))()
   }
   stop() {}
   destory() {}

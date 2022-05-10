@@ -93,7 +93,7 @@ export default class PathElement extends RenderedElement {
     let endPnts = null;
     for (let i = 0; i < path2d.subPaths.length; i += 1) {
       const subPath = path2d.subPaths[i];
-      const v = subPath.getPoints(10);
+      const v = subPath.getPoints(this.getInsertGeometryPoint(10));
       // v的返回值可能存在单个点数组的情况，后续无法构成path路径
       if (v && v.length > 1) {
         const startPnt = v[0];

@@ -19,7 +19,9 @@
         "fetch-ie8": "^1.5.0",
         "proj4": "^2.7.5",
         "promise-polyfill": "^8.2.1",
-        "qs": "^6.9.4"
+        "qs": "^6.9.4",
+        "svg-pathdata": "^6.0.0",
+        "fabric": "^4.5.1"
     },
     "devDependencies": {
         "happypack": "^5.0.0",

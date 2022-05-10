@@ -94,6 +94,7 @@ export default class SymbolNode extends SymbolBase {
       method: 'get',
       url: url,
       dataType: "text",
+      timeout: 1000,
     });
 
     const xml = await new DOMParser().parseFromString(

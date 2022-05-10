@@ -18,8 +18,8 @@ class RegularLine2 extends BaseRegularElement {
     super(node);
     this.aboveAxisIDs = [];
     this.axis2_Y = 0.5;
-    this.initBaseAttributes(node);
     this.type = "msbl_regularline2";
+    this.initBaseAttributes(node);
   }
 
   initBaseAttributes(node) {
@@ -94,7 +94,10 @@ class RegularLine2 extends BaseRegularElement {
       return;
     }
 
-    const _spline = new Spline(this.poly, false, v * this.m_scaleY);
+    const _spline = new Spline(this.poly, {
+      offset: v * this.m_scaleY,
+      maxPoint: this.getInsertGeometryPoint(5),
+    });
 
     child.applyMainGeo(_spline, this.width);
     child.applyMapScale(this.m_scaleX, this.m_scaleY, this.width);
@@ -315,7 +318,9 @@ class RegularLine2 extends BaseRegularElement {
   setPoints(points) {
     super.setPoints(points);
     if (points.length > 1) {
-      this.mainLine = new Spline(this.poly);
+      this.mainLine = new Spline(this.poly, {
+        maxPoint: this.getInsertGeometryPoint(5),
+      });
       this.traverChildren();
     }
   }

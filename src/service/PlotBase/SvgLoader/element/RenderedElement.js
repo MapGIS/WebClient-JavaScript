@@ -53,7 +53,6 @@ class RenderedElement extends Element {
       }
     });
   }
-  //未使用
   calculateOpacity() {
     let opacity = 1.0;
     let element = this;
@@ -283,6 +282,11 @@ class RenderedElement extends Element {
   getBaseClass() {
     return RenderedElement;
   }
+  /**
+   * @description: 描述点组的丰富度
+   * @param {*} number
+   * @return {*}
+   */
   getInsertGeometryPoint(number){
     return number
   }

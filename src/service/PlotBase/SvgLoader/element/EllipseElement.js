@@ -1,28 +1,28 @@
 /*
  * @Author: your name
  * @Date: 2021-11-03 09:47:16
- * @LastEditTime: 2021-11-15 10:05:01
+ * @LastEditTime: 2022-05-10 17:13:59
  * @LastEditors: Do not edit
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\CircleElement.js
  */
-import Point from "../../../PlotUtilBase/Geometry/Point.js";
-import PathElement from "./PathElement.js";
 import { EllipseCurve } from "../../../PlotUtilBase/Curves";
+import  CircleElement  from "./CircleElement.js";
 
-export default class CircleElement extends PathElement {
+export default class EllipseElement extends CircleElement {
   constructor(node) {
     super(node);
-    this.type = "circle";
+    this.type = "ellipse";
   }
   _getCoords(matrix) {
     const cx = this.getAttribute("cx").getPixels("x");
     const cy = this.getAttribute("cy").getPixels("y");
-    const r = this.getAttribute("r").getPixels();
+    const rx = this.getAttribute("rx").getPixels();
+    const ry = this.getAttribute("ry").getPixels();
 
     const pathArr = [];
 
-    pathArr.push(new EllipseCurve(cx, cy, r, r).getPoints(this.getInsertGeometryPoint(40)));
+    pathArr.push(new EllipseCurve(cx, cy, rx, ry).getPoints(this.getInsertGeometryPoint(40)));
 
     for (let i = 0; i < pathArr.length; i += 1) {
       for (let j = 0; j < pathArr[i].length; j += 1) {
@@ -32,13 +32,4 @@ export default class CircleElement extends PathElement {
     return pathArr;
   }
 
-  getOriginPoint() {
-    const cx = this.getAttribute("cx").getPixels("x");
-    const cy = this.getAttribute("cy").getPixels("y");
-    const origin = super.getOriginPoint();
-    if (origin) {
-      return origin;
-    }
-    return new Point(cx, cy);
-  }
 }

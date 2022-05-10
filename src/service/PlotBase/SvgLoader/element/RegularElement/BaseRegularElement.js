@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 15:12:35
- * @LastEditTime: 2022-03-14 13:34:02
+ * @LastEditTime: 2022-05-10 16:10:26
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularElement\BaseRegularElement.js
@@ -16,7 +16,6 @@ import MainElement from "../extend/MainElement";
 import BasePlotElement from "../BasePlotElement";
 import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
 import TSpanElement from "../TSpanElement";
-import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 
 export default class BaseRegularElement extends BasePlotElement {
   constructor(node) {
@@ -122,8 +121,7 @@ export default class BaseRegularElement extends BasePlotElement {
 
   /**
    * @description: 作用线宽
-   * @param {*}
-   * @return {*}
+   * @param {object}  child 子节点
    */
   _applyScaleWidth(child) {
     // 作用随图缩放线宽
@@ -306,8 +304,6 @@ export default class BaseRegularElement extends BasePlotElement {
 
   /**
    * @description: 计算真实外包边界
-   * @param {*}
-   * @return {*}
    */
   getBounds() {
     const _bounds = new Bounds();

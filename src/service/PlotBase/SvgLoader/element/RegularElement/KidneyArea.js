@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-02 15:16:15
- * @LastEditTime: 2022-02-24 11:39:59
+ * @LastEditTime: 2022-05-10 17:08:03
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Object\RegularElement\RegularSurface.ts
@@ -10,7 +10,6 @@ import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
 import Point from "../../../../PlotUtilBase/Geometry/Point";
 import {calculatePolygonGravityCenter} from "../../../../PlotUtilBase/Math/MathUtils";
 import BaseRegularElement from "./BaseRegularElement";
-import TSpanElement from "../TSpanElement";
 import MainBorderElement from "../extend/MainBorderElement";
 import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 import Bounds from "../../../../PlotUtilBase/Geometry/Bound";
@@ -255,7 +254,10 @@ export default class KidneyArea extends BaseRegularElement {
   setPoints(points, options) {
     super.setPoints(points, options);
     if (this.poly.length > 1) {
-      this.mainBorder = new Spline(this.poly, true);
+      this.mainBorder = new Spline(this.poly,{
+        close:true,
+        maxPoint:this.getInsertGeometryPoint(10)
+      });
       this.traverChildren();
     }
   }
