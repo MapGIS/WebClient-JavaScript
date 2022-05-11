@@ -6,7 +6,6 @@ import Path2D from './Path2D';
 
 export default class MultiArrow {
   constructor(options) {
-    this.ctrlpnts = options.ctrlpnts || []
     this.MIN_PTCNT_PERARROW = 3
     this.MIN_GEOPT_CNT = 2
     this.ATL_DIV_ABL_1 = 0.18
@@ -25,6 +24,7 @@ export default class MultiArrow {
     this.SV2_defaultAYPosScale = 0.65
     this.ctrlpnts = []
     this.scaleValues = []
+    this.ctrlpnts = options.ctrlpnts || []
   }
 
   generateArrowBody(pnts, e, h) {
@@ -446,6 +446,9 @@ export default class MultiArrow {
 
   calculate() {
     const pnts = this.correectCtrlPnts(this.ctrlpnts)
+    console.log('this: ', this);
+    console.log('this.ctrlpnts: ', this.ctrlpnts);
+    
     const pntNum = pnts.length
     if (pntNum < 3) return pnts
     const arrNum = Math.floor(pntNum / this.MIN_PTCNT_PERARROW)

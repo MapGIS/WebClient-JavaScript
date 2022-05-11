@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 16:32:53
+ * @LastEditTime: 2022-05-10 17:31:12
  */
 import { fabric } from "fabric";
 import  PlotRegularObject  from "./PlotRegularObject";
@@ -33,4 +33,4 @@ const PlotRegularPoint = fabric.util.createClass(PlotRegularObject, {
 });
 
 fabric.PlotRegularPoint = PlotRegularPoint;
-export default PlotRegularObject
+export default PlotRegularPoint

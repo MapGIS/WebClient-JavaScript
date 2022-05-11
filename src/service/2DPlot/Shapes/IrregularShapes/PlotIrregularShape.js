@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-18 15:08:54
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 16:33:36
+ * @LastEditTime: 2022-05-11 09:54:22
  */
 import { fabric } from "fabric";
 import  PlotPolylineObject  from "../PlotPolylineObject";

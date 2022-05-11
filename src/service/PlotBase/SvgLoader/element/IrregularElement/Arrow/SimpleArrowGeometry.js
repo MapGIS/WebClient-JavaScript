@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-18 10:17:39
- * @LastEditTime: 2021-11-09 13:37:53
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-11 10:23:54
+ * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\Arrow\SimpleArrow.js
  */

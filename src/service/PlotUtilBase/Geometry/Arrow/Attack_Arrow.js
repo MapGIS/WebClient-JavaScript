@@ -2,8 +2,8 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 13:35:50
- * @LastEditTime: 2021-11-08 17:00:54
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-11 10:17:52
+ * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Geometry\Attack_Arrow.js
  */
