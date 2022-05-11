@@ -1,188 +1,142 @@
 /*
- * @Description:
+ * @Description: plotLayer
  * @Author: zk
- * @Date: 2021-11-15 17:47:45
+ * @Date: 2022-05-11 19:05:03
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 17:05:14
+ * @LastEditTime: 2022-05-11 20:46:18
  */
-import { fabric } from "fabric";
-import  {DrawPlotObjectFactory2D}  from "./Draw/DrawPlotObjectFactory2D";
-import  {PlotObjectFactory}  from "./Shapes/PlotObjectFactory";
-import  SymbolManager  from "../PlotBase/SymbolManager/SymbolManager";
-import FabricLineUtil from "./EditTool/FabricLineUtil";
+import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
+import { PlotObjectFactory } from './Shapes/PlotObjectFactory';
+import { createGuid } from "../PlotUtilBase/Util/Guid";
+import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 
-export const PlotCanvas = fabric.util.createClass(fabric.Canvas, {
+export default class PlotCanvas {
+    constructor() {
+        // 标绘对象
+        this.m_plotObjects = [];
+        // fabricCanvas
+        this._fabricCanvas=null
+        // uuid
+        this._layerId= createGuid()
+    }
 
-  m_CoordSys: null,
-  selection: false,
+    /**
+     * set given CoordSystem on PlotCanvas
+     * @param {CoordSystem} coordSys CoordSystem to set
+     * @return {void}
+     */
+    setCoordSys(coordSys) {
+        this.m_CoordSys = coordSys;
+    }
 
-  /**
-   * Constructor
-   * @param {HTMLElement | String} el &lt;canvas> element to initialize instance on
-   * @param {Object} [options] Options object
-   * @return {Object} thisArg
-   */
-  initialize: function (el, options) {
-    this.callSuper("initialize", el, options);
-    // 更新触发事件
-    this.on("object:modified", (event) => {
-      const target = event.target;
-      if (target && target.getElement) {
-        const ele = target.getElement();
+    /**
+     * returns current CoordSystem
+     * @return {CoordSystem} current CoordSystem
+     */
+    getCoordSys() {
+        return this.m_CoordSys;
+    }
 
-        if (event.action === "rotate") {
-          if (ele.tranAngle || ele.tranAngle === 0) {
-            ele.tranAngle = target.angle;
-          }
+    DrawSymbol(symbol) {
+        if (this.drawTool) {
+            this.drawTool.disable();
         }
-        if (
-          event.action === "scale" ||
-          event.action === "scaleX" ||
-          event.action === "scaleY"
-        ) {
-          if (ele.setTranSize) {
-            ele.setTranSize(target.scaleX, target.scaleY);
-          }
+        this.drawTool = DrawPlotObjectFactory2D.createInstance(symbol.type, this, symbol);
+        if (this.drawTool) {
+            this.drawTool.enable();
         }
-      }
-    });
-    // 修改lineUtil
-    new FabricLineUtil(this)
-  },
-  /**
-   * set given CoordSystem on PlotCanvas
-   * @param {CoordSystem} coordSys CoordSystem to set
-   * @return {void}
-   */
-  setCoordSys: function setCoordSys(coordSys) {
-    this.m_CoordSys = coordSys;
-  },
-  /**
-   * returns current CoordSystem
-   * @return {CoordSystem} current CoordSystem
-   */
-  getCoordSys: function getCoordSys() {
-    return this.m_CoordSys;
-  },
-
-  DrawSymbol: function DrawSymbol(symbol) {
-    if (this.drawTool) {
-      this.drawTool.disable();
+        return this.drawTool;
     }
-    this.drawTool = DrawPlotObjectFactory2D.createInstance(
-      symbol.type,
-      this,
-      symbol
-    );
-    if (this.drawTool) {
-      this.drawTool.enable();
+    addPlotObjectBy3DPlotObj(plotObj3D) {
+        const element = plotObj3D.getElement();
+
+        const plotObj = PlotObjectFactory.createInstance(element.type, {
+            element: element,
+            positions: element.positions,
+            canvas: this
+        });
+
+        this.add(plotObj);
+        return plotObj;
     }
-    return this.drawTool;
-  },
-  addPlotObjectBy3DPlotObj(plotObj3D) {
-    const element = plotObj3D.getElement();
-
-    const plotObj = PlotObjectFactory.createInstance(element.type, {
-      element: element,
-      positions: element.positions,
-      canvas: this,
-    });
-
-    this.add(plotObj);
-    return plotObj;
-  },
-
-  /**
-   * @description: 根据uid获取对象
-   * @param {*} uid
-   * @return {*}
-   */
-  getPlotObjectByUid(uid) {
-    let t;
-    this.forEachObject((s) => {
-      const elem = s.getElement();
-      if (elem && elem.getFeatureId() === uid) {
-        t = s;
-      }
-    });
-    return t;
-  },
-
-  toGeoJSON: function toGeoJSON() {
-    const base = {
-      type: "FeatureCollection",
-      features: [],
-    };
-    this.forEachObject((s) => {
-      if (s.toGeoJSON) {
-        base.features.push(s.toGeoJSON());
-      }
-    });
-    return base;
-  },
-  // eslint-disable-next-line no-unused-vars
-  fromGeoJSON: function fromGeoJSON(geoJson) {
-    if (geoJson.type === "FeatureCollection") {
-      const { features } = geoJson;
-      features.forEach((s) => {
-        this.addGeoJSONObject(s);
-      });
-    } else {
-      // eslint-disable-next-line no-new
-      new Error("GeoJSON类型错误，传入值非要素集！");
+    add(plotObj) {
+        this.m_plotObjects.push(plotObj);
+        if(this._fabricCanvas){
+            this._fabricCanvas.add(plotObj)
+        }
     }
-  },
-async  addGeoJSONObject(geoFeature) {
-    // 1、element
-    const id = geoFeature.properties.symbolId;
-    const symbolManager = SymbolManager.instance;
 
-    const leaf = symbolManager.getLeafByID(id);
-
-    const element =await leaf.getElement()
-    const plotObj = PlotObjectFactory.createInstance(element.type, {
-      element,
-      positions: element.positions,
-      canvas: this,
-    });
-
-    plotObj.fromGeoJSON(geoFeature);
-
-    this.add(plotObj);
-  },
-
-
-  /* 
-  tip:改写方法
-   修改宽度和高度并刷新,原有方法 setDimensions设置高宽时会触发 requestRenderAll()
-   在二三维联动时三维会频繁发送事件，二维界面会出现闪烁，因此改写为立即触发render
-  */
-  setCanvasDimensionsSize: function (dimensions, options) {
-    var cssValue;
-
-    options = options || {};
-
-    for (var prop in dimensions) {
-      cssValue = dimensions[prop];
-
-      if (!options.cssOnly) {
-        this._setBackstoreDimension(prop, dimensions[prop]);
-        cssValue += "px";
-        this.hasLostContext = true;
-      }
-
-      if (!options.backstoreOnly) {
-        this._setCssDimension(prop, cssValue);
-      }
+    /**
+     * @description: 根据uid获取对象
+     * @param {*} uid
+     * @return {*}
+     */
+    getPlotObjectByUid(uid) {
+        let t;
+        this.m_plotObjects.forEach((s) => {
+            const elem = s.getElement();
+            if (elem && elem.getFeatureId() === uid) {
+                t = s;
+            }
+        });
+        return t;
     }
-    if (this._isCurrentlyDrawing) {
-      this.freeDrawingBrush && this.freeDrawingBrush._setBrushStyles();
+
+    toGeoJSON() {
+        const base = {
+            type: 'FeatureCollection',
+            features: []
+        };
+        this.m_plotObjects.forEach((s) => {
+            if (s.toGeoJSON) {
+                base.features.push(s.toGeoJSON());
+            }
+        });
+        return base;
     }
-    this._initRetinaScaling();
-    this.calcOffset();
+    // eslint-disable-next-line no-unused-vars
+    fromGeoJSON(geoJson) {
+        if (geoJson.type === 'FeatureCollection') {
+            const { features } = geoJson;
+            features.forEach((s) => {
+                this.addGeoJSONObject(s);
+            });
+        } else {
+            // eslint-disable-next-line no-new
+            new Error('GeoJSON类型错误，传入值非要素集！');
+        }
+    }
 
-    return this;
-  },
-});
+    async addGeoJSONObject(geoFeature) {
+        // 1、element
+        const id = geoFeature.properties.symbolId;
+        const symbolManager = SymbolManager.instance;
 
-fabric.PlotCanvas = PlotCanvas;
+        const leaf = symbolManager.getLeafByID(id);
+
+        const element = await leaf.getElement();
+        const plotObj = PlotObjectFactory.createInstance(element.type, {
+            element,
+            positions: element.positions,
+            canvas: this
+        });
+
+        plotObj.fromGeoJSON(geoFeature);
+
+        this.add(plotObj);
+    }
+
+    setFabricCanvas(fabricCanvas){
+        this._fabricCanvas=fabricCanvas
+    }
+    getFabricCanvas(){
+        return this._fabricCanvas
+    }
+
+    getPlotObjects(){
+        return this.m_plotObjects
+    }
+    getLayerId(){
+       return this._layerId
+    }
+}

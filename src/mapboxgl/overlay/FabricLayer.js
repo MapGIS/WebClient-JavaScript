@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-04-25 20:08:02
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-27 15:09:26
+ * @LastEditTime: 2022-05-11 14:46:00
  */
 import mapboxgl from '@mapgis/mapbox-gl';
 import { PlotMapCoordSys } from './fabric/PlotMapCoordSys';
@@ -14,7 +14,7 @@ export class FabricLayer {
      * @description: 构造
      * @param {Object} map mapboxglmap
      * @param {Function} fabricClass fabric图层
-     * @param {Object} fabricOptions fabric图层
+     * @param {Object} fabricOptions fabric图层选项
      */
     constructor(map, fabricClass, fabricOptions) {
         const m_fabricOptions = fabricOptions || {};

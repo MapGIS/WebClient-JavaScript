@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-17 16:12:55
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 09:53:26
+ * @LastEditTime: 2022-05-11 15:00:36
  */
 
 import { fabric } from "fabric";
@@ -147,6 +147,7 @@ const PlotRegularObject = fabric.util.createClass(PlotPolylineObject, {
   },
   _render(ctx) {
     if (this.m_coordsPx.length < 2 || !this._elem.show) return;
+    console.log('111111111')
     this._comparePathElementRender(ctx);
     this._pathElementRender(ctx);
     this._spanElementRender(ctx);

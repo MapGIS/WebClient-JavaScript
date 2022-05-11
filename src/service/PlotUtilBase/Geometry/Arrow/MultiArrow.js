@@ -445,10 +445,7 @@ export default class MultiArrow {
   }
 
   calculate() {
-    const pnts = this.correectCtrlPnts(this.ctrlpnts)
-    console.log('this: ', this);
-    console.log('this.ctrlpnts: ', this.ctrlpnts);
-    
+    const pnts = this.correectCtrlPnts(this.ctrlpnts)  
     const pntNum = pnts.length
     if (pntNum < 3) return pnts
     const arrNum = Math.floor(pntNum / this.MIN_PTCNT_PERARROW)

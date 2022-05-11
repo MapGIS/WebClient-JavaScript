@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-17 13:54:10
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 16:57:02
+ * @LastEditTime: 2022-05-11 19:14:48
  */
 import  DrawObject  from "../../PlotBase/Draw/DrawObject";
 import  Point  from "../../PlotUtilBase/Geometry/Point";
@@ -25,7 +25,7 @@ export default class DrawPoint2D extends DrawObject {
   }
 
   removeHooks() {
-    this.m_fabricCanvas.interactive = true;
+    this.m_fabricCanvas.interactive = false;
     this.m_fabricCanvas.off("mouse:up", this.onMouseUp);
     super.removeHooks();
   }

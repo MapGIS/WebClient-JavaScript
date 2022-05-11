@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 11:04:30
- * @LastEditTime: 2022-04-01 09:20:40
+ * @LastEditTime: 2022-05-11 14:04:28
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\PlotCanvas3D.js
@@ -92,7 +92,7 @@ export default class PlotCanvas3D extends Observable {
   }
 
   addPrimitiveBy2DPlotObj(plotObj2D) {
-    const element = plotObj2D.getElement();
+    const element = plotObj2D.getElement()
 
     const primitive = PrimitiveFactory.createInstance(element.type, {
       positions: element.positions,

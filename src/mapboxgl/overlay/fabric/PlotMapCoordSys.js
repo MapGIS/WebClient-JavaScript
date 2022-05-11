@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-04-26 09:05:34
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-26 14:49:40
+ * @LastEditTime: 2022-05-11 13:53:18
  */
 
 /**
@@ -46,3 +46,17 @@ PlotMapCoordSys.prototype.getScale = function getScale() {
   const n=this.m_mapboxMap.getZoom()
   return  256* Math.pow(2,n);
 };
+
+/**
+ * @description: 获取地图边界
+ * @return {Array<Array<number>>} 边界
+ */
+PlotMapCoordSys.prototype.getBounds= function getBounds(){
+   /**
+    * toArray方法
+    * var llb = new mapboxgl.LngLatBounds([-73.9876, 40.7661], [-73.9397, 40.8002]);
+      llb.toArray(); // = [[-73.9876, 40.7661], [-73.9397, 40.8002]]
+    */
+    const lnglatBounds= this.m_mapboxMap.getBounds().toArray()
+    return lnglatBounds
+}

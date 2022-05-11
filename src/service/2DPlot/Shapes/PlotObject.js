@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-05 11:32:52
- * @LastEditTime: 2022-05-10 16:29:40
+ * @LastEditTime: 2022-05-11 16:02:33
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlot\src\js\Shapes\PlotObject.js
@@ -22,6 +22,24 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
   _elemPropsUpdateHandler(event) {
     this.set("dirty", true);
   },
+  _isInMapBounds: function _isInMapBounds(positions){
+    const mapBounds= this.getCoordSys().getBounds()
+    let flag=false
+
+    const nw = mapBounds[0]
+    const es = mapBounds[1]
+
+    for(let i=0;i<positions.length;i++){
+      const x= positions[i].x
+      const y= positions[i].y
+    
+      if(x>nw[0]&&x<es[0]&&y<es[1]&&y>nw[1]){
+        flag=true
+        break
+      }
+    }
+     return flag
+  },
   setPnts(latlngs) {
     this._elem.positions = _.cloneDeep(latlngs);
     this.dataToPoint();
@@ -33,6 +51,7 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
   dataToPoint: function dataToPoint() {
     const coordSys = this.getCoordSys();
     const { positions } = this._elem;
+
     this.m_coordsPx = [];
     for (let i = 0; i < positions.length; i += 1) {
       const pntPx = coordSys.dataToPoint([positions[i].x,positions[i].y]);
