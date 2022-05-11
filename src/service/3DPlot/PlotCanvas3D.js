@@ -161,22 +161,23 @@ export default class PlotCanvas3D extends Observable {
     }
   }
   addGeoJSONObject(geoFeature) {
+    let that = this;
     const id = geoFeature.properties.symbolId;
 
     const symbolManager = SymbolManager.instance;
 
     const leaf = symbolManager.getLeafByID(id);
 
-    const element = leaf.getElement();
+    leaf.getElement().then(function (element) {
+      const primitive = PrimitiveFactory.createInstance(element.type, {
+        positions: element.positions,
+        element,
+      });
 
-    const primitive = PrimitiveFactory.createInstance(element.type, {
-      positions: element.positions,
-      element,
+      primitive.fromGeoJSON(geoFeature);
+
+      that.addPrimitive(primitive);
     });
-
-    primitive.fromGeoJSON(geoFeature);
-
-    this.addPrimitive(primitive);
   }
   /**
    * @description: 根据uid获取对象
