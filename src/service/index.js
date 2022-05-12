@@ -37,7 +37,7 @@ import ArcGis from './ArcGis';
 import SymbolManager from "./PlotBase/index"
 import { PlotCanvas } from './2DPlot/index';
 import { PlotCanvasGroup } from './2DPlot/PlotCanvasGroup'
-import {PlotCanvas3D} from "./3DPlot/index"
+import {PlotLayer3D,PlotLayerMap,DrawTool} from "./3DPlot/index"
 
 
 export {
@@ -64,7 +64,9 @@ export {
     SymbolManager,
     PlotCanvas,
     PlotCanvasGroup,
-    PlotCanvas3D
+    PlotLayer3D,
+    PlotLayerMap,
+    DrawTool
 };
 //-------命名空间 Zondy 结束-----
 
@@ -95,7 +97,9 @@ const All = {
     CloudDisk,
     ArcGis,
     SymbolManager,
-    PlotCanvas3D
+    PlotLayer3D,
+    PlotLayerMap,
+    DrawTool
     //-------命名空间 Zondy 结束-----
 };
 

@@ -99,62 +99,78 @@ export default class LineEditTool {
   }
 
   _onLeftDown(event) {
-    if (!defined(this._pickedPrimitive)) return;
-
+    let that = this;
     const pick = this._plotViewer.pick(event.position);
     if (!defined(pick)) return;
 
-    if (!(pick.id === "LineEditToolCtrlPnts")) return;
+    let {primitive} = pick;
 
-    this._pickedBillboard = pick.primitive;
-    this._plotViewer.disableCameraInputs();
-    this._dragging = true;
+    // if (defined(primitive) && defined(pick.pickedPrimitive)) {
+    //   let {positions} = pick.pickedPrimitive;
+    //   if (defined(positions) && positions instanceof Array) {
+    //     axios.get("assets/point.svg").then(() => {
+    //       let billboards = new Cesium.BillboardCollection();
+    //       for (let i = 0; i < positions.length; i++) {
+    //         billboards.add({
+    //           position: position[i],
+    //           image: "assets/point.svg",
+    //           sizeInMeters: true,
+    //           id: "LineEditToolCtrlPnts_" + i,
+    //         });
+    //       }
+    //       that._scene.primitives.add(billboards);
+    //     });
+    //   }
+    // }
+    // this._pickedBillboard = pick.primitive;
+    // this._plotViewer.disableCameraInputs();
+    // this._dragging = true;
   }
 
   _onMouseMove(event) {
-    if (!this._dragging) return;
-
-    const viewer = this._plotViewer.getViewer();
-    const index = this._pickedBillboard.positionIndex;
-
-    const { positions } = this._pickedPrimitive;
-    const endPosition = CesiumUtil.windowCoordToCartesian3(
-      viewer,
-      event.endPosition
-    );
-
-    let cartographic = undefined;
-    // 控制点移除边界外，导致无法获取点
-    try {
-      cartographic = Cesium.Cartographic.fromCartesian(endPosition);
-    } catch(e) {
-      cartographic = undefined;
-    }
-    if (!cartographic) return;
-
-    const billboardPos = Cesium.Cartesian3.fromDegreesArrayHeights([
-      Cesium.Math.toDegrees(cartographic.longitude),
-      Cesium.Math.toDegrees(cartographic.latitude),
-      503,
-    ]);
-
-    // eslint-disable-next-line prefer-destructuring
-    this._pickedBillboard.position = billboardPos[0];
-
-    positions[index] = CesiumUtil.cartesian3ToDegrees(
-      viewer.scene.globe.ellipsoid,
-      endPosition
-    );
-
-    this._pickedPrimitive.positions = positions;
+    // if (!this._dragging) return;
+    //
+    // const viewer = this._plotViewer.getViewer();
+    // const index = this._pickedBillboard.positionIndex;
+    //
+    // const { positions } = this._pickedPrimitive;
+    // const endPosition = CesiumUtil.windowCoordToCartesian3(
+    //   viewer,
+    //   event.endPosition
+    // );
+    //
+    // let cartographic = undefined;
+    // // 控制点移除边界外，导致无法获取点
+    // try {
+    //   cartographic = Cesium.Cartographic.fromCartesian(endPosition);
+    // } catch(e) {
+    //   cartographic = undefined;
+    // }
+    // if (!cartographic) return;
+    //
+    // const billboardPos = Cesium.Cartesian3.fromDegreesArrayHeights([
+    //   Cesium.Math.toDegrees(cartographic.longitude),
+    //   Cesium.Math.toDegrees(cartographic.latitude),
+    //   503,
+    // ]);
+    //
+    // // eslint-disable-next-line prefer-destructuring
+    // this._pickedBillboard.position = billboardPos[0];
+    //
+    // positions[index] = CesiumUtil.cartesian3ToDegrees(
+    //   viewer.scene.globe.ellipsoid,
+    //   endPosition
+    // );
+    //
+    // this._pickedPrimitive.positions = positions;
   }
 
   _onLeftUp(event) {
 
-    if (!this._dragging) return;
-
-    this._plotViewer.enableCameraInputs();
-    this._dragging = false;
+    // if (!this._dragging) return;
+    //
+    // this._plotViewer.enableCameraInputs();
+    // this._dragging = false;
   }
 
   enable() {

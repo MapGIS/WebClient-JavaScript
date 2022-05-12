@@ -7,7 +7,7 @@ class PlotLayerMap {
   constructor() {
     this._plotLayerMap = [];
 
-    if(!PlotLayerMap.instance){
+    if (!PlotLayerMap.instance) {
       PlotLayerMap.instance = this;
     }
 
@@ -15,15 +15,41 @@ class PlotLayerMap {
   }
 
   /**
-   * @function module: module:3DPlot.addLayer
-   * @description 添加点坐标，可以为[x,y]坐标或者ArcGisPoint对象
-   * @param point - {ArcGisPoint} 必选项，要查询的多边形序号，可为点坐标数组或者坐标或者ArcGisPoint对象数组。
+   * @function module:3DPlot.addLayer
+   * @description 添加图层至图层组
+   * @param layer - {PlotLayer} 必选项，要添加图层。
    */
   addLayer(layer) {
-    this._plotLayerMap.push()
+    this._plotLayerMap.push(layer);
   }
-  removeLayer() {}
-  removeLayerById() {}
+
+  /**
+   * @function module:3DPlot.removeLayer
+   * @description 从图层组删除图层
+   * @param layer - {PlotLayer} 必选项，要删除的图层。
+   */
+  removeLayer(layer) {
+    if(!layer) return;
+    const {id} = layer;
+
+    if(id){
+      this.removeLayerById(id);
+    }
+  }
+
+  /**
+   * @function module:3DPlot.removeLayerById
+   * @description 根据图层ID从图层组删除图层
+   * @param id - {String} 必选项，要删除的图层ID。
+   */
+  removeLayerById(id) {
+    for (let i = 0; i < this._plotLayerMap.length; i++) {
+      if (id === this._plotLayerMap[i].id) {
+        this._plotLayerMap.splice(i, 1);
+        break;
+      }
+    }
+  }
 }
 
 PlotLayerMap.instance = null;
