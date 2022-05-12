@@ -3,7 +3,7 @@ import SymbolManager from "../../service/PlotBase/SymbolManager/SymbolManager";
 import {DrawPlotObjectFactory3D} from "./Draw";
 import {CesiumUtil} from "./Utils/CesiumUtil";
 import Observable from "../../service/PlotUtilBase/Observable";
-import LineEditTool from "./EditTool/LineEditTool";
+import EditTool from "./EditTool/EditTool";
 import {PrimitiveFactory} from "./Primitive/PrimitiveFactory";
 
 /**
@@ -11,15 +11,17 @@ import {PrimitiveFactory} from "./Primitive/PrimitiveFactory";
  * @description 行业标绘图层
  * @author 基础平台-杨琨
  */
-export default class PlotLayer3D extends Observable {
+class PlotLayer3D extends Observable {
   constructor(Cesium, viewer) {
     super();
     //viewer对象
     this._viewer = viewer;
     //标绘图元列表
     this._plotList = [];
-    // const linEditTool = new LineEditTool(this);
-    // linEditTool.enable();
+    //图元可否编辑
+    this._editable = false;
+    //编辑工具
+    this._editTool = new EditTool(this);
   }
 
   /**
@@ -181,3 +183,20 @@ export default class PlotLayer3D extends Observable {
     tag.click();
   }
 }
+
+Object.defineProperties(PlotLayer3D.prototype, {
+  editable: {
+    get: function () {
+      return this._editable;
+    },
+    set: function (value) {
+      this._editable = value;
+      //启用编辑工具
+      if(this._editable) {
+        this._editTool.enable();
+      }
+    }
+  }
+});
+
+export default PlotLayer3D;
