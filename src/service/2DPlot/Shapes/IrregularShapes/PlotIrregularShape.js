@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-18 15:08:54
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 09:54:22
+ * @LastEditTime: 2022-05-12 15:52:44
  */
 import { fabric } from "fabric";
 import  PlotPolylineObject  from "../PlotPolylineObject";
@@ -46,7 +46,6 @@ import  PlotPolylineObject  from "../PlotPolylineObject";
     }
   },
   _render(ctx) {
-    if (!this._elem.show) return;
     const coords = this._elem.cacheCoords || this._elem.getCoords();
     this._comparePathElementRender(ctx, coords);
     this._pathElementRender(ctx, coords);

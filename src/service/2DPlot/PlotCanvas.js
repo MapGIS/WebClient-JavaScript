@@ -3,11 +3,11 @@
  * @Author: zk
  * @Date: 2022-05-11 19:05:03
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 20:46:18
+ * @LastEditTime: 2022-05-12 17:11:21
  */
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
 import { PlotObjectFactory } from './Shapes/PlotObjectFactory';
-import { createGuid } from "../PlotUtilBase/Util/Guid";
+import { createGuid } from '../PlotUtilBase/Util/Guid';
 import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 
 export default class PlotCanvas {
@@ -15,24 +15,76 @@ export default class PlotCanvas {
         // 标绘对象
         this.m_plotObjects = [];
         // fabricCanvas
-        this._fabricCanvas=null
+        this._fabricCanvas = null;
         // uuid
-        this._layerId= createGuid()
+        this._layerId = createGuid();
+        //  visible
+        this._visible = true;
+        // event
+        this._objectModifiedEventAction = this._objectModifiedEventAction.bind(this);
+        this._eventHandlers=[]
+    }
+    bindFabricCanvas(fabricCanvas) {
+        this.bindEvent(fabricCanvas);
+        this.setFabricCanvas(fabricCanvas);
+    }
+    removeFabricCanvas() {
+        this.removeEvent();
+        this.setFabricCanvas(null);
     }
 
-    /**
-     * set given CoordSystem on PlotCanvas
-     * @param {CoordSystem} coordSys CoordSystem to set
-     * @return {void}
-     */
+    bindEvent(fabricCanvas) {
+        // 更新触发事件
+        fabricCanvas.on('object:modified', this._objectModifiedEventAction);
+    }
+    removeEvent() {
+        this._fabricCanvas && this._fabricCanvas.off('object:modified', this._objectModifiedEventAction);
+    }
+    _objectModifiedEventAction(event) {
+        const target = event.target;
+        if (this.m_plotObjects.indexOf(target) === -1) {
+            return;
+        }
+        if (target && target.getElement) {
+            const ele = target.getElement();
+
+            if (event.action === 'rotate') {
+                if (ele.tranAngle || ele.tranAngle === 0) {
+                    ele.tranAngle = target.angle;
+                }
+            }
+            if (event.action === 'scale' || event.action === 'scaleX' || event.action === 'scaleY') {
+                if (ele.setTranSize) {
+                    ele.setTranSize(target.scaleX, target.scaleY);
+                }
+            }
+        }
+    }
+    on(eventName,handler){
+        const t= this._createHandler(handler).bind(this)
+        this._eventHandlers.push({eventName,handler:t})
+        this._fabricCanvas.on(eventName,t)
+    }
+    off(eventName){
+       this._eventHandlers.forEach((s)=>{
+        if(s.eventName===eventName){
+            this._fabricCanvas.off(s.eventName,s.handler)
+        } 
+       })
+    }
+    _createHandler(handler){
+        return (event)=>{
+            const target = event.target;
+            if (this.m_plotObjects.indexOf(target) === -1) {
+                return;
+            }
+            handler(event)
+        }
+    }
     setCoordSys(coordSys) {
         this.m_CoordSys = coordSys;
     }
 
-    /**
-     * returns current CoordSystem
-     * @return {CoordSystem} current CoordSystem
-     */
     getCoordSys() {
         return this.m_CoordSys;
     }
@@ -61,17 +113,24 @@ export default class PlotCanvas {
     }
     add(plotObj) {
         this.m_plotObjects.push(plotObj);
-        if(this._fabricCanvas){
-            this._fabricCanvas.add(plotObj)
+        if (this._fabricCanvas) {
+            this._fabricCanvas.add(plotObj);
         }
     }
-
-    /**
-     * @description: 根据uid获取对象
-     * @param {*} uid
-     * @return {*}
-     */
-    getPlotObjectByUid(uid) {
+    remove(plotObj) {
+        const i = this.m_plotObjects.indexOf(plotObj);
+        if (i > -1) {
+            this.m_plotObjects.splice(i, 0);
+        }
+        if (this._fabricCanvas) {
+            this._fabricCanvas.remove(plotObj);
+        }
+    }
+    removeById(id) {
+        const plotObject = this.getPlotObjectById(id);
+        this.remove(plotObject);
+    }
+    getPlotObjectById(uid) {
         let t;
         this.m_plotObjects.forEach((s) => {
             const elem = s.getElement();
@@ -122,21 +181,33 @@ export default class PlotCanvas {
         });
 
         plotObj.fromGeoJSON(geoFeature);
-
         this.add(plotObj);
     }
 
-    setFabricCanvas(fabricCanvas){
-        this._fabricCanvas=fabricCanvas
+    setFabricCanvas(fabricCanvas) {
+        this._fabricCanvas = fabricCanvas;
     }
-    getFabricCanvas(){
-        return this._fabricCanvas
+    getFabricCanvas() {
+        return this._fabricCanvas;
     }
 
-    getPlotObjects(){
-        return this.m_plotObjects
+    getPlotObjects() {
+        return this.m_plotObjects;
     }
-    getLayerId(){
-       return this._layerId
+    getLayerId() {
+        return this._layerId;
+    }
+    setVisible(flag) {
+        this._visible = flag;
+        if (!flag) {
+            this.m_plotObjects.forEach((s) => {
+                s.setValue('show', false);
+            });
+        } else {
+            this.m_plotObjects.forEach((s) => {
+                s.setValue('show', true);
+            });
+        }
+        this._fabricCanvas.requestRenderAll();
     }
 }

@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-18 15:08:54
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 16:34:12
+ * @LastEditTime: 2022-05-12 15:52:43
  */
 import { fabric } from "fabric";
 import Bounds from "../../../PlotUtilBase/Geometry/Bound";
@@ -35,7 +35,6 @@ const PlotIrregularShapeByLatlng = fabric.util.createClass(
       return newBounds;
     },
     _render(ctx) {
-      if (!this._elem.show) return;
       const coordSys = this.getCoordSys();
       const _coords = this._elem.cacheCoords || this._elem.getCoords();
       const coords = _coords.map((s) =>

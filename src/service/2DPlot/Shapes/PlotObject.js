@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-05 11:32:52
- * @LastEditTime: 2022-05-11 16:02:33
+ * @LastEditTime: 2022-05-12 15:52:03
  * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlot\src\js\Shapes\PlotObject.js
@@ -105,6 +105,10 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
   },
   setValue: function setValue(key, value, ids,isWaitRender) {
     this._elem.setNodeAttr(key, value,ids);
+    // 控制是否显示
+    if(key==='show'){
+      this.visible=value
+    }
     if(isWaitRender){
       this.set("dirty", true);
     }

@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-04-25 20:08:02
  * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 14:46:00
+ * @LastEditTime: 2022-05-12 09:52:54
  */
 import mapboxgl from '@mapgis/mapbox-gl';
 import { PlotMapCoordSys } from './fabric/PlotMapCoordSys';
@@ -17,19 +17,26 @@ export class FabricLayer {
      * @param {Object} fabricOptions fabric图层选项
      */
     constructor(map, fabricClass, fabricOptions) {
-        const m_fabricOptions = fabricOptions || {};
+        if(!FabricLayer.instance){
+            const m_fabricOptions = fabricOptions || {};
+            this.map = map;
+            this.initDevicePixelRatio();
+            this.canvas = this._createCanvas();
+            this.mapContainer = map.getCanvasContainer();
+            this.mapContainer.appendChild(this.canvas);
+    
+            this.m_fabricCanvas = this._createFabricCanvas(this.canvas, fabricClass, m_fabricOptions);
+            // this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
+    
+            this.bindEvent();
+            this._reset();
 
-        this.map = map;
-        this.initDevicePixelRatio();
-        this.canvas = this._createCanvas();
-        this.mapContainer = map.getCanvasContainer();
-        this.mapContainer.appendChild(this.canvas);
-
-        this.m_fabricCanvas = this._createFabricCanvas(this.canvas, fabricClass, m_fabricOptions);
-        // this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
-
-        this.bindEvent();
-        this._reset();
+            // set fabric instance
+            FabricLayer.instance= this
+        }else{
+            return FabricLayer.instance
+        }
+       
     }
 
     initDevicePixelRatio() {
