@@ -3,6 +3,7 @@ import {Check, defined} from "../../PlotUtilBase/Check";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 import BasePlotPrimitive from "../Primitive/BasePlotPrimitive";
 import Point from "../../PlotUtilBase/Geometry/Point"
+import * as turf from "@turf/turf";
 
 /**
  * @class module:3DPlot.PlotLayer3D
@@ -19,10 +20,18 @@ export default class EditTool {
     this._scene = this._plotLayer._viewer.scene;
     //是否移动位置点
     this._isChangePoisition = false;
+    //是否改变形状
+    this._isChangeShape = false;
     //位置点的广告牌对象
     this._positionBillboards = undefined;
+    //形状控制点
+    this._shapeBillboards = undefined;
     //当前选中的标绘图元
     this._selectPlot = undefined;
+    //控制点高度
+    this._controlHeight = 0;
+    //形状控制点
+    this._shapePoint = undefined;
 
     this.onSelected = this._onSelected.bind(this);
     this.onLeftDown = this._onLeftDown.bind(this);
@@ -125,52 +134,136 @@ export default class EditTool {
       if (pointType && pointType === "positionControl") {
         that._disableCamera();
         this._isChangePoisition = true;
+      }else if (pointType && pointType === "shapeControl") {
+        that._disableCamera();
+        this._isChangeShape = true;
+        this._shapePoint = primitive;
       } else if (defined(primitive.pickedPrimitive)) {
         //是标绘图元
         let {positions} = primitive.pickedPrimitive;
         //暂存标绘图元
         that._selectPlot = primitive.pickedPrimitive;
+        //获取控制点高度
+        const {dimModHeight = 0} = that._selectPlot;
+        that._controlHeight = dimModHeight + 100;
+        //获取控制点类型
         const {type} = that._selectPlot._elem;
-        //规则点
-        if (type === "msbl_regularpoint") {
-          //设置位移点
-          if (!that._positionBillboards) {
-            let billboards = new Cesium.BillboardCollection();
-            for (let i = 0; i < positions.length; i++) {
-              billboards.add({
-                position: Cesium.Cartesian3.fromDegrees(positions[i].x, positions[i].y, 0),
-                image: "http://localhost:8895/assets/point.svg",
-                sizeInMeters: true,
-                id: "LineEditToolCtrlPnts_" + i,
-                scale: 1
-              });
+        switch (type) {
+          //规则点
+          case "msbl_regularpoint":
+            //设置位移点
+            if (!that._positionBillboards) {
+              that._setPositionControl(Cesium.Cartesian3.fromDegrees(positions[0].x, positions[0].y, that._controlHeight));
             }
-            let billboard = billboards.get(0);
-            billboard.pointType = "positionControl";
-            that._scene.primitives.add(billboards);
-            that._positionBillboards = billboards;
-          }
+            break;
+          //规则区一
+          case "msbl_regularsurface":
+          //规则区二
+          case "msbl_kidneyarea":
+          //规则线一
+          case "msbl_regularline1":
+          //规则线二
+          case "msbl_regularline2":
+          //非规则符号
+          case "msbl_AssaultArrow":
+          case "msbl_MultiArrow":
+          case "msbl_CombinationalCircle":
+          case "msbl_AntiAircraftGroup":
+          case "msbl_cannonGroup":
+          case "msbl_Kidney":
+          case "msbl_doublearrow":
+          case "msbl_singleArrow":
+          case "msbl_squadarrow":
+          case "msbl_FigureFan":
+            let cneter = this._getCenter(that._selectPlot.positions);
+            //设置位置控制点
+            that._setPositionControl(Cesium.Cartesian3.fromDegrees(cneter.geometry.coordinates[0], cneter.geometry.coordinates[1], that._controlHeight));
+            //设置几何控制点
+            //经纬度转笛卡尔坐标点
+            let newPositions = [];
+            for (let i = 0; i < positions.length; i++) {
+              newPositions.push(Cesium.Cartesian3.fromDegrees(positions[i].x, positions[i].y, that._controlHeight));
+            }
+            this._setShapeControl(newPositions);
+            break;
         }
       }
     }
   }
 
   _onMouseMove(event) {
+    //获取鼠标点的笛卡尔坐标
+    let mouseCartesian = CesiumUtil.windowCoordToCartesian3(
+      this._plotLayer._viewer,
+      event.endPosition
+    );
+    //获取上一次鼠标点的笛卡尔坐标
+    let prevMouseCartesian = CesiumUtil.windowCoordToCartesian3(
+      this._plotLayer._viewer,
+      event.startPosition
+    );
+    //转化为经纬度坐标
+    let mouseCartographic = Cesium.Cartographic.fromCartesian(mouseCartesian);
+    //设置位置点高度
+    mouseCartographic.height = 600;
+    //计算平移距离
+    let cartographicStart = Cesium.Cartographic.fromCartesian(prevMouseCartesian);
+    let cartographicEnd = Cesium.Cartographic.fromCartesian(mouseCartesian);
+    let offsetLng = Cesium.Math.toDegrees(cartographicEnd.longitude - cartographicStart.longitude);
+    let offsetLat = Cesium.Math.toDegrees(cartographicEnd.latitude - cartographicStart.latitude);
     if (this._isChangePoisition) {
       let billboard = this._positionBillboards.get(0);
-      if (this._scene.pickPosition(event.endPosition)) {
-        //获取鼠标点的笛卡尔坐标
-        let mouseCartesian = this._scene.pickPosition(event.endPosition);
-        //转化为经纬度坐标
-        let mouseCartographic = Cesium.Cartographic.fromCartesian(mouseCartesian);
-        //设置位置点高度
-        mouseCartographic.height = 0;
-        //更新位置点坐标
-        billboard.position = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(mouseCartographic.longitude), Cesium.Math.toDegrees(mouseCartographic.latitude), mouseCartographic.height);
-        //更细标绘图元位置坐标
-        let cartographic = Cesium.Cartographic.fromCartesian(this._scene.pickPosition(event.endPosition));
-        this._selectPlot.positions = [new Point(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude))];
+      const {type} = this._selectPlot._elem;
+      //更新位置点坐标
+      billboard.position = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(mouseCartographic.longitude), Cesium.Math.toDegrees(mouseCartographic.latitude), mouseCartographic.height);
+      //更新标绘图元位置坐标
+      switch (type) {
+        //规则点一
+        case "msbl_regularpoint":
+          let cartographic = Cesium.Cartographic.fromCartesian(mouseCartesian);
+          this._selectPlot.positions = [new Point(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude))];
+          break;
+        //规则区一
+        case "msbl_regularsurface":
+        //规则区二
+        case "msbl_kidneyarea":
+        //规则线一
+        case "msbl_regularline1":
+        //规则线二
+        case "msbl_regularline2":
+        //非规则符号
+        case "msbl_MultiArrow":
+        case "msbl_CombinationalCircle":
+        case "msbl_AntiAircraftGroup":
+        case "msbl_cannonGroup":
+        case "msbl_Kidney":
+        case "msbl_doublearrow":
+        case "msbl_singleArrow":
+        case "msbl_squadarrow":
+        case "msbl_FigureFan":
+          //形状控制点
+          let shapeBillboards = this._shapeBillboards;
+          //平移图元和形状控制点
+          let newPositions = [];
+          let positions = this._selectPlot.positions;
+          for (let i = 0; i < positions.length; i++) {
+            let shapePoint = shapeBillboards.get(i);
+            shapePoint.position = Cesium.Cartesian3.fromDegrees(positions[i].x + offsetLng, positions[i].y + offsetLat, 600);
+            newPositions.push(new Point(positions[i].x + offsetLng, positions[i].y + offsetLat));
+          }
+          this._selectPlot.positions = newPositions;
+          break;
       }
+    }else if(this._isChangeShape){
+      let {pointIndex} = this._shapePoint;
+      this._shapePoint.position = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(mouseCartographic.longitude), Cesium.Math.toDegrees(mouseCartographic.latitude), 600);
+      let positions = this._selectPlot.positions, newPositions = [];
+      for (let i = 0; i < positions.length; i++) {
+        newPositions.push(new Point(positions[i].x, positions[i].y));
+      }
+      newPositions[pointIndex].x += offsetLng;
+      newPositions[pointIndex].y += offsetLat;
+      this._selectPlot.positions = newPositions;
     }
     // if (!this._dragging) return;
     //
@@ -212,6 +305,10 @@ export default class EditTool {
   _onLeftUp(event) {
     if (this._isChangePoisition) {
       this._isChangePoisition = false;
+      this._enableCamera();
+    }
+    if (this._isChangeShape) {
+      this._isChangeShape = false;
       this._enableCamera();
     }
     // if (!this._dragging) return;
@@ -271,5 +368,80 @@ export default class EditTool {
     this._scene.screenSpaceCameraController.enableZoom = true;
     this._scene.screenSpaceCameraController.enableTilt = true;
     this._scene.screenSpaceCameraController.enableLook = true;
+  }
+
+  /**
+   * @description 获取几何中心点
+   * @param positions - {Array} 必选项，点数组
+   * @return {Object} center 中心点
+   */
+  _getCenter(positions) {
+    let points = [];
+    for (let i = 0; i < positions.length; i++) {
+      points.push(turf.point([positions[i].x, positions[i].y]));
+    }
+
+    return turf.center(turf.featureCollection(points));
+  }
+
+  /**
+   * @description 设置位置控制点
+   * @param position - {Cartesian3} 必选项，控制点坐标
+   * @param name - {String} 可选项，控制点名称
+   */
+  _setPositionControl(position, name) {
+    name = name || "LineEditToolCtrlPnts";
+
+    if (!this._positionBillboards) {
+      let billboards = new Cesium.BillboardCollection();
+      billboards.add({
+        position: position,
+        image: "http://localhost:8895/assets/point.svg",
+        sizeInMeters: true,
+        id: name,
+        scale: 4
+      });
+      let billboard = billboards.get(0);
+      billboard.pointType = "positionControl";
+      this._scene.primitives.add(billboards);
+      this._positionBillboards = billboards;
+    }
+  }
+
+  /**
+   * @description 设置形状控制点
+   * @param positions - {Array} 必选项，控制点坐标
+   * @param options - {Object} 可选项，额外参数
+   * @param {Number} [options.height = 0] 可选项，控制点高度
+   * @param {String} [options.name = "EditToolShapePoints"] 可选项，控制点名称
+   */
+  _setShapeControl(positions, options) {
+    options = options || {};
+    let height = options.height || 0;
+    let name = options.name || "EditToolShapePoints";
+
+    if (!this._shapeBillboards) {
+      let billboards = new Cesium.BillboardCollection();
+      //设置控制点
+      for (let i = 0; i < positions.length; i++) {
+        let position = Cesium.Cartesian3.clone(positions[i]);
+        position.height = height;
+        billboards.add({
+          position: position,
+          image: "http://localhost:8895/assets/point.svg",
+          sizeInMeters: true,
+          id: name,
+          scale: 4
+        });
+      }
+      //在控制点上添加额外属性
+      for (let i = 0; i < positions.length; i++) {
+        let billboard = billboards.get(i);
+        billboard.pointType = "shapeControl";
+        billboard.pointIndex = i;
+      }
+      this._scene.primitives.add(billboards);
+      this._shapeBillboards = billboards;
+    }
   }
 }

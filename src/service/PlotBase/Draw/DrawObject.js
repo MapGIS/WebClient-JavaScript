@@ -17,6 +17,7 @@ export default class DrawObject extends Observable {
   enable() {
     if (this._enabled) return;
 
+    console.log("+++++++++++++++++++++++++")
     this.addHooks();
     this._enabled = true;
   }

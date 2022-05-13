@@ -38,12 +38,15 @@ export default class DrawPolyline extends DrawObject {
     this._viewer = viewer;
     this._symbol = symbol;
     this._primitive = null;
+    this._isAdded = false;
+    this.uuid = Math.random() * 10000000;
   }
 
   addHooks() {
     const viewer = this._viewer;
     const symbol = this._symbol;
     const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+    let that = this;
 
     handler.setInputAction((event) => {
       const worldPos = viewer.scene.globe.pick(
@@ -51,18 +54,15 @@ export default class DrawPolyline extends DrawObject {
         viewer.scene
       );
 
-      let that = this;
-      
       if (!worldPos) return;
 
       symbol.getElement().then(function (res) {
-        if (!that._primitive) {
-          const primitive = PrimitiveFactory.createInstance(symbol.type, {
+        if (!that._isAdded) {
+          that._primitive = PrimitiveFactory.createInstance(symbol.type, {
             positions: that.m_coords,
             element: res,
           });
-          console.log("primitive",primitive)
-          that._primitive = primitive;
+          that._isAdded = true;
           viewer.scene.primitives.add(that._primitive);
         }
 

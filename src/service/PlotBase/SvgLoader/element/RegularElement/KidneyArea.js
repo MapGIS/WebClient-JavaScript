@@ -24,7 +24,7 @@ export default class KidneyArea extends BaseRegularElement {
     super(node);
     this.muti_scaleX = 1;
     this.muti_scaleY = 1;
-    this.type = "msbl_KidneyArea";
+    this.type = "msbl_kidneyarea";
   }
 
   // base

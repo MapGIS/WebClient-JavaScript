@@ -29,21 +29,16 @@ class DrawTool {
    * @param symbol - {Object} 必选项，标绘图元的符号对象
    */
   drawPlot(symbol) {
-    if (this._drawTool) {
-      this._drawTool.disable();
+    if (!this._drawTool) {
+      this._drawTool = DrawPlotObjectFactory3D.createInstance(
+        symbol.type,
+        this._plotLyaer._viewer,
+        symbol
+      );
+
     }
 
-    this._drawTool = DrawPlotObjectFactory3D.createInstance(
-      symbol.type,
-      this._plotLyaer._viewer,
-      symbol
-    );
-
-    if (this._drawTool) {
-      this._drawTool.enable();
-    }
-
-    return this._drawTool;
+    this._drawTool.enable();
   }
 
   /**
