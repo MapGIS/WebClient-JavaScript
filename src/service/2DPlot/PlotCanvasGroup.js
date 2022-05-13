@@ -1,31 +1,41 @@
 /*
- * @Description:
+ * @class: Module:2DPlot.PlotCanvasGroup
+ * @Description: 二维图层组
  * @Author: zk
- * @Date: 2021-11-15 17:47:45
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-12 16:26:03
+ * @Date: 2022-05-13 11:01:10
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-13 11:21:32
  */
+
 import { fabric } from 'fabric';
-import FabricLineUtil from './EditTool/FabricLineUtil';
+import PlotCanvas from './PlotCanvas';
 
 export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
     selection: false,
+    /**
+     * @function: Module:PlotCanvasGroup
+     * @description: 构造
+     * @param {HTMLCanvasElement} el
+     * @param {Object} options
+     * @return {*}
+     */
     initialize: function (el, options) {
         if (!PlotCanvasGroup.instance) {
             this.callSuper('initialize', el, options);
             this._plotCanvasLayers = [];
             PlotCanvasGroup.instance = this;
-            // 修改lineUtil
-            new FabricLineUtil(this);
         } else {
             return PlotCanvasGroup.instance;
         }
     },
-    /* 
-     tip:改写方法
-     修改宽度和高度并刷新,原有方法 setDimensions设置高宽时会触发 requestRenderAll()
-     在二三维联动时三维会频繁发送事件，二维界面会出现闪烁，因此改写为立即触发render
-  */
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.setCanvasDimensionsSize
+     * @description: fabricCanvas改写方法
+     * @tip: 修改宽度和高度并刷新,原有方法 setDimensions设置高宽时会触发 requestRenderAll()
+      在二三维联动时三维会频繁发送事件，二维界面会出现闪烁，因此改写为立即触发render
+     * @param {{height:number,width:number}} dimensions
+     * @param {Object} options
+     */
     setCanvasDimensionsSize: function (dimensions, options) {
         var cssValue;
 
@@ -53,12 +63,29 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         return this;
     },
 
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.setCoordSys
+     * @description: 设置坐标系
+     * @param {*} coordSys
+     * @return {*}
+     */
     setCoordSys(coordSys) {
         this.m_CoordSys = coordSys;
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.getCoordSys
+     * @description: 获取坐标系
+     * @return {Object}
+     */
     getCoordSys() {
         return this.m_CoordSys;
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.getLayerById
+     * @description: 根据id获取图层
+     * @param {*} layerId
+     * @return {Object} layer
+     */
     getLayerById(layerId) {
         let layer = null;
         const i = this._plotCanvasLayers.findIndex((s) => s.getLayerId() === layerId);
@@ -67,6 +94,11 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         }
         return layer;
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.addLayer
+     * @description: 添加图层
+     * @param {PlotCanvas} layer
+     */
     addLayer(layer) {
         layer.bindFabricCanvas(this);
         layer.setCoordSys(this.m_CoordSys);
@@ -75,13 +107,28 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         });
         this._plotCanvasLayers.push(layer);
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.getLayers
+     * @description: 获取图层组
+     * @return {Array<PlotCanvas>}
+     */
     getLayers() {
         return this._plotCanvasLayers;
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.removeLayer
+     * @description: 移除图层
+     * @param {PlotCanvas} layer
+     */
     removeLayer(layer) {
         const layerID = layer.getLayerId();
         this.removeLayerById(layerID);
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.removeLayerById
+     * @description: 根据图层ID移除图层
+     * @param {String} layerID
+     */
     removeLayerById(layerID) {
         const layers = this._plotCanvasLayers;
         for (let i = 0; i < layers.length; i++) {
@@ -97,14 +144,30 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
             }
         }
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.bringObjectsByLayerToFront
+     * @description: 将图层前置
+     * @param {*} layer
+     * @return {*}
+     */
     bringObjectsByLayerToFront(layer) {
         const plotObjects = layer.getPlotObjects();
         this.bringObjectsToFront(plotObjects);
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.bringObjectByLayerIdToFront
+     * @description: 根据图层id将图层前置
+     * @param {String} layerId
+     */
     bringObjectByLayerIdToFront(layerId) {
         const layer = this.getLayerById(layerId);
         this.bringObjectsByLayerToFront(layer);
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.bringObjectsToFront
+     * @description: 将标绘对象前置
+     * @param {Array<Object>} objectArray PlotObject数组
+     */
     bringObjectsToFront(objectArray) {
         if (!objectArray) {
             return;
@@ -118,6 +181,13 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         this.requestRenderAll();
         return this;
     },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.removeFromArray
+     * @description: 移除数组value
+     * @param {Array<any>} array
+     * @param {*} value
+     * @return {*}
+     */
     removeFromArray: function (array, value) {
         var idx = array.indexOf(value);
         if (idx !== -1) {

@@ -1,9 +1,10 @@
 /*
- * @Description:Fabric联动图层
+ * @class: Module:FabricLayer
+ * @Description: fabric-地图框架联动图层
  * @Author: zk
- * @Date: 2022-04-25 20:08:02
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-12 09:52:54
+ * @Date: 2022-05-13 11:22:56
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-13 11:34:20
  */
 import mapboxgl from '@mapgis/mapbox-gl';
 import { PlotMapCoordSys } from './fabric/PlotMapCoordSys';
@@ -11,6 +12,7 @@ import { throttle } from '../util/Util';
 
 export class FabricLayer {
     /**
+     * @function: Module:FabricLayer
      * @description: 构造
      * @param {Object} map mapboxglmap
      * @param {Function} fabricClass fabric图层
@@ -39,14 +41,19 @@ export class FabricLayer {
        
     }
 
+    /**
+     * @function: Module:FabricLayer.pototype.initDevicePixelRatio
+     * @description: 初始化dpi
+     */
     initDevicePixelRatio() {
         this.devicePixelRatio = window.devicePixelRatio || 1;
     }
     /**
-     * @description: s
-     * @param {*} fabricClass
-     * @param {*} fabricOptions
-     * @return {*}
+     * @function: Module:FabricLayer.pototype._createFabricCanvas
+     * @description: 创建fabric图层
+     * @param {Object} fabricClass fabric canvas类
+     * @param {Object} fabricOptions fabric options
+     * @return {Object} fabric图层
      */
     _createFabricCanvas(canvas, fabricClass, fabricOptions) {
         const m_fabricCanvas = new fabricClass(canvas, fabricOptions);
@@ -62,11 +69,20 @@ export class FabricLayer {
         });
         return m_fabricCanvas
     }
-    getPlotCanvas(){
+    /**
+     * @function: Module:FabricLayer.pototype.getFabricCanvas
+     * @description: 获取fabricCanvas
+     * @return {Object} fabricCanvas
+     */
+    getFabricCanvas(){
        return this.m_fabricCanvas
     }
 
     //-----------------------------------Event Methods----------------------------------------
+    /**
+     * @function: Module:FabricLayer.pototype.bindEvent
+     * @description: 绑定地图事件
+     */
     bindEvent() {
         var map = this.map;
         //下面几个是mapboxgl专属事件,clickEvent和mousemoveEvent是mapv内部自带的方法不放出来
@@ -105,6 +121,10 @@ export class FabricLayer {
         this.map.on('remove', this.innerRemove);
     }
 
+    /**
+     * @function: Module:FabricLayer.pototype.unbindEvent
+     * @description: 解绑地图事件
+     */
     unbindEvent() {
         var map = this.map;
         map.off('resize', this.innerResize);
@@ -161,17 +181,19 @@ export class FabricLayer {
         this._visiable();
     }
 
-
-
     resizeEvent() {
         this._reset();
         this._visiable();
     }
-
     removeEvent() {
         this.mapContainer.removeChild(this.canvas);
     }
 
+    /**
+     * @function: Module:FabricLayer.pototype._createCanvas
+     * @description: 创建canvas
+     * @return {HTMLCanvasElement}
+     */
     _createCanvas() {
         var canvas = document.createElement('canvas');
         var devicePixelRatio = this.devicePixelRatio;
@@ -186,6 +208,10 @@ export class FabricLayer {
         return canvas;
     }
 
+    /**
+     * @function: Module:FabricLayer.pototype._reset
+     * @description: 重置视图
+     */
     _reset() {
         if (this.canvas === null || this.m_fabricCanvas === null) {
             return;
@@ -196,6 +222,10 @@ export class FabricLayer {
         this.render();
     }
 
+    /**
+     * @function: Module:FabricLayer.pototype.draw
+     * @description: 绘制
+     */
     draw() {
         return this._reset();
     }
@@ -210,6 +240,10 @@ export class FabricLayer {
         return this;
     }
 
+    /**
+     * @function: Module:FabricLayer.pototype.resizeCanvas
+     * @description: 刷新canvas 
+     */
     resizeCanvas() {
         this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
         if (this.canvas == undefined || this.canvas == null) return;
@@ -228,10 +262,10 @@ export class FabricLayer {
         this.m_fabricCanvas.renderAll();
     }
     /**
+     * @function: Module:FabricLayer.pototype._applyPosition
      * @description: 偏移fabriccanvas
      * @param {HTMLCanvasElement} canvas
      * @param {{x:number,y:number}} origin
-     * @return {*}
      */
     _applyPosition(canvas, origin) {
         if (!canvas) return;
@@ -243,13 +277,19 @@ export class FabricLayer {
     fixPosition() {}
 
     onResize() {}
+    
+    /**
+     * @function: Module:FabricLayer.pototype.render
+     * @description: 渲染
+     */
     render() {
         if (!this.canvas || !this.m_fabricCanvas) return;
         this.m_fabricCanvas.requestRenderAll();
     }
+
     /**
-     * 销毁图层，清空所有的事件与数据，与remove效果一致
-     * @function 
+     * @function: Module:FabricLayer.pototype.destroy
+     * @description: 
      */
     destroy() {
         this.unbindEvent();
