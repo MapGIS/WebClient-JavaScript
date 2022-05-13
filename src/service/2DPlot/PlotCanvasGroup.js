@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 11:21:32
+ * @LastEditTime: 2022-05-13 16:54:34
  */
 
 import { fabric } from 'fabric';
@@ -194,6 +194,56 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
             array.splice(idx, 1);
         }
         return array;
+    },
+
+    /**
+     * @function: Module:PlotCanvasGroup.prototype.getPlotObjectById
+     * @description: 根据要素id获取要素对象
+     * @param {*} uid
+     * @return {*}
+     */
+    getPlotObjectById(uid) {
+        let t;
+        this._objects.forEach((s) => {
+            const elem = s.getElement();
+            if (elem && elem.getFeatureId() === uid) {
+                t = s;
+            }
+        });
+        return t;
+    },
+    _isInMapBounds(positions, mapBounds) {
+        let flag = false;
+
+        const nw = mapBounds[0];
+        const es = mapBounds[1];
+
+        for (let i = 0; i < positions.length; i++) {
+            const x = positions[i].x;
+            const y = positions[i].y;
+
+            if (x > nw[0] && x < es[0] && y < es[1] && y > nw[1]) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    },
+    /**
+     * @function: Module:PlotCanvasGroup.prototype._renderObjects
+     * @description: 渲染标绘对象代码
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {Array<Object>} objects
+     */
+    _renderObjects(ctx, objects) {
+        const mapBounds = this.getCoordSys().getBounds();
+        var i, len;
+        for (i = 0, len = objects.length; i < len; ++i) {
+            const object = objects[i];
+            const element = object.getElement();
+            const flag = element ? this._isInMapBounds(element.positions, mapBounds) : false;
+            flag && object && object.render(ctx);
+        }
     }
 });
 

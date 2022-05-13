@@ -1,10 +1,10 @@
 /*
- * @class:  Module:2DPlot.PlotCanvas
+ * @class: Module:2DPlot.PlotCanvas
  * @Description: 二维图层类
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 11:06:46
+ * @LastEditTime: 2022-05-13 16:19:17
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -338,5 +338,12 @@ export default class PlotCanvas {
             });
         }
         this._fabricCanvas.requestRenderAll();
+    }
+    /**
+     * @function: Module:PlotCanvas.prototype.requestRenderAll
+     * @description: 请求渲染
+     */
+    requestRenderAll(){
+        this._fabricCanvas.requestRenderAll()
     }
 }

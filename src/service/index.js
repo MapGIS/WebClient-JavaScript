@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: zk
  * @Date: 2022-05-10 12:45:10
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 21:13:07
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-13 12:03:09
  */
 //-------命名空间 mapgis 开始-----
 import * as Util from './utils';
@@ -34,10 +34,11 @@ import ElasticSearch from './datastore/elasticsearch';
 import PostGIS from './datastore/postgis';
 import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
-import SymbolManager from "./PlotBase/index"
+import {SymbolManager} from "./PlotBase/index"
 import { PlotCanvas } from './2DPlot/index';
 import { PlotCanvasGroup } from './2DPlot/PlotCanvasGroup'
 import {PlotLayer3D,PlotLayerMap,DrawTool} from "./3DPlot/index"
+import { TimeLine } from './PlotBase/index';
 
 
 export {
@@ -66,7 +67,8 @@ export {
     PlotCanvasGroup,
     PlotLayer3D,
     PlotLayerMap,
-    DrawTool
+    DrawTool,
+    TimeLine
 };
 //-------命名空间 Zondy 结束-----
 

@@ -2,8 +2,8 @@
  * @Description: 时间轴
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-24 11:48:49
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-13 13:47:03
  */
 
 /**
@@ -38,7 +38,7 @@ export default class TimeLine {
     const plotObjects = item.featureIds
       .split(",")
       .map((t) => {
-        return this._canvas.getPlotObjectByUid(t);
+        return this._canvas.getPlotObjectById(t);
       })
       .filter((b) => b);
     return new animation({

@@ -2,8 +2,8 @@
  * @Description:坐标转换类（标绘）
  * @Author: zk
  * @Date: 2022-04-26 09:05:34
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 13:53:18
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-13 14:42:35
  */
 
 /**
@@ -43,8 +43,9 @@ PlotMapCoordSys.prototype.pointToData = function pointToData(pt) {
  * @return {number}
  */
 PlotMapCoordSys.prototype.getScale = function getScale() {
-  const n=this.m_mapboxMap.getZoom()
-  return  256* Math.pow(2,n);
+  let n=this.m_mapboxMap.getZoom()
+  
+  return  256* Math.pow(2,n+1);
 };
 
 /**

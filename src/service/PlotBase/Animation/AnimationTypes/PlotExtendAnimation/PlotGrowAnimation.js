@@ -2,11 +2,11 @@
  * @Description: 动画基础类
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-19 10:08:59
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-13 13:33:39
  */
-import { Point } from "@/MapGISBase/Geometry/Point";
-import Spline from "@/MapGISBase/Geometry/Spline";
+import  Point  from "../../../../PlotUtilBase/Geometry/Point";
+import Spline from "../../../../PlotUtilBase/Geometry/Spline";
 import { PlotBaseAnimation } from "../PlotBaseAnimation";
 
 export class PlotGrowAnimation extends PlotBaseAnimation {
