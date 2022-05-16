@@ -16,12 +16,20 @@ class PlotLayer3D extends Observable {
     super();
     //viewer对象
     this._viewer = viewer;
-    //标绘图元列表
+    //标绘图元id列表
     this._plotList = [];
+    //primitive数组
+    this._primitiveCollection = new Cesium.PrimitiveCollection();
     //图元可否编辑
     this._editable = false;
     //编辑工具
     this._editTool = new EditTool(this);
+    //图层id
+    this._id = "plotLayer_" + parseInt(String(Math.random() * 100000000));
+
+    this._primitiveCollection._id = this._id;
+    let scene = this._getScene();
+    scene.primitives.add(this._primitiveCollection);
   }
 
   /**
@@ -30,11 +38,16 @@ class PlotLayer3D extends Observable {
    * @param plot - {Plot} 必选项，要添加的标绘图元
    */
   addPlot(plot) {
-    const {scene} = this._viewer;
-    if (!scene) throw new Error("三维场景scene 未初始化");
-    scene.primitives.add(plot);
+    this._primitiveCollection.add(plot);
     this._plotList.push(plot.id);
     return plot;
+  }
+
+  _getScene() {
+    let {scene} = this._viewer;
+    if (!scene) throw new Error("三维场景scene 未初始化");
+
+    return scene;
   }
 
   /**
@@ -56,9 +69,7 @@ class PlotLayer3D extends Observable {
   }
 
   _removePlotByID(id) {
-    const {scene} = this._viewer;
-    if (!scene) throw new Error("三维场景scene 未初始化");
-
+    let scene = this._getScene();
     let result;
 
     //删除标绘图元
@@ -79,8 +90,7 @@ class PlotLayer3D extends Observable {
    * @return {Object} json
    */
   removePlot(plot) {
-    const {scene} = this._viewer;
-    if (!scene) throw new Error("三维场景scene 未初始化");
+    let scene = this._getScene();
 
     //删除图元列表中的id
     for (let i = 0; i < this._plotList.length; i++) {
@@ -100,18 +110,30 @@ class PlotLayer3D extends Observable {
    * @return {Object} json
    */
   getPlotByID(id) {
-    const {scene} = this._viewer;
-    if (!scene) throw new Error("三维场景scene 未初始化");
+    let index = this._getPlotIndexById(id);
+    let scene = this._getScene();
 
-    let index;
+    if(index !== undefined){
+      return _primitives[index];
+    }
+    return undefined;
+  }
 
-    for (let i = 0; i < scene.primitives.length; i++) {
-      if (id === scene.primitives[i].id) {
+  _getPlotIndexById(id) {
+    let scene = this._getScene();
+
+    let index = undefined;
+
+    const {_primitives} = scene.primitives;
+
+    for (let i = 0; i < _primitives.length; i++) {
+      if (id === _primitives[i].id) {
         index = i;
         break;
       }
     }
-    return scene.primitives[index];
+
+    return index;
   }
 
   /**
@@ -132,7 +154,7 @@ class PlotLayer3D extends Observable {
    * @return {Object} json
    */
   toJSON() {
-    const {scene} = this._viewer;
+    let scene = this._getScene();
 
     const json = {
       type: "FeatureCollection",
@@ -158,12 +180,40 @@ class PlotLayer3D extends Observable {
     if (geoJson.type === "FeatureCollection") {
       const {features} = geoJson;
       features.forEach((s) => {
-        this.addGeoJSONObject(s);
+        this._addGeoJSONObject(s);
       });
     } else {
       // eslint-disable-next-line no-new
       new Error("GeoJSON类型错误，传入值非要素集！");
     }
+  }
+
+  _addGeoJSONObject(geoFeature) {
+    let that = this;
+    const id = geoFeature.properties.symbolId;
+
+    const symbolManager = SymbolManager.instance;
+
+    const leaf = symbolManager.getLeafByID(id);
+
+    leaf.getElement().then(function (element) {
+      const primitive = PrimitiveFactory.createInstance(element.type, {
+        positions: element.positions,
+        element,
+      });
+
+      primitive.fromGeoJSON(geoFeature);
+      primitive.id = id + "_" + parseInt(String(Math.random() * 1000000000));
+
+      that._plotList.push(primitive.id);
+
+      that._addPrimitive(primitive);
+    });
+  }
+
+  _addPrimitive(primitive) {
+    this._primitiveCollection.add(primitive);
+    return primitive;
   }
 
   /**
@@ -182,6 +232,57 @@ class PlotLayer3D extends Observable {
     tag.href = url;
     tag.click();
   }
+
+  /**
+   * @function module:PlotLayer3D.queryByGeometry
+   * @description 标绘图元几何查询接口
+   *
+   * @param geometry {Object} 查询几何，经纬度组成的点或点数组
+   * @param {String} [type = 'polygon'] 几何类型，支持point,polygon
+   * @example
+   * 点查询
+   * queryByGeometry({x: 113, y: 40}, "point");
+   */
+  queryByGeometry(geometry, type) {
+    //无法使用pick方式，因为仅会拾取最上面的图元
+    let plot;
+    type = type || "polygon";
+    if (!geometry) return;
+    switch (type) {
+      case "point":
+        //判断x、y是否有值
+        const {x, y} = geometry;
+        if (!x * y) return;
+        for (let i = 0; i < this._plotList.length; i++) {
+          plot = this.getPlotByID(this._plotList[i]);
+          const {_elem} = plot;
+          if (!_elem) return;
+          const {cacheCoords} = _elem;
+          if (!cacheCoords) return;
+          let points = [];
+          for (let j = 0; j < cacheCoords[0].length; j++) {
+            points.push(this._mercatorTolonlat(cacheCoords[0][j]));
+          }
+
+          console.log("points", points)
+        }
+        break;
+    }
+  }
+
+  _mercatorTolonlat(mercator) {
+    let lonlat = {lon: 0, lat: 0};
+
+    let x = mercator.x / 20037508.34 * 180;
+    let y = mercator.y / 20037508.34 * 180;
+
+    y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
+
+    lonlat.lon = x;
+    lonlat.lat = y;
+
+    return lonlat;
+  };
 }
 
 Object.defineProperties(PlotLayer3D.prototype, {
@@ -192,7 +293,7 @@ Object.defineProperties(PlotLayer3D.prototype, {
     set: function (value) {
       this._editable = value;
       //启用编辑工具
-      if(this._editable) {
+      if (this._editable) {
         this._editTool.enable();
       }
     }
