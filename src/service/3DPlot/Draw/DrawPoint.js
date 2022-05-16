@@ -12,12 +12,13 @@ import { PrimitiveFactory } from "../Primitive/PrimitiveFactory";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 
 export default class DrawPoint extends DrawObject {
-  constructor(viewer, symbol) {
+  constructor(viewer, symbol, plotLayer) {
     super();
     this._viewer = viewer;
     this._symbol = symbol;
     this.m_coords = [];
     this._primitive = null;
+    this._plotLayer = plotLayer;
   }
 
   addHooks() {
@@ -44,7 +45,7 @@ export default class DrawPoint extends DrawObject {
           worldPos
         );
         that.m_coords.push(lnglat);
-        viewer.scene.primitives.add(that._primitive);
+        that._plotLayer._primitiveCollection.add(that._primitive);
 
         that._primitive.positions = that.m_coords;
         that.disable();

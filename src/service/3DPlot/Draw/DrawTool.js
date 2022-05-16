@@ -9,7 +9,7 @@ import {DrawPlotObjectFactory3D} from "./DrawPlotObjectFactory3D";
 class DrawTool {
   constructor(layer) {
     //标绘图层
-    this._plotLyaer = layer;
+    this._plotLayer = layer;
     //绘制工具
     this._drawTool = undefined;
   }
@@ -20,7 +20,7 @@ class DrawTool {
    * @param layer - {PlotLayer3D} 必选项，标绘图层
    */
   setLayer(layer) {
-    this._plotLyaer = layer;
+    this._plotLayer = layer;
   }
 
   /**
@@ -32,8 +32,9 @@ class DrawTool {
     if (!this._drawTool) {
       this._drawTool = DrawPlotObjectFactory3D.createInstance(
         symbol.type,
-        this._plotLyaer._viewer,
-        symbol
+        this._plotLayer._viewer,
+        symbol,
+        this._plotLayer
       );
 
     }

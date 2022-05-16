@@ -5,6 +5,7 @@ import {CesiumUtil} from "./Utils/CesiumUtil";
 import Observable from "../../service/PlotUtilBase/Observable";
 import EditTool from "./EditTool/EditTool";
 import {PrimitiveFactory} from "./Primitive/PrimitiveFactory";
+import * as turf from "@turf/turf";
 
 /**
  * @class module:3DPlot.PlotLayer3D
@@ -113,7 +114,7 @@ class PlotLayer3D extends Observable {
     let index = this._getPlotIndexById(id);
     let scene = this._getScene();
 
-    if(index !== undefined){
+    if (index !== undefined) {
       return _primitives[index];
     }
     return undefined;
@@ -244,30 +245,31 @@ class PlotLayer3D extends Observable {
    * queryByGeometry({x: 113, y: 40}, "point");
    */
   queryByGeometry(geometry, type) {
-    //无法使用pick方式，因为仅会拾取最上面的图元
-    let plot;
+    //先暂时使用查询标绘图元控制点的方式，其他方式太耗费性能
+    let plots = [];
     type = type || "polygon";
     if (!geometry) return;
     switch (type) {
       case "point":
-        //判断x、y是否有值
-        const {x, y} = geometry;
-        if (!x * y) return;
-        for (let i = 0; i < this._plotList.length; i++) {
-          plot = this.getPlotByID(this._plotList[i]);
-          const {_elem} = plot;
-          if (!_elem) return;
-          const {cacheCoords} = _elem;
-          if (!cacheCoords) return;
-          let points = [];
-          for (let j = 0; j < cacheCoords[0].length; j++) {
-            points.push(this._mercatorTolonlat(cacheCoords[0][j]));
+        break;
+      case "polygon":
+        let newPoints = [];
+        for (let i = 0; i < geometry.length; i++) {
+          newPoints.push([geometry[i].x, geometry[i].y]);
+        }
+        const {_primitives} = this._primitiveCollection;
+        for (let i = 0; i < _primitives.length; i++) {
+          const {positions} = _primitives[i];
+          for (let j = 0; j < positions.length; j++) {
+            if (turf.booleanPointInPolygon(turf.point([positions[j].x, positions[j].y]), turf.polygon([newPoints]))) {
+              plots.push(_primitives[i]);
+              break;
+            }
           }
-
-          console.log("points", points)
         }
         break;
     }
+    return plots;
   }
 
   _mercatorTolonlat(mercator) {

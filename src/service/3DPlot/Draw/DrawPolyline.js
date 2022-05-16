@@ -32,13 +32,14 @@ function look(viewer, center, offset) {
 }
 
 export default class DrawPolyline extends DrawObject {
-  constructor(viewer, symbol) {
+  constructor(viewer, symbol, plotLayer) {
     super();
     this.m_coords = [];
     this._viewer = viewer;
     this._symbol = symbol;
     this._primitive = null;
     this._isAdded = false;
+    this._plotLayer = plotLayer;
     this.uuid = Math.random() * 10000000;
   }
 
@@ -63,7 +64,7 @@ export default class DrawPolyline extends DrawObject {
             element: res,
           });
           that._isAdded = true;
-          viewer.scene.primitives.add(that._primitive);
+          that._plotLayer._primitiveCollection.add(that._primitive);
         }
 
         const lnglat = CesiumUtil.cartesian3ToDegrees(

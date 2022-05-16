@@ -156,7 +156,6 @@ class PlotLayerMap {
           }
           break;
       }
-      console.log("scene",scene.primitives)
     }
   }
 
