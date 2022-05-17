@@ -2,8 +2,8 @@
  * @Description: element基础类
  * @Author: zk
  * @Date: 2021-11-04 17:02:07
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-07 11:55:00
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-16 20:14:26
  */
 
 /* eslint-disable guard-for-in */
@@ -51,14 +51,16 @@ export default class Element {
    * @return {*}
    */
   _init(node) {
-    this._attributes = {};
-    this._styles = {};
-    this._children = [];
-    
+    this._initValues()
     this._traverNodes(node);
     this._traverAttributes(node.attributes);
     this._addStylesFromStyleDefinition(node);
 
+  }
+  _initValues(){
+    this._attributes = {};
+    this._styles = {};
+    this._children = [];
   }
 
   _traverAttributes(attributes) {
@@ -199,20 +201,6 @@ export default class Element {
     return matrix;
   }
 
-  replaceChild(childNode, replaceEle) {
-    function _removeChild(children, ele, _replaceEle) {
-      if (children && ele) {
-        const i = children.findIndex((s) => s === ele);
-        if (i > -1) {
-          children[i] = _replaceEle;
-        }
-        children.forEach((e) => {
-          _removeChild(e._children, ele, _replaceEle);
-        });
-      }
-    }
-    _removeChild(this._children, childNode, replaceEle);
-  }
   replaceChildById(id, replaceEle) {
     function _removeChildById(children, _id, _replaceEle) {
       if (children && _id) {

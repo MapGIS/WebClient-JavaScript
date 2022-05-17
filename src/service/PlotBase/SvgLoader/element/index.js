@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:22:31
- * @LastEditTime: 2022-05-10 15:55:52
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-16 19:01:45
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
  */
@@ -30,6 +30,7 @@ import DoubleArrowGeometry from "./IrregularElement/Arrow/DoubleArrowGeometry";
 import SimpleArrowGeometry from "./IrregularElement/Arrow/SimpleArrowGeometry";
 import SquadArrowGeometry from "./IrregularElement/Arrow/SquadArrowGeometry";
 import FigureFanGeometry from "./IrregularElement/FigureFanGeometry";
+import SimpleLine from './SimpleElement/SimpleLine'
 
 const drawTypes = [
   "path",
@@ -57,6 +58,9 @@ ElementFactory.register("msbl_regularline1", RegularLine1);
 ElementFactory.register("msbl_regularline2", RegularLine2);
 ElementFactory.register("msbl_kidneyarea", KidneyArea);
 ElementFactory.register("msbl_regularsurface", RegularSurface);
+
+// 新修规则
+ElementFactory.register("simpleline", SimpleLine);
 
 // 非规则符号
 ElementFactory.register("msbl_AssaultArrow", AssaultArrowGeometry);

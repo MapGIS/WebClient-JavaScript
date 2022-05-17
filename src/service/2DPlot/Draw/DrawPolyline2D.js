@@ -2,12 +2,12 @@
  * @Description:
  * @Author: zk
  * @Date: 2021-12-03 13:45:17
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 16:57:06
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-16 20:56:03
  */
 import DrawObject from '../../PlotBase/Draw/DrawObject';
 import Point from '../../PlotUtilBase/Geometry/Point';
-import  {PlotObjectFactory}  from '../Shapes/PlotObjectFactory';
+import { PlotObjectFactory } from '../Shapes/PlotObjectFactory';
 
 const _ = require('lodash');
 export default class DrawPolyline2D extends DrawObject {
@@ -42,7 +42,7 @@ export default class DrawPolyline2D extends DrawObject {
         this.m_coords[this.m_coords.length - 1] = new Point(pnt[0], pnt[1]);
         if (this.m_coords.length >= 2) {
             this.m_object.setPnts(this.m_coords);
-            this.m_fabricCanvas.renderAll();
+            this.m_fabricCanvas.requestRenderAll();
         }
     }
     innerOnMouseUp(event) {
@@ -59,11 +59,13 @@ export default class DrawPolyline2D extends DrawObject {
             this.m_coords.push(new Point(pnt[0], pnt[1]));
 
             if (!this.m_object) {
-                this.m_object = PlotObjectFactory.createInstance(this.m_symbol.type, {
-                    element: this.m_symbol.getElement(),
-                    canvas: this.m_fabricCanvas
+                this.m_symbol.getElement().then((element) => {
+                    this.m_object = PlotObjectFactory.createInstance(this.m_symbol.type, {
+                        element: element,
+                        canvas: this.m_fabricCanvas
+                    });
+                    this.m_fabricCanvas.add(this.m_object);
                 });
-                this.m_fabricCanvas.add(this.m_object);
             }
         }
 

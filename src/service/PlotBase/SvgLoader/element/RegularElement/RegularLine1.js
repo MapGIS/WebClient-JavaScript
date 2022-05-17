@@ -2,8 +2,8 @@
  * @Description: 
  * @Author: zk
  * @Date: 2022-02-17 19:03:38
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 20:44:01
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-17 08:52:05
  */
 import Point from "../../../../PlotUtilBase/Geometry/Point";
 import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
@@ -105,6 +105,7 @@ export default class RegularLine1 extends BaseRegularElement {
   _applyElementTransfrom(element) {
     // 子节点调用
     const { width, defaultLine, flag, poly } = this;
+    
     let gOrigin;
     let arrowDir = false;
     let scaleX = 1;

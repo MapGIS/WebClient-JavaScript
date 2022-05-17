@@ -2,8 +2,8 @@
  * @Description:
  * @Author: zk
  * @Date: 2021-11-17 13:54:10
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-11 19:14:48
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-16 18:36:49
  */
 import  DrawObject  from "../../PlotBase/Draw/DrawObject";
 import  Point  from "../../PlotUtilBase/Geometry/Point";
@@ -32,18 +32,22 @@ export default class DrawPoint2D extends DrawObject {
 
   innerOnMouseUp(event) {
     const pnt = this.m_coordSys.pointToData([event.pointer.x,event.pointer.y]);
-    const object = PlotObjectFactory.createInstance(this.m_symbol.type, {
-      element: this.m_symbol.getElement(),
-      canvas: this.m_fabricCanvas,
-    });
 
-    object.setPnts([new Point(pnt[0],pnt[1])]);
+    this.m_symbol.getElement().then((element)=>{
+      const object = PlotObjectFactory.createInstance(this.m_symbol.type, {
+        element:element ,
+        canvas: this.m_fabricCanvas,
+      });
+  
+      object.setPnts([new Point(pnt[0],pnt[1])]);
+  
+      this.m_fabricCanvas.add(object);
+      this.m_fabricCanvas.requestRenderAll();
+      this.fireFinishEvent({ plotObj2D: object });
+      this.disable();
+    })
 
-    this.m_fabricCanvas.add(object);
-    this.m_fabricCanvas.requestRenderAll();
-    
-    this.disable();
 
-    this.fireFinishEvent({ plotObj2D: object });
+
   }
 }

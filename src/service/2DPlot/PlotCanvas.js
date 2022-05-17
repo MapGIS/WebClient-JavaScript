@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 16:19:17
+ * @LastEditTime: 2022-05-16 19:10:38
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -93,9 +93,8 @@ export default class PlotCanvas {
      * @param {Function} handler 绑定函数
      */
     on(eventName,handler){
-        const t= this._createHandler(handler).bind(this)
-        this._eventHandlers.push({eventName,handler:t})
-        this._fabricCanvas.on(eventName,t)
+        this._eventHandlers.push({eventName,handler})
+        this._fabricCanvas.on(eventName,handler)
     }
     /**
      * @function: Module:PlotCanvas.prototype.off

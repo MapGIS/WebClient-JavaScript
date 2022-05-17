@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 15:15:33
+ * @LastEditTime: 2022-05-16 18:54:26
  */
 import { fabric } from "fabric";
 import  PlotRegularObject  from "./PlotRegularObject";
@@ -25,7 +25,7 @@ const PlotRegularPoint = fabric.util.createClass(PlotRegularObject, {
     this.set("dirty", true);
   },
   isNotVisible(){
-     return this.callSuper("isNotVisible") ||  this.m_coordsPx.length < 1;
+     return this.opacity === 0 || (!this.width && !this.height && this.strokeWidth === 0) || !this.visible || !this._elem.show||  this.m_coordsPx.length < 1;
   },
   _render(ctx) {
     this._comparePathElementRender(ctx);

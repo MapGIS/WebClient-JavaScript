@@ -2,8 +2,8 @@
  * @Description:
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-05-10 16:57:33
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-16 19:02:53
  */
 import  {PlotObjectFactory}  from "./PlotObjectFactory";
 import  PlotRegularPoint  from "./RegularShapes/PlotRegularPoint";
@@ -18,6 +18,9 @@ PlotObjectFactory.register("msbl_regularLine1", PlotRegularObject);
 PlotObjectFactory.register("msbl_regularLine2", PlotRegularObject);
 PlotObjectFactory.register("msbl_regularsurface", PlotRegularSurface);
 PlotObjectFactory.register("msbl_kidneyarea", PlotKidneyarea);
+
+// 新修规则
+PlotObjectFactory.register("simpleline", PlotRegularObject);
 
 // 非规则符号
 PlotObjectFactory.register("msbl_AssaultArrow", PlotIrregularShape);
