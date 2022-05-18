@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-06-02 15:16:15
- * @LastEditTime: 2022-05-10 17:08:03
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-17 16:18:38
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Object\RegularElement\RegularSurface.ts
  */

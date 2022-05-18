@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 16:54:34
+ * @LastEditTime: 2022-05-18 14:52:57
  */
 
 import { fabric } from 'fabric';

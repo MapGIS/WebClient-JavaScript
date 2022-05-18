@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: zk
- * @LastEditTime: 2022-05-16 19:02:53
+ * @LastEditTime: 2022-05-18 09:45:46
  */
 import  {PlotObjectFactory}  from "./PlotObjectFactory";
 import  PlotRegularPoint  from "./RegularShapes/PlotRegularPoint";
@@ -12,6 +12,7 @@ import  PlotRegularSurface  from "./RegularShapes/PlotRegularSurface";
 import  PlotIrregularShape  from "./IrregularShapes/PlotIrregularShape";
 import  PlotIrregularShapeByLatlng  from "./IrregularShapes/PlotIrregularShapeByLatlng";
 import  PlotKidneyarea  from "./RegularShapes/PlotKidneyarea";
+import PlotSimpleArea from "./RegularShapes/PlotSimpleArea";
 
 PlotObjectFactory.register("msbl_regularpoint", PlotRegularPoint);
 PlotObjectFactory.register("msbl_regularLine1", PlotRegularObject);
@@ -21,6 +22,9 @@ PlotObjectFactory.register("msbl_kidneyarea", PlotKidneyarea);
 
 // 新修规则
 PlotObjectFactory.register("simpleline", PlotRegularObject);
+PlotObjectFactory.register("simplearea", PlotSimpleArea);
+PlotObjectFactory.register("simplepoint", PlotRegularPoint);
+
 
 // 非规则符号
 PlotObjectFactory.register("msbl_AssaultArrow", PlotIrregularShape);

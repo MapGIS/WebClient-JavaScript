@@ -7,6 +7,7 @@ import ExtendLineElement from '../extend/ExtendLineElement';
 import BaseSimple from './BaseSimple';
 import NoUseElement from '../extend/NoUseElement';
 import TSpanElement from '../TSpanElement';
+import MainLineElement from '../extend/MainLineElement';
 
 class SimpleLine extends BaseSimple {
     constructor(node) {
@@ -17,6 +18,7 @@ class SimpleLine extends BaseSimple {
     }
 
     _initValues() {
+
         super._initValues();
         // 获取轴线组
         this._extendLineArr = [];
@@ -24,17 +26,17 @@ class SimpleLine extends BaseSimple {
     _getMainDefaultLine() {
         for (let i = 0; i < this._extendLineArr.length; i++) {
             const v = this._extendLineArr[i].getDefaultLine();
-            if (v &&(v.getStart().y === this.height / 2 || v.getEnd().y === this.height / 2) ) {
+            if (v && (v.getStart().y === this.height / 2 || v.getEnd().y === this.height / 2)) {
                 return v;
             }
         }
-        return new DefaultLinePathParser(`m 0,${this.height/2} ${this.width},0`);
+        return new DefaultLinePathParser(`m 0,${this.height / 2} ${this.width},0`);
     }
 
     initBaseAttributes(node) {
         super.initBaseAttributes(node);
-        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== '2') {
-            new Error('符号类型不一致！');
+        if (this.getAttribute('zondyPlotSymbol:type').getValue()!== '1') {
+            throw new Error('符号类型不一致！');
         }
     }
 
@@ -47,56 +49,68 @@ class SimpleLine extends BaseSimple {
         const useStyle = this._getUseStyle(ele);
 
         if (SimpleLine.sliceTypes.indexOf(useStyle) === -1) {
-            const nouse= new NoUseElement(document.createElement('svg'))
-            return nouse
+            const nouse = new NoUseElement(document.createElement('svg'));
+            return nouse;
         }
 
-        if (useStyle === '10') {
+        if (useStyle === '10' || useStyle === '11') {
             this.isExtendLine = true;
             if (node.nodeName === 'g') {
                 let childNode = node.firstElementChild;
-                
-                let i=0
+
+                let i = 0;
                 while (childNode) {
                     if (childNode.nodeName === 'path') {
-                        const extendElement = new ExtendLineElement(childNode);
+
+                        let extendElement
+                        if( useStyle === '11'){
+                            extendElement = new ExtendLineElement(childNode);
+                        }else{
+                            extendElement= new MainLineElement(childNode)  
+                        }
+
                         this._extendLineArr.push(extendElement);
-                        ele._children[i]= extendElement
-                        extendElement._parent=ele
+                        ele._children[i] = extendElement;
+                        extendElement._parent = ele;
                     }
-                    i=i+1
+                    i = i + 1;
                     childNode = childNode.nextElementSibling;
                 }
                 return ele;
             }
             if (node.nodeName === 'path') {
-                const extendElement = new ExtendLineElement(node);
+
+                let extendElement
+                if( useStyle === '11'){
+                    extendElement = new ExtendLineElement(node);
+                }else{
+                    extendElement= new MainLineElement(node)  
+                }
+
                 this._extendLineArr.push(extendElement);
                 return extendElement;
             }
         }
-        if (useStyle === '11' || useStyle === '12') {
-            if (node.nodeName === 'g') {
-                ele._children.forEach((s)=>{
-                    this.applyPartElement(s)
-                })
-                return ele;
+        if (useStyle === '12' || useStyle === '13') {
+            this._travelElementArr(ele._children, (s) => {
+                this.applyPartElement(s);
+            });
+            if (node.nodeName !== 'g') {
+                this.applyPartElement(ele);
             }
-            if (node.nodeName === 'path') {
-                this.applyPartElement(ele)
-                return ele;
-            }
+            return ele;
         }
         return ele;
     }
+
     _applyElementTransfrom(element) {
         const type = this._getUseStyle(element);
         switch (type) {
-            case '11': {
+            case '12': {
                 this._dupAction(element);
                 break;
             }
-            case '12': {
+            case '13': {
                 this._nonAction(element);
                 break;
             }
@@ -127,7 +141,7 @@ class SimpleLine extends BaseSimple {
 
     _getPathRate(gOrigin, mainLine, defaultLine, width, flag) {
         const lengTotal = mainLine.lengthArr.reduce((total, current) => total + current);
-   
+
         const start = defaultLine.getStart();
         const end = defaultLine.getEnd();
 
@@ -141,7 +155,7 @@ class SimpleLine extends BaseSimple {
         const _eleMainLineRate = (offsetX / (end.x - start.x)) * mainLineRate + startRate;
 
         const offsetRate = flag ? _eleMainLineRate : 1 - _eleMainLineRate;
-        debugger
+
         return [offsetRate, offsetX, offsetY];
     }
 
@@ -149,6 +163,7 @@ class SimpleLine extends BaseSimple {
         // 子节点调用
         const { width, defaultLine, poly } = this;
         const arrowDir = element.getPose() === '0' ? false : true;
+
         let flag = true;
         let gOrigin = element.getOriginPoint();
 
@@ -195,7 +210,9 @@ class SimpleLine extends BaseSimple {
             if (arrowDir) {
                 scaleY = -scaleY;
             }
-        } else {
+        }
+
+        if ((rotateAngle < -90 && rotateAngle > -180) || (rotateAngle > 90 && rotateAngle < 180)) {
             // 处理文字的翻转
             if (element instanceof TSpanElement) {
                 const bounds = element.getBoundingBox();
@@ -298,43 +315,11 @@ class SimpleLine extends BaseSimple {
                 element.getAttribute('zondyPlotSymbolItem:type').getValue() ||
                 (element._parent && element._parent.getAttribute('zondyPlotSymbolItem:type').getValue());
         } else {
-            type = '12';
+            type = '13';
         }
         return type;
     }
 
-    applyPartElement(ele) {
-        if (!ele) return;
-        const origin = this._getOriginPointByPx(ele);
-        ele.getOriginPoint = function () {
-            return origin.clone();
-        };
-        const pose = this.getAttribute('zondyPlotSymbolItem:pose').hasValue() ? this.getAttribute('zondyPlotSymbolItem:pose').getValue() : '0';
-        ele.getPose = function () {
-            return pose;
-        };
-    }
-    _getOrigin(ele) {
-        let origin;
-        if (ele.getAttribute('zondyPlotSymbolItem:markerOrigin').hasValue()) {
-            const arr = ele.getAttribute('zondyPlotSymbolItem:markerOrigin').getString().split(',');
-            origin = new Point(parseFloat(arr[0]), parseFloat(arr[1]));
-        } else {
-            const bounds = ele.getBoundingBox();
-            origin = bounds.getCenter();
-        }
-        return origin;
-    }
-    _getOriginPointByPx(ele) {
-        let gOrigin;
-        const group = ele.getElementGroup();
-        if (group) {
-            gOrigin = this._getOrigin(group);
-        } else {
-            gOrigin = this._getOrigin(ele);
-        }
-        return gOrigin;
-    }
     /**
      * @description: 判断是否进行绘制
      * @param {*}
@@ -371,6 +356,6 @@ class SimpleLine extends BaseSimple {
     }
 }
 
-SimpleLine.sliceTypes = ['10', '11', '12'];
+SimpleLine.sliceTypes = ['10', '11', '12','13'];
 
 export default SimpleLine;

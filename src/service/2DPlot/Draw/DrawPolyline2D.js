@@ -40,7 +40,7 @@ export default class DrawPolyline2D extends DrawObject {
     innerOnMouseMove(event) {
         const pnt = this.m_coordSys.pointToData([event.pointer.x, event.pointer.y]);
         this.m_coords[this.m_coords.length - 1] = new Point(pnt[0], pnt[1]);
-        if (this.m_coords.length >= 2) {
+        if (this.m_coords.length >= 2 && this.m_object) {
             this.m_object.setPnts(this.m_coords);
             this.m_fabricCanvas.requestRenderAll();
         }
