@@ -11,7 +11,7 @@ import {CesiumUtil} from "../../Utils/CesiumUtil";
 import SvgElementInstance from "./SvgElementInstance";
 
 export default class RegularSurfaceElementInstance extends SvgElementInstance {
-  svgToGeomInstances(elem,options) {
+  svgToGeomInstances(elem,options,callback) {
     const { surfaceBorderWidth }=options
     this.polylineOutInstance = null;
     this.polygonRect = new Bounds();
@@ -44,12 +44,12 @@ export default class RegularSurfaceElementInstance extends SvgElementInstance {
     });
 
     const exportInstance = instances.flat();
-    return {
+    callback({
       instances: exportInstance,
       polylineOutInstance: this.polylineOutInstance,
       polygonRect:this.polygonRect,
       borderColor:this._borderColor
-    };
+    });
   }
 
   pathElemToGeomInstance(elem) {

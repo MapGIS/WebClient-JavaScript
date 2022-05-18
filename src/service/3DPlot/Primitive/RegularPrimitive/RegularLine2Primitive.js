@@ -14,12 +14,13 @@ class RegularLine2Primitive extends RegularLine1Primitive {
     super(options);
   }
 
-  _elementInstance(ele) {
-    const instances = new RegularLine2ElementInstance(ele, {
+  _elementInstance(ele, callback) {
+    new RegularLine2ElementInstance(ele, {
       ...this.getBaseSaveAttributesValues(),
       globelScale: this.getGlobelScale()
-    }).getInstance();
-    return instances;
+    }).getInstance(function (instances) {
+      callback(instances);
+    });
   }
 
   initBaseSaveAttributes() {
