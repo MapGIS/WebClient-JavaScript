@@ -12,9 +12,9 @@ import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/M
 import RegularLineElementInstance from "./RegularLineElementInstance";
 
 export default class RegularLine1ElementInstance extends RegularLineElementInstance {
-  pathElemToWallGeomInstance(pathElem, options) {
+  pathElemToWallGeomInstance(pathElem, options, sampleHeights) {
     if (!(pathElem instanceof MainElement)) return undefined;
-    return super.pathElemToWallGeomInstance(pathElem, options);
+    return super.pathElemToWallGeomInstance(pathElem, options, sampleHeights);
   }
 
   transfromGeoCesium(elem, cesgeo, options) {
@@ -26,7 +26,7 @@ export default class RegularLine1ElementInstance extends RegularLineElementInsta
   }
 
   _rotatePart(ele, cesGeom, options) {
-    const { dimModHeight } = options;
+    let { dimModHeight } = options;
     if (ele instanceof MainElement) return;
 
     if (!ele._dimModal.is3DTran()) return;
@@ -42,6 +42,10 @@ export default class RegularLine1ElementInstance extends RegularLineElementInsta
       translatePoint.y
     );
 
+    //这个地方控制抬起高度，贴地或贴模型时抬高高度为0
+    if(typeof this._classificationType === 'number' && this._classificationType >= 0){
+      dimModHeight = 0;
+    }
     const originPnt = Cesium.Cartesian3.fromDegreesArrayHeights([
       t.x,
       t.y,
