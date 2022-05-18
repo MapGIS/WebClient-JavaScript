@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-02-17 19:03:38
  * @LastEditors: zk
- * @LastEditTime: 2022-05-18 20:15:51
+ * @LastEditTime: 2022-05-18 20:29:03
  */
 import Point from "../../../../PlotUtilBase/Geometry/Point";
 import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
@@ -208,6 +208,7 @@ export default class RegularLine1 extends BaseRegularElement {
     // 特殊处理线一
     if (element._dimModal) {
       element._dimModal.set3D(true);
+      element._dimModal.setAttitude(arrowDir)
       element._dimModal.setLineAngle(lineangle);
       element._dimModal.setTranslatePoint(origin.clone());
     }

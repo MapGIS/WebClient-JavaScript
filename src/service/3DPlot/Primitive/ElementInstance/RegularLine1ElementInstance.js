@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:26:48
- * @LastEditTime: 2022-03-31 14:41:20
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-18 20:29:50
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
@@ -20,7 +20,7 @@ export default class RegularLine1ElementInstance extends RegularLineElementInsta
   transfromGeoCesium(elem, cesgeo, options) {
     super.transfromGeoCesium(elem, cesgeo, options);
     const {dimModAttitude}=options
-    if (dimModAttitude === 1){
+    if (dimModAttitude === 1 && elem.getAttitude()){
       this._rotatePart(elem, cesgeo, options);
     }
   }

@@ -3,12 +3,13 @@ import Point from "../../../PlotUtilBase/Geometry/Point";
  * @Description: element维度转换
  * @Author: zk
  * @Date: 2021-11-16 11:04:30
- * @LastEditors: Do not edit
- * @LastEditTime: 2021-11-16 14:16:03
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-18 20:28:14
  */
 export default class DimModal {
   constructor() {
     this._3d = false;
+    this._attitude=false
     this.lineAngle = null;
     this.translatePoint = null;
     this.translatePnt = null;
@@ -18,6 +19,12 @@ export default class DimModal {
   }
   set3D(flag) {
     this._3d = !!flag;
+  }
+  setAttitude(flag){
+    this._attitude=flag
+  }
+  getAttitude(){
+    return this._attitude
   }
   setLineAngle(angle){
     this.lineAngle=angle
