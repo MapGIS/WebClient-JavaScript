@@ -2,8 +2,8 @@
 /*
  * @Author: your name
  * @Date: 2021-09-14 18:57:30
- * @LastEditTime: 2022-03-04 13:45:41
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-18 19:51:19
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element\TSapnElement.js
  */
@@ -159,15 +159,14 @@ class TSpanElement extends TextElement {
     textGeo.vertexArrayBuffer.applyMatrix4(matrix4_2);
 
     // 处理文字对象的竖立（特殊逻辑）
-    if (this._dimModal.is3DTran()) {
+    // if (this._dimModal.is3DTran()) {
       const _p = this._dimModal.getTranslatePoint();
       const tempY = -this._y;
       const p = new Point(_p.x, tempY);
       p.applyMatrix3(t1);
       p.applyMatrix3(t2);
-
       this._dimModal.setTranslatePnt(new Point(p.x, p.y));
-    }
+    // }
   }
 
   getBoundingBox() {

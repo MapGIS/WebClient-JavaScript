@@ -302,6 +302,7 @@ class SimpleArea extends BaseSimple {
             return;
         }
 
+
         if (useStyle === '13') {
             this._nonAction(child);
         }
