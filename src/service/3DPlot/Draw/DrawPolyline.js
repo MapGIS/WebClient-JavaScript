@@ -47,6 +47,7 @@ export default class DrawPolyline extends DrawObject {
     const viewer = this._viewer;
     const symbol = this._symbol;
     const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+    const {classificationType} = symbol;
     let that = this;
 
     handler.setInputAction((event) => {
@@ -62,6 +63,7 @@ export default class DrawPolyline extends DrawObject {
           that._primitive = PrimitiveFactory.createInstance(symbol.type, {
             positions: that.m_coords,
             element: res,
+            classificationType: classificationType
           });
           that._isAdded = true;
           that._plotLayer._primitiveCollection.add(that._primitive);

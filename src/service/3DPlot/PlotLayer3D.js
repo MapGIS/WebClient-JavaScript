@@ -271,20 +271,6 @@ class PlotLayer3D extends Observable {
     }
     return plots;
   }
-
-  _mercatorTolonlat(mercator) {
-    let lonlat = {lon: 0, lat: 0};
-
-    let x = mercator.x / 20037508.34 * 180;
-    let y = mercator.y / 20037508.34 * 180;
-
-    y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
-
-    lonlat.lon = x;
-    lonlat.lat = y;
-
-    return lonlat;
-  };
 }
 
 Object.defineProperties(PlotLayer3D.prototype, {
