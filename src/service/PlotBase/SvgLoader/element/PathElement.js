@@ -3,7 +3,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 18:10:16
- * @LastEditTime: 2022-05-18 19:51:52
+ * @LastEditTime: 2022-05-18 20:01:49
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\PathElement.js
@@ -158,14 +158,14 @@ export default class PathElement extends RenderedElement {
         const tureMatrix = transformMatrix.clone().multiply(matrix);
         _coords = this._getCoords(tureMatrix);
         // 部件竖立 （特殊逻辑）
-        // if (this._dimModal.is3DTran()) {
+        if (this._dimModal.is3DTran()) {
           const _pnts = new Point(
             this._dimModal.getTranslatePoint().x,
             this._dimModal.getTranslatePoint().y
           );
           _pnts.applyMatrix3(tureMatrix);
           this._dimModal.setTranslatePnt(_pnts);
-        // }
+        }
       }
     } else {
       _coords = [];
