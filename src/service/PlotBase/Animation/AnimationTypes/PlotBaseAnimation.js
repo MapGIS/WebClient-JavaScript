@@ -2,12 +2,12 @@
  * @Description: 动画基础类
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-25 10:01:27
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:28:41
  */
 import { AnimationUtil } from "../utils/AnimationUtil";
 import { easingFunc } from "../utils/Easing";
-export class PlotBaseAnimation {
+export default class PlotBaseAnimation {
   constructor(options) {
     // copy options
     this._options = options;

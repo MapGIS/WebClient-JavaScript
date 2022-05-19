@@ -2,13 +2,13 @@
  * @Description:
  * @Author: zk
  * @Date: 2022-04-19 10:53:30
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-24 15:54:12
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:29:00
  */
 import { AnimationUtil } from "../../utils/AnimationUtil";
-import { PlotBaseAnimation } from "../PlotBaseAnimation";
+import  PlotBaseAnimation  from "../PlotBaseAnimation";
 
-export class PlotScaleAnimation extends PlotBaseAnimation {
+export default class PlotScaleAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options)
     // animation type

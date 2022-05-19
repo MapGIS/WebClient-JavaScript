@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 13:47:03
+ * @LastEditTime: 2022-05-19 14:51:07
  */
 
 /**
@@ -14,13 +14,13 @@
 
 import { AnimationReg } from "../AnimationTypes";
 export default class TimeLine {
-  constructor(canvas, options) {
-    this._canvas = canvas;
+  constructor(layerGroup, options) {
+    this._layerGroup = layerGroup;
     this._timeLineName = options.timeLineName || "";
     this._totalTime = options.totalTime || 20000;
     // 动画对象的队列
     this.handleRender = function () {
-      canvas.requestRenderAll ? canvas.requestRenderAll() : null;
+      layerGroup.requestRenderAll ? layerGroup.requestRenderAll() : null;
     };
     this._animationArr = [];
     this._animationItems = [];
@@ -38,7 +38,7 @@ export default class TimeLine {
     const plotObjects = item.featureIds
       .split(",")
       .map((t) => {
-        return this._canvas.getPlotObjectById(t);
+        return this._layerGroup.getPlotObjectById(t);
       })
       .filter((b) => b);
     return new animation({

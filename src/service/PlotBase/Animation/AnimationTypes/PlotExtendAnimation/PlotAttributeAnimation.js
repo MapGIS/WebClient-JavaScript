@@ -2,14 +2,14 @@
  * @Description: 属性动画类
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-19 15:09:44
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:30:10
  */
 import { AnimationUtil } from "../../utils/AnimationUtil";
 import { GradientColor } from "../../utils/GradientColor";
-import { PlotBaseAnimation } from "../PlotBaseAnimation";
+import  PlotBaseAnimation  from "../PlotBaseAnimation";
 
-export class PlotAttributeAnimation extends PlotBaseAnimation {
+export default class PlotAttributeAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options);
     // animation type

@@ -2,14 +2,14 @@
  * @Description: 显隐动画类
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-20 15:47:08
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:31:06
  */
 import { AnimationUtil } from "../../../utils/AnimationUtil";
-import { PlotColorAnimation } from "./PlotColorAnimation";
+import  PlotColorAnimation  from "./PlotColorAnimation";
 
 const _ = require("lodash");
-export class PlotVisibleAnimation extends PlotColorAnimation {
+export default class PlotVisibleAnimation extends PlotColorAnimation {
   constructor(options) {
     super(options);
     // animation type

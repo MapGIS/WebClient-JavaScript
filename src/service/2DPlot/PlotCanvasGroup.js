@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-18 14:52:57
+ * @LastEditTime: 2022-05-19 14:54:49
  */
 
 import { fabric } from 'fabric';
@@ -199,35 +199,20 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
     /**
      * @function: Module:PlotCanvasGroup.prototype.getPlotObjectById
      * @description: 根据要素id获取要素对象
-     * @param {*} uid
+     * @param {String} uid
      * @return {*}
      */
     getPlotObjectById(uid) {
-        let t;
-        this._objects.forEach((s) => {
-            const elem = s.getElement();
+        let t=null;
+        for(let i =0;i<this._objects.length;i++){
+            const object = this._objects[i]
+            const elem = object.getElement();
             if (elem && elem.getFeatureId() === uid) {
-                t = s;
-            }
-        });
-        return t;
-    },
-    _isInMapBounds(positions, mapBounds) {
-        let flag = false;
-
-        const nw = mapBounds[0];
-        const es = mapBounds[1];
-
-        for (let i = 0; i < positions.length; i++) {
-            const x = positions[i].x;
-            const y = positions[i].y;
-
-            if (x > nw[0] && x < es[0] && y < es[1] && y > nw[1]) {
-                flag = true;
-                break;
-            }
+                t = object;
+                break
+            }  
         }
-        return flag;
+        return t;
     },
     /**
      * @function: Module:PlotCanvasGroup.prototype._renderObjects
@@ -236,12 +221,20 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
      * @param {Array<Object>} objects
      */
     _renderObjects(ctx, objects) {
-        const mapBounds = this.getCoordSys().getBounds();
         var i, len;
         for (i = 0, len = objects.length; i < len; ++i) {
             const object = objects[i];
             const element = object.getElement();
-            const flag = element ? this._isInMapBounds(element.positions, mapBounds) : false;
+            const bounds  = element.getBounds()
+            const left = bounds.left
+            const bottom= bounds.bottom
+            const top= bounds.top
+            const right= bounds.right
+            
+            let flag = true
+            if((this.width<left && this.height<bottom) || (top<0 && right<0 ) ){
+                flag=false                
+            }
             flag && object && object.render(ctx);
         }
     }

@@ -1,14 +1,14 @@
 import { AnimationUtil } from "../../utils/AnimationUtil";
-import { PlotBaseAnimation } from "../PlotBaseAnimation";
+import  PlotBaseAnimation from "../PlotBaseAnimation";
 
 /*
  * @Description: 路径动画类
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-19 11:27:07
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:31:22
  */
-export class PlotPathAnimation extends PlotBaseAnimation {
+export default  class PlotPathAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options)
     // animation type

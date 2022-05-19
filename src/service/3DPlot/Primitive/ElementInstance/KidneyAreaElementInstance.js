@@ -10,14 +10,9 @@ import RegularLine1ElementInstance from "./RegularLine1ElementInstance";
 import {CesiumGeomUtil} from "../../Utils/CesiumUtil";
 export default class KidneyAreaElementInstance extends RegularLine1ElementInstance {
   transfromGeoCesium(elem, cesgeo, options) {
-    let {dimModHeight} = options;
-    if(typeof this._classificationType === 'number' && this._classificationType >= 0){
-      dimModHeight = 0;
-    }
-
     CesiumGeomUtil.degreesWithHeightToWorldCoords(
         cesgeo,
-      dimModHeight
+      options.dimModHeight
     );
     this._rotatePart(elem, cesgeo, options);
   }

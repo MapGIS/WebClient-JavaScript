@@ -12,12 +12,10 @@ import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/M
 import { defined } from "../../../PlotUtilBase/Check";
 
 export default class RegularLineElementInstance extends SvgElementInstance {
-  svgToGeomInstances(elem, options, callback) {
-    let that = this;
-    super.svgToGeomInstances(elem, options, function (instances, sampleHeights) {
-      const wallGeomInstances = that.generateWallGeometryInstances(elem, options);
-      callback({ instances, wallGeomInstances });
-    });
+  svgToGeomInstances(elem, options) {
+    const instances = super.svgToGeomInstances(elem, options);
+    const wallGeomInstances = this.generateWallGeometryInstances(elem, options);
+    return { instances, wallGeomInstances };
   }
 
   /**
@@ -87,7 +85,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     return instances;
   }
 
-  pathElemToGeomInstance(pathElem, options, sampleHeights) {
+  pathElemToGeomInstance(pathElem, options) {
     const instances = [];
     const style=pathElem.getContextStyle()
     const fill =style.fillStyle;
@@ -104,21 +102,10 @@ export default class RegularLineElementInstance extends SvgElementInstance {
 
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
-        let heights, geometry;
-        if(sampleHeights) {
-          heights = sampleHeights[i];
-          geometry = this._generateStrokeGeometry(
-            coords,
-            isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
-            heights
-          );
-        }else {
-          geometry = this._generateStrokeGeometry(
-            coords,
-            isMainElement ? strokeWidthSize - 5 : strokeWidthSize
-          );
-        }
-
+        const geometry = this._generateStrokeGeometry(
+          coords,
+          isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+        );
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
@@ -168,14 +155,9 @@ export default class RegularLineElementInstance extends SvgElementInstance {
   }
 
   transfromGeoCesium(elem,cesGeom, options) {
-    let {dimModHeight} = options;
-    //这个地方控制抬起高度，贴地或贴模型时抬高高度为0
-    if(typeof this._classificationType === 'number' && this._classificationType >= 0){
-      dimModHeight = 0;
-    }
     CesiumGeomUtil.degreesWithHeightToWorldCoords(
       cesGeom,
-      dimModHeight
+      options.dimModHeight
     );
   }
 }

@@ -2,14 +2,14 @@
  * @Description: 对象颜色动画类
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-20 15:46:57
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:30:40
  */
-import { PlotBaseAnimation } from "../../PlotBaseAnimation";
+import  PlotBaseAnimation  from "../../PlotBaseAnimation";
 import { AnimationColorUtil } from "../../../utils/ColorUtil";
 import { is } from "../../../utils/AnimationUtil";
 
-export class PlotColorAnimation extends PlotBaseAnimation {
+export default class PlotColorAnimation extends PlotBaseAnimation {
   constructor(options) {
     super(options);
     // animation type

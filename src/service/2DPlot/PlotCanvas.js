@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-16 19:10:38
+ * @LastEditTime: 2022-05-19 11:28:26
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -17,7 +17,7 @@ export default class PlotCanvas {
     constructor() {
         // 标绘对象
         this.m_plotObjects = [];
-        // fabricCanvas 
+        // fabricCanvas
         this._fabricCanvas = null;
         // uuid
         this._layerId = createGuid();
@@ -25,7 +25,7 @@ export default class PlotCanvas {
         this._visible = true;
         // event
         this._objectModifiedEventAction = this._objectModifiedEventAction.bind(this);
-        this._eventHandlers=[]
+        this._eventHandlers = [];
     }
 
     /**
@@ -66,6 +66,9 @@ export default class PlotCanvas {
     removeEvent() {
         this._fabricCanvas && this._fabricCanvas.off('object:modified', this._objectModifiedEventAction);
     }
+    /**
+     * @param {{ target: any; action: string; }} event
+     */
     _objectModifiedEventAction(event) {
         const target = event.target;
         if (this.m_plotObjects.indexOf(target) === -1) {
@@ -92,9 +95,9 @@ export default class PlotCanvas {
      * @param {String} eventName 事件名，参考fabricjs Canvas类事件
      * @param {Function} handler 绑定函数
      */
-    on(eventName,handler){
-        this._eventHandlers.push({eventName,handler})
-        this._fabricCanvas.on(eventName,handler)
+    on(eventName, handler) {
+        this._eventHandlers.push({ eventName, handler });
+        this._fabricCanvas.on(eventName, handler);
     }
     /**
      * @function: Module:PlotCanvas.prototype.off
@@ -102,12 +105,12 @@ export default class PlotCanvas {
      * @param {String} eventName 事件名
      * @return {*}
      */
-    off(eventName){
-       this._eventHandlers.forEach((s)=>{
-        if(s.eventName===eventName){
-            this._fabricCanvas.off(s.eventName,s.handler)
-        } 
-       })
+    off(eventName) {
+        this._eventHandlers.forEach((s) => {
+            if (s.eventName === eventName) {
+                this._fabricCanvas.off(s.eventName, s.handler);
+            }
+        });
     }
     /**
      * @function: Module:PlotCanvas.prototype._createHandler
@@ -115,14 +118,14 @@ export default class PlotCanvas {
      * @param {*} handler
      * @return {*}
      */
-    _createHandler(handler){
-        return (event)=>{
+    _createHandler(handler) {
+        return (/** @type {{ target: any; }} */ event) => {
             const target = event.target;
             if (this.m_plotObjects.indexOf(target) === -1) {
                 return;
             }
-            handler(event)
-        }
+            handler(event);
+        };
     }
     /**
      * @function: Module:PlotCanvas.prototype.setCoordSys
@@ -255,7 +258,7 @@ export default class PlotCanvas {
     fromGeoJSON(geoJson) {
         if (geoJson.type === 'FeatureCollection') {
             const { features } = geoJson;
-            features.forEach((s) => {
+            features.forEach((/** @type {any} */ s) => {
                 this.addGeoJSONObject(s);
             });
         } else {
@@ -307,7 +310,7 @@ export default class PlotCanvas {
     /**
      * @function: Module:PlotCanvas.prototype.getPlotObjects
      * @description: 获取标绘对象列表
-     * @return {Array<Object>} 
+     * @return {Array<Object>}
      */
     getPlotObjects() {
         return this.m_plotObjects;
@@ -338,11 +341,69 @@ export default class PlotCanvas {
         }
         this._fabricCanvas.requestRenderAll();
     }
+
+    /**
+     * @function: Module:PlotCanvas.prototype.queryPlotByPoint
+     * @description: 点选标绘对象
+     * @param {{ x: number; y: number; } | [number,number]} point
+     * @return {null | Object} 标绘对象
+     */
+    queryPlotByPoint(point) {
+        const p = Array.isArray(point) ? point : [point.x, point.y];
+        for (let i = 0; i < this.m_plotObjects.length; i++) {
+            const plot = this.m_plotObjects[i];
+            const element = plot.getElement();
+            const bounds = element.getBounds();
+            if (!this._isInBounds(p, bounds)) {
+                return plot;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @function: Module:PlotCanvas.prototype.queryPlotsByBounds
+     * @description: 矩阵选查询
+     * @param {{ left: number; right: number; bottom: number; top: number; }} bounds
+     * @return {*}
+     */
+    queryPlotsByBounds(bounds) {
+        const expPlots = [];
+        const p1 = [bounds.left, bounds.right];
+        const p2 = [bounds.bottom, bounds.top];
+        for (let i = 0; i < this.m_plotObjects.length; i++) {
+            const plot = this.m_plotObjects[i];
+            const element = plot.getElement();
+            const ebounds = element.getBounds();
+            if (!this._isInBounds(p1, ebounds)) {
+                expPlots.push(plot);
+            }
+            if (!this._isInBounds(p2, ebounds)) {
+                expPlots.push(plot);
+            }
+        }
+        return expPlots;
+    }
+    /**
+     * @param {any[]} p
+     * @param {{ left: any; bottom: any; top: any; right: any; }} bounds
+     */
+    _isInBounds(p, bounds) {
+        const left = bounds.left;
+        const bottom = bounds.bottom;
+        const top = bounds.top;
+        const right = bounds.right;
+        if (left < p[0] && p[0] < right && bottom < p[1] && p[1] < top) {
+            return false;
+        }
+        return false;
+    }
+
     /**
      * @function: Module:PlotCanvas.prototype.requestRenderAll
      * @description: 请求渲染
      */
-    requestRenderAll(){
-        this._fabricCanvas.requestRenderAll()
+    requestRenderAll() {
+        this._fabricCanvas.requestRenderAll();
     }
 }

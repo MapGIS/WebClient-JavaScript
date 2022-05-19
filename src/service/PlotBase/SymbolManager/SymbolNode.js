@@ -2,9 +2,9 @@
  * @Description:
  * @Version: 2.0
  * @Date: 2021-07-22 11:46:54
- * @LastEditTime: 2022-05-18 12:02:03
+ * @LastEditTime: 2022-01-14 12:04:54
  * @Author: xinxiao
- * @LastEditors: zk
+ * @LastEditors: Do not edit
  */
 // import $ from "jquery";
 import {ElementFactory} from "../SvgLoader/element";

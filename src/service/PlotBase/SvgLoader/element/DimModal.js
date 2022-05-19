@@ -9,7 +9,6 @@ import Point from "../../../PlotUtilBase/Geometry/Point";
 export default class DimModal {
   constructor() {
     this._3d = false;
-    this._attitude=false
     this.lineAngle = null;
     this.translatePoint = null;
     this.translatePnt = null;
@@ -19,12 +18,6 @@ export default class DimModal {
   }
   set3D(flag) {
     this._3d = !!flag;
-  }
-  setAttitude(flag){
-    this._attitude=flag
-  }
-  getAttitude(){
-    return this._attitude
   }
   setLineAngle(angle){
     this.lineAngle=angle

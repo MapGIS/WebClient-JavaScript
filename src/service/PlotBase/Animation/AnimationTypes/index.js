@@ -2,15 +2,15 @@
  * @Description:
  * @Author: zk
  * @Date: 2022-03-23 15:13:16
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-20 15:47:24
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:31:42
  */
-import { PlotAttributeAnimation } from "./PlotExtendAnimation/PlotAttributeAnimation";
-import { PlotBaseAnimation } from "./PlotBaseAnimation";
-import { PlotBlinkAnimation } from "./PlotExtendAnimation/PlotColorAnimation/PlotBlinkAnimation";
-import { PlotGrowAnimation } from "./PlotExtendAnimation/PlotGrowAnimation";
-import { PlotScaleAnimation } from "./PlotExtendAnimation/PlotScaleAnimation";
-import { PlotVisibleAnimation } from "./PlotExtendAnimation/PlotColorAnimation/PlotVisibleAnimation";
+import  PlotAttributeAnimation  from "./PlotExtendAnimation/PlotAttributeAnimation";
+import  PlotBaseAnimation  from "./PlotBaseAnimation";
+import  PlotBlinkAnimation  from "./PlotExtendAnimation/PlotColorAnimation/PlotBlinkAnimation";
+import  PlotGrowAnimation  from "./PlotExtendAnimation/PlotGrowAnimation/PlotGrowAnimation";
+import  PlotScaleAnimation  from "./PlotExtendAnimation/PlotScaleAnimation";
+import  PlotVisibleAnimation  from "./PlotExtendAnimation/PlotColorAnimation/PlotVisibleAnimation";
 class AnimationReg {
   static getAnimation(type) {
     if (type === 0 || type === "base-animation") {

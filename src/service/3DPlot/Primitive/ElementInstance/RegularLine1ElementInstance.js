@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:26:48
- * @LastEditTime: 2022-05-18 20:29:50
- * @LastEditors: zk
+ * @LastEditTime: 2022-03-31 14:41:20
+ * @LastEditors: Do not edit
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
@@ -12,21 +12,21 @@ import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/M
 import RegularLineElementInstance from "./RegularLineElementInstance";
 
 export default class RegularLine1ElementInstance extends RegularLineElementInstance {
-  pathElemToWallGeomInstance(pathElem, options, sampleHeights) {
+  pathElemToWallGeomInstance(pathElem, options) {
     if (!(pathElem instanceof MainElement)) return undefined;
-    return super.pathElemToWallGeomInstance(pathElem, options, sampleHeights);
+    return super.pathElemToWallGeomInstance(pathElem, options);
   }
 
   transfromGeoCesium(elem, cesgeo, options) {
     super.transfromGeoCesium(elem, cesgeo, options);
     const {dimModAttitude}=options
-    if (dimModAttitude === 1 && elem.getAttitude()){
+    if (dimModAttitude === 1){
       this._rotatePart(elem, cesgeo, options);
     }
   }
 
   _rotatePart(ele, cesGeom, options) {
-    let { dimModHeight } = options;
+    const { dimModHeight } = options;
     if (ele instanceof MainElement) return;
 
     if (!ele._dimModal.is3DTran()) return;
@@ -42,10 +42,6 @@ export default class RegularLine1ElementInstance extends RegularLineElementInsta
       translatePoint.y
     );
 
-    //这个地方控制抬起高度，贴地或贴模型时抬高高度为0
-    if(typeof this._classificationType === 'number' && this._classificationType >= 0){
-      dimModHeight = 0;
-    }
     const originPnt = Cesium.Cartesian3.fromDegreesArrayHeights([
       t.x,
       t.y,

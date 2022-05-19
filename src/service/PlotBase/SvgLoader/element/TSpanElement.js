@@ -159,7 +159,6 @@ class TSpanElement extends TextElement {
     textGeo.vertexArrayBuffer.applyMatrix4(matrix4_2);
 
     // 处理文字对象的竖立（特殊逻辑）
-    this._dimModal.set3D(true)
     if (this._dimModal.is3DTran()) {
       const _p = this._dimModal.getTranslatePoint();
       const tempY = -this._y;

@@ -105,7 +105,6 @@ export default class RegularLine1 extends BaseRegularElement {
   _applyElementTransfrom(element) {
     // 子节点调用
     const { width, defaultLine, flag, poly } = this;
-    
     let gOrigin;
     let arrowDir = false;
     let scaleX = 1;
@@ -207,8 +206,7 @@ export default class RegularLine1 extends BaseRegularElement {
 
     // 特殊处理线一
     if (element._dimModal) {
-      element._dimModal.set3D(true);
-      element._dimModal.setAttitude(arrowDir)
+      element._dimModal.set3D(arrowDir);
       element._dimModal.setLineAngle(lineangle);
       element._dimModal.setTranslatePoint(origin.clone());
     }

@@ -2,14 +2,14 @@
  * @Description: 闪烁动画类
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-24 13:46:07
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-19 15:30:52
  */
-import { PlotColorAnimation } from "./PlotColorAnimation";
+import  PlotColorAnimation  from "./PlotColorAnimation";
 import { GradientColor } from "../../../utils/GradientColor";
 import { AnimationUtil } from "../../../utils/AnimationUtil";
 
-export class PlotBlinkAnimation extends PlotColorAnimation {
+export default class PlotBlinkAnimation extends PlotColorAnimation {
   constructor(options) {
     super(options);
     // animation type

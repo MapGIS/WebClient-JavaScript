@@ -11,15 +11,10 @@ import RegularLine1ElementInstance from "../ElementInstance/RegularLine1ElementI
 
 class RegularLine1Primitive extends BaseRegularPrimitive {
   constructor(options) {
-    options = options || {};
     super(options);
-    //是否贴地或贴模型
-    const {classificationType} = options;
-    this._classificationType = classificationType;
   }
 
   update(frameState) {
-    let that = this;
     if (!this._elem || !this._elem.show) {
       return;
     }
@@ -27,22 +22,16 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     if (this._update) {
       this._update = false;
       this._translucent = false;
-      this._createGeomInstance(function (elementInstance) {
-        const {instances, wallGeomInstances} = elementInstance;
-        that.applySelectStatus(instances);
-        that.instancesToPrimitives(instances);
-        //不贴地或不贴模型时，才显示墙
-        if(!that._classificationType && !(typeof that._classificationType === 'number')){
-          that.wallInstancesToPrimitive(wallGeomInstances);
-        }
-        that.updatePrimitive(frameState);
-      });
-    }else {
-      this.updatePrimitive(frameState);
+      const {instances, wallGeomInstances} = this._createGeomInstance();
+
+      this.applySelectStatus(instances);
+      this.instancesToPrimitives(instances);
+      this.wallInstancesToPrimitive(wallGeomInstances);
     }
+    this.updatePrimitive(frameState);
   }
 
-  _createGeomInstance(callback) {
+  _createGeomInstance() {
     const webMercatorProjection = new Cesium.WebMercatorProjection();
 
     const projectPos = this._positions.map((s) => {
@@ -55,18 +44,15 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     this._elem.changeAttributeStatus(true, scale, scale);
 
     this._elem.setPoints(projectPos);
-    this._elementInstance(this._elem, function (instances) {
-      callback(instances);
-    })
+    return this._elementInstance(this._elem);
   }
 
-  _elementInstance(ele, callback) {
-    new RegularLine1ElementInstance(
+  _elementInstance(ele) {
+    const instances = new RegularLine1ElementInstance(
       ele,
       {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
-    ).getInstance(function (instances) {
-      callback(instances);
-    });
+    ).getInstance();
+    return instances;
   }
 
   initBaseSaveAttributes() {
