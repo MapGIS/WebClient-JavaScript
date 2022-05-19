@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-14 18:57:30
- * @LastEditTime: 2022-05-18 20:16:49
+ * @LastEditTime: 2022-05-18 20:55:23
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element\TSapnElement.js
@@ -158,7 +158,7 @@ class TSpanElement extends TextElement {
     matrix4_2.setThreeMatrix(t2);
     textGeo.vertexArrayBuffer.applyMatrix4(matrix4_2);
 
-    // 处理文字对象的竖立（特殊逻辑）\
+    // 处理文字对象的竖立（特殊逻辑）
     this._dimModal.set3D(true)
     if (this._dimModal.is3DTran()) {
       const _p = this._dimModal.getTranslatePoint();
