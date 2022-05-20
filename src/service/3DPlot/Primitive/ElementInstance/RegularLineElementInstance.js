@@ -7,15 +7,17 @@
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
 import SvgElementInstance from "./SvgElementInstance";
-import { CesiumGeomUtil, CesiumUtil } from "../../Utils/CesiumUtil";
+import {CesiumGeomUtil, CesiumUtil} from "../../Utils/CesiumUtil";
 import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
-import { defined } from "../../../PlotUtilBase/Check";
+import {defined} from "../../../PlotUtilBase/Check";
 
 export default class RegularLineElementInstance extends SvgElementInstance {
-  svgToGeomInstances(elem, options) {
-    const instances = super.svgToGeomInstances(elem, options);
-    const wallGeomInstances = this.generateWallGeometryInstances(elem, options);
-    return { instances, wallGeomInstances };
+  svgToGeomInstances(elem, options, callback) {
+    let that = this;
+    super.svgToGeomInstances(elem, options, function (instances) {
+      const wallGeomInstances = that.generateWallGeometryInstances(elem, options);
+      callback({instances, wallGeomInstances});
+    });
   }
 
   /**
@@ -86,26 +88,54 @@ export default class RegularLineElementInstance extends SvgElementInstance {
   }
 
   pathElemToGeomInstance(pathElem, options) {
+    console.log("---pathElem", pathElem)
     const instances = [];
-    const style=pathElem.getContextStyle()
-    const fill =style.fillStyle;
+    const style = pathElem.getContextStyle()
+    const fill = style.fillStyle;
     const stroke = style.strokeStyle;
-    const fillStyleType=style.fillStyleType
-    const lineWidth=style.lineWidth
-    const strokeWidthSize = lineWidth*this.globelScale/2;
-    const _fillWidthSize = this.fillDefaultWidth*this.globelScale/2
+    const fillStyleType = style.fillStyleType
+    const lineWidth = style.lineWidth
+    const strokeWidthSize = lineWidth * this.globelScale / 2;
+    const _fillWidthSize = this.fillDefaultWidth * this.globelScale / 2
 
     const parts = pathElem.cacheCoords || pathElem.getCoords();
     const isMainElement = !!(pathElem instanceof MainElement);
+    const {pathHeights} = options;
 
+    if (pathHeights && pathHeights.length !== parts.length) {
+      console.error("pathHeights数目不对！");
+    }
+    let geometry
     if (stroke && stroke !== "none") {
 
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
-        const geometry = this._generateStrokeGeometry(
-          coords,
-          isMainElement ? strokeWidthSize - 5 : strokeWidthSize
-        );
+        if (pathHeights && pathHeights instanceof Array) {
+          if (pathElem.type === 'mainline') {
+            geometry = this._generateStrokeGeometry(
+              coords,
+              isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
+              pathHeights[i]
+            );
+          } else if (pathElem.type === 'circle') {
+            console.log("=====pathHeights===", pathHeights)
+            geometry = this._generateStrokeGeometry(
+              coords,
+              isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+            );
+          } else {
+            geometry = this._generateStrokeGeometry(
+              coords,
+              isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+            );
+          }
+        } else {
+          geometry = this._generateStrokeGeometry(
+            coords,
+            isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+          );
+        }
+
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
@@ -113,15 +143,36 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           this.getColor(pathElem, "strokeStyle"),
           true
         );
+        if (pathElem.type === 'circle') {
+          console.log("instances", instances)
+          let {values} = instance.geometry.attributes.position;
+          for (let i = 0; i < values.length; i += 3) {
+            let cartographic =  Cesium.Cartographic.fromCartesian(new Cesium.Cartesian3(values[i], values[i + 1], values[i + 2]));
+            cartographic.height += pathHeights[0][0];
+            let car = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude), cartographic.height);
+            values[i] = car.x;
+            values[i + 1] = car.y;
+            values[i + 2] = car.z;
+          }
+        }
         if (defined(instance)) instances.push(instance);
       }
     }
 
-    if (fill && fill !== "none" && fillStyleType>0) {
+    if (fill && fill !== "none" && fillStyleType > 0) {
 
+      console.log("pathElem", pathElem)
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
-        const geometry = this._generateFillGeometry(coords, _fillWidthSize);
+        if (pathHeights && pathHeights instanceof Array) {
+          if (pathElem.type === 'path' && !pathElem._dimModal.translatePnt) {
+            geometry = this._generateFillGeometry(coords, _fillWidthSize, pathHeights[i]);
+          } else {
+            geometry = this._generateFillGeometry(coords, _fillWidthSize);
+          }
+        } else {
+          geometry = this._generateFillGeometry(coords, _fillWidthSize);
+        }
 
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
@@ -136,7 +187,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     return instances;
   }
 
-  transformExtrudeGeometry(geometry,options) {
+  transformExtrudeGeometry(geometry, options) {
     if (!defined(geometry)) return;
 
     const position = geometry.vertexArrayBuffer;
@@ -154,7 +205,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     }
   }
 
-  transfromGeoCesium(elem,cesGeom, options) {
+  transfromGeoCesium(elem, cesGeom, options) {
     CesiumGeomUtil.degreesWithHeightToWorldCoords(
       cesGeom,
       options.dimModHeight
