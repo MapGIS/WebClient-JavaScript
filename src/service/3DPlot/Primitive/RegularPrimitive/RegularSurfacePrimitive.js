@@ -19,70 +19,75 @@ class RegularSurfacePrimitive extends RegularLine1Primitive {
       return;
     }
     if (this._update) {
+      let that = this;
       this._update = false;
-      const instanceObject = this._createGeomInstance(this._elem);
+      this._createGeomInstance(function (instanceObject) {
+        const {polygonRect, borderColor, instances, polylineOutInstance} =
+          instanceObject;
 
-      const {polygonRect, borderColor, instances, polylineOutInstance} =
-        instanceObject;
+        const img = that._elem._getFillImg();
 
-      const img = this._elem._getFillImg();
+        const px_height = img.height * that.getGlobelScale();
+        const px_width = img.width * that.getGlobelScale();
 
-      const px_height = img.height * this.getGlobelScale();
-      const px_width = img.width * this.getGlobelScale();
-
-      if (px_height !== 0 && px_width !== 0) {
-        const xNum = Math.ceil(polygonRect.width / px_width);
-        const yNum = Math.ceil(polygonRect.height / px_height);
-        this._primitive = new Cesium.GroundPrimitive({
-          geometryInstances: instances,
-          asynchronous: true,
-          classificationType: Cesium.ClassificationType.TERRAIN,
-          appearance: new Cesium.MaterialAppearance({
-            material: new Cesium.Material({
-              fabric: {
-                type: "Image",
-                uniforms: {
-                  image: img,
-                  repeat: {x: xNum, y: yNum},
+        if (px_height !== 0 && px_width !== 0) {
+          const xNum = Math.ceil(polygonRect.width / px_width);
+          const yNum = Math.ceil(polygonRect.height / px_height);
+          that._primitive = new Cesium.GroundPrimitive({
+            geometryInstances: instances,
+            asynchronous: true,
+            classificationType: Cesium.ClassificationType.TERRAIN,
+            appearance: new Cesium.MaterialAppearance({
+              material: new Cesium.Material({
+                fabric: {
+                  type: "Image",
+                  uniforms: {
+                    image: img,
+                    repeat: {x: xNum, y: yNum},
+                  },
                 },
-              },
+              }),
             }),
+          });
+          that._primitive.pickedPrimitive = that;
+        } else {
+          that._primitive = null;
+        }
+
+        const materialOpts = {
+          fabric: {
+            type: "Color",
+            uniforms: {
+              color: borderColor,
+            },
+          },
+        };
+
+        that._primitive1 = new Cesium.GroundPolylinePrimitive({
+          geometryInstances: polylineOutInstance,
+          asynchronous: true,
+          appearance: new Cesium.PolylineMaterialAppearance({
+            material: new Cesium.Material(materialOpts),
           }),
         });
-        this._primitive.pickedPrimitive = this;
-      } else {
-        this._primitive = null;
-      }
 
-      const materialOpts = {
-        fabric: {
-          type: "Color",
-          uniforms: {
-            color: borderColor,
-          },
-        },
-      };
-
-      this._primitive1 = new Cesium.GroundPolylinePrimitive({
-        geometryInstances: polylineOutInstance,
-        asynchronous: true,
-        appearance: new Cesium.PolylineMaterialAppearance({
-          material: new Cesium.Material(materialOpts),
-        }),
+        that._primitive1.pickedPrimitive = that;
+        that._primitive1 && that._primitive1.update(frameState);
+        that._primitive && that._primitive.update(frameState);
       });
-
-      this._primitive1.pickedPrimitive = this;
+    }else {
+      this._primitive1 && this._primitive1.update(frameState);
+      this._primitive && this._primitive.update(frameState);
     }
-    this._primitive1 && this._primitive1.update(frameState);
-    this._primitive && this._primitive.update(frameState);
   }
 
-  _elementInstance(ele) {
-    const instances = new RegularSurfaceElementInstance(
+  _elementInstance(ele, callback) {
+    new RegularSurfaceElementInstance(
       ele,
       {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
-    ).getInstance();
-    return instances;
+    ).getInstance(function (instances) {
+      callback(instances);
+    });
   }
 
   initBaseSaveAttributes() {

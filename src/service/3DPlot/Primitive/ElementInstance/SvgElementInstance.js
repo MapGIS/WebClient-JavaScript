@@ -292,12 +292,14 @@ export default class SvgElementInstance {
       if (pathHeights.length !== paths.length) {
         console.error("pathHeights采样不全！");
       }
-      let axisHeights;
+      if (type === 'msbl_regularpoint') {
+        options.dimModHeight += Number(pathHeights[0][0]);
+      }
+      let axisHeights = [];
       for (let i = 0; i < paths.length; i += 1) {
         options.pathHeights = pathHeights[i];
-        if (paths[i].type === 'mainline') {
-          axisHeights = pathHeights[i];
-        }
+        options.type = type;
+        axisHeights.push(pathHeights[i]);
         const pathTempInst = that.pathElemToGeomInstance(paths[i], options);
         if (!defined(pathTempInst)) continue;
         if (Array.isArray(pathTempInst)) {
@@ -349,7 +351,7 @@ export default class SvgElementInstance {
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
         const geometry = this._generateFillGeometry(coords, _fillWidthSize);
-        const instance = this._generateCesiumGeometryInstance(
+        let instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
           options,
@@ -399,6 +401,10 @@ export default class SvgElementInstance {
       let height = 0;
       if (pathHeights instanceof Array && pathHeights.length === coordsLen) {
         height += pathHeights[j];
+      }
+
+      if (typeof pathHeights === 'number') {
+        height += pathHeights;
       }
 
       vec3s.push(new Vector3(coord.x, coord.y, height));

@@ -10,6 +10,7 @@ import SvgElementInstance from "./SvgElementInstance";
 import {CesiumGeomUtil, CesiumUtil} from "../../Utils/CesiumUtil";
 import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/MainElement";
 import {defined} from "../../../PlotUtilBase/Check";
+import {setOffsetHeight} from "./Util";
 
 export default class RegularLineElementInstance extends SvgElementInstance {
   svgToGeomInstances(elem, options, callback) {
@@ -34,7 +35,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
 
     let instances = [];
     for (let i = 0; i < paths.length; i += 1) {
-      options.axisHeights = axisHeights;
+      options.axisHeights = axisHeights[i];
       const wallGeomInstance = this.pathElemToWallGeomInstance(
         paths[i],
         options
@@ -97,19 +98,6 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     return instances;
   }
 
-  _setOffsetHeight(instance, height) {
-    let {values} = instance.geometry.attributes.position;
-    for (let i = 0; i < values.length; i += 3) {
-      let cartographic = Cesium.Cartographic.fromCartesian(new Cesium.Cartesian3(values[i], values[i + 1], values[i + 2]));
-      cartographic.height += height;
-      let car = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude), cartographic.height);
-      values[i] = car.x;
-      values[i + 1] = car.y;
-      values[i + 2] = car.z;
-    }
-    return instance;
-  }
-
   pathElemToGeomInstance(pathElem, options) {
     const instances = [];
     const style = pathElem.getContextStyle()
@@ -122,7 +110,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
 
     const parts = pathElem.cacheCoords || pathElem.getCoords();
     const isMainElement = !!(pathElem instanceof MainElement);
-    const {pathHeights} = options;
+    const {pathHeights, type} = options;
 
     let geometry
     if (stroke && stroke !== "none") {
@@ -130,7 +118,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
         if (pathHeights && pathHeights instanceof Array) {
-          if (pathElem.type === 'mainline') {
+          if (pathElem.type === 'mainline' || pathElem.type === 'extendline' || pathElem.type === 'mainborder') {
             geometry = this._generateStrokeGeometry(
               coords,
               isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
@@ -142,11 +130,18 @@ export default class RegularLineElementInstance extends SvgElementInstance {
               isMainElement ? strokeWidthSize - 5 : strokeWidthSize
             );
           } else {
-            geometry = this._generateStrokeGeometry(
-              coords,
-              isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
-              pathHeights[i]
-            );
+            if(type === 'msbl_regularline2' || type === 'msbl_kidneyarea'){
+              geometry = this._generateStrokeGeometry(
+                coords,
+                isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
+                pathHeights[i].length > 1 ? pathHeights[i] : pathHeights[i][0]
+              );
+            }else {
+              geometry = this._generateStrokeGeometry(
+                coords,
+                isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+              );
+            }
           }
         } else {
           geometry = this._generateStrokeGeometry(
@@ -163,7 +158,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           true
         );
         if (pathElem.type === 'circle' || pathElem._dimModal.translatePnt) {
-          instance = this._setOffsetHeight(instance, pathHeights[0][0]);
+          instance = setOffsetHeight(instance, pathHeights[0][0]);
         }
         if (defined(instance)) instances.push(instance);
       }
@@ -191,7 +186,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           true
         );
         if (pathElem._dimModal.translatePnt) {
-          instance = this._setOffsetHeight(instance, pathHeights[0][0]);
+          instance = setOffsetHeight(instance, pathHeights[0][0]);
         }
         if (defined(instance)) instances.push(instance);
       }

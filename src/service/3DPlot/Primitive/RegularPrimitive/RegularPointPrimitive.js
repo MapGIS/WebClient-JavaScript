@@ -63,34 +63,40 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
           primitive.modelMatrix = this._modelMatrix;
         })
         this._isTranslate = false;
+        this.updatePrimitive(frameState);
       } else {
+        let that = this;
         // 设置缩放参数
         const scale = this.getGlobelScale();
         this._elem.changeAttributeStatus(true, scale, scale);
 
-        const geomInstances = this._createGeomInstance();
-
-        this.applySelectStatus(geomInstances);
-        this.instancesToPrimitives(geomInstances);
+        this._createGeomInstance(function (geomInstances) {
+          that.applySelectStatus(geomInstances);
+          that.instancesToPrimitives(geomInstances);
+          that.updatePrimitive(frameState);
+        });
       }
+    }else {
+      this.updatePrimitive(frameState);
     }
-
-    this.updatePrimitive(frameState);
   }
 
   isDestroyed() {
     return false;
   }
 
-  _createGeomInstance() {
-    return this._elementInstance(this._elem);
+  _createGeomInstance(callback) {
+    this._elementInstance(this._elem, function (instances) {
+      callback(instances);
+    });
   }
-  _elementInstance(ele) {
-    const instances = new RegularPointElementInstance(
+  _elementInstance(ele, callback) {
+    new RegularPointElementInstance(
       ele,
       {...this.getBaseSaveAttributesValues(),globelScale:this.getGlobelScale()} 
-    ).getInstance();
-    return instances;
+    ).getInstance(function (instances) {
+      callback(instances);
+    });
   }
 
   initBaseSaveAttributes() {
