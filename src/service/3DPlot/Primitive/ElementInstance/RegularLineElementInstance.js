@@ -14,8 +14,8 @@ import {defined} from "../../../PlotUtilBase/Check";
 export default class RegularLineElementInstance extends SvgElementInstance {
   svgToGeomInstances(elem, options, callback) {
     let that = this;
-    super.svgToGeomInstances(elem, options, function (instances) {
-      const wallGeomInstances = that.generateWallGeometryInstances(elem, options);
+    super.svgToGeomInstances(elem, options, function (instances, axisHeights) {
+      const wallGeomInstances = that.generateWallGeometryInstances(elem, options, axisHeights);
       callback({instances, wallGeomInstances});
     });
   }
@@ -26,7 +26,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
    * @param {*} options
    * @returns
    */
-  generateWallGeometryInstances(elem, options) {
+  generateWallGeometryInstances(elem, options, axisHeights) {
     if (!options.isOpenWall) return undefined;
 
     const paths = [];
@@ -34,6 +34,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
 
     let instances = [];
     for (let i = 0; i < paths.length; i += 1) {
+      options.axisHeights = axisHeights;
       const wallGeomInstance = this.pathElemToWallGeomInstance(
         paths[i],
         options
@@ -56,15 +57,24 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     );
 
     const parts = pathElem.cacheCoords || pathElem.getCoords();
+    const {axisHeights} = options;
     const instances = [];
     for (let i = 0; i < parts.length; i += 1) {
       const coords = parts[i];
 
       const degreeArrayHeights = [];
-      for (let j = 0; j < coords.length; j += 1) {
-        const coord = coords[j];
-        const res = CesiumUtil.WebMercatorUnProject(coord.x, coord.y);
-        degreeArrayHeights.push(res.x, res.y, wallHeight);
+      if (axisHeights) {
+        for (let j = 0; j < coords.length; j += 1) {
+          const coord = coords[j];
+          const res = CesiumUtil.WebMercatorUnProject(coord.x, coord.y);
+          degreeArrayHeights.push(res.x, res.y, wallHeight + axisHeights[i][j]);
+        }
+      } else {
+        for (let j = 0; j < coords.length; j += 1) {
+          const coord = coords[j];
+          const res = CesiumUtil.WebMercatorUnProject(coord.x, coord.y);
+          degreeArrayHeights.push(res.x, res.y, wallHeight);
+        }
       }
 
       const wallGeometry = Cesium.WallGeometry.createGeometry(
@@ -87,8 +97,20 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     return instances;
   }
 
+  _setOffsetHeight(instance, height) {
+    let {values} = instance.geometry.attributes.position;
+    for (let i = 0; i < values.length; i += 3) {
+      let cartographic = Cesium.Cartographic.fromCartesian(new Cesium.Cartesian3(values[i], values[i + 1], values[i + 2]));
+      cartographic.height += height;
+      let car = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude), cartographic.height);
+      values[i] = car.x;
+      values[i + 1] = car.y;
+      values[i + 2] = car.z;
+    }
+    return instance;
+  }
+
   pathElemToGeomInstance(pathElem, options) {
-    console.log("---pathElem", pathElem)
     const instances = [];
     const style = pathElem.getContextStyle()
     const fill = style.fillStyle;
@@ -102,9 +124,6 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     const isMainElement = !!(pathElem instanceof MainElement);
     const {pathHeights} = options;
 
-    if (pathHeights && pathHeights.length !== parts.length) {
-      console.error("pathHeights数目不对！");
-    }
     let geometry
     if (stroke && stroke !== "none") {
 
@@ -118,7 +137,6 @@ export default class RegularLineElementInstance extends SvgElementInstance {
               pathHeights[i]
             );
           } else if (pathElem.type === 'circle') {
-            console.log("=====pathHeights===", pathHeights)
             geometry = this._generateStrokeGeometry(
               coords,
               isMainElement ? strokeWidthSize - 5 : strokeWidthSize
@@ -126,7 +144,8 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           } else {
             geometry = this._generateStrokeGeometry(
               coords,
-              isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+              isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
+              pathHeights[i]
             );
           }
         } else {
@@ -136,24 +155,15 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           );
         }
 
-        const instance = this._generateCesiumGeometryInstance(
+        let instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
           options,
           this.getColor(pathElem, "strokeStyle"),
           true
         );
-        if (pathElem.type === 'circle') {
-          console.log("instances", instances)
-          let {values} = instance.geometry.attributes.position;
-          for (let i = 0; i < values.length; i += 3) {
-            let cartographic =  Cesium.Cartographic.fromCartesian(new Cesium.Cartesian3(values[i], values[i + 1], values[i + 2]));
-            cartographic.height += pathHeights[0][0];
-            let car = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude), cartographic.height);
-            values[i] = car.x;
-            values[i + 1] = car.y;
-            values[i + 2] = car.z;
-          }
+        if (pathElem.type === 'circle' || pathElem._dimModal.translatePnt) {
+          instance = this._setOffsetHeight(instance, pathHeights[0][0]);
         }
         if (defined(instance)) instances.push(instance);
       }
@@ -161,7 +171,6 @@ export default class RegularLineElementInstance extends SvgElementInstance {
 
     if (fill && fill !== "none" && fillStyleType > 0) {
 
-      console.log("pathElem", pathElem)
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
         if (pathHeights && pathHeights instanceof Array) {
@@ -174,13 +183,16 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           geometry = this._generateFillGeometry(coords, _fillWidthSize);
         }
 
-        const instance = this._generateCesiumGeometryInstance(
+        let instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
           options,
           this.getColor(pathElem, "fillStyle"),
           true
         );
+        if (pathElem._dimModal.translatePnt) {
+          instance = this._setOffsetHeight(instance, pathHeights[0][0]);
+        }
         if (defined(instance)) instances.push(instance);
       }
     }

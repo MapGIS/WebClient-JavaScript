@@ -236,29 +236,6 @@ export default class SvgElementInstance {
         console.error("没有translatePnt点！");
       }
     }
-    // let sampleLength = [], samplePoints = [], index = 0, translatePoints = [];
-    //
-    // for (let i = 0; i < paths.length; i++) {
-    //   const {cacheCoords} = paths[i];
-    //   sampleLength.push([]);
-    //   let tp = paths[i]._dimModal.getTranslatePnt();
-    //   if (tp) {
-    //     let translate = this._mercatorTolonlat(tp);
-    //     translatePoints.push(Cesium.Cartesian3.fromDegrees(translate.lon, translate.lat, 0));
-    //   } else {
-    //     translatePoints.push(tp);
-    //   }
-    //
-    //   for (let j = 0; j < cacheCoords.length; j++) {
-    //     sampleLength[i].push(cacheCoords[j].length);
-    //     for (let k = 0; k < cacheCoords[j].length; k++) {
-    //       let sample = this._mercatorTolonlat(cacheCoords[j][k]);
-    //       samplePoints.push(Cesium.Cartesian3.fromDegrees(sample.lon, sample.lat, 0));
-    //     }
-    //   }
-    // }
-    //
-    // return {sampleLength, samplePoints, translatePoints};
   }
 
   _getPointSampleOptions(lonlat) {
@@ -273,7 +250,7 @@ export default class SvgElementInstance {
       let heightGroup = this.sampleConfigs[this.pathIndex[i]];
       for (let j = 0; j < heightGroup.length; j++) {
         pathHeights[i].push([]);
-        for (let k = heightGroup[j].start;k <= heightGroup[j].end; k++){
+        for (let k = heightGroup[j].start; k <= heightGroup[j].end; k++) {
           pathHeights[i][j].push(sampleResult[k].height);
         }
       }
@@ -312,12 +289,15 @@ export default class SvgElementInstance {
     let sampleElevationTool = new Cesium.SampleElevationTool(window.viewer, this.samplePoints, 'terrain', function (sampleResult) {
       let pathHeights = that._getPathHeights(sampleResult);
       let instances = [];
-      if(pathHeights.length !== paths.length){
+      if (pathHeights.length !== paths.length) {
         console.error("pathHeights采样不全！");
       }
-      console.log("-----paths",paths)
+      let axisHeights;
       for (let i = 0; i < paths.length; i += 1) {
         options.pathHeights = pathHeights[i];
+        if (paths[i].type === 'mainline') {
+          axisHeights = pathHeights[i];
+        }
         const pathTempInst = that.pathElemToGeomInstance(paths[i], options);
         if (!defined(pathTempInst)) continue;
         if (Array.isArray(pathTempInst)) {
@@ -334,8 +314,8 @@ export default class SvgElementInstance {
         }
       }
 
-      callback(instances);
-    }, {level: 12});
+      callback(instances, axisHeights);
+    }, {level: 10});
     sampleElevationTool.start();
   }
 
@@ -417,7 +397,7 @@ export default class SvgElementInstance {
     for (let j = 0; j < coordsLen; j += 1) {
       const coord = coords[j];
       let height = 0;
-      if(pathHeights instanceof Array){
+      if (pathHeights instanceof Array && pathHeights.length === coordsLen) {
         height += pathHeights[j];
       }
 
@@ -463,8 +443,7 @@ export default class SvgElementInstance {
 
     const vec3s = [];
     let offset = 0;
-    if(pathHeights){
-      console.log("-------")
+    if (pathHeights && pathHeights instanceof Array) {
       offset += pathHeights[0];
     }
     vec3s.push(new Vector3(first.x, first.y, height + offset));
@@ -547,7 +526,8 @@ export default class SvgElementInstance {
     }
   }
 
-  transformExtrudeGeometry(extrudeGeom, options) {}
+  transformExtrudeGeometry(extrudeGeom, options) {
+  }
 
   transfromGeoCesium(elem, cesgeo, options) {
     const {dimModHeight} = options;
