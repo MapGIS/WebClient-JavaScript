@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-02-17 19:03:38
  * @LastEditors: zk
- * @LastEditTime: 2022-05-18 20:29:03
+ * @LastEditTime: 2022-05-23 13:49:17
  */
 import Point from "../../../../PlotUtilBase/Geometry/Point";
 import Matrix3 from "../../../../PlotUtilBase/Math/Matrix3";
@@ -172,7 +172,7 @@ export default class RegularLine1 extends BaseRegularElement {
     rotateAngle = -lineangle;
 
     if (this._is3d) {
-      this._run3d(element, matrix, origin);
+      this._run3d(matrix, origin);
     }
     
     // 控制点组调换把初始svg符号翻转
@@ -203,15 +203,27 @@ export default class RegularLine1 extends BaseRegularElement {
       this.m_scaleX,
       this.m_scaleY 
     );
-
-    // 特殊处理线一
-    if (element._dimModal) {
-      element._dimModal.set3D(arrowDir);
-      element._dimModal.setLineAngle(lineangle);
-      element._dimModal.setTranslatePoint(origin.clone());
-    }
-
     element._transformMatrix = matrix;
+
+    let _origin= origin.clone()
+
+  if(arrowDir){
+    let _lineangle = lineangle;
+    if (arrowDir) {
+        if (_lineangle < -90 || _lineangle >= 90) {
+            _lineangle = 180 + _lineangle;
+        }
+    }
+    element._dimModal.clear()
+    element._dimModal.push(
+      {
+        originPoint:_origin,
+        lineAngle:_lineangle
+      }
+    )
+  }
+
+
   }
 
   _getPathRate(gOrigin, mainLine, defaultLine, width, flag) {

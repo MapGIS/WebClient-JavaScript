@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:26:48
- * @LastEditTime: 2022-03-31 14:41:20
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-23 09:13:04
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
@@ -20,7 +20,7 @@ export default class RegularLine1ElementInstance extends RegularLineElementInsta
   transfromGeoCesium(elem, cesgeo, options) {
     super.transfromGeoCesium(elem, cesgeo, options);
     const {dimModAttitude}=options
-    if (dimModAttitude === 1){
+    if (dimModAttitude === "1" && cesgeo.modDetail){
       this._rotatePart(elem, cesgeo, options);
     }
   }
@@ -28,14 +28,8 @@ export default class RegularLine1ElementInstance extends RegularLineElementInsta
   _rotatePart(ele, cesGeom, options) {
     const { dimModHeight } = options;
     if (ele instanceof MainElement) return;
-
-    if (!ele._dimModal.is3DTran()) return;
-    const translatePoint = ele._dimModal.getTranslatePnt();
-    let lineAngle = ele._dimModal.getLineAngle();
-
-    if (lineAngle < -90 || lineAngle >= 90) {
-      lineAngle = 180 + lineAngle;
-    }
+    const translatePoint = cesGeom.modDetail.originPnt;
+    let lineAngle = cesGeom.modDetail.lineAngle;
 
     const t = CesiumUtil.WebMercatorUnProject(
       translatePoint.x,

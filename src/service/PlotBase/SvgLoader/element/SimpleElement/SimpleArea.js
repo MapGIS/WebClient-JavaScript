@@ -6,6 +6,8 @@ import Spline from '../../../../PlotUtilBase/Geometry/Spline';
 import NoUseElement from '../extend/NoUseElement';
 import BaseSimple from './BaseSimple';
 import { calculatePolygonGravityCenter } from '../../../../PlotUtilBase/Math/MathUtils';
+import TSpanElement from '../TSpanElement';
+import PathElement from '../PathElement';
 
 class SimpleArea extends BaseSimple {
     /**
@@ -83,9 +85,9 @@ class SimpleArea extends BaseSimple {
         }
     }
 
-    initBaseAttributes(){
-        super.initBaseAttributes()
-        if (this.getAttribute('zondyPlotSymbol:type').getValue()!== '2') {
+    initBaseAttributes() {
+        super.initBaseAttributes();
+        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== '2') {
             throw new Error('符号类型不一致！');
         }
     }
@@ -148,7 +150,6 @@ class SimpleArea extends BaseSimple {
         return [_muti_scaleX, _muti_scaleY];
     }
     _getFillCanvas() {
-        
         const { fillElementArr } = this;
         const size = fillElementArr.length;
         if (size <= 0) return null;
@@ -276,7 +277,6 @@ class SimpleArea extends BaseSimple {
     }
 
     _applyMainElement(child) {
-
         const mainAreaArr = this._mainAreaArr;
         const fillElementArr = this.fillElementArr;
         // 检查轴线
@@ -297,11 +297,10 @@ class SimpleArea extends BaseSimple {
 
         const { mainBorder } = this;
         const { poly } = this;
-        if (!poly || poly.length <= 2 || !mainBorder) {
+        if (!poly || poly.length <= 2 || !mainBorder || this.isMustFill) {
             child.isAllowCoords = false;
             return;
         }
-
 
         if (useStyle === '13') {
             this._nonAction(child);
@@ -314,58 +313,76 @@ class SimpleArea extends BaseSimple {
     _nonAction(element) {
         const { mainBorder } = this;
         const origin = element.getOriginPoint();
-        const center = element.getBoundingBox().getCenter()
-        const angle=180* Math.atan2(origin.y-center.y, origin.x- center.x)/Math.PI
+        const center = element.getBoundingBox().getCenter();
+        const angle = (180 * Math.atan2(origin.y - center.y, origin.x - center.x)) / Math.PI;
         let matrix = new Matrix3();
         let offsetRate = parseFloat(element.getMarkerOffset());
         offsetRate = offsetRate < 0 ? 0 : offsetRate;
         offsetRate = offsetRate > 1 ? 1 : offsetRate;
 
         const [point, kAngle] = mainBorder.getTransfromByRate(offsetRate);
-        let rotateAngle = -kAngle+angle-90;
+
+        let rotateAngle = -kAngle + angle - 90;
         let translatePoint = new Point(point[0] - origin.x, point[1] - origin.y);
 
-        if (this._is3d) {
-            this._run3d(element, matrix, origin);
+        if (this._is3d ) {
+            // 文本
+            if(element instanceof TSpanElement){
+                this._run3d(matrix, origin);
+            }
+            // 部件不需要翻转
+            if(element instanceof PathElement){
+                rotateAngle+=180
+            }
         }
 
         this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, rotateAngle, 1, 1, this.m_scaleX, this.m_scaleY);
 
         element._transformMatrix = matrix;
+
+        element._dimModal.clear();
+        element._dimModal.push({
+            originPoint: origin.clone(),
+            lineAngle: rotateAngle
+        });
     }
     _centerAction(element) {
         const { poly } = this;
         let matrix = new Matrix3();
         const origin = element.getOriginPoint();
-        const hasPose = element.getPose() === '0' ? false : true;
         const defaultCenter = new Point(this.width / 2, this.height / 2);
 
         origin.x = defaultCenter.x;
         origin.y = defaultCenter.y;
-  
+
         const pnts = poly.map((s) => [s.x, s.y]);
-  
+
         const tranPoint = calculatePolygonGravityCenter(pnts);
-  
-        const translatePoint = new Point(
-          tranPoint[0] - origin.x,
-          tranPoint[1] - origin.y
-        );
+
+        const translatePoint = new Point(tranPoint[0] - origin.x, tranPoint[1] - origin.y);
         const [muiScaleX, muiScaleY] = this.getMutiScale(pnts);
 
         // 特殊处理3d
         if (this._is3d && element._dimModal) {
-            element._dimModal.set3D(hasPose);
-            element._dimModal.setLineAngle(0);
-            element._dimModal.setTranslatePoint(origin);
+            element._dimModal.clear();
+            element._dimModal.push({
+                originPoint: origin.clone(),
+                lineAngle: 0
+            });
         }
         if (this._is3d) {
-            this._run3d(element, matrix, origin);
+            this._run3d(matrix, origin);
         }
 
         this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, null, muiScaleX, muiScaleY, this.m_scaleX, this.m_scaleY);
 
         element._transformMatrix = matrix;
+
+        element._dimModal.clear();
+        element._dimModal.push({
+            originPoint: origin.clone(),
+            lineAngle: 0
+        });
     }
 
     set isMustFill(value) {
@@ -377,7 +394,7 @@ class SimpleArea extends BaseSimple {
 
     changeAttributeStatus(is3d, scaleX, scaleY) {
         super.changeAttributeStatus(is3d, scaleX, scaleY);
-        if (is3d) {
+        if (is3d && this._isMustFill) {
             this.fillImg = this._getFillImg();
         }
     }
@@ -393,5 +410,5 @@ class SimpleArea extends BaseSimple {
         }
     }
 }
-SimpleArea.sliceTypes = ['10','13', '21', '22'];
+SimpleArea.sliceTypes = ['10', '13', '21', '22'];
 export default SimpleArea;

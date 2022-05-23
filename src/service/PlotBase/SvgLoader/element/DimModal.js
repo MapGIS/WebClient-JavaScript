@@ -1,64 +1,74 @@
-import Point from "../../../PlotUtilBase/Geometry/Point";
+import Point from '../../../PlotUtilBase/Geometry/Point';
 /*
- * @Description: element维度转换
+ * @Description: 三维控制点几何
  * @Author: zk
  * @Date: 2021-11-16 11:04:30
  * @LastEditors: zk
- * @LastEditTime: 2022-05-18 20:28:14
+ * @LastEditTime: 2022-05-23 13:37:11
  */
 export default class DimModal {
-  constructor() {
-    this._3d = false;
-    this.lineAngle = null;
-    this.translatePoint = null;
-    this.translatePnt = null;
-  }
-  is3DTran() {
-    return this._3d;
-  }
-  set3D(flag) {
-    this._3d = !!flag;
-  }
-  setLineAngle(angle){
-    this.lineAngle=angle
-  }
-  getLineAngle(){
-    return this.lineAngle
-  }
-  setTranslatePoint(point) {
-    this.translatePoint = point;
-  }
-  getTranslatePoint() {
-    if (this._3d) {
-      return this.translatePoint;
+    constructor(element) {
+        // element
+        this._elem = element;
+        this.lineAngles = [];
+        this.translatePoints = [];
+        this.translatePnts = null;
     }
-    // eslint-disable-next-line no-new
-    new Error("控制点参数缺失！");
-    return null;
-  }
-  setTranslatePnt(point) {
-    this.translatePnt = point;
-  }
-  getTranslatePnt() {
-    if (this._3d) {
-      return this.translatePnt;
+    clear() {
+        this.lineAngles = [];
+        this.translatePoints = [];
+        this.translatePnts = null;
     }
-    // eslint-disable-next-line no-new
-    new Error("控制点参数缺失！");
-    return null;
-  }
+    setTranslatePoints(arr) {
+        this.translatePoints = arr;
+    }
+    getTranslatePoints() {
+        return this.translatePoints;
+    }
+    setLineAngles(lineAngles) {
+        this.lineAngles = lineAngles;
+    }
+    getLineAngles() {
+        return this.lineAngles;
+    }
 
-  clone() {
-    // eslint-disable-next-line no-proto
-    const cloneObject = Object.create(this.__proto__);
-    cloneObject.lineAngle = this.lineAngle ? this.lineAngle : null;
-    cloneObject.translatePoint = this.translatePoint
-      ? new Point(this.translatePoint.x, this.translatePoint.y)
-      : null;
-    cloneObject.translatePnt = this.translatePnt
-      ? new Point(this.translatePnt.x, this.translatePnt.y)
-      : null;
-    cloneObject._3d=this._3d
-    return cloneObject;
-  }
+    push(object) {
+        const { originPoint, lineAngle } = object;
+        this.translatePoints.push(originPoint);
+        this.lineAngles.push(lineAngle);
+    }
+    
+    get(i) {
+        const oLen = this.translatePoints.length;
+        const lLen = this.lineAngles.length;
+        
+
+        if (i >= oLen || i >= lLen) {
+            return undefined
+        }
+
+        if (!this.translatePnts) {
+            const elem = this._elem;
+            const transformMatrix = elem._getTransform();
+            let transforms = [];
+            if (!Array.isArray(transformMatrix)) {
+                transforms = [transformMatrix];
+            } else {
+                transforms = transformMatrix;
+            }
+
+            const trueMatrixs = transforms.map((s) => {
+                return s.clone();
+            });
+
+            this.translatePnts = trueMatrixs.map((tureMatrix, index) => {
+                return this.translatePoints[index].clone().applyMatrix3(tureMatrix);
+            });
+        }
+
+        return {
+            originPnt: this.translatePnts[i],
+            lineAngle: this.lineAngles[i]
+        };
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-05-18 14:17:45
+ * @LastEditTime: 2022-05-23 13:51:01
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
@@ -24,7 +24,7 @@ class SimplePoint extends BaseSimple {
         // 初始化
         this.initBaseAttributes(node);
         // 初始化扩展
-        this.setReplaceIndex(1)
+        this.setReplaceIndex(0)
     }
 
     _initValues() {
@@ -45,6 +45,7 @@ class SimplePoint extends BaseSimple {
     get tranAngle() {
         return this.transformAngle;
     }
+
 
     setTranSize(x, y) {
         this.transformSizeY = y;
@@ -111,7 +112,7 @@ class SimplePoint extends BaseSimple {
         let matrix = new Matrix3();
 
         if (this._is3d) {
-            this._run3d(element, matrix, origin);
+            this._run3d(matrix, origin);
         }
         this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, null, 1, 1, this.m_scaleX, this.m_scaleY);
         element._transformMatrix = matrix;
@@ -134,7 +135,6 @@ class SimplePoint extends BaseSimple {
         const replaceElement= this.replaceElement
         const tags= this.tags
         if(!replaceElement || !tags || i>=tags.length ){
-            console.info("可替换便签索引不存在!")
             return
         }
         this.currentReplaceIndex= i

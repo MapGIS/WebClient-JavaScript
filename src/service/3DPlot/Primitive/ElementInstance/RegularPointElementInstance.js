@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:29:02
- * @LastEditTime: 2022-01-14 17:01:17
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 10:25:10
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularPointElementInstance.js\
  */
@@ -14,10 +14,10 @@ export default class RegularPointElementInstance extends SvgElementInstance {
   transfromGeoCesium(elem,cesgeo, options) {
     const { dimModHeight, dimModAttitude } = options;
 
-
-    let isRotate = false;
-    if (dimModAttitude === 1) {
-      isRotate = true;
+    // 点是否翻转直立
+    let isTurnOver = false;
+    if (dimModAttitude === "1") {
+      isTurnOver = true;
     }
 
     const tranSize = this._elem.getTranSize()
@@ -34,12 +34,14 @@ export default class RegularPointElementInstance extends SvgElementInstance {
     const rad = Cesium.Math.toRadians(tranAngle);
     CesiumGeomUtil.scale(cesgeo, t1, t2, 1);
 
-    if (isRotate) {
+    // 旋转
+    if (isTurnOver) {
       CesiumGeomUtil.rotateX(cesgeo, Math.PI / 2);
       CesiumGeomUtil.rotateZ(cesgeo, -rad);
     } else {
       CesiumGeomUtil.rotateZ(cesgeo, -rad);
     }
+    // 平移模型
     CesiumGeomUtil.translate(cesgeo, new Cesium.Cartesian3(0, 0, dimModHeight));
   }
 }

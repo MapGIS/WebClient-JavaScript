@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-06-02 15:16:15
- * @LastEditTime: 2022-05-10 17:08:03
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-23 13:49:11
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Object\RegularElement\RegularSurface.ts
  */
@@ -113,9 +113,13 @@ export default class KidneyArea extends BaseRegularElement {
       this._applyMutiScale(pnts);
       // 特殊处理3d
       if (this._is3d && element._dimModal) {
-        element._dimModal.set3D(true);
-        element._dimModal.setLineAngle(0);
-        element._dimModal.setTranslatePoint(origin);
+        element._dimModal.clear()
+        element._dimModal.push(
+          {
+            originPoint:origin.clone(),
+            lineAngle:0
+          }
+        )
       }
     } else if (relativeToBorder === "Forward" || direction === "Forward") {
       const defaultCenter = new Point(this.width / 2, this.height / 2);
@@ -135,7 +139,7 @@ export default class KidneyArea extends BaseRegularElement {
     }
 
     if (this._is3d) {
-      this._run3d(element, matrix, origin);
+      this._run3d(matrix, origin);
     }
 
     this._applyNormalMatrixTransfrom(
@@ -150,6 +154,10 @@ export default class KidneyArea extends BaseRegularElement {
     );
 
     element._transformMatrix = matrix;
+
+
+
+
   }
 
   _applyMainElement(child) {

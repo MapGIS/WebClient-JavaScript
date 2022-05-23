@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-05-17 14:39:27
- * @LastEditTime: 2021-11-15 10:04:34
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 13:58:36
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Document\RectElement.ts
  */
@@ -16,7 +16,7 @@ export default class RectElement extends PathElement {
     this.type = "rect";
   }
 
-  _getCoords(matrix) {
+  _geometryPnts() {
     const x = this.getAttribute("x").getNumber();
     const y = this.getAttribute("y").getNumber();
     const width = this.getStyle("width").getNumber();
@@ -87,12 +87,6 @@ export default class RectElement extends PathElement {
     }
     path.push(s);
     path = path.map((c) => c.map((t) => new Point(t.x, t.y)));
-
-    for (let i = 0; i < path.length; i += 1) {
-      for (let j = 0; j < path[i].length; j += 1) {
-        path[i][j].applyMatrix3(matrix);
-      }
-    }
 
     return path;
   }

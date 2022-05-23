@@ -139,7 +139,7 @@ class RegularLine2 extends BaseRegularElement {
     let _angle = -angle;
 
     if (this._is3d) {
-      this._run3d(element, matrix, origin);
+      this._run3d(matrix, origin);
       // 几何翻转后，y轴翻转取反
       offsetY = -offsetY;
     }
@@ -161,12 +161,22 @@ class RegularLine2 extends BaseRegularElement {
     );
 
     element._transformMatrix = matrix;
+
+    element._dimModal.clear()
+    element._dimModal.push(
+      {
+        originPoint:origin.clone(),
+        lineAngle:_angle
+      }
+    )
   }
 
   _dupAction(element) {
     let pntInfo;
     let origin;
     let trueOrigin;
+    let lineAngles=[]
+    let originPoints=[]
     const matrixs = [];
     const { mainLine } = this;
 
@@ -198,7 +208,7 @@ class RegularLine2 extends BaseRegularElement {
           // 进行镜面翻转时（即scale（1，-1））,角度方向又发生变化，因此必须加乘以-1
           let _angle = -angle;
           if (this._is3d) {
-            this._run3d(element, matrix, trueOrigin);
+            this._run3d(matrix, trueOrigin);
             // 第一步 回正角度
             _angle = -_angle;
             // 第二步 解决翻转后角度变化的问题
@@ -216,6 +226,8 @@ class RegularLine2 extends BaseRegularElement {
             this.m_scaleY
           );
           matrixs.push(matrix);
+          lineAngles.push(_angle)
+          originPoints.push(trueOrigin)
         }
       }
     } else {
@@ -240,7 +252,7 @@ class RegularLine2 extends BaseRegularElement {
 
           let _angle = -angle;
           if (this._is3d) {
-            this._run3d(element, matrix, trueOrigin);
+            this._run3d(matrix, trueOrigin);
           }
 
           this._applyNormalMatrixTransfrom(
@@ -255,6 +267,8 @@ class RegularLine2 extends BaseRegularElement {
           );
 
           matrixs.push(matrix);
+          lineAngles.push(_angle)
+          originPoints.push(trueOrigin)
 
           tempPoint = this._getDuplicateEndPoint(
             tempPoint,
@@ -265,6 +279,9 @@ class RegularLine2 extends BaseRegularElement {
       }
     }
     element._transformMatrix = matrixs;
+    element._dimModal.clear()
+    element._dimModal.setTranslatePoints(originPoints)
+    element._dimModal.setLineAngles(lineAngles)
   }
 
 

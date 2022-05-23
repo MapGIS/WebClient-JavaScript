@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:17:52
- * @LastEditTime: 2022-04-01 16:40:05
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 10:38:22
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularLine1Primitive.js
  */
@@ -57,7 +57,7 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
 
   initBaseSaveAttributes() {
     super.initBaseSaveAttributes()
-    this.dimModAttitude = 1;
+    this.dimModAttitude = "1";
     this.isOpenWall = true;
     this.isWallGradColor = false
     this.wallColor = 'rgba(255,0,0,0.3)'

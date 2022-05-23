@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-09-26 15:12:35
- * @LastEditTime: 2022-05-10 16:10:26
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-23 13:48:57
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularElement\BaseRegularElement.js
  */
@@ -133,17 +133,11 @@ export default class BaseRegularElement extends BasePlotElement {
   /** 转换矩阵相关封装*/
   /**
    * @description: 作用坐标系转换
-   * @param {*} child
    * @param {*} matrix
    * @param {*} origin
    * @return {*}
    */
-  _run3d(child, matrix, origin) {
-    if (child instanceof TSpanElement) {
-      const bounds = child.getBoundingBox();
-      const center = bounds.getCenter();
-      this._runScale(matrix, center, 1, -1);
-    }
+  _run3d(matrix, origin) {
     this._runScale(matrix, origin, 1, -1);
   }
 

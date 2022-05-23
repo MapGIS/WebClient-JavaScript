@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 11:24:29
- * @LastEditTime: 2021-12-07 10:30:11
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-23 18:59:29
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\Draw\DrawObject.js
  */
@@ -16,8 +16,6 @@ export default class DrawObject extends Observable {
 
   enable() {
     if (this._enabled) return;
-
-    console.log("+++++++++++++++++++++++++")
     this.addHooks();
     this._enabled = true;
   }

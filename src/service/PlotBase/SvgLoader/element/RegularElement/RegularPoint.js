@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-02-24 11:40:59
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-23 13:49:41
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
  */
@@ -122,7 +122,7 @@ class RegularPoint extends BaseRegularElement {
     let matrix = new Matrix3();
 
     if (this._is3d) {
-      this._run3d(element, matrix, origin);
+      this._run3d(matrix, origin);
     }
     this._applyNormalMatrixTransfrom(
       matrix,

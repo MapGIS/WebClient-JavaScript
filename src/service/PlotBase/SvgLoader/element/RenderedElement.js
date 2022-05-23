@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 16:50:45
- * @LastEditTime: 2022-03-10 10:48:39
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 16:28:37
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\Render.js
  */
@@ -24,7 +24,8 @@ class RenderedElement extends Element {
     super(node);
     this._matrix = Transform.getTransfromFrmElement(this);
     this._transformMatrix = new Matrix3();
-    this._dimModal = new DimModal();
+    this._dimModal = new DimModal(this);
+    
     this._mapScaleLineWidth = 1;
     this.isAllowCoords = true;
     // 后续自动生成
@@ -279,6 +280,11 @@ class RenderedElement extends Element {
 
     return baseAttributes;
   }
+
+  getGeometryDetail(i){
+    return this._dimModal.get(i)
+  }
+
   getBaseClass() {
     return RenderedElement;
   }
@@ -290,6 +296,8 @@ class RenderedElement extends Element {
   getInsertGeometryPoint(number){
     return number
   }
+
+
 }
 
 RenderedElement.baseSVGAttributes = [];

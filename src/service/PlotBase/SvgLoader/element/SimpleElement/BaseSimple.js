@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-16 12:05:54
  * @LastEditors: zk
- * @LastEditTime: 2022-05-18 14:17:41
+ * @LastEditTime: 2022-05-23 17:02:37
  */
 
 import Point from '../../../../PlotUtilBase/Geometry/Point';
@@ -17,6 +17,7 @@ import MainElement from '../extend/MainElement';
 import BasePlotElement from '../BasePlotElement';
 import Bounds from '../../../../PlotUtilBase/Geometry/Bound';
 import TSpanElement from '../TSpanElement';
+import TextElement from '../TextElement';
 
 export default class BaseSimple extends BasePlotElement {
     constructor(node) {
@@ -35,7 +36,7 @@ export default class BaseSimple extends BasePlotElement {
         this.symbolId = this.getAttribute('zondyPlotSymbol:id').getValue();
         this.symbolName = this.getAttribute('zondyPlotSymbol:name').getValue();
         this.symbolDesc = this.getAttribute('zondyPlotSymbol:desc').getValue();
-        this.symbolPose = this.getAttribute('zondyPlotSymbol:pose').getValue();
+        this.symbolPose = this.getAttribute('zondyPlotSymbol:pose').hasValue()? this.getAttribute('zondyPlotSymbol:pose').getValue() :'1';
     }
 
     // 遍历子节点
@@ -47,6 +48,11 @@ export default class BaseSimple extends BasePlotElement {
         const temp = this._replaceChild(childNode, child);
         temp._parent = this;
         this._children.push(temp);
+    }
+
+    // 获取符号姿态
+    getSymbolPose(){
+       return  this.symbolPose
     }
 
     // 遍历子元素
@@ -115,17 +121,11 @@ export default class BaseSimple extends BasePlotElement {
     /** 转换矩阵相关封装*/
     /**
      * @description: 作用坐标系转换
-     * @param {*} child
      * @param {*} matrix
      * @param {*} origin
      * @return {*}
      */
-    _run3d(child, matrix, origin) {
-        if (child instanceof TSpanElement) {
-            const bounds = child.getBoundingBox();
-            const center = bounds.getCenter();
-            this._runScale(matrix, center, 1, -1);
-        }
+    _run3d(matrix, origin) {
         this._runScale(matrix, origin, 1, -1);
     }
 
@@ -259,14 +259,13 @@ export default class BaseSimple extends BasePlotElement {
         return gOrigin;
     }
     _getSourceAttribute(ele,attributeName,defaultValue){
-      let attr;
-      const group = ele.getElementGroup();
-      if (group) {
-        attr = group.getAttribute(attributeName).hasValue() ? group.getAttribute(attributeName).getValue() : defaultValue;
-      } else {
-        attr = ele.getAttribute(attributeName).hasValue() ? ele.getAttribute(attributeName).getValue() :defaultValue;
+      if(ele.getAttribute(attributeName).hasValue()){
+          return ele.getAttribute(attributeName).getValue()
+      }else if(ele._parent){
+          return this._getSourceAttribute(ele._parent,attributeName,defaultValue)
+      }else{
+          return defaultValue
       }
-      return attr
     }
     _getPose(ele) {
         let pose=this._getSourceAttribute(ele,'zondyPlotSymbolItem:pose',"0")

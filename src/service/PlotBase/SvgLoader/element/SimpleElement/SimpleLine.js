@@ -18,7 +18,6 @@ class SimpleLine extends BaseSimple {
     }
 
     _initValues() {
-
         super._initValues();
         // 获取轴线组
         this._extendLineArr = [];
@@ -35,7 +34,7 @@ class SimpleLine extends BaseSimple {
 
     initBaseAttributes(node) {
         super.initBaseAttributes(node);
-        if (this.getAttribute('zondyPlotSymbol:type').getValue()!== '1') {
+        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== '1') {
             throw new Error('符号类型不一致！');
         }
     }
@@ -61,12 +60,11 @@ class SimpleLine extends BaseSimple {
                 let i = 0;
                 while (childNode) {
                     if (childNode.nodeName === 'path') {
-
-                        let extendElement
-                        if( useStyle === '11'){
+                        let extendElement;
+                        if (useStyle === '11') {
                             extendElement = new ExtendLineElement(childNode);
-                        }else{
-                            extendElement= new MainLineElement(childNode)  
+                        } else {
+                            extendElement = new MainLineElement(childNode);
                         }
 
                         this._extendLineArr.push(extendElement);
@@ -79,12 +77,11 @@ class SimpleLine extends BaseSimple {
                 return ele;
             }
             if (node.nodeName === 'path') {
-
-                let extendElement
-                if( useStyle === '11'){
+                let extendElement;
+                if (useStyle === '11') {
                     extendElement = new ExtendLineElement(node);
-                }else{
-                    extendElement= new MainLineElement(node)  
+                } else {
+                    extendElement = new MainLineElement(node);
                 }
 
                 this._extendLineArr.push(extendElement);
@@ -197,7 +194,7 @@ class SimpleLine extends BaseSimple {
         rotateAngle = -lineangle;
 
         if (this._is3d) {
-            this._run3d(element, matrix, origin);
+            this._run3d(matrix, origin);
         }
 
         // 控制点组调换把初始svg符号翻转
@@ -222,20 +219,27 @@ class SimpleLine extends BaseSimple {
         }
         this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, rotateAngle, scaleX, scaleY, this.m_scaleX, this.m_scaleY);
 
-        // 特殊处理线一
-        if (element._dimModal) {
-            element._dimModal.set3D(arrowDir);
-            element._dimModal.setLineAngle(lineangle);
-            element._dimModal.setTranslatePoint(origin.clone());
+        let _lineangle = lineangle;
+        if (arrowDir) {
+            if (_lineangle < -90 || _lineangle >= 90) {
+                _lineangle = 180 + _lineangle;
+            }
         }
 
         element._transformMatrix = matrix;
+        element._dimModal.clear();
+        element._dimModal.push({
+            originPoint: origin.clone(),
+            lineAngle: _lineangle
+        });
     }
 
     _dupAction(element) {
         let pntInfo;
         let origin;
         let trueOrigin;
+        let lineAngles = [];
+        let originPoints = [];
         const matrixs = [];
         const { mainLine } = this;
 
@@ -260,7 +264,7 @@ class SimpleLine extends BaseSimple {
                     // 进行镜面翻转时（即scale（1，-1））,角度方向又发生变化，因此必须加乘以-1
                     let _angle = -angle;
                     if (this._is3d) {
-                        this._run3d(element, matrix, trueOrigin);
+                        this._run3d(matrix, trueOrigin);
                         // 第一步 回正角度
                         _angle = -_angle;
                         // 第二步 解决翻转后角度变化的问题
@@ -269,6 +273,8 @@ class SimpleLine extends BaseSimple {
 
                     this._applyNormalMatrixTransfrom(matrix, trueOrigin, translatePoint, _angle, 1, 1, this.m_scaleX, this.m_scaleY);
                     matrixs.push(matrix);
+                    lineAngles.push(-_angle);
+                    originPoints.push(trueOrigin);
                 }
             }
         } else {
@@ -286,18 +292,23 @@ class SimpleLine extends BaseSimple {
 
                     let _angle = -angle;
                     if (this._is3d) {
-                        this._run3d(element, matrix, trueOrigin);
+                        this._run3d(matrix, trueOrigin);
                     }
 
                     this._applyNormalMatrixTransfrom(matrix, trueOrigin, translatePoint, _angle, 1, 1, this.m_scaleX, this.m_scaleY);
 
                     matrixs.push(matrix);
+                    lineAngles.push(-_angle);
+                    originPoints.push(trueOrigin);
 
                     tempPoint = this._getDuplicateEndPoint(tempPoint, this.width * this.m_scaleX, rad);
                 }
             }
         }
         element._transformMatrix = matrixs;
+        element._dimModal.clear();
+        element._dimModal.setTranslatePoints(originPoints);
+        element._dimModal.setLineAngles(lineAngles);
     }
 
     /**
@@ -356,6 +367,6 @@ class SimpleLine extends BaseSimple {
     }
 }
 
-SimpleLine.sliceTypes = ['10', '11', '12','13'];
+SimpleLine.sliceTypes = ['10', '11', '12', '13'];
 
 export default SimpleLine;

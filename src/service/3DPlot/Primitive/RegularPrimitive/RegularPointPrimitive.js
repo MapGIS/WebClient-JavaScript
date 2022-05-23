@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-20 10:57:25
- * @LastEditTime: 2022-04-21 16:57:22
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 10:38:14
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularPointPrimitive.js
  */
@@ -95,7 +95,7 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
 
   initBaseSaveAttributes() {
     this.dimModHeight = 0;
-    this.dimModAttitude = 1;
+    this.dimModAttitude ="1";
   }
 
   getPrimitiveBaseSaveAttributes() {

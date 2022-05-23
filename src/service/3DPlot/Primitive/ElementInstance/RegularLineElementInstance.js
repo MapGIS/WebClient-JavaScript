@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:26:48
- * @LastEditTime: 2022-04-01 09:17:56
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 17:14:28
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularLine1ElementInstance.js
  */
@@ -96,6 +96,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     const _fillWidthSize = this.fillDefaultWidth*this.globelScale/2
 
     const parts = pathElem.cacheCoords || pathElem.getCoords();
+    
     const isMainElement = !!(pathElem instanceof MainElement);
 
     if (stroke && stroke !== "none") {
@@ -106,6 +107,8 @@ export default class RegularLineElementInstance extends SvgElementInstance {
           coords,
           isMainElement ? strokeWidthSize - 5 : strokeWidthSize
         );
+        geometry.modDetail=pathElem.getGeometryDetail(i)
+
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
@@ -122,7 +125,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
         const geometry = this._generateFillGeometry(coords, _fillWidthSize);
-
+        geometry.modDetail=pathElem.getGeometryDetail(i)
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,

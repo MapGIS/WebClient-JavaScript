@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-25 10:22:13
- * @LastEditTime: 2022-04-01 09:16:34
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-20 20:10:07
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\SvgElementInstance.js
  */
@@ -71,6 +71,7 @@ export default class SvgElementInstance {
         const coords = parts[i];
         this._closeCoordsPath(coords);
         const geometry = this._generateStrokeGeometry(coords, strokeWidthSize);
+        geometry.modDetail=pathElem.getGeometryDetail(i)
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
@@ -85,6 +86,7 @@ export default class SvgElementInstance {
       for (let i = 0; i < parts.length; i += 1) {
         const coords = parts[i];
         const geometry = this._generateFillGeometry(coords, _fillWidthSize);
+        geometry.modDetail=pathElem.getGeometryDetail(i)
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
@@ -103,7 +105,11 @@ export default class SvgElementInstance {
     const textWidth = this.textDefaultWidth*this.globelScale/2;
     const textGeo = this._generateTextGeometry(spanElem, textWidth);
 
+    if(!textGeo)  return undefined;
+
     spanElem.applyTextGeo3D(textGeo);
+    textGeo.modDetail=spanElem.getGeometryDetail(0)
+
 
     return this._generateCesiumGeometryInstance(
       spanElem,
@@ -190,8 +196,9 @@ export default class SvgElementInstance {
 
     this.transformExtrudeGeometry(extrudeGeom, options);
     const cesGeom = CesiumGeomUtil.createCesiumGeomByExtrudeGeom(extrudeGeom);
+    cesGeom.modDetail=extrudeGeom.modDetail
     this.transfromGeoCesium(elem, cesGeom, options);
-  //  修改cesium边界，解决线宽过小时无法显示的问题
+    //  修改cesium边界，解决线宽过小时无法显示的问题
     cesGeom.boundingSphere=Cesium.BoundingSphere.fromVertices(
       cesGeom.attributes.position.values
     );

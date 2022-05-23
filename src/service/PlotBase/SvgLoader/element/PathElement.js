@@ -3,7 +3,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 18:10:16
- * @LastEditTime: 2022-05-18 20:01:49
+ * @LastEditTime: 2022-05-20 15:59:52
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\PathElement.js
@@ -14,7 +14,6 @@ import {Vector2} from "../../../PlotUtilBase/Math/Vector2";
 import {ShapePath} from "../../../PlotUtilBase/Path2D/ShapePath";
 import RenderedElement from "./RenderedElement";
 import PathParser from "./PathParser";
-import Matrix3 from "../../../PlotUtilBase/Math/Matrix3";
 
 function vectorMagnitude(v) {
   // eslint-disable-next-line no-restricted-properties
@@ -38,7 +37,7 @@ export default class PathElement extends RenderedElement {
     this._pathParser = new PathParser(this.getAttribute("d").getString());
   }
 
-  _pathPnts() {
+  _geometryPnts() {
     const pathParser = this._pathParser;
     pathParser.reset();
     const path2d = new ShapePath();
@@ -116,7 +115,7 @@ export default class PathElement extends RenderedElement {
   }
 
   _getCoords(matrix) {
-    const pathArr = this._pathPnts();
+    const pathArr = this._geometryPnts();
     let v = [];
     if (Array.isArray(matrix)) {
       matrix.forEach((m) => {
@@ -157,15 +156,6 @@ export default class PathElement extends RenderedElement {
       } else {
         const tureMatrix = transformMatrix.clone().multiply(matrix);
         _coords = this._getCoords(tureMatrix);
-        // 部件竖立 （特殊逻辑）
-        if (this._dimModal.is3DTran()) {
-          const _pnts = new Point(
-            this._dimModal.getTranslatePoint().x,
-            this._dimModal.getTranslatePoint().y
-          );
-          _pnts.applyMatrix3(tureMatrix);
-          this._dimModal.setTranslatePnt(_pnts);
-        }
       }
     } else {
       _coords = [];
