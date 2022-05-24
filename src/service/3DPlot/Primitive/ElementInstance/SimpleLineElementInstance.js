@@ -12,9 +12,9 @@ import MainElement from '../../../../service/PlotBase/SvgLoader/element/extend/M
 import RegularLineElementInstance from './RegularLineElementInstance';
 
 export default class SimpleLineElementInstance extends RegularLineElementInstance {
-    pathElemToWallGeomInstance(pathElem, options) {
+    pathElemToWallGeomInstance(pathElem, options, wallOffsetHeights) {
         if (!(pathElem instanceof MainElement)) return undefined;
-        return super.pathElemToWallGeomInstance(pathElem, options);
+        return super.pathElemToWallGeomInstance(pathElem, options, wallOffsetHeights);
     }
 
     transfromGeoCesium(elem, cesgeo, options) {

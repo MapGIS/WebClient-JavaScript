@@ -12,10 +12,12 @@ import MainElement from "../../../../service/PlotBase/SvgLoader/element/extend/M
 import { defined } from "../../../PlotUtilBase/Check";
 
 export default class RegularLineElementInstance extends SvgElementInstance {
-  svgToGeomInstances(elem, options) {
-    const instances = super.svgToGeomInstances(elem, options);
-    const wallGeomInstances = this.generateWallGeometryInstances(elem, options);
-    return { instances, wallGeomInstances };
+  svgToGeomInstances(elem, options, callback) {
+    let that = this;
+    super.svgToGeomInstances(elem, options, function (instances, wallOffsetHeights) {
+      const wallGeomInstances = that.generateWallGeometryInstances(elem, options, wallOffsetHeights);
+      callback({ instances, wallGeomInstances });
+    });
   }
 
   /**
@@ -24,17 +26,24 @@ export default class RegularLineElementInstance extends SvgElementInstance {
    * @param {*} options
    * @returns
    */
-  generateWallGeometryInstances(elem, options) {
+  generateWallGeometryInstances(elem, options, wallOffsetHeights) {
     if (!options.isOpenWall) return undefined;
 
     const paths = [];
     elem.getPathElem(paths);
 
-    let instances = [];
+    let instances = [], wallIndex = 0, wallOffsetHeightArray;
     for (let i = 0; i < paths.length; i += 1) {
+      const {type} = paths[i];
+      if(type === 'extendline' || type === 'mainline'){
+        wallOffsetHeightArray = wallOffsetHeights[wallIndex];
+        wallIndex++;
+      }
+
       const wallGeomInstance = this.pathElemToWallGeomInstance(
         paths[i],
-        options
+        options,
+        wallOffsetHeightArray
       );
       if (!defined(wallGeomInstance)) continue;
       if (Array.isArray(wallGeomInstance)) {
@@ -46,7 +55,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     return instances;
   }
 
-  pathElemToWallGeomInstance(pathElem, options) {
+  pathElemToWallGeomInstance(pathElem, options, wallOffsetHeights) {
     const wallHeight = options.dimModHeight;
     const wallColor = options.wallColor;
     const cesiumWallColor = Cesium.ColorGeometryInstanceAttribute.fromColor(
@@ -55,31 +64,60 @@ export default class RegularLineElementInstance extends SvgElementInstance {
 
     const parts = pathElem.cacheCoords || pathElem.getCoords();
     const instances = [];
-    for (let i = 0; i < parts.length; i += 1) {
-      const coords = parts[i];
+    if(wallOffsetHeights instanceof Array && wallOffsetHeights.length > 0){
+      for (let i = 0; i < parts.length; i += 1) {
+        const coords = parts[i];
 
-      const degreeArrayHeights = [];
-      for (let j = 0; j < coords.length; j += 1) {
-        const coord = coords[j];
-        const res = CesiumUtil.WebMercatorUnProject(coord.x, coord.y);
-        degreeArrayHeights.push(res.x, res.y, wallHeight);
+        const degreeArrayHeights = [];
+        for (let j = 0; j < coords.length; j += 1) {
+          const coord = coords[j];
+          const res = CesiumUtil.WebMercatorUnProject(coord.x, coord.y);
+          degreeArrayHeights.push(res.x, res.y, wallHeight + wallOffsetHeights[i][j]);
+        }
+
+        const wallGeometry = Cesium.WallGeometry.createGeometry(
+          new Cesium.WallGeometry({
+            positions:
+              Cesium.Cartesian3.fromDegreesArrayHeights(degreeArrayHeights),
+          })
+        );
+
+        instances.push(
+          new Cesium.GeometryInstance({
+            geometry: wallGeometry,
+            attributes: {
+              color: cesiumWallColor,
+            },
+          })
+        );
       }
+    }else {
+      for (let i = 0; i < parts.length; i += 1) {
+        const coords = parts[i];
 
-      const wallGeometry = Cesium.WallGeometry.createGeometry(
-        new Cesium.WallGeometry({
-          positions:
-            Cesium.Cartesian3.fromDegreesArrayHeights(degreeArrayHeights),
-        })
-      );
+        const degreeArrayHeights = [];
+        for (let j = 0; j < coords.length; j += 1) {
+          const coord = coords[j];
+          const res = CesiumUtil.WebMercatorUnProject(coord.x, coord.y);
+          degreeArrayHeights.push(res.x, res.y, wallHeight);
+        }
 
-      instances.push(
-        new Cesium.GeometryInstance({
-          geometry: wallGeometry,
-          attributes: {
-            color: cesiumWallColor,
-          },
-        })
-      );
+        const wallGeometry = Cesium.WallGeometry.createGeometry(
+          new Cesium.WallGeometry({
+            positions:
+              Cesium.Cartesian3.fromDegreesArrayHeights(degreeArrayHeights),
+          })
+        );
+
+        instances.push(
+          new Cesium.GeometryInstance({
+            geometry: wallGeometry,
+            attributes: {
+              color: cesiumWallColor,
+            },
+          })
+        );
+      }
     }
 
     return instances;
@@ -94,6 +132,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     const lineWidth=style.lineWidth
     const strokeWidthSize = lineWidth*this.globelScale/2;
     const _fillWidthSize = this.fillDefaultWidth*this.globelScale/2
+    const {offsetHeights} = options;
 
     const parts = pathElem.cacheCoords || pathElem.getCoords();
     
@@ -102,13 +141,17 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     if (stroke && stroke !== "none") {
 
       for (let i = 0; i < parts.length; i += 1) {
+        let offsetHeight;
+        if(offsetHeights){
+          offsetHeight = offsetHeights[i];
+        }
         const coords = parts[i];
         const geometry = this._generateStrokeGeometry(
           coords,
-          isMainElement ? strokeWidthSize - 5 : strokeWidthSize
+          isMainElement ? strokeWidthSize - 5 : strokeWidthSize,
+          offsetHeight
         );
         geometry.modDetail=pathElem.getGeometryDetail(i)
-
         const instance = this._generateCesiumGeometryInstance(
           pathElem,
           geometry,
