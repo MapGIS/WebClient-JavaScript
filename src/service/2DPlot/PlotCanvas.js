@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-19 11:28:26
+ * @LastEditTime: 2022-05-24 11:12:29
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -343,6 +343,18 @@ export default class PlotCanvas {
     }
 
     /**
+     * @function: Module:PlotCanvas.prototype.queryPlotByLatLng
+     * @description: 点选标绘对象
+     * @param {{lng:number,lat:number}|[number,number]} latlng
+     * @return {*}
+     */
+    queryPlotByLatLng(latlng) {
+        const latlngArr = Array.isArray(latlng) ? latlng : [latlng.lng, latlng.lat];
+        const point = this.getCoordSys().dataToPoint(latlngArr);
+        return this.queryPlotByPoint(point);
+    }
+
+    /**
      * @function: Module:PlotCanvas.prototype.queryPlotByPoint
      * @description: 点选标绘对象
      * @param {{ x: number; y: number; } | [number,number]} point
@@ -354,13 +366,27 @@ export default class PlotCanvas {
             const plot = this.m_plotObjects[i];
             const element = plot.getElement();
             const bounds = element.getBounds();
-            if (!this._isInBounds(p, bounds)) {
+            if (this._isInBounds(p, bounds)) {
                 return plot;
             }
         }
         return null;
     }
 
+    /**
+     * @function: Module:PlotCanvas.prototype.queryPlotsByLatlngBounds
+     * @description: 矩阵选查询
+     * @param {{ left: number; right: number; bottom: number; top: number; }} bounds
+     * @return {*}
+     */
+    queryPlotsByLatlngBounds(bounds) {
+        const p1 = [bounds.left, bounds.bottom];
+        const p2 = [bounds.right, bounds.top];
+        const coordSys = this.getCoordSys();
+        const leftBottom = coordSys.dataToPoint(p1);
+        const rightTop = coordSys.dataToPoint(p2);
+        return this.queryPlotsByBounds({ left: leftBottom[0], top: leftBottom[1], bottom: rightTop[1], right: rightTop[0] });
+    }
     /**
      * @function: Module:PlotCanvas.prototype.queryPlotsByBounds
      * @description: 矩阵选查询
@@ -369,16 +395,14 @@ export default class PlotCanvas {
      */
     queryPlotsByBounds(bounds) {
         const expPlots = [];
-        const p1 = [bounds.left, bounds.right];
-        const p2 = [bounds.bottom, bounds.top];
         for (let i = 0; i < this.m_plotObjects.length; i++) {
             const plot = this.m_plotObjects[i];
             const element = plot.getElement();
             const ebounds = element.getBounds();
-            if (!this._isInBounds(p1, ebounds)) {
-                expPlots.push(plot);
-            }
-            if (!this._isInBounds(p2, ebounds)) {
+
+            const p1 = [ebounds.left, ebounds.bottom];
+            const p2 = [ebounds.right, ebounds.bottom];
+            if (this._isInBounds(p1, bounds) && this._isInBounds(p2, bounds)) {
                 expPlots.push(plot);
             }
         }
@@ -393,10 +417,16 @@ export default class PlotCanvas {
         const bottom = bounds.bottom;
         const top = bounds.top;
         const right = bounds.right;
-        if (left < p[0] && p[0] < right && bottom < p[1] && p[1] < top) {
-            return false;
+        if (left <= p[0] && p[0] <= right && bottom <= p[1] && p[1] <= top) {
+            return true;
         }
         return false;
+    }
+
+    initCoords(){
+        this.m_plotObjects.forEach((s)=>{
+             s.dataToPoint&&s.dataToPoint()
+        })
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-05 11:32:52
- * @LastEditTime: 2022-05-16 18:53:37
+ * @LastEditTime: 2022-05-24 11:10:01
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlot\src\js\Shapes\PlotObject.js
@@ -41,10 +41,9 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
         }
     },
     render: function render(ctx) {
-      if (this.isNotVisible()) {
-        return;
-    }
-        this.dataToPoint();
+        if (this.isNotVisible()) {
+            return;
+        }
         this.setBounds(ctx);
         this.callSuper('render', ctx);
     },

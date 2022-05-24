@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-19 14:54:49
+ * @LastEditTime: 2022-05-24 11:15:30
  */
 
 import { fabric } from 'fabric';
@@ -214,6 +214,11 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         }
         return t;
     },
+    initLayerCoords(){
+        this._plotCanvasLayers.forEach(layer => {
+            layer.initCoords()
+        });
+    },
     /**
      * @function: Module:PlotCanvasGroup.prototype._renderObjects
      * @description: 渲染标绘对象代码
@@ -221,6 +226,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
      * @param {Array<Object>} objects
      */
     _renderObjects(ctx, objects) {
+        this.initLayerCoords()
         var i, len;
         for (i = 0, len = objects.length; i < len; ++i) {
             const object = objects[i];
