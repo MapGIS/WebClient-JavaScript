@@ -4,7 +4,7 @@ import Point from '../../../PlotUtilBase/Geometry/Point';
  * @Author: zk
  * @Date: 2021-11-16 11:04:30
  * @LastEditors: zk
- * @LastEditTime: 2022-05-23 13:37:11
+ * @LastEditTime: 2022-05-24 16:33:39
  */
 export default class DimModal {
     constructor(element) {
@@ -41,9 +41,8 @@ export default class DimModal {
     get(i) {
         const oLen = this.translatePoints.length;
         const lLen = this.lineAngles.length;
-        
-
-        if (i >= oLen || i >= lLen) {
+        let fIndex=i
+        if (oLen===0  || 0 === lLen) {
             return undefined
         }
 
@@ -66,9 +65,13 @@ export default class DimModal {
             });
         }
 
+        if(lLen===1 || oLen===1){
+            fIndex=0
+        }
+
         return {
-            originPnt: this.translatePnts[i],
-            lineAngle: this.lineAngles[i]
+            originPnt: this.translatePnts[fIndex],
+            lineAngle: this.lineAngles[fIndex]
         };
     }
 }
