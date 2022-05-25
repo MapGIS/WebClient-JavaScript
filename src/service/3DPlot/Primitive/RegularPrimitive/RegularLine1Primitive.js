@@ -20,18 +20,22 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     }
 
     if (this._update) {
+      let that = this;
       this._update = false;
       this._translucent = false;
-      const {instances, wallGeomInstances} = this._createGeomInstance();
-
-      this.applySelectStatus(instances);
-      this.instancesToPrimitives(instances);
-      this.wallInstancesToPrimitive(wallGeomInstances);
+      this._createGeomInstance(function (instancesObj) {
+        const {instances, wallGeomInstances} = instancesObj;
+        that.applySelectStatus(instances);
+        that.instancesToPrimitives(instances);
+        that.wallInstancesToPrimitive(wallGeomInstances);
+        that.updatePrimitive(frameState);
+      });
+    }else {
+      this.updatePrimitive(frameState);
     }
-    this.updatePrimitive(frameState);
   }
 
-  _createGeomInstance() {
+  _createGeomInstance(callback) {
     const webMercatorProjection = new Cesium.WebMercatorProjection();
 
     const projectPos = this._positions.map((s) => {
@@ -44,15 +48,18 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     this._elem.changeAttributeStatus(true, scale, scale);
 
     this._elem.setPoints(projectPos);
-    return this._elementInstance(this._elem);
+    this._elementInstance(function (instances) {
+      callback(instances);
+    });
   }
 
-  _elementInstance(ele) {
-    const instances = new RegularLine1ElementInstance(
-      ele,
+  _elementInstance(callback) {
+    new RegularLine1ElementInstance(
+        this._elem,
       {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
-    ).getInstance();
-    return instances;
+    ).getInstance(function (instances) {
+      callback(instances);
+    });
   }
 
   initBaseSaveAttributes() {

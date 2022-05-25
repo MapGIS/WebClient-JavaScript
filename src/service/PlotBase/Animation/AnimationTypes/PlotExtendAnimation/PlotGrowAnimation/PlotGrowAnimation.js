@@ -3,34 +3,28 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-19 16:41:43
+ * @LastEditTime: 2022-05-25 11:30:57
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import Spline from '../../../../../PlotUtilBase/Geometry/Spline';
 import { calculatePolygonGravityCenter } from '../../../../../PlotUtilBase/Math/MathUtils';
-import PlotBaseAnimation from '../../PlotBaseAnimation';
+import PlotCoordsAnimation from './PlotCoordsAnimation';
 
-export default class PlotGrowAnimation extends PlotBaseAnimation {
+export default class PlotGrowAnimation extends PlotCoordsAnimation {
     constructor(options) {
         super(options);
+    }
+    _initBaseAttributes(options){
+        super._initBaseAttributes(options)
         // animation type
         this.animationType = 'grow-animation';
         // init options
         this.startRate = options.startRate || 0;
         this.endRate = options.endRate || 1;
         this.growMode = options.growMode || 'spline';
-        // init base attrs
-        this._init();
     }
-    _init() {
-        const plotObjects = this._plotObjects;
-        this._animationPolys = plotObjects.map((s) => {
-            const elem = s.getElement();
-            if (elem) {
-                return elem.positions.map((s) => new Point(s.x, s.y));
-            }
-        });
-
+    update() {
+        super.update();
         // mode init
         const mode = this.growMode;
         const polysArr = this._animationPolys;
@@ -40,53 +34,40 @@ export default class PlotGrowAnimation extends PlotBaseAnimation {
                 return new Spline(s);
             });
         } else if (mode === 'center') {
-           this.modeFunArr=[]
-            for(let j=0;j<polysArr.length;j++){
-              const polys= polysArr[j]
-              const len = polys.length;
-              const v = [];
-              let center
-              if (len === 2) {
-                   center = [(polys[1].x - polys[0].x) / 2+polys[0].x, (polys[1].y - polys[0].y) / 2+polys[0].y];
-              } else {
-                  // 计算中心点
-                  center = calculatePolygonGravityCenter(polys.map((t) => [t.x, t.y]));
-              }
-              for(let i=0;i<len;i++){
-                v.push(this._getCenterFunc([polys[i].x,polys[i].y],center))
-              }
-              this.modeFunArr.push(v)
+            this.modeFunArr = [];
+            for (let j = 0; j < polysArr.length; j++) {
+                const polys = polysArr[j];
+                const len = polys.length;
+                const v = [];
+                let center;
+                if (len === 2) {
+                    center = [(polys[1].x - polys[0].x) / 2 + polys[0].x, (polys[1].y - polys[0].y) / 2 + polys[0].y];
+                } else {
+                    // 计算中心点
+                    center = calculatePolygonGravityCenter(polys.map((t) => [t.x, t.y]));
+                }
+                for (let i = 0; i < len; i++) {
+                    v.push(this._getCenterFunc([polys[i].x, polys[i].y], center));
+                }
+                this.modeFunArr.push(v);
             }
-            
         }
     }
-    _getCenterFunc(poly,center){
-      return function(rate){
-         return [ (poly[0]-center[0])*rate+center[0] ,(poly[1]-center[1])*rate+center[1] ]  
-      }
+
+    _calcTrueRate(rate) {
+        const startRate = this.startRate;
+        const endRate = this.endRate;
+        return (endRate - startRate) * rate + startRate;
     }
-    restore() {
-        super.restore();
-        this._plotObjects.forEach((s, i) => {
-            this._setPnts(s, this._animationPolys[i]);
-        });
-    }
-    _setPnts(obj, positions) {
-        if (obj.positions) {
-            obj.positions = positions;
-        }
-        if (obj.setPnts) {
-            obj.setPnts(positions);
-        }
-    }
-    _calcTrueRate(rate){
-      const startRate = this.startRate;
-      const endRate = this.endRate;
-      return (endRate - startRate) * rate + startRate;
+
+    _getCenterFunc(poly, center) {
+        return function (rate) {
+            return [(poly[0] - center[0]) * rate + center[0], (poly[1] - center[1]) * rate + center[1]];
+        };
     }
     _splineAction(rate) {
         const splines = this.splines;
-        const trueRate= this._calcTrueRate(rate)
+        const trueRate = this._calcTrueRate(rate);
         splines.forEach((t, index) => {
             const animationPoly = this._animationPolys[index];
             const animationObject = this._plotObjects[index];
@@ -109,13 +90,13 @@ export default class PlotGrowAnimation extends PlotBaseAnimation {
     }
 
     _centerAction(rate) {
-        const trueRate= this._calcTrueRate(rate)
-        this._plotObjects.forEach((plotObject,i) => {
-          const tPolys= this.modeFunArr[i].map((s)=>{
-            const p =s(trueRate)
-            return new Point(p[0],p[1])
-          })
-          this._setPnts(plotObject, tPolys);
+        const trueRate = this._calcTrueRate(rate);
+        this._plotObjects.forEach((plotObject, i) => {
+            const tPolys = this.modeFunArr[i].map((s) => {
+                const p = s(trueRate);
+                return new Point(p[0], p[1]);
+            });
+            this._setPnts(plotObject, tPolys);
         });
     }
     _render(rate) {

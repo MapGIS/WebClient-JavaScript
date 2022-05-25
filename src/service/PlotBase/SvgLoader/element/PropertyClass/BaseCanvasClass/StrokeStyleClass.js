@@ -4,15 +4,14 @@ import Property from "../../Property";
  * @Description:
  * @Author: zk
  * @Date: 2022-03-03 14:07:54
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-07 09:24:59
+ * @LastEditors: zk
+ * @LastEditTime: 2022-05-25 13:45:58
  */
 class StrokeStyleClass extends BaseStyleObject {
   constructor(elem) {
     super(elem)
     this.lineWidth = elem.getStyle("stroke-width").getNumber()
   }
-
   createStyleObject() {
     const elem = this._elem;
     const style = {};

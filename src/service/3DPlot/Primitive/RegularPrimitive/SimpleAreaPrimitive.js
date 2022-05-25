@@ -17,7 +17,7 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
     }
 
     _createFillInstance(instances, options) {
-        const { polygonRect } = options;
+        const {polygonRect} = options;
 
         const img = this._elem._getFillImg();
         const px_height = img.height * this.getGlobelScale();
@@ -38,7 +38,7 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
                             type: 'Image',
                             uniforms: {
                                 image: img,
-                                repeat: { x: xNum, y: yNum }
+                                repeat: {x: xNum, y: yNum}
                             }
                         }
                     })
@@ -47,8 +47,9 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
         }
         return _primitive;
     }
+
     _createPolylineOutInstance(polylineOutInstance, options) {
-        const { borderColor } = options;
+        const {borderColor} = options;
 
         const materialOpts = {
             fabric: {
@@ -74,50 +75,60 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
         }
         if (this.isMustFill) {
             if (this._update) {
+                let that = this;
                 this._update = false;
-                const instanceObject = this._createGeomInstance(this._elem);
+                this._createGeomInstance(function (instanceObject) {
+                    const {polygonRect, borderColor, instances, polylineOutInstance} = instanceObject;
 
-                const { polygonRect, borderColor, instances, polylineOutInstance } = instanceObject;
+                    that._primitive = that._createFillInstance(instances, {polygonRect});
 
-                this._primitive = this._createFillInstance(instances, { polygonRect });
+                    if (that._primitive) {
+                        that._primitive.pickedPrimitive = that;
+                    }
 
-                if (this._primitive) {
-                    this._primitive.pickedPrimitive = this;
-                }
+                    that._primitive1 = that._createPolylineOutInstance(polylineOutInstance, {borderColor});
 
-                this._primitive1 = this._createPolylineOutInstance(polylineOutInstance, { borderColor });
-
-                this._primitive1.pickedPrimitive = this;
+                    that._primitive1.pickedPrimitive = that;
+                    that._primitive1 && that._primitive1.update(frameState);
+                    that._primitive && that._primitive.update(frameState);
+                });
+            } else {
+                this._primitive1 && this._primitive1.update(frameState);
+                this._primitive && this._primitive.update(frameState);
             }
-            this._primitive1 && this._primitive1.update(frameState);
-            this._primitive && this._primitive.update(frameState);
         } else {
             if (this._update) {
+                let that = this;
                 this._update = false;
                 this._translucent = false;
-                const { instances, wallGeomInstances } = this._createGeomInstance();
-
-                this.applySelectStatus(instances);
-                this.instancesToPrimitives(instances);
-                this.wallInstancesToPrimitive(wallGeomInstances);
+                this._createGeomInstance(function (instanceObject) {
+                    const {instances, wallGeomInstances} = instanceObject;
+                    that.applySelectStatus(instances);
+                    that.instancesToPrimitives(instances);
+                    that.wallInstancesToPrimitive(wallGeomInstances);
+                    that.updatePrimitive(frameState);
+                });
+            } else {
+                this.updatePrimitive(frameState);
             }
-            this.updatePrimitive(frameState);
         }
     }
 
-    _elementInstance(ele) {
+    _elementInstance(callback) {
         if (this.isMustFill) {
-            const instances = new RegularSurfaceElementInstance(ele, {
+            new RegularSurfaceElementInstance(this._elem, {
                 ...this.getBaseSaveAttributesValues(),
                 globelScale: this.getGlobelScale()
-            }).getInstance();
-            return instances;
+            }).getInstance(function (instances) {
+                callback(instances);
+            });
         } else {
-            const instances = new SimpleAreaForKidneyElementInstance(ele, {
+            new SimpleAreaForKidneyElementInstance(this._elem, {
                 ...this.getBaseSaveAttributesValues(),
                 globelScale: this.getGlobelScale()
-            }).getInstance();
-            return instances;
+            }).getInstance(function (instances) {
+                callback(instances);
+            });
         }
     }
 
@@ -134,6 +145,7 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
         this.wallGradColor = 'rgba(255,0,0,0.3)';
     }
 }
-SimpleAreaPrimitive.extendPrimitiveAttributes = ['dimModAttitude', 'dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor','surfaceBorderWidth']
+
+SimpleAreaPrimitive.extendPrimitiveAttributes = ['dimModAttitude', 'dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor', 'surfaceBorderWidth']
 
 export default SimpleAreaPrimitive;
