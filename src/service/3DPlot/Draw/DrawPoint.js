@@ -38,8 +38,8 @@ export default class DrawPoint extends DrawObject {
                 const {classificationType} = that._symbol;
                 res.classificationType = classificationType;
                 const {style} = that._symbol;
-                if(style){
-                    res.initNodeStyles(style);
+                if(style && style.nodeStyles){
+                    res.initNodeStyles(style.nodeStyles);
                 }
 
                 that._primitive = PrimitiveFactory.createInstance(symbol.type, {
