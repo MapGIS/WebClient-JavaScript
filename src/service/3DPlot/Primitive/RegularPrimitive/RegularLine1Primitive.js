@@ -48,14 +48,14 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     this._elem.changeAttributeStatus(true, scale, scale);
 
     this._elem.setPoints(projectPos);
-    this._elementInstance(this._elem, function (instances) {
+    this._elementInstance(function (instances) {
       callback(instances);
     });
   }
 
-  _elementInstance(ele, callback) {
+  _elementInstance(callback) {
     new RegularLine1ElementInstance(
-      ele,
+        this._elem,
       {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
     ).getInstance(function (instances) {
       callback(instances);

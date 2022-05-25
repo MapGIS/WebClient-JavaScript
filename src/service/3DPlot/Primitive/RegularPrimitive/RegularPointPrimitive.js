@@ -10,115 +10,124 @@ import BaseRegularPrimitive from "./BaseRegularPrimitive";
 import RegularPointElementInstance from "../ElementInstance/RegularPointElementInstance";
 
 class RegularPointPrimitive extends BaseRegularPrimitive {
-  constructor(options) {
-    super(options);
-    this._modelMatrix = Cesium.Matrix4.clone(Cesium.Matrix4.IDENTITY);
-    // 平移刷新
-    this._isTranslate = false;
-  }
-
-  set modelMatrix(modalMatrix){
-    this._modelMatrix=modalMatrix
-  }
-  get modelMatrix() {
-    return this._modelMatrix;
-  }
-
-  set selected(selected) {
-    this._selected = selected;
-    this._update = true;
-    this._isTranslate=false
-  }
-
-  _elemPropsUpdateHandler(event) {
-    if (event.type === "positions") {
-      this._positions = [];
-      const positions = event.value;
-      for (let i = 0; i < positions.length; i += 1) {
-        const tempPos = this._elem.positions[i];
-        this._positions.push(
-          Cesium.Cartesian3.fromDegrees(tempPos.x, tempPos.y)
-        );
-      }
-      this._isTranslate = true;
-    }
-    this._update = true;
-    
-  }
-  update(frameState) {
-    if (!this._elem || !this._elem.show) {
-      return;
-    }
-
-    if (this._update) {
-      this._update = false;
-      this._translucent = false;
-      // 更新刷新位置
-      this._modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(
-        this._positions[0]
-      );
-
-      if (this._primitives&&this._primitives.length>0 && this._isTranslate) {
-        this._primitives.forEach((primitive)=>{
-          primitive.modelMatrix = this._modelMatrix;
-        })
+    constructor(options) {
+        super(options);
+        this._modelMatrix = Cesium.Matrix4.clone(Cesium.Matrix4.IDENTITY);
+        // 平移刷新
         this._isTranslate = false;
-      } else {
-        // 设置缩放参数
-        const scale = this.getGlobelScale();
-        this._elem.changeAttributeStatus(true, scale, scale);
-
-        const geomInstances = this._createGeomInstance();
-
-        this.applySelectStatus(geomInstances);
-        this.instancesToPrimitives(geomInstances);
-      }
     }
 
-    this.updatePrimitive(frameState);
-  }
+    set modelMatrix(modalMatrix) {
+        this._modelMatrix = modalMatrix
+    }
 
-  isDestroyed() {
-    return false;
-  }
+    get modelMatrix() {
+        return this._modelMatrix;
+    }
 
-  _createGeomInstance() {
-    return this._elementInstance(this._elem);
-  }
-  _elementInstance(ele) {
-    const instances = new RegularPointElementInstance(
-      ele,
-      {...this.getBaseSaveAttributesValues(),globelScale:this.getGlobelScale()} 
-    ).getInstance();
-    return instances;
-  }
+    set selected(selected) {
+        this._selected = selected;
+        this._update = true;
+        this._isTranslate = false
+    }
 
-  initBaseSaveAttributes() {
-    this.dimModHeight = 0;
-    this.dimModAttitude ="1";
-  }
+    _elemPropsUpdateHandler(event) {
+        if (event.type === "positions") {
+            this._positions = [];
+            const positions = event.value;
+            for (let i = 0; i < positions.length; i += 1) {
+                const tempPos = this._elem.positions[i];
+                this._positions.push(
+                    Cesium.Cartesian3.fromDegrees(tempPos.x, tempPos.y)
+                );
+            }
+            this._isTranslate = true;
+        }
+        this._update = true;
 
-  getPrimitiveBaseSaveAttributes() {
-    return RegularPointPrimitive.extendPrimitiveAttributes.concat([]);
-  }
+    }
 
-  instancesToPrimitives(instances) {
-    if (instances && instances.length > 0) {
-      this.destroy()
-      this._primitives = instances.map((instance) => {
-        const primitive = new Cesium.Primitive({
-          geometryInstances: instance,
-          modelMatrix: this._modelMatrix,
-          appearance: new Cesium.PerInstanceColorAppearance({
-            translucent: this._translucent || this.isTranslucentInstance(instance),
-          }),
-          asynchronous: false,
+    update(frameState) {
+        if (!this._elem || !this._elem.show) {
+            return;
+        }
+
+        if (this._update) {
+            this._update = false;
+            this._translucent = false;
+            // 更新刷新位置
+            this._modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(
+                this._positions[0]
+            );
+
+            if (this._primitives && this._primitives.length > 0 && this._isTranslate) {
+                this._primitives.forEach((primitive) => {
+                    primitive.modelMatrix = this._modelMatrix;
+                })
+                this._isTranslate = false;
+                this.updatePrimitive(frameState);
+            } else {
+                // 设置缩放参数
+                let that = this;
+                const scale = this.getGlobelScale();
+                this._elem.changeAttributeStatus(true, scale, scale);
+
+                this._createGeomInstance(function (geomInstances) {
+                    that.applySelectStatus(geomInstances);
+                    that.instancesToPrimitives(geomInstances);
+                    that.updatePrimitive(frameState);
+                });
+            }
+        } else {
+            this.updatePrimitive(frameState);
+        }
+    }
+
+    isDestroyed() {
+        return false;
+    }
+
+    _createGeomInstance(callback) {
+        this._elementInstance(function (instances) {
+            callback(instances);
         });
-        primitive.pickedPrimitive = this;
-        return primitive;
-      });
     }
-  }
+
+    _elementInstance(callback) {
+        new RegularPointElementInstance(
+            this._elem,
+            {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
+        ).getInstance(function (instances) {
+            callback(instances);
+        });
+    }
+
+    initBaseSaveAttributes() {
+        this.dimModHeight = 0;
+        this.dimModAttitude = "1";
+    }
+
+    getPrimitiveBaseSaveAttributes() {
+        return RegularPointPrimitive.extendPrimitiveAttributes.concat([]);
+    }
+
+    instancesToPrimitives(instances) {
+        if (instances && instances.length > 0) {
+            this.destroy()
+            this._primitives = instances.map((instance) => {
+                const primitive = new Cesium.Primitive({
+                    geometryInstances: instance,
+                    modelMatrix: this._modelMatrix,
+                    appearance: new Cesium.PerInstanceColorAppearance({
+                        translucent: this._translucent || this.isTranslucentInstance(instance),
+                    }),
+                    asynchronous: false,
+                });
+                primitive.pickedPrimitive = this;
+                return primitive;
+            });
+        }
+    }
 }
 
 RegularPointPrimitive.extendPrimitiveAttributes = ["dimModHeight", "dimModAttitude"];

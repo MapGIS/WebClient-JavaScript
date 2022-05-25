@@ -116,6 +116,11 @@ class SimplePoint extends BaseSimple {
         }
         this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, null, 1, 1, this.m_scaleX, this.m_scaleY);
         element._transformMatrix = matrix;
+        element._dimModal.clear();
+        element._dimModal.push({
+            originPoint: origin.clone(),
+            lineAngle: 0
+        });
     }
 
     getBounds() {

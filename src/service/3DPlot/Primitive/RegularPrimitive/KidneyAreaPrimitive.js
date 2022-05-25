@@ -14,11 +14,12 @@ export default class KidneyAreaPrimitive extends RegularLine2Primitive {
     super(options);
   }
 
-  _elementInstance(ele) {
-    const instances = new KidneyAreaElementInstance(ele, {
+  _elementInstance(callback) {
+    new KidneyAreaElementInstance(this._elem, {
       ...this.getBaseSaveAttributesValues(),
       globelScale: this.getGlobelScale()
-    }).getInstance();
-    return instances
+    }).getInstance(function (instances) {
+      callback(instances);
+    });
   }
 }

@@ -10,7 +10,7 @@ import RegularLineElementInstance from "./RegularLineElementInstance";
 import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
 
 export default class IrregularElementInstance extends RegularLineElementInstance {
-  svgToGeomInstances(elem, options) {
+  svgToGeomInstances(elem, options, callback) {
     const instances = this.pathElemToGeomInstance(elem, options);
     let wallGeomInstances;
     if (!options.isOpenWall) {
@@ -18,7 +18,7 @@ export default class IrregularElementInstance extends RegularLineElementInstance
     } else {
       wallGeomInstances = this.pathElemToWallGeomInstance(elem, options);
     }
-    return { instances, wallGeomInstances };
+    callback({ instances, wallGeomInstances });
   }
 
   pathElemToGeomInstance(elem, options) {

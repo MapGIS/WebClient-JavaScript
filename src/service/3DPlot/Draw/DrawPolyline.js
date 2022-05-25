@@ -59,6 +59,8 @@ export default class DrawPolyline extends DrawObject {
 
       symbol.getElement().then(function (res) {
         if (!that._isAdded) {
+          const {classificationType} = that._symbol;
+          res.classificationType = classificationType;
           that._primitive = PrimitiveFactory.createInstance(symbol.type, {
             positions: that.m_coords,
             element: res,

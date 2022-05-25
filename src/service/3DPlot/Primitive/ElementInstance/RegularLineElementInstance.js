@@ -35,7 +35,7 @@ export default class RegularLineElementInstance extends SvgElementInstance {
     let instances = [], wallIndex = 0, wallOffsetHeightArray;
     for (let i = 0; i < paths.length; i += 1) {
       const {type} = paths[i];
-      if(type === 'extendline' || type === 'mainline'){
+      if(wallOffsetHeights instanceof Array && wallOffsetHeights.length > 0 && (type === 'extendline' || type === 'mainline')){
         wallOffsetHeightArray = wallOffsetHeights[wallIndex];
         wallIndex++;
       }

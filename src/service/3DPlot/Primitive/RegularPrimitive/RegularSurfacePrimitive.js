@@ -71,30 +71,35 @@ class RegularSurfacePrimitive extends RegularLine1Primitive {
             return;
         }
         if (this._update) {
+            let that = this;
             this._update = false;
-            const instanceObject = this._createGeomInstance(this._elem);
+            this._createGeomInstance(function (instanceObject) {
+                const { polygonRect, borderColor, instances, polylineOutInstance } = instanceObject;
 
-            const { polygonRect, borderColor, instances, polylineOutInstance } = instanceObject;
+                that._primitive = that._createFillInstance(instances, { polygonRect });
 
-            this._primitive = this._createFillInstance(instances, { polygonRect });
+                if (that._primitive) {
+                    that._primitive.pickedPrimitive = that;
+                }
 
-            if (this._primitive) {
-                this._primitive.pickedPrimitive = this;
-            }
+                that._primitive1 = that._createPolylineOutInstance(polylineOutInstance, { borderColor });
 
-            this._primitive1 = this._createPolylineOutInstance(polylineOutInstance, { borderColor });
-
-            this._primitive1.pickedPrimitive = this;
+                that._primitive1.pickedPrimitive = that;
+                that._primitive1 && that._primitive1.update(frameState);
+                that._primitive && that._primitive.update(frameState);
+            });
+        }else {
+            this._primitive1 && this._primitive1.update(frameState);
+            this._primitive && this._primitive.update(frameState);   
         }
-        this._primitive1 && this._primitive1.update(frameState);
-        this._primitive && this._primitive.update(frameState);
     }
-    _elementInstance(ele) {
-        const instances = new RegularSurfaceElementInstance(ele, {
+    _elementInstance(callback) {
+        new RegularSurfaceElementInstance(this._elem, {
             ...this.getBaseSaveAttributesValues(),
             globelScale: this.getGlobelScale()
-        }).getInstance();
-        return instances;
+        }).getInstance(function (instances) {
+            callback(instances);
+        });
     }
 
     initBaseSaveAttributes() {

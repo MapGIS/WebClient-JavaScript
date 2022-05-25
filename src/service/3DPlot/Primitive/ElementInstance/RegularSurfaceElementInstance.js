@@ -11,80 +11,80 @@ import {CesiumUtil} from "../../Utils/CesiumUtil";
 import SvgElementInstance from "./SvgElementInstance";
 
 export default class RegularSurfaceElementInstance extends SvgElementInstance {
-  svgToGeomInstances(elem,options) {
-    const { surfaceBorderWidth }=options
-    this.polylineOutInstance = null;
-    this.polygonRect = new Bounds();
-    this._borderColor = Cesium.Color.RED;
-    this._surfaceBorderWidth = surfaceBorderWidth;
+    svgToGeomInstances(elem, options, callback) {
+        const {surfaceBorderWidth} = options
+        this.polylineOutInstance = null;
+        this.polygonRect = new Bounds();
+        this._borderColor = Cesium.Color.RED;
+        this._surfaceBorderWidth = surfaceBorderWidth;
 
-    const pathElements = [];
-    const instances = [];
+        const pathElements = [];
+        const instances = [];
 
-    elem.getPathElem(pathElements);
+        elem.getPathElem(pathElements);
 
-    const styleObject = pathElements[0].getContextStyle();
-    if (styleObject) {
-      if (styleObject.strokeStyle !== "none") {
-        this._borderColor = Cesium.Color.fromCssColorString(
-          styleObject.strokeStyle
-        );
-      }
+        const styleObject = pathElements[0].getContextStyle();
+        if (styleObject) {
+            if (styleObject.strokeStyle !== "none") {
+                this._borderColor = Cesium.Color.fromCssColorString(
+                    styleObject.strokeStyle
+                );
+            }
 
-      // 边线线宽为像素值，界面显示效果太差，因此边线宽度取固定值
-      // if(pathElements[0].getStyle('stroke-width').hasValue()){
-      //   const v=Math.round(pathElements[0].getStyle('stroke-width').getNumber())/2 
-      //   this._surfaceBorderWidth=v
-      // }
+            // 边线线宽为像素值，界面显示效果太差，因此边线宽度取固定值
+            // if(pathElements[0].getStyle('stroke-width').hasValue()){
+            //   const v=Math.round(pathElements[0].getStyle('stroke-width').getNumber())/2
+            //   this._surfaceBorderWidth=v
+            // }
 
+        }
+
+        pathElements.forEach((s) => {
+            instances.push(this.pathElemToGeomInstance(s));
+        });
+
+        const exportInstance = instances.flat();
+        callback({
+            instances: exportInstance,
+            polylineOutInstance: this.polylineOutInstance,
+            polygonRect: this.polygonRect,
+            borderColor: this._borderColor
+        });
     }
 
-    pathElements.forEach((s) => {
-      instances.push(this.pathElemToGeomInstance(s));
-    });
+    pathElemToGeomInstance(elem) {
+        const _parts = elem.cacheCoords || elem.getCoords();
 
-    const exportInstance = instances.flat();
-    return {
-      instances: exportInstance,
-      polylineOutInstance: this.polylineOutInstance,
-      polygonRect:this.polygonRect,
-      borderColor:this._borderColor
-    };
-  }
+        const polygonparts = _parts
+            .flatMap((s) =>
+                s.map((t) => {
+                    this.polygonRect.addPnt(t.x, t.y);
+                    const latlng = CesiumUtil.WebMercatorUnProject(t.x, t.y);
+                    return [latlng.x, latlng.y];
+                })
+            )
+            .flat();
 
-  pathElemToGeomInstance(elem) {
-    const _parts = elem.cacheCoords || elem.getCoords();
+        const polygon = new Cesium.PolygonGeometry({
+            polygonHierarchy: new Cesium.PolygonHierarchy(
+                Cesium.Cartesian3.fromDegreesArray(polygonparts)
+            ),
+        });
 
-    const polygonparts = _parts
-      .flatMap((s) =>
-        s.map((t) => {
-          this.polygonRect.addPnt(t.x, t.y);
-          const latlng = CesiumUtil.WebMercatorUnProject(t.x, t.y);
-          return [latlng.x, latlng.y];
-        })
-      )
-      .flat();
+        const groundPolyline = new Cesium.GroundPolylineGeometry({
+            positions: Cesium.Cartesian3.fromDegreesArray(polygonparts),
+            width: this._surfaceBorderWidth,
+        });
 
-    const polygon = new Cesium.PolygonGeometry({
-      polygonHierarchy: new Cesium.PolygonHierarchy(
-        Cesium.Cartesian3.fromDegreesArray(polygonparts)
-      ),
-    });
+        const instance = new Cesium.GeometryInstance({
+            geometry: polygon,
+        });
 
-    const groundPolyline = new Cesium.GroundPolylineGeometry({
-      positions: Cesium.Cartesian3.fromDegreesArray(polygonparts),
-      width: this._surfaceBorderWidth,
-    });
+        this.polylineOutInstance = new Cesium.GeometryInstance({
+            geometry: groundPolyline,
+        });
 
-    const instance = new Cesium.GeometryInstance({
-      geometry: polygon,
-    });
-
-    this.polylineOutInstance = new Cesium.GeometryInstance({
-      geometry: groundPolyline,
-    });
-
-    return instance;
-  }
+        return instance;
+    }
 
 }

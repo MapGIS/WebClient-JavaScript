@@ -35,6 +35,8 @@ export default class DrawPoint extends DrawObject {
       if (!worldPos) return;
 
       symbol.getElement().then(function (res) {
+        const {classificationType} = that._symbol;
+        res.classificationType = classificationType;
         that._primitive = PrimitiveFactory.createInstance(symbol.type, {
           positions: that.m_coords,
           element: res

@@ -10,8 +10,8 @@ import SimpleLineElementInstance from '../ElementInstance/SimpleLineElementInsta
 import RegularLine1Primitive from './RegularLine1Primitive';
 
 class SimpleLinePrimitive extends RegularLine1Primitive {
-    _elementInstance(ele, callback) {
-        new SimpleLineElementInstance(ele, {
+    _elementInstance(callback) {
+        new SimpleLineElementInstance(this._elem, {
             ...this.getBaseSaveAttributesValues(),
             globelScale: this.getGlobelScale()
         }).getInstance(function (instances) {
