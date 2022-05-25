@@ -197,6 +197,28 @@ class BasePlotElement extends SvgElement {
       geometry: this._createGeometry(),
     };
   }
+
+  /**
+   * @description: 获取样式json对象
+   * @return {Object} json 样式对象
+   */
+  getStyleJSON() {
+      const {properties} = this.toGeoJSON();
+      const {symbolNodes} = properties;
+      let style = {};
+      Object.keys(symbolNodes).forEach(function (key) {
+          let styleObj = symbolNodes[key];
+          let keys = key.split(',');
+          for (let i = 0; i < keys.length; i++) {
+              if (!style.hasOwnProperty(keys[i])) {
+                  style[keys[i]] = {};
+              }
+              style[keys[i]] = Object.assign(style[keys[i]], styleObj);
+          }
+      });
+    return style;
+  }
+
   fromGeoJSON(geojson) {
     if (geojson.type === "Feature") {
       // 初始化样式 样式覆盖
@@ -271,7 +293,7 @@ class BasePlotElement extends SvgElement {
   setAllAttributes(properties){
     this.initProperties(properties)
     //  发送属性变更事件
-    this._propsUpdateSignal.dispatch({});  
+    this._propsUpdateSignal.dispatch({});
   }
   /**
    * @description: 获取属性对象
