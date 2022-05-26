@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-24 11:12:29
+ * @LastEditTime: 2022-05-26 11:42:37
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -428,6 +428,7 @@ export default class PlotCanvas {
              s.dataToPoint&&s.dataToPoint()
         })
     }
+
 
     /**
      * @function: Module:PlotCanvas.prototype.requestRenderAll

@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-17 16:12:55
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 16:56:30
+ * @LastEditTime: 2022-05-24 11:19:36
  */
 
 import { fabric } from 'fabric';

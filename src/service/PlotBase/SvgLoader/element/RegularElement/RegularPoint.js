@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-05-23 13:49:41
+ * @LastEditTime: 2022-05-25 20:41:42
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
@@ -21,10 +21,16 @@ class RegularPoint extends BaseRegularElement {
     this.transformAngle = 0;
     this.transformSizeX = 1;
     this.transformSizeY = 1;
+
+    // 暂时处理逻辑。处理fabricjs转动角度无法满足动画需要的问题
+    this.geometryAngle=0
+
     this.currentReplaceIndex = null;
     this.initBaseAttributes(node);
     this.traverChildren();
   }
+  
+  
 
   set tranAngle(value) {
     this.transformAngle = value;
@@ -49,6 +55,13 @@ class RegularPoint extends BaseRegularElement {
 
   getTranSize() {
     return [this.transformSizeX, this.transformSizeY];
+  }
+
+  setGeometryAngle(angle){
+     this.geometryAngle=angle
+  }
+  getGeometryAngle(){
+    return this.geometryAngle
   }
 
   getSaveBaseAttributes() {
@@ -128,7 +141,7 @@ class RegularPoint extends BaseRegularElement {
       matrix,
       origin,
       translatePoint,
-      null,
+      this.getGeometryAngle(),
       1,
       1,
       this.m_scaleX,

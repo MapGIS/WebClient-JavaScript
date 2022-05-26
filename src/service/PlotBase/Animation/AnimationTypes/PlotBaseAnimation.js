@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 12:06:38
+ * @LastEditTime: 2022-05-26 15:09:13
  */
 import { AnimationUtil } from '../utils/AnimationUtil';
 import { easingFunc } from '../utils/Easing';
@@ -27,8 +27,12 @@ export default class PlotBaseAnimation {
         this._plotObjects = options.plotObjects || null;
         // 动画状态
         this._status = 'pending';
-        // 刷新函数
+        // 图层组函数
         this.handRefresh = options.handRefresh || function () {};
+        this.getPlotObjectById = options.getPlotObjectById || function (uid) {};
+        this.addUtilPath= options.addUtilPath || function (){}
+        this.removeUtilPath= options.removeUtilPath || function(){
+        }
         // 时段记录
         this.timeSpace = 0;
         // 播放历史
@@ -43,14 +47,13 @@ export default class PlotBaseAnimation {
         this.isCanRender = true;
     }
     // 更新动画参数
-    update() {
-    }
+    update() {}
     // 销毁动画
     destory() {}
     // 开始动画
     play(_totalTime) {
         // 更新动画参数
-        this.update()
+        this.update();
         // 动画播放
         let rate = 0;
         let start;

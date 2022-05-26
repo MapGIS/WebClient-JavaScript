@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-24 11:49:53
+ * @LastEditTime: 2022-05-26 15:30:28
  */
 
 import { fabric } from 'fabric';
@@ -203,21 +203,36 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
      * @return {*}
      */
     getPlotObjectById(uid) {
-        let t=null;
-        for(let i =0;i<this._objects.length;i++){
-            const object = this._objects[i]
+        let t = null;
+        for (let i = 0; i < this._objects.length; i++) {
+            const object = this._objects[i];
             const elem = object.getElement();
             if (elem && elem.getFeatureId() === uid) {
                 t = object;
-                break
-            }  
+                break;
+            }
         }
         return t;
     },
-    initLayerCoords(){
-        this._plotCanvasLayers.forEach(layer => {
-            layer.initCoords()
+    initLayerCoords() {
+        this._plotCanvasLayers.forEach((layer) => {
+            layer.initCoords();
         });
+    },
+    addUtilPath(coords, options) {
+        const coordSys = this.getCoordSys();
+        const points = coords.map((s) => {
+            const v = coordSys.dataToPoint([s.x, s.y]);
+            return { x: v[0], y: v[1] };
+        });
+        const polyline = new fabric.Polyline(points, {  
+                fill:'green', 
+        });  
+        // this.add(polyline);
+        return polyline
+    },
+    removeUtilPath(utilPlotObject){
+        this.remove(utilPlotObject)
     },
     /**
      * @function: Module:PlotCanvasGroup.prototype._renderObjects
@@ -226,20 +241,20 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
      * @param {Array<Object>} objects
      */
     _renderObjects(ctx, objects) {
-        this.initLayerCoords()
+        this.initLayerCoords();
         var i, len;
         for (i = 0, len = objects.length; i < len; ++i) {
             const object = objects[i];
             const element = object.getElement();
-            const bounds  = element.getBounds()
-            const left = bounds.left
-            const bottom= bounds.bottom
-            const top= bounds.top
-            const right= bounds.right
-            
-            let flag = true
-            if((this.width<left && this.height<bottom) || (top<0 && right<0 ) ){
-                flag=false                
+            const bounds = element.getBounds();
+            const left = bounds.left;
+            const bottom = bounds.bottom;
+            const top = bounds.top;
+            const right = bounds.right;
+
+            let flag = true;
+            if ((this.width < left && this.height < bottom) || (top < 0 && right < 0)) {
+                flag = false;
             }
             flag && object && object.render(ctx);
         }

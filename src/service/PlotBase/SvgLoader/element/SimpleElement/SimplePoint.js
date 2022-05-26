@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-05-23 13:51:01
+ * @LastEditTime: 2022-05-25 20:43:04
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
@@ -22,15 +22,17 @@ class SimplePoint extends BaseSimple {
         this.transformSizeX = 1;
         this.transformSizeY = 1;
         // 初始化
+        // 暂时处理逻辑。处理fabricjs转动角度无法满足动画需要的问题
+        this.geometryAngle = 0;
         this.initBaseAttributes(node);
         // 初始化扩展
-        this.setReplaceIndex(0)
+        this.setReplaceIndex(0);
     }
 
     _initValues() {
         super._initValues();
         // 可扩展属性
-        this.replaceElement=null
+        this.replaceElement = null;
         this.currentReplaceIndex = null;
     }
 
@@ -46,7 +48,6 @@ class SimplePoint extends BaseSimple {
         return this.transformAngle;
     }
 
-
     setTranSize(x, y) {
         this.transformSizeY = y;
         this.transformSizeX = x;
@@ -60,6 +61,12 @@ class SimplePoint extends BaseSimple {
         return [this.transformSizeX, this.transformSizeY];
     }
 
+    setGeometryAngle(angle) {
+        this.geometryAngle = angle;
+    }
+    getGeometryAngle() {
+        return this.geometryAngle;
+    }
     getSaveBaseAttributes() {
         const attributes = super.getSaveBaseAttributes();
         return this._getSaveBaseAttributes(SimplePoint, attributes);
@@ -73,15 +80,11 @@ class SimplePoint extends BaseSimple {
      */
     _replaceChild(node, ele) {
         // replace Element
-        if (
-          ele instanceof RectElement &&
-          ele.getAttribute("zondyPlotSymbolItem:replace").hasValue()
-        ) {
-
-          // 替换icon
-          const replaceElement=new ReplaceRectElement(node);
-          this.replaceElement = replaceElement
-          return  replaceElement;
+        if (ele instanceof RectElement && ele.getAttribute('zondyPlotSymbolItem:replace').hasValue()) {
+            // 替换icon
+            const replaceElement = new ReplaceRectElement(node);
+            this.replaceElement = replaceElement;
+            return replaceElement;
         }
         return ele;
     }
@@ -114,7 +117,7 @@ class SimplePoint extends BaseSimple {
         if (this._is3d) {
             this._run3d(matrix, origin);
         }
-        this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, null, 1, 1, this.m_scaleX, this.m_scaleY);
+        this._applyNormalMatrixTransfrom(matrix, origin, translatePoint, this.getGeometryAngle(), 1, 1, this.m_scaleX, this.m_scaleY);
         element._transformMatrix = matrix;
         element._dimModal.clear();
         element._dimModal.push({
@@ -136,14 +139,14 @@ class SimplePoint extends BaseSimple {
         return new Bounds(x1.x, x1.y, x2.x, x2.y);
     }
 
-    setReplaceIndex(i){
-        const replaceElement= this.replaceElement
-        const tags= this.tags
-        if(!replaceElement || !tags || i>=tags.length ){
-            return
+    setReplaceIndex(i) {
+        const replaceElement = this.replaceElement;
+        const tags = this.tags;
+        if (!replaceElement || !tags || i >= tags.length) {
+            return;
         }
-        this.currentReplaceIndex= i
-        replaceElement.setReplacePartId(tags[i])
+        this.currentReplaceIndex = i;
+        replaceElement.setReplacePartId(tags[i]);
     }
 
     setPoints(points) {

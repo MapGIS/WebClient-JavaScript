@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:20:42
- * @LastEditTime: 2022-01-11 15:24:19
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-05-26 16:13:17
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\SvgElement.js
  */
@@ -31,3 +31,4 @@ export default class SvgElement extends RenderedElement {
     cloneObject.height = this.height;
   }
 }
+

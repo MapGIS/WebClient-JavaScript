@@ -5,7 +5,11 @@ import {ShapePath} from "../../../../PlotUtilBase/Path2D/ShapePath";
 
 export default class MainLineElement extends MainElement {
   constructor(node) {
-    super(node);
+    if(node){
+        super(node)
+    }else{
+      super(MainLineElement.createDefaultNode())
+    }
     this.type = "mainline";
     this.flag = true;
   }
@@ -371,3 +375,9 @@ export default class MainLineElement extends MainElement {
     return pathArr;
   }
 }
+MainLineElement.createDefaultNode = function () {
+    // 添加子节点
+    const path = document.createElement('path');
+    path.setAttribute('d', 'm 200.0,100.0 -200,0');
+    return path;
+};
