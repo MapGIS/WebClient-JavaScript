@@ -79,6 +79,7 @@ export default class DrawPolyline extends DrawObject {
           });
           that._primitive.id = res.featureId;
           that._isAdded = true;
+          that._plotLayer._isDrawing = true;
           that._plotLayer._primitiveCollection.add(that._primitive);
           if(that._addedPlot){
             that._addedPlot(that._primitive);
@@ -134,5 +135,6 @@ export default class DrawPolyline extends DrawObject {
     this._handler = null;
     this._isAdded = false;
     this.m_coords = [];
+    this._plotLayer._isDrawing = false;
   }
 }

@@ -52,6 +52,7 @@ export default class DrawPoint extends DrawObject {
                 if(that._addedPlot){
                     that._addedPlot(that._primitive);
                 }
+                that._plotLayer._isDrawing = true;
                 const lnglat = CesiumUtil.cartesian3ToDegrees(
                     viewer.scene.globe.ellipsoid,
                     worldPos
@@ -74,5 +75,6 @@ export default class DrawPoint extends DrawObject {
         this._handler = null;
         this._isAdded = false;
         this.m_coords = [];
+        this._plotLayer._isDrawing = false;
     }
 }

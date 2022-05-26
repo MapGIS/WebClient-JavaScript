@@ -379,6 +379,16 @@ class BasePlotPrimitive {
     setStyle(key, value, nodeIds) {
         this.setValue(key, value, nodeIds);
     }
+
+    /**
+     * @description: 获取标绘图元样式
+     * @public
+     *
+     * @return {Object} style 图元样式
+     */
+    getStyle() {
+        return this._elem.getStyleJSON();
+    }
 }
 
 export default BasePlotPrimitive;
