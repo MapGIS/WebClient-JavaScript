@@ -17,8 +17,6 @@ class PlotLayer3D extends Observable {
     super();
     //viewer对象
     this._viewer = viewer;
-    //标绘图元id列表
-    this._plotList = [];
     //primitive数组
     this._primitiveCollection = new Cesium.PrimitiveCollection();
     //图元可否编辑
@@ -40,7 +38,6 @@ class PlotLayer3D extends Observable {
    */
   addPlot(plot) {
     this._primitiveCollection.add(plot);
-    this._plotList.push(plot.id);
     return plot;
   }
 
@@ -55,33 +52,11 @@ class PlotLayer3D extends Observable {
    * @function module:PlotLayer3D.removePlotByID
    * @description 根据标绘图元ID删除标绘图元
    * @param id - {String} 必选项，要删除的标绘图元ID
-   * @return {Object} json
+   * @return {Object} json，被删除的标绘图元
    */
   removePlotByID(id) {
-    //删除图元列表中的id
-    for (let j = 0; j < this._plotList.length; j++) {
-      if (id === this._plotList[j]) {
-        this._plotList.splice(j, 1);
-        break;
-      }
-    }
-
-    return this._removePlotByID(id);
-  }
-
-  _removePlotByID(id) {
-    let scene = this._getScene();
-    let result;
-
-    //删除标绘图元
-    for (let i = 0; i < scene.primitives.length; i++) {
-      if (id === scene.primitives[i].id) {
-        result = scene.primitives.remove(scene.primitives[i]);
-        break;
-      }
-    }
-
-    return result;
+    let plot = this.getPlotByID(id);
+    return this.removePlot(plot);
   }
 
   /**
@@ -91,42 +66,45 @@ class PlotLayer3D extends Observable {
    * @return {Object} json
    */
   removePlot(plot) {
-    let scene = this._getScene();
-
-    //删除图元列表中的id
-    for (let i = 0; i < this._plotList.length; i++) {
-      if (id === this._plotList[i]) {
-        this._plotList.splice(i, 1);
-        break;
-      }
+    let plotLayer = this._getPlotLayer();
+    if(plotLayer){
+      return plotLayer.remove(plot);
     }
-
-    return scene.primitives.remove(plot);
   }
 
   /**
    * @function module:PlotLayer3D.getPlotByID
    * @description 根据标绘图元ID获取标绘图元
    * @param id - {String} 必选项，标绘图元ID
-   * @return {Object} json
+   * @return {Object} json，没找到返回undefined
    */
   getPlotByID(id) {
-    let index = this._getPlotIndexById(id);
-    let scene = this._getScene();
+    let plotLayer = this._getPlotLayer();
 
+    if(!plotLayer) {
+      return undefined;
+    }
+
+    let index = this._getPlotIndexById(id, plotLayer);
+    const {_primitives} = plotLayer;
     if (index !== undefined) {
       return _primitives[index];
     }
     return undefined;
   }
 
-  _getPlotIndexById(id) {
-    let scene = this._getScene();
-
+  /**
+   * @description 根据标绘图元ID获取标绘图元的index
+   * @private
+   *
+   * @param id - {String} 必选项，标绘图元ID
+   * @param plotLayer - {Object} 必选项，标绘图层
+   * @return {Number} index
+   */
+  _getPlotIndexById(id, plotLayer) {
     let index = undefined;
 
-    const {_primitives} = scene.primitives;
-
+    const {_primitives} = plotLayer;
     for (let i = 0; i < _primitives.length; i++) {
       if (id === _primitives[i].id) {
         index = i;
@@ -136,17 +114,35 @@ class PlotLayer3D extends Observable {
 
     return index;
   }
+  /**
+   * @description 根据标绘图层ID获取标绘图层
+   * @private
+   *
+   * @return {Object} plotLayer 标绘图层，没找到返回undefined
+   */
+  _getPlotLayer() {
+    let scene = this._getScene();
+    //根据图层id寻找标绘图层
+    const {_primitives} = scene.primitives;
+    //标绘图层
+    let primitiveCollection;
+    for (let i = 0; i < _primitives.length; i++) {
+      if (this._id === _primitives[i]._id) {
+        primitiveCollection = _primitives[i];
+        break;
+      }
+    }
+
+    return primitiveCollection;
+  }
 
   /**
    * @function module:PlotLayer3D.removeAll
    * @description 移除图层下的所有标绘图元
    */
   removeAll() {
-    for (let i = 0; i < this._plotList.length; i++) {
-      this._removePlotByID(this._plotList[i]);
-    }
-
-    this._plotList = [];
+    let plotLayer = this._getPlotLayer();
+    plotLayer.removeAll();
   }
 
   /**
@@ -205,8 +201,6 @@ class PlotLayer3D extends Observable {
 
       primitive.fromGeoJSON(geoFeature);
       primitive.id = id + "_" + parseInt(String(Math.random() * 1000000000));
-
-      that._plotList.push(primitive.id);
 
       that._addPrimitive(primitive);
     });

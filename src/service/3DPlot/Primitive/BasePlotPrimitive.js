@@ -12,7 +12,7 @@
  * @property show 是否显示
  */
 
-export default class BasePlotPrimitive {
+class BasePlotPrimitive {
     constructor(options) {
         Cesium.Check.defined('options', options);
         Cesium.Check.defined('options.element', options.element);
@@ -35,7 +35,7 @@ export default class BasePlotPrimitive {
 
         this._positions = [];
 
-        const { positions } = this._elem;
+        const {positions} = this._elem;
         for (let i = 0; i < positions.length; i += 1) {
             const tempPos = this._elem.positions[i];
             this._positions.push(Cesium.Cartesian3.fromDegrees(tempPos.x, tempPos.y));
@@ -237,7 +237,7 @@ export default class BasePlotPrimitive {
             v[s] = this[s];
         });
         return v;
-        
+
     }
 
     /**
@@ -295,7 +295,7 @@ export default class BasePlotPrimitive {
                         type: 'Image',
                         uniforms: {
                             image: this.getColorRamp([0.0, 1], [wallColor, WallGradColor], true),
-                            repeat: { x: 1, y: 1 }
+                            repeat: {x: 1, y: 1}
                         }
                     }
                 })
@@ -367,4 +367,18 @@ export default class BasePlotPrimitive {
         else ctx.fillRect(0, 0, 100, 1);
         return ramp;
     }
+
+    /**
+     * @description: 设置标绘图元样式，必须通过此方法设置，修改样式的属性无效
+     * @param key {String} 样式名
+     * @param value {Any} 样式值
+     * @param value {Any} 样式值
+     * @param nodeIds {String} 图元部件ID字符串，可传入多个id，以逗号分隔，当id有多个时，可统一修改多个部件的样式，
+     * 若找不到id则不做改变
+     */
+    setStyle(key, value, nodeIds) {
+        this.setValue(key, value, nodeIds);
+    }
 }
+
+export default BasePlotPrimitive;
