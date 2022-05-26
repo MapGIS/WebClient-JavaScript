@@ -41,16 +41,9 @@ class PlotLayer3D extends Observable {
         //是否在绘制图元，绘制途中不触发pick事件
         this._isDrawing = false;
 
-        //常驻点击事件，针对vue组件做出的修改
+        //标绘图元拾取事件，针对vue组件做出的修改
         this._handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
-        this._handler.setInputAction((event) => {
-            if(!that._isDrawing && that._pickPlot){
-                const pick = viewer.scene.pick(event.position);
-                if(pick && pick.primitive && pick.primitive.pickedPrimitive){
-                    that._pickPlot(pick.primitive.pickedPrimitive)
-                }
-            }
-        }, this._pickEventType);
+        this._setPickPlot();
 
         this._primitiveCollection._id = this._id;
         let scene = this._getScene();
@@ -306,6 +299,22 @@ class PlotLayer3D extends Observable {
 
         return lonlat;
     };
+
+    /**
+     * @description 标绘图元拾取事件，绘制中途不会触发该事件，只有绘制图元结束才会触发
+     * @private
+     */
+    _setPickPlot() {
+        let that = this;
+        this._handler.setInputAction((event) => {
+            if(!that._isDrawing && that._pickPlot){
+                const pick = viewer.scene.pick(event.position);
+                if(pick && pick.primitive && pick.primitive.pickedPrimitive){
+                    that._pickPlot(pick.primitive.pickedPrimitive)
+                }
+            }
+        }, this._pickEventType);
+    }
 }
 
 Object.defineProperties(PlotLayer3D.prototype, {
@@ -337,14 +346,7 @@ Object.defineProperties(PlotLayer3D.prototype, {
             let that = this;
             this._handler.removeInputAction(this._pickEventType);
             this._pickEventType = value;
-            this._handler.setInputAction((event) => {
-                if(!that._isDrawing && that._pickPlot){
-                    const pick = viewer.scene.pick(event.position);
-                    if(pick && pick.primitive && pick.primitive.pickedPrimitive){
-                        that._pickPlot(pick.primitive.pickedPrimitive)
-                    }
-                }
-            }, this._pickEventType);
+            this._setPickPlot();
         }
     }
 });
