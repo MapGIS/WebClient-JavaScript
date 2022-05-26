@@ -35,18 +35,20 @@ export default class DrawPoint extends DrawObject {
             if (!worldPos) return;
 
             symbol.getElement().then(function (res) {
-                const {classificationType} = that._symbol;
+                const {classificationType, id} = that._symbol;
                 res.classificationType = classificationType;
                 const {style} = that._symbol;
                 if(style && style.nodeStyles){
                     res.initNodeStyles(style.nodeStyles);
                 }
-
+                if(id){
+                    res.featureId = id;
+                }
                 that._primitive = PrimitiveFactory.createInstance(symbol.type, {
                     positions: that.m_coords,
                     element: res
                 });
-
+                that._primitive.id = id;
                 const lnglat = CesiumUtil.cartesian3ToDegrees(
                     viewer.scene.globe.ellipsoid,
                     worldPos

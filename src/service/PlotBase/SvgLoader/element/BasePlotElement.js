@@ -334,7 +334,7 @@ class BasePlotElement extends SvgElement {
     setNodeAttr(type, value, childIds) {
         const {baseSVGAttributes, extendElementAttributes} =
             this.getSaveBaseAttributes();
-        const baseSVGStyleAttributes = this.styleObject.getSVGStyleNameArr();
+        const baseSVGStyleAttributes = this.getStyleObject().getSVGStyleNameArr();
 
         let val = value;
 
