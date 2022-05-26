@@ -40,17 +40,16 @@ class PlotLayer3D extends Observable {
         //是否在绘制图元，绘制途中不触发pick事件
         this._isDrawing = false;
 
-        if (this._pickPlot) {
-            const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
-            handler.setInputAction((event) => {
-                if(!that._isDrawing){
-                    const pick = viewer.scene.pick(event.position);
-                    if(pick && pick.primitive && pick.primitive.pickedPrimitive){
-                        that._pickPlot(pick.primitive.pickedPrimitive)
-                    }
+        //常驻点击事件，针对vue组件做出的修改
+        const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+        handler.setInputAction((event) => {
+            if(!that._isDrawing && that._pickPlot){
+                const pick = viewer.scene.pick(event.position);
+                if(pick && pick.primitive && pick.primitive.pickedPrimitive){
+                    that._pickPlot(pick.primitive.pickedPrimitive)
                 }
-            }, this._pickEventType);
-        }
+            }
+        }, this._pickEventType);
 
         this._primitiveCollection._id = this._id;
         let scene = this._getScene();
@@ -319,6 +318,22 @@ Object.defineProperties(PlotLayer3D.prototype, {
             if (this._editable) {
                 this._editTool.enable();
             }
+        }
+    },
+    pickPlot: {
+        get: function () {
+            return this._pickPlot;
+        },
+        set: function (value) {
+            this._pickPlot = value;
+        }
+    },
+    pickEventType: {
+        get: function () {
+            return this._pickEventType;
+        },
+        set: function (value) {
+            this._pickEventType = value;
         }
     }
 });
