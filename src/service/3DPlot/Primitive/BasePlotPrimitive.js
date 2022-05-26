@@ -375,10 +375,8 @@ class BasePlotPrimitive {
      * @param value {Any} 样式值
      * @param nodeIds {String} 图元部件ID字符串，可传入多个id，以逗号分隔，当id有多个时，可统一修改多个部件的样式，
      * 若找不到id则不做改变
-     * @return {*}
      */
     setStyle(key, value, nodeIds) {
-        console.log("this._elem",this._elem)
         this.setValue(key, value, nodeIds);
     }
 }
