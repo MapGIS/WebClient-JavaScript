@@ -21,6 +21,7 @@ import GeomUtil from "../PlotUtilBase/Geometry/GeomUtil";
 class PlotLayer3D extends Observable {
     constructor(Cesium, viewer, options) {
         super();
+        options = options || {};
         let that = this;
         //viewer对象
         this._viewer = viewer;
