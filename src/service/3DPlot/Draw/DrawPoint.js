@@ -12,13 +12,16 @@ import {PrimitiveFactory} from "../Primitive/PrimitiveFactory";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 
 export default class DrawPoint extends DrawObject {
-    constructor(viewer, symbol, plotLayer) {
+    constructor(viewer, symbol, plotLayer, options) {
         super();
         this._viewer = viewer;
         this._symbol = symbol;
         this.m_coords = [];
         this._primitive = null;
         this._plotLayer = plotLayer;
+        //绘制完成回调函数
+        const {addedPlot} = options;
+        this._addedPlot = addedPlot;
     }
 
     addHooks() {
@@ -35,20 +38,20 @@ export default class DrawPoint extends DrawObject {
             if (!worldPos) return;
 
             symbol.getElement().then(function (res) {
-                const {classificationType, id} = that._symbol;
+                const {classificationType} = that._symbol;
                 res.classificationType = classificationType;
                 const {style} = that._symbol;
                 if(style && style.nodeStyles){
                     res.initNodeStyles(style.nodeStyles);
                 }
-                if(id){
-                    res.featureId = id;
-                }
                 that._primitive = PrimitiveFactory.createInstance(symbol.type, {
                     positions: that.m_coords,
                     element: res
                 });
-                that._primitive.id = id;
+                that._primitive.id = res.featureId;
+                if(that._addedPlot){
+                    that._addedPlot(that._primitive);
+                }
                 const lnglat = CesiumUtil.cartesian3ToDegrees(
                     viewer.scene.globe.ellipsoid,
                     worldPos
@@ -67,8 +70,9 @@ export default class DrawPoint extends DrawObject {
 
     removeHooks() {
         const handler = this._handler;
-        // handler.removeInputAction();
         handler.destroy();
         this._handler = null;
+        this._isAdded = false;
+        this.m_coords = [];
     }
 }

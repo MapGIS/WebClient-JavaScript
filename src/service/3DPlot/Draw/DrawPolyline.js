@@ -32,7 +32,7 @@ function look(viewer, center, offset) {
 }
 
 export default class DrawPolyline extends DrawObject {
-  constructor(viewer, symbol, plotLayer) {
+  constructor(viewer, symbol, plotLayer, options) {
     super();
     this.m_coords = [];
     this._viewer = viewer;
@@ -41,14 +41,22 @@ export default class DrawPolyline extends DrawObject {
     this._isAdded = false;
     this._plotLayer = plotLayer;
     this.uuid = Math.random() * 10000000;
+    //绘制完成回调函数
+    const {addedPlot} = options;
+    this._addedPlot = addedPlot;
   }
 
+  /**
+   * @description 添加点击事件
+   * @private
+   */
   addHooks() {
     const viewer = this._viewer;
     const symbol = this._symbol;
     const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
     let that = this;
 
+    //单击事件，开始绘制图元
     handler.setInputAction((event) => {
       const worldPos = viewer.scene.globe.pick(
         viewer.camera.getPickRay(event.position),
@@ -58,23 +66,27 @@ export default class DrawPolyline extends DrawObject {
       if (!worldPos) return;
 
       symbol.getElement().then(function (res) {
-        if (!that._isAdded) {
-          const {classificationType, id} = that._symbol;
+        if (!that._isAdded && that._handler) {
+          const {classificationType} = that._symbol;
           res.classificationType = classificationType;
           const {style} = that._symbol;
           if(style && style.nodeStyles){
             res.initNodeStyles(style.nodeStyles);
           }
-          if(id){
-            res.featureId = id;
-          }
           that._primitive = PrimitiveFactory.createInstance(symbol.type, {
             positions: that.m_coords,
             element: res,
           });
-          that._primitive.id = id;
+          that._primitive.id = res.featureId;
           that._isAdded = true;
           that._plotLayer._primitiveCollection.add(that._primitive);
+          if(that._addedPlot){
+            that._addedPlot(that._primitive);
+          }
+        }
+
+        if(!that._handler){
+          return;
         }
 
         const lnglat = CesiumUtil.cartesian3ToDegrees(
@@ -102,6 +114,7 @@ export default class DrawPolyline extends DrawObject {
       });
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+    //双击事件，结束绘制图元
     handler.setInputAction((event) => {
       this.fireFinishEvent({ plotObj3D: this._primitive });
       this.disable();
@@ -117,8 +130,9 @@ export default class DrawPolyline extends DrawObject {
       look(this.viewer, this.m_coords[this.m_coords.length - 1], 1000);
     }
 
-    // handler.removeInputAction();
     handler.destroy();
     this._handler = null;
+    this._isAdded = false;
+    this.m_coords = [];
   }
 }
