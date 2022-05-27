@@ -37,8 +37,8 @@ import ArcGis from './ArcGis';
 import {SymbolManager} from "./PlotBase/index"
 import { PlotCanvas } from './2DPlot/index';
 import { PlotCanvasGroup } from './2DPlot/PlotCanvasGroup'
-import {PlotLayer3D,PlotLayerMap,DrawTool} from "./3DPlot/index"
-import { TimeLine } from './PlotBase/index';
+import {PlotLayer3D,PlotLayerMap} from "./3DPlot/index"
+import { TimeLine, DrawTool } from './PlotBase/index';
 
 
 export {

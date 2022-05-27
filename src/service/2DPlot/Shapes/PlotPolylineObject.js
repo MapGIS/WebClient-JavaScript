@@ -26,7 +26,11 @@ const PlotPolylineObject = fabric.util.createClass(PlotObject, {
     baseSize: 2000000,
     originBaseX: 0,
     originBaseY: 0,
-
+    setPnts(latlngs) {
+        this.callSuper('setPnts', latlngs);
+        this.innerInitControls();
+        this.set('dirty', true);
+    },
     setBounds: function setBounds(ctx) {
         this._setBounds(this._calcBounds(ctx));
     },

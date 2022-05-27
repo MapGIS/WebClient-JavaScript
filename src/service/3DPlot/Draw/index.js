@@ -7,6 +7,5 @@
  * @FilePath: \MapGISPlotBase\src\3DPlot\Draw\index.js
  */
 import { DrawPlotObjectFactory3D } from "./DrawPlotObjectFactory3D";
-import DrawTool from "./DrawTool";
 
-export { DrawPlotObjectFactory3D,DrawTool };
+export { DrawPlotObjectFactory3D };

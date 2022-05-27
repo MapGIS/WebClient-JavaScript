@@ -1,4 +1,7 @@
-import {DrawPlotObjectFactory3D} from "./DrawPlotObjectFactory3D";
+import {DrawPlotObjectFactory3D} from "../../3DPlot/Draw";
+import {PlotLayer3D} from "../../3DPlot";
+import {PlotCanvas} from "../../2DPlot";
+import {DrawPlotObjectFactory2D} from "../../2DPlot/Draw/DrawPlotObjectFactory2D";
 
 /**
  * @class module:3DPlot.DrawTool
@@ -22,6 +25,8 @@ class DrawTool {
     /**
      * @function module:3DPlot.DrawTool.setLayer
      * @description 设置要作用的标绘图层
+     * @public
+     *
      * @param layer - {PlotLayer3D} 必选项，标绘图层
      */
     setLayer(layer) {
@@ -29,11 +34,26 @@ class DrawTool {
     }
 
     /**
-     * @function module:3DPlot.DrawTool.drawPlot
-     * @description 绘制标绘图元
+     * @description 绘制标绘图元工具
+     * @public
+     *
      * @param symbol - {Object} 必选项，标绘图元的符号对象
      */
     drawPlot(symbol) {
+        if(this._plotLayer instanceof PlotLayer3D){
+            this._drawPlot3D(symbol);
+        }else if(this._plotLayer instanceof PlotCanvas){
+            this._drawPlot2D(symbol);
+        }
+    }
+
+    /**
+     * @description 绘制标绘图元（三维）
+     * @private
+     *
+     * @param symbol - {Object} 必选项，标绘图元的符号对象
+     */
+    _drawPlot3D(symbol) {
         //一直是原有符号
         if (!this._drawTool) {
             this._symbolUrl = symbol.src;
@@ -63,7 +83,23 @@ class DrawTool {
     }
 
     /**
+     * @description 绘制标绘图元（二维）
+     * @private
+     *
+     * @param symbol - {Object} 必选项，标绘图元的符号对象
+     */
+    _drawPlot2D(symbol){
+        if (!this._drawTool) {
+            this._drawTool = DrawPlotObjectFactory2D.createInstance(symbol.type, this._plotLayer, symbol);
+        }
+
+        //开始绘制
+        this._drawTool.enable();
+    }
+
+    /**
      * @function module:3DPlot.DrawTool.stopDraw
+     * @public
      * @description 停止绘制
      */
     stopDraw() {

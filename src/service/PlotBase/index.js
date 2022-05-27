@@ -7,5 +7,6 @@
  */
 import SymbolManager from './SymbolManager/SymbolManager';
 import TimeLine from './Animation/TimeLine/TimeLine'
- 
-export {SymbolManager,TimeLine} ;
+import DrawTool from './Draw/DrawTool'
+
+export {SymbolManager,TimeLine,DrawTool} ;

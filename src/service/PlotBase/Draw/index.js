@@ -9,8 +9,10 @@
 
 import DrawObject from "./DrawObject";
 import { DrawPlotObjectFactory } from "./DrawObjectFactory";
+import DrawTool from "./DrawTool";
 
 export default{
     DrawObject,
-    DrawPlotObjectFactory
+    DrawPlotObjectFactory,
+    DrawTool
 }
