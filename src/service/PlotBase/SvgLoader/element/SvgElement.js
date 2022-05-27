@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:20:42
- * @LastEditTime: 2022-05-26 16:13:17
+ * @LastEditTime: 2022-05-26 16:55:50
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\SvgElement.js
@@ -10,7 +10,11 @@ import RenderedElement from "./RenderedElement";
 
 export default class SvgElement extends RenderedElement {
   constructor(node) {
-    super(node);
+    if(node){
+       super(node)
+    }else{
+      super(SvgElement.createDefaultNode())  
+    }
 
     this.type = "svg";
 
@@ -31,4 +35,11 @@ export default class SvgElement extends RenderedElement {
     cloneObject.height = this.height;
   }
 }
+SvgElement.createDefaultNode = function () {
+    // 添加子节点
+    const svg = document.createElement('svg');
+    svg.setAttribute('width','200');
+    svg.setAttribute('height','200');
+    return svg;
+};
 

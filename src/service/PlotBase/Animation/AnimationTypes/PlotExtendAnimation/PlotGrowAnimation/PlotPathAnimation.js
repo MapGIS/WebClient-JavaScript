@@ -8,7 +8,7 @@ import MainLineElement from '../../../../SvgLoader/element/extend/MainLineElemen
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-26 16:13:31
+ * @LastEditTime: 2022-05-27 11:00:55
  */
 export default class PlotPathAnimation extends PlotCoordsAnimation {
     constructor(options) {
@@ -33,10 +33,10 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         this.AlongTangent = AnimationUtil.defineValue(options.AlongTangent, true);
 
         //绑定id
-        this.symbolBindId =  AnimationUtil.defineValue(options.symbolBindId, null);
+        this.symbolBindId = AnimationUtil.defineValue(options.symbolBindId, null);
 
         // 路径对象
-        this.pathWayObject=null
+        this.pathWayObject = null;
         // init geometry
         this.geometryInstance = null;
         this.geometryAngles = [];
@@ -46,24 +46,29 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         // 根据路径类型生成几何
         const { pathType } = this;
 
-        const plot= this.getPlotObjectById(this.symbolBindId)
-        let coords=null
-        if(plot){
-            coords=plot.getElement().positions
-        }else{
-            coords=this.animationCoords
+        const plot = this.getPlotObjectById(this.symbolBindId);
+        let coords = null;
+        if (plot) {
+            coords = plot.getElement().positions;
+        } else {
+            coords = this.animationCoords;
         }
 
         if (pathType == 'line') {
             this.geometryInstance = new Spline(coords);
         }
 
-        // const main= new MainLineElement()
-        // main.applyMainGeo(this.geometryInstance)
-        // const tempCoords=main.getCoords().flat()
-        
-        // this.pathWayObject=this.addUtilPath(tempCoords)
-    
+        const main = new MainLineElement();
+        main.applyMainGeo(this.geometryInstance);
+        const tempCoords = main.getCoords().flat();
+        if(this.pathWayObject){
+            this.pathWayObject.setPnts(tempCoords)
+            this.pathWayObject=null
+        }else{
+            this.pathWayObject = this.addUtilPath(tempCoords);
+        }
+
+
         this.geometryAngles = this._plotObjects.map((s) => s.getElement().getGeometryAngle());
     }
 
@@ -79,12 +84,17 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
             const element = s.getElement();
             element.setGeometryAngle(this.geometryAngles[i]);
         });
+
+        if(this.pathWayObject){
+            this.removeUtilPath(this.pathWayObject)
+            this.pathWayObject=null
+        }
     }
 
     render(rate) {
-        if(!this.geometryInstance) return;
+        if (!this.geometryInstance) return;
         const trueRate = this._calcTrueRate(rate);
-    
+
         const v = this.geometryInstance.getTransfromByRate(trueRate);
         const pnt = new Point(v[0][0], v[0][1]);
 

@@ -4,11 +4,12 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-26 15:30:28
+ * @LastEditTime: 2022-05-27 10:56:43
  */
 
 import { fabric } from 'fabric';
 import PlotCanvas from './PlotCanvas';
+import PlotUtilLine from './Shapes/PlotUtilLine';
 
 export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
     selection: false,
@@ -206,6 +207,9 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         let t = null;
         for (let i = 0; i < this._objects.length; i++) {
             const object = this._objects[i];
+            if(!object.isExtendPlotObject){
+                continue
+            }
             const elem = object.getElement();
             if (elem && elem.getFeatureId() === uid) {
                 t = object;
@@ -220,19 +224,15 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         });
     },
     addUtilPath(coords, options) {
-        const coordSys = this.getCoordSys();
-        const points = coords.map((s) => {
-            const v = coordSys.dataToPoint([s.x, s.y]);
-            return { x: v[0], y: v[1] };
-        });
-        const polyline = new fabric.Polyline(points, {  
-                fill:'green', 
-        });  
-        // this.add(polyline);
-        return polyline
+        const plot = new PlotUtilLine({
+            coords,
+            canvas:this
+        })
+        this.add(plot);
+        return plot;
     },
-    removeUtilPath(utilPlotObject){
-        this.remove(utilPlotObject)
+    removeUtilPath(utilPlotObject) {
+        this.remove(utilPlotObject);
     },
     /**
      * @function: Module:PlotCanvasGroup.prototype._renderObjects
@@ -245,17 +245,20 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         var i, len;
         for (i = 0, len = objects.length; i < len; ++i) {
             const object = objects[i];
-            const element = object.getElement();
-            const bounds = element.getBounds();
-            const left = bounds.left;
-            const bottom = bounds.bottom;
-            const top = bounds.top;
-            const right = bounds.right;
-
             let flag = true;
-            if ((this.width < left && this.height < bottom) || (top < 0 && right < 0)) {
-                flag = false;
+            if (object.isExtendPlotObject) {
+                const element = object.getElement();
+                const bounds = element.getBounds();
+                const left = bounds.left;
+                const bottom = bounds.bottom;
+                const top = bounds.top;
+                const right = bounds.right;
+
+                if ((this.width < left && this.height < bottom) || (top < 0 && right < 0)) {
+                    flag = false;
+                }
             }
+
             flag && object && object.render(ctx);
         }
     }
