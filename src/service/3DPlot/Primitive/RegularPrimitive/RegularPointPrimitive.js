@@ -71,6 +71,7 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
                 let that = this;
                 const scale = this.getGlobelScale();
                 this._elem.changeAttributeStatus(true, scale, scale);
+                this._isTranslate = false;
 
                 this._createGeomInstance(function (geomInstances) {
                     that.applySelectStatus(geomInstances);
