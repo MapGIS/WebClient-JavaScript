@@ -90,7 +90,7 @@ class DrawTool {
      */
     _drawPlot2D(symbol){
         if (!this._drawTool) {
-            this._drawTool = DrawPlotObjectFactory2D.createInstance(symbol.type, this._plotLayer, symbol);
+            this._drawTool = DrawPlotObjectFactory2D.createInstance(symbol.type, this._plotLayer, symbol, this._options);
         }
 
         //开始绘制

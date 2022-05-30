@@ -10,12 +10,15 @@ import  Point  from "../../PlotUtilBase/Geometry/Point";
 import  {PlotObjectFactory}  from "../Shapes/PlotObjectFactory";
 
 export default class DrawPoint2D extends DrawObject {
-  constructor(fabricCanvas, symbol) {
+  constructor(fabricCanvas, symbol, options) {
     super();
     this.m_fabricCanvas = fabricCanvas;
     this.m_symbol = symbol;
     this.m_coordSys = this.m_fabricCanvas.getCoordSys();
     this.onMouseUp = this.innerOnMouseUp.bind(this);
+    //绘制完成回调函数
+    const {addedPlot} = options;
+    this._addedPlot = addedPlot;
   }
 
   addHooks() {
@@ -44,6 +47,9 @@ export default class DrawPoint2D extends DrawObject {
       this.m_fabricCanvas.add(object);
       this.m_fabricCanvas.requestRenderAll();
       this.fireFinishEvent({ plotObj2D: object });
+      if(this._addedPlot){
+        this._addedPlot(object);
+      }
       this.disable();
     })
 

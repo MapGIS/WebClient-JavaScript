@@ -11,7 +11,7 @@ import { PlotObjectFactory } from '../Shapes/PlotObjectFactory';
 
 const _ = require('lodash');
 export default class DrawPolyline2D extends DrawObject {
-    constructor(fabricCanvas, symbol) {
+    constructor(fabricCanvas, symbol, options) {
         super();
         this.m_fabricCanvas = fabricCanvas;
         this.m_symbol = symbol;
@@ -20,6 +20,9 @@ export default class DrawPolyline2D extends DrawObject {
         this.m_coords = [[0, 0]];
         this.onMouseUp = this.innerOnMouseUp.bind(this);
         this.onMouseMove = _.throttle(this.innerOnMouseMove.bind(this), 30);
+        //绘制完成回调函数
+        const {addedPlot} = options;
+        this._addedPlot = addedPlot;
     }
 
     addHooks() {
@@ -54,6 +57,9 @@ export default class DrawPolyline2D extends DrawObject {
         if (lastPnt && Math.abs(pnt[0] - lastPnt.x) < 1e-4 && Math.abs(pnt[1] - lastPnt.y) < 1e-4) {
             this.fireFinishEvent({ plotObj2D: this.m_object });
             this.m_startDrawing = false;
+            if(this._addedPlot){
+                this._addedPlot(this.m_object);
+            }
             this.disable();
         } else {
             this.m_coords.push(new Point(pnt[0], pnt[1]));

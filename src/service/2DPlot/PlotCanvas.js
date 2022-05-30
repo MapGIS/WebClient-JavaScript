@@ -145,22 +145,6 @@ export default class PlotCanvas {
     }
 
     /**
-     * @function: Module:PlotCanvas.prototype.DrawSymbol
-     * @description: 绘制工具
-     * @param {*} symbol 符号节点
-     * @return {*}
-     */
-    DrawSymbol(symbol) {
-        if (this.drawTool) {
-            this.drawTool.disable();
-        }
-        this.drawTool = DrawPlotObjectFactory2D.createInstance(symbol.type, this, symbol);
-        if (this.drawTool) {
-            this.drawTool.enable();
-        }
-        return this.drawTool;
-    }
-    /**
      * @function: Module:PlotCanvas.prototype.addPlotObjectBy3DPlotObj
      * @description: 根据三维对象添加二维对象
      * @param {*} plotObj3D
