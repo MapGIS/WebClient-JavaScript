@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-05-26 15:07:10
+ * @LastEditTime: 2022-05-30 16:19:18
  */
 
 /**
@@ -19,21 +19,10 @@ export default class TimeLine {
         this._timeLineName = options.timeLineName || '';
         this._totalTime = options.totalTime || 20000;
 
-        this.handleRender = function () {
-            layerGroup.requestRenderAll ? layerGroup.requestRenderAll() : null;
-        };
-        this.getPlotObjectById = function (uid) {
-            if(layerGroup.getPlotObjectById){
-              return layerGroup.getPlotObjectById(uid)
-            }
-            return null;
-        };
-        this.addUtilPath= function(coords,options){
-            this._layerGroup.addUtilPath(coords,options)
-        }
-        this.removeUtilPath= function(utilPlotObject){
-            this._layerGroup.removeUtilPath(utilPlotObject)
-        }
+        this.handleRender =layerGroup.requestRenderAll?layerGroup.requestRenderAll.bind(layerGroup):null
+        this.getPlotObjectById = layerGroup.getPlotObjectById?layerGroup.getPlotObjectById.bind(layerGroup):()=>{return null}
+        this.drawUtilPlotObject=  layerGroup.drawUtilPlotObject?layerGroup.drawUtilPlotObject.bind(layerGroup):()=>{return null}
+        this.removeDrawUtilPlotObject=layerGroup.removeDrawUtilPlotObject?layerGroup.removeDrawUtilPlotObject.bind(layerGroup):()=>{return null}
         // 动画对象的队列
         this._animationArr = [];
         this._animationItems = [];
@@ -48,19 +37,24 @@ export default class TimeLine {
     }
     _getAnimationObject(item) {
         const animation = AnimationReg.getAnimation(item.type);
+        console.log('--------------')
         const plotObjects = item.featureIds
             .split(',')
             .map((t) => {
-                return this._layerGroup.getPlotObjectById(t);
+                console.log('t: ', t);
+                const s =this._layerGroup.getPlotObjectById(t);
+                console.log('s: ', s);
+                return s
             })
             .filter((b) => b);
+        console.log('plotObjects: ', plotObjects);
         return new animation({
             ...item,
             plotObjects,
             handRefresh: this.handleRender.bind(this),
             getPlotObjectById: this.getPlotObjectById.bind(this),
-            addUtilPath:this.addUtilPath.bind(this),
-            removeUtilPath:this.removeUtilPath.bind(this),
+            drawUtilPlotObject:this.drawUtilPlotObject,
+            removeDrawUtilPlotObject:this.removeDrawUtilPlotObject
         });
     }
 
@@ -77,6 +71,7 @@ export default class TimeLine {
     play() {
         const totalTime = this._totalTime;
         this.animationAction((t) => t.play(totalTime))();
+        
     }
     reset() {
         this.animationAction((t) => t.reset())();
@@ -130,6 +125,4 @@ export default class TimeLine {
 
         this.animationAction((s) => s.jumpTo(_time))();
     }
-    stop() {}
-    destory() {}
 }

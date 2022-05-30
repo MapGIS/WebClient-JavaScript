@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-26 11:42:37
+ * @LastEditTime: 2022-05-30 14:50:31
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -183,7 +183,7 @@ export default class PlotCanvas {
     remove(plotObj) {
         const i = this.m_plotObjects.indexOf(plotObj);
         if (i > -1) {
-            this.m_plotObjects.splice(i, 0);
+            this.m_plotObjects.splice(i,1);
         }
         if (this._fabricCanvas) {
             this._fabricCanvas.remove(plotObj);

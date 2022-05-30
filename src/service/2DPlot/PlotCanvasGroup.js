@@ -4,12 +4,14 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-27 10:56:43
+ * @LastEditTime: 2022-05-30 16:22:23
  */
 
 import { fabric } from 'fabric';
 import PlotCanvas from './PlotCanvas';
-import PlotUtilLine from './Shapes/PlotUtilLine';
+import DrawTool from '../PlotBase/Draw/DrawTool';
+import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
+import { PlotObjectFactory } from './Shapes/PlotObjectFactory';
 
 export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
     selection: false,
@@ -23,8 +25,11 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
     initialize: function (el, options) {
         if (!PlotCanvasGroup.instance) {
             this.callSuper('initialize', el, options);
-            this._plotCanvasLayers = [];
             PlotCanvasGroup.instance = this;
+            // 工具图层
+            this._utilPlotCanvas = new PlotCanvas();
+            this._plotCanvasLayers = [];
+            this.addLayer(this._utilPlotCanvas);
         } else {
             return PlotCanvasGroup.instance;
         }
@@ -207,9 +212,6 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         let t = null;
         for (let i = 0; i < this._objects.length; i++) {
             const object = this._objects[i];
-            if(!object.isExtendPlotObject){
-                continue
-            }
             const elem = object.getElement();
             if (elem && elem.getFeatureId() === uid) {
                 t = object;
@@ -222,17 +224,6 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         this._plotCanvasLayers.forEach((layer) => {
             layer.initCoords();
         });
-    },
-    addUtilPath(coords, options) {
-        const plot = new PlotUtilLine({
-            coords,
-            canvas:this
-        })
-        this.add(plot);
-        return plot;
-    },
-    removeUtilPath(utilPlotObject) {
-        this.remove(utilPlotObject);
     },
     /**
      * @function: Module:PlotCanvasGroup.prototype._renderObjects
@@ -261,6 +252,22 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
 
             flag && object && object.render(ctx);
         }
+    },
+    drawUtilPlotObject(id, options) {
+        const symbol = SymbolManager.instance;
+        const leaf = symbol.getLeafByID(id);
+        return leaf.getElement().then((element) => {
+            const plotObj = PlotObjectFactory.createInstance(element.type, {
+                element,
+                positions: options.positions,
+                canvas: this._utilPlotCanvas
+            });
+            this._utilPlotCanvas.add(plotObj);
+            return plotObj;
+        });
+    },
+    removeDrawUtilPlotObject(plotObject){
+        this._utilPlotCanvas.remove(plotObject)  
     }
 });
 

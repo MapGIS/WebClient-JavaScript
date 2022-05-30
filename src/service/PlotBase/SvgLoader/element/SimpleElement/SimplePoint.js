@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-05-25 20:43:04
+ * @LastEditTime: 2022-05-27 20:21:31
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
@@ -134,9 +134,26 @@ class SimplePoint extends BaseSimple {
         const offsetY = pnt.y - originPoint.y;
         const x1 = new Point(offsetX, offsetY);
         const x2 = new Point(offsetX + width, offsetY + height);
+        const x3 = new Point(offsetX, offsetY + height);
+        const x4 = new Point(offsetX + width, offsetY);
+
+        x1.applyPointRotate(pnt, -this.geometryAngle);
+        x2.applyPointRotate(pnt, -this.geometryAngle);
+        x3.applyPointRotate(pnt, -this.geometryAngle);
+        x4.applyPointRotate(pnt, -this.geometryAngle);
+
         x1.applyPointScale(pnt, this.m_scaleX, this.m_scaleY);
         x2.applyPointScale(pnt, this.m_scaleX, this.m_scaleY);
-        return new Bounds(x1.x, x1.y, x2.x, x2.y);
+        x3.applyPointScale(pnt, this.m_scaleX, this.m_scaleY);
+        x4.applyPointScale(pnt, this.m_scaleX, this.m_scaleY);
+
+        const t1 = Math.max(x1.x, x2.x, x3.x, x4.x);
+        const t2 = Math.min(x1.x, x2.x, x3.x, x4.x);
+        const t3 = Math.max(x1.y, x2.y, x3.y, x4.y);
+        const t4 = Math.min(x1.y, x2.y, x3.y, x4.y);
+
+        const bounds = new Bounds(t2, t4, t1, t3);
+        return bounds;
     }
 
     setReplaceIndex(i) {

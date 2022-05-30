@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-05 11:32:52
- * @LastEditTime: 2022-05-27 10:53:09
+ * @LastEditTime: 2022-05-30 16:23:28
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlot\src\js\Shapes\PlotObject.js
@@ -18,8 +18,6 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
         this._elem.positions = options.positions || [];
         this.m_coordsPx = [];
         this._elem.propsUpdateSignal.add(this._elemPropsUpdateHandler, this);
-        
-        this.isExtendPlotObject=true
     },
     _elemPropsUpdateHandler(event) {
         this.set('dirty', true);

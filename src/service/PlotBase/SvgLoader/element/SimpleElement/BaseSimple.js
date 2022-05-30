@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-16 12:05:54
  * @LastEditors: zk
- * @LastEditTime: 2022-05-23 17:02:37
+ * @LastEditTime: 2022-05-27 20:22:33
  */
 
 import Point from '../../../../PlotUtilBase/Geometry/Point';
@@ -16,8 +16,6 @@ import { drawTypes } from '../index';
 import MainElement from '../extend/MainElement';
 import BasePlotElement from '../BasePlotElement';
 import Bounds from '../../../../PlotUtilBase/Geometry/Bound';
-import TSpanElement from '../TSpanElement';
-import TextElement from '../TextElement';
 
 export default class BaseSimple extends BasePlotElement {
     constructor(node) {
