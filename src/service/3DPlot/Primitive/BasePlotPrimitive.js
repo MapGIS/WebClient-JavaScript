@@ -1,11 +1,4 @@
-/*
- * @Author: your name
- * @Date: 2021-10-27 18:46:20
- * @LastEditTime: 2022-05-23 16:36:41
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\BasePlotPrimitive.js
- */
+import {getCenter, getCenterByCartesian} from "../Utils/PlotUtil"
 /**
  * 标绘primitive基类
  * @property positions 坐标信息
@@ -49,8 +42,33 @@ class BasePlotPrimitive {
 
     _elemPropsUpdateHandler(event) {
         if (event.type === 'positions') {
+            let {_positionBillboards,_shapeBillboards} = this;
+            let prevCenter = getCenterByCartesian(this._positions);
             this._positions = [];
             const positions = event.value;
+            let center = getCenter(positions);
+            let cartographicStart = Cesium.Cartographic.fromDegrees(prevCenter.geometry.coordinates[0], prevCenter.geometry.coordinates[1], 0);
+            let cartographicEnd = Cesium.Cartographic.fromDegrees(center.geometry.coordinates[0], center.geometry.coordinates[1], 0);
+            let offsetLng = Cesium.Math.toDegrees(cartographicEnd.longitude - cartographicStart.longitude);
+            let offsetLat = Cesium.Math.toDegrees(cartographicEnd.latitude - cartographicStart.latitude);
+            //更新位置点坐标
+            if(_positionBillboards){
+                let _positionBillboard = _positionBillboards.get(0);
+                let _positionBillboardCart = Cesium.Cartographic.fromCartesian(_positionBillboard.position);
+                let positionPoint = Cesium.Cartesian3.fromDegrees(center.geometry.coordinates[0], center.geometry.coordinates[1], _positionBillboardCart.height);
+                _positionBillboard.position = positionPoint;
+            }
+            //更新控制点坐标
+            if(_shapeBillboards){
+                //平移图元和形状控制点
+                for (let i = 0; i < positions.length; i++) {
+                    let shapePoint = _shapeBillboards.get(i);
+                    if(shapePoint._isEdit === false){
+                        let shapePointCart = Cesium.Cartographic.fromCartesian(shapePoint.position);
+                        shapePoint.position = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(shapePointCart.longitude) + offsetLng, Cesium.Math.toDegrees(shapePointCart.latitude) + offsetLat, 600);
+                    }
+                }
+            }
             for (let i = 0; i < positions.length; i += 1) {
                 const tempPos = this._elem.positions[i];
                 this._positions.push(Cesium.Cartesian3.fromDegrees(tempPos.x, tempPos.y));
