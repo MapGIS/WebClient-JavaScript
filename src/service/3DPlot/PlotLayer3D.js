@@ -286,6 +286,19 @@ class PlotLayer3D extends Observable {
         return plots;
     }
 
+    addPrimitiveBy2DPlotObj(plotObj2D) {
+        const element = plotObj2D.getElement();
+
+        const primitive = PrimitiveFactory.createInstance(element.type, {
+            positions: element.positions,
+            element: element,
+        });
+
+        this._addPrimitive(primitive);
+
+        return primitive;
+    }
+
     _mercatorTolonlat(mercator) {
         let lonlat = {lon: 0, lat: 0};
 

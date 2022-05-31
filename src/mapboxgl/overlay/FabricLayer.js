@@ -28,6 +28,7 @@ export class FabricLayer {
             this.mapContainer.appendChild(this.canvas);
     
             this.m_fabricCanvas = this._createFabricCanvas(this.canvas, fabricClass, m_fabricOptions);
+            this.m_fabricCanvas.setMap(this.map)
             // this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
     
             this.bindEvent();

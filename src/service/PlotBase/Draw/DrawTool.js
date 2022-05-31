@@ -1,6 +1,6 @@
 import {DrawPlotObjectFactory3D} from "../../3DPlot/Draw";
 import {PlotLayer3D} from "../../3DPlot";
-import {PlotCanvas} from "../../2DPlot";
+import {PlotLayer2D} from "../../2DPlot";
 import {DrawPlotObjectFactory2D} from "../../2DPlot/Draw/DrawPlotObjectFactory2D";
 
 /**
@@ -42,7 +42,7 @@ class DrawTool {
     drawPlot(symbol) {
         if(this._plotLayer instanceof PlotLayer3D){
             this._drawPlot3D(symbol);
-        }else if(this._plotLayer instanceof PlotCanvas){
+        }else if(this._plotLayer instanceof PlotLayer2D){
             this._drawPlot2D(symbol);
         }
     }

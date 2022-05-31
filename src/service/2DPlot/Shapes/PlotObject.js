@@ -21,6 +21,10 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
     },
     _elemPropsUpdateHandler(event) {
         this.set('dirty', true);
+        const {type} = event;
+        if(type === "positions"){
+            this.canvas.requestRenderAll();
+        }
     },
     setPnts(latlngs) {
         this._elem.positions = _.cloneDeep(latlngs);

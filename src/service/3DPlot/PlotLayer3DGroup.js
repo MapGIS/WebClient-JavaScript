@@ -1,20 +1,20 @@
 /**
- * @class module:3DPlot.PlotLayerMap
+ * @class module:3DPlot.PlotLayer3DGroup
  * @description 行业标绘图层组
  * @author 基础平台-杨琨
  */
-class PlotLayerMap {
+class PlotLayer3DGroup {
   constructor(viewer) {
     //图层列表
     this._plotLayerMap = [];
     //viewer对象
     this._viewer = viewer;
 
-    if (!PlotLayerMap.instance) {
-      PlotLayerMap.instance = this;
+    if (!PlotLayer3DGroup.instance) {
+      PlotLayer3DGroup.instance = this;
     }
 
-    return PlotLayerMap.instance;
+    return PlotLayer3DGroup.instance;
   }
 
   /**
@@ -183,6 +183,6 @@ class PlotLayerMap {
   }
 }
 
-PlotLayerMap.instance = null;
+PlotLayer3DGroup.instance = null;
 
-export default PlotLayerMap
+export default PlotLayer3DGroup
