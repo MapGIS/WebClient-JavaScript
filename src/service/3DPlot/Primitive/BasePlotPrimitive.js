@@ -1,10 +1,13 @@
 import {getCenter, getCenterByCartesian} from "../Utils/PlotUtil"
-/**
- * 标绘primitive基类
- * @property positions 坐标信息
- * @property show 是否显示
- */
 
+/**
+ * @class module:3DPlot.BasePlotPrimitive
+ * @description 标绘图元基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 额外参数
+ * @param {Object} [options.element] SVG符号对象
+ */
 class BasePlotPrimitive {
     constructor(options) {
         Cesium.Check.defined('options', options);
@@ -40,6 +43,10 @@ class BasePlotPrimitive {
         this.extendPrimitiveAttributes = ['dimModHeight'];
     }
 
+    /**
+     * @description 二三维联动处理方法
+     * @private
+     */
     _elemPropsUpdateHandler(event) {
         if (event.type === 'positions') {
             let {_positionBillboards,_shapeBillboards} = this;
@@ -93,9 +100,11 @@ class BasePlotPrimitive {
     }
 
     /**
-     * @description: 修改调整的scale比例
-     * @param {*} number
-     * @return {*}
+     * @description 修改调整的scale比例
+     * @function module:3DPlot.BasePlotPrimitive.setAdjustScale
+     * @public
+     *
+     * @param {Number} number 比例值
      */
     setAdjustScale(number) {
         this._elem.setAdjustScale(number);
@@ -106,6 +115,13 @@ class BasePlotPrimitive {
         return this._elem;
     }
 
+    /**
+     * @description 标绘图元更新方法，有这个方法，则被cesium视为一个primitive
+     * @function module:3DPlot.BasePlotPrimitive.setAdjustScale
+     * @public
+     *
+     * @param {Boolean} frameState 是否更新
+     */
     update(frameState) {
         if (!this._elem || !this._elem.show) {
             return;
@@ -162,9 +178,11 @@ class BasePlotPrimitive {
     }
 
     /**
-     * @description: object to geojson
-     * @param {*}
-     * @return {*}
+     * @description: 导出JSON数据
+     * @function module:3DPlot.BasePlotPrimitive.toGeoJSON
+     * @public
+     *
+     * @return {Object} json 导出的数据
      */
     toGeoJSON() {
         const json = this._elem.toGeoJSON();
@@ -180,11 +198,13 @@ class BasePlotPrimitive {
 
     /**
      * @description: 修改属性
-     * @param {*} key
-     * @param {*} value
-     * @param {*} ids
-     * @param {*} isWaitRender
-     * @return {*}
+     * @function module:3DPlot.BasePlotPrimitive.setValue
+     * @public
+     *
+     * @param {String} key 属性名
+     * @param {Any} value 属性值
+     * @param {String} ids 要修改的部件id，多个id以逗号分隔
+     * @param {Boolean} isWaitRender 是否更新
      */
     setValue(key, value, ids, isWaitRender = true) {
         const baseAttrNames = this.getPrimitiveBaseSaveAttributes();
@@ -199,10 +219,12 @@ class BasePlotPrimitive {
     }
 
     /**
-     * @description: geojson to object
-     * @param {*} geoJson
-     * @param {*} isLoadElement
-     * @return {*}
+     * @description: 从json导入数据
+     * @function @function module:3DPlot.BasePlotPrimitive.fromGeoJSON
+     * @public
+     *
+     * @param {Object} geoJson 要导入的数据
+     * @param {Boolean} isLoadElement 是否更新符号
      */
     fromGeoJSON(geoJson, isLoadElement = true) {
         if (geoJson.type === 'Feature') {
@@ -228,8 +250,8 @@ class BasePlotPrimitive {
 
     /**
      * @description: 初始化保存属性（必须和extend扩展数组对应）
-     * @param {*}
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
+     * @public
      */
     initBaseSaveAttributes() {
         this.dimModHeight = this._modHeight;
@@ -237,8 +259,10 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取需要保存的字段数组
-     * @param {*}
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
+     * @public
+     *
+     * @return {Array} Attributes 字段数组
      */
     getPrimitiveBaseSaveAttributes() {
         return BasePlotPrimitive.extendPrimitiveAttributes.concat([]);
@@ -246,8 +270,10 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取需要保存的属性组对象
-     * @param {*}
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.getBaseSaveAttributesValues
+     * @public
+     *
+     * @return {Object} v 属性组对象
      */
     getBaseSaveAttributesValues() {
         const attrs = this.getPrimitiveBaseSaveAttributes();
@@ -256,13 +282,15 @@ class BasePlotPrimitive {
             v[s] = this[s];
         });
         return v;
-
     }
 
     /**
      * @description: 检验是否需要开启透明度渲染
-     * @param {*} geomInstances
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.isTranslucentInstance
+     * @public
+     *
+     * @param {Array} geomInstance 几何实例数组
+     * @return {Boolean} 是否需要开启透明度渲染
      */
     isTranslucentInstance(geomInstance) {
         if (geomInstance.attributes.color.value[3] !== 255) {
@@ -273,8 +301,10 @@ class BasePlotPrimitive {
 
     /**
      * @description: 实体转换
-     * @param {*} instances
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.instancesToPrimitives
+     * @public
+     *
+     * @param {Array} instances 几何实例数组
      */
     instancesToPrimitives(instances) {
         if (instances) {
@@ -295,8 +325,10 @@ class BasePlotPrimitive {
 
     /**
      * @description: 墙实体转换
-     * @param {*} wallInstances
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.wallInstancesToPrimitive
+     * @public
+     *
+     * @param {Array} wallInstances 墙的几何实例数组
      */
     wallInstancesToPrimitive(wallInstances) {
         if (this._wallPrimitive) {
@@ -336,8 +368,10 @@ class BasePlotPrimitive {
 
     /**
      * @description: 更新实体状态
-     * @param {*} flag
-     * @return {*}
+     * @function @function module:3DPlot.BasePlotPrimitive.updatePrimitive
+     * @public
+     *
+     * @param {Boolean} flag 是否更新
      */
     updatePrimitive(flag) {
         if (this._primitives && this._primitives.length > 0) {
@@ -350,8 +384,10 @@ class BasePlotPrimitive {
 
     /**
      * @description: 作用选中后透明度效果
-     * @param {*} geomInstances
-     * @return {*}
+     * @function @function @function module:3DPlot.BasePlotPrimitive.applySelectStatus
+     * @public
+     *
+     * @param {Array} geomInstances 几何实例数组
      */
     applySelectStatus(geomInstances) {
         if (this._selected) {
@@ -365,10 +401,13 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取渐变材料的canvas
-     * @param {*} elevationRamp
-     * @param {*} colorArr
-     * @param {*} isVertical
-     * @return {*}
+     * @function @function @function module:3DPlot.BasePlotPrimitive.getColorRamp
+     * @public
+     *
+     * @param {Array} elevationRamp 渐变范围
+     * @param {Array} colorArr 渐变颜色数组
+     * @param {Boolean} isVertical 排列方式，横向或竖向
+     * @return {Object} ramp 渐变材料的canvas对象
      */
     getColorRamp(elevationRamp, colorArr, isVertical = true) {
         var ramp = document.createElement('canvas');
@@ -389,6 +428,9 @@ class BasePlotPrimitive {
 
     /**
      * @description: 设置标绘图元样式，必须通过此方法设置，修改样式的属性无效
+     * @function @function @function module:3DPlot.BasePlotPrimitive.setStyle
+     * @public
+     *
      * @param key {String} 样式名
      * @param value {Any} 样式值
      * @param value {Any} 样式值
@@ -401,6 +443,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取标绘图元样式
+     * @function @function @function module:3DPlot.BasePlotPrimitive.getStyle
      * @public
      *
      * @return {Object} style 图元样式

@@ -6,11 +6,14 @@ import Point from "../../PlotUtilBase/Geometry/Point"
 import * as turf from "@turf/turf";
 
 /**
- * @class module:3DPlot.PlotLayer3D
- * @description 行业标绘图层
+ * @class module:3DPlot.EditTool
+ * @description 三维编辑工具
  * @author 基础平台-杨琨
  *
- * @param {PlotLayer3D} layer
+ * @param {Object} layer 标绘图层
+ * @param options - {Object} 额外参数
+ * @param {Object} [options.positionIcon] 位置控制点的绘制参数，参考cesium的billboard参数
+ * @param {Object} [options.shapeIcon] 形状控制点的绘制参数，参考cesium的billboard参数
  */
 export default class EditTool {
     constructor(layer, options) {
@@ -347,6 +350,10 @@ export default class EditTool {
         // this._dragging = false;
     }
 
+    /**
+     * @description 启用编辑工具
+     * @function module:3DPlot.EditTool.enable
+     */
     enable() {
         this._plotLayer.on("selected", this.onSelected);
         this._billboards = new Cesium.BillboardCollection();
@@ -369,6 +376,10 @@ export default class EditTool {
         );
     }
 
+    /**
+     * @description 停用编辑工具
+     * @function module:3DPlot.EditTool.disable
+     */
     disable() {
         this._leftDownHandler = CesiumUtil.destroyEventHandler(
             this._leftDownHandler
@@ -402,6 +413,8 @@ export default class EditTool {
 
     /**
      * @description 获取几何中心点
+     * @private
+     *
      * @param positions - {Array} 必选项，点数组
      * @return {Object} center 中心点
      */
@@ -416,6 +429,8 @@ export default class EditTool {
 
     /**
      * @description 设置位置控制点
+     * @private
+     *
      * @param position - {Cartesian3} 必选项，控制点坐标
      * @param name - {String} 可选项，控制点名称
      * @param primitive - {Object} 必选项，标绘图元
@@ -447,6 +462,8 @@ export default class EditTool {
 
     /**
      * @description 设置形状控制点
+     * @private
+     *
      * @param positions - {Array} 必选项，控制点坐标
      * @param options - {Object} 可选项，额外参数
      * @param {Number} [options.height = 0] 可选项，控制点高度
