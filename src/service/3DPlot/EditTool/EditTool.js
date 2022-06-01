@@ -159,6 +159,7 @@ export default class EditTool {
                 switch (type) {
                     //规则点
                     case "msbl_regularpoint":
+                    case "simplepoint":
                         //设置位移点
                         that._setPositionControl(Cesium.Cartesian3.fromDegrees(positions[0].x, positions[0].y, that._controlHeight), undefined, primitive.pickedPrimitive);
                         break;
@@ -181,6 +182,8 @@ export default class EditTool {
                     case "msbl_singleArrow":
                     case "msbl_squadarrow":
                     case "msbl_FigureFan":
+                    case "simplearea":
+                    case "simpleline":
                         let cneter = this._getCenter(that._selectPlot.positions);
                         //设置位置控制点
                         that._setPositionControl(Cesium.Cartesian3.fromDegrees(cneter.geometry.coordinates[0], cneter.geometry.coordinates[1], that._controlHeight), undefined, primitive.pickedPrimitive);
@@ -228,6 +231,7 @@ export default class EditTool {
             switch (type) {
                 //规则点一
                 case "msbl_regularpoint":
+                case "simplepoint":
                     let cartographic = Cesium.Cartographic.fromCartesian(mouseCartesian);
                     this._selectPlot.positions = [new Point(Cesium.Math.toDegrees(cartographic.longitude), Cesium.Math.toDegrees(cartographic.latitude))];
                     break;
@@ -249,6 +253,8 @@ export default class EditTool {
                 case "msbl_singleArrow":
                 case "msbl_squadarrow":
                 case "msbl_FigureFan":
+                case "simplearea":
+                case "simpleline":
                     //形状控制点
                     let shapeBillboards = this._shapeBillboards;
                     //平移图元和形状控制点
