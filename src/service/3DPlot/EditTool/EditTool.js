@@ -13,7 +13,9 @@ import * as turf from "@turf/turf";
  * @param {PlotLayer3D} layer
  */
 export default class EditTool {
-    constructor(layer) {
+    constructor(layer, options) {
+        options = options || {};
+        const {positionIcon = {}, shapeIcon = {}} = options
         //标绘图层
         this._plotLayer = layer;
         //scene对象
@@ -32,6 +34,12 @@ export default class EditTool {
         this._controlHeight = 0;
         //形状控制点
         this._shapePoint = undefined;
+
+        //位置点图标
+        this._defaultIcon = "data:image/svg+xml;base64,77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnIHN0YW5kYWxvbmU9J25vJz8+PCEtLSBDcmVhdGVkIHdpdGggSW5rc2NhcGUgKGh0dHA6Ly93d3cuaW5rc2NhcGUub3JnLykgLS0+DQo8c3ZnIHdpZHRoPSI0ODAiDQogICAgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIiB2ZXJzaW9uPSIxLjEiDQogICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBoZWlnaHQ9IjQ4MCINCiAgICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIiBpZD0ic3ZnMiINCiAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iDQogICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogICAgPGRlZnMgaWQ9ImRlZnMzMDA5Ii8+DQogICAgPG1ldGFkYXRhIGlkPSJtZXRhZGF0YTciPg0KICAgICAgICA8cmRmOlJERj4NCiAgICAgICAgICAgIDxjYzpXb3JrIHJkZjphYm91dD0iIj4NCiAgICAgICAgICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4NCiAgICAgICAgICAgICAgICA8ZGM6dHlwZSByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIi8+DQogICAgICAgICAgICAgICAgPGRjOnRpdGxlLz4NCiAgICAgICAgICAgIDwvY2M6V29yaz4NCiAgICAgICAgPC9yZGY6UkRGPg0KICAgIDwvbWV0YWRhdGE+DQogICAgPG1zYmwgQW5nbGU9IjkwIiBBdHRpdHVkZT0iMSIgeE9yaWdpbj0iMC41IiBUeXBlPSJtc2JsX3JlZ3VsYXJwb2ludCIgeU9yaWdpbj0iMC41IiBOYW1lPSLlm6LnuqciIGlkPSJkc2MyOTk0Ii8+DQogICAgPCEtLSBSb3RhdGVQb2xpY3kgIDA656aB5q2i5peL6L2sICAxOuayv+edgOWJjei/m+eahOaWueWQkSAgMjrlnoLnm7Tkuo7liY3ov5vnmoTmlrnlkJEtLT4NCiAgICA8XzNEIE1vZGVsPSIiIGlkPSJfM0QzMDI0Ii8+DQogICAgPGNpcmNsZSBjeD0iMjQwIiBjeT0iMjQwIiBzdHlsZT0iZmlsbDojM0M2RUJFO3N0cm9rZTojZmZmZmZmO3N0cm9rZS13aWR0aDo0OCIgcj0iMjQwIi8+DQo8L3N2Zz4=";
+        this._positionIcon = positionIcon;
+        //控制点图标
+        this._shapeIcon = shapeIcon;
 
         this.onSelected = this._onSelected.bind(this);
         this.onLeftDown = this._onLeftDown.bind(this);
@@ -419,13 +427,15 @@ export default class EditTool {
         if (!primitive) return;
         if (!_positionBillboards) {
             let billboards = new Cesium.BillboardCollection();
-            billboards.add({
+            let option = {
                 position: position,
-                image: "http://localhost:8895/assets/point.svg",
+                image: this._defaultIcon,
                 sizeInMeters: true,
                 id: name,
                 scale: 4
-            });
+            };
+            option = Object.assign(option, this._positionIcon);
+            billboards.add(option);
             let billboard = billboards.get(0);
             billboard.pointType = "positionControl";
             billboard._plotId = primitive.id;
@@ -455,13 +465,15 @@ export default class EditTool {
             for (let i = 0; i < positions.length; i++) {
                 let position = Cesium.Cartesian3.clone(positions[i]);
                 position.height = height;
-                billboards.add({
+                let option = {
                     position: position,
-                    image: "http://localhost:8895/assets/point.svg",
+                    image: this._defaultIcon,
                     sizeInMeters: true,
                     id: name,
                     scale: 4
-                });
+                };
+                option = Object.assign(option, this._shapeIcon);
+                billboards.add(option);
             }
             //在控制点上添加额外属性
             for (let i = 0; i < positions.length; i++) {

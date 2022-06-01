@@ -29,11 +29,9 @@ class PlotLayer3D extends Observable {
         this._primitiveCollection = new Cesium.PrimitiveCollection();
         //图元可否编辑
         this._editable = false;
-        //编辑工具
-        this._editTool = new EditTool(this);
         //图层id
         this._id = "plotLayer_" + parseInt(String(Math.random() * 100000000));
-        const {pickPlot, pickEventType = 0} = options
+        const {pickPlot, pickEventType = 0, positionIcon, shapeIcon} = options
         //点击事件回调
         this._pickPlot = pickPlot;
         //点击事件类型
@@ -44,6 +42,17 @@ class PlotLayer3D extends Observable {
         //标绘图元拾取事件，针对vue组件做出的修改
         this._handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
         this._setPickPlot();
+
+        //位置点图标
+        this._positionIcon = positionIcon;
+        //控制点图标
+        this._shapeIcon = shapeIcon;
+
+        //编辑工具
+        this._editTool = new EditTool(this, {
+            positionIcon: this._positionIcon,
+            shapeIcon: this._shapeIcon
+        });
 
         this._primitiveCollection._id = this._id;
         let scene = this._getScene();
