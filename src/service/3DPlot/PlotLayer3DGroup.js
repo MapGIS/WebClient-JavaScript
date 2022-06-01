@@ -1,3 +1,7 @@
+import SymbolManager from "../PlotBase/SymbolManager/SymbolManager";
+import {PlotObjectFactory} from "../2DPlot/Shapes/PlotObjectFactory";
+import {PlotLayer3D} from "./index";
+
 /**
  * @class module:3DPlot.PlotLayer3DGroup
  * @description 行业标绘图层组
@@ -9,6 +13,8 @@ class PlotLayer3DGroup {
     this._plotLayerMap = [];
     //viewer对象
     this._viewer = viewer;
+    //工具图层
+    this._utilPlotCanvas = new PlotLayer3D(Cesium, this._viewer);
 
     if (!PlotLayer3DGroup.instance) {
       PlotLayer3DGroup.instance = this;
@@ -180,6 +186,42 @@ class PlotLayer3DGroup {
     if (index !== undefined) {
       return index;
     }
+  }
+
+  drawUtilPlotObject(id, options) {
+    const symbol = SymbolManager.instance;
+    const leaf = symbol.getLeafByID(id);
+    return leaf.getElement().then((element) => {
+      const plotObj = PlotObjectFactory.createInstance(element.type, {
+        element,
+        positions: options.positions,
+        canvas: this._utilPlotCanvas
+      });
+      this._utilPlotCanvas.addPlot(plotObj);
+      return plotObj;
+    });
+  }
+  removeDrawUtilPlotObject(plotObject){
+    this._utilPlotCanvas.removePlot(plotObject)
+  }
+  /**
+   * @function: Module:PlotLayer2DGroup.prototype.getPlotObjectById
+   * @description: 根据要素id获取要素对象
+   * @param {String} uid
+   * @return {*}
+   */
+  getPlotObjectById(uid) {
+    let t = null;
+    for (let i = 0; i < this._plotLayerMap.length; i++) {
+      const layer = this._plotLayerMap[i];
+      const plot = layer.getPlotByID(uid);
+      let elem;
+      if(plot) {
+        elem = plot.getElement();
+        t = elem;
+      }
+    }
+    return t;
   }
 }
 

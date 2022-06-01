@@ -209,24 +209,6 @@ export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
         return array;
     },
 
-    /**
-     * @function: Module:PlotLayer2DGroup.prototype.getPlotObjectById
-     * @description: 根据要素id获取要素对象
-     * @param {String} uid
-     * @return {*}
-     */
-    getPlotObjectById(uid) {
-        let t = null;
-        for (let i = 0; i < this._objects.length; i++) {
-            const object = this._objects[i];
-            const elem = object.getElement();
-            if (elem && elem.getFeatureId() === uid) {
-                t = object;
-                break;
-            }
-        }
-        return t;
-    },
     initLayerCoords() {
         this._plotCanvasLayers.forEach((layer) => {
             layer.initCoords();
@@ -275,6 +257,24 @@ export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
     },
     removeDrawUtilPlotObject(plotObject){
         this._utilPlotCanvas.remove(plotObject)  
+    },
+    /**
+     * @function: Module:PlotLayer2DGroup.prototype.getPlotObjectById
+     * @description: 根据要素id获取要素对象
+     * @param {String} uid
+     * @return {*}
+     */
+    getPlotObjectById(uid) {
+        let t = null;
+        for (let i = 0; i < this._objects.length; i++) {
+            const object = this._objects[i];
+            const elem = object.getElement();
+            if (elem && elem.getFeatureId() === uid) {
+                t = object;
+                break;
+            }
+        }
+        return t;
     }
 });
 
