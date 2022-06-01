@@ -1,15 +1,14 @@
-/*
- * @class:
- * @Description:
- * @Author: zk
- * @Date: 2022-05-23 14:21:36
- * @LastEditors: zk
- * @LastEditTime: 2022-05-23 17:26:48
- */
 import RegularSurfaceElementInstance from '../ElementInstance/RegularSurfaceElementInstance';
 import SimpleAreaForKidneyElementInstance from '../ElementInstance/SimpleAreaForKidneyElementInstance';
 import KidneyAreaPrimitive from './KidneyAreaPrimitive';
 
+/**
+ * @class module:3DPlot.SimpleAreaPrimitive
+ * @description 标绘图元（新规则区）基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 初始化参数
+ */
 class SimpleAreaPrimitive extends KidneyAreaPrimitive {
     constructor(options) {
         super(options);

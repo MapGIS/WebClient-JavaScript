@@ -5,7 +5,7 @@ import {getCenter, getCenterByCartesian} from "../Utils/PlotUtil"
  * @description 标绘图元基类
  * @author 基础平台-杨琨
  *
- * @param options - {Object} 额外参数
+ * @param options - {Object} 初始化参数
  * @param {Object} [options.element] SVG符号对象
  */
 class BasePlotPrimitive {

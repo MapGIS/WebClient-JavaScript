@@ -1,19 +1,25 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 10:17:52
- * @LastEditTime: 2022-05-20 10:38:22
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularLine1Primitive.js
- */
 import BaseRegularPrimitive from "./BaseRegularPrimitive";
 import RegularLine1ElementInstance from "../ElementInstance/RegularLine1ElementInstance";
 
+/**
+ * @class module:3DPlot.RegularLine1Primitive
+ * @description 标绘图元（规则线一）基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 初始化参数
+ */
 class RegularLine1Primitive extends BaseRegularPrimitive {
   constructor(options) {
     super(options);
   }
 
+  /**
+   * @description 重载父类的update方法
+   * @function module:3DPlot.RegularLine1Primitive.update
+   * @public
+   *
+   * @param {Boolean} frameState 是否更新
+   * */
   update(frameState) {
     if (!this._elem || !this._elem.show) {
       return;
@@ -35,6 +41,12 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     }
   }
 
+  /**
+   * @description 重载父类的_createGeomInstance方法
+   * @private
+   *
+   * @param {function} callback 回调函数
+   * */
   _createGeomInstance(callback) {
     const webMercatorProjection = new Cesium.WebMercatorProjection();
 
@@ -53,6 +65,12 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     });
   }
 
+  /**
+   * @description 重载父类的_elementInstance方法
+   * @private
+   *
+   * @param {function} callback 回调函数
+   * */
   _elementInstance(callback) {
     new RegularLine1ElementInstance(
         this._elem,
@@ -62,6 +80,11 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     });
   }
 
+  /**
+   * @description 重载父类的initBaseSaveAttributes方法
+   * @function module:3DPlot.RegularLine1Primitive.initBaseSaveAttributes
+   * @public
+   * */
   initBaseSaveAttributes() {
     super.initBaseSaveAttributes()
     this.dimModAttitude = "1";
@@ -71,6 +94,13 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
     this.wallGradColor = 'rgba(255,0,0,0.3)'
   }
 
+  /**
+   * @description 重载父类的getPrimitiveBaseSaveAttributes方法
+   * @function module:3DPlot.RegularLine1Primitive.getPrimitiveBaseSaveAttributes
+   * @public
+   *
+   * @return {Array} Attributes 属性字段数组
+   * */
   getPrimitiveBaseSaveAttributes() {
     return RegularLine1Primitive.extendPrimitiveAttributes.concat([]);
   }
