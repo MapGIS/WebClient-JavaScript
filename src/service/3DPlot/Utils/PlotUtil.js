@@ -29,4 +29,20 @@ function getCenterByCartesian(positions) {
     return turf.center(turf.featureCollection(points));
 }
 
-export {getCenter, getCenterByCartesian}
+/**
+ * @description 二三维联动时，向扩展图层里面添加标绘图元
+ * @param {Object} linkTool 二三维联动工具
+ * @param {Object} plot 要添加的图元
+ */
+function addExtendLayersPlot(linkTool, plot) {
+    const {_extendLayers} = linkTool;
+    for (let i = 0; i < _extendLayers.length; i++) {
+        if(_extendLayers[i].addPrimitiveBy2DPlotObj){
+            _extendLayers[i].addPrimitiveBy2DPlotObj(plot);
+        }else if(_extendLayers[i].addPlotObjectBy3DPlotObj) {
+            _extendLayers[i].addPlotObjectBy3DPlotObj(plot);
+        }
+    }
+}
+
+export {getCenter, getCenterByCartesian, addExtendLayersPlot}

@@ -3,6 +3,7 @@ import PrimitiveFactory from "../Primitive/index";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 import GeomUtil from "../../../service/PlotUtilBase/Geometry/GeomUtil";
 import Point from "../../../service/PlotUtilBase/Geometry/Point";
+import {addExtendLayersPlot} from "../Utils/PlotUtil";
 
 function look(viewer, center, offset) {
   if (!viewer) {
@@ -120,6 +121,7 @@ export default class DrawPolyline extends DrawObject {
     //双击事件，结束绘制图元
     handler.setInputAction((event) => {
       this.fireFinishEvent({ plotObj3D: this._primitive });
+      addExtendLayersPlot(this._plotLayer._linkTool, this._primitive);
       this.disable();
     }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 

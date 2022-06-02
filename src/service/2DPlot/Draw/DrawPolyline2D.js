@@ -7,7 +7,8 @@
  */
 import DrawObject from '../../PlotBase/Draw/DrawObject';
 import Point from '../../PlotUtilBase/Geometry/Point';
-import { PlotObjectFactory } from '../Shapes/PlotObjectFactory';
+import {PlotObjectFactory} from '../Shapes/PlotObjectFactory';
+import {addExtendLayersPlot} from "../../3DPlot/Utils/PlotUtil";
 
 const _ = require('lodash');
 export default class DrawPolyline2D extends DrawObject {
@@ -48,6 +49,7 @@ export default class DrawPolyline2D extends DrawObject {
             this.m_fabricCanvas.requestRenderAll();
         }
     }
+
     innerOnMouseUp(event) {
         if (!this.m_startDrawing) this.m_startDrawing = true;
 
@@ -55,9 +57,9 @@ export default class DrawPolyline2D extends DrawObject {
         const lastPnt = this.m_coords.length > 2 ? this.m_coords[this.m_coords.length - 2] : null;
 
         if (lastPnt && Math.abs(pnt[0] - lastPnt.x) < 1e-4 && Math.abs(pnt[1] - lastPnt.y) < 1e-4) {
-            this.fireFinishEvent({ plotObj2D: this.m_object });
+            this.fireFinishEvent({plotObj2D: this.m_object});
             this.m_startDrawing = false;
-            if(this._addedPlot){
+            if (this._addedPlot) {
                 this._addedPlot(this.m_object);
             }
             this.disable();
@@ -71,6 +73,7 @@ export default class DrawPolyline2D extends DrawObject {
                         canvas: this.m_fabricCanvas
                     });
                     this.m_fabricCanvas.add(this.m_object);
+                    addExtendLayersPlot(this.m_fabricCanvas._linkTool, this.m_object);
                 });
             }
         }

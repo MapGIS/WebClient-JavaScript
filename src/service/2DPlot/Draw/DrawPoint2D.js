@@ -8,6 +8,7 @@
 import  DrawObject  from "../../PlotBase/Draw/DrawObject";
 import  Point  from "../../PlotUtilBase/Geometry/Point";
 import  {PlotObjectFactory}  from "../Shapes/PlotObjectFactory";
+import {addExtendLayersPlot} from "../../3DPlot/Utils/PlotUtil";
 
 export default class DrawPoint2D extends DrawObject {
   constructor(fabricCanvas, symbol, options) {
@@ -50,6 +51,7 @@ export default class DrawPoint2D extends DrawObject {
       if(this._addedPlot){
         this._addedPlot(object);
       }
+      addExtendLayersPlot(this.m_fabricCanvas._linkTool, object);
       this.disable();
     })
 

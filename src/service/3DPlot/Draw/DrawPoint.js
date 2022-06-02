@@ -1,6 +1,7 @@
 import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
 import {PrimitiveFactory} from "../Primitive/PrimitiveFactory";
 import {CesiumUtil} from "../Utils/CesiumUtil";
+import {addExtendLayersPlot} from "../Utils/PlotUtil";
 
 /**
  * @class module:3DPlot.DrawPoint
@@ -67,6 +68,7 @@ export default class DrawPoint extends DrawObject {
                 that._plotLayer._primitiveCollection.add(that._primitive);
 
                 that._primitive.positions = that.m_coords;
+                addExtendLayersPlot(that._plotLayer._linkTool, that._primitive);
                 that.disable();
                 that.fireFinishEvent({plotObj3D: that._primitive});
             });

@@ -16,6 +16,7 @@ export default class LinkTool {
         this._plotLayer._linkTool = this;
         this._isLinked = true;
         this._mapContainer = undefined;
+        this._extendLayers = [];
 
         if (this._plotLayer instanceof PlotLayer3D) {
             this._mapContainer = this._plotLayer._viewer;
@@ -32,6 +33,8 @@ export default class LinkTool {
      */
     _initPlotLayers() {
         if (!this._containers) return;
+
+        this._extendLayers = [];
 
         for (let i = 0; i < this._containers.length; i++) {
             let id, type, _plotLayer, _container = this._containers[i];
@@ -66,6 +69,7 @@ export default class LinkTool {
                         }
                         break;
                 }
+                this._extendLayers.push(_plotLayer);
             }
         }
     }
