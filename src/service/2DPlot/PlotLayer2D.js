@@ -12,6 +12,7 @@ import { PlotObjectFactory } from './Shapes/PlotObjectFactory';
 import { createGuid } from '../PlotUtilBase/Util/Guid';
 import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 import FabricLineUtil from './EditTool/FabricLineUtil';
+import {addExtendLayersPlot, removeExtendLayersPlot} from "../3DPlot/Utils/PlotUtil";
 
 export default class PlotLayer2D {
     constructor() {
@@ -26,6 +27,9 @@ export default class PlotLayer2D {
         // event
         this._objectModifiedEventAction = this._objectModifiedEventAction.bind(this);
         this._eventHandlers = [];
+
+        //二三维联动工具
+        this._linkTool = undefined;
     }
 
     /**
@@ -170,6 +174,7 @@ export default class PlotLayer2D {
      */
     add(plotObj) {
         this.m_plotObjects.push(plotObj);
+        addExtendLayersPlot(this._linkTool, plotObj);
         if (this._fabricCanvas) {
             this._fabricCanvas.add(plotObj);
         }
@@ -187,6 +192,7 @@ export default class PlotLayer2D {
         }
         if (this._fabricCanvas) {
             this._fabricCanvas.remove(plotObj);
+            removeExtendLayersPlot(this._linkTool, plotObj);
         }
     }
     /**

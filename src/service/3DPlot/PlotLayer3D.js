@@ -8,6 +8,7 @@ import {PrimitiveFactory} from "./Primitive/PrimitiveFactory";
 import * as turf from "@turf/turf";
 import Point from "../PlotUtilBase/Geometry/Point";
 import GeomUtil from "../PlotUtilBase/Geometry/GeomUtil";
+import {addExtendLayersPlot, removeExtendLayersPlot} from "./Utils/PlotUtil";
 
 /**
  * @class module:3DPlot.PlotLayer3D
@@ -54,6 +55,9 @@ class PlotLayer3D extends Observable {
             shapeIcon: this._shapeIcon
         });
 
+        //二三维联动工具
+        this._linkTool = undefined;
+
         this._primitiveCollection._id = this._id;
         let scene = this._getScene();
         scene.primitives.add(this._primitiveCollection);
@@ -66,6 +70,7 @@ class PlotLayer3D extends Observable {
      */
     addPlot(plot) {
         this._primitiveCollection.add(plot);
+        addExtendLayersPlot(this._linkTool, plot);
         return plot;
     }
 
@@ -96,6 +101,7 @@ class PlotLayer3D extends Observable {
     removePlot(plot) {
         let plotLayer = this._getPlotLayer();
         if (plotLayer) {
+            removeExtendLayersPlot(this._linkTool, plot);
             return plotLayer.remove(plot);
         }
     }

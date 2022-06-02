@@ -35,14 +35,36 @@ function getCenterByCartesian(positions) {
  * @param {Object} plot 要添加的图元
  */
 function addExtendLayersPlot(linkTool, plot) {
-    const {_extendLayers} = linkTool;
-    for (let i = 0; i < _extendLayers.length; i++) {
-        if(_extendLayers[i].addPrimitiveBy2DPlotObj){
-            _extendLayers[i].addPrimitiveBy2DPlotObj(plot);
-        }else if(_extendLayers[i].addPlotObjectBy3DPlotObj) {
-            _extendLayers[i].addPlotObjectBy3DPlotObj(plot);
+    if(!linkTool) return;
+    const {_extendLayers, _isLinked} = linkTool;
+    if (_isLinked) {
+        for (let i = 0; i < _extendLayers.length; i++) {
+            if (_extendLayers[i].addPrimitiveBy2DPlotObj) {
+                _extendLayers[i].addPrimitiveBy2DPlotObj(plot);
+            } else if (_extendLayers[i].addPlotObjectBy3DPlotObj) {
+                _extendLayers[i].addPlotObjectBy3DPlotObj(plot);
+            }
         }
     }
 }
 
-export {getCenter, getCenterByCartesian, addExtendLayersPlot}
+/**
+ * @description 二三维联动时，向扩展图层里面删除标绘图元
+ * @param {Object} linkTool 二三维联动工具
+ * @param {Object} plot 要删除的图元
+ */
+function removeExtendLayersPlot(linkTool, plot) {
+    if(!linkTool) return;
+    const {_extendLayers, _isLinked} = linkTool;
+    if (_isLinked) {
+        for (let i = 0; i < _extendLayers.length; i++) {
+            if (_extendLayers[i].addPrimitiveBy2DPlotObj) {
+                _extendLayers[i].remove(plot);
+            } else if (_extendLayers[i].addPlotObjectBy3DPlotObj) {
+                _extendLayers[i].removePlot(plot);
+            }
+        }
+    }
+}
+
+export {getCenter, getCenterByCartesian, addExtendLayersPlot, removeExtendLayersPlot}

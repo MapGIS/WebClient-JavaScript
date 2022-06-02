@@ -8,15 +8,21 @@ import * as Cesium from "cesium";
  * @author 基础平台-杨琨
  * @param {Object} plotLayer 三维标绘图层、二维标绘图层或者图层基类
  * @param {Array} containers 图层容器数组
+ * @param {Object} options 初始化参数
+ * @param {Boolean} [isLinked = true] 是否进行联动
  */
-export default class LinkTool {
-    constructor(plotLayer, containers) {
+class LinkTool {
+    constructor(plotLayer, containers, options) {
+        options = options || {};
         this._plotLayer = plotLayer;
         this._containers = containers;
         this._plotLayer._linkTool = this;
-        this._isLinked = true;
         this._mapContainer = undefined;
         this._extendLayers = [];
+
+        const {isLinked = true} = options;
+        //是否进行联动
+        this._isLinked = isLinked;
 
         if (this._plotLayer instanceof PlotLayer3D) {
             this._mapContainer = this._plotLayer._viewer;
@@ -74,3 +80,16 @@ export default class LinkTool {
         }
     }
 }
+
+Object.defineProperties(LinkTool.prototype, {
+    isLinked: {
+        get() {
+            return this._isLinked;
+        },
+        set(v) {
+            this._isLinked = v;
+        }
+    }
+})
+
+export default LinkTool;
