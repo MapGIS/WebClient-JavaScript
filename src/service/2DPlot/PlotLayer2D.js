@@ -167,12 +167,12 @@ export default class PlotLayer2D {
         return plotObj;
     }
     /**
-     * @function: Module:PlotLayer2D.prototype.add
+     * @function: Module:PlotLayer2D.prototype.addPlot
      * @description: 添加标绘对象
      * @param {Object} plotObj
      * @return {*}
      */
-    add(plotObj) {
+    addPlot(plotObj) {
         this.m_plotObjects.push(plotObj);
         addExtendLayersPlot(this._linkTool, plotObj);
         if (this._fabricCanvas) {
@@ -180,38 +180,38 @@ export default class PlotLayer2D {
         }
     }
     /**
-     * @function: Module:PlotLayer2D.prototype.remove
+     * @function: Module:PlotLayer2D.prototype.removePlot
      * @description: 删除标绘对象
-     * @param {Object} plotObj
+     * @param {Object} plot
      * @return {*}
      */
-    remove(plotObj) {
-        const i = this.m_plotObjects.indexOf(plotObj);
+    removePlot(plot) {
+        const i = this.m_plotObjects.indexOf(plot);
         if (i > -1) {
             this.m_plotObjects.splice(i,1);
         }
         if (this._fabricCanvas) {
-            this._fabricCanvas.remove(plotObj);
-            removeExtendLayersPlot(this._linkTool, plotObj);
+            this._fabricCanvas.remove(plot);
+            removeExtendLayersPlot(this._linkTool, plot);
         }
     }
     /**
-     * @function: Module:PlotLayer2D.prototype.removeById
+     * @function: Module:PlotLayer2D.prototype.removePlotByID
      * @description: 通过要素id移除
      * @param {String} id
      * @return {*}
      */
-    removeById(id) {
+    removePlotByID(id) {
         const plotObject = this.getPlotObjectById(id);
         this.remove(plotObject);
     }
     /**
-     * @function: Module:PlotLayer2D.prototype.getPlotObjectById
+     * @function: Module:PlotLayer2D.prototype.getPlotByID
      * @description: 根据要素id获取要素对象
      * @param {*} uid
      * @return {*}
      */
-    getPlotObjectById(uid) {
+    getPlotByID(uid) {
         let t;
         this.m_plotObjects.forEach((s) => {
             const elem = s.getElement();
@@ -223,10 +223,10 @@ export default class PlotLayer2D {
     }
 
     /**
-     * @function: Module:PlotLayer2D.prototype.toGeoJSON
+     * @function: Module:PlotLayer2D.prototype.toJSON
      * @description: 导出geosjon对象
      */
-    toGeoJSON() {
+    toJSON() {
         const base = {
             type: 'FeatureCollection',
             features: []
@@ -240,12 +240,12 @@ export default class PlotLayer2D {
     }
 
     /**
-     * @function: Module:PlotLayer2D.prototype.fromGeoJSON
+     * @function: Module:PlotLayer2D.prototype.fromJSON
      * @description: 加载geojson对象
      * @param {Object} geoJson geojson对象
      * @return {*}
      */
-    fromGeoJSON(geoJson) {
+    fromJSON(geoJson) {
         if (geoJson.type === 'FeatureCollection') {
             const { features } = geoJson;
             features.forEach((/** @type {any} */ s) => {
