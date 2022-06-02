@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 10:22:13
- * @LastEditTime: 2022-05-20 20:10:07
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\SvgElementInstance.js
- */
 import {Vector2} from "../../../PlotUtilBase/Math/Vector2";
 import {Vector3} from "../../../PlotUtilBase/Math/Vector3";
 import PolylineCurve3 from "../../../../service/PlotUtilBase/Curves/PolylineCurve3";
@@ -16,6 +8,15 @@ import {ExtrudeGeometryUtil} from "../../Utils/ExtrudeGeometryUtil";
 import {Shape} from "../../../PlotUtilBase/Path2D/Shape";
 import {setOffsetHeight} from "./Util";
 
+/**
+ * @class module:3DPlot.SvgElementInstance
+ * @description 三维SVG符号解析对象
+ * @author 基础平台-杨琨
+ *
+ * @param {Object} elem SVG符号对象
+ * @param options - {Object} 初始化参数
+ * @param {Number} [options.globelScale] 全局缩放系数
+ */
 export default class SvgElementInstance {
     constructor(elem, options = {}) {
         this._elem = elem;
@@ -26,6 +27,13 @@ export default class SvgElementInstance {
         this.instance = undefined;
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.getInstance
+     * @description 获取解析后的几何对象
+     * @public
+     *
+     * @param {function} callback 回调函数
+     */
     getInstance(callback) {
         let that = this;
         this.svgToGeomInstances(this._elem, this._options, function (instance) {
@@ -34,6 +42,15 @@ export default class SvgElementInstance {
         });
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.svgToGeomInstances
+     * @description 将SVG解析为几何对象
+     * @public
+     *
+     * @param {Object} elem SVG符号对象
+     * @param {Object} options 额外参数
+     * @param {function} callback 回调函数
+     */
     svgToGeomInstances(elem, options, callback) {
         const paths = [];
         elem.getPathElem(paths);
@@ -71,6 +88,13 @@ export default class SvgElementInstance {
         }
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.getInstances
+     * @description 将SVG里的各个部件解析为几何对象
+     * @public
+     *
+     * @param {Object} opt 额外参数
+     */
     getInstances(opt) {
         let {sampleResult, type, paths, options, spans} = opt;
         let pathOffsetHeights, spanOffsetHeights, wallOffsetHeights;
@@ -127,6 +151,14 @@ export default class SvgElementInstance {
         return {instances, wallOffsetHeights}
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.pathElemToGeomInstance
+     * @description 将SVG里的path元素解析为几何对象
+     * @public
+     *
+     * @param {Object} pathElem path元素的符号对象
+     * @param {Object} options 额外参数
+     */
     pathElemToGeomInstance(pathElem, options) {
         const instances = [];
         const style = pathElem.getContextStyle()
@@ -161,6 +193,14 @@ export default class SvgElementInstance {
         return instances;
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.spanElemToGeomInstance
+     * @description 将SVG里的span元素解析为几何对象
+     * @public
+     *
+     * @param {Object} spanElem span元素的符号对象
+     * @param {Object} options 额外参数
+     */
     spanElemToGeomInstance(spanElem, options) {
         if (!spanElem) return undefined;
 
@@ -176,6 +216,13 @@ export default class SvgElementInstance {
         return this._generateCesiumGeometryInstance(spanElem, textGeo, options, this.getColor(spanElem, "fillStyle"));
     }
 
+    /**
+     * @description 通过span元素生成三维的文字体对象
+     * @private
+     *
+     * @param {Object} spanElem span元素的符号对象
+     * @param {Number} textWidth 文字宽度
+     */
     _generateTextGeometry(spanElem, textWidth) {
         const text = spanElem.getText();
         const fontSize = spanElem.getStyle("font-size").getPixels();
@@ -185,6 +232,14 @@ export default class SvgElementInstance {
         return ExtrudeGeometryUtil.createExtrudeGeometryByDepth(shapes, 4, textWidth, 1);
     }
 
+    /**
+     * @description 将svg里的线生成三维的管道体
+     * @private
+     *
+     * @param {Array} coords 点坐标数组
+     * @param {Number} strokeWidth 线宽
+     * @param {Array} offsetHeights 有地形高程采样是的高度数组
+     */
     _generateStrokeGeometry(coords, strokeWidth, offsetHeights) {
         const vec3s = [];
         const coordsLen = coords.length;
@@ -218,6 +273,13 @@ export default class SvgElementInstance {
         return ExtrudeGeometryUtil.createExtrudeGeometryByPath([shape], undefined, polylineCurve, coordsLen * 2 - 3);
     }
 
+    /**
+     * @description 将svg里的区生成三维的平面体
+     * @private
+     *
+     * @param {Array} coords 点坐标数组
+     * @param {Number} height 平面厚度
+     */
     _generateFillGeometry(coords, height) {
         const pts = [];
         let coordsLen = coords.length;
@@ -246,6 +308,15 @@ export default class SvgElementInstance {
         return ExtrudeGeometryUtil.createExtrudeGeometryByPath([shape], undefined, polylineCurve, 1);
     }
 
+    /**
+     * @description 内部生成三维体的方法
+     * @private
+     *
+     * @param {Object} elem SVG符号对象
+     * @param {Object} extrudeGeom 三维线对象
+     * @param {Object} options 额外参数
+     * @param {Object} color 颜色
+     */
     _generateCesiumGeometryInstance(elem, extrudeGeom, options, color) {
         if (!defined(extrudeGeom)) return undefined;
 
@@ -262,6 +333,15 @@ export default class SvgElementInstance {
         });
     }
 
+    /**
+     * @description 根据类型获取颜色对象
+     * @private
+     *
+     * @param {Object} ele SVG符号对象
+     * @param {String} type 类型
+     *
+     * @return {Object} ret 颜色对象
+     */
     _getColorByType(ele, type) {
         let ret;
         const styles = ele.getContextStyle()
@@ -301,14 +381,35 @@ export default class SvgElementInstance {
         }
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.transformExtrudeGeometry
+     * @description: 平移三维几何体，主要针对经纬度和墨卡托坐标系进行的处理
+     * @public
+     *
+     * @param {Object} extrudeGeom 三维几何体对象
+     * @param {Object} options 额外参数
+     */
     transformExtrudeGeometry(extrudeGeom, options) {
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.transformExtrudeGeometry
+     * @description: 生成cesium的geometry对象
+     * @public
+     *
+     * @param {Object} elem SVG符号对象
+     * @param {Object} cesgeo 三维几何体对象
+     * @param {Object} options 额外参数
+     */
     transfromGeoCesium(elem, cesgeo, options) {
         const {dimModHeight} = options;
         CesiumGeomUtil.translate(cesgeo, new Cesium.Cartesian3(0, 0, dimModHeight));
     }
 
+    /**
+     * @description: 初始化地形高度采样参数
+     * @private
+     */
     _initSampleOptions() {
         this.samplePoints = [];
         this.sampleConfigs = [];
@@ -317,6 +418,12 @@ export default class SvgElementInstance {
         this.index = 0;
     }
 
+    /**
+     * @description: 获取坐标点数组
+     * @private
+     *
+     * @return {Array} cacheCoords 坐标点数组
+     */
     _getCoords(path) {
         const {cacheCoords} = path;
         if (!cacheCoords) {
@@ -328,30 +435,8 @@ export default class SvgElementInstance {
 
     /**
      * @description 全部点地形采样
-     * @param path - {Object} 必选项，path对象
-     * @return sample - {Object} 采样点（笛卡尔坐标）信息
-     */
-    _getFullSample(path) {
-        const cacheCoords = this._getCoords(path);
-
-        let samples = [], simpleConfig = [], startIndex = this.index, endIndex;
-        for (let j = 0; j < cacheCoords.length; j++) {
-            for (let k = 0; k < cacheCoords[j].length; k++) {
-                let sample = this._mercatorTolonlat(cacheCoords[j][k]);
-                samples.push(Cesium.Cartesian3.fromDegrees(sample.lon, sample.lat, 0));
-            }
-            endIndex = startIndex + cacheCoords[j].length - 1;
-            simpleConfig.push({
-                start: startIndex, end: endIndex
-            })
-            startIndex = endIndex + 1;
-        }
-
-        return {samples, simpleConfig, endIndex}
-    }
-
-    /**
-     * @description 全部点地形采样
+     * @private
+     *
      * @param path - {Object} 必选项，path对象
      * @return sample - {Object} 采样点（笛卡尔坐标）信息
      */
@@ -376,6 +461,8 @@ export default class SvgElementInstance {
 
     /**
      * @description 指定点地形采样
+     * @private
+     *
      * @param points - {Array} 必选项，指定的采样点数组
      * @return sample - {Object} 采样点（笛卡尔坐标）信息
      */
@@ -394,6 +481,12 @@ export default class SvgElementInstance {
         return {samples, simpleConfig, endIndex}
     }
 
+    /**
+     * @description 保存高度采样点
+     * @private
+     *
+     * @param {Object} path SVG部件符号对象
+     */
     _setPointsSample(path) {
         let originPnts = [];
         let parts = path.cacheCoords || path.getCoords();
@@ -405,6 +498,8 @@ export default class SvgElementInstance {
 
     /**
      * @description 根据OriginPoint进行地形采样
+     * @private
+     *
      * @param originPnt - {Object} 必选项，originPnt对象
      * @return sample - {Object} 采样点（笛卡尔坐标）信息
      */
@@ -423,6 +518,8 @@ export default class SvgElementInstance {
 
     /**
      * @description 根据经纬度进行地形采样
+     * @private
+     *
      * @param Lonlat - {Object} 必选项，Lonlat对象
      * @return sample - {Object} 采样点（笛卡尔坐标）信息
      */
@@ -438,6 +535,13 @@ export default class SvgElementInstance {
         return {samples, simpleConfig, endIndex}
     }
 
+    /**
+     * @description 确定采样点所对应的SVG部件
+     * @private
+     *
+     * @param {Object} sampleObj 采样点配置对象
+     * @param {String} type 部件类型
+     */
     _setSamples(sampleObj, type) {
         type = type || 'path';
         this.samplePoints = this.samplePoints.concat(sampleObj.samples);
@@ -453,7 +557,8 @@ export default class SvgElementInstance {
 
     /**
      * @description 取得采样参数
-     * @param type - {String} 必选项，path类型
+     * @private
+     *
      * @param paths - {Array} 必选项，path数组
      * @param spans - {Array} 必选项，span数组
      * @return sampleOptions - {Object} 采样参数
@@ -485,13 +590,10 @@ export default class SvgElementInstance {
         }
     }
 
-    _getPointSampleOptions(lonlat) {
-        this._initSampleOptions();
-        this._setSamples(this._getLonlatSample(lonlat));
-    }
-
     /**
      * @description 根据采样结果取得每个部件的高程采样数组
+     * @private
+     *
      * @param sampleResult - {Array} 必选项，高程采样结果
      * @param type - {String} 可选项，类型，path或span
      * @return pathHeights - {Array} 所有部件的高程采样数组
@@ -518,6 +620,8 @@ export default class SvgElementInstance {
 
     /**
      * @description 墨卡托坐标转经纬度坐标
+     * @private
+     *
      * @param mercator - {Object} 必选项，墨卡托坐标
      * @return lonlat - {Object} 经纬度坐标
      */
