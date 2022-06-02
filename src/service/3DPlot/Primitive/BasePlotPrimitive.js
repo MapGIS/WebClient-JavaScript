@@ -117,7 +117,7 @@ class BasePlotPrimitive {
 
     /**
      * @description 标绘图元更新方法，有这个方法，则被cesium视为一个primitive
-     * @function module:3DPlot.BasePlotPrimitive.setAdjustScale
+     * @function module:3DPlot.BasePlotPrimitive.update
      * @public
      *
      * @param {Boolean} frameState 是否更新
@@ -150,6 +150,10 @@ class BasePlotPrimitive {
         this._primitive && this._primitive.update(frameState);
     }
 
+    /**
+     * @description 生成cesium的geometry对象方法
+     * @private
+     * */
     _createGeomInstance() {
         return [];
     }
@@ -220,7 +224,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 从json导入数据
-     * @function @function module:3DPlot.BasePlotPrimitive.fromGeoJSON
+     * @function module:3DPlot.BasePlotPrimitive.fromGeoJSON
      * @public
      *
      * @param {Object} geoJson 要导入的数据
@@ -250,7 +254,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 初始化保存属性（必须和extend扩展数组对应）
-     * @function @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
+     * @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
      * @public
      */
     initBaseSaveAttributes() {
@@ -259,7 +263,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取需要保存的字段数组
-     * @function @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
+     * @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
      * @public
      *
      * @return {Array} Attributes 字段数组
@@ -270,7 +274,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取需要保存的属性组对象
-     * @function @function module:3DPlot.BasePlotPrimitive.getBaseSaveAttributesValues
+     * @function module:3DPlot.BasePlotPrimitive.getBaseSaveAttributesValues
      * @public
      *
      * @return {Object} v 属性组对象
@@ -286,7 +290,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 检验是否需要开启透明度渲染
-     * @function @function module:3DPlot.BasePlotPrimitive.isTranslucentInstance
+     * @function module:3DPlot.BasePlotPrimitive.isTranslucentInstance
      * @public
      *
      * @param {Array} geomInstance 几何实例数组
@@ -301,7 +305,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 实体转换
-     * @function @function module:3DPlot.BasePlotPrimitive.instancesToPrimitives
+     * @function module:3DPlot.BasePlotPrimitive.instancesToPrimitives
      * @public
      *
      * @param {Array} instances 几何实例数组
@@ -325,7 +329,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 墙实体转换
-     * @function @function module:3DPlot.BasePlotPrimitive.wallInstancesToPrimitive
+     * @function module:3DPlot.BasePlotPrimitive.wallInstancesToPrimitive
      * @public
      *
      * @param {Array} wallInstances 墙的几何实例数组
@@ -368,7 +372,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 更新实体状态
-     * @function @function module:3DPlot.BasePlotPrimitive.updatePrimitive
+     * @function module:3DPlot.BasePlotPrimitive.updatePrimitive
      * @public
      *
      * @param {Boolean} flag 是否更新
@@ -384,7 +388,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 作用选中后透明度效果
-     * @function @function @function module:3DPlot.BasePlotPrimitive.applySelectStatus
+     * @function @function module:3DPlot.BasePlotPrimitive.applySelectStatus
      * @public
      *
      * @param {Array} geomInstances 几何实例数组
@@ -401,7 +405,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取渐变材料的canvas
-     * @function @function @function module:3DPlot.BasePlotPrimitive.getColorRamp
+     * @function @function module:3DPlot.BasePlotPrimitive.getColorRamp
      * @public
      *
      * @param {Array} elevationRamp 渐变范围
@@ -428,7 +432,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 设置标绘图元样式，必须通过此方法设置，修改样式的属性无效
-     * @function @function @function module:3DPlot.BasePlotPrimitive.setStyle
+     * @function @function module:3DPlot.BasePlotPrimitive.setStyle
      * @public
      *
      * @param key {String} 样式名
@@ -443,7 +447,7 @@ class BasePlotPrimitive {
 
     /**
      * @description: 获取标绘图元样式
-     * @function @function @function module:3DPlot.BasePlotPrimitive.getStyle
+     * @function @function module:3DPlot.BasePlotPrimitive.getStyle
      * @public
      *
      * @return {Object} style 图元样式

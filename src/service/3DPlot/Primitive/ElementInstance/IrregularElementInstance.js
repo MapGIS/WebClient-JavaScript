@@ -1,4 +1,4 @@
-import { defined } from "../../../../service/PlotUtilBase/Check";
+import { defined } from "../../../PlotUtilBase/Check";
 import RegularLineElementInstance from "./RegularLineElementInstance";
 import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
 
