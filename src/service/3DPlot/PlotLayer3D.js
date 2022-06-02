@@ -64,8 +64,10 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.addPlot
+     * @function module:3DPlot.PlotLayer3D.addPlot
      * @description 添加标绘图元
+     * @public
+     *
      * @param plot - {Plot} 必选项，要添加的标绘图元
      */
     addPlot(plot) {
@@ -74,6 +76,12 @@ class PlotLayer3D extends Observable {
         return plot;
     }
 
+    /**
+     * @description 获取scene对象
+     * @private
+     *
+     * @return {Object} scene scene对象
+     */
     _getScene() {
         let {scene} = this._viewer;
         if (!scene) throw new Error("三维场景scene 未初始化");
@@ -82,8 +90,10 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.removePlotByID
+     * @function module:3DPlot.PlotLayer3D.removePlotByID
      * @description 根据标绘图元ID删除标绘图元
+     * @public
+     *
      * @param id - {String} 必选项，要删除的标绘图元ID
      * @return {Object} json，被删除的标绘图元
      */
@@ -93,8 +103,10 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.removePlotByID
+     * @function module:3DPlot.PlotLayer3D.removePlotByID
      * @description 删除标绘图元
+     * @public
+     *
      * @param plot - {Plot} 必选项，要删除的标绘图元
      * @return {Object} json
      */
@@ -107,8 +119,10 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.getPlotByID
+     * @function module:3DPlot.PlotLayer3D.getPlotByID
      * @description 根据标绘图元ID获取标绘图元
+     * @public
+     *
      * @param id - {String} 必选项，标绘图元ID
      * @return {Object} json，没找到返回undefined
      */
@@ -172,7 +186,9 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.removeAll
+     * @function module:3DPlot.PlotLayer3D.removeAll
+     * @public
+     *
      * @description 移除图层下的所有标绘图元
      */
     removeAll() {
@@ -181,8 +197,10 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.toJSON
+     * @function module:3DPlot.PlotLayer3D.toJSON
      * @description 导出图层数据
+     * @public
+     *
      * @return {Object} json
      */
     toJSON() {
@@ -204,8 +222,10 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.fromJSON
+     * @function module:3DPlot.PlotLayer3D.fromJSON
      * @description 导入图层数据
+     * @public
+     *
      * @param geoJson - {Object} 必选项，标绘图元ID
      */
     fromJSON(geoJson) {
@@ -220,6 +240,12 @@ class PlotLayer3D extends Observable {
         }
     }
 
+    /**
+     * @description 添加单个json数据图元
+     * @private
+     *
+     * @param geoFeature - {Object} json数据
+     */
     _addGeoJSONObject(geoFeature) {
         let that = this;
         const id = geoFeature.properties.symbolId;
@@ -241,13 +267,19 @@ class PlotLayer3D extends Observable {
         });
     }
 
+    /**
+     * @description 添加单个Primitive数据
+     * @private
+     *
+     * @param primitive - {Object} primitive数据
+     */
     _addPrimitive(primitive) {
         this._primitiveCollection.add(primitive);
         return primitive;
     }
 
     /**
-     * @function module:PlotLayer3D.getSnapshot
+     * @function module:3DPlot.PlotLayer3D.getSnapshot
      * @description 获取屏幕快照
      */
     getSnapshot() {
@@ -264,7 +296,7 @@ class PlotLayer3D extends Observable {
     }
 
     /**
-     * @function module:PlotLayer3D.queryByGeometry
+     * @function module:3DPlot.PlotLayer3D.queryByGeometry
      * @description 标绘图元几何查询接口
      *
      * @param geometry {Object} 查询几何，经纬度组成的点或点数组
@@ -301,6 +333,13 @@ class PlotLayer3D extends Observable {
         return plots;
     }
 
+    /**
+     * @function module:3DPlot.PlotLayer3D.addPrimitiveBy2DPlotObj
+     * @description 把一个二维标绘图元添加入三维标绘图层中
+     * @public
+     *
+     * @return {Object} primitive 三维标绘图元
+     */
     addPrimitiveBy2DPlotObj(plotObj2D) {
         const element = plotObj2D.getElement();
 
@@ -313,20 +352,6 @@ class PlotLayer3D extends Observable {
 
         return primitive;
     }
-
-    _mercatorTolonlat(mercator) {
-        let lonlat = {lon: 0, lat: 0};
-
-        let x = mercator.x / 20037508.34 * 180;
-        let y = mercator.y / 20037508.34 * 180;
-
-        y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
-
-        lonlat.lon = x;
-        lonlat.lat = y;
-
-        return lonlat;
-    };
 
     /**
      * @description 标绘图元拾取事件，绘制中途不会触发该事件，只有绘制图元结束才会触发
