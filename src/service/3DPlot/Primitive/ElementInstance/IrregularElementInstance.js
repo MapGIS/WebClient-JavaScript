@@ -1,15 +1,24 @@
-/*
- * @Description:
- * @Author: zk
- * @Date: 2022-01-12 13:59:36
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-31 10:31:38
- */
 import { defined } from "../../../../service/PlotUtilBase/Check";
 import RegularLineElementInstance from "./RegularLineElementInstance";
 import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
 
+/**
+ * @class module:3DPlot.IrregularElementInstance
+ * @description SVG的非规则符号解析器
+ * @author 基础平台-杨琨
+ */
 export default class IrregularElementInstance extends RegularLineElementInstance {
+
+  /**
+   * @function module:3DPlot.IrregularElementInstance.svgToGeomInstances
+   * @description 重载父类的svgToGeomInstances方法
+   * @public
+   * @override
+   *
+   * @param {Object} elem SVG符号对象
+   * @param {Object} options 额外参数
+   * @param {function} callback 回调函数
+   */
   svgToGeomInstances(elem, options, callback) {
     const instances = this.pathElemToGeomInstance(elem, options);
     let wallGeomInstances;
@@ -21,6 +30,15 @@ export default class IrregularElementInstance extends RegularLineElementInstance
     callback({ instances, wallGeomInstances });
   }
 
+  /**
+   * @function module:3DPlot.IrregularElementInstance.pathElemToGeomInstance
+   * @description 重载父类的pathElemToGeomInstance方法
+   * @public
+   * @override
+   *
+   * @param {Object} elem SVG的path符号对象
+   * @param {Object} options 额外参数
+   */
   pathElemToGeomInstance(elem, options) {
     const instances = [];
     const coords = elem.cacheCoords || elem.getCoords();

@@ -1,16 +1,24 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 11:15:18
- * @LastEditTime: 2022-05-23 19:01:26
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularSurfaceElementInstance.js
- */
 import Bounds from "../../../../service/PlotUtilBase/Geometry/Bound";
 import {CesiumUtil} from "../../Utils/CesiumUtil";
 import SvgElementInstance from "./SvgElementInstance";
 
+/**
+ * @class module:3DPlot.RegularSurfaceElementInstance
+ * @description SVG的一类区符号解析基类
+ * @author 基础平台-杨琨
+ */
 export default class RegularSurfaceElementInstance extends SvgElementInstance {
+
+    /**
+     * @function module:3DPlot.SvgElementInstance.svgToGeomInstances
+     * @description 重载父类的svgToGeomInstances方法
+     * @public
+     * @override
+     *
+     * @param {Object} elem SVG符号对象
+     * @param {Object} options 额外参数
+     * @param {function} callback 回调函数
+     */
     svgToGeomInstances(elem, options, callback) {
         const {surfaceBorderWidth} = options
         this.polylineOutInstance = null;
@@ -52,6 +60,14 @@ export default class RegularSurfaceElementInstance extends SvgElementInstance {
         });
     }
 
+    /**
+     * @function module:3DPlot.SvgElementInstance.pathElemToGeomInstance
+     * @description 重载父类的pathElemToGeomInstance方法
+     * @public
+     * @override
+     *
+     * @param {Object} elem path元素的符号对象
+     */
     pathElemToGeomInstance(elem) {
         const _parts = elem.cacheCoords || elem.getCoords();
 

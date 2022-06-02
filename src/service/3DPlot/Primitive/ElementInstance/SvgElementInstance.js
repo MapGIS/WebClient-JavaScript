@@ -393,7 +393,7 @@ export default class SvgElementInstance {
     }
 
     /**
-     * @function module:3DPlot.SvgElementInstance.transformExtrudeGeometry
+     * @function module:3DPlot.SvgElementInstance.transfromGeoCesium
      * @description: 生成cesium的geometry对象
      * @public
      *

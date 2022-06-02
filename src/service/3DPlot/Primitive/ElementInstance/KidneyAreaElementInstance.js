@@ -1,14 +1,23 @@
-/*
- * @Author: your name
- * @Date: 2021-11-04 15:54:38
- * @LastEditTime: 2022-05-20 19:54:49
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\KidneyAreaElementInstance.js
- */
 import RegularLine1ElementInstance from "./RegularLine1ElementInstance";
 import {CesiumGeomUtil} from "../../Utils/CesiumUtil";
+
+/**
+ * @class module:3DPlot.KidneyAreaElementInstance
+ * @description SVG的二类线符号解析基类
+ * @author 基础平台-杨琨
+ */
 export default class KidneyAreaElementInstance extends RegularLine1ElementInstance {
+
+  /**
+   * @function module:3DPlot.KidneyAreaElementInstance.transfromGeoCesium
+   * @description: 重载父类的transfromGeoCesium方法
+   * @public
+   * @override
+   *
+   * @param {Object} elem SVG符号对象
+   * @param {Object} cesgeo 三维几何体对象
+   * @param {Object} options 额外参数
+   */
   transfromGeoCesium(elem, cesgeo, options) {
     CesiumGeomUtil.degreesWithHeightToWorldCoords(
         cesgeo,
