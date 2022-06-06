@@ -72,7 +72,7 @@ export default class DrawPolyline2D extends DrawObject {
                         element: element,
                         canvas: this.m_fabricCanvas
                     });
-                    this.m_fabricCanvas.add(this.m_object);
+                    this.m_fabricCanvas.addPlot(this.m_object);
                     addExtendLayersPlot(this.m_fabricCanvas._linkTool, this.m_object);
                 });
             }
