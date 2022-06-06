@@ -30,6 +30,7 @@ export default class DrawPoint2D extends DrawObject {
 
   removeHooks() {
     this._plotLayer.interactive = false;
+    this._plotLayer._isDrawing = false;
     this._plotLayer.off("mouse:up", this.onMouseUp);
     super.removeHooks();
   }
@@ -44,7 +45,7 @@ export default class DrawPoint2D extends DrawObject {
       });
   
       object.setPnts([new Point(pnt[0],pnt[1])]);
-  
+      this._plotLayer._isDrawing = true;
       this._plotLayer.addPlot(object);
       this._plotLayer.requestRenderAll();
       this.fireFinishEvent({ plotObj2D: object });

@@ -14,7 +14,7 @@ import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 import FabricLineUtil from './EditTool/FabricLineUtil';
 import {addExtendLayersPlot, removeExtendLayersPlot} from "../3DPlot/Utils/PlotUtil";
 
-export default class PlotLayer2D {
+class PlotLayer2D {
     constructor() {
         // 标绘对象
         this.m_plotObjects = [];
@@ -30,6 +30,10 @@ export default class PlotLayer2D {
 
         //二三维联动工具
         this._linkTool = undefined;
+        //点击回调事件
+        this._pickPlot = undefined;
+        //是否在绘制图元，绘制途中不触发pick事件
+        this._isDrawing = false;
     }
 
     /**
@@ -428,3 +432,24 @@ export default class PlotLayer2D {
         this._fabricCanvas.requestRenderAll();
     }
 }
+
+Object.defineProperties(PlotLayer2D.prototype, {
+    pickPlot: {
+        get() {
+            return this._pickPlot;
+        },
+        set(v) {
+            let that = this;
+            this._pickPlot = v;
+            this.off("mouse:down");
+            this.on("mouse:down", function (result) {
+                result = result || {};
+                if(result.target && !that._isDrawing){
+                    that._pickPlot(result.target);
+                }
+            });
+        }
+    }
+});
+
+export default PlotLayer2D;

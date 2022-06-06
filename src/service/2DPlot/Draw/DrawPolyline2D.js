@@ -38,6 +38,7 @@ export default class DrawPolyline2D extends DrawObject {
         this.m_fabricCanvas.interactive = true;
         this.m_fabricCanvas.off('mouse:move', this.onMouseMove);
         this.m_fabricCanvas.off('mouse:up', this.onMouseUp);
+        this.m_fabricCanvas._isDrawing = false;
         super.removeHooks();
     }
 
@@ -73,6 +74,7 @@ export default class DrawPolyline2D extends DrawObject {
                         canvas: this.m_fabricCanvas
                     });
                     this.m_fabricCanvas.addPlot(this.m_object);
+                    this.m_fabricCanvas._isDrawing = true;
                     addExtendLayersPlot(this.m_fabricCanvas._linkTool, this.m_object);
                 });
             }
