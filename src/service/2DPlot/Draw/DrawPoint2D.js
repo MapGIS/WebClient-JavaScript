@@ -11,11 +11,11 @@ import  {PlotObjectFactory}  from "../Shapes/PlotObjectFactory";
 import {addExtendLayersPlot} from "../../3DPlot/Utils/PlotUtil";
 
 export default class DrawPoint2D extends DrawObject {
-  constructor(fabricCanvas, symbol, options) {
+  constructor(plotLayer, symbol, options) {
     super();
-    this.m_fabricCanvas = fabricCanvas;
+    this._plotLayer = plotLayer;
     this.m_symbol = symbol;
-    this.m_coordSys = this.m_fabricCanvas.getCoordSys();
+    this.m_coordSys = this._plotLayer.getCoordSys();
     this.onMouseUp = this.innerOnMouseUp.bind(this);
     //绘制完成回调函数
     const {addedPlot} = options;
@@ -24,13 +24,13 @@ export default class DrawPoint2D extends DrawObject {
 
   addHooks() {
     super.addHooks();
-    this.m_fabricCanvas.on("mouse:up", this.onMouseUp);
-    this.m_fabricCanvas.interactive = false;
+    this._plotLayer.on("mouse:up", this.onMouseUp);
+    this._plotLayer.interactive = false;
   }
 
   removeHooks() {
-    this.m_fabricCanvas.interactive = false;
-    this.m_fabricCanvas.off("mouse:up", this.onMouseUp);
+    this._plotLayer.interactive = false;
+    this._plotLayer.off("mouse:up", this.onMouseUp);
     super.removeHooks();
   }
 
@@ -40,18 +40,18 @@ export default class DrawPoint2D extends DrawObject {
     this.m_symbol.getElement().then((element)=>{
       const object = PlotObjectFactory.createInstance(this.m_symbol.type, {
         element:element ,
-        canvas: this.m_fabricCanvas,
+        canvas: this._plotLayer,
       });
   
       object.setPnts([new Point(pnt[0],pnt[1])]);
   
-      this.m_fabricCanvas.add(object);
-      this.m_fabricCanvas.requestRenderAll();
+      this._plotLayer.addPlot(object);
+      this._plotLayer.requestRenderAll();
       this.fireFinishEvent({ plotObj2D: object });
       if(this._addedPlot){
         this._addedPlot(object);
       }
-      addExtendLayersPlot(this.m_fabricCanvas._linkTool, object);
+      addExtendLayersPlot(this._plotLayer._linkTool, object);
       this.disable();
     })
 

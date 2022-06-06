@@ -94,15 +94,39 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
     isNotVisible: function () {
         return this.opacity === 0 || (!this.width && !this.height && this.strokeWidth === 0) || !this.visible || !this._elem.show;
     },
-    setValue: function setValue(key, value, ids, isWaitRender) {
+    setValue: function setValue(key, value, ids) {
         this._elem.setNodeAttr(key, value, ids);
-        if (isWaitRender) {
-            this.set('dirty', true);
-        }
+        this.set('dirty', true);
+        this.canvas.requestRenderAll();
     },
 
     getPlotCanvas: function getPlotCanvas() {
         return this.canvas;
+    },
+    /**
+     * @description: 设置标绘图元样式，必须通过此方法设置，修改样式的属性无效
+     * @function @function module:3DPlot.BasePlotPrimitive.setStyle
+     * @public
+     *
+     * @param key {String} 样式名
+     * @param value {Any} 样式值
+     * @param value {Any} 样式值
+     * @param nodeIds {String} 图元部件ID字符串，可传入多个id，以逗号分隔，当id有多个时，可统一修改多个部件的样式，
+     * 若找不到id则不做改变
+     */
+    setStyle(key, value, nodeIds) {
+        this.setValue(key, value, nodeIds);
+    },
+
+    /**
+     * @description: 获取标绘图元样式
+     * @function @function module:3DPlot.BasePlotPrimitive.getStyle
+     * @public
+     *
+     * @return {Object} style 图元样式
+     */
+    getStyle() {
+        return this._elem.getStyleJSON();
     }
 });
 fabric.PlotObject = PlotObject;
