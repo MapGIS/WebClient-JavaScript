@@ -1,7 +1,6 @@
 import DrawTool from "./Draw/DrawTool";
 import {PlotLayer3D} from "../3DPlot";
 import {PlotLayer2D} from "../2DPlot";
-import * as Cesium from "cesium";
 
 /**
  * @description 二三维联动工具
