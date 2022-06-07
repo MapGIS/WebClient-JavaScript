@@ -1,12 +1,9 @@
-/*
- * @class: 
- * @Description: 
- * @Author: zk
- * @Date: 2022-05-23 16:44:52
- * @LastEditors: zk
- * @LastEditTime: 2022-05-23 16:44:52
- */
-
 import SimpleLineElementInstance from "./SimpleLineElementInstance";
+
+/**
+ * @class module:3DPlot.SimpleAreaForKidneyElementInstance
+ * @description SVG的新规则区符号解析基类
+ * @author 基础平台-杨琨
+ */
 export default class SimpleAreaForKidneyElementInstance extends SimpleLineElementInstance {
 }

@@ -8,7 +8,7 @@ import Point from '../../../../../PlotUtilBase/Geometry/Point';
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
  * @LastEditors: zk
- * @LastEditTime: 2022-05-30 15:34:52
+ * @LastEditTime: 2022-06-07 15:42:48
  */
 export default class PlotPathAnimation extends PlotCoordsAnimation {
     constructor(options) {
@@ -25,12 +25,12 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         ):[]
         this.showPath = AnimationUtil.defineValue(options.showPath, true);
         this.pathStyle = AnimationUtil.defineValue(options.pathStyle, {fill:'none',strokeStyle:"#00ff00",lineWidth:5});
-        this.pathType = AnimationUtil.defineValue(options.pathType, 'line');
+        this.pathType = AnimationUtil.defineValue(options.pathType, 'spline');
         this.startPathRate = AnimationUtil.defineValue(options.startPathRate, 0);
         this.endPathRate = AnimationUtil.defineValue(options.endPathRate, 1);
 
         //是否沿切线方向
-        this.AlongTangent = AnimationUtil.defineValue(options.AlongTangent, true);
+        this.alongTangent = AnimationUtil.defineValue(options.alongTangent, true);
 
         //绑定id
         this.symbolBindId = AnimationUtil.defineValue(options.symbolBindId, null);
@@ -49,10 +49,15 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         const { pathType } = this;
         
         if(!this._cacheCoords){
-            const plot = this.getPlotObjectById(this.symbolBindId);
             let coords = null;
-            if (plot) {
-                coords = plot.getElement().positions;
+            if (this.symbolBindId) {
+                const plot = this.getPlotObjectById(this.symbolBindId);
+                if(plot){
+                    coords = plot.getElement().positions;
+                }else{
+                    coords=null
+                    return
+                }
             } else {
                 coords = this.animationCoords;
             }
@@ -63,7 +68,7 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
             this._initPathWayObject({coords:this._cacheCoords,pathStyle:this.pathStyle})
         }
 
-        if(pathType==='line'){
+        if(pathType==='spline'){
             this.geometryInstance=new Spline(this._cacheCoords)
         }
 
@@ -94,6 +99,16 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         return (endRate - startRate) * rate + startRate;
     }
 
+    exportOption(){
+        const object = super.exportOption()
+        const propertys= PlotPathAnimation.cacheProperty.split(',')
+        propertys.forEach((s)=>{
+            object[s]=this[s]
+        })
+        return object
+    }
+
+
     restore() {
         super.restore();
         this._plotObjects.forEach((s, i) => {
@@ -123,10 +138,12 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         this._plotObjects.forEach((plotobject) => {
             const element = plotobject.getElement();
             // 设置沿斜线方向的角度
-            if (this.AlongTangent) {
+            if (this.alongTangent) {
                 element.setGeometryAngle(v[1]);
             }
             this._setPnts(plotobject, [pnt]);
         });
     }
 }
+
+PlotPathAnimation.cacheProperty= 'symbolBindId,animationCoords,showPath,pathStyle,startPathRate,endPathRate,alongTangent'

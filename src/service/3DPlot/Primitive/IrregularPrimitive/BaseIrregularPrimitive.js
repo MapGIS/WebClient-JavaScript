@@ -1,21 +1,28 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 10:17:42
- * @LastEditTime: 2022-04-01 09:46:07
- * @LastEditors: Do not edit
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\IrregularPrimitive\BaseIrregularPrimitive.js
- */
 import Point from "../../../../service/PlotUtilBase/Geometry/Point";
 import {Vector2} from "../../../PlotUtilBase/Math/Vector2";
 import BasePlotPrimitive from "../BasePlotPrimitive";
 import IrregularElementInstance from "../ElementInstance/IrregularElementInstance";
 
+/**
+ * @class module:3DPlot.BaseIrregularPrimitive
+ * @description 非规则标绘图元基类
+ * @author 基础平台-杨琨
+ *
+ * @param {Object} options 初始化参数
+ */
 class BaseIrregularPrimitive extends BasePlotPrimitive {
     constructor(options) {
         super(options);
     }
 
+    /**
+     * @function module:3DPlot.BaseIrregularPrimitive.update
+     * @description 重载父类的update方法
+     * @public
+     * @override
+     *
+     * @param {Boolean} frameState 是否更新
+     */
     update(frameState) {
         if (!this._elem || !this._elem.show) {
             return;
@@ -39,8 +46,9 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
 
     /**
      * @description: 处理最后两点绘制不闭合
-     * @param {*} coords
-     * @return {*}
+     * @private
+     *
+     * @param {Array} coords 坐标点数组
      */
     _closeCoordsPath(coords) {
         if (!coords || coords.length < 3) return;
@@ -57,6 +65,13 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
         }
     }
 
+    /**
+     * @description 重载父类的_createGeomInstance方法
+     * @private
+     * @override
+     *
+     * @param {function} callback 回调函数
+     * */
     _createGeomInstance(callback) {
         const webMercatorProjection = new Cesium.WebMercatorProjection();
         const projectPos = this._positions.map((s) => {
@@ -76,6 +91,12 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
         });
     }
 
+    /**
+     * @description 处理非规则几何方法
+     * @private
+     *
+     * @param {function} callback 回调函数
+     * */
     _elementInstance(callback) {
         new IrregularElementInstance(this._elem, {
             ...this.getBaseSaveAttributesValues(),
@@ -85,6 +106,12 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
         });
     }
 
+    /**
+     * @description: 重载父类的initBaseSaveAttributes方法
+     * @function module:3DPlot.BaseIrregularPrimitive.initBaseSaveAttributes
+     * @public
+     * @override
+     */
     initBaseSaveAttributes() {
         this.dimModHeight = this._modHeight;
         this.isOpenWall = true;
@@ -93,6 +120,14 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
         this.wallGradColor = "rgba(255,0,0,0.3)";
     }
 
+    /**
+     * @description: 重载父类的getPrimitiveBaseSaveAttributes方法
+     * @function module:3DPlot.BaseIrregularPrimitive.initBaseSaveAttributes
+     * @public
+     * @override
+     *
+     * @return {Array} Attributes 字段数组
+     */
     getPrimitiveBaseSaveAttributes() {
         return BaseIrregularPrimitive.extendPrimitiveAttributes.concat([]);
     }

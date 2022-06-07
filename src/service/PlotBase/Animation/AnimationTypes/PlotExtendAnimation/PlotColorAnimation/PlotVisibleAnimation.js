@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 11:26:27
+ * @LastEditTime: 2022-06-07 15:41:34
  */
 import { AnimationUtil } from '../../../utils/AnimationUtil';
 import PlotColorAnimation from './PlotColorAnimation';
@@ -33,9 +33,20 @@ export default class PlotVisibleAnimation extends PlotColorAnimation {
         });
     }
 
+    exportOption(){
+        const object = super.exportOption()
+        const propertys= PlotVisibleAnimation.cacheProperty.split(',')
+        propertys.forEach((s)=>{
+            object[s]=this[s]
+        })
+        return object
+    }
+
+
     render(rate) {
         const colorItems = this._getColorItemByRate(rate);
         this._setColorItems(colorItems);
-        this.handRefresh();
     }
 }
+
+PlotVisibleAnimation.cacheProperty='endStatus'

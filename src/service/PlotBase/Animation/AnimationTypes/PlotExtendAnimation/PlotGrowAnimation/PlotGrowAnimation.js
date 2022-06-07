@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 11:30:57
+ * @LastEditTime: 2022-06-07 15:42:15
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import Spline from '../../../../../PlotUtilBase/Geometry/Spline';
@@ -92,13 +92,25 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
     _centerAction(rate) {
         const trueRate = this._calcTrueRate(rate);
         this._plotObjects.forEach((plotObject, i) => {
-            const tPolys = this.modeFunArr[i].map((s) => {
+            const tPolys = this.modeFunArr[i].map((s) => {  
                 const p = s(trueRate);
+                
                 return new Point(p[0], p[1]);
             });
             this._setPnts(plotObject, tPolys);
         });
     }
+
+    exportOption(){
+        const object = super.exportOption()
+        const propertys= PlotGrowAnimation.cacheProperty.split(',')
+        propertys.forEach((s)=>{
+            object[s]=this[s]
+        })
+        return object
+    }
+
+
     _render(rate) {
         const mode = this.growMode;
         if (mode === 'spline') {
@@ -109,6 +121,7 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
     }
     render(rate) {
         this._render(rate);
-        this.handRefresh();
     }
 }
+
+PlotGrowAnimation.cacheProperty='startRate,endRate,growMode'

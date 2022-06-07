@@ -8,5 +8,6 @@
 import SymbolManager from './SymbolManager/SymbolManager';
 import TimeLine from './Animation/TimeLine/TimeLine'
 import DrawTool from './Draw/DrawTool'
+import LinkTool from "./LinkTool";
 
-export {SymbolManager,TimeLine,DrawTool} ;
+export {SymbolManager,TimeLine,DrawTool,LinkTool} ;

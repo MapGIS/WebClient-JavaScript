@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 12:05:14
+ * @LastEditTime: 2022-06-07 15:40:43
  */
 import { AnimationUtil } from '../../utils/AnimationUtil';
 import { GradientColor } from '../../utils/GradientColor';
@@ -13,27 +13,44 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
     constructor(options) {
         super(options);
     }
-
+    
     _initBaseAttributes(options) {
         super._initBaseAttributes(options);
         // animation type
         this.animationType = 'attribute-animation';
         // attrItems
-        this._attrsItems = this.resloveAttrsItems(options.attrsItems);
+        this._attrsItems=[]
+        // this._attrsItems = this.resloveAttrsItems(options.attrsItems);
+        const item =  AnimationUtil.defineValue(options.attrsItem, null);
+        if(item){
+            const type = this._getAttrType(item.attrName)
+            if(type && item.attrName){
+                this._attrsItems.push(this.sloveItemByType(type,item.ids,item.attrName,item.value))
+            }
+        }
     }
-
     update() {
-      super.update()
+        super.update();
         // copy attributes
         this._copyAttributes = this._plotObjects.map((s) => s.toGeoJSON().properties);
     }
 
-    resloveAttrsItems(attrsItems) {
-        if (!attrsItems) return [];
-        return attrsItems.map((s) => {
-            const arr = s.trim().split('_');
-            return this.sloveItemByType(arr[3], arr[0], arr[1], arr[2]);
-        });
+    // resloveAttrsItems(attrsItems) {
+    //     if (!attrsItems) return [];
+    //     return attrsItems.map((s) => {
+    //         const arr = s.trim().split('_');
+    //         return this.sloveItemByType(arr[3], arr[0], arr[1], arr[2]);
+    //     });
+    // }
+    _getAttrType(attrName){
+        let type=null
+        if(PlotAttributeAnimation.limitColorItems.indexOf(attrName)>-1){
+            type= 'color'
+        }
+        if(PlotAttributeAnimation.limitNumberItems.indexOf(attrName)>-1){
+            type='number'
+        }
+        return type
     }
     sloveItemByType(resloveType, ids, type, valStr) {
         const that = this;
@@ -53,16 +70,26 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
         }
         return item;
     }
-    rateToNum(str, rate) {
-        const arr = eval(str);
+    rateToNum(valArr, rate) {
+        const arr =valArr
         if (arr.length === 0) new Error('动画参数错误！');
         if (arr.length === 1) return arr[0];
         return AnimationUtil.getNumberRate(arr, rate);
     }
-    rateToColor(str, rate) {
-        const colorArr = eval(str);
-        return new GradientColor(colorArr).getGradientColorByRate(rate);
+    rateToColor(valArr, rate) {
+        debugger
+        return new GradientColor(valArr).getGradientColorByRate(rate);
     }
+
+    exportOption(){
+        const object = super.exportOption()
+        const propertys= PlotAttributeAnimation.cacheProperty.split(',')
+        propertys.forEach((s)=>{
+            object[s]=this[s]
+        })
+        return object
+    }
+
     restore() {
         super.restore();
         this._plotObjects.forEach((s, index) => {
@@ -78,6 +105,8 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
                 s.setValue(item.type, t, item.ids);
             });
         });
-        this.handRefresh();
     }
 }
+PlotAttributeAnimation.limitColorItems=['compareLineColor','wallColor','wallGradColor','strokeStyle','fillGradColor','fillStyle']
+PlotAttributeAnimation.limitNumberItems=['compareLineWidth','dimModHeight','lineWidth']
+PlotAttributeAnimation.cacheProperty='attrItem'

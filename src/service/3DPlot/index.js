@@ -1,9 +1,7 @@
 import PlotLayer3D from './PlotLayer3D';
-import PlotLayerMap from './PlotLayerMap';
-import {DrawTool} from './Draw/index';
+import PlotLayer3DGroup from './PlotLayer3DGroup';
 
 export {
-   DrawTool,
-   PlotLayerMap,
+   PlotLayer3DGroup,
    PlotLayer3D
 }

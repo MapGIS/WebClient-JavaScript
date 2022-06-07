@@ -1,15 +1,14 @@
-/*
- * @class:
- * @Description:
- * @Author: zk
- * @Date: 2022-05-23 14:21:36
- * @LastEditors: zk
- * @LastEditTime: 2022-05-23 17:26:48
- */
 import RegularSurfaceElementInstance from '../ElementInstance/RegularSurfaceElementInstance';
 import SimpleAreaForKidneyElementInstance from '../ElementInstance/SimpleAreaForKidneyElementInstance';
 import KidneyAreaPrimitive from './KidneyAreaPrimitive';
 
+/**
+ * @class module:3DPlot.SimpleAreaPrimitive
+ * @description 标绘图元（新规则区）基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 初始化参数
+ */
 class SimpleAreaPrimitive extends KidneyAreaPrimitive {
     constructor(options) {
         super(options);
@@ -69,6 +68,13 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
         });
     }
 
+    /**
+     * @description 重写父类的update方法
+     * @function module:3DPlot.SimpleAreaPrimitive.update
+     * @public
+     *
+     * @param {Boolean} frameState 是否更新
+     */
     update(frameState) {
         if (!this._elem || !this._elem.show) {
             return;
@@ -114,6 +120,12 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
         }
     }
 
+    /**
+     * @description 重写父类的_elementInstance方法
+     * @private
+     *
+     * @param {function} callback 回调函数
+     */
     _elementInstance(callback) {
         if (this.isMustFill) {
             new RegularSurfaceElementInstance(this._elem, {
@@ -132,10 +144,22 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
         }
     }
 
+    /**
+     * @description 重写父类的getPrimitiveBaseSaveAttributes方法
+     * @function module:3DPlot.SimpleAreaPrimitive.getPrimitiveBaseSaveAttributes
+     * @public
+     *
+     * @return {Array} Attributes 属性字段数组
+     */
     getPrimitiveBaseSaveAttributes() {
         return SimpleAreaPrimitive.extendPrimitiveAttributes.concat([]);
     }
 
+    /**
+     * @description 重写父类的initBaseSaveAttributes方法
+     * @function module:3DPlot.SimpleAreaPrimitive.initBaseSaveAttributes
+     * @public
+     */
     initBaseSaveAttributes() {
         this.dimModAttitude = this._elem.getSymbolPose();
         this.dimModHeight = this._modHeight;

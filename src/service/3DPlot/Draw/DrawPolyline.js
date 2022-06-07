@@ -1,17 +1,9 @@
-/*
- * @Author: your name
- * @Date: 2021-09-17 11:51:33
- * @LastEditTime: 2022-03-30 11:04:29
- * @LastEditors: Do not edit
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Draw\DrawRegularPoint.js
- */
-
 import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
 import PrimitiveFactory from "../Primitive/index";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 import GeomUtil from "../../../service/PlotUtilBase/Geometry/GeomUtil";
 import Point from "../../../service/PlotUtilBase/Geometry/Point";
+import {addExtendLayersPlot} from "../Utils/PlotUtil";
 
 function look(viewer, center, offset) {
   if (!viewer) {
@@ -31,6 +23,17 @@ function look(viewer, center, offset) {
   }, 100);
 }
 
+/**
+ * @class module:3DPlot.DrawPolyline
+ * @description 绘制线工具
+ * @author 基础平台-杨琨
+ *
+ * @param {Object} viewer 三维视图容器对象
+ * @param {Object} symbol 标绘符号对象
+ * @param {Object} plotLayer 标绘图层
+ * @param options - {Object} 额外参数
+ * @param {Function} [options.addedPlot] 添加标绘图元完成后的回调函数
+ */
 export default class DrawPolyline extends DrawObject {
   constructor(viewer, symbol, plotLayer, options) {
     super();
@@ -48,7 +51,7 @@ export default class DrawPolyline extends DrawObject {
 
   /**
    * @description 添加点击事件
-   * @private
+   * @function module:3DPlot.DrawPolyline.addHooks
    */
   addHooks() {
     const viewer = this._viewer;
@@ -118,12 +121,17 @@ export default class DrawPolyline extends DrawObject {
     //双击事件，结束绘制图元
     handler.setInputAction((event) => {
       this.fireFinishEvent({ plotObj3D: this._primitive });
+      addExtendLayersPlot(this._plotLayer._linkTool, this._primitive);
       this.disable();
     }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
     this._handler = handler;
   }
 
+  /**
+   * @description 移除点击事件
+   * @function module:3DPlot.DrawPolyline.removeHooks
+   */
   removeHooks() {
     const handler = this._handler;
     this._primitive = null;

@@ -1,14 +1,13 @@
-/*
- * @Author: your name
- * @Date: 2021-10-20 10:57:25
- * @LastEditTime: 2022-05-20 10:38:14
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularPointPrimitive.js
- */
 import BaseRegularPrimitive from "./BaseRegularPrimitive";
 import RegularPointElementInstance from "../ElementInstance/RegularPointElementInstance";
 
+/**
+ * @class module:3DPlot.RegularPointPrimitive
+ * @description 标绘图元（规则点）基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 初始化参数
+ */
 class RegularPointPrimitive extends BaseRegularPrimitive {
     constructor(options) {
         super(options);
@@ -31,6 +30,12 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
         this._isTranslate = false
     }
 
+    /**
+     * @description 重写父类的_elemPropsUpdateHandler方法
+     * @private
+     *
+     * @param {Object} event 事件对象
+     */
     _elemPropsUpdateHandler(event) {
         if (event.type === "positions") {
             this._positions = [];
@@ -47,6 +52,13 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
 
     }
 
+    /**
+     * @description 重写父类的update方法
+     * @function module:3DPlot.RegularPointPrimitive.update
+     * @public
+     *
+     * @param {Boolean} frameState 是否更新
+     */
     update(frameState) {
         if (!this._elem || !this._elem.show) {
             return;
@@ -88,12 +100,24 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
         return false;
     }
 
+    /**
+     * @description 重写父类的_createGeomInstance方法
+     * @private
+     *
+     * @param {function} callback 回调函数
+     */
     _createGeomInstance(callback) {
         this._elementInstance(function (instances) {
             callback(instances);
         });
     }
 
+    /**
+     * @description 重写父类的_elementInstancee方法
+     * @private
+     *
+     * @param {function} callback 回调函数
+     */
     _elementInstance(callback) {
         new RegularPointElementInstance(
             this._elem,
@@ -103,15 +127,33 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
         });
     }
 
+    /**
+     * @description 重写父类的initBaseSaveAttributes方法
+     * @function module:3DPlot.RegularPointPrimitive.initBaseSaveAttributes
+     * @public
+     */
     initBaseSaveAttributes() {
         this.dimModHeight = 0;
         this.dimModAttitude = "1";
     }
 
+    /**
+     * @description 重写父类的getPrimitiveBaseSaveAttributes方法
+     * @function module:3DPlot.RegularPointPrimitive.getPrimitiveBaseSaveAttributes
+     * @public
+     *
+     * @return {Array} Attributes 属性字段数组
+     */
     getPrimitiveBaseSaveAttributes() {
         return RegularPointPrimitive.extendPrimitiveAttributes.concat([]);
     }
 
+    /**
+     * @description 重写父类的instancesToPrimitives方法
+     * @function module:3DPlot.RegularPointPrimitive.instancesToPrimitives
+     * @public
+     * @param {Array} instances 几何实例数组
+     */
     instancesToPrimitives(instances) {
         if (instances && instances.length > 0) {
             this.destroy()

@@ -1,16 +1,19 @@
-/*
- * @Author: your name
- * @Date: 2021-09-17 11:51:33
- * @LastEditTime: 2021-12-27 11:54:35
- * @LastEditors: Do not edit
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Draw\DrawRegularPoint.js
- */
-
 import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
 import {PrimitiveFactory} from "../Primitive/PrimitiveFactory";
 import {CesiumUtil} from "../Utils/CesiumUtil";
+import {addExtendLayersPlot} from "../Utils/PlotUtil";
 
+/**
+ * @class module:3DPlot.DrawPoint
+ * @description 绘制点工具
+ * @author 基础平台-杨琨
+ *
+ * @param {Object} viewer 三维视图容器对象
+ * @param {Object} symbol 标绘符号对象
+ * @param {Object} plotLayer 标绘图层
+ * @param options - {Object} 额外参数
+ * @param {Function} [options.addedPlot] 添加标绘图元完成后的回调函数
+ */
 export default class DrawPoint extends DrawObject {
     constructor(viewer, symbol, plotLayer, options) {
         super();
@@ -24,6 +27,10 @@ export default class DrawPoint extends DrawObject {
         this._addedPlot = addedPlot;
     }
 
+    /**
+     * @description 添加点击事件
+     * @function module:3DPlot.DrawPoint.addHooks
+     */
     addHooks() {
         const viewer = this._viewer;
         const symbol = this._symbol;
@@ -61,6 +68,7 @@ export default class DrawPoint extends DrawObject {
                 that._plotLayer._primitiveCollection.add(that._primitive);
 
                 that._primitive.positions = that.m_coords;
+                addExtendLayersPlot(that._plotLayer._linkTool, that._primitive);
                 that.disable();
                 that.fireFinishEvent({plotObj3D: that._primitive});
             });
@@ -69,6 +77,10 @@ export default class DrawPoint extends DrawObject {
         this._handler = handler;
     }
 
+    /**
+     * @description 移除点击事件
+     * @function module:3DPlot.DrawPoint.removeHooks
+     */
     removeHooks() {
         const handler = this._handler;
         handler.destroy();

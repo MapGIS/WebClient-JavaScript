@@ -2,8 +2,8 @@
  * @Description: 根据比率获取渐变颜色
  * @Author: zk
  * @Date: 2022-03-28 10:46:58
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-04-15 14:21:44
+ * @LastEditors: zk
+ * @LastEditTime: 2022-06-07 14:11:21
  */
 
 import { AnimationUtil } from "./AnimationUtil";

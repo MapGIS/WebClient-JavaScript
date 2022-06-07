@@ -1,24 +1,30 @@
+import SymbolManager from "../PlotBase/SymbolManager/SymbolManager";
+import {PlotObjectFactory} from "../2DPlot/Shapes/PlotObjectFactory";
+import {PlotLayer3D} from "./index";
+
 /**
- * @class module:3DPlot.PlotLayerMap
+ * @class module:3DPlot.PlotLayer3DGroup
  * @description 行业标绘图层组
  * @author 基础平台-杨琨
  */
-class PlotLayerMap {
+class PlotLayer3DGroup {
   constructor(viewer) {
     //图层列表
     this._plotLayerMap = [];
     //viewer对象
     this._viewer = viewer;
+    //工具图层
+    this._utilPlotCanvas = new PlotLayer3D(Cesium, this._viewer);
 
-    if (!PlotLayerMap.instance) {
-      PlotLayerMap.instance = this;
+    if (!PlotLayer3DGroup.instance) {
+      PlotLayer3DGroup.instance = this;
     }
 
-    return PlotLayerMap.instance;
+    return PlotLayer3DGroup.instance;
   }
 
   /**
-   * @function module:3DPlot.addLayer
+   * @function module:3DPlot.PlotLayer3DGroup.addLayer
    * @description 添加图层至图层组
    * @param layer - {PlotLayer} 必选项，要添加图层。
    */
@@ -27,7 +33,7 @@ class PlotLayerMap {
   }
 
   /**
-   * @function module:3DPlot.removeLayer
+   * @function module:3DPlot.PlotLayer3DGroup.removeLayer
    * @description 从图层组删除图层
    * @param layer - {PlotLayer} 必选项，要删除的图层。
    */
@@ -41,7 +47,7 @@ class PlotLayerMap {
   }
 
   /**
-   * @function module:3DPlot.removeLayerById
+   * @function module:3DPlot.PlotLayer3DGroup.removeLayerById
    * @description 根据图层ID从图层组删除图层
    * @param id - {String} 必选项，要删除的图层ID。
    */
@@ -55,7 +61,7 @@ class PlotLayerMap {
   }
 
   /**
-   * @function module:3DPlot.raise
+   * @function module:3DPlot.PlotLayer3DGroup.raise
    * @description 图层上移，请确保图层加载完毕，再改变图层顺序
    * @param layer - {Object} 必选项，要上移的图层
    */
@@ -64,7 +70,7 @@ class PlotLayerMap {
   }
 
   /**
-   * @function module:3DPlot.raise
+   * @function module:3DPlot.PlotLayer3DGroup.raise
    * @description 图层下移，请确保图层加载完毕，再改变图层顺序
    * @param layer - {Object} 必选项，要下移的图层
    */
@@ -72,6 +78,13 @@ class PlotLayerMap {
     this._move(layer, "lower");
   }
 
+  /**
+   * @description 移动图层方法
+   * @private
+   *
+   * @param layer - {Object} 必选项，要移动的图层
+   * @param type - {String} 必选项，方向，向上或向下
+   */
   _move(layer, type) {
     let index, isFind = false;
     for (let i = 0; i < this._plotLayerMap.length; i++) {
@@ -159,6 +172,12 @@ class PlotLayerMap {
     }
   }
 
+  /**
+   * @description 获取scene对象
+   * @private
+   *
+   * @return {Object} scene scene对象
+   */
   _getScene() {
     let {scene} = this._viewer;
     if (!scene) throw new Error("三维场景scene 未初始化");
@@ -166,6 +185,13 @@ class PlotLayerMap {
     return scene;
   }
 
+  /**
+   * @description 获取标绘图元在内部标绘列表里的index
+   * @private
+   *
+   * @param {String} id 图元id
+   * @return {Number} index 标绘图元的index
+   */
   _getPrimitiveIndexById(id) {
     let scene = this._getScene(), index = undefined;
 
@@ -181,8 +207,44 @@ class PlotLayerMap {
       return index;
     }
   }
+
+  drawUtilPlotObject(id, options) {
+    const symbol = SymbolManager.instance;
+    const leaf = symbol.getLeafByID(id);
+    return leaf.getElement().then((element) => {
+      const plotObj = PlotObjectFactory.createInstance(element.type, {
+        element,
+        positions: options.positions,
+        canvas: this._utilPlotCanvas
+      });
+      this._utilPlotCanvas.addPlot(plotObj);
+      return plotObj;
+    });
+  }
+  removeDrawUtilPlotObject(plotObject){
+    this._utilPlotCanvas.removePlot(plotObject)
+  }
+  /**
+   * @function: Module:3DPlot.PlotLayer3DGroup.getPlotObjectById
+   * @description: 根据要素id获取要素对象
+   * @param {String} uid
+   * @return {*}
+   */
+  getPlotObjectById(uid) {
+    let t = null;
+    for (let i = 0; i < this._plotLayerMap.length; i++) {
+      const layer = this._plotLayerMap[i];
+      const plot = layer.getPlotByID(uid);
+      let elem;
+      if(plot) {
+        elem = plot.getElement();
+        t = elem;
+      }
+    }
+    return t;
+  }
 }
 
-PlotLayerMap.instance = null;
+PlotLayer3DGroup.instance = null;
 
-export default PlotLayerMap
+export default PlotLayer3DGroup

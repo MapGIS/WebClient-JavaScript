@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-30 14:04:17
+ * @LastEditTime: 2022-06-07 16:21:27
  */
 import { AnimationUtil } from '../utils/AnimationUtil';
 import { easingFunc } from '../utils/Easing';
@@ -20,159 +20,185 @@ export default class PlotBaseAnimation {
         // init options
         this.duration = AnimationUtil.defineValue(options.duration, 3000);
         this.easing = AnimationUtil.defineValue(options.easing, 'Linear');
-        this.repeat = AnimationUtil.defineValue(options.repeat, false);
-        this.startTime = AnimationUtil.defineValue(options.startTime, 0);
+        this.delay = AnimationUtil.defineValue(options.delay, 0);
+        this.endDelay = AnimationUtil.defineValue(options.endDelay, 0);
         this.animationName = AnimationUtil.defineValue(options.animationName, '');
+        this.loop = AnimationUtil.defineValue(options.loop, 1);
+        this.timelineOffset = AnimationUtil.defineValue(options.timelineOffset, 0);
+        this.featureIds= options.featureIds
         // 动画对象
         this._plotObjects = options.plotObjects || null;
         // 动画状态
         this._status = 'pending';
         // 图层组函数
-        this.handRefresh = options.handRefresh || function () {};
         this.getPlotObjectById = options.getPlotObjectById || function (uid) {};
         this.drawUtilPlotObject = options.drawUtilPlotObject ? options.drawUtilPlotObject : function () {};
-        this.removeDrawUtilPlotObject=options.removeDrawUtilPlotObject?options.removeDrawUtilPlotObject:function(){};
-        // 时段记录
-        this.timeSpace = 0;
-        // 播放历史
-        this.isHasHistory = false;
-        // 动画stepid
-        this.reqId = null;
-        // 动画重复播放间隔
-        this.timeRepeatSpace = 0;
-        // requestAnimationArr
-        this.requestAnimationArr = [];
-        // 动画是否可绘制
-        this.isCanRender = true;
+        this.removeDrawUtilPlotObject = options.removeDrawUtilPlotObject ? options.removeDrawUtilPlotObject : function () {};
+        // 动画参数
+        this.reversed = false;
+        this.speed = 1;
+        // 重置参数
+        this.reset();
+        // 状态
+        this._updateGeometry = true;
+        this._firstRender = true;
     }
     // 更新动画参数
     update() {}
-    // 销毁动画
-    destory() {}
     // 开始动画
-    play(_totalTime) {
-        // 更新动画参数
-        this.update();
+    play() {
+        if (this._updateGeometry) {
+            this._updateGeometry = false;
+            this.update();
+        }
+        if (this._firstRender) {
+            this._firstRender = false;
+            this.render(0.00001);
+        }
+        this.paused = false;
+    }
+    tick(time) {
         // 动画播放
-        let rate = 0;
-        let start;
-        let repeatTimes = 0;
-        let repeatStart = 0;
-        let repeatTotalTimes = 0;
-        let isTimeRepeatSpace = false;
-        let timeLimit = 40;
-        let limitStart;
+        this.now = time;
+        if (!this.startTime) this.startTime = this.now;
+        const vTime = (this.now + (this.lastTime - this.startTime)) * this.speed;
+        this.setInstanceProgress(vTime);
+    }
 
-        const that = this;
-        const time = this.duration;
-        const startTime = this.startTime;
-        const timeRepeatSpace = this.timeRepeatSpace;
-        const totalTime = this._getTotalTime(_totalTime);
+    setInstanceProgress(engineTime) {
+        const insDuration = this.duration;
+        const insTimelineOffset = this.timelineOffset;
+        const totalDuration = insDuration + insTimelineOffset;
+        const insDelay = this.delay + insTimelineOffset;
+        const insEndDelay = totalDuration - this.endDelay;
+        const insTime = this.adjustTime(engineTime);
 
-        if (this._status === 'pausing' || this.timeSpace !== 0) {
-            this.isHasHistory = true;
+        this.currentTime = this.minMax(insTime, 0, totalDuration);
+
+        if (!this.loopBegan && this.currentTime > 0) {
+            this.loopBegan = true;
         }
-        this._status = 'animating';
+        if ( insTime <= insDelay) {
+            this.setAnimationsProgress(0);
+        }
+        if ((insTime >= insEndDelay && this.currentTime !== totalDuration) || !insDuration) {
+            this.setAnimationsProgress(insDuration);
+        }
+        if (insTime > insDelay && insTime < insEndDelay) {
+            this.setAnimationsProgress(insTime - insTimelineOffset);
+        }
 
-        function step(timestamp) {
-            if (start === undefined) {
-                start = timestamp;
-            }
-            if (limitStart === undefined) limitStart = timestamp;
-
-            if (that.isHasHistory) {
-                start = timestamp - that.timeSpace;
-                that.isHasHistory = false;
-            }
-
-            let elapsed = timestamp - start;
-            // 记录当前时间
-            that.timeSpace = elapsed;
-            if (timestamp - limitStart > timeLimit) {
-                limitStart = timestamp;
-                if (elapsed >= startTime) {
-                    // 减去repeat时间 开始时间
-                    rate = (elapsed - startTime - repeatTotalTimes) / time;
-                    if (that.repeat) {
-                        if (rate >= 1) {
-                            const v = Math.floor(rate);
-                            rate = rate - Math.floor(rate);
-                            if (repeatTimes < v && !isTimeRepeatSpace) {
-                                repeatTimes = repeatTimes + 1;
-                                isTimeRepeatSpace = true;
-                                repeatStart = timestamp;
-                            }
-                        }
-                    } else {
-                        if (rate >= 1) {
-                            rate = 1;
-                            that.timeSpace = time + startTime;
-                        }
-                    }
-                    rate = rate.toFixed(3);
-                    if (isTimeRepeatSpace && timestamp - repeatStart >= timeRepeatSpace) {
-                        isTimeRepeatSpace = false;
-                        repeatTotalTimes += timeRepeatSpace;
-                    }
-                    if (!isTimeRepeatSpace) {
-                        that.render(that.applyEasing(rate));
-                    }
+        if (engineTime >= totalDuration) {
+            this.lastTime = 0;
+            this.countIteration();
+            if (!this.remaining) {
+                this.paused = true;
+                if (!this.completed) {
+                    this.completed = true;
                 }
-            }
-            if (elapsed <= totalTime && that._status === 'animating') {
-                that.limitReq();
-                that.reqId = window.requestAnimationFrame(step);
-                that.requestAnimationArr.push(that.reqId);
+            } else {
+                this.startTime = this.now - insTimelineOffset / this.speed;
             }
         }
-        that.reqId = window.requestAnimationFrame(step);
     }
-    _getTotalTime(_totalTime) {
-        const time = this.duration;
-        const startTime = this.startTime;
-        const totalTime = _totalTime > time + startTime ? (this.repeat ? _totalTime : time + startTime) : _totalTime;
-        return totalTime;
+
+    adjustTime(time) {
+        const v = time - this.timelineOffset;
+        if (v < 0) {
+            return time;
+        } else {
+            return (this.reversed ? this.duration - v : v) + this.timelineOffset;
+        }
     }
+
+    minMax(val, min, max) {
+        if (val === min) {
+            return min;
+        }
+        if (val === max) {
+            return max;
+        }
+        return Math.min(Math.max(val, min), max);
+    }
+
     // 暂停动画
     pause() {
-        this._status = 'pausing';
+        this.paused = true;
+        this.resetTime();
     }
     // 重置动画
     reset() {
-        this._status = 'pending';
+        this.remaining = this.loop;
+        this.paused = true;
+        this.completed = false;
         this.timeSpace = 0;
-        this.removeReq();
-    }
-    // 停止动画
-    stop() {
-        this._status = 'pending';
+        this.progress = 0;
+        this.currentTime = 0;
+        this.startTime = 0;
+        this.lastTime = 0;
+        this._updateGeometry = true;
+        this._firstRender = true;
     }
     // 复位动画
     restore() {
-        this._status = 'pending';
-        this.timeSpace = 0;
-        this.removeReq();
-    }
-    // 清空req
-    removeReq() {
-        if (this.reqId !== null) {
-            window.cancelAnimationFrame(this.reqId);
-        }
-    }
-    limitReq() {
-        this.requestAnimationArr.forEach((s) => {
-            window.cancelAnimationFrame(s);
-        });
-        this.requestAnimationArr = [];
+        this.reset();
     }
 
-    jumpTo(time) {
-        this.timeSpace = time;
-        this.isHasHistory = true;
-    }
     applyEasing(rate) {
         return easingFunc(this.easing)(rate);
     }
-    // render
+
+    setAnimationsProgress(time) {
+        let rate = this.minMax(time / this.duration, 0, 1);
+        rate = this.applyEasing(rate);
+        // rate=parseFloat(rate.toFixed(5))
+        // if(!rate || rate<10e-5) return;
+        this.render(rate);
+    }
+
+    countIteration() {
+        if (this.remaining && this.remaining !== true) {
+            this.remaining--;
+        }
+    }
+
+    seek(time) {
+        this.currentTime=this.minMax(time, 0, this.timelineOffset + this.duration);
+        this.resetTime();
+    }
+
+    setSpeed(speed) {
+        this.speed = speed;
+        if (!this.paused) {
+            this.resetTime();
+        }
+    }
+
+    resetTime() {
+        this.startTime = 0;
+        this.lastTime = this.adjustTime(this.currentTime) * (1 / this.speed);
+    }
+    
+    exportOption(){
+       const propertys= PlotBaseAnimation.cacheProperty.split(',')
+       const object ={}
+       
+       propertys.forEach((s)=>{
+           object[s]=this[s]
+       })
+       return object
+    }
+
+    isInAnimation(uid){
+        if(!this.featureIds) return false;
+        const v = this.featureIds.split(',')
+        if(v.indexOf(uid)>-1){
+            return true
+        }
+        return false
+    }
+
     render(rate) {}
 }
+
+PlotBaseAnimation.cacheProperty='animationType,duration,featureIds,animationName,easing,delay,endDelay,loop,timelineOffset'

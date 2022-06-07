@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 11:25:38
+ * @LastEditTime: 2022-06-07 15:41:10
  */
 import PlotColorAnimation from './PlotColorAnimation';
 import { GradientColor } from '../../../utils/GradientColor';
@@ -19,14 +19,12 @@ export default class PlotBlinkAnimation extends PlotColorAnimation {
         // animation type
         this.animationType = 'blink-animation';
         //init base options
-        this.repeat = AnimationUtil.defineValue(options.repeat, true);
+        this.loop = AnimationUtil.defineValue(options.loop, 500);
         this.duration = AnimationUtil.defineValue(options.duration, 1000);
         // init options
         this.blinkColors = AnimationUtil.defineValue(options.blinkColors, []);
         this.isBlinkGrad = AnimationUtil.defineValue(options.isBlinkGrad, true);
         this.endStatus = AnimationUtil.defineValue(options.endStatus, true);
-        // timeRepeatSpace 时间间隔
-        this.timeRepeatSpace = AnimationUtil.defineValue(options.blinkInterval, 0);
     }
 
     /**
@@ -77,9 +75,20 @@ export default class PlotBlinkAnimation extends PlotColorAnimation {
         });
     }
 
+    
+    exportOption(){
+        const object = super.exportOption()
+        const propertys= PlotBlinkAnimation.cacheProperty.split(',')
+        propertys.forEach((s)=>{
+            object[s]=this[s]
+        })
+        return object
+    }
+
     render(rate) {
         const colorItems = this._getColorItemByRate(rate);
         this._setColorItems(colorItems);
-        this.handRefresh();
     }
 }
+
+PlotBlinkAnimation.cacheProperty='blinkColors,isBlinkGrad,endStatus'

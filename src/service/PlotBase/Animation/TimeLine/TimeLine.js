@@ -3,101 +3,147 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-05-30 16:19:18
+ * @LastEditTime: 2022-06-07 16:14:18
  */
-
-/**
-   * tip:不通过时间轴来控制动画的原因
-   * 时间轴控制帧动画时，某一帧承载的压力过大，导致动画性能严重降低。
-     因此时间轴只做用作动画组的概念，所有操作都下放
-   */
 
 import { AnimationReg } from '../AnimationTypes';
 export default class TimeLine {
     constructor(layerGroup, options) {
         this._layerGroup = layerGroup;
         this._timeLineName = options.timeLineName || '';
-        this._totalTime = options.totalTime || 20000;
-
-        this.handleRender =layerGroup.requestRenderAll?layerGroup.requestRenderAll.bind(layerGroup):null
-        this.getPlotObjectById = layerGroup.getPlotObjectById?layerGroup.getPlotObjectById.bind(layerGroup):()=>{return null}
-        this.drawUtilPlotObject=  layerGroup.drawUtilPlotObject?layerGroup.drawUtilPlotObject.bind(layerGroup):()=>{return null}
-        this.removeDrawUtilPlotObject=layerGroup.removeDrawUtilPlotObject?layerGroup.removeDrawUtilPlotObject.bind(layerGroup):()=>{return null}
         // 动画对象的队列
         this._animationArr = [];
-        this._animationItems = [];
+        // 初始化
+        this.initLayerGroupFunction(layerGroup);
+        // 时间轴选项
+        this.invert = false;
+        this.speed = 1;
+        this.raf = null;
     }
-    addAnimationObject(item) {
-        const t = item.startTime + item.duration;
-        if (t > this._totalTime) {
-            this._totalTime = t;
-        }
-        this._animationArr.push(this._getAnimationObject(item));
-        this._animationItems.push(item);
+
+    initLayerGroupFunction(layerGroup) {
+        this.handleRender = layerGroup.requestRenderAll ? layerGroup.requestRenderAll.bind(layerGroup) : null;
+        this.getPlotObjectById = layerGroup.getPlotObjectById
+            ? layerGroup.getPlotObjectById.bind(layerGroup)
+            : () => {
+                  return null;
+              };
+        this.drawUtilPlotObject = layerGroup.drawUtilPlotObject
+            ? layerGroup.drawUtilPlotObject.bind(layerGroup)
+            : () => {
+                  return null;
+              };
+        this.removeDrawUtilPlotObject = layerGroup.removeDrawUtilPlotObject
+            ? layerGroup.removeDrawUtilPlotObject.bind(layerGroup)
+            : () => {
+                  return null;
+              };
     }
     _getAnimationObject(item) {
-        const animation = AnimationReg.getAnimation(item.type);
-        console.log('--------------')
+        const animation = AnimationReg.getAnimation(item.animationType);
+
         const plotObjects = item.featureIds
             .split(',')
             .map((t) => {
-                console.log('t: ', t);
-                const s =this._layerGroup.getPlotObjectById(t);
-                console.log('s: ', s);
-                return s
+                const s = this._layerGroup.getPlotObjectById(t);
+
+                return s;
             })
             .filter((b) => b);
-        console.log('plotObjects: ', plotObjects);
-        return new animation({
+
+        const animate = new animation({
             ...item,
             plotObjects,
-            handRefresh: this.handleRender.bind(this),
             getPlotObjectById: this.getPlotObjectById.bind(this),
-            drawUtilPlotObject:this.drawUtilPlotObject,
-            removeDrawUtilPlotObject:this.removeDrawUtilPlotObject
+            drawUtilPlotObject: this.drawUtilPlotObject,
+            removeDrawUtilPlotObject: this.removeDrawUtilPlotObject
         });
+        return animate;
+    }
+
+
+    play() {
+        this.resetTime();
+        this.animationAction((t) => t.play())();
+        this.handleRender();
+        const activeInstances = this._animationArr.concat([]);
+        const that = this;
+        const engine = (function () {
+            function start() {
+                that.raf = requestAnimationFrame(step);
+            }
+            function step(t) {
+                let activeInstancesLength = activeInstances.length;
+                if (activeInstancesLength) {
+                    let i = 0;
+                    while (i < activeInstancesLength) {
+                        const activeInstance = activeInstances[i];
+                        if (!activeInstance.paused) {
+                            activeInstance.tick(t);
+                        } else {
+                            const instanceIndex = activeInstances.indexOf(activeInstance);
+                            if (instanceIndex > -1) {
+                                activeInstances.splice(instanceIndex, 1);
+                                activeInstancesLength = activeInstances.length;
+                            }
+                        }
+                        i++;
+                    }
+                    that.handleRender();
+                    start();
+                } else {
+                    that.raf = cancelAnimationFrame(that.raf);
+                }
+            }
+            return start;
+        })();
+        engine();
+    }
+    pause() {
+        this.animationAction((t) => t.pause())();
+    }
+
+    clear() {
+        this._animationArr = [];
+        this.restore();
+    }
+    
+
+
+
+    toJson() {
+        const  animationOptions= this._animationArr.map((ani) => ani.exportOption());
+        const t = {
+            timeLineName: this._timeLineName,
+            animations: animationOptions
+        }
+        return t;
+    }
+
+    getAnimationById(id){
+        return this._animationArr.filter((v)=> v.isInAnimation(id))
+    }
+
+    addAnimationObject(item) {
+        this._animationArr.push(this._getAnimationObject(item));
+    }
+    
+    removeAnimation(animation){
+        const i= this._animationArr.indexOf(animation)
+        if(i>-1){
+          const ani= this._animationArr[i]
+          ani.paused=true
+          ani.restore()
+          this._animationArr.splice(i,1)
+        }
     }
 
     fromJSON(json) {
         if (!json || !json.animations) return;
         this._timeLineName = json.timeLineName;
-        this._totalTime = json.totalTime;
         this._animationArr = json.animations.map((s) => {
-            this._animationItems.push(s);
             return this._getAnimationObject(s);
         });
-    }
-
-    play() {
-        const totalTime = this._totalTime;
-        this.animationAction((t) => t.play(totalTime))();
-        
-    }
-    reset() {
-        this.animationAction((t) => t.reset())();
-        this.animationAction((t) => {
-            t.render(0.001);
-        })();
-        this.handleRender();
-    }
-    pause() {
-        this.animationAction((t) => t.pause())();
-    }
-    clear() {
-        this._animationArr = [];
-        this.reset();
-    }
-    restore() {
-        this.animationAction((t) => t.restore())();
-        this.handleRender();
-    }
-    save() {
-        const t = {
-            timeLineName: this._timeLineName,
-            totalTime: this._totalTime,
-            animations: this._animationItems
-        };
-        return t;
     }
     animationAction(func) {
         const that = this;
@@ -107,22 +153,38 @@ export default class TimeLine {
             });
         };
     }
-
     /**
      * @description: 时间轴跳转
      * @param {number} time
      * @return {*}
      */
-    jumpTo(time) {
-        let _time;
-        if (time > this._totalTime) {
-            _time = this._totalTime;
-        } else if (time < 0) {
-            _time = 0;
-        } else {
-            _time = time;
-        }
+    seek(time) {
+        this.animationAction((s) => {
+            s.seek(time);
+        })();
+        this.handleRender()
+    }
 
-        this.animationAction((s) => s.jumpTo(_time))();
+    setSpeed(speed) {
+        if (speed < 0) return;
+        this.speed = speed;
+        this.animationAction((s) => s.setSpeed(speed))();
+    }
+    getSpeed() {
+        return this.speed;
+    }
+    // new
+    resetTime() {
+        this.animationAction((s) => s.resetTime())();
+    }
+    reversed(flag) {
+        this.animationAction((s) => (s.reversed = flag))();
+        this.resetTime();
+    }
+    restore() {
+        this.reversed(false);
+        this.setSpeed(1);
+        this.animationAction((t) => t.restore())();
+        this.handleRender();
     }
 }

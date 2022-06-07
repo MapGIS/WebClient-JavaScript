@@ -9,12 +9,12 @@ import '../PlotBase/index';
 import './EditTool/controls.action';
 import './Draw/index.js';
 import './Shapes/index.js';
-import  PlotCanvas  from './PlotCanvas';
-import { PlotCanvasGroup } from './PlotCanvasGroup';
+import  PlotLayer2D  from './PlotLayer2D';
+import { PlotLayer2DGroup } from './PlotLayer2DGroup';
 import SymbolManager from '../PlotBase/SymbolManager/SymbolManager'
 
 export {
-    PlotCanvasGroup,
-    PlotCanvas,
+    PlotLayer2DGroup,
+    PlotLayer2D,
     SymbolManager
 }

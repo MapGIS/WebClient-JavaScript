@@ -1,19 +1,24 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 10:17:52
- * @LastEditTime: 2022-04-01 16:40:35
- * @LastEditors: Do not edit
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularLine1Primitive.js
- */
 import RegularLine1Primitive from "./RegularLine1Primitive";
 import RegularLine2ElementInstance from "../ElementInstance/RegularLine2ElementInstance";
 
+/**
+ * @class module:3DPlot.RegularLine2Primitive
+ * @description 标绘图元（规则线二）基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 初始化参数
+ */
 class RegularLine2Primitive extends RegularLine1Primitive {
   constructor(options) {
     super(options);
   }
 
+  /**
+   * @description 重载父类的_elementInstance方法
+   * @private
+   *
+   * @param {function} callback 回调函数
+   * */
   _elementInstance(callback) {
     new RegularLine2ElementInstance(this._elem, {
       ...this.getBaseSaveAttributesValues(),
@@ -23,6 +28,11 @@ class RegularLine2Primitive extends RegularLine1Primitive {
     });
   }
 
+  /**
+   * @description 重载父类的initBaseSaveAttributes方法
+   * @function module:3DPlot.RegularLine2Primitive.initBaseSaveAttributes
+   * @public
+   * */
   initBaseSaveAttributes() {
     this.dimModHeight = this._modHeight
     this.isOpenWall = true
@@ -31,6 +41,13 @@ class RegularLine2Primitive extends RegularLine1Primitive {
     this.wallGradColor = 'rgba(255,0,0,0.3)'
   }
 
+  /**
+   * @description 重载父类的getPrimitiveBaseSaveAttributes方法
+   * @function module:3DPlot.RegularLine2Primitive.getPrimitiveBaseSaveAttributes
+   * @public
+   *
+   * @return {Array} Attributes 属性字段数组
+   * */
   getPrimitiveBaseSaveAttributes() {
     const attrs = super.getPrimitiveBaseSaveAttributes();
     return attrs.concat(RegularLine2Primitive.extendPrimitiveAttributes);

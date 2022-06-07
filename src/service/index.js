@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-05-10 12:45:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-13 12:03:09
+ * @LastEditTime: 2022-06-07 16:53:45
  */
 //-------命名空间 mapgis 开始-----
 import * as Util from './utils';
@@ -35,10 +35,10 @@ import PostGIS from './datastore/postgis';
 import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
 import {SymbolManager} from "./PlotBase/index"
-import { PlotCanvas } from './2DPlot/index';
-import { PlotCanvasGroup } from './2DPlot/PlotCanvasGroup'
-import {PlotLayer3D,PlotLayerMap} from "./3DPlot/index"
-import { TimeLine, DrawTool } from './PlotBase/index';
+import { PlotLayer2D } from './2DPlot/index';
+import { PlotLayer2DGroup } from './2DPlot/PlotLayer2DGroup'
+import {PlotLayer3D,PlotLayer3DGroup} from "./3DPlot/index"
+import { TimeLine, DrawTool, LinkTool } from './PlotBase/index';
 
 
 export {
@@ -63,12 +63,13 @@ export {
     CloudDisk,
     ArcGis,
     SymbolManager,
-    PlotCanvas,
-    PlotCanvasGroup,
+    PlotLayer2D,
+    PlotLayer2DGroup,
     PlotLayer3D,
-    PlotLayerMap,
+    PlotLayer3DGroup,
     DrawTool,
-    TimeLine
+    TimeLine,
+    LinkTool
 };
 //-------命名空间 Zondy 结束-----
 
@@ -100,8 +101,9 @@ const All = {
     ArcGis,
     SymbolManager,
     PlotLayer3D,
-    PlotLayerMap,
-    DrawTool
+    PlotLayer3DGroup: PlotLayer3DGroup,
+    DrawTool,
+    LinkTool
     //-------命名空间 Zondy 结束-----
 };
 

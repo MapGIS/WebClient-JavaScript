@@ -1,14 +1,13 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 11:03:09
- * @LastEditTime: 2022-05-23 15:49:43
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\RegularSurfacePrimitive.js
- */
 import RegularSurfaceElementInstance from '../ElementInstance/RegularSurfaceElementInstance';
 import RegularLine1Primitive from './RegularLine1Primitive';
 
+/**
+ * @class module:3DPlot.RegularSurfacePrimitive
+ * @description 标绘图元（规则区一）基类
+ * @author 基础平台-杨琨
+ *
+ * @param options - {Object} 初始化参数
+ */
 class RegularSurfacePrimitive extends RegularLine1Primitive {
     constructor(options) {
         super(options);
@@ -66,6 +65,13 @@ class RegularSurfacePrimitive extends RegularLine1Primitive {
         });
     }
 
+    /**
+     * @description 重写父类的update方法
+     * @function module:3DPlot.RegularSurfacePrimitive.update
+     * @public
+     *
+     * @param {Boolean} frameState 是否更新
+     */
     update(frameState) {
         if (!this._elem || !this._elem.show) {
             return;
@@ -93,6 +99,13 @@ class RegularSurfacePrimitive extends RegularLine1Primitive {
             this._primitive && this._primitive.update(frameState);   
         }
     }
+
+    /**
+     * @description 重写父类的_elementInstance方法
+     * @private
+     *
+     * @param {function} callback 回调函数
+     */
     _elementInstance(callback) {
         new RegularSurfaceElementInstance(this._elem, {
             ...this.getBaseSaveAttributesValues(),
@@ -102,10 +115,22 @@ class RegularSurfacePrimitive extends RegularLine1Primitive {
         });
     }
 
+    /**
+     * @description 重写父类的initBaseSaveAttributes方法
+     * @function module:3DPlot.RegularSurfacePrimitive.initBaseSaveAttributes
+     * @public
+     */
     initBaseSaveAttributes() {
         this.surfaceBorderWidth = 3;
     }
 
+    /**
+     * @description 重写父类的getPrimitiveBaseSaveAttributes方法
+     * @function module:3DPlot.RegularSurfacePrimitive.getPrimitiveBaseSaveAttributes
+     * @public
+     *
+     * @return {Array} Attributes 属性字段数组
+     */
     getPrimitiveBaseSaveAttributes() {
         return RegularSurfacePrimitive.extendPrimitiveAttributes.concat([]);
     }

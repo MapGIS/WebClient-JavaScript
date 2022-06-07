@@ -1,16 +1,23 @@
-/*
- * @Author: your name
- * @Date: 2021-10-25 10:29:02
- * @LastEditTime: 2022-05-20 10:25:10
- * @LastEditors: zk
- * @Description: In User Settings Edit
- * @FilePath: \MapGISPlotBase\src\3DPlot\Primitive\ElementInstance\RegularPointElementInstance.js\
- */
 import SvgElementInstance from "./SvgElementInstance";
 import {CesiumGeomUtil} from "../../Utils/CesiumUtil";
 
+/**
+ * @class module:3DPlot.RegularPointElementInstance
+ * @description SVG的点符号解析器
+ * @author 基础平台-杨琨
+ */
 export default class RegularPointElementInstance extends SvgElementInstance {
 
+  /**
+   * @function module:3DPlot.SvgElementInstance.transformExtrudeGeometry
+   * @description: 重载父类的transfromGeoCesium方法
+   * @public
+   * @override
+   *
+   * @param {Object} elem SVG符号对象
+   * @param {Object} cesgeo 三维几何体对象
+   * @param {Object} options 额外参数
+   */
   transfromGeoCesium(elem,cesgeo, options) {
     const { dimModHeight, dimModAttitude } = options;
 

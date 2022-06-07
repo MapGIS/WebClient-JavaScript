@@ -1,41 +1,48 @@
 /*
- * @class: Module:2DPlot.PlotCanvasGroup
+ * @class: Module:2DPlot.PlotLayer2DGroup
  * @Description: 二维图层组
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-05-30 16:22:23
+ * @LastEditTime: 2022-06-07 17:00:38
  */
 
 import { fabric } from 'fabric';
-import PlotCanvas from './PlotCanvas';
+import PlotLayer2D from './PlotLayer2D';
 import DrawTool from '../PlotBase/Draw/DrawTool';
 import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 import { PlotObjectFactory } from './Shapes/PlotObjectFactory';
 
-export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
+export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
     selection: false,
     /**
-     * @function: Module:PlotCanvasGroup
+     * @function: Module:PlotLayer2DGroup
      * @description: 构造
      * @param {HTMLCanvasElement} el
      * @param {Object} options
      * @return {*}
      */
     initialize: function (el, options) {
-        if (!PlotCanvasGroup.instance) {
+        if (!PlotLayer2DGroup.instance) {
             this.callSuper('initialize', el, options);
-            PlotCanvasGroup.instance = this;
+            PlotLayer2DGroup.instance = this;
             // 工具图层
-            this._utilPlotCanvas = new PlotCanvas();
+            this._utilPlotCanvas = new PlotLayer2D();
             this._plotCanvasLayers = [];
             this.addLayer(this._utilPlotCanvas);
         } else {
-            return PlotCanvasGroup.instance;
+            return PlotLayer2DGroup.instance;
         }
     },
+    setMap(map){
+        this._map=map
+    },
+    getMap(){
+        return this._map
+    },
+
     /**
-     * @function: Module:PlotCanvasGroup.prototype.setCanvasDimensionsSize
+     * @function: Module:PlotLayer2DGroup.prototype.setCanvasDimensionsSize
      * @description: fabricCanvas改写方法
      * @tip: 修改宽度和高度并刷新,原有方法 setDimensions设置高宽时会触发 requestRenderAll()
       在二三维联动时三维会频繁发送事件，二维界面会出现闪烁，因此改写为立即触发render
@@ -70,7 +77,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
     },
 
     /**
-     * @function: Module:PlotCanvasGroup.prototype.setCoordSys
+     * @function: Module:PlotLayer2DGroup.prototype.setCoordSys
      * @description: 设置坐标系
      * @param {*} coordSys
      * @return {*}
@@ -79,7 +86,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         this.m_CoordSys = coordSys;
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.getCoordSys
+     * @function: Module:PlotLayer2DGroup.prototype.getCoordSys
      * @description: 获取坐标系
      * @return {Object}
      */
@@ -87,7 +94,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         return this.m_CoordSys;
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.getLayerById
+     * @function: Module:PlotLayer2DGroup.prototype.getLayerById
      * @description: 根据id获取图层
      * @param {*} layerId
      * @return {Object} layer
@@ -101,9 +108,9 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         return layer;
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.addLayer
+     * @function: Module:PlotLayer2DGroup.prototype.addLayer
      * @description: 添加图层
-     * @param {PlotCanvas} layer
+     * @param {PlotLayer2D} layer
      */
     addLayer(layer) {
         layer.bindFabricCanvas(this);
@@ -114,24 +121,24 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         this._plotCanvasLayers.push(layer);
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.getLayers
+     * @function: Module:PlotLayer2DGroup.prototype.getLayers
      * @description: 获取图层组
-     * @return {Array<PlotCanvas>}
+     * @return {Array<PlotLayer2D>}
      */
     getLayers() {
         return this._plotCanvasLayers;
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.removeLayer
+     * @function: Module:PlotLayer2DGroup.prototype.removeLayer
      * @description: 移除图层
-     * @param {PlotCanvas} layer
+     * @param {PlotLayer2D} layer
      */
     removeLayer(layer) {
         const layerID = layer.getLayerId();
         this.removeLayerById(layerID);
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.removeLayerById
+     * @function: Module:PlotLayer2DGroup.prototype.removeLayerById
      * @description: 根据图层ID移除图层
      * @param {String} layerID
      */
@@ -151,7 +158,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         }
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.bringObjectsByLayerToFront
+     * @function: Module:PlotLayer2DGroup.prototype.bringObjectsByLayerToFront
      * @description: 将图层前置
      * @param {*} layer
      * @return {*}
@@ -161,7 +168,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         this.bringObjectsToFront(plotObjects);
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.bringObjectByLayerIdToFront
+     * @function: Module:PlotLayer2DGroup.prototype.bringObjectByLayerIdToFront
      * @description: 根据图层id将图层前置
      * @param {String} layerId
      */
@@ -170,7 +177,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         this.bringObjectsByLayerToFront(layer);
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.bringObjectsToFront
+     * @function: Module:PlotLayer2DGroup.prototype.bringObjectsToFront
      * @description: 将标绘对象前置
      * @param {Array<Object>} objectArray PlotObject数组
      */
@@ -188,7 +195,7 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         return this;
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype.removeFromArray
+     * @function: Module:PlotLayer2DGroup.prototype.removeFromArray
      * @description: 移除数组value
      * @param {Array<any>} array
      * @param {*} value
@@ -202,31 +209,13 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
         return array;
     },
 
-    /**
-     * @function: Module:PlotCanvasGroup.prototype.getPlotObjectById
-     * @description: 根据要素id获取要素对象
-     * @param {String} uid
-     * @return {*}
-     */
-    getPlotObjectById(uid) {
-        let t = null;
-        for (let i = 0; i < this._objects.length; i++) {
-            const object = this._objects[i];
-            const elem = object.getElement();
-            if (elem && elem.getFeatureId() === uid) {
-                t = object;
-                break;
-            }
-        }
-        return t;
-    },
     initLayerCoords() {
         this._plotCanvasLayers.forEach((layer) => {
             layer.initCoords();
         });
     },
     /**
-     * @function: Module:PlotCanvasGroup.prototype._renderObjects
+     * @function: Module:PlotLayer2DGroup.prototype._renderObjects
      * @description: 渲染标绘对象代码
      * @param {CanvasRenderingContext2D} ctx
      * @param {Array<Object>} objects
@@ -262,13 +251,31 @@ export const PlotCanvasGroup = fabric.util.createClass(fabric.Canvas, {
                 positions: options.positions,
                 canvas: this._utilPlotCanvas
             });
-            this._utilPlotCanvas.add(plotObj);
+            this._utilPlotCanvas.addPlot(plotObj);
             return plotObj;
         });
     },
     removeDrawUtilPlotObject(plotObject){
-        this._utilPlotCanvas.remove(plotObject)  
+        this._utilPlotCanvas.removePlot(plotObject)  
+    },
+    /**
+     * @function: Module:PlotLayer2DGroup.prototype.getPlotObjectById
+     * @description: 根据要素id获取要素对象
+     * @param {String} uid
+     * @return {*}
+     */
+    getPlotObjectById(uid) {
+        let t = null;
+        for (let i = 0; i < this._objects.length; i++) {
+            const object = this._objects[i];
+            const elem = object.getElement();
+            if (elem && elem.getFeatureId() === uid) {
+                t = object;
+                break;
+            }
+        }
+        return t;
     }
 });
 
-fabric.PlotCanvasGroup = PlotCanvasGroup;
+fabric.PlotLayer2DGroup = PlotLayer2DGroup;

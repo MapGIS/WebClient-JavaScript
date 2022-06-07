@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-25 11:57:47
+ * @LastEditTime: 2022-06-07 15:43:18
  */
 import PlotBaseAnimation from '../../PlotBaseAnimation';
 import { AnimationColorUtil } from '../../../utils/ColorUtil';
@@ -18,6 +18,8 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
         super._initBaseAttributes(options);
         // animation type
         this.animationType = 'color-animation';
+        // first colorItems
+        this.firstColorItem=null
     }
 
     update() {
@@ -27,6 +29,10 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
             return s.toGeoJSON().properties;
         });
         const copyAttributes = attributes.map((s) => JSON.parse(JSON.stringify(s)));
+
+        if(!this.firstColorItem){
+            this.firstColorItem=copyAttributes
+        }
 
         // 获取所有颜色对象
         this._cacheColorItems(attributes, copyAttributes);
@@ -163,7 +169,10 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
     }
     restore() {
         super.restore();
-        const colorItems = JSON.parse(JSON.stringify(this._copyAttributes));
-        this._setColorItems(colorItems);
+        if(this.firstColorItem){
+            const colorItems = JSON.parse(JSON.stringify(this.firstColorItem));
+            this._setColorItems(colorItems);
+        }
+
     }
 }

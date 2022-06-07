@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-05-27 17:30:23
+ * @LastEditTime: 2022-06-07 15:43:10
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import PlotBaseAnimation from '../../PlotBaseAnimation';
@@ -14,13 +14,13 @@ export default class PlotCoordsAnimation extends PlotBaseAnimation {
     }
 
     _initBaseAttributes(options) {
-        super._initBaseAttributes(options)
+        super._initBaseAttributes(options);
         // animation type
         this.animationType = 'coords-animation';
     }
 
     update() {
-        super.update()
+        super.update();
         // 初始化动画polys
         const plotObjects = this._plotObjects;
         this._animationPolys = plotObjects.map((s) => {
@@ -42,7 +42,8 @@ export default class PlotCoordsAnimation extends PlotBaseAnimation {
         }
         if (obj.setPnts) {
             obj.setPnts(positions);
-            
         }
     }
 }
+
+
