@@ -1,97 +1,106 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
-    <!--当前示例页面样式表引用-->
-    <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <script src="./static/libs/include-openlayers-local.js"></script>
-    <style>
-        .tableTxt
-        {
-            width: 40%;
-            float: left;
-            font-size: small;
-        }
-        input{
-            height: 12px;
-            display: block;
-            width: 50%;
-            font-size: 10px;
-        }
-        br{
-           display:inline; 
-           line-height:2px;
-        }
-    </style>
-    <script type="text/javascript">
-
-        function RectProject()
-        {
-         
-         var srcPosStr =  document.getElementById("srcPositions").value;
-         var posArrStr = srcPosStr.split(',');
-
-         //需要投影转换的矩形
-         var rectangle = new Zondy.Object.Rectangle(parseFloat(posArrStr[0]), parseFloat(posArrStr[1]), parseFloat(posArrStr[2]), parseFloat(posArrStr[3]));
-            //对矩形范围坐标点进行投影转换
-            var ProjectRang = new Zondy.Service.ProjectRang({
-                //数据源名称,默认值为"MapGISLocal"
-                gdbsvrName: document.getElementById("dataSourceName").value,
-                //数据库名称
-                gdbName: document.getElementById("dataBaseName").value,
-                //源投影参考系ID
-                srefID: parseInt(document.getElementById("srRefID").value),
-                //目的投影参考系ID
-                desfID: parseInt(document.getElementById("desRefID").value),
-                //服务器地址
-                ip: document.getElementById("IP").value,
-                //服务器端口
-                port: document.getElementById("Port").value    //访问IGServer的端口号，.net版为6163，Java版为8089
-            });
-            //调用execute方法，执行矩形投影投影转换功能服务，并返回结果信息，onSuccess为回调函数
-            ProjectRang.execute(rectangle, projSuccess);
-        }
-        //投影转换成功后的回调
-        function projSuccess(data) {
-            //显示结果
-            if(data.DesDots.length>=2)
-            {
-                var resultStr = (data.DesDots)[0].x+","+(data.DesDots)[0].y+","+ (data.DesDots)[1].x+","+(data.DesDots)[1].y;
-                document.getElementById("resultDiv").value = resultStr;
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <!--当前示例页面样式表引用-->
+        <link rel="stylesheet" href="./static/demo/openlayers/example/style.css" />
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-openlayers-local.js"></script>
+        <style>
+            .tableTxt {
+                width: 40%;
+                float: left;
+                font-size: small;
             }
-        }
-    </script>
-</head>
+            input {
+                height: 12px;
+                display: block;
+                width: 50%;
+                font-size: 10px;
+            }
+            br {
+                display: inline;
+                line-height: 2px;
+            }
+        </style>
+        <script type="text/javascript">
+            function RectProject() {
+                var srcPosStr = document.getElementById('srcPositions').value;
+                var posArrStr = srcPosStr.split(',');
 
-<body>
-    <form action="" style="width: 60%;height: 160px; position: absolute; left: 50%; transform: translateX(-50%)">
-        <fieldset>
-        <legend>投影参数信息:</legend>
-        <div class="tableTxt">数据源名称:</div><input  id="dataSourceName" type="text"   value="MapGISLocal"><br>      
-        <div class="tableTxt">数据库名称: </div><input  id="dataBaseName" type="text"  value="OpenLayerVecterMap"><br>
-        <div class="tableTxt">源投影参照系ID:</div> <input  id="srRefID" type="text"   value="10"><br>
-        <div class="tableTxt">目的投影参照系ID:</div> <input  id="desRefID" type="text"   value="601"><br>
-        <div class="tableTxt">服务器地址:</div> <input id="IP"  type="text"   value="develop.smaryun.com"><br>
-        <div class="tableTxt">服务器端口: </div><input id="Port"   type="text"   value="6163"><br>
-        </fieldset>
-    </form>
+                //需要投影转换的矩形
+                var rectangle = new Zondy.Object.Rectangle(
+                    parseFloat(posArrStr[0]),
+                    parseFloat(posArrStr[1]),
+                    parseFloat(posArrStr[2]),
+                    parseFloat(posArrStr[3])
+                );
+                //对矩形范围坐标点进行投影转换
+                var ProjectRang = new Zondy.Service.ProjectRang({
+                    //数据源名称,默认值为"MapGISLocal"
+                    gdbsvrName: document.getElementById('dataSourceName').value,
+                    //数据库名称
+                    gdbName: document.getElementById('dataBaseName').value,
+                    //源投影参考系名
+                    srefName: document.getElementById('srefName').value,
+                    //目的投影参考系名
+                    desfName: document.getElementById('desfName').value,
+                    //服务器地址
+                    ip: document.getElementById('IP').value,
+                    //服务器端口
+                    port: document.getElementById('Port').value //访问IGServer的端口号，.net版为6163，Java版为8089
+                });
+                //调用execute方法，执行矩形投影投影转换功能服务，并返回结果信息，onSuccess为回调函数
+                ProjectRang.execute(rectangle, projSuccess);
+            }
+            //投影转换成功后的回调
+            function projSuccess(data) {
+                //显示结果
+                if (data.DesDots.length >= 2) {
+                    var resultStr = data.DesDots[0].x + ',' + data.DesDots[0].y + ',' + data.DesDots[1].x + ',' + data.DesDots[1].y;
+                    document.getElementById('resultDiv').value = resultStr;
+                }
+            }
+        </script>
+    </head>
 
-    <form action="" style="width: 25%;height: 100px;position: absolute;top: 170px;left: 20%;float: left;">
-        <fieldset>
-        <legend>源矩形坐标:</legend>
-           <textarea id="srcPositions" style="width: 98%;height: 80px;">2119075.5815982167,-8944857.387927618,-1350086.1660772718,3477202.6583427647</textarea>
-        </fieldset>
-    </form>
-    <input type="button" value="投影=>" style="height: 20px;width: 8%;float: left;position: relative;top: 200px;left: 45%;margin: 6px 6px;" onclick="RectProject()">
-    <form action="" style="width: 25%;height: 100px;position: absolute;top: 170px;left: 55%;float: left;">
-        <fieldset>
-        <legend>目的矩形坐标:</legend>
-           <textarea id="resultDiv" style="width: 98%;height: 80px;"></textarea>
-        </fieldset>
-    </form>
-</body>
+    <body>
+        <form action="" style="width: 60%; height: 160px; position: absolute; left: 50%; transform: translateX(-50%)">
+            <fieldset>
+                <legend>投影参数信息:</legend>
+                <div class="tableTxt">数据源名称:</div>
+                <input id="dataSourceName" type="text" value="MapGISLocal" /><br />
+                <div class="tableTxt">数据库名称:</div>
+                <input id="dataBaseName" type="text" value="OpenLayerVecterMap" /><br />
+                <div class="tableTxt">源投影参照系名:</div>
+                <input id="srefName" type="text" value="地理坐标系(北京)_度" /><br />
+                <div class="tableTxt">目的投影参照系名:</div>
+                <input id="desfName" type="text" value="地理坐标系(西安)_度" /><br />
+                <div class="tableTxt">服务器地址:</div>
+                <input id="IP" type="text" value="develop.smaryun.com" /><br />
+                <div class="tableTxt">服务器端口:</div>
+                <input id="Port" type="text" value="6163" /><br />
+            </fieldset>
+        </form>
 
+        <form action="" style="width: 25%; height: 100px; position: absolute; top: 170px; left: 20%; float: left">
+            <fieldset>
+                <legend>源矩形坐标:</legend>
+                <textarea id="srcPositions" style="width: 98%; height: 80px">114.12,30.12,114.67,30.87</textarea>
+            </fieldset>
+        </form>
+        <input
+            type="button"
+            value="投影=>"
+            style="height: 20px; width: 8%; float: left; position: relative; top: 200px; left: 45%; margin: 6px 6px"
+            onclick="RectProject()"
+        />
+        <form action="" style="width: 25%; height: 100px; position: absolute; top: 170px; left: 55%; float: left">
+            <fieldset>
+                <legend>目的矩形坐标:</legend>
+                <textarea id="resultDiv" style="width: 98%; height: 80px"></textarea>
+            </fieldset>
+        </form>
+    </body>
 </html>

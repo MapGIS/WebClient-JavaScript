@@ -206,8 +206,8 @@ class PlotLayer2D {
      * @return {*}
      */
     removePlotByID(id) {
-        const plotObject = this.getPlotObjectById(id);
-        this.remove(plotObject);
+        const plotObject = this.getPlotByID(id);
+        this.removePlot(plotObject);
     }
     /**
      * @function: Module:PlotLayer2D.prototype.getPlotByID
