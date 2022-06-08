@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-14 18:57:30
- * @LastEditTime: 2022-05-23 13:40:03
+ * @LastEditTime: 2022-06-08 17:13:57
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element\TSapnElement.js
@@ -161,10 +161,24 @@ class TSpanElement extends TextElement {
         const bounds = new Bounds();
         const fontSize = this.getStyle('font-size').getNumber();
         const width = this._getMeasureTextWidth();
+    
         const pos = this.getPos(width);
+
+        let del=-width/2
+        const textAnchorProps = this.getStyle('text-anchor');
+        if (textAnchorProps.hasValue()) {
+            const s = textAnchorProps.getString();
+            if (s === 'middle') {
+                del =0;
+            } else if (s === 'end') {
+                del = width/2;
+            }
+        }
+        
         const matrix = this._getMatrix();
+
         bounds.addPnt(pos.x, pos.y - fontSize);
-        bounds.addPnt(pos.x + width, pos.y);
+        bounds.addPnt(pos.x + width-del, pos.y);
         bounds.applyMatrix3(matrix);
         return bounds;
     }
