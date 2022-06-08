@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-05 11:32:52
- * @LastEditTime: 2022-05-30 16:23:28
+ * @LastEditTime: 2022-06-08 09:54:23
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlot\src\js\Shapes\PlotObject.js
@@ -94,10 +94,12 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
     isNotVisible: function () {
         return this.opacity === 0 || (!this.width && !this.height && this.strokeWidth === 0) || !this.visible || !this._elem.show;
     },
-    setValue: function setValue(key, value, ids) {
+    setValue: function setValue(key, value, ids,isWaitRender=true) {
         this._elem.setNodeAttr(key, value, ids);
         this.set('dirty', true);
-        this.canvas.requestRenderAll();
+        if(isWaitRender){
+            this.canvas.requestRenderAll();
+        }
     },
 
     getPlotCanvas: function getPlotCanvas() {

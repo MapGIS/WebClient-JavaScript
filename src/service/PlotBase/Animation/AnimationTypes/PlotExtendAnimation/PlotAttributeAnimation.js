@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:40:43
+ * @LastEditTime: 2022-06-08 12:49:52
  */
 import { AnimationUtil } from '../../utils/AnimationUtil';
 import { GradientColor } from '../../utils/GradientColor';
@@ -13,19 +13,19 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
     constructor(options) {
         super(options);
     }
-    
+
     _initBaseAttributes(options) {
         super._initBaseAttributes(options);
         // animation type
         this.animationType = 'attribute-animation';
         // attrItems
-        this._attrsItems=[]
+        this._attrsItems = [];
         // this._attrsItems = this.resloveAttrsItems(options.attrsItems);
-        const item =  AnimationUtil.defineValue(options.attrsItem, null);
-        if(item){
-            const type = this._getAttrType(item.attrName)
-            if(type && item.attrName){
-                this._attrsItems.push(this.sloveItemByType(type,item.ids,item.attrName,item.value))
+        const item = AnimationUtil.defineValue(options.attrsItem, null);
+        if (item) {
+            const type = this._getAttrType(item.attrName);
+            if (type && item.attrName) {
+                this._attrsItems.push(this.sloveItemByType(type, item.ids, item.attrName, item.value));
             }
         }
     }
@@ -42,15 +42,15 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
     //         return this.sloveItemByType(arr[3], arr[0], arr[1], arr[2]);
     //     });
     // }
-    _getAttrType(attrName){
-        let type=null
-        if(PlotAttributeAnimation.limitColorItems.indexOf(attrName)>-1){
-            type= 'color'
+    _getAttrType(attrName) {
+        let type = null;
+        if (PlotAttributeAnimation.limitColorItems.indexOf(attrName) > -1) {
+            type = 'color';
         }
-        if(PlotAttributeAnimation.limitNumberItems.indexOf(attrName)>-1){
-            type='number'
+        if (PlotAttributeAnimation.limitNumberItems.indexOf(attrName) > -1) {
+            type = 'number';
         }
-        return type
+        return type;
     }
     sloveItemByType(resloveType, ids, type, valStr) {
         const that = this;
@@ -71,23 +71,23 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
         return item;
     }
     rateToNum(valArr, rate) {
-        const arr =valArr
+        const arr = valArr;
         if (arr.length === 0) new Error('动画参数错误！');
         if (arr.length === 1) return arr[0];
         return AnimationUtil.getNumberRate(arr, rate);
     }
     rateToColor(valArr, rate) {
-        debugger
+        debugger;
         return new GradientColor(valArr).getGradientColorByRate(rate);
     }
 
-    exportOption(){
-        const object = super.exportOption()
-        const propertys= PlotAttributeAnimation.cacheProperty.split(',')
-        propertys.forEach((s)=>{
-            object[s]=this[s]
-        })
-        return object
+    exportOption() {
+        const object = super.exportOption();
+        const propertys = PlotAttributeAnimation.cacheProperty.split(',');
+        propertys.forEach((s) => {
+            object[s] = this[s];
+        });
+        return object;
     }
 
     restore() {
@@ -102,11 +102,11 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
         this._plotObjects.forEach((s) => {
             this._attrsItems.forEach((item) => {
                 const t = item.getRateValue(rate);
-                s.setValue(item.type, t, item.ids);
+                s.setValue(item.type, t, item.ids, false);
             });
         });
     }
 }
-PlotAttributeAnimation.limitColorItems=['compareLineColor','wallColor','wallGradColor','strokeStyle','fillGradColor','fillStyle']
-PlotAttributeAnimation.limitNumberItems=['compareLineWidth','dimModHeight','lineWidth']
-PlotAttributeAnimation.cacheProperty='attrItem'
+PlotAttributeAnimation.limitColorItems = ['compareLineColor', 'wallColor', 'wallGradColor', 'strokeStyle', 'fillGradColor', 'fillStyle'];
+PlotAttributeAnimation.limitNumberItems = ['compareLineWidth', 'dimModHeight', 'lineWidth'];
+PlotAttributeAnimation.cacheProperty = 'attrItem';

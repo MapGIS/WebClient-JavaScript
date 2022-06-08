@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 16:14:18
+ * @LastEditTime: 2022-06-08 10:52:19
  */
 
 import { AnimationReg } from '../AnimationTypes';
@@ -22,7 +22,7 @@ export default class TimeLine {
     }
 
     initLayerGroupFunction(layerGroup) {
-        this.handleRender = layerGroup.requestRenderAll ? layerGroup.requestRenderAll.bind(layerGroup) : null;
+        this.handleRender = layerGroup.requestRenderAll ? layerGroup.requestRenderAll.bind(layerGroup) : () => {};
         this.getPlotObjectById = layerGroup.getPlotObjectById
             ? layerGroup.getPlotObjectById.bind(layerGroup)
             : () => {
@@ -46,7 +46,6 @@ export default class TimeLine {
             .split(',')
             .map((t) => {
                 const s = this._layerGroup.getPlotObjectById(t);
-
                 return s;
             })
             .filter((b) => b);
@@ -60,7 +59,6 @@ export default class TimeLine {
         });
         return animate;
     }
-
 
     play() {
         this.resetTime();
@@ -107,34 +105,33 @@ export default class TimeLine {
         this._animationArr = [];
         this.restore();
     }
-    
-
-
 
     toJson() {
-        const  animationOptions= this._animationArr.map((ani) => ani.exportOption());
+        const animationOptions = this._animationArr.map((ani) => ani.exportOption());
         const t = {
             timeLineName: this._timeLineName,
             animations: animationOptions
-        }
+        };
         return t;
     }
 
-    getAnimationById(id){
-        return this._animationArr.filter((v)=> v.isInAnimation(id))
+    getAnimationById(id) {
+        return this._animationArr.filter((v) => v.isInAnimation(id));
     }
 
     addAnimationObject(item) {
-        this._animationArr.push(this._getAnimationObject(item));
+        const addAnimation = this._getAnimationObject(item);
+        this._animationArr.push(addAnimation);
+        return addAnimation;
     }
-    
-    removeAnimation(animation){
-        const i= this._animationArr.indexOf(animation)
-        if(i>-1){
-          const ani= this._animationArr[i]
-          ani.paused=true
-          ani.restore()
-          this._animationArr.splice(i,1)
+
+    removeAnimation(animation) {
+        const i = this._animationArr.indexOf(animation);
+        if (i > -1) {
+            const ani = this._animationArr[i];
+            ani.paused = true;
+            ani.restore();
+            this._animationArr.splice(i, 1);
         }
     }
 
@@ -162,7 +159,7 @@ export default class TimeLine {
         this.animationAction((s) => {
             s.seek(time);
         })();
-        this.handleRender()
+        this.handleRender();
     }
 
     setSpeed(speed) {

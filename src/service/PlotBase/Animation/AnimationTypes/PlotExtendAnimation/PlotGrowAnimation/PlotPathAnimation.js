@@ -8,7 +8,7 @@ import Point from '../../../../../PlotUtilBase/Geometry/Point';
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:42:48
+ * @LastEditTime: 2022-06-08 12:53:11
  */
 export default class PlotPathAnimation extends PlotCoordsAnimation {
     constructor(options) {
@@ -30,7 +30,7 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         this.endPathRate = AnimationUtil.defineValue(options.endPathRate, 1);
 
         //是否沿切线方向
-        this.alongTangent = AnimationUtil.defineValue(options.alongTangent, true);
+        this.alongTangent = AnimationUtil.defineValue(options.alongTangent, false);
 
         //绑定id
         this.symbolBindId = AnimationUtil.defineValue(options.symbolBindId, null);
@@ -119,6 +119,17 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         if(this.pathWayObject){
             this.removeDrawUtilPlotObject(this.pathWayObject)
             this.pathWayObject=null
+        }
+    }
+
+    _setPnts(obj, positions) {
+        if (obj.positions) {
+            obj.positions = positions;
+            // 解决点类样式不刷新的问题
+            obj._isTranslate=false
+        }
+        if (obj.setPnts) {
+            obj.setPnts(positions);
         }
     }
 

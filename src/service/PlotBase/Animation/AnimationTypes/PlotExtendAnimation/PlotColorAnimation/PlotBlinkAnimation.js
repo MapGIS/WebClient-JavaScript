@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:41:10
+ * @LastEditTime: 2022-06-08 11:47:33
  */
 import PlotColorAnimation from './PlotColorAnimation';
 import { GradientColor } from '../../../utils/GradientColor';
@@ -70,7 +70,7 @@ export default class PlotBlinkAnimation extends PlotColorAnimation {
             if (Object.prototype.toString.call(colorItem[s]) === '[object Object]') {
                 this._applyColorByRate(colorItem[s], rate);
             } else {
-                colorItem[s] = color ? color : this.isBlinkGrad ? this._calcColorRate(colorItem[s], rate) : colorItem[s];
+                colorItem[s] = color ? color : (this.isBlinkGrad ? this._calcColorRate(colorItem[s], rate) : colorItem[s]);
             }
         });
     }

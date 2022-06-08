@@ -3,14 +3,13 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 16:21:27
+ * @LastEditTime: 2022-06-08 13:36:34
  */
 import { AnimationUtil } from '../utils/AnimationUtil';
 import { easingFunc } from '../utils/Easing';
 export default class PlotBaseAnimation {
     constructor(options) {
         this._initBaseAttributes(options);
-        this.update();
     }
     _initBaseAttributes(options) {
         // copy options
@@ -44,7 +43,18 @@ export default class PlotBaseAnimation {
         this._firstRender = true;
     }
     // 更新动画参数
-    update() {}
+    update() {
+         
+        if(Array.isArray(this._plotObjects) && this._plotObjects.length===0){
+            this._plotObjects = this.featureIds
+            .split(',')
+            .map((t) => {
+                const s = this.getPlotObjectById(t);
+                return s;
+            })
+            .filter((b) => b);
+        }
+    }
     // 开始动画
     play() {
         if (this._updateGeometry) {
@@ -164,7 +174,9 @@ export default class PlotBaseAnimation {
 
     seek(time) {
         this.currentTime=this.minMax(time, 0, this.timelineOffset + this.duration);
-        this.resetTime();
+        if (!this.paused) {
+            this.resetTime();
+        }
     }
 
     setSpeed(speed) {

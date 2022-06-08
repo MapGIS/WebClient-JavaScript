@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-06 21:00:52
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:35:31
+ * @LastEditTime: 2022-06-08 11:32:50
  */
 
 /**
@@ -22,9 +22,9 @@ export const v = {
                 range: [0, Infinity],
                 default: 3000
             },
-            animationName:{
-                type:'string',
-                default:''
+            animationName: {
+                type: 'string',
+                default: ''
             },
             easing: {
                 desc: '描述时间的不均匀变化',
@@ -218,7 +218,7 @@ export const v = {
             },
             alongTangent: {
                 type: 'boolean',
-                default: true
+                default: false
             }
         }
     }

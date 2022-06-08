@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-28 10:46:58
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 14:11:21
+ * @LastEditTime: 2022-06-08 11:59:31
  */
 
 import { AnimationUtil } from "./AnimationUtil";
@@ -37,6 +37,9 @@ export class GradientColor {
       : rate === 0
       ? 0
       : rate.toFixed(3);
+    if(currentAlpha>=1){
+      currentAlpha=1
+    }
 
     const hex = AnimationColorUtil.colorHex(
       "rgba(" +

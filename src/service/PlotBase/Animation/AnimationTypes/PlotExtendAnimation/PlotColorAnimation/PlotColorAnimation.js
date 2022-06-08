@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:43:18
+ * @LastEditTime: 2022-06-08 12:49:59
  */
 import PlotBaseAnimation from '../../PlotBaseAnimation';
 import { AnimationColorUtil } from '../../../utils/ColorUtil';
@@ -19,19 +19,19 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
         // animation type
         this.animationType = 'color-animation';
         // first colorItems
-        this.firstColorItem=null
+        this.firstColorItem = null;
     }
 
     update() {
-        super.update()
+        super.update();
         // options
         const attributes = this._plotObjects.map((s) => {
             return s.toGeoJSON().properties;
         });
         const copyAttributes = attributes.map((s) => JSON.parse(JSON.stringify(s)));
 
-        if(!this.firstColorItem){
-            this.firstColorItem=copyAttributes
+        if (!this.firstColorItem) {
+            this.firstColorItem = copyAttributes;
         }
 
         // 获取所有颜色对象
@@ -163,16 +163,15 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
             const plotObj = this._plotObjects[index];
             const v = this._flatColorItems(s);
             v.forEach((s) => {
-                plotObj.setValue(s.type, s.value, s.ids);
+                plotObj.setValue(s.type, s.value, s.ids, false);
             });
         });
     }
     restore() {
         super.restore();
-        if(this.firstColorItem){
+        if (this.firstColorItem) {
             const colorItems = JSON.parse(JSON.stringify(this.firstColorItem));
             this._setColorItems(colorItems);
         }
-
     }
 }
