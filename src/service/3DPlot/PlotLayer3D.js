@@ -261,7 +261,7 @@ class PlotLayer3D extends Observable {
             });
 
             primitive.fromGeoJSON(geoFeature);
-            primitive.id = id + "_" + parseInt(String(Math.random() * 1000000000));
+            primitive.id = element.getFeatureId();
 
             that._addPrimitive(primitive);
         });
