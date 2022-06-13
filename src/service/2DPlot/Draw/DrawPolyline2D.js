@@ -53,6 +53,7 @@ export default class DrawPolyline2D extends DrawObject {
 
     innerOnMouseUp(event) {
         if (!this.m_startDrawing) this.m_startDrawing = true;
+        let that = this;
 
         const pnt = this.m_coordSys.pointToData([event.pointer.x, event.pointer.y]);
         const lastPnt = this.m_coords.length > 2 ? this.m_coords[this.m_coords.length - 2] : null;
@@ -69,6 +70,10 @@ export default class DrawPolyline2D extends DrawObject {
 
             if (!this.m_object) {
                 this.m_symbol.getElement().then((element) => {
+                    const {style} = that.m_symbol;
+                    if(style && style.nodeStyles){
+                        element.initNodeStyles(style.nodeStyles);
+                    }
                     this.m_object = PlotObjectFactory.createInstance(this.m_symbol.type, {
                         element: element,
                         canvas: this._plotLayer

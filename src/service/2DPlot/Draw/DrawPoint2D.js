@@ -36,9 +36,14 @@ export default class DrawPoint2D extends DrawObject {
   }
 
   innerOnMouseUp(event) {
+    let that = this;
     const pnt = this.m_coordSys.pointToData([event.pointer.x,event.pointer.y]);
 
     this.m_symbol.getElement().then((element)=>{
+      const {style} = that.m_symbol;
+      if(style && style.nodeStyles){
+        element.initNodeStyles(style.nodeStyles);
+      }
       const object = PlotObjectFactory.createInstance(this.m_symbol.type, {
         element:element ,
         canvas: this._plotLayer,
