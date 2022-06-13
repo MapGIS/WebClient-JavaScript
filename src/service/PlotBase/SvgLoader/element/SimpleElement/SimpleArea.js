@@ -87,7 +87,7 @@ class SimpleArea extends BaseSimple {
 
     initBaseAttributes() {
         super.initBaseAttributes();
-        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== '2') {
+        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== 'simplearea') {
             throw new Error('符号类型不一致！');
         }
     }

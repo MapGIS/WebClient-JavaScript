@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-05-27 20:21:31
+ * @LastEditTime: 2022-06-13 12:07:04
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js
@@ -71,7 +71,7 @@ class SimplePoint extends BaseSimple {
         const attributes = super.getSaveBaseAttributes();
         return this._getSaveBaseAttributes(SimplePoint, attributes);
     }
-
+ 
     /**
      * @description: 替换replace属性的element对象
      * @param {*} node
@@ -91,7 +91,7 @@ class SimplePoint extends BaseSimple {
 
     initBaseAttributes(node) {
         super.initBaseAttributes(node);
-        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== '0') {
+        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== 'simplepoint') {
             throw new Error('符号类型不一致！');
         }
         const mode = this.getAttribute('zondyPlotSymbol:originMode').hasValue() ? this.getAttribute('zondyPlotSymbol:originMode').getValue() : '0';

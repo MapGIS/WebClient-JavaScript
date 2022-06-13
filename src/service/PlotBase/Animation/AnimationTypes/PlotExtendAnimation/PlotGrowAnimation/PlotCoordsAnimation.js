@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:43:10
+ * @LastEditTime: 2022-06-13 11:51:25
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import PlotBaseAnimation from '../../PlotBaseAnimation';
@@ -45,5 +45,3 @@ export default class PlotCoordsAnimation extends PlotBaseAnimation {
         }
     }
 }
-
-

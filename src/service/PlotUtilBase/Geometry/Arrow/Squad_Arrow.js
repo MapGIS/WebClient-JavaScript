@@ -23,7 +23,7 @@ export default class SquadArrow extends AttackArrow {
   insertPoints(points) {
     const count = points.length
     if (count < 2) {
-      return this.points
+      return points
     }
     const pnts = points
     // 有时用户移动过快或者过慢，_onMouseMove捕获到的坐标会和onTouch捕获到的坐标一样。

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-11-09 10:29:43
- * @LastEditTime: 2022-02-15 13:47:47
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-06-13 14:48:14
+ * @LastEditors: zk
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\Arrow\DoubleArrow.js
  */
@@ -13,7 +13,7 @@ import Point from "../../../../../PlotUtilBase/Geometry/Point";
 export default class DoubleArrowGeometry extends BaseIrregularElement{
     constructor(node) {
         super(node);
-        this.type='msbl_doublearrow';
+        this.type='doublearrow';
     }
     _insertGeometry(points){
         const pnts= points.map((s)=> [s.x,s.y])

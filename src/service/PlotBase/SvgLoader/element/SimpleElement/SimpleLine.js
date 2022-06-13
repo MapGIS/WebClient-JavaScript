@@ -34,7 +34,7 @@ class SimpleLine extends BaseSimple {
 
     initBaseAttributes(node) {
         super.initBaseAttributes(node);
-        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== '1') {
+        if (this.getAttribute('zondyPlotSymbol:type').getValue() !== 'simpleline') {
             throw new Error('符号类型不一致！');
         }
     }
