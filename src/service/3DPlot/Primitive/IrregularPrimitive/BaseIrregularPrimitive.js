@@ -1,7 +1,7 @@
-import Point from "../../../../service/PlotUtilBase/Geometry/Point";
-import {Vector2} from "../../../PlotUtilBase/Math/Vector2";
-import BasePlotPrimitive from "../BasePlotPrimitive";
-import IrregularElementInstance from "../ElementInstance/IrregularElementInstance";
+import Point from '../../../../service/PlotUtilBase/Geometry/Point';
+import { Vector2 } from '../../../PlotUtilBase/Math/Vector2';
+import BasePlotPrimitive from '../BasePlotPrimitive';
+import IrregularElementInstance from '../ElementInstance/IrregularElementInstance';
 
 /**
  * @class module:3DPlot.BaseIrregularPrimitive
@@ -33,7 +33,7 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
             this._update = false;
             this._translucent = false;
             this._createGeomInstance(function (instanceObj) {
-                const {instances, wallGeomInstances} = instanceObj;
+                const { instances, wallGeomInstances } = instanceObj;
                 that.applySelectStatus(instances);
                 that.instancesToPrimitives(instances);
                 that.wallInstancesToPrimitive(wallGeomInstances);
@@ -55,10 +55,7 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
         const firstPnt = coords[0];
         const endPnt = coords[coords.length - 1];
 
-        if (
-            Math.abs(firstPnt.x - endPnt.x) < 10e-8 &&
-            Math.abs(firstPnt.y - endPnt.y) < 10e-8
-        ) {
+        if (Math.abs(firstPnt.x - endPnt.x) < 10e-8 && Math.abs(firstPnt.y - endPnt.y) < 10e-8) {
             const secondPnt = coords[1];
             const lastPnt = new Vector2(secondPnt.x, secondPnt.y);
             coords.push(lastPnt);
@@ -98,10 +95,10 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
      * @param {function} callback 回调函数
      * */
     _elementInstance(callback) {
-        new IrregularElementInstance(this._elem, {
-            ...this.getBaseSaveAttributesValues(),
-            globelScale: this.getGlobelScale(),
-        }).getInstance(function (instance) {
+        new IrregularElementInstance(
+            this._elem,
+            Object.assign(this.getBaseSaveAttributesValues(), { globelScale: this.getGlobelScale() })
+        ).getInstance(function (instance) {
             callback(instance);
         });
     }
@@ -116,8 +113,8 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
         this.dimModHeight = this._modHeight;
         this.isOpenWall = true;
         this.isWallGradColor = false;
-        this.wallColor = "rgba(255,0,0,0.3)";
-        this.wallGradColor = "rgba(255,0,0,0.3)";
+        this.wallColor = 'rgba(255,0,0,0.3)';
+        this.wallGradColor = 'rgba(255,0,0,0.3)';
     }
 
     /**
@@ -133,12 +130,6 @@ class BaseIrregularPrimitive extends BasePlotPrimitive {
     }
 }
 
-BaseIrregularPrimitive.extendPrimitiveAttributes = [
-    "dimModHeight",
-    "isOpenWall",
-    "isWallGradColor",
-    "wallColor",
-    "wallGradColor",
-];
+BaseIrregularPrimitive.extendPrimitiveAttributes = ['dimModHeight', 'isOpenWall', 'isWallGradColor', 'wallColor', 'wallGradColor'];
 
 export default BaseIrregularPrimitive;

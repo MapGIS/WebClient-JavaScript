@@ -121,7 +121,7 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
     _elementInstance(callback) {
         new RegularPointElementInstance(
             this._elem,
-            {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
+            Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})
         ).getInstance(function (instances) {
             callback(instances);
         });

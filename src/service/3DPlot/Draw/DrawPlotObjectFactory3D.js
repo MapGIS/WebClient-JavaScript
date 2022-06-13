@@ -4,13 +4,19 @@
  * @Author: zk
  * @Date: 2022-06-13 14:58:40
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 15:28:25
+ * @LastEditTime: 2022-06-13 15:47:08
  */
 import SimpleFactory from "../../../service/PlotUtilBase/SimpleFactory";
 import DrawPoint from "./DrawPoint";
 import DrawPolyline from "./DrawPolyline";
 
 const DrawPlotObjectFactory3D = new SimpleFactory();
+
+DrawPlotObjectFactory3D.register("msbl_regularpoint", DrawPoint);
+DrawPlotObjectFactory3D.register("msbl_regularline1", DrawPolyline);
+DrawPlotObjectFactory3D.register("msbl_regularline2", DrawPolyline);
+DrawPlotObjectFactory3D.register("msbl_regularsurface", DrawPolyline);
+DrawPlotObjectFactory3D.register("msbl_KidneyArea", DrawPolyline);
 
 DrawPlotObjectFactory3D.register("simplepoint", DrawPoint);
 DrawPlotObjectFactory3D.register("simpleline", DrawPolyline);

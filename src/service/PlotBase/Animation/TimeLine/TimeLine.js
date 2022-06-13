@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-08 10:52:19
+ * @LastEditTime: 2022-06-13 19:22:43
  */
 
 import { AnimationReg } from '../AnimationTypes';
@@ -50,13 +50,17 @@ export default class TimeLine {
             })
             .filter((b) => b);
 
-        const animate = new animation({
-            ...item,
-            plotObjects,
-            getPlotObjectById: this.getPlotObjectById.bind(this),
-            drawUtilPlotObject: this.drawUtilPlotObject,
-            removeDrawUtilPlotObject: this.removeDrawUtilPlotObject
-        });
+        if(!animation){
+           throw new Error('动画类型错误！')
+        }
+
+        const animate = new animation(
+            Object.assign(item,{
+                plotObjects,
+                getPlotObjectById: this.getPlotObjectById.bind(this),
+                drawUtilPlotObject: this.drawUtilPlotObject,
+                removeDrawUtilPlotObject: this.removeDrawUtilPlotObject
+            }));
         return animate;
     }
 

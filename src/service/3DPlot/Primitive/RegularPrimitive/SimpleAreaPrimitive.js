@@ -128,17 +128,11 @@ class SimpleAreaPrimitive extends KidneyAreaPrimitive {
      */
     _elementInstance(callback) {
         if (this.isMustFill) {
-            new RegularSurfaceElementInstance(this._elem, {
-                ...this.getBaseSaveAttributesValues(),
-                globelScale: this.getGlobelScale()
-            }).getInstance(function (instances) {
+            new RegularSurfaceElementInstance(this._elem, Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})).getInstance(function (instances) {
                 callback(instances);
             });
         } else {
-            new SimpleAreaForKidneyElementInstance(this._elem, {
-                ...this.getBaseSaveAttributesValues(),
-                globelScale: this.getGlobelScale()
-            }).getInstance(function (instances) {
+            new SimpleAreaForKidneyElementInstance(this._elem, Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})).getInstance(function (instances) {
                 callback(instances);
             });
         }

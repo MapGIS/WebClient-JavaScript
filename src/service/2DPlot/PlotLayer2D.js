@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 16:57:26
+ * @LastEditTime: 2022-06-13 17:08:19
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -12,7 +12,7 @@ import { PlotObjectFactory } from './Shapes/PlotObjectFactory';
 import { createGuid } from '../PlotUtilBase/Util/Guid';
 import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 import FabricLineUtil from './EditTool/FabricLineUtil';
-import {addExtendLayersPlot, removeExtendLayersPlot} from "../3DPlot/Utils/PlotUtil";
+import { addExtendLayersPlot, removeExtendLayersPlot } from '../3DPlot/Utils/PlotUtil';
 
 class PlotLayer2D {
     constructor() {
@@ -34,6 +34,8 @@ class PlotLayer2D {
         this._pickPlot = undefined;
         //是否在绘制图元，绘制途中不触发pick事件
         this._isDrawing = false;
+        // 是否为可编辑活跃图层
+        this.editable = false;
     }
 
     /**
@@ -181,6 +183,10 @@ class PlotLayer2D {
         addExtendLayersPlot(this._linkTool, plotObj);
         if (this._fabricCanvas) {
             this._fabricCanvas.add(plotObj);
+            if (!this.editable) {
+                plotObj.selectable = false;
+                plotObj.evented = false;
+            }
         }
     }
     /**
@@ -192,7 +198,7 @@ class PlotLayer2D {
     removePlot(plot) {
         const i = this.m_plotObjects.indexOf(plot);
         if (i > -1) {
-            this.m_plotObjects.splice(i,1);
+            this.m_plotObjects.splice(i, 1);
         }
         if (this._fabricCanvas) {
             this._fabricCanvas.remove(plot);
@@ -417,12 +423,11 @@ class PlotLayer2D {
         return false;
     }
 
-    initCoords(){
-        this.m_plotObjects.forEach((s)=>{
-             s.dataToPoint&&s.dataToPoint()
-        })
+    initCoords() {
+        this.m_plotObjects.forEach((s) => {
+            s.dataToPoint && s.dataToPoint();
+        });
     }
-
 
     /**
      * @function: Module:PlotLayer2D.prototype.requestRenderAll
@@ -434,6 +439,26 @@ class PlotLayer2D {
 }
 
 Object.defineProperties(PlotLayer2D.prototype, {
+    editable: {
+        get: function () {
+            return this._editable;
+        },
+        set: function (value) {
+            this._editable = value;
+            //启用编辑工具
+            if (this._editable) {
+                this.m_plotObjects.forEach((plot) => {
+                    plot.selectable = true;
+                    plot.evented = true;
+                });
+            } else {
+                this.m_plotObjects.forEach((plot) => {
+                    plot.selectable = false;
+                    plot.evented = false;
+                });
+            }
+        }
+    },
     pickPlot: {
         get() {
             return this._pickPlot;
@@ -441,10 +466,10 @@ Object.defineProperties(PlotLayer2D.prototype, {
         set(v) {
             let that = this;
             this._pickPlot = v;
-            this.off("mouse:down");
-            this.on("mouse:down", function (result) {
+            this.off('mouse:down');
+            this.on('mouse:down', function (result) {
                 result = result || {};
-                if(result.target && !that._isDrawing){
+                if (result.target && !that._isDrawing) {
                     that._pickPlot(result.target);
                 }
             });

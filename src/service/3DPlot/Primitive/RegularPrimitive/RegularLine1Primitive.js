@@ -73,8 +73,7 @@ class RegularLine1Primitive extends BaseRegularPrimitive {
    * */
   _elementInstance(callback) {
     new RegularLine1ElementInstance(
-        this._elem,
-      {...this.getBaseSaveAttributesValues(), globelScale: this.getGlobelScale()}
+        this._elem,Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})
     ).getInstance(function (instances) {
       callback(instances);
     });

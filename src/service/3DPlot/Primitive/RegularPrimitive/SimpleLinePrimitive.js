@@ -17,10 +17,7 @@ class SimpleLinePrimitive extends RegularLine1Primitive {
      * @param {function} callback 回调函数
      */
     _elementInstance(callback) {
-        new SimpleLineElementInstance(this._elem, {
-            ...this.getBaseSaveAttributesValues(),
-            globelScale: this.getGlobelScale()
-        }).getInstance(function (instances) {
+        new SimpleLineElementInstance(this._elem, Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})).getInstance(function (instances) {
             callback(instances);
         });
     }

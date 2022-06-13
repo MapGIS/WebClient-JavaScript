@@ -3,11 +3,17 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 15:33:26
+ * @LastEditTime: 2022-06-13 15:48:50
  */
 import DrawPoint2D from './DrawPoint2D';
 import DrawPolyline2D from './DrawPolyline2D';
 import { DrawPlotObjectFactory2D } from './DrawPlotObjectFactory2D';
+
+DrawPlotObjectFactory2D.register('msbl_regularpoint', DrawPoint2D);
+DrawPlotObjectFactory2D.register('msbl_regularLine1', DrawPolyline2D);
+DrawPlotObjectFactory2D.register('msbl_regularLine2', DrawPolyline2D);
+DrawPlotObjectFactory2D.register('msbl_regularsurface', DrawPolyline2D);
+DrawPlotObjectFactory2D.register('msbl_kidneyarea', DrawPolyline2D);
 
 // 新修规则
 DrawPlotObjectFactory2D.register('simpleline', DrawPolyline2D);

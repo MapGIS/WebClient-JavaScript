@@ -1,3 +1,11 @@
+/*
+ * @class: 
+ * @Description: 
+ * @Author: zk
+ * @Date: 2022-06-13 19:19:48
+ * @LastEditors: zk
+ * @LastEditTime: 2022-06-13 19:19:48
+ */
 import RegularLine1Primitive from "./RegularLine1Primitive";
 import RegularLine2ElementInstance from "../ElementInstance/RegularLine2ElementInstance";
 
@@ -20,10 +28,7 @@ class RegularLine2Primitive extends RegularLine1Primitive {
    * @param {function} callback 回调函数
    * */
   _elementInstance(callback) {
-    new RegularLine2ElementInstance(this._elem, {
-      ...this.getBaseSaveAttributesValues(),
-      globelScale: this.getGlobelScale()
-    }).getInstance(function (instances) {
+    new RegularLine2ElementInstance(this._elem,Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})).getInstance(function (instances) {
       callback(instances);
     });
   }

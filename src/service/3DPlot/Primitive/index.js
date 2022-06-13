@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:36:53
- * @LastEditTime: 2022-06-13 15:28:14
+ * @LastEditTime: 2022-06-13 15:46:53
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\RegularElement.js
@@ -16,6 +16,13 @@ import BaseIrregularPrimitive from "./IrregularPrimitive/BaseIrregularPrimitive"
 import SimplePointPrimitive from "./RegularPrimitive/SimplePointPrimitive";
 import SimpleLinePrimitive from "./RegularPrimitive/SimpleLinePrimitive";
 import SimpleAreaPrimitive from "./RegularPrimitive/SimpleAreaPrimitive";
+
+// 规则符号
+PrimitiveFactory.register("msbl_regularpoint", RegularPointPrimitive);
+PrimitiveFactory.register("msbl_regularline1", RegularLine1Primitive);
+PrimitiveFactory.register("msbl_regularline2", RegularLine2Primitive);
+PrimitiveFactory.register("msbl_regularsurface", RegularSurfacePrimitive);
+PrimitiveFactory.register("msbl_kidneyarea", KidneyAreaPrimitive);
 
 // 新修规则
 PrimitiveFactory.register("simplepoint", SimplePointPrimitive);

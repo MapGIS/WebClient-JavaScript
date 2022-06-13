@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:22:31
- * @LastEditTime: 2022-06-13 15:27:51
+ * @LastEditTime: 2022-06-13 15:46:17
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
@@ -46,6 +46,13 @@ ElementFactory.register('msbl', MsblElement);
 ElementFactory.register('circle', CircleElement);
 ElementFactory.register('ellipse', EllipseElement);
 ElementFactory.register('rect', RectElement);
+
+// 规则符号
+ElementFactory.register('msbl_regularpoint', RegularPoint);
+ElementFactory.register('msbl_regularline1', RegularLine1);
+ElementFactory.register('msbl_regularline2', RegularLine2);
+ElementFactory.register('msbl_kidneyarea', KidneyArea);
+ElementFactory.register('msbl_regularsurface', RegularSurface);
 
 // 新修规则
 ElementFactory.register('simpleline', SimpleLine);

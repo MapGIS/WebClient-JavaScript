@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-17 16:12:55
  * @LastEditors: zk
- * @LastEditTime: 2022-05-24 11:19:36
+ * @LastEditTime: 2022-06-13 19:16:08
  */
 
 import { fabric } from 'fabric';
@@ -34,7 +34,7 @@ const PlotRegularObject = fabric.util.createClass(PlotPolylineObject, {
             const style = tempPath.getContextStyle();
             const lineWidth = this.calcMapScaleLineWidth(style.lineWidth);
             const _pnts = tempPath.cacheCoords || tempPath.getCoords();
-            this._pointsToPath(ctx, { ...style, lineWidth }, _pnts);
+            this._pointsToPath(ctx, Object.assign(style, { lineWidth }), _pnts);
         }
     },
     _comparePathElementRender: function _comparePathElementRender(ctx) {
@@ -46,14 +46,15 @@ const PlotRegularObject = fabric.util.createClass(PlotPolylineObject, {
             const svgStyle = tempPath.getContextStyle();
             const compareLineWidthByMap = this.calcMapScaleLineWidth(compareLineWidth);
             const lineWidth = this.calcMapScaleLineWidth(svgStyle.lineWidth);
-            const _compareStyle = this._comparePathStyle({
-                compareLine,
-                compareLineWidth: compareLineWidthByMap,
-                compareLineColor,
-                compareLineOpacity,
-                ...svgStyle,
-                lineWidth
-            });
+            const _compareStyle = this._comparePathStyle(
+                Object.assign(svgStyle, {
+                    compareLine,
+                    compareLineWidth: compareLineWidthByMap,
+                    compareLineColor,
+                    compareLineOpacity,
+                    lineWidth
+                })
+            );
             if (!_compareStyle) continue;
 
             const _pnts = tempPath.cacheCoords || tempPath.getCoords();
@@ -142,5 +143,5 @@ const PlotRegularObject = fabric.util.createClass(PlotPolylineObject, {
     }
 });
 
-fabric.PlotRegularObject = PlotRegularObject; 
+fabric.PlotRegularObject = PlotRegularObject;
 export default PlotRegularObject;

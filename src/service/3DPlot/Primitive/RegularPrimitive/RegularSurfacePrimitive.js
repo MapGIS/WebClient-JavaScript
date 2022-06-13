@@ -107,10 +107,7 @@ class RegularSurfacePrimitive extends RegularLine1Primitive {
      * @param {function} callback 回调函数
      */
     _elementInstance(callback) {
-        new RegularSurfaceElementInstance(this._elem, {
-            ...this.getBaseSaveAttributesValues(),
-            globelScale: this.getGlobelScale()
-        }).getInstance(function (instances) {
+        new RegularSurfaceElementInstance(this._elem, Object.assign(this.getBaseSaveAttributesValues(),{globelScale: this.getGlobelScale()})).getInstance(function (instances) {
             callback(instances);
         });
     }

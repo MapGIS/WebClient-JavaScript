@@ -2,8 +2,8 @@
  * @Description:
  * @Author: zk
  * @Date: 2021-11-18 15:08:49
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-28 12:03:50
+ * @LastEditors: zk
+ * @LastEditTime: 2022-06-13 19:24:54
  */
 import Point from "../../../PlotUtilBase/Geometry/Point";
 import {createGuid} from "../../../PlotUtilBase/Util/Guid";
@@ -188,11 +188,10 @@ class BasePlotElement extends SvgElement {
     }
 
     _createProperties() {
-        const properties = {
+        const properties =Object.assign(this.toJson(), {
             symbolId: this._symbol.id,
             symbolName: this._symbol.name,
-            ...this.toJson(),
-        };
+        });
         // 存储样式节点属性
         properties.symbolNodes = this.getNodesAttributes();
         return properties;
