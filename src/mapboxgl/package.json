@@ -1,6 +1,6 @@
 {
     "name": "@mapgis/webclient-es6-mapboxgl",
-    "version": "15.6.1",
+    "version": "15.6.2",
     "description": "",
     "main1": "dist-libs/webclient-mapboxgl-plugin.min.js",
     "module": "index.js",
