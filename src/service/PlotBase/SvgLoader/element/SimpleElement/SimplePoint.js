@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:33:26
- * @LastEditTime: 2022-06-13 12:07:04
+ * @LastEditTime: 2022-06-14 15:31:58
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\RegularPointElement.js

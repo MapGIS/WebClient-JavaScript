@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:22:31
- * @LastEditTime: 2022-06-13 15:46:17
+ * @LastEditTime: 2022-06-14 15:12:15
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
@@ -34,18 +34,29 @@ import SimpleLine from './SimpleElement/SimpleLine';
 import SimpleArea from './SimpleElement/SimpleArea';
 import SimplePoint from './SimpleElement/SimplePoint';
 import TailedSquadArrowGeometry from './IrregularElement/Arrow/TailedSquadArrowGeometry';
+import LineElement from './LineElement';
+import PolylineElement from './PolylineElement';
+import PolygonElement from './PolygonElement';
+import StyleElement from './StyleElement';
+import DefsElement from './DefsElement';
 
-const drawTypes = ['path', 'mainline', 'tspan', 'mainborder', 'circle', 'rect', 'extendline'];
+
+const drawTypes = ['path', 'mainline', 'tspan', 'mainborder', 'circle','ellipse','rect','line','polyline','polygon','extendline'];
 
 ElementFactory.register('path', PathElement);
 ElementFactory.register('g', GElement);
 ElementFactory.register('svg', SvgElement);
+ElementFactory.register('defs', DefsElement);
+ElementFactory.register('style', StyleElement);
 ElementFactory.register('text', TextElement);
 ElementFactory.register('tspan', TSpanElement);
 ElementFactory.register('msbl', MsblElement);
 ElementFactory.register('circle', CircleElement);
 ElementFactory.register('ellipse', EllipseElement);
 ElementFactory.register('rect', RectElement);
+ElementFactory.register('line',LineElement)
+ElementFactory.register('polyline',PolylineElement)
+ElementFactory.register('polygon',PolygonElement)
 
 // 规则符号
 ElementFactory.register('msbl_regularpoint', RegularPoint);
@@ -71,4 +82,4 @@ ElementFactory.register('doublearrow', DoubleArrowGeometry);
 ElementFactory.register('assaultarrow', AssaultArrowGeometry);
 ElementFactory.register('tailedsquadarrow', TailedSquadArrowGeometry);
 
-export { Element, SvgElement, ElementFactory, GElement, drawTypes };
+export { Element, SvgElement,StyleElement, DefsElement,ElementFactory, GElement, drawTypes };

@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-04 17:02:07
  * @LastEditors: zk
- * @LastEditTime: 2022-05-18 12:41:37
+ * @LastEditTime: 2022-06-15 09:21:27
  */
 
 /* eslint-disable guard-for-in */
@@ -13,7 +13,7 @@ import Bounds from "../../../PlotUtilBase/Geometry/Bound";
 import Property from "./Property";
 import ElementFactory from "./ElementFactory";
 
-import {GElement} from "./index";
+import {GElement,SvgElement,DefsElement,StyleElement} from "./index";
 
 const SVGDEFAULTSTYLE = {
   fill: "none",
@@ -55,7 +55,6 @@ export default class Element {
     this._traverNodes(node);
     this._traverAttributes(node.attributes);
     this._addStylesFromStyleDefinition(node);
-
   }
   _initValues(){
     this._attributes = {};
@@ -91,6 +90,8 @@ export default class Element {
     }
   }
 
+
+
   // 遍历节点
   _traverNodes(node) {
     // 添加子节点
@@ -99,7 +100,7 @@ export default class Element {
     });
   }
 
-  getAttribute(name, createIfNotExists = false) {
+  getAttribute(name, createIfNotExists = false,skipAncestors=true) {
     const attr = this._attributes[name.toLowerCase()];
 
     if (!attr && createIfNotExists) {
@@ -108,6 +109,18 @@ export default class Element {
       this._attributes[name.toLowerCase()] = tempAttr;
 
       return tempAttr;
+    }
+
+    if (!skipAncestors) {
+      const parent = this._parent;
+
+      if (parent) {
+        const parentStyle = parent.getAttribute(name);
+
+        if (parentStyle&&parentStyle.hasValue()) {
+          return parentStyle;
+        }
+      }
     }
 
     return attr || new Property("");
@@ -231,6 +244,8 @@ export default class Element {
     return null;
   }
 
+  
+
   getBoundingBox() {
     const boundingBox = new Bounds();
     this._children.forEach((child) => {
@@ -238,6 +253,41 @@ export default class Element {
     });
     return boundingBox;
   }
+
+  _getSVGElement(){
+    if(this instanceof SvgElement) return this;
+    if (!this._parent) return null;
+    let parent = this._parent;
+    
+    while (parent) {
+      if (parent instanceof SvgElement) {
+        return parent;
+      }
+      parent = parent._parent;
+    }
+    
+    return null;
+  }
+  _getStyleElements(){
+      const svgElement= this._getSVGElement()
+      
+      if(!svgElement){
+        return null
+      }
+      if(!svgElement._children || svgElement._children.length===0){
+        return null
+      }
+      const defsV = svgElement._children.filter((s)=> s instanceof DefsElement)
+      if(defsV.length===0) return null;
+      
+      const styleElementGroupArr = defsV.map((def)=>{
+         return  def._children.filter((d)=> d instanceof StyleElement)
+      }).flat()
+
+      return styleElementGroupArr
+      
+  }
+
   _cloneAttributes(obj) {
     const keys = Object.keys(obj);
     const temp = {};

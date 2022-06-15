@@ -2,105 +2,104 @@
  * @Description:
  * @Version: 2.0
  * @Date: 2021-07-22 11:46:54
- * @LastEditTime: 2022-01-14 12:04:54
+ * @LastEditTime: 2022-06-15 14:47:07
  * @Author: xinxiao
- * @LastEditors: Do not edit
+ * @LastEditors: zk
  */
 // import $ from "jquery";
-import {ElementFactory} from "../SvgLoader/element";
-import { defined } from "../../PlotUtilBase/Check";
-import LogTool from "../../PlotUtilBase/Log/LogTool";
-import SymbolBase from "./SymbolBase";
-import axios from "axios";
+import { ElementFactory } from '../SvgLoader/element';
+import { defined } from '../../PlotUtilBase/Check';
+import LogTool from '../../PlotUtilBase/Log/LogTool';
+import SymbolBase from './SymbolBase';
+import axios from 'axios';
 
 export default class SymbolNode extends SymbolBase {
-  constructor() {
-    super();
-    this._src = "";
-    this._type = "";
-    this._elem = undefined;
-  }
-  get src() {
-    return this._src;
-  }
-
-  set src(value) {
-    this._src = value;
-  }
-
-  get type() {
-    return this._type;
-  }
-
-  set type(value) {
-    this._type = value;
-  }
-
-  /**
-   * @override
-   *
-   * @param {String} json
-   */
-  fromJson(json) {
-    super.fromJson(json);
-    if (!defined(json.type)) {
-      LogTool.error("json.type is not defined");
-      return false;
+    constructor() {
+        super();
+        this._src = '';
+        this._type = '';
+        this._elem = undefined;
+    }
+    get src() {
+        return this._src;
     }
 
-    if (!defined(json.src)) {
-      LogTool.error("json.src is not defined");
-      return false;
+    set src(value) {
+        this._src = value;
     }
 
-    this.type = json.type;
+    get type() {
+        return this._type;
+    }
 
-    this.src = json.src;
+    set type(value) {
+        this._type = value;
+    }
 
-    this._elem = null;
+    /**
+     * @override
+     *
+     * @param {String} json
+     */
+    fromJson(json) {
+        super.fromJson(json);
+        if (!defined(json.type)) {
+            LogTool.error('json.type is not defined');
+            return false;
+        }
 
-    return true;
-  }
+        if (!defined(json.src)) {
+            LogTool.error('json.src is not defined');
+            return false;
+        }
 
-  /**
-   * 获取符号对应的Element(走克隆)
-   *
-   * @returns {Element}
-   */
-  async getElement() {
-    const elem = ElementFactory.createInstance(await this.getSvg(), this.type);
-    elem.symbolManager(this);
-    return elem;
-  }
+        this.type = json.type;
 
-  /**
-   * 获取符号对应图片
-   *
-   * @returns {Image}
-   */
-  getImage() {
-    const img = new Image();
-    img.id = this.id;
-    img.src = this.src;
-    return img;
-  }
+        this.src = json.src;
 
-  /**
-   * 获取符号对应svg
-   */
-  async getSvg() {
-    const url = this.src;
-    const res = await axios({
-      method: 'get',
-      url: url,
-      dataType: "text",
-      timeout: 1000,
-    });
+        this._elem = null;
 
-    const xml = await new DOMParser().parseFromString(
-      res.data,
-      "image/svg+xml"
-    );
-    return xml.documentElement;
-  }
+        return true;
+    }
+
+    /**
+     * 获取符号对应的Element(走克隆)
+     *
+     * @returns {Element}
+     */
+    async getElement() {
+        const elem = ElementFactory.createInstance(await this.getSvg(), this.type);
+        elem.symbolManager(this);
+        return elem;
+    }
+
+    /**
+     * 获取符号对应图片
+     *
+     * @returns {Image}
+     */
+    getImage() {
+        const img = new Image();
+        img.id = this.id;
+        img.src = this.src;
+        return img;
+    }
+
+    /**
+     * 获取符号对应svg
+     */
+    async getSvg() {
+        const url = this.src;
+        const res = await axios({
+            method: 'get',
+            url: url,
+            dataType: 'text',
+            timeout: 1000
+        });
+
+        const xml = await new DOMParser().parseFromString(res.data, 'text/xml');
+
+        const v = xml.documentElement;
+        return v;
+    }
 }

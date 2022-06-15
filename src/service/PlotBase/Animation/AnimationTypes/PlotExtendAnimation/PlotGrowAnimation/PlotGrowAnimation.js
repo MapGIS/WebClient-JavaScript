@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:42:15
+ * @LastEditTime: 2022-06-15 15:24:10
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import Spline from '../../../../../PlotUtilBase/Geometry/Spline';
@@ -31,7 +31,7 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
         // 1.spline
         if (mode === 'spline') {
             this.splines = polysArr.map((s) => {
-                return new Spline(s);
+                return new Spline(s,{});
             });
         } else if (mode === 'center') {
             this.modeFunArr = [];

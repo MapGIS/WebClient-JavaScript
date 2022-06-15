@@ -8,7 +8,7 @@ import Point from '../../../../../PlotUtilBase/Geometry/Point';
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-08 12:53:11
+ * @LastEditTime: 2022-06-15 15:28:09
  */
 export default class PlotPathAnimation extends PlotCoordsAnimation {
     constructor(options) {
@@ -69,7 +69,7 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         }
 
         if(pathType==='spline'){
-            this.geometryInstance=new Spline(this._cacheCoords)
+            this.geometryInstance=new Spline(this._cacheCoords,{})
         }
 
         this.geometryAngles = this._plotObjects.map((s) => s.getElement().getGeometryAngle());
@@ -144,6 +144,7 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         const trueRate = this._calcTrueRate(rate);
 
         const v = this.geometryInstance.getTransfromByRate(trueRate);
+        
         const pnt = new Point(v[0][0], v[0][1]);
 
         this._plotObjects.forEach((plotobject) => {

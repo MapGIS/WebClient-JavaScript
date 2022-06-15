@@ -23,6 +23,17 @@ export default class Point {
     return new Point(x, y);
   }
 
+  static parsePath(path){
+    const points = StringUtil.toNumbers(path);
+		const len = points.length;
+		const pathPoints=[];
+
+		for (let i = 0; i < len; i += 2) {
+			pathPoints.push(new Point(points[i], points[i + 1]));
+		}
+		return pathPoints;
+  }
+
   /**
    * 克隆当前点对象
    * @function
