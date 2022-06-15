@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 11:51:25
+ * @LastEditTime: 2022-06-15 20:47:43
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import PlotBaseAnimation from '../../PlotBaseAnimation';
@@ -29,6 +29,8 @@ export default class PlotCoordsAnimation extends PlotBaseAnimation {
                 return elem.positions.map((s) => new Point(s.x, s.y));
             }
         });
+
+       
     }
     restore() {
         super.restore();

@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 17:34:12
+ * @LastEditTime: 2022-06-15 19:53:34
  */
 
 import { fabric } from 'fabric';
@@ -28,6 +28,7 @@ export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
             PlotLayer2DGroup.instance = this;
             // 工具图层
             this._utilPlotCanvas = new PlotLayer2D();
+            this._utilPlotCanvas.editable=true
             this._plotCanvasLayers = [];
             this.addLayer(this._utilPlotCanvas);
         } else {

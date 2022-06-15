@@ -8,7 +8,7 @@ import Point from '../../../../../PlotUtilBase/Geometry/Point';
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-15 15:28:09
+ * @LastEditTime: 2022-06-15 20:43:05
  */
 export default class PlotPathAnimation extends PlotCoordsAnimation {
     constructor(options) {
@@ -19,12 +19,14 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         // animation type
         this.animationType = 'path-animation';
         // init options
-        this.animationCoords = options.animationCoords?AnimationUtil.defineValue(
-            options.animationCoords.map((s) => new Point(s[0], s[1])),
-            []
-        ):[]
+        this.animationCoords = options.animationCoords
+            ? AnimationUtil.defineValue(
+                  options.animationCoords.map((s) => new Point(s[0], s[1])),
+                  []
+              )
+            : [];
         this.showPath = AnimationUtil.defineValue(options.showPath, true);
-        this.pathStyle = AnimationUtil.defineValue(options.pathStyle, {fill:'none',strokeStyle:"#00ff00",lineWidth:5});
+        this.pathStyle = AnimationUtil.defineValue(options.pathStyle, { fill: 'none', strokeStyle: '#00ff00', lineWidth: 5 });
         this.pathType = AnimationUtil.defineValue(options.pathType, 'spline');
         this.startPathRate = AnimationUtil.defineValue(options.startPathRate, 0);
         this.endPathRate = AnimationUtil.defineValue(options.endPathRate, 1);
@@ -36,61 +38,77 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         this.symbolBindId = AnimationUtil.defineValue(options.symbolBindId, null);
 
         // 路径对象
-        this.pathWayObject = null
-        this._cacheCoords=null
+        this.pathWayObject = null;
+        this._cacheCoords = null;
         // init geometry
         this.geometryInstance = null;
         this.geometryAngles = [];
     }
 
     update() {
-        super.update()
+        super.update();
         // 根据路径类型生成几何
         const { pathType } = this;
-        
-        if(!this._cacheCoords){
-            let coords = null;
+
+        if (!this._cacheCoords) {
+            let coords = [];
             if (this.symbolBindId) {
                 const plot = this.getPlotObjectById(this.symbolBindId);
-                if(plot){
+                if (plot) {
                     coords = plot.getElement().positions;
-                }else{
-                    coords=null
-                    return
+                } else {
+                    coords = [];
                 }
             } else {
                 coords = this.animationCoords;
             }
-            this._cacheCoords=coords
+            this._cacheCoords = coords;
         }
 
-        if(this.showPath){
-            this._initPathWayObject({coords:this._cacheCoords,pathStyle:this.pathStyle})
+        if (this._cacheCoords.length === 0) {
+            throw new Error('路径动画控制点数量不能为0');
         }
 
-        if(pathType==='spline'){
-            this.geometryInstance=new Spline(this._cacheCoords,{})
-        }
+        if (this._cacheCoords.length === 1) {
+            console.error('无法生成路径');
+            return;
+        } else {
+            if (this.showPath) {
+                this._initPathWayObject({ coords: this._cacheCoords, pathStyle: this.pathStyle });
+            }
 
-        this.geometryAngles = this._plotObjects.map((s) => s.getElement().getGeometryAngle());
+            if (pathType === 'spline') {
+                this.geometryInstance = new Spline(this._cacheCoords, {});
+            }
+        }
+        this.geometryAngles = this._plotObjects.map((s) => {
+            const element = s.getElement();
+            if (element.getGeometryAngle) {
+                return element.getGeometryAngle();
+            } else {
+                console.error('目标对象没有控制点信息');
+                return 0;
+            }
+        });
     }
 
-    _initPathWayObject(options){
-        const {coords,pathStyle} = options
-        if(!this.pathWayObject){
-            this.drawUtilPlotObject(101,{
-                positions:coords
-            }).then((s)=>{
-               this.pathWayObject=s
-               this._setPathWayStyles(s,pathStyle)
-            })
-        }else{
-            this._setPathWayStyles(this.pathWayObject,pathStyle)
+    _initPathWayObject(options) {
+        const { coords, pathStyle } = options;
+
+        if (!this.pathWayObject) {
+            this.drawUtilPlotObject(101, {
+                positions: coords
+            }).then((s) => {
+                this.pathWayObject = s;
+                this._setPathWayStyles(s, pathStyle);
+            });
+        } else {
+            this._setPathWayStyles(this.pathWayObject, pathStyle);
         }
     }
-    _setPathWayStyles(pathWayObject,styles){
-        const element= pathWayObject.getElement()
-        element.setNodesAttributes({'templine_utilline':styles})
+    _setPathWayStyles(pathWayObject, styles) {
+        const element = pathWayObject.getElement();
+        element.setNodesAttributes({ templine_utilline: styles });
     }
 
     _calcTrueRate(rate) {
@@ -99,26 +117,25 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         return (endRate - startRate) * rate + startRate;
     }
 
-    exportOption(){
-        const object = super.exportOption()
-        const propertys= PlotPathAnimation.cacheProperty.split(',')
-        propertys.forEach((s)=>{
-            object[s]=this[s]
-        })
-        return object
+    exportOption() {
+        const object = super.exportOption();
+        const propertys = PlotPathAnimation.cacheProperty.split(',');
+        propertys.forEach((s) => {
+            object[s] = this[s];
+        });
+        return object;
     }
-
 
     restore() {
         super.restore();
         this._plotObjects.forEach((s, i) => {
             const element = s.getElement();
-            element.setGeometryAngle(this.geometryAngles[i]);
+            element.setGeometryAngle && element.setGeometryAngle(this.geometryAngles[i]);
         });
-        
-        if(this.pathWayObject){
-            this.removeDrawUtilPlotObject(this.pathWayObject)
-            this.pathWayObject=null
+
+        if (this.pathWayObject) {
+            this.removeDrawUtilPlotObject(this.pathWayObject);
+            this.pathWayObject = null;
         }
     }
 
@@ -126,7 +143,7 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         if (obj.positions) {
             obj.positions = positions;
             // 解决点类样式不刷新的问题
-            obj._isTranslate=false
+            obj._isTranslate = false;
         }
         if (obj.setPnts) {
             obj.setPnts(positions);
@@ -135,16 +152,16 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
 
     render(rate) {
         if (!this.geometryInstance) return;
-        
+
         // 重新适配路径
-        if(this.pathWayObject){
-            this._cacheCoords= this.pathWayObject.getElement().positions
+        if (this.pathWayObject) {
+            this._cacheCoords = this.pathWayObject.getElement().positions;
         }
 
         const trueRate = this._calcTrueRate(rate);
 
         const v = this.geometryInstance.getTransfromByRate(trueRate);
-        
+
         const pnt = new Point(v[0][0], v[0][1]);
 
         this._plotObjects.forEach((plotobject) => {
@@ -158,4 +175,4 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
     }
 }
 
-PlotPathAnimation.cacheProperty= 'symbolBindId,animationCoords,showPath,pathStyle,startPathRate,endPathRate,alongTangent'
+PlotPathAnimation.cacheProperty = 'symbolBindId,animationCoords,showPath,pathStyle,startPathRate,endPathRate,alongTangent';
