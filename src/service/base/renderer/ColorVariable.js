@@ -7,7 +7,7 @@ import { VisualVariable } from './VisualVariable';
  * @class mapgis.renderer.ColorVariable
  * @classdesc 视觉变量-颜色视觉变量
  * @param {String} [type] 视觉变量类型，只能是 'color'
- * @param {String} [normalizationField] 标准化数据所依据的数字属性字段的名称，将数据值除以对应字段数据值，然后乘以 100得到比率
+ * @param {String} [normalizationField] 标准化数据所依据的数字属性字段的名称，将数据值除以对应字段数据值
  * @param {Array<ColorStop>} [stops] 视觉变量颜色数组，定义在一系列停靠点中应用于要素的连续色带的颜色
  */
 export default class ColorVariable extends VisualVariable {

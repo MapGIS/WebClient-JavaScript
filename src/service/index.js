@@ -2,6 +2,7 @@
 import * as Util from './utils';
 import * as Symbol from './base/symbols';
 import * as Style from './base/style';
+import * as Renderer from './base/renderer';
 import * as geoJSON from './base/format/geojson';
 import * as Crs from './base/crs';
 //-------命名空间 mapgis 结束-----
@@ -32,6 +33,7 @@ export {
     Util,
     Symbol,
     Style,
+    Renderer,
     geoJSON,
     Crs,
     Common,
@@ -56,6 +58,7 @@ const All = {
     //-------命名空间 mapgis 开始-----
     Symbol,
     Style,
+    Renderer,
     geoJSON,
     Util,
     Crs,

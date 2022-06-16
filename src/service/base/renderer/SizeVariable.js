@@ -13,7 +13,7 @@ import { VisualVariable } from './VisualVariable';
  * @param {Number} [maxSize] 最大数据值的要素尺寸的大小
  * @param {Number} [minDataValue] 尺寸渐变中使用的最小数据值
  * @param {Number} [minSize] 最小数据值的要素尺寸的大小
- * @param {String} [normalizationField] 标准化数据所依据的数字属性字段的名称，将数据值除以对应字段数据值，然后乘以 100得到比率
+ * @param {String} [normalizationField] 标准化数据所依据的数字属性字段的名称，将数据值除以对应字段数据值
  * @param {Array<SizeStop>} [stops] 视觉变量尺寸数组，定义从field或valueExpression返回的数据值到符号大小的映射的对象数组
  * @param {String} [target] outline在根据视图比例缩放多边形轮廓宽度时，必须使用此值
  * @param {Boolean} [useSymbolValue] 使用符号值，当使用ObjectSymbol3DLayer在渲染器上设置大小可视变量时，此属性指示是否将由height、width或depth属性定义的值应用于此可视变量的相应轴，而不是按比例缩放此轴的值

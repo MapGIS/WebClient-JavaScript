@@ -2,8 +2,7 @@ import { mapgis } from '../common/base';
 import { cloneDeep } from 'lodash';
 import { Renderer } from './Renderer';
 
-import { Symbols } from "@mapgis/webclient-es6-service";
-const { PointSymbol3D, PolygonSymbol3D, LineSymbol3D } = Symbols;
+import { PointSymbol3D, PolygonSymbol3D, LineSymbol3D } from "../symbols/index";
 
 /**
  * 三维专题图-分段专题图
@@ -18,8 +17,8 @@ const { PointSymbol3D, PolygonSymbol3D, LineSymbol3D } = Symbols;
  * @param {PolygonSymbol3D} [backgroundFillSymbol] 专题图边界变量，使用分级符号对面要素进行符号化时，在此属性上设置以可视化每个要素的边界
  * @param {Object} [legendOptions] 专题图图例选项，用来在图例中展示符号信息
  * @param {String} [normalizationType] 专题图归一化类型，可选 "field"|"percent-of-total"|"log"
- * @param {String} [normalizationField] 专题图归一化字段，将数据值除以对应字段数据值，然后乘以 100得到比率
- * @param {Number} [normalizationTotal] 专题图归一化值，将数据值除以所有数据值的总和，然后乘以 100得到比率
+ * @param {String} [normalizationField] 专题图归一化字段，将数据值除以对应字段数据值
+ * @param {Number} [normalizationTotal] 专题图归一化值，将数据值除以所有数据值的总和
  * @param {String} [valueExpression] 专题图计算表达式，用来对要素中的单/多个属性进行数学计算
  * @param {String} [valueExpressionTitle] 专题图计算表达式标题，在legendOptions属性中没有提供的情况下，将显示为图例中的标题
  */

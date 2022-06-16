@@ -4,6 +4,7 @@ var mapgis = (window.mapgis = window.mapgis || {});
 
 mapgis.style = mapgis.style || {};
 mapgis.symbols = mapgis.symbols || {};
+mapgis.renderer = mapgis.renderer || {};
 
 
 

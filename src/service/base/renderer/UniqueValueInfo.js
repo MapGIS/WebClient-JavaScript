@@ -2,8 +2,7 @@ import { mapgis } from '../common/base';
 import { cloneDeep } from 'lodash';
 import { Renderer } from './Renderer';
 
-import { Symbols } from "@mapgis/webclient-es6-service";
-const { PointSymbol3D, PolygonSymbol3D, LineSymbol3D } = Symbols;
+import { PointSymbol3D, PolygonSymbol3D, LineSymbol3D } from "../symbols/index";
 
 /**
  * 三维专题图-单值信息
