@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-15 20:47:28
+ * @LastEditTime: 2022-06-16 11:37:25
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import Spline from '../../../../../PlotUtilBase/Geometry/Spline';
@@ -14,8 +14,8 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
     constructor(options) {
         super(options);
     }
-    _initBaseAttributes(options){
-        super._initBaseAttributes(options)
+    _initBaseAttributes(options) {
+        super._initBaseAttributes(options);
         // animation type
         this.animationType = 'grow-animation';
         // init options
@@ -31,7 +31,11 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
         // 1.spline
         if (mode === 'spline') {
             this.splines = polysArr.map((s) => {
-                return new Spline(s,{});
+                if (s.length >= 2) {
+                    return new Spline(s, {});
+                } else {
+                    return null;
+                }
             });
         } else if (mode === 'center') {
             this.modeFunArr = [];
@@ -40,6 +44,10 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
                 const len = polys.length;
                 const v = [];
                 let center;
+                if (len <= 1) {
+                    v.push(null);
+                    continue;
+                }
                 if (len === 2) {
                     center = [(polys[1].x - polys[0].x) / 2 + polys[0].x, (polys[1].y - polys[0].y) / 2 + polys[0].y];
                 } else {
@@ -69,6 +77,7 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
         const splines = this.splines;
         const trueRate = this._calcTrueRate(rate);
         splines.forEach((t, index) => {
+            if (!t) return;
             const animationPoly = this._animationPolys[index];
             const animationObject = this._plotObjects[index];
             if (animationPoly.length > 0) {
@@ -92,24 +101,24 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
     _centerAction(rate) {
         const trueRate = this._calcTrueRate(rate);
         this._plotObjects.forEach((plotObject, i) => {
-            const tPolys = this.modeFunArr[i].map((s) => {  
+            if (!this.modeFunArr || !this.modeFunArr[i]) return;
+            const tPolys = this.modeFunArr[i].map((s) => {
                 const p = s(trueRate);
-                
+
                 return new Point(p[0], p[1]);
             });
             this._setPnts(plotObject, tPolys);
         });
     }
 
-    exportOption(){
-        const object = super.exportOption()
-        const propertys= PlotGrowAnimation.cacheProperty.split(',')
-        propertys.forEach((s)=>{
-            object[s]=this[s]
-        })
-        return object
+    exportOption() {
+        const object = super.exportOption();
+        const propertys = PlotGrowAnimation.cacheProperty.split(',');
+        propertys.forEach((s) => {
+            object[s] = this[s];
+        });
+        return object;
     }
-
 
     _render(rate) {
         const mode = this.growMode;
@@ -124,4 +133,4 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
     }
 }
 
-PlotGrowAnimation.cacheProperty='startRate,endRate,growMode'
+PlotGrowAnimation.cacheProperty = 'startRate,endRate,growMode';

@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-14 13:54:55
  * @LastEditors: zk
- * @LastEditTime: 2022-06-14 14:47:59
+ * @LastEditTime: 2022-06-16 11:37:48
  */
 
 import Element from './Element';
@@ -12,12 +12,13 @@ import StringUtil from '../../../PlotUtilBase/Util/StringUtil'
 import Property from './Property';
 export default class StyleElement extends Element {
 
-	type = 'style';
+
 	constructor(
 		node
 	) {
 		super(node);
         const that=this
+		this.type = 'style';
         this._styles={}
 		const css = StringUtil.compressSpaces(
 			Array.from(node.childNodes)

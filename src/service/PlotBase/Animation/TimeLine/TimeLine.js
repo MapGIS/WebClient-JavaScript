@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-15 20:52:13
+ * @LastEditTime: 2022-06-16 10:42:15
  */
 
 import { AnimationReg } from '../AnimationTypes';
@@ -15,13 +15,15 @@ export default class TimeLine {
         this._animationArr = [];
         // 初始化图层组方法
         this.initLayerGroupFunction(layerGroup);
-        //-- 时间轴选项 --
+        //-- 时间轴选项 -
         // 反转
         this.invert = false;
         // 速率
         this.speed = 1;
         // 请求raf
         this.raf = null;
+        // 是否重新刷新动画队列
+        // this._refreshAnimationList = false;
     }
 
     /**
@@ -88,13 +90,23 @@ export default class TimeLine {
         this.resetTime();
         this.animationAction((t) => t.play())();
         this.handleRender();
-        const activeInstances = this._animationArr.concat([]);
+        let activeInstances = this._animationArr.concat([]);
         const that = this;
         const engine = (function () {
             function start() {
                 that.raf = requestAnimationFrame(step);
             }
             function step(t) {
+                
+                // 重新刷新动画队列
+                // if (that._refreshAnimationList) {
+                //     activeInstances = that._animationArr.concat([]);
+                //     activeInstances.forEach((ani) => {
+                //         ani.play();
+                //     });
+                //     that._refreshAnimationList = false;
+                // }
+
                 let activeInstancesLength = activeInstances.length;
                 if (activeInstancesLength) {
                     let i = 0;
@@ -227,10 +239,12 @@ export default class TimeLine {
      * @return {*}
      */
     seek(time) {
+        this.pause()
         this.animationAction((s) => {
             s.seek(time);
         })();
         this.handleRender();
+        this._refreshAnimationList = true;
     }
 
     /**
