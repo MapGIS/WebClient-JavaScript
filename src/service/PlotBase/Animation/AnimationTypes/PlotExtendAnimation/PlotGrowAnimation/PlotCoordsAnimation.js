@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-16 14:36:33
+ * @LastEditTime: 2022-06-16 17:21:09
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import PlotBaseAnimation from '../../PlotBaseAnimation';
@@ -34,10 +34,10 @@ export default class PlotCoordsAnimation extends PlotBaseAnimation {
         super.restore();
         this._plotObjects.forEach((s, i) => {
             this._setPnts(s, this._animationPolys[i]);
+            s.isInitCoords = false;
         });
     }
     _setPnts(obj, positions) {
-        
         if (obj.positions) {
             obj.positions = positions;
         }

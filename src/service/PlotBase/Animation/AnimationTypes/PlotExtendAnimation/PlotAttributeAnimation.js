@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-16 11:45:57
+ * @LastEditTime: 2022-06-16 15:46:02
  */
 import { AnimationUtil } from '../../utils/AnimationUtil';
 import { GradientColor } from '../../utils/GradientColor';
@@ -101,11 +101,11 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
         this._plotObjects.forEach((s) => {
             this._attrsItems.forEach((item) => {
                 const t = item.getRateValue(rate);
-                s.setValue(item.type, t, item.ids, false);
+                s.setValue(item.type, t, item.ids, true);
             });
         });
     }
 }
 PlotAttributeAnimation.limitColorItems = ['compareLineColor', 'wallColor', 'wallGradColor', 'strokeStyle', 'fillGradColor', 'fillStyle'];
 PlotAttributeAnimation.limitNumberItems = ['compareLineWidth', 'dimModHeight', 'lineWidth'];
-PlotAttributeAnimation.cacheProperty = 'attrItem';
+PlotAttributeAnimation.cacheProperty = 'attrsItem';

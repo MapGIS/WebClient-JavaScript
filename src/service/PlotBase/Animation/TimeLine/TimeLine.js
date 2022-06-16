@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-16 10:42:15
+ * @LastEditTime: 2022-06-16 17:38:44
  */
 
 import { AnimationReg } from '../AnimationTypes';
@@ -24,6 +24,8 @@ export default class TimeLine {
         this.raf = null;
         // 是否重新刷新动画队列
         // this._refreshAnimationList = false;
+        // 统一设置初始状态
+        this._initGeometryStatus=false
     }
 
     /**
@@ -87,8 +89,16 @@ export default class TimeLine {
      * @return {*}
      */
     play() {
+        // 重置当前时间
         this.resetTime();
+        // 修改动画状态
         this.animationAction((t) => t.play())();
+        // 动画对象默认从rate=0处开始
+        if(this._initGeometryStatus){
+            this._initGeometryStatus=false
+            this.animationAction((t) => t.resetGeometryStatus())();
+        }
+        // 强制刷新
         this.handleRender();
         let activeInstances = this._animationArr.concat([]);
         const that = this;
@@ -309,6 +319,7 @@ export default class TimeLine {
      * @return {*}
      */
     restore() {
+        this._initGeometryStatus=true
         this.reversed(false);
         this.setSpeed(1);
         this.animationAction((t) => t.restore())();
