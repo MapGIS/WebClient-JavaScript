@@ -16,7 +16,7 @@ class PlotLayer3DGroup {
         this._viewer = viewer;
         //工具图层
         this._utilPlotCanvas = new PlotLayer3D(Cesium, this._viewer);
-        this._utilPlotCanvas.editable=true
+        this._utilPlotCanvas.editable=false
         this._plotLayerMap.push(this._utilPlotCanvas);
 
         if (!PlotLayer3DGroup.instance) {
