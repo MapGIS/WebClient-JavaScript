@@ -12,6 +12,7 @@ import { PointSymbol3D, PolygonSymbol3D, LineSymbol3D } from "../symbols/index";
  * @param {Symbol} [symbol] 专题图符号样式
  * @param {String} [label] 专题图图例标签，用来描述分配了默认符号的元素
  * @param {Array<VisualVariable>} [visualVariables] 专题图视觉变量，可选 "color"|"opacity"|"size"|"rotation"
+ * @param {Object} [legendOptions] 专题图图例选项，用来在图例中展示符号信息
  */
 export default class SimpleRenderer extends Renderer {
   constructor(option) {

@@ -7,7 +7,12 @@ import { VisualVariable } from './VisualVariable';
  * @class mapgis.renderer.OpacityVariable
  * @classdesc 视觉变量-透明度视觉变量
  * @param {String} [type] 视觉变量类型，只能是 'opacity'
- * @param {String} [normalizationField] 标准化数据所依据的数字属性字段的名称，将数据值除以对应字段数据值
+ * @param {String} [field] 视觉变量字段
+ * @param {String} [valueExpression] 计算表达式，用来对要素中的单/多个属性进行数学计算
+ * @param {String} [valueExpressionTitle] 计算表达式标题
+ * @param {String} [normalizationType] 归一化类型，可选 "field"|"percent-of-total"|"log"
+ * @param {String} [normalizationField] 归一化字段，将renderer中对应字段数据值除以归一化字段数据值
+ * @param {Number} [normalizationTotal] 归一化值，将renderer中对应字段数据值除以所有数据值的总和
  * @param {Array<OpacityStop>} [stops] 视觉变量透明度数组，定义在一系列停靠点中应用于要素的透明度
  */
 export default class OpacityVariable extends VisualVariable {
@@ -16,8 +21,13 @@ export default class OpacityVariable extends VisualVariable {
     var options = option ? option : {};
     const { type = "opacity" } = options;
     this.type = type;
-    const { normalizationField, stops } = options;
+    const { field, valueExpression, valueExpressionTitle, normalizationType, normalizationField, normalizationTotal, stops } = options;
+    this.field = field;
+    this.valueExpression = valueExpression;
+    this.valueExpressionTitle = valueExpressionTitle;
+    this.normalizationType = normalizationType;
     this.normalizationField = normalizationField;
+    this.normalizationTotal = normalizationTotal;
     this.stops = stops;
   }
 
@@ -36,8 +46,13 @@ export default class OpacityVariable extends VisualVariable {
     json = json || {};
     const { type = "opacity" } = json;
     this.type = type;
-    const { normalizationField, stops } = json;
+    const { field, valueExpression, valueExpressionTitle, normalizationType, normalizationField, normalizationTotal, stops } = json;
+    this.field = field;
+    this.valueExpression = valueExpression;
+    this.valueExpressionTitle = valueExpressionTitle;
+    this.normalizationType = normalizationType;
     this.normalizationField = normalizationField;
+    this.normalizationTotal = normalizationTotal;
     this.stops = stops;
   }
 
@@ -48,7 +63,12 @@ export default class OpacityVariable extends VisualVariable {
   toJSON() {
     return {
       type: this.type,
+      field: this.field,
+      valueExpression: this.valueExpression,
+      valueExpressionTitle: this.valueExpressionTitle,
+      normalizationType: this.normalizationType,
       normalizationField: this.normalizationField,
+      normalizationTotal: this.normalizationTotal,
       stops: this.stops,
     };
   }
