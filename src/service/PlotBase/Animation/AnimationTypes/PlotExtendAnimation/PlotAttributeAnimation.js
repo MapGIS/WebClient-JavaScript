@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-08 12:49:52
+ * @LastEditTime: 2022-06-16 11:45:57
  */
 import { AnimationUtil } from '../../utils/AnimationUtil';
 import { GradientColor } from '../../utils/GradientColor';
@@ -77,7 +77,6 @@ export default class PlotAttributeAnimation extends PlotBaseAnimation {
         return AnimationUtil.getNumberRate(arr, rate);
     }
     rateToColor(valArr, rate) {
-        debugger;
         return new GradientColor(valArr).getGradientColorByRate(rate);
     }
 
