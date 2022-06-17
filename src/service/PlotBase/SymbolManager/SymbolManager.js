@@ -13,9 +13,17 @@ import {getAction} from "../Util/request";
 import axios from "axios";
 
 export default class SymbolManager {
-  constructor(symbolsUrl) {
+  constructor(symbolsUrl, options) {
+    options = options || {};
+
     this._symbols = null;
     this._symbolsUrl = "";
+
+    const {fontURL = ''} = options;
+    if(fontURL) {
+      window._mapgisSymanagerConfig_ = {};
+      window._mapgisSymanagerConfig_._fontURL = fontURL;
+    }
 
     if (!SymbolManager.instance) {
       this._symbolsUrl = symbolsUrl;

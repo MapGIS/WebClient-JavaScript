@@ -30,7 +30,10 @@ class FontCache {
 
   _getFont(strFontName) {
     let font = null;
-    const strPath = "assets/fonts/" + strFontName + ".json";
+    let strPath = "assets/fonts/" + strFontName + ".json";
+    if(window._mapgisSymanagerConfig_ && window._mapgisSymanagerConfig_._fontURL) {
+      strPath = window._mapgisSymanagerConfig_._fontURL + strPath;
+    }
 
     const request = new XMLHttpRequest();
     request.onreadystatechange = function () {
