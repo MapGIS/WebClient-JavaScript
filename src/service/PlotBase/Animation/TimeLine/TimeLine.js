@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-16 17:38:44
+ * @LastEditTime: 2022-06-17 15:46:41
  */
 
 import { AnimationReg } from '../AnimationTypes';
@@ -202,11 +202,18 @@ export default class TimeLine {
     /**
      * @function: Module:TimeLine.prototype.addAnimationObject
      * @description: 添加动画对象
+     * @param {*} plotObjects
      * @param {*} item
      * @return {*}
      */
-    addAnimationObject(item) {
-        const addAnimation = this.createAnimationObject(item);
+    addAnimationObject(plotObjects,item) {
+        if(!plotObjects || plotObjects.length===0) return;
+        const animationOptions= Object.assign({},item)
+        const keyString= plotObjects.map((s)=>{
+            return  s.getElement().getFeatureId()
+        }).toString()
+        animationOptions.featureIds=keyString
+        const addAnimation = this.createAnimationObject(animationOptions);
         this._animationArr.push(addAnimation);
         return addAnimation;
     }

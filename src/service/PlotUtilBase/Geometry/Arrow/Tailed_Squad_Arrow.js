@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-13 11:35:38
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 15:24:01
+ * @LastEditTime: 2022-06-17 15:51:43
  */
 import { PlotUtils } from '../PoltUtils';
 import AttackArrow from './Attack_Arrow';
@@ -46,7 +46,6 @@ export default class TailedSquadArrow extends AttackArrow {
 
         leftPnts = PlotUtils.getQBSplinePoints(leftPnts);
         rightPnts = PlotUtils.getQBSplinePoints(rightPnts);
-
         return leftPnts.concat(headPnts, rightPnts.reverse(), [tailPnts[1], leftPnts[0]])
     }
 
