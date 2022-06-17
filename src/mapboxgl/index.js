@@ -36,13 +36,15 @@ export {
 import {
     EchartsLayer,
     MapvLayer,
-    DeckglLayer
+    DeckglLayer,
+    FabricLayer
     /* StreamLayer */
 } from './overlay/index.js';
 
 export {
     EchartsLayer,
     MapvLayer,
-    DeckglLayer
+    DeckglLayer,
+    FabricLayer
     /* StreamLayer */
 };
