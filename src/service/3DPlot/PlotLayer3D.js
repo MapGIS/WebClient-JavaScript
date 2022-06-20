@@ -132,7 +132,7 @@ class PlotLayer3D extends Observable {
         if (!plotLayer) {
             return undefined;
         }
-
+        
         let index = this._getPlotIndexById(id, plotLayer);
         const {_primitives} = plotLayer;
         if (index !== undefined) {
