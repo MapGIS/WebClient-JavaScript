@@ -89,7 +89,10 @@ export default class SymbolNode extends SymbolBase {
      * 获取符号对应svg
      */
     async getSvg() {
-        const url = this.src;
+        let url = this.src;
+        if(window._mapgisSymanagerConfig_ && window._mapgisSymanagerConfig_._baseUrl) {
+            url = window._mapgisSymanagerConfig_._baseUrl + url;
+        }
         const res = await axios({
             method: 'get',
             url: url,

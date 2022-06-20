@@ -19,10 +19,18 @@ export default class SymbolManager {
     this._symbols = null;
     this._symbolsUrl = "";
 
-    const {fontURL = ''} = options;
-    if(fontURL) {
+    const {fontURL = '', baseUrl = ''} = options;
+
+    if(!window._mapgisSymanagerConfig_) {
       window._mapgisSymanagerConfig_ = {};
+    }
+
+    if(fontURL) {
       window._mapgisSymanagerConfig_._fontURL = fontURL;
+    }
+
+    if(baseUrl) {
+      window._mapgisSymanagerConfig_._baseUrl = baseUrl;
     }
 
     if (!SymbolManager.instance) {
