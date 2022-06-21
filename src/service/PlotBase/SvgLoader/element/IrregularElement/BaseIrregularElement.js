@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-18 09:13:48
- * @LastEditTime: 2022-06-13 14:27:24
+ * @LastEditTime: 2022-06-21 16:58:02
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\BaseIrregularElement.js
@@ -16,6 +16,7 @@ export default class BaseIrregularElement extends BasePlotElement {
         this.type = 'irregular';
         this.m_coords = [];
         this._tempRegularPath = this._children[0];
+        
         this.initBaseAttributes(node);
     }
 
@@ -66,6 +67,14 @@ export default class BaseIrregularElement extends BasePlotElement {
         });
         return _bounds;
     }
+    
+    applyFuncToStorkeGeometry(coords,func){
+        return coords
+    }
+    applyFuncToFillGeometry(coords,func){
+        return coords
+    }
+    
     /**
      * @description: 几何对象生成要素点
      * @param {*} points 插入控制点
