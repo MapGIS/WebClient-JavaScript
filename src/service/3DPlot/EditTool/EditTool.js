@@ -224,7 +224,7 @@ export default class EditTool {
             this._plotLayer._viewer,
             event.startPosition
         );
-        if(!mouseCartesian) return;
+        if(!mouseCartesian || !prevMouseCartesian) return;
         //转化为经纬度坐标
         let mouseCartographic = Cesium.Cartographic.fromCartesian(mouseCartesian);
         //设置位置点高度
