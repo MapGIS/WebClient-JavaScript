@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: zk
+ * @Date: 2022-05-10 12:45:10
+ * @LastEditors: zk
+ * @LastEditTime: 2022-06-22 10:14:41
+ */
 //-------命名空间 mapgis 开始-----
 import * as Util from './utils';
 import * as Symbol from './base/symbols';

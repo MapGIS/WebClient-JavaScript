@@ -2,8 +2,8 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 13:35:50
- * @LastEditTime: 2022-05-11 10:17:52
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-06-22 10:31:10
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \TypeScript-Babel-Starter\src\Geometry\Attack_Arrow.js
  */
@@ -25,7 +25,7 @@ export default class AttackArrow {
   insertPoints(points) {
     let count = points.length
     if (count <= 2) {
-      return points
+      return [points]
     }
     const pnts = points
     // 计算箭尾
@@ -62,7 +62,7 @@ export default class AttackArrow {
 
     leftPnts = PlotUtils.getQBSplinePoints(leftPnts)
     rightPnts = PlotUtils.getQBSplinePoints(rightPnts)
-    return leftPnts.concat(headPnts, rightPnts.reverse())
+    return [leftPnts,headPnts, rightPnts.reverse()]
   }
 
   getPoints() {

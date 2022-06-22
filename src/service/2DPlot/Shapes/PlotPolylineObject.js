@@ -158,7 +158,7 @@ const PlotPolylineObject = fabric.util.createClass(PlotObject, {
             for (let m = 1; m < tempPntsLen; m += 1) {
                 ctx.lineTo(tempPnts[m].x + this.m_offsetX, tempPnts[m].y + this.m_offsetY);
             }
-            if (GeomUtil.PointEqualFuzzy(startPnt.x, startPnt.y, endPnt.x, endPnt.y)) {
+            if (GeomUtil.PointEqualFuzzy(startPnt.x, startPnt.y, endPnt.x, endPnt.y,1e-18)) {
                 ctx.closePath();
             }
 

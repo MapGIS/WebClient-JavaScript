@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-11-04 17:02:07
- * @LastEditTime: 2022-05-10 15:25:05
- * @LastEditors: Do not edit
+ * @LastEditTime: 2022-06-22 10:23:17
+ * @LastEditors: zk
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\extend\ReplacedGroupElement.js
  */
@@ -34,6 +34,8 @@ export default class ReplacedGroupElement extends GElement {
     if (!defined(symbolManager)) symbolManager = new SymbolManager();
 
     const symbol = symbolManager.getLeafByID(parseInt(id,10));
+
+    if(!symbol) return;
 
     var that = this;
     

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-07-01 09:30:22
- * @LastEditTime: 2021-11-08 17:15:57
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-06-22 10:34:32
+ * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \leaflet-mark-dtis\src\Component\Geometry\Squad_Arrow.js
  */
@@ -23,7 +23,7 @@ export default class SquadArrow extends AttackArrow {
   insertPoints(points) {
     const count = points.length
     if (count < 2) {
-      return points
+      return [points]
     }
     const pnts = points
     // 有时用户移动过快或者过慢，_onMouseMove捕获到的坐标会和onTouch捕获到的坐标一样。
@@ -32,7 +32,7 @@ export default class SquadArrow extends AttackArrow {
       pnts[pnts.length - 1][1] === pnts[pnts.length - 2][1] &&
       pnts[pnts.length - 1][2] === pnts[pnts.length - 2][2]
     ) {
-      return pnts
+      return [pnts]
     }
     const tailPnts = this.getTailPoints(pnts)
     const headPnts = this.getArrowHeadPoints(pnts, tailPnts[0], tailPnts[1])
@@ -53,7 +53,7 @@ export default class SquadArrow extends AttackArrow {
     rightPnts.push(neckRight)
     leftPnts = PlotUtils.getQBSplinePoints(leftPnts)
     rightPnts = PlotUtils.getQBSplinePoints(rightPnts)
-    return leftPnts.concat(headPnts, rightPnts.reverse())
+    return [leftPnts,headPnts, rightPnts.reverse()]
   }
 
   getTailPoints(points) {

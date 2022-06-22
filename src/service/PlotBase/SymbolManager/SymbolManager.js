@@ -2,9 +2,9 @@
  * @Description:
  * @Version: 2.0
  * @Date: 2021-07-22 11:46:16
- * @LastEditTime: 2022-01-14 09:49:26
+ * @LastEditTime: 2022-06-22 10:43:56
  * @Author: xinxiao
- * @LastEditors: Do not edit
+ * @LastEditors: zk
  */
 import {defined} from "../../PlotUtilBase/Check";
 import LogTool from "../../PlotUtilBase/Log/LogTool";
@@ -78,6 +78,7 @@ export default class SymbolManager {
   async getSymbols() {
     if (this._symbols) return this._symbols;
 
+    debugger
     try {
       const res = await axios.get(this._symbolsUrl);
       this._symbols = new SymbolCatalog();
@@ -102,7 +103,7 @@ export default class SymbolManager {
         return leaves[i];
       }
     }
-
+    LogTool.warn(`符号库id为${id}的节点不存在！`)
     return null;
   }
 

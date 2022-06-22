@@ -49,10 +49,6 @@ export default class SymbolBase {
       return false;
     }
 
-    if (!defined(json.id)) {
-      LogTool.warn("json.id is not defined");
-    }
-
     this.id = json.id;
 
     this.name = json.name;

@@ -132,7 +132,7 @@ class PlotLayer3D extends Observable {
         if (!plotLayer) {
             return undefined;
         }
-
+        
         let index = this._getPlotIndexById(id, plotLayer);
         const {_primitives} = plotLayer;
         if (index !== undefined) {
@@ -253,8 +253,10 @@ class PlotLayer3D extends Observable {
         const symbolManager = SymbolManager.instance;
 
         const leaf = symbolManager.getLeafByID(id);
+        if(!leaf) return null;
 
         leaf.getElement().then(function (element) {
+            if(!element) return null;
             const primitive = PrimitiveFactory.createInstance(element.type, {
                 positions: element.positions,
                 element,

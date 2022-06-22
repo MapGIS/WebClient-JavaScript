@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-17 15:46:41
+ * @LastEditTime: 2022-06-17 19:58:03
  */
 
 import { AnimationReg } from '../AnimationTypes';
@@ -25,7 +25,7 @@ export default class TimeLine {
         // 是否重新刷新动画队列
         // this._refreshAnimationList = false;
         // 统一设置初始状态
-        this._initGeometryStatus = false;
+        this._initGeometryStatus=false
     }
 
     /**
@@ -94,8 +94,8 @@ export default class TimeLine {
         // 修改动画状态
         this.animationAction((t) => t.play())();
         // 动画对象默认从rate=0处开始
-        if (this._initGeometryStatus) {
-            this._initGeometryStatus = false;
+        if(this._initGeometryStatus){
+            this._initGeometryStatus=false
             this.animationAction((t) => t.resetGeometryStatus())();
         }
         // 强制刷新
@@ -198,13 +198,25 @@ export default class TimeLine {
         return this._animationArr.filter((v) => v.isInAnimation(id));
     }
 
-    /**
-     * @function: Module:TimeLine.prototype.addAnimationObject
-     * @description: 添加动画对象
-     * @param {*} plotObjects
-     * @param {*} item
-     * @return {*}
-     */
+    // /**
+    //  * @function: Module:TimeLine.prototype.addAnimationObject
+    //  * @description: 添加动画对象
+    //  * @param {*} plotObjects
+    //  * @param {*} item
+    //  * @return {*}
+    //  */
+    // addAnimationObject(plotObjects,item) {
+    //     if(!plotObjects || plotObjects.length===0) return;
+    //     const animationOptions= Object.assign({},item)
+    //     const keyString= plotObjects.map((s)=>{
+    //         return  s.getElement().getFeatureId()
+    //     }).toString()
+    //     animationOptions.featureIds=keyString
+    //     const addAnimation = this.createAnimationObject(animationOptions);
+    //     this._animationArr.push(addAnimation);
+    //     return addAnimation;
+    // }
+
     addAnimationObject(item) {
         const addAnimation = this.createAnimationObject(item);
         this._animationArr.push(addAnimation);
@@ -249,7 +261,7 @@ export default class TimeLine {
      * @return {*}
      */
     seek(time) {
-        this.pause();
+        this.pause()
         this.animationAction((s) => {
             s.seek(time);
         })();
@@ -319,7 +331,7 @@ export default class TimeLine {
      * @return {*}
      */
     restore() {
-        this._initGeometryStatus = true;
+        this._initGeometryStatus=true
         this.reversed(false);
         this.setSpeed(1);
         this.animationAction((t) => t.restore())();

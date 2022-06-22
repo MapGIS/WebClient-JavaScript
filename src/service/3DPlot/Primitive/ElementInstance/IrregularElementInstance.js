@@ -46,6 +46,12 @@ export default class IrregularElementInstance extends RegularLineElementInstance
     const lineWidth = pathStyle.lineWidth;
     const fillStyleType = pathStyle.fillStyleType;
 
+    // 非规则符号使用外部设置函数进行控制点填充
+    const strokeCoords = this._elem.applyFuncToStorkeGeometry(coords);
+    // 非规则符号使用完整几何进行填充
+    const fillCoords= this._elem.applyFuncToFillGeometry(coords);
+
+
     const strokeColor = Cesium.Color.fromCssColorString(pathStyle.strokeStyle);
     const widthSize = (lineWidth * this.globelScale) / 2;
 
@@ -57,8 +63,8 @@ export default class IrregularElementInstance extends RegularLineElementInstance
     const fillColorAttribute =
       Cesium.ColorGeometryInstanceAttribute.fromColor(fillColor);
 
-    for (let i = 0; i < coords.length; i += 1) {
-      let path = coords[i];
+    for (let i = 0; i < strokeCoords.length; i += 1) {
+      let path = strokeCoords[i];
       path = GeomUtil.ClearSamePts(path);
       const geometry = this._generateStrokeGeometry(path, widthSize);
       if (!geometry) {
@@ -78,8 +84,8 @@ export default class IrregularElementInstance extends RegularLineElementInstance
     }
 
     if (fillStyleType > 0) {
-      for (let i = 0; i < coords.length; i += 1) {
-        let path = coords[i];
+      for (let i = 0; i < fillCoords.length; i += 1) {
+        let path = fillCoords[i];
         path = GeomUtil.ClearSamePts(path);
         const geometry = this._generateFillGeometry(path, fillSize);
         if (!geometry) {

@@ -76,7 +76,14 @@ export default class AssaultArrow extends BaseArrow {
     const dis = GeomUtil.PolylinDistance(clonePnts);
     const arrowPnts = this.generateArrowPnts();
 
-    ret.push(arrowPnts.shapePts);
+    ret.push(arrowPnts.leftBodyPts);
+    let arrowHeadPnts=[] 
+    arrowHeadPnts.push(arrowPnts.leftBodyPts[arrowPnts.leftBodyPts.length-1])
+    arrowHeadPnts=arrowHeadPnts.concat(arrowPnts.arrowHeadPts)
+    arrowHeadPnts.push(arrowPnts.rightBodyPts[0])
+    ret.push(arrowHeadPnts);
+    ret.push(arrowPnts.rightBodyPts);
+
 
     if (this.mScaleValues.length < 9) {
       this.mScaleValues = [];

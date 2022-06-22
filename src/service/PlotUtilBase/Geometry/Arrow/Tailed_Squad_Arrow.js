@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-13 11:35:38
  * @LastEditors: zk
- * @LastEditTime: 2022-06-17 15:51:43
+ * @LastEditTime: 2022-06-22 10:34:37
  */
 import { PlotUtils } from '../PoltUtils';
 import AttackArrow from './Attack_Arrow';
@@ -25,13 +25,13 @@ export default class TailedSquadArrow extends AttackArrow {
     insertPoints(points) {
         var count = points.length;
         if (count < 2) {
-            return points;
+            return [points];
         }
         var pnts = points
         //有时用户移动过快或者过慢，_onMouseMove捕获到的坐标会和onTouch捕获到的坐标一样。
         //为了防止这种事情发生：
         if (pnts[pnts.length - 1][1] == pnts[pnts.length - 2][1] && pnts[pnts.length - 1][2] == pnts[pnts.length - 2][2]) {
-            return points;
+            return [points];
         }
         var tailPnts = this.getTailPoints(pnts);
         var headPnts = this.getArrowHeadPoints(pnts, tailPnts[0], tailPnts[2]);
@@ -46,7 +46,8 @@ export default class TailedSquadArrow extends AttackArrow {
 
         leftPnts = PlotUtils.getQBSplinePoints(leftPnts);
         rightPnts = PlotUtils.getQBSplinePoints(rightPnts);
-        return leftPnts.concat(headPnts, rightPnts.reverse(), [tailPnts[1], leftPnts[0]])
+
+        return [leftPnts,headPnts, rightPnts.reverse(), [rightPnts[rightPnts.length-1],tailPnts[1], leftPnts[0]]]
     }
 
     getTailPoints(points) {

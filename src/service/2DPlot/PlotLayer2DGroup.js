@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-06-15 19:53:34
+ * @LastEditTime: 2022-06-22 10:16:16
  */
 
 import { fabric } from 'fabric';
@@ -246,7 +246,11 @@ export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
     drawUtilPlotObject(id, options) {
         const symbol = SymbolManager.instance;
         const leaf = symbol.getLeafByID(id);
+
+        if(!leaf) return null;
+
         return leaf.getElement().then((element) => {
+            if(!element)return null;
             const plotObj = PlotObjectFactory.createInstance(element.type, {
                 element,
                 positions: options.positions,

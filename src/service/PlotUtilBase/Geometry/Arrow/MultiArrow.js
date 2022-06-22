@@ -521,8 +521,9 @@ export default class MultiArrow {
       )
       ctrlPntsBetArr.push(ctrlPnts.leftPnts)
       ctrlPntsBetArr.push(ctrlPnts.rightPnts)
+      
+      
     }
-
     const path2D = new Path2D()
     path2D.MoveTo(arrBodys[0][0])
     path2D.CurveTo(arrBodys[0][1], arrBodys[0][2], arrBodys[0][3])
@@ -560,6 +561,6 @@ export default class MultiArrow {
 
     const arrPolygon = []
     path2D.ToSubPathPolygons(arrPolygon)
-    return arrPolygon[0]
+    return arrPolygon
   }
 }
