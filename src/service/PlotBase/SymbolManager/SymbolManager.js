@@ -11,6 +11,7 @@ import LogTool from "../../PlotUtilBase/Log/LogTool";
 import SymbolCatalog from "./SymbolCatalog";
 import {getAction} from "../Util/request";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export default class SymbolManager {
   constructor(symbolsUrl, options) {
@@ -77,8 +78,6 @@ export default class SymbolManager {
 
   async getSymbols() {
     if (this._symbols) return this._symbols;
-
-    debugger
     try {
       const res = await axios.get(this._symbolsUrl);
       this._symbols = new SymbolCatalog();

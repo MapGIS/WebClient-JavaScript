@@ -12,6 +12,7 @@ import { defined } from '../../PlotUtilBase/Check';
 import LogTool from '../../PlotUtilBase/Log/LogTool';
 import SymbolBase from './SymbolBase';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export default class SymbolNode extends SymbolBase {
     constructor() {

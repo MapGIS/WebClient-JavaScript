@@ -4,6 +4,7 @@ import {CesiumUtil} from "../Utils/CesiumUtil";
 import BasePlotPrimitive from "../Primitive/BasePlotPrimitive";
 import Point from "../../PlotUtilBase/Geometry/Point"
 import * as turf from "@turf/turf";
+axios.defaults.withCredentials = true;
 
 /**
  * @class module:3DPlot.EditTool

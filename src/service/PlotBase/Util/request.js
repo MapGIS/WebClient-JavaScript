@@ -1,5 +1,6 @@
 import axios from "axios";
 import LogTool from "../../PlotUtilBase/Log/LogTool";
+axios.defaults.withCredentials = true;
 
 const apiBaseUrl = "http://localhost:8082";
 
