@@ -28,7 +28,7 @@ export default class ServerSymbolManager {
         return leaves[i];
       }
     }
-
+    LogTool.warn(`符号库id为${symbolId}的节点不存在`)
     return null;
     
   }
@@ -56,7 +56,6 @@ export default class ServerSymbolManager {
       LogTool.error(symbolId, "对应的符号不存在");
       return undefined;
     }
-
     return symbol.getImage();
   }
 }

@@ -2,7 +2,7 @@
  * @Description:
  * @Version: 2.0
  * @Date: 2021-07-22 11:46:54
- * @LastEditTime: 2022-06-15 14:47:07
+ * @LastEditTime: 2022-06-22 09:39:55
  * @Author: xinxiao
  * @LastEditors: zk
  */
@@ -69,7 +69,12 @@ export default class SymbolNode extends SymbolBase {
      */
     async getElement() {
         const elem = ElementFactory.createInstance(await this.getSvg(), this.type);
-        elem.symbolManager(this);
+        
+        if(elem){
+            elem.symbolManager(this);
+        }else{
+            LogTool.warn(`符号类型${this.type}未注册!`)
+        }
         return elem;
     }
 

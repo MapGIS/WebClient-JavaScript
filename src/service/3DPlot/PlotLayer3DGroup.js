@@ -216,7 +216,9 @@ class PlotLayer3DGroup {
     drawUtilPlotObject(id, options) {
         const symbol = SymbolManager.instance;
         const leaf = symbol.getLeafByID(id);
+        if(!leaf)return null;
         return leaf.getElement().then((element) => {
+            if(!element) return null;
             // 待修改问题：positions传参无效
             //   const primitive = PrimitiveFactory.createInstance(element.type, {
             //     positions:options.positions,
@@ -233,7 +235,9 @@ class PlotLayer3DGroup {
         });
     }
     removeDrawUtilPlotObject(primitive) {
-        this._utilPlotCanvas.removePlot(primitive);
+        if(primitive){
+            this._utilPlotCanvas.removePlot(primitive);
+        }
     }
     /**
      * @function: Module:3DPlot.PlotLayer3DGroup.getPlotObjectById

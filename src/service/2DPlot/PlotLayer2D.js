@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 17:08:19
+ * @LastEditTime: 2022-06-22 10:01:17
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -278,14 +278,15 @@ class PlotLayer2D {
         const symbolManager = SymbolManager.instance;
 
         const leaf = symbolManager.getLeafByID(id);
+        if(!leaf) return null;
 
         const element = await leaf.getElement();
+        if(!element) return null
         const plotObj = PlotObjectFactory.createInstance(element.type, {
             element,
             positions: element.positions,
             canvas: this
         });
-
         plotObj.fromGeoJSON(geoFeature);
         this.addPlot(plotObj);
     }
