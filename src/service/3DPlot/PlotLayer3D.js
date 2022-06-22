@@ -213,10 +213,16 @@ class PlotLayer3D extends Observable {
         const primitives = scene.primitives;
         const length = primitives.length;
         for (let i = 0; i < length; i++) {
-            const p = primitives.get(i);
-            if (p.toGeoJSON) {
-                base.features.push(p.toGeoJSON());
+          const p = primitives.get(i);
+          if (this._id === p._id) {
+            const {_primitives} = p;
+            for (let j = 0; j < _primitives.length; j++) {
+              if (_primitives[j].toGeoJSON) {
+                  json.features.push(_primitives[j].toGeoJSON());
+              }
             }
+            break;
+          }
         }
         return json;
     }
