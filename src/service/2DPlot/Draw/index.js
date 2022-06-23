@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 15:48:50
+ * @LastEditTime: 2022-06-23 11:15:37
  */
 import DrawPoint2D from './DrawPoint2D';
 import DrawPolyline2D from './DrawPolyline2D';
@@ -21,6 +21,7 @@ DrawPlotObjectFactory2D.register('simplearea', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('simplepoint', DrawPoint2D);
 
 // 非规则符号
+DrawPlotObjectFactory2D.register('irregular', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('combinationcircle', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('kidney', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('sector', DrawPolyline2D);

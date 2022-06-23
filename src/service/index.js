@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-05-10 12:45:10
  * @LastEditors: zk
- * @LastEditTime: 2022-06-22 10:14:41
+ * @LastEditTime: 2022-06-22 19:49:31
  */
 //-------命名空间 mapgis 开始-----
 import * as Util from './utils';
@@ -40,6 +40,7 @@ import { PlotLayer2D } from './2DPlot/index';
 import { PlotLayer2DGroup } from './2DPlot/PlotLayer2DGroup'
 import {PlotLayer3D,PlotLayer3DGroup} from "./3DPlot/index"
 import { TimeLine, DrawTool, LinkTool } from './PlotBase/index';
+import PlotRegister from './PlotRegister/PlotRegister';
 
 export {
     Util,
@@ -70,6 +71,7 @@ export {
     PlotLayer3DGroup,
     DrawTool,
     TimeLine,
+    PlotRegister,
     LinkTool
 };
 //-------命名空间 Zondy 结束-----

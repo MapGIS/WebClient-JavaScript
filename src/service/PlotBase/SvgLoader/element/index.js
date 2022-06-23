@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:22:31
- * @LastEditTime: 2022-06-14 15:12:15
+ * @LastEditTime: 2022-06-23 11:14:35
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
@@ -39,6 +39,7 @@ import PolylineElement from './PolylineElement';
 import PolygonElement from './PolygonElement';
 import StyleElement from './StyleElement';
 import DefsElement from './DefsElement';
+import BaseIrregularElement from './IrregularElement/BaseIrregularElement';
 
 
 const drawTypes = ['path', 'mainline', 'tspan', 'mainborder', 'circle','ellipse','rect','line','polyline','polygon','extendline'];
@@ -71,6 +72,7 @@ ElementFactory.register('simplearea', SimpleArea);
 ElementFactory.register('simplepoint', SimplePoint);
 
 // 非规则符号
+ElementFactory.register('irregular', BaseIrregularElement);
 ElementFactory.register('combinationcircle', CombinationalCircleGeometry);
 ElementFactory.register('kidney', KidneyGeometry);
 ElementFactory.register('sector', FigureFanGeometry);

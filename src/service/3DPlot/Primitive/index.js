@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 16:36:53
- * @LastEditTime: 2022-06-13 15:46:53
+ * @LastEditTime: 2022-06-23 11:17:00
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\3DPlot\RegularElement.js
@@ -30,6 +30,7 @@ PrimitiveFactory.register("simpleline", SimpleLinePrimitive);
 PrimitiveFactory.register("simplearea", SimpleAreaPrimitive);
 
 // 非规则符号
+PrimitiveFactory.register('irregular', BaseIrregularPrimitive);
 PrimitiveFactory.register("combinationcircle", BaseIrregularPrimitive);
 PrimitiveFactory.register("kidney", BaseIrregularPrimitive);
 PrimitiveFactory.register("sector", BaseIrregularPrimitive);
