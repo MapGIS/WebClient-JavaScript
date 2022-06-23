@@ -4,10 +4,11 @@
  * @Author: zk
  * @Date: 2022-06-22 16:04:04
  * @LastEditors: zk
- * @LastEditTime: 2022-06-23 11:47:01
+ * @LastEditTime: 2022-06-23 14:05:46
  */
 import { defined } from './Check';
 import { warn } from './Log';
+import LogTool from './Log/LogTool';
 
 /**
  * 简单工厂方法
@@ -44,7 +45,7 @@ export default class SimpleFactory {
         }
 
         if (!defined(Proto)) {
-            warn('未找到', type, '对应的原型', this._type2Protos);
+            LogTool.warn(`未找到${type}对应的原型`)
             return undefined;
         }
 

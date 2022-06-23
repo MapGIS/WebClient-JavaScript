@@ -1,7 +1,8 @@
-import {DrawPlotObjectFactory3D} from "../../3DPlot/Draw";
-import {PlotLayer3D} from "../../3DPlot";
-import {PlotLayer2D} from "../../2DPlot";
-import {DrawPlotObjectFactory2D} from "../../2DPlot/Draw/DrawPlotObjectFactory2D";
+import { DrawPlotObjectFactory3D } from '../../3DPlot/Draw';
+import { PlotLayer3D } from '../../3DPlot';
+import { PlotLayer2D } from '../../2DPlot';
+import { DrawPlotObjectFactory2D } from '../../2DPlot/Draw/DrawPlotObjectFactory2D';
+import LogTool from '../../PlotUtilBase/Log/LogTool';
 
 /**
  * @class module:3DPlot.DrawTool
@@ -40,9 +41,9 @@ class DrawTool {
      * @param symbol - {Object} 必选项，标绘图元的符号对象
      */
     drawPlot(symbol) {
-        if(this._plotLayer instanceof PlotLayer3D){
+        if (this._plotLayer instanceof PlotLayer3D) {
             this._drawPlot3D(symbol);
-        }else if(this._plotLayer instanceof PlotLayer2D){
+        } else if (this._plotLayer instanceof PlotLayer2D) {
             this._drawPlot2D(symbol);
         }
     }
@@ -57,29 +58,22 @@ class DrawTool {
         //一直是原有符号
         if (!this._drawTool) {
             this._symbolUrl = symbol.src;
-            this._drawTool = DrawPlotObjectFactory3D.createInstance(
-                symbol.type,
-                this._plotLayer._viewer,
-                symbol,
-                this._plotLayer,
-                this._options
-            );
+            this._drawTool = DrawPlotObjectFactory3D.createInstance(symbol.type, this._plotLayer._viewer, symbol, this._plotLayer, this._options);
         }
 
         //换新符号
         if (symbol.should !== this._symbolUrl) {
             this._symbolUrl = symbol.src;
-            this._drawTool = DrawPlotObjectFactory3D.createInstance(
-                symbol.type,
-                this._plotLayer._viewer,
-                symbol,
-                this._plotLayer,
-                this._options
-            );
+
+            this._drawTool = DrawPlotObjectFactory3D.createInstance(symbol.type, this._plotLayer._viewer, symbol, this._plotLayer, this._options);
         }
 
-        //开始绘制
-        this._drawTool.enable();
+        if (this._drawTool) {
+            //开始绘制
+            this._drawTool.enable();
+        }else{
+            LogTool.warn("drawTool未定义！")
+        }
     }
 
     /**
@@ -88,13 +82,17 @@ class DrawTool {
      *
      * @param symbol - {Object} 必选项，标绘图元的符号对象
      */
-    _drawPlot2D(symbol){
+    _drawPlot2D(symbol) {
         if (!this._drawTool) {
             this._drawTool = DrawPlotObjectFactory2D.createInstance(symbol.type, this._plotLayer, symbol, this._options);
         }
 
-        //开始绘制
-        this._drawTool.enable();
+        if (this._drawTool) {
+            //开始绘制
+            this._drawTool.enable();
+        }else{
+            LogTool.warn("drawTool未定义！")
+        }
     }
 
     /**
