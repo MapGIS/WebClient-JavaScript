@@ -163,6 +163,7 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
                     modelMatrix: this._modelMatrix,
                     appearance: new Cesium.PerInstanceColorAppearance({
                         translucent: this._translucent || this.isTranslucentInstance(instance),
+                        noAlpha: true
                     }),
                     asynchronous: false,
                 });
