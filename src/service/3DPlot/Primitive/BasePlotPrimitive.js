@@ -140,7 +140,8 @@ class BasePlotPrimitive {
             this._primitive = new Cesium.Primitive({
                 geometryInstances: geomInstances,
                 appearance: new Cesium.PerInstanceColorAppearance({
-                    translucent: this._translucent
+                    translucent: this._translucent,
+                    noAlpha: true
                 }),
                 asynchronous: false
             });
@@ -317,7 +318,8 @@ class BasePlotPrimitive {
                 const primitive = new Cesium.Primitive({
                     geometryInstances: instance,
                     appearance: new Cesium.PerInstanceColorAppearance({
-                        translucent: this._translucent || this.isTranslucentInstance(instance)
+                        translucent: this._translucent || this.isTranslucentInstance(instance),
+                        noAlpha: true
                     }),
                     asynchronous: false
                 });
@@ -357,7 +359,8 @@ class BasePlotPrimitive {
             });
         } else {
             appearance = new Cesium.PerInstanceColorAppearance({
-                translucent: true
+                translucent: true,
+                noAlpha: true
             });
         }
 
