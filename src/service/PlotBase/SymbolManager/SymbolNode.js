@@ -2,7 +2,7 @@
  * @Description:
  * @Version: 2.0
  * @Date: 2021-07-22 11:46:54
- * @LastEditTime: 2022-06-22 10:30:00
+ * @LastEditTime: 2022-06-27 16:17:53
  * @Author: xinxiao
  * @LastEditors: zk
  */
@@ -66,15 +66,22 @@ export default class SymbolNode extends SymbolBase {
     /**
      * 获取符号对应的Element(走克隆)
      *
-     * @returns {Element}
+     * @returns {Element | null}
      */
     async getElement() {
         const elem = ElementFactory.createInstance(await this.getSvg(), this.type);
-        
-        if(elem){
-            elem.symbolManager(this);
-        }else{
-            LogTool.warn(`符号类型${this.type}未注册!`)
+
+        if (elem) {
+            if (elem.symbolManager) {
+                elem.symbolManager(this);
+            }else{
+                LogTool.warn(`符号类型${this.type}未注册!`);
+                // elem类型未定义
+                return null;
+            }
+
+        } else {
+            LogTool.warn(`符号类型${this.type}未注册!`);
         }
         return elem;
     }
@@ -96,7 +103,7 @@ export default class SymbolNode extends SymbolBase {
      */
     async getSvg() {
         let url = this.src;
-        if(window._mapgisSymanagerConfig_ && window._mapgisSymanagerConfig_._baseUrl) {
+        if (window._mapgisSymanagerConfig_ && window._mapgisSymanagerConfig_._baseUrl) {
             url = window._mapgisSymanagerConfig_._baseUrl + url;
         }
         const res = await axios({
