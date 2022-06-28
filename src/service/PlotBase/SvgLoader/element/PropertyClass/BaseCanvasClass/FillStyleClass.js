@@ -2,8 +2,8 @@
  * @Description:
  * @Author: zk
  * @Date: 2022-03-03 15:57:30
- * @LastEditors: Do not edit
- * @LastEditTime: 2022-03-08 10:14:58
+ * @LastEditors: zk
+ * @LastEditTime: 2022-06-28 10:35:07
  */
 import BaseStyleObject from "./BaseStyleObjectClass";
 import Property from "../../Property";
@@ -29,11 +29,19 @@ class FillStyleClass extends BaseStyleObject {
       fillRule;
     // 计算填充样式
     const fillStyleProp = elem.getStyle("fill");
-    if (fillStyleProp.hasValue()) {
-      fillStyleType = 1;
+
+    if (fillStyleProp.hasValue() ) {
+
+      if(fillStyleProp.getString()==='none'){
+        fillStyleType = 0;
+      }else{
+        fillStyleType = 1
+      }
+
       if (fillStyleProp.getString() === "currentColor") {
         fillStyleProp.setValue(elem.getStyle("color").getColor());
       }
+      
       fillStyle = fillStyleProp.getColor();
 
       if (fillStyle === "inherit") {
@@ -59,6 +67,7 @@ class FillStyleClass extends BaseStyleObject {
     }
 
     return style;
+    
   }
 
   getBaseClass() {

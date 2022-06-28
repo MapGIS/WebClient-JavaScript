@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-23 11:15:15
+ * @LastEditTime: 2022-06-28 09:54:02
  */
 import  {PlotObjectFactory}  from "./PlotObjectFactory";
 import  PlotRegularPoint  from "./RegularShapes/PlotRegularPoint";
@@ -30,6 +30,8 @@ PlotObjectFactory.register('irregular', PlotIrregularShape);
 PlotObjectFactory.register("combinationcircle", PlotIrregularShapeByLatlng);
 PlotObjectFactory.register("kidney", PlotIrregularShape);
 PlotObjectFactory.register("sector", PlotIrregularShape);
+PlotObjectFactory.register('pathway',PlotIrregularShape)
+PlotObjectFactory.register('triangle',PlotIrregularShape)
 
 PlotObjectFactory.register("singlearrow", PlotIrregularShape);
 PlotObjectFactory.register("squadarrow", PlotIrregularShape);

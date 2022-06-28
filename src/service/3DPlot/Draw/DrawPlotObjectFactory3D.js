@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-13 14:58:40
  * @LastEditors: zk
- * @LastEditTime: 2022-06-23 11:16:19
+ * @LastEditTime: 2022-06-28 09:52:39
  */
 import SimpleFactory from "../../../service/PlotUtilBase/SimpleFactory";
 import DrawPoint from "./DrawPoint";
@@ -26,6 +26,8 @@ DrawPlotObjectFactory3D.register('irregular', DrawPolyline);
 DrawPlotObjectFactory3D.register("combinationcircle", DrawPolyline);
 DrawPlotObjectFactory3D.register("kidney", DrawPolyline);
 DrawPlotObjectFactory3D.register("sector", DrawPolyline);
+DrawPlotObjectFactory3D.register('pathway',DrawPolyline)
+DrawPlotObjectFactory3D.register('triangle',DrawPolyline)
 
 DrawPlotObjectFactory3D.register("singlearrow", DrawPolyline);
 DrawPlotObjectFactory3D.register("squadarrow", DrawPolyline);

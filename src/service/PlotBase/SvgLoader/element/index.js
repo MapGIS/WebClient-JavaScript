@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 22:22:31
- * @LastEditTime: 2022-06-23 11:14:35
+ * @LastEditTime: 2022-06-28 09:52:04
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\index.js
@@ -40,6 +40,8 @@ import PolygonElement from './PolygonElement';
 import StyleElement from './StyleElement';
 import DefsElement from './DefsElement';
 import BaseIrregularElement from './IrregularElement/BaseIrregularElement';
+import PathwayGeometry from './IrregularElement/PathwayGeometry';
+import TriangleGemtry from './IrregularElement/TriangleGemtry';
 
 
 const drawTypes = ['path', 'mainline', 'tspan', 'mainborder', 'circle','ellipse','rect','line','polyline','polygon','extendline'];
@@ -76,6 +78,8 @@ ElementFactory.register('irregular', BaseIrregularElement);
 ElementFactory.register('combinationcircle', CombinationalCircleGeometry);
 ElementFactory.register('kidney', KidneyGeometry);
 ElementFactory.register('sector', FigureFanGeometry);
+ElementFactory.register('pathway',PathwayGeometry)
+ElementFactory.register('triangle',TriangleGemtry)
 
 ElementFactory.register('singlearrow', SimpleArrowGeometry);
 ElementFactory.register('squadarrow', SquadArrowGeometry);

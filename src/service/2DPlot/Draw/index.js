@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-15 17:47:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-23 11:15:37
+ * @LastEditTime: 2022-06-28 09:53:26
  */
 import DrawPoint2D from './DrawPoint2D';
 import DrawPolyline2D from './DrawPolyline2D';
@@ -25,6 +25,8 @@ DrawPlotObjectFactory2D.register('irregular', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('combinationcircle', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('kidney', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('sector', DrawPolyline2D);
+DrawPlotObjectFactory2D.register('pathway',DrawPolyline2D)
+DrawPlotObjectFactory2D.register('triangle',DrawPolyline2D)
 
 DrawPlotObjectFactory2D.register('singlearrow', DrawPolyline2D);
 DrawPlotObjectFactory2D.register('squadarrow', DrawPolyline2D);

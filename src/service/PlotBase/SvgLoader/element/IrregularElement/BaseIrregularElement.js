@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-18 09:13:48
- * @LastEditTime: 2022-06-23 13:38:41
+ * @LastEditTime: 2022-06-28 10:22:04
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\base\SvgLoader\element\IrregularElement\BaseIrregularElement.js
@@ -37,7 +37,7 @@ export default class BaseIrregularElement extends BasePlotElement {
         const path = document.createElement('path');
         path.setAttribute(
             'style',
-            'fill:#ffff64;fill-opacity:0.70588235;stroke:#ff0000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none'
+            'fill:none;fill-opacity:0.70588235;stroke:#ff0000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none'
         );
         path.setAttribute('id', 'irregular');
         path.setAttribute('d', 'm 200.0,100.0 -200,0');
