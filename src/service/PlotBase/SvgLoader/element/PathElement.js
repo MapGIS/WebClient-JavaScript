@@ -3,7 +3,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-30 18:10:16
- * @LastEditTime: 2022-06-22 10:22:59
+ * @LastEditTime: 2022-06-29 17:13:53
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\PathElement.js
@@ -117,6 +117,7 @@ export default class PathElement extends RenderedElement {
   _getCoords(matrix) {
     const pathArr = this._geometryPnts();
     let v = [];
+    
     if (Array.isArray(matrix)) {
       matrix.forEach((m) => {
         let t = [];
@@ -138,7 +139,6 @@ export default class PathElement extends RenderedElement {
       }
       v = pathArr;
     }
-
     return v;
 
   }
@@ -147,6 +147,7 @@ export default class PathElement extends RenderedElement {
     const transformMatrix = this._getTransform();
     const matrix = this._getMatrix();
     let _coords = [];
+    
     if (this.isAllowCoords) {
       if (Array.isArray(transformMatrix)) {
         const trueMatrixs = transformMatrix.map((s) => {
@@ -160,7 +161,6 @@ export default class PathElement extends RenderedElement {
     } else {
       _coords = [];
     }
-
     return _coords;
   }
 

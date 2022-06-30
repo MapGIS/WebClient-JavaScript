@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-07 15:41:34
+ * @LastEditTime: 2022-06-29 17:27:48
  */
 import { AnimationUtil } from '../../../utils/AnimationUtil';
 import PlotColorAnimation from './PlotColorAnimation';

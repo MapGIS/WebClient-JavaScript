@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-14 18:57:30
- * @LastEditTime: 2022-06-08 17:13:57
+ * @LastEditTime: 2022-06-28 17:55:21
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlotBase\src\svg-loader\element\TSapnElement.js
@@ -19,7 +19,6 @@ import FontStyleClass from './PropertyClass/BaseCanvasClass/FontStyleClass';
 import FillStyleClass from './PropertyClass/BaseCanvasClass/FillStyleClass';
 import StrokeStyleClass from './PropertyClass/BaseCanvasClass/StrokeStyleClass';
 import PropertyClass from './PropertyClass/PropertyClass';
-import DimModal from './DimModal';
 import Matrix3 from '../../../PlotUtilBase/Math/Matrix3';
 
 class TSpanElement extends TextElement {

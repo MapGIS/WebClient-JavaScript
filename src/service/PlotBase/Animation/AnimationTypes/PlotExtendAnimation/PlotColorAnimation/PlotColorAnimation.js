@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-08 12:49:59
+ * @LastEditTime: 2022-06-29 17:06:36
  */
 import PlotBaseAnimation from '../../PlotBaseAnimation';
 import { AnimationColorUtil } from '../../../utils/ColorUtil';
@@ -95,7 +95,7 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
             if (Object.prototype.toString.call(colorItem[s]) === '[object Object]') {
                 this._applyColorByRate(colorItem[s], rate);
             } else {
-                colorItem[s] = this._calcColorRate(colorItem[s], colorRate);
+                colorItem[s] = this._calcColorRate(colorItem[s], rate);
             }
         });
     }
@@ -167,11 +167,15 @@ export default class PlotColorAnimation extends PlotBaseAnimation {
             });
         });
     }
-    restore() {
-        super.restore();
+    
+    clearColorItem(){
         if (this.firstColorItem) {
             const colorItems = JSON.parse(JSON.stringify(this.firstColorItem));
             this._setColorItems(colorItems);
         }
+    }
+    restore() {
+        super.restore();
+        this.clearColorItem()
     }
 }

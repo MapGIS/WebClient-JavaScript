@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-08 11:47:33
+ * @LastEditTime: 2022-06-29 17:30:44
  */
 import PlotColorAnimation from './PlotColorAnimation';
 import { GradientColor } from '../../../utils/GradientColor';
@@ -19,8 +19,8 @@ export default class PlotBlinkAnimation extends PlotColorAnimation {
         // animation type
         this.animationType = 'blink-animation';
         //init base options
-        this.loop = AnimationUtil.defineValue(options.loop, 500);
-        this.duration = AnimationUtil.defineValue(options.duration, 1000);
+        this.loop = AnimationUtil.defineValue(options.loop, 50000000);
+        this.duration = AnimationUtil.defineValue(options.duration, 500);
         // init options
         this.blinkColors = AnimationUtil.defineValue(options.blinkColors, []);
         this.isBlinkGrad = AnimationUtil.defineValue(options.isBlinkGrad, true);
@@ -59,10 +59,6 @@ export default class PlotBlinkAnimation extends PlotColorAnimation {
         if (blinkColors.length === 0) {
             color = null;
         } else {
-            const lastColor = blinkColors[blinkColors.length - 1];
-            if (!this.endStatus) {
-                blinkColors = blinkColors.concat([this._calcColorRate(lastColor, 0)]);
-            }
             color = this.isBlinkGrad ? this._calcColorArrByRate(blinkColors, rate) : this._calcColorArrByRateWithNoGrad(blinkColors, rate);
         }
 
@@ -70,25 +66,37 @@ export default class PlotBlinkAnimation extends PlotColorAnimation {
             if (Object.prototype.toString.call(colorItem[s]) === '[object Object]') {
                 this._applyColorByRate(colorItem[s], rate);
             } else {
-                colorItem[s] = color ? color : (this.isBlinkGrad ? this._calcColorRate(colorItem[s], rate) : colorItem[s]);
+                if (color) {
+                    colorItem[s] = color;
+                } else {
+                    const defaultColorArr = [];
+                    defaultColorArr.push(colorItem[s]);
+                    defaultColorArr.unshift(this._calcColorRate(colorItem[s], 0))
+                    colorItem[s] = this.isBlinkGrad
+                        ? this._calcColorArrByRate(defaultColorArr, rate)
+                        : this._calcColorArrByRateWithNoGrad(defaultColorArr, rate);
+                }
             }
         });
     }
 
-    
-    exportOption(){
-        const object = super.exportOption()
-        const propertys= PlotBlinkAnimation.cacheProperty.split(',')
-        propertys.forEach((s)=>{
-            object[s]=this[s]
-        })
-        return object
+    exportOption() {
+        const object = super.exportOption();
+        const propertys = PlotBlinkAnimation.cacheProperty.split(',');
+        propertys.forEach((s) => {
+            object[s] = this[s];
+        });
+        return object;
     }
 
     render(rate) {
+        if(rate>=1){
+             this.clearColorItem()
+             return
+        }
         const colorItems = this._getColorItemByRate(rate);
         this._setColorItems(colorItems);
     }
 }
 
-PlotBlinkAnimation.cacheProperty='blinkColors,isBlinkGrad,endStatus'
+PlotBlinkAnimation.cacheProperty = 'blinkColors,isBlinkGrad,endStatus';

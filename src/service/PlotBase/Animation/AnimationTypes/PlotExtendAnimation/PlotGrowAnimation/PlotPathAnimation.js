@@ -2,13 +2,14 @@ import { AnimationUtil } from '../../../utils/AnimationUtil';
 import PlotCoordsAnimation from './PlotCoordsAnimation';
 import Spline from '../../../../../PlotUtilBase/Geometry/Spline';
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
+import { calculatePolygonGravityCenter } from '../../../../../PlotUtilBase/Math/MathUtils';
 
 /*
  * @Description: 路径动画类
  * @Author: zk
  * @Date: 2022-04-19 09:59:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-15 20:43:05
+ * @LastEditTime: 2022-06-30 15:34:50
  */
 export default class PlotPathAnimation extends PlotCoordsAnimation {
     constructor(options) {
@@ -90,6 +91,26 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
                 return 0;
             }
         });
+
+        this.centerActions = this._plotObjects.map((plotobject) => {
+            const positions = plotobject.getElement().positions;
+            const len = positions.length;
+            let center;
+            if (len === 1) {
+                center = [positions[0].x, positions[0].y];
+            } else if (len === 2) {
+                center = [(positions[1].x - positions[0].x) / 2 + positions[0].x, (positions[1].y - positions[0].y) / 2 + positions[0].y];
+            } else {
+                // 计算中心点
+                center = calculatePolygonGravityCenter(positions.map((t) => [t.x, t.y]));
+            }
+
+            return function (polys, pnt) {
+                return polys.map((pol) => {
+                    return new Point(pol.x + pnt.x - center[0], pol.y + pnt.y - center[1]);
+                });
+            };
+        });
     }
 
     _initPathWayObject(options) {
@@ -164,13 +185,14 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
 
         const pnt = new Point(v[0][0], v[0][1]);
 
-        this._plotObjects.forEach((plotobject) => {
+        this._plotObjects.forEach((plotobject, index) => {
             const element = plotobject.getElement();
+
             // 设置沿斜线方向的角度
-            if (this.alongTangent) {
+            if (this.alongTangent && element.setGeometryAngle) {
                 element.setGeometryAngle(v[1]);
             }
-            this._setPnts(plotobject, [pnt]);
+            this._setPnts(plotobject, this.centerActions[index](this._animationPolys[index], pnt));
         });
     }
 }

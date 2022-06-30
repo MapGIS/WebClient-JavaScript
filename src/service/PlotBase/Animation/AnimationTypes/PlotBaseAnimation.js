@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-16 17:38:39
+ * @LastEditTime: 2022-06-30 15:52:51
  */
 import { AnimationUtil } from '../utils/AnimationUtil';
 import { easingFunc } from '../utils/Easing';
@@ -41,7 +41,7 @@ export default class PlotBaseAnimation {
         // 状态
         this._updateGeometry = true;
         // 允许动画作用
-        this._allowAnimation= false
+        this._allowAnimation = false;
     }
     /**
      * @function: Module:PlotBaseAnimation.prototype.update
@@ -95,6 +95,7 @@ export default class PlotBaseAnimation {
         const totalDuration = insDuration + insTimelineOffset;
         const insDelay = this.delay + insTimelineOffset;
         const insEndDelay = totalDuration - this.endDelay;
+
         const insTime = this.adjustTime(engineTime);
 
         this.currentTime = this.minMax(insTime, 0, totalDuration);
@@ -102,9 +103,14 @@ export default class PlotBaseAnimation {
         if (!this.loopBegan && this.currentTime > 0) {
             this.loopBegan = true;
         }
-        if (insTime <= insDelay) {
+        if (insTime <= insTimelineOffset ) {
+            return;
+        }
+
+        if(insTime <= insDelay && this.remaining>1){
             this.setAnimationsProgress(0);
         }
+
         if (insTime >= insEndDelay) {
             this.setAnimationsProgress(insDuration);
         }
@@ -159,7 +165,7 @@ export default class PlotBaseAnimation {
      * @return {*}
      */
     restore() {
-        this.updateGeometry()
+        this.updateGeometry();
         this.reset();
     }
 
@@ -276,8 +282,8 @@ export default class PlotBaseAnimation {
         }
         return false;
     }
-    resetGeometryStatus(){
-        this.render(0.001)
+    resetGeometryStatus() {
+        this.render(0.001);
     }
     updateGeometry() {
         if (this._updateGeometry) {

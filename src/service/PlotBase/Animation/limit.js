@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-06 21:00:52
  * @LastEditors: zk
- * @LastEditTime: 2022-06-16 15:42:45
+ * @LastEditTime: 2022-06-29 17:33:29
  */
 
 /**
@@ -135,10 +135,6 @@ export const v = {
                 default: []
             },
             isBlinkGrad: {
-                type: 'boolean',
-                default: true
-            },
-            endStatus: {
                 type: 'boolean',
                 default: true
             }
