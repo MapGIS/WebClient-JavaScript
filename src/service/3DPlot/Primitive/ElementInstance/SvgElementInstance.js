@@ -22,8 +22,8 @@ export default class SvgElementInstance {
         this._elem = elem;
         this._options = options;
         this.globelScale = options.globelScale || 100
-        this.fillDefaultWidth = 5
-        this.textDefaultWidth = 10
+        this.fillDefaultWidth = 2.9
+        this.textDefaultWidth = 8
         this.instance = undefined;
     }
 

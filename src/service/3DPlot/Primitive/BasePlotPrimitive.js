@@ -18,8 +18,8 @@ class BasePlotPrimitive {
         this._update = true;
         this._translucent = false;
         // 缩放
-        this.m_scale = 20;
-        this._modHeight = 500;
+        this.m_scale = 60;
+        this._modHeight = 2000;
 
         this._elem = options.element;
 
