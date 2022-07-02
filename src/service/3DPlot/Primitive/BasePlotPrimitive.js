@@ -1,4 +1,4 @@
-import {getCenter, getCenterByCartesian} from "../Utils/PlotUtil"
+import { getCenter, getCenterByCartesian } from '../Utils/PlotUtil';
 
 /**
  * @class module:3DPlot.BasePlotPrimitive
@@ -31,7 +31,7 @@ class BasePlotPrimitive {
 
         this._positions = [];
 
-        const {positions} = this._elem;
+        const { positions } = this._elem;
         for (let i = 0; i < positions.length; i += 1) {
             const tempPos = this._elem.positions[i];
             this._positions.push(Cesium.Cartesian3.fromDegrees(tempPos.x, tempPos.y));
@@ -49,10 +49,10 @@ class BasePlotPrimitive {
      */
     _elemPropsUpdateHandler(event) {
         if (event.type === 'positions') {
-            let {_positionBillboards,_shapeBillboards} = this;
+            let { _positionBillboards, _shapeBillboards } = this;
             const positions = event.value;
 
-            if(_positionBillboards && _shapeBillboards){
+            if (_positionBillboards && _shapeBillboards) {
                 let prevCenter = getCenterByCartesian(this._positions);
                 let center = getCenter(positions);
                 let cartographicStart = Cesium.Cartographic.fromDegrees(prevCenter.geometry.coordinates[0], prevCenter.geometry.coordinates[1], 0);
@@ -62,15 +62,23 @@ class BasePlotPrimitive {
                 //更新位置点坐标
                 let _positionBillboard = _positionBillboards.get(0);
                 let _positionBillboardCart = Cesium.Cartographic.fromCartesian(_positionBillboard.position);
-                let positionPoint = Cesium.Cartesian3.fromDegrees(center.geometry.coordinates[0], center.geometry.coordinates[1], _positionBillboardCart.height);
+                let positionPoint = Cesium.Cartesian3.fromDegrees(
+                    center.geometry.coordinates[0],
+                    center.geometry.coordinates[1],
+                    _positionBillboardCart.height
+                );
                 _positionBillboard.position = positionPoint;
                 //更新控制点坐标
                 //平移图元和形状控制点
                 for (let i = 0; i < positions.length; i++) {
                     let shapePoint = _shapeBillboards.get(i);
-                    if(shapePoint._isEdit === false){
+                    if (shapePoint._isEdit === false) {
                         let shapePointCart = Cesium.Cartographic.fromCartesian(shapePoint.position);
-                        shapePoint.position = Cesium.Cartesian3.fromDegrees(Cesium.Math.toDegrees(shapePointCart.longitude) + offsetLng, Cesium.Math.toDegrees(shapePointCart.latitude) + offsetLat, 600);
+                        shapePoint.position = Cesium.Cartesian3.fromDegrees(
+                            Cesium.Math.toDegrees(shapePointCart.longitude) + offsetLng,
+                            Cesium.Math.toDegrees(shapePointCart.latitude) + offsetLat,
+                            600
+                        );
                     }
                 }
             }
@@ -253,6 +261,26 @@ class BasePlotPrimitive {
         }
     }
 
+    getStyleJSON() {
+        const object = this._elem.getStyleJSON();
+        const baseAttrNames = this.getPrimitiveBaseSaveAttributes();
+        baseAttrNames.forEach((t) => {
+            object[t] = this[t];
+        });
+        return object;
+    }
+
+    setStyleJSON(object) {
+        this._elem.setStyleJSON(object);
+        const baseAttrNames = this.getPrimitiveBaseSaveAttributes();
+        const keys = Object.keys(object);
+        keys.forEach((t) => {
+            if (baseAttrNames.indexOf(t) > -1) {
+                this[t] = object[t];
+            }
+        });
+    }
+
     /**
      * @description: 初始化保存属性（必须和extend扩展数组对应）
      * @function module:3DPlot.BasePlotPrimitive.initBaseSaveAttributes
@@ -352,7 +380,7 @@ class BasePlotPrimitive {
                         type: 'Image',
                         uniforms: {
                             image: this.getColorRamp([0.0, 1], [wallColor, WallGradColor], true),
-                            repeat: {x: 1, y: 1}
+                            repeat: { x: 1, y: 1 }
                         }
                     }
                 })
@@ -456,7 +484,7 @@ class BasePlotPrimitive {
      * @return {Object} style 图元样式
      */
     getStyle() {
-        return this._elem.getStyleJSON();
+        return this.getStyleJSON();
     }
 }
 

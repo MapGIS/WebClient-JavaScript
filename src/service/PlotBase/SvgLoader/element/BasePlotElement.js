@@ -3,18 +3,18 @@
  * @Author: zk
  * @Date: 2021-11-18 15:08:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-13 19:24:54
+ * @LastEditTime: 2022-07-02 14:22:55
  */
-import Point from "../../../PlotUtilBase/Geometry/Point";
-import {createGuid} from "../../../PlotUtilBase/Util/Guid";
-import SvgElement from "./SvgElement";
-import Signal from "../../../PlotUtilBase/Signal/Signal";
-import PathElement from "./PathElement";
-import TSpanElement from "./TSpanElement";
-import {drawTypes} from "./index";
-import GElement from "./GElement";
-import TextElement from "./TextElement";
-import PropertyClass from "./PropertyClass/PropertyClass";
+import Point from '../../../PlotUtilBase/Geometry/Point';
+import { createGuid } from '../../../PlotUtilBase/Util/Guid';
+import SvgElement from './SvgElement';
+import Signal from '../../../PlotUtilBase/Signal/Signal';
+import PathElement from './PathElement';
+import TSpanElement from './TSpanElement';
+import { drawTypes } from './index';
+import GElement from './GElement';
+import TextElement from './TextElement';
+import PropertyClass from './PropertyClass/PropertyClass';
 
 /**
  * 标绘Element基类
@@ -40,7 +40,7 @@ class BasePlotElement extends SvgElement {
         // 衬线
         this.compareLine = 0;
         this.compareLineWidth = 6;
-        this.compareLineColor = "#099563";
+        this.compareLineColor = '#099563';
         this.compareLineOpacity = 1;
         // 控制点数组，统一为经纬度
         this._pnts = [];
@@ -59,8 +59,8 @@ class BasePlotElement extends SvgElement {
     set positions(pnts) {
         this._pnts = pnts;
         this._propsUpdateSignal.dispatch({
-            type: "positions",
-            value: pnts,
+            type: 'positions',
+            value: pnts
         });
     }
 
@@ -112,11 +112,7 @@ class BasePlotElement extends SvgElement {
     }
 
     _getPathElem(elem, paths) {
-        if (
-            elem._children.length === 0 &&
-            elem instanceof PathElement &&
-            elem.isAllowCoords
-        ) {
+        if (elem._children.length === 0 && elem instanceof PathElement && elem.isAllowCoords) {
             paths.push(elem);
         } else {
             for (let i = 0; i < elem._children.length; i += 1) {
@@ -135,11 +131,7 @@ class BasePlotElement extends SvgElement {
     }
 
     _getSpanElem(elem, spans) {
-        if (
-            elem._children.length === 0 &&
-            elem instanceof TSpanElement &&
-            elem.isAllowCoords
-        ) {
+        if (elem._children.length === 0 && elem instanceof TSpanElement && elem.isAllowCoords) {
             spans.push(elem);
         } else {
             for (let i = 0; i < elem._children.length; i += 1) {
@@ -156,9 +148,7 @@ class BasePlotElement extends SvgElement {
     _clone(cloneObject) {
         super._clone(cloneObject);
         cloneObject._is3d = this._is3d;
-        cloneObject._pnts = this._pnts
-            ? this._pnts.map((s) => new Point(s.x, s.y))
-            : null;
+        cloneObject._pnts = this._pnts ? this._pnts.map((s) => new Point(s.x, s.y)) : null;
         cloneObject._propsUpdateSignal = new Signal();
 
         cloneObject.m_scaleX = this.m_scaleX;
@@ -182,15 +172,15 @@ class BasePlotElement extends SvgElement {
     _createGeometry() {
         const coordinates = this._pnts.map((s) => [s.x, s.y]);
         return {
-            type: "MultiPoint",
-            coordinates,
+            type: 'MultiPoint',
+            coordinates
         };
     }
 
     _createProperties() {
-        const properties =Object.assign(this.toJson(), {
+        const properties = Object.assign(this.toJson(), {
             symbolId: this._symbol.id,
-            symbolName: this._symbol.name,
+            symbolName: this._symbol.name
         });
         // 存储样式节点属性
         properties.symbolNodes = this.getNodesAttributes();
@@ -203,9 +193,9 @@ class BasePlotElement extends SvgElement {
 
     toGeoJSON() {
         return {
-            type: "Feature",
+            type: 'Feature',
             properties: this._createProperties(),
-            geometry: this._createGeometry(),
+            geometry: this._createGeometry()
         };
     }
 
@@ -214,30 +204,29 @@ class BasePlotElement extends SvgElement {
      * @return {Object} json 样式对象
      */
     getStyleJSON() {
-        const {properties} = this.toGeoJSON();
-        const {symbolNodes} = properties;
-        let nodeStyles = {}, style = JSON.parse(JSON.stringify(properties));
-        Object.keys(symbolNodes).forEach(function (key) {
-            let styleObj = symbolNodes[key];
-            let keys = key.split(',');
-            for (let i = 0; i < keys.length; i++) {
-                if (!nodeStyles.hasOwnProperty(keys[i])) {
-                    nodeStyles[keys[i]] = {};
-                }
-                nodeStyles[keys[i]] = Object.assign(nodeStyles[keys[i]], styleObj);
-            }
-        });
-        style.nodeStyles = nodeStyles;
-        delete style.isScaleByMap;
+        const { properties } = this.toGeoJSON();
+        const { symbolNodes } = properties;
+        let style = JSON.parse(JSON.stringify(properties));
+        style.nodeStyles = JSON.parse(JSON.stringify(symbolNodes));
         delete style.symbolNodes;
-
         return style;
     }
 
+    /**
+     * @description: 设置样式json对象
+     * @params {Object} json 样式对象
+     */
+    setStyleJSON(object) {
+        let style = JSON.parse(JSON.stringify(object));
+        style.symbolNodes = JSON.parse(JSON.stringify(object.nodeStyles));
+        delete style.nodeStyles;
+        this.initProperties(style)
+    }
+
     fromGeoJSON(geojson) {
-        if (geojson.type === "Feature") {
+        if (geojson.type === 'Feature') {
             // 初始化样式 样式覆盖
-            const {coordinates} = geojson.geometry;
+            const { coordinates } = geojson.geometry;
             const _coords = coordinates || [];
             const pnts = [];
             _coords.forEach((s) => {
@@ -247,7 +236,7 @@ class BasePlotElement extends SvgElement {
             this.initProperties(geojson.properties);
         } else {
             // eslint-disable-next-line no-new
-            new Error("GeoJSON类型错误!");
+            new Error('GeoJSON类型错误!');
         }
     }
 
@@ -255,7 +244,6 @@ class BasePlotElement extends SvgElement {
         this.initPlotAttributes(properties);
         this.initNodeStyles(properties.symbolNodes);
     }
-
 
     /**   子节点样式   */
     /**
@@ -277,7 +265,7 @@ class BasePlotElement extends SvgElement {
             if (child instanceof GElement) {
                 this._getStyles(child._children, styleObject);
             } else if (drawTypes.indexOf(child.type) > -1) {
-                const id = child.getAttribute("id").getString();
+                const id = child.getAttribute('id').getString();
                 if (id) {
                     // 区分文字属性和普通样式属性
                     styleObject[id] = child.toJson();
@@ -309,7 +297,7 @@ class BasePlotElement extends SvgElement {
      * @return {*}
      */
     setAllAttributes(properties) {
-        this.initProperties(properties)
+        this.initProperties(properties);
         //  发送属性变更事件
         this._propsUpdateSignal.dispatch({});
     }
@@ -320,7 +308,7 @@ class BasePlotElement extends SvgElement {
      * @return {*}
      */
     getAllAttributes() {
-        return this._createProperties()
+        return this._createProperties();
     }
 
     /**
@@ -331,15 +319,14 @@ class BasePlotElement extends SvgElement {
      * @return {*}
      */
     setNodeAttr(type, value, childIds) {
-        const {baseSVGAttributes, extendElementAttributes} =
-            this.getSaveBaseAttributes();
+        const { baseSVGAttributes, extendElementAttributes } = this.getSaveBaseAttributes();
         const baseSVGStyleAttributes = this.getStyleObject().getSVGStyleNameArr();
 
         let val = value;
 
-        if (type === "text") {
-            const idArr = childIds.split(",");
-            val = value.split(",");
+        if (type === 'text') {
+            const idArr = childIds.split(',');
+            val = value.split(',');
             idArr.forEach((s, index) => {
                 const ele = this._getElementById(s);
                 if (ele) {
@@ -355,7 +342,7 @@ class BasePlotElement extends SvgElement {
         ) {
             this._setNodeAttr(this, type, value);
         } else {
-            const idArr = childIds.split(",");
+            const idArr = childIds.split(',');
             idArr.forEach((s) => {
                 const ele = this._getElementById(s);
                 if (ele) {
@@ -366,8 +353,7 @@ class BasePlotElement extends SvgElement {
     }
 
     _setNodeAttr(child, key, value) {
-        const {baseSVGAttributes, extendElementAttributes} =
-            child.getSaveBaseAttributes();
+        const { baseSVGAttributes, extendElementAttributes } = child.getSaveBaseAttributes();
         const baseSVGStyleAttributes = child.getStyleObject().getStyleNameArr();
 
         if (baseSVGStyleAttributes.indexOf(key) > -1) {
@@ -381,7 +367,7 @@ class BasePlotElement extends SvgElement {
         //  发送属性变更事件
         this._propsUpdateSignal.dispatch({
             type: key,
-            value: value,
+            value: value
         });
     }
 
@@ -415,7 +401,7 @@ class BasePlotElement extends SvgElement {
         // 去除文字影响
         textObjArr.forEach((s) => {
             textValues.push(s.text);
-            s.text = "none";
+            s.text = 'none';
         });
         const pathGroup = this.divideGroup(pathKeys, pathObjArr);
         const textGroup = this.divideGroup(textKeys, textObjArr);
@@ -491,9 +477,9 @@ class BasePlotElement extends SvgElement {
 
         const keys = Object.keys(nodeStyles);
         keys.forEach((s) => {
-            const idArr = s.split(",");
+            const idArr = s.split(',');
             const styleObject = nodeStyles[s];
-            const textArr = styleObject.text ? styleObject.text.split(",") : null;
+            const textArr = styleObject.text ? styleObject.text.split(',') : null;
 
             idArr.forEach((id, i) => {
                 const ele = this._getElementById(id);
@@ -525,7 +511,7 @@ class BasePlotElement extends SvgElement {
     _getElementById(id, children = this._children) {
         for (let i = 0; i < children.length; i++) {
             const child = children[i];
-            if (child.getAttribute("id").getString() === id) {
+            if (child.getAttribute('id').getString() === id) {
                 return child;
             }
             if (child instanceof TextElement || child instanceof GElement) {
@@ -552,14 +538,7 @@ class BasePlotElement extends SvgElement {
     }
 }
 
-BasePlotElement.extendElementAttributes = [
-    "show",
-    "featureId",
-    "isScaleByMap",
-    "compareLine",
-    "compareLineWidth",
-    "compareLineColor",
-];
+BasePlotElement.extendElementAttributes = ['show', 'featureId', 'compareLine', 'compareLineWidth', 'compareLineColor'];
 
 BasePlotElement.baseSVGAttributes = [];
 BasePlotElement.styleClassArray = [];

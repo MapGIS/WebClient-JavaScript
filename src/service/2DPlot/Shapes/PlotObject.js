@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-05 11:32:52
- * @LastEditTime: 2022-06-08 09:54:23
+ * @LastEditTime: 2022-07-02 15:05:58
  * @LastEditors: zk
  * @Description: In User Settings Edit
  * @FilePath: \MapGISPlot\src\js\Shapes\PlotObject.js
@@ -90,6 +90,13 @@ const PlotObject = fabric.util.createClass(fabric.Object, {
             // eslint-disable-next-line no-new
             new Error('GeoJSON类型错误!');
         }
+    },
+    getStyleJSON(){
+        const object = this._elem.getStyleJSON();
+        return object;
+    },
+    setStyleJSON(object){
+        this._elem.setStyleJSON(object)
     },
     isNotVisible: function () {
         return this.opacity === 0 || (!this.width && !this.height && this.strokeWidth === 0) || !this.visible || !this._elem.show;

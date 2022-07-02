@@ -8,6 +8,11 @@ import RegularPointPrimitive from "./RegularPointPrimitive";
  * @param options - {Object} 初始化参数
  */
 class SimplePointPrimitive extends RegularPointPrimitive {
+ 
+  constructor(options) {
+    super(options);
+    this.m_scale=50
+  }
 
   /**
    * @description 重写父类的initBaseSaveAttributes方法
