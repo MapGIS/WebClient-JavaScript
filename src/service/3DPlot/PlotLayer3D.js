@@ -236,6 +236,7 @@ class PlotLayer3D extends Observable {
      */
     fromJSON(geoJson) {
         if (geoJson.type === "FeatureCollection") {
+            this.removeAll();
             const {features} = geoJson;
             features.forEach((s) => {
                 this._addGeoJSONObject(s);
