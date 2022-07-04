@@ -118,7 +118,7 @@ class PlotLayer2D {
     off(eventName) {
         this._eventHandlers.forEach((s) => {
             if (s.eventName === eventName) {
-                this._fabricCanvas.off(s.eventName, s.handler);
+                this._fabricCanvas && this._fabricCanvas.off(s.eventName, s.handler);
             }
         });
     }
@@ -278,10 +278,10 @@ class PlotLayer2D {
         const symbolManager = SymbolManager.instance;
 
         const leaf = symbolManager.getLeafByID(id);
-        if(!leaf) return null;
+        if (!leaf) return null;
 
         const element = await leaf.getElement();
-        if(!element) return null
+        if (!element) return null;
         const plotObj = PlotObjectFactory.createInstance(element.type, {
             element,
             positions: element.positions,
@@ -435,7 +435,7 @@ class PlotLayer2D {
      * @description: 请求渲染
      */
     requestRenderAll() {
-        this._fabricCanvas.requestRenderAll();
+        this._fabricCanvas && this._fabricCanvas.requestRenderAll();
     }
 }
 
