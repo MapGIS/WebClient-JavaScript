@@ -142,7 +142,19 @@ export default class EditTool {
         //拾取标绘图元
         const pick = this._scene.pick(event.position);
 
-        if (!defined(pick)) return;
+        if (!defined(pick)) {
+            if(this._selectPlot){
+                if(this._selectPlot._positionBillboards){
+                    this._scene.primitives.remove(this._selectPlot._positionBillboards);
+                    this._selectPlot._positionBillboards = undefined;
+                }
+                if(this._selectPlot._shapeBillboards){
+                    this._scene.primitives.remove(this._selectPlot._shapeBillboards);
+                    this._selectPlot._shapeBillboards = undefined;
+                }
+            }
+            return;
+        }
 
         let {primitive} = pick;
         let {pointType, _plotId} = primitive;
@@ -161,6 +173,12 @@ export default class EditTool {
             } else if (defined(primitive.pickedPrimitive)) {
                 //是标绘图元
                 let {positions} = primitive.pickedPrimitive;
+                if(that._selectPlot && that._selectPlot._positionBillboards){
+                    that._scene.primitives.remove(that._selectPlot._positionBillboards);
+                    that._scene.primitives.remove(that._selectPlot._shapeBillboards);
+                    that._selectPlot._positionBillboards = undefined;
+                    that._selectPlot._shapeBillboards = undefined;
+                }
                 //暂存标绘图元
                 that._selectPlot = primitive.pickedPrimitive;
                 //获取控制点高度
@@ -184,18 +202,20 @@ export default class EditTool {
                     //规则线二
                     case "msbl_regularline2":
                     //非规则符号
-                    case "msbl_AssaultArrow":
-                    case "msbl_MultiArrow":
-                    case "msbl_CombinationalCircle":
-                    case "msbl_AntiAircraftGroup":
-                    case "msbl_cannonGroup":
-                    case "msbl_Kidney":
-                    case "msbl_doublearrow":
-                    case "msbl_singleArrow":
-                    case "msbl_squadarrow":
-                    case "msbl_FigureFan":
                     case "simplearea":
                     case "simpleline":
+                    case "irregular":
+                    case "kidney":
+                    case "sector":
+                    case "combinationcircle":
+                    case "pathway":
+                    case "triangle":
+                    case "singlearrow":
+                    case "multiarrow":
+                    case "doublearrow":
+                    case "squadarrow":
+                    case "assaultarrow":
+                    case "tailedsquadarrow":
                         let cneter = this._getCenter(that._selectPlot.positions);
                         //设置位置控制点
                         that._setPositionControl(Cesium.Cartesian3.fromDegrees(cneter.geometry.coordinates[0], cneter.geometry.coordinates[1], that._controlHeight), undefined, primitive.pickedPrimitive);
