@@ -132,7 +132,7 @@ class PlotLayer3D extends Observable {
         if (!plotLayer) {
             return undefined;
         }
-        
+
         let index = this._getPlotIndexById(id, plotLayer);
         const {_primitives} = plotLayer;
         if (index !== undefined) {
@@ -301,6 +301,23 @@ class PlotLayer3D extends Observable {
         tag.setAttribute("download", "三维态势图");
         tag.href = url;
         tag.click();
+    }
+
+    /**
+     * @function: Module:PlotLayer2D.prototype.setVisible
+     * @description: 设置图层可见性
+     * @param {Boolean} flag
+     */
+    setVisible(flag) {
+      const {_primitives} = this._primitiveCollection;
+      if(!_primitives || !(_primitives instanceof Array)) return;
+      for (let i = 0; i < _primitives.length; i++) {
+        let _primitivesCollection = _primitives[i]._primitives;
+        if(!_primitivesCollection || !(_primitivesCollection instanceof Array)) return;
+        for (let j = 0; j < _primitivesCollection.length; j++) {
+          _primitivesCollection[j].show = flag;
+        }
+      }
     }
 
     /**
