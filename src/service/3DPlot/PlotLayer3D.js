@@ -248,6 +248,7 @@ class PlotLayer3D extends Observable {
             let layerInterval = setInterval(function () {
                 if(features.length === that._primitiveCollection._primitives.length){
                     that.loaded = true;
+                    clearInterval(layerInterval);
                 }
             },50);
         } else {

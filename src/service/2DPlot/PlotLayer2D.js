@@ -260,9 +260,16 @@ class PlotLayer2D {
     fromJSON(geoJson) {
         if (geoJson.type === 'FeatureCollection') {
             const { features } = geoJson;
+            let that = this;
             features.forEach((/** @type {any} */ s) => {
                 this.addGeoJSONObject(s);
             });
+            let layerInterval = setInterval(function () {
+                if(features.length === that.getPlotObjects().length){
+                    that.loaded = true;
+                    clearInterval(layerInterval);
+                }
+            },50);
         } else {
             // eslint-disable-next-line no-new
             new Error('GeoJSON类型错误，传入值非要素集！');
