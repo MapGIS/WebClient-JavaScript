@@ -216,6 +216,7 @@ export default class EditTool {
                     case "squadarrow":
                     case "assaultarrow":
                     case "tailedsquadarrow":
+                    case "multiArrow":
                         let cneter = this._getCenter(that._selectPlot.positions);
                         //设置位置控制点
                         that._setPositionControl(Cesium.Cartesian3.fromDegrees(cneter.geometry.coordinates[0], cneter.geometry.coordinates[1], that._controlHeight), undefined, primitive.pickedPrimitive);
@@ -288,6 +289,19 @@ export default class EditTool {
                 case "msbl_FigureFan":
                 case "simplearea":
                 case "simpleline":
+                case "irregular":
+                case "kidney":
+                case "sector":
+                case "combinationcircle":
+                case "pathway":
+                case "triangle":
+                case "singlearrow":
+                case "multiarrow":
+                case "doublearrow":
+                case "squadarrow":
+                case "assaultarrow":
+                case "tailedsquadarrow":
+                case "multiArrow":
                     //形状控制点
                     let shapeBillboards = this._shapeBillboards;
                     //平移图元和形状控制点
