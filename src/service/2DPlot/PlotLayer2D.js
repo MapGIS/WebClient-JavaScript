@@ -36,6 +36,8 @@ class PlotLayer2D {
         this._isDrawing = false;
         // 是否为可编辑活跃图层
         this.editable = false;
+        //是否加载完毕
+        this.loaded = false;
     }
 
     /**

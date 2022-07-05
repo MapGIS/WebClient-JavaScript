@@ -58,6 +58,9 @@ class PlotLayer3D extends Observable {
         //二三维联动工具
         this._linkTool = undefined;
 
+        //是否加载完毕
+        this.loaded = false;
+
         this._primitiveCollection._id = this._id;
         let scene = this._getScene();
         scene.primitives.add(this._primitiveCollection);
@@ -238,9 +241,15 @@ class PlotLayer3D extends Observable {
         if (geoJson.type === "FeatureCollection") {
             this.removeAll();
             const {features} = geoJson;
+            let that = this;
             features.forEach((s) => {
                 this._addGeoJSONObject(s);
             });
+            let layerInterval = setInterval(function () {
+                if(features.length === that._primitiveCollection._primitives.length){
+                    that.loaded = true;
+                }
+            },50);
         } else {
             // eslint-disable-next-line no-new
             new Error("GeoJSON类型错误，传入值非要素集！");
