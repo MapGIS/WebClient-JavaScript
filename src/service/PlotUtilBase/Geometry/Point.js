@@ -157,4 +157,7 @@ static newAdd(pnt,x,y){
     return new Point(pnt.x-x,pnt.y-y)
   }
 }
+if(typeof Zondy.Plot.PlotUtilBase=== 'undefined'){
+  Zondy.Plot.PlotUtilBase={}
+}
 Zondy.Plot.PlotUtilBase.Point=Point
