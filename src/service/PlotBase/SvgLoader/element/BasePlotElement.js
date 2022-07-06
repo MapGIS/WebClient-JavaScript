@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2021-11-18 15:08:49
  * @LastEditors: zk
- * @LastEditTime: 2022-07-02 14:22:55
+ * @LastEditTime: 2022-07-06 11:22:37
  */
 import Point from '../../../PlotUtilBase/Geometry/Point';
 import { createGuid } from '../../../PlotUtilBase/Util/Guid';
@@ -319,6 +319,7 @@ class BasePlotElement extends SvgElement {
      * @return {*}
      */
     setNodeAttr(type, value, childIds) {
+        if(!childIds) return;
         const { baseSVGAttributes, extendElementAttributes } = this.getSaveBaseAttributes();
         const baseSVGStyleAttributes = this.getStyleObject().getSVGStyleNameArr();
 

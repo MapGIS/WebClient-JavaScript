@@ -283,7 +283,7 @@ export default class PlotBaseAnimation {
         return false;
     }
     resetGeometryStatus() {
-        this.render(0.001);
+        this.render(0.000001);
     }
     updateGeometry() {
         if (this._updateGeometry) {
