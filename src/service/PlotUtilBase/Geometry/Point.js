@@ -1,6 +1,7 @@
 import { defaultValue } from "../Check";
 import StringUtil from "../Util/StringUtil";
 import MathUtil from "../Util/MathUtil";
+import { Zondy } from "../../common/Base";
 /**
  * Point类
  * @property x x坐标
@@ -156,3 +157,4 @@ static newAdd(pnt,x,y){
     return new Point(pnt.x-x,pnt.y-y)
   }
 }
+Zondy.Plot.PlotUtilBase.Point=Point

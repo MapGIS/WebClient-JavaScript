@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-06-22 16:53:01
  * @LastEditors: zk
- * @LastEditTime: 2022-06-23 11:54:41
+ * @LastEditTime: 2022-07-06 12:08:10
  */
 import { ElementFactory } from '../PlotBase/SvgLoader/element';
 import { PlotObjectFactory } from '../2DPlot/Shapes/PlotObjectFactory';
@@ -12,7 +12,7 @@ import { PrimitiveFactory } from '../3DPlot/Primitive/PrimitiveFactory';
 import { DrawPlotObjectFactory2D } from '../2DPlot/Draw/DrawPlotObjectFactory2D';
 import { DrawPlotObjectFactory3D } from '../3DPlot/Draw/DrawPlotObjectFactory3D';
 import LogTool from '../PlotUtilBase/Log/LogTool';
-
+import { Zondy } from '../common/Base';
 class PlotRegister {
     constructor() {
         this._cacheRegisterTypes = [];
@@ -88,3 +88,4 @@ class PlotRegister {
 }
 
 export default PlotRegister;
+Zondy.Plot.PlotRegister=PlotRegister

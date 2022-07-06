@@ -9,6 +9,7 @@ import * as turf from "@turf/turf";
 import Point from "../PlotUtilBase/Geometry/Point";
 import GeomUtil from "../PlotUtilBase/Geometry/GeomUtil";
 import {addExtendLayersPlot, removeExtendLayersPlot} from "./Utils/PlotUtil";
+import { Zondy } from "../common/Base";
 
 /**
  * @class module:3DPlot.PlotLayer3D
@@ -442,3 +443,4 @@ Object.defineProperties(PlotLayer3D.prototype, {
 });
 
 export default PlotLayer3D;
+Zondy.Plot.PlotLayer3D=PlotLayer3D

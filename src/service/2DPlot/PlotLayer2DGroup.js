@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-06-22 10:16:16
+ * @LastEditTime: 2022-07-06 12:11:07
  */
 
 import { fabric } from 'fabric';
@@ -284,3 +284,4 @@ export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
 });
 
 fabric.PlotLayer2DGroup = PlotLayer2DGroup;
+Zondy.Plot.PlotLayer2DGroup=PlotLayer2DGroup

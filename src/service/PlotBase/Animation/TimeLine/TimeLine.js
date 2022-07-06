@@ -3,9 +3,9 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-06-17 19:58:03
+ * @LastEditTime: 2022-07-06 12:05:37
  */
-
+import { Zondy } from '../../../common/Base';
 import { AnimationReg } from '../AnimationTypes';
 export default class TimeLine {
     constructor(layerGroup, options) {
@@ -338,3 +338,5 @@ export default class TimeLine {
         this.handleRender();
     }
 }
+
+Zondy.Plot.TimeLine= TimeLine

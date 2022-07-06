@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 10:34:57
  * @LastEditors: zk
- * @LastEditTime: 2022-06-22 10:01:17
+ * @LastEditTime: 2022-07-06 12:11:10
  */
 
 import { DrawPlotObjectFactory2D } from './Draw/DrawPlotObjectFactory2D';
@@ -13,6 +13,7 @@ import { createGuid } from '../PlotUtilBase/Util/Guid';
 import SymbolManager from '../PlotBase/SymbolManager/SymbolManager';
 import FabricLineUtil from './EditTool/FabricLineUtil';
 import { addExtendLayersPlot, removeExtendLayersPlot } from '../3DPlot/Utils/PlotUtil';
+import { Zondy } from '../common/Base';
 
 class PlotLayer2D {
     constructor() {
@@ -488,3 +489,5 @@ Object.defineProperties(PlotLayer2D.prototype, {
 });
 
 export default PlotLayer2D;
+
+Zondy.Plot.PlotLayer2D=PlotLayer2D

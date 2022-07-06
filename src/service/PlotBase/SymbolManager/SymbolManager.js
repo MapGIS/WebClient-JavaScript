@@ -2,7 +2,7 @@
  * @Description:
  * @Version: 2.0
  * @Date: 2021-07-22 11:46:16
- * @LastEditTime: 2022-06-22 10:43:56
+ * @LastEditTime: 2022-07-06 12:15:56
  * @Author: xinxiao
  * @LastEditors: zk
  */
@@ -11,6 +11,7 @@ import LogTool from "../../PlotUtilBase/Log/LogTool";
 import SymbolCatalog from "./SymbolCatalog";
 import {getAction} from "../Util/request";
 import axios from "axios";
+import { Zondy } from "../../common/Base";
 axios.defaults.withCredentials = true;
 
 export default class SymbolManager {
@@ -116,3 +117,5 @@ export default class SymbolManager {
     return symbol.getImage();
   }
 }
+
+Zondy.Plot.SymbolManager=SymbolManager

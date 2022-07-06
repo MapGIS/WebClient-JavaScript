@@ -1,4 +1,5 @@
-﻿var Zondy = (window.Zondy = window.Zondy || {});
+﻿
+var Zondy = (window.Zondy = window.Zondy || {});
 
 Zondy.Event = Zondy.Event || {};
 
@@ -53,5 +54,7 @@ Zondy.CloudDisk.Model = Zondy.CloudDisk.Model || {};
 
 Zondy.IGServerX = Zondy.IGServerX || {};
 Zondy.IGServerX.Vector = Zondy.IGServerX.Vector || {};
+
+Zondy.Plot = Zondy.Plot || {};
 
 export { Zondy };

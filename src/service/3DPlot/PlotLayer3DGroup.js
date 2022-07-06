@@ -258,3 +258,4 @@ class PlotLayer3DGroup {
 PlotLayer3DGroup.instance = null;
 
 export default PlotLayer3DGroup;
+Zondy.Plot.PlotLayer3DGroup=PlotLayer3DGroup
