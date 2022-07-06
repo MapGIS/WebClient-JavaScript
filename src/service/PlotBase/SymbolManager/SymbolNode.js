@@ -110,7 +110,7 @@ export default class SymbolNode extends SymbolBase {
             method: 'get',
             url: url,
             dataType: 'text',
-            timeout: 1000
+            timeout: 1200
         });
 
         const xml = await new DOMParser().parseFromString(res.data, 'text/xml');
