@@ -1,7 +1,7 @@
-import { extend } from '../../common/Util';
+import { extend } from '../../common';
 import { mapgis } from '../common/base';
 import { VectorStyle } from './VectorStyle';
-import { LineCap, LineJoin } from './Enum';
+import { Cap, Join } from './Enum';
 import { Shadow } from './Shadow';
 import { Graphic } from './Graphic';
 
@@ -23,8 +23,8 @@ export default class LineStyle extends VectorStyle {
         const {
             width = 1,
             dashArray,
-            cap = LineCap.butt,
-            join = LineJoin.miter,
+            cap = Cap.butt,
+            join = Join.miter,
             shadow,
             symbol
         } = options;

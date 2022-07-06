@@ -13,7 +13,7 @@ const DefaultMarkerImagePlotting =
  * @param {Number} [symbol] 符号样式
  * @param {Number} [size] 符号大小
  */
-export default class MarkerSymbol extends Symbol {
+export default class MarkerStyle extends Symbol {
     constructor(option) {
         super();
         var options = option ? option : {};
@@ -114,5 +114,5 @@ export default class MarkerSymbol extends Symbol {
     }
 }
 
-export { MarkerSymbol };
-mapgis.symbols.MarkerSymbol = MarkerSymbol;
+export { MarkerStyle };
+mapgis.symbols.MarkerStyle = MarkerStyle;
