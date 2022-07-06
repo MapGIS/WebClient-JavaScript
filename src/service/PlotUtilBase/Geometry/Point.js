@@ -1,4 +1,3 @@
-import { defaultValue } from "../Check";
 import StringUtil from "../Util/StringUtil";
 import MathUtil from "../Util/MathUtil";
 import { Zondy } from "../../common/Base";
@@ -14,8 +13,8 @@ export default class Point {
    * @param {Number} [y=0] y坐标
    */
   constructor(x, y) {
-    this.x = defaultValue(x,0);
-    this.y = defaultValue(y,0);
+    this.x= typeof x==='undefined'?0:x
+    this.y =typeof y==='undefined'?0:y
   }
 
   static parse(strPnt, defaultValue = 0) {
