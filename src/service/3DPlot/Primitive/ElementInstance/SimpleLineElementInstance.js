@@ -1,5 +1,5 @@
 import { CesiumGeomUtil, CesiumUtil } from '../../Utils/CesiumUtil';
-import MainElement from '../../../../service/PlotBase/SvgLoader/element/extend/MainElement';
+import MainElement from '../../../PlotBase/SvgLoader/element/extend/MainElement';
 import RegularLineElementInstance from './RegularLineElementInstance';
 
 /**

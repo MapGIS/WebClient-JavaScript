@@ -1,4 +1,4 @@
-import Point from '../../../../service/PlotUtilBase/Geometry/Point';
+import Point from '../../../PlotUtilBase/Geometry/Point';
 import { Vector2 } from '../../../PlotUtilBase/Math/Vector2';
 import BasePlotPrimitive from '../BasePlotPrimitive';
 import IrregularElementInstance from '../ElementInstance/IrregularElementInstance';

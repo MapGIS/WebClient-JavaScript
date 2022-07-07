@@ -1,8 +1,8 @@
-import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
+import DrawObject from "../../PlotBase/Draw/DrawObject";
 import PrimitiveFactory from "../Primitive/index";
 import {CesiumUtil} from "../Utils/CesiumUtil";
-import GeomUtil from "../../../service/PlotUtilBase/Geometry/GeomUtil";
-import Point from "../../../service/PlotUtilBase/Geometry/Point";
+import GeomUtil from "../../PlotUtilBase/Geometry/GeomUtil";
+import Point from "../../PlotUtilBase/Geometry/Point";
 import {addExtendLayersPlot} from "../Utils/PlotUtil";
 
 function look(viewer, center, offset) {

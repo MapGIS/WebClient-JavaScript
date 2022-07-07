@@ -6,7 +6,7 @@
  * @LastEditors: zk
  * @LastEditTime: 2022-06-28 09:52:39
  */
-import SimpleFactory from "../../../service/PlotUtilBase/SimpleFactory";
+import SimpleFactory from "../../PlotUtilBase/SimpleFactory";
 import DrawPoint from "./DrawPoint";
 import DrawPolyline from "./DrawPolyline";
 

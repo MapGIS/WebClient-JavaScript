@@ -1,4 +1,4 @@
-import Bounds from "../../../../service/PlotUtilBase/Geometry/Bound";
+import Bounds from "../../../PlotUtilBase/Geometry/Bound";
 import {CesiumUtil} from "../../Utils/CesiumUtil";
 import SvgElementInstance from "./SvgElementInstance";
 

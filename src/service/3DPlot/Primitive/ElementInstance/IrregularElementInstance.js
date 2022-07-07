@@ -1,6 +1,6 @@
 import { defined } from "../../../PlotUtilBase/Check";
 import RegularLineElementInstance from "./RegularLineElementInstance";
-import GeomUtil from "../../../../service/PlotUtilBase/Geometry/GeomUtil";
+import GeomUtil from "../../../PlotUtilBase/Geometry/GeomUtil";
 
 /**
  * @class module:3DPlot.IrregularElementInstance
