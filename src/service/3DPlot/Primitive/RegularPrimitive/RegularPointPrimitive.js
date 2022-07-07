@@ -29,6 +29,11 @@ class RegularPointPrimitive extends BaseRegularPrimitive {
         this._update = true;
         this._isTranslate = false
     }
+    
+     fromGeoJSON(geoJson, isLoadElement = true){
+        super.fromGeoJSON(geoJson,isLoadElement)
+        this._isTranslate = false;
+     }
 
     /**
      * @description 重写父类的_elemPropsUpdateHandler方法
