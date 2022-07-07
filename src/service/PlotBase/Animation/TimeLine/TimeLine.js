@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-07-06 12:05:37
+ * @LastEditTime: 2022-07-07 11:50:08
  */
 import { Zondy } from '../../../common';
 import { AnimationReg } from '../AnimationTypes';
