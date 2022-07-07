@@ -48,6 +48,7 @@ class BasePlotPrimitive {
      * @private
      */
     _elemPropsUpdateHandler(event) {
+        console.log("event.type",event.type)
         if (event.type === 'positions') {
             let { _positionBillboards, _shapeBillboards } = this;
             const positions = event.value;

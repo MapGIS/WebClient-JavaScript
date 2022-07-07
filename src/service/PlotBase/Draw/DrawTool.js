@@ -3,7 +3,7 @@ import { PlotLayer3D } from '../../3DPlot';
 import { PlotLayer2D } from '../../2DPlot';
 import { DrawPlotObjectFactory2D } from '../../2DPlot/Draw/DrawPlotObjectFactory2D';
 import LogTool from '../../PlotUtilBase/Log/LogTool';
-import {Zondy} from '../../common/Base'
+import {Zondy} from '../../common'
 
 /**
  * @class module:3DPlot.DrawTool

@@ -1,4 +1,4 @@
-import DrawObject from "../../../service/PlotBase/Draw/DrawObject";
+import DrawObject from "../../PlotBase/Draw/DrawObject";
 import {PrimitiveFactory} from "../Primitive/PrimitiveFactory";
 import {CesiumUtil} from "../Utils/CesiumUtil";
 import {addExtendLayersPlot} from "../Utils/PlotUtil";

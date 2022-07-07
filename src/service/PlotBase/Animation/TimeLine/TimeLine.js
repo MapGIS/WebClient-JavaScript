@@ -5,7 +5,7 @@
  * @LastEditors: zk
  * @LastEditTime: 2022-07-06 12:05:37
  */
-import { Zondy } from '../../../common/Base';
+import { Zondy } from '../../../common';
 import { AnimationReg } from '../AnimationTypes';
 export default class TimeLine {
     constructor(layerGroup, options) {

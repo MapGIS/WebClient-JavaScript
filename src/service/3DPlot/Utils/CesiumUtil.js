@@ -1,5 +1,5 @@
 import {Vector3} from "../../PlotUtilBase/Math/Vector3";
-import MathUtil from "../../../service/PlotUtilBase/Util/MathUtil";
+import MathUtil from "../../PlotUtilBase/Util/MathUtil";
 import {defined, Check} from "../../PlotUtilBase/Check";
 
 /**

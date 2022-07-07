@@ -1,15 +1,15 @@
 import {defined} from "../PlotUtilBase/Check";
-import SymbolManager from "../../service/PlotBase/SymbolManager/SymbolManager";
+import SymbolManager from "../PlotBase/SymbolManager/SymbolManager";
 import {DrawPlotObjectFactory3D} from "./Draw";
 import {CesiumUtil} from "./Utils/CesiumUtil";
-import Observable from "../../service/PlotUtilBase/Observable";
+import Observable from "../PlotUtilBase/Observable";
 import EditTool from "./EditTool/EditTool";
 import {PrimitiveFactory} from "./Primitive/PrimitiveFactory";
 import * as turf from "@turf/turf";
 import Point from "../PlotUtilBase/Geometry/Point";
 import GeomUtil from "../PlotUtilBase/Geometry/GeomUtil";
 import {addExtendLayersPlot, removeExtendLayersPlot} from "./Utils/PlotUtil";
-import { Zondy } from "../common/Base";
+import { Zondy } from "../common";
 
 /**
  * @class module:3DPlot.PlotLayer3D
@@ -197,7 +197,7 @@ class PlotLayer3D extends Observable {
      */
     removeAll() {
         let plotLayer = this._getPlotLayer();
-        plotLayer.removeAll();
+        plotLayer && plotLayer.removeAll();
     }
 
     /**
