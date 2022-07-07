@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-30 15:52:51
+ * @LastEditTime: 2022-07-07 10:43:16
  */
 import { AnimationUtil } from '../utils/AnimationUtil';
 import { easingFunc } from '../utils/Easing';
@@ -283,13 +283,12 @@ export default class PlotBaseAnimation {
         return false;
     }
     resetGeometryStatus() {
-        this.render(0.000001);
+        // this.render(0.000001);
     }
     updateGeometry() {
         if (this._updateGeometry) {
             this._updateGeometry = false;
-            this.update();
-            // this.render(0.00001);
+            this.update()
         }
     }
 }

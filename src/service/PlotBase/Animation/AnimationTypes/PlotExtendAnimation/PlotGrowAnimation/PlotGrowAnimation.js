@@ -3,7 +3,7 @@
  * @Author: zk
  * @Date: 2022-03-23 10:02:49
  * @LastEditors: zk
- * @LastEditTime: 2022-06-30 12:09:04
+ * @LastEditTime: 2022-07-07 10:53:14
  */
 import Point from '../../../../../PlotUtilBase/Geometry/Point';
 import Spline from '../../../../../PlotUtilBase/Geometry/Spline';
@@ -128,6 +128,11 @@ export default class PlotGrowAnimation extends PlotCoordsAnimation {
             this._centerAction(rate);
         }
     }
+
+    resetGeometryStatus() {
+        this.render(0.001);
+    }
+
     render(rate) {
         this._render(rate);
     }
