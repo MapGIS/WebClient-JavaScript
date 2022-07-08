@@ -84,9 +84,6 @@ export default class DrawPolyline extends DrawObject {
           that._isAdded = true;
           that._plotLayer._isDrawing = true;
           that._plotLayer._primitiveCollection.add(that._primitive);
-          if(that._addedPlot){
-            that._addedPlot(that._primitive);
-          }
         }
 
         if(!that._handler){
@@ -122,7 +119,11 @@ export default class DrawPolyline extends DrawObject {
     handler.setInputAction((event) => {
       this.fireFinishEvent({ plotObj3D: this._primitive });
       addExtendLayersPlot(this._plotLayer._linkTool, this._primitive);
+      let _primitive = this._primitive
       this.disable();
+      if(this._addedPlot){
+        this._addedPlot(_primitive);
+      }
     }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
     this._handler = handler;
