@@ -48,7 +48,8 @@ class LinkTool {
                 id = _container._container.id;
             } else {
                 type = "mapbox";
-                id = _container.mapContainer.parentElement.id;
+                id = _container.mapContainer.parentElement && _container.mapContainer.parentElement.id
+                || _container._containerId;
             }
             if (this._mapContainer._container.id !== id) {
                 switch (type) {
