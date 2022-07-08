@@ -3,10 +3,11 @@
  * @Author: zk
  * @Date: 2022-03-23 11:53:45
  * @LastEditors: zk
- * @LastEditTime: 2022-07-07 11:50:08
+ * @LastEditTime: 2022-07-08 17:38:44
  */
 import { Zondy } from '../../../common';
 import { AnimationReg } from '../AnimationTypes';
+import { createGuid } from '../../../PlotUtilBase/Util/Guid';
 export default class TimeLine {
     constructor(layerGroup, options) {
         this._layerGroup = layerGroup;
@@ -170,7 +171,8 @@ export default class TimeLine {
         const animationOptions = this._animationArr.map((ani) => ani.exportOption());
         const t = {
             timeLineName: this._timeLineName,
-            animations: animationOptions
+            animations: animationOptions,
+            id:this._scriptId
         };
         return t;
     }
@@ -183,6 +185,7 @@ export default class TimeLine {
     fromJSON(json) {
         if (!json || !json.animations) return;
         this._timeLineName = json.timeLineName;
+        this._scriptId= json.id  || createGuid()
         this._animationArr = json.animations.map((s) => {
             return this.createAnimationObject(s);
         });
