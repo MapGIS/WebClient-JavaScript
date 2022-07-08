@@ -187,7 +187,9 @@ export class FabricLayer {
         this._visiable();
     }
     removeEvent() {
-        this.mapContainer.removeChild(this.canvas);
+        try {
+            this.mapContainer.removeChild(this.canvas);
+        }catch (e) {}
     }
 
     /**

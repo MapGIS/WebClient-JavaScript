@@ -45,7 +45,7 @@ PlotMapCoordSys.prototype.pointToData = function pointToData(pt) {
 PlotMapCoordSys.prototype.getScale = function getScale() {
   let n=this.m_mapboxMap.getZoom()
   
-  return  256* Math.pow(2,n+1);
+  return  1024 * Math.pow(2,n+1);
 };
 
 /**
