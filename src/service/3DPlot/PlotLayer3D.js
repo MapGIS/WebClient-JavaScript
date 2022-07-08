@@ -118,6 +118,12 @@ class PlotLayer3D extends Observable {
         let plotLayer = this._getPlotLayer();
         if (plotLayer) {
             removeExtendLayersPlot(this._linkTool, plot);
+            if(plot._positionBillboards){
+                this._viewer.scene.primitives.remove(plot._positionBillboards);
+            }
+            if(plot._shapeBillboards){
+                this._viewer.scene.primitives.remove(plot._shapeBillboards);
+            }
             return plotLayer.remove(plot);
         }
     }
