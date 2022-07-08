@@ -67,7 +67,8 @@ export default class PlotPathAnimation extends PlotCoordsAnimation {
         }
 
         if (this._cacheCoords.length === 0) {
-            throw new Error('路径动画控制点数量不能为0');
+            console.error('路径动画控制点数量不能为0');
+            return;
         }
 
         if (this._cacheCoords.length === 1) {
