@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:22:56
  * @LastEditors: zk
- * @LastEditTime: 2022-05-24 11:23:51
+ * @LastEditTime: 2022-07-13 13:37:47
  */
 import mapboxgl from '@mapgis/mapbox-gl';
 import { PlotMapCoordSys } from './fabric/PlotMapCoordSys';
@@ -19,27 +19,23 @@ export class FabricLayer {
      * @param {Object} fabricOptions fabric图层选项
      */
     constructor(map, fabricClass, fabricOptions) {
-        if(!FabricLayer.instance){
-            const m_fabricOptions = fabricOptions || {};
-            this.map = map;
-            this.initDevicePixelRatio();
-            this.canvas = this._createCanvas();
-            this.mapContainer = map.getCanvasContainer();
-            this.mapContainer.appendChild(this.canvas);
-    
-            this.m_fabricCanvas = this._createFabricCanvas(this.canvas, fabricClass, m_fabricOptions);
-            this.m_fabricCanvas.setMap(this.map)
-            // this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
-    
-            this.bindEvent();
-            this._reset();
+        const m_fabricOptions = fabricOptions || {};
+        this.map = map;
+        this.initDevicePixelRatio();
 
-            // set fabric instance
-            FabricLayer.instance= this
-        }else{
-            return FabricLayer.instance
-        }
-       
+        this.destroy();
+        this.canvas = this._createCanvas();
+        this.mapContainer = map.getCanvasContainer();
+        this.mapContainer.appendChild(this.canvas);
+
+        this.m_fabricCanvas = this._createFabricCanvas(this.canvas, fabricClass, m_fabricOptions);
+
+        this.m_fabricCanvas.setMap(this.map);
+        // this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
+
+        this.bindEvent();
+        this._reset();
+        FabricLayer.instance=this
     }
 
     /**
@@ -68,15 +64,15 @@ export class FabricLayer {
             this.map.dragRotate.enable();
             this.map.dragPan.enable();
         });
-        return m_fabricCanvas
+        return m_fabricCanvas;
     }
     /**
      * @function: Module:FabricLayer.pototype.getFabricCanvas
      * @description: 获取fabricCanvas
      * @return {Object} fabricCanvas
      */
-    getFabricCanvas(){
-       return this.m_fabricCanvas
+    getFabricCanvas() {
+        return this.m_fabricCanvas;
     }
 
     //-----------------------------------Event Methods----------------------------------------
@@ -87,7 +83,7 @@ export class FabricLayer {
     bindEvent() {
         var map = this.map;
         //下面几个是mapboxgl专属事件,clickEvent和mousemoveEvent是mapv内部自带的方法不放出来
-        this.innerMove= throttle(this.moveEvent,25,this) 
+        this.innerMove = throttle(this.moveEvent, 25, this);
         this.innerMoveStart = this.moveStartEvent.bind(this);
         this.innerMoveEnd = this.moveEndEvent.bind(this);
 
@@ -144,7 +140,7 @@ export class FabricLayer {
         map.off('moveend', this.innerMoveEnd);
     }
 
-    moveEvent(){
+    moveEvent() {
         this._reset();
     }
     moveStartEvent() {
@@ -153,7 +149,7 @@ export class FabricLayer {
 
     moveEndEvent() {
         this._reset();
-        this._visiable()
+        this._visiable();
     }
 
     zoomStartEvent() {
@@ -166,7 +162,6 @@ export class FabricLayer {
 
     rotateStartEvent() {
         this._unvisiable();
-
     }
     rotateEndEvent() {
         this._reset();
@@ -175,7 +170,6 @@ export class FabricLayer {
 
     pitchStartEvent() {
         this._unvisiable();
-
     }
     pitchEndEvent() {
         this._reset();
@@ -189,7 +183,7 @@ export class FabricLayer {
     removeEvent() {
         try {
             this.mapContainer.removeChild(this.canvas);
-        }catch (e) {}
+        } catch (e) {}
     }
 
     /**
@@ -245,7 +239,7 @@ export class FabricLayer {
 
     /**
      * @function: Module:FabricLayer.pototype.resizeCanvas
-     * @description: 刷新canvas 
+     * @description: 刷新canvas
      */
     resizeCanvas() {
         this.mapContainer.style.perspective = this.map.transform.cameraToCenterDistance + 'px';
@@ -253,10 +247,10 @@ export class FabricLayer {
 
         const x = parseInt(this.map.getCanvas().style.width) * this.devicePixelRatio;
         const y = parseInt(this.map.getCanvas().style.height) * this.devicePixelRatio;
+        
         this.m_fabricCanvas.setCanvasDimensionsSize({ height: y, width: x });
 
-
-        const topLeft ={x:0,y:0};
+        const topLeft = { x: 0, y: 0 };
 
         // 偏移canvas
         this._applyPosition(this.m_fabricCanvas.lowerCanvasEl, topLeft);
@@ -280,7 +274,7 @@ export class FabricLayer {
     fixPosition() {}
 
     onResize() {}
-    
+
     /**
      * @function: Module:FabricLayer.pototype.render
      * @description: 渲染
@@ -292,12 +286,17 @@ export class FabricLayer {
 
     /**
      * @function: Module:FabricLayer.pototype.destroy
-     * @description: 
+     * @description:
      */
     destroy() {
-        this.unbindEvent();
-        this.mapContainer.removeChild(this.canvas);
-        this.m_fabricCanvas = null;
+        if (FabricLayer.instance) {
+            FabricLayer.instance.m_fabricCanvas.dispose();
+            FabricLayer.instance.unbindEvent();
+            FabricLayer.instance.m_fabricCanvas = null;
+            FabricLayer.instance.canvas=null
+            FabricLayer.instance=null
+        }
+       
     }
 }
 

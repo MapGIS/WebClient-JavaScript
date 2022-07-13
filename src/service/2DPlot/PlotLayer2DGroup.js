@@ -4,7 +4,7 @@
  * @Author: zk
  * @Date: 2022-05-13 11:01:10
  * @LastEditors: zk
- * @LastEditTime: 2022-07-06 12:11:07
+ * @LastEditTime: 2022-07-13 12:47:38
  */
 
 import { fabric } from 'fabric';
@@ -17,23 +17,18 @@ export const PlotLayer2DGroup = fabric.util.createClass(fabric.Canvas, {
     selection: false,
     /**
      * @function: Module:PlotLayer2DGroup
-     * @description: 构造
-     * @param {HTMLCanvasElement} el
+      * @description: 构造
+    * @param {HTMLCanvasElement} el
      * @param {Object} options
      * @return {*}
      */
     initialize: function (el, options) {
-        if (!PlotLayer2DGroup.instance) {
-            this.callSuper('initialize', el, options);
-            PlotLayer2DGroup.instance = this;
-            // 工具图层
-            this._utilPlotCanvas = new PlotLayer2D();
-            this._utilPlotCanvas.editable=true
-            this._plotCanvasLayers = [];
-            this.addLayer(this._utilPlotCanvas);
-        } else {
-            return PlotLayer2DGroup.instance;
-        }
+        this.callSuper('initialize', el, options);
+        // 工具图层
+        this._utilPlotCanvas = new PlotLayer2D();
+        this._utilPlotCanvas.editable=true
+        this._plotCanvasLayers = [];
+        this.addLayer(this._utilPlotCanvas);
     },
     setMap(map){
         this._map=map
