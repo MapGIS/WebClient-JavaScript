@@ -120,7 +120,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import IconFont from "@/components/IconFont/iconfront";
+import IconFont from "@/config/components/IconFont/iconfront";
 // import NavbarItem from "./NavbarItem";
 
 import { isMobile } from "@/utils/mobile";

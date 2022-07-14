@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import CardView from '@/components/CardView/index';
+import CardView from '@/config/components/CardView/index';
 
 export default {
     name: 'card-group',

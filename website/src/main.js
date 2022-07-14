@@ -10,7 +10,7 @@ import ElementUI from 'element-ui';
 // import Antd from 'ant-design-vue';
 // import 'ant-design-vue/dist/antd.less';
 
-import IconFont from './components/IconFont/iconfont'
+import IconFont from './config/components/IconFont/iconfont'
 import VueLazyload from 'vue-lazyload'
 
 import ECharts from 'vue-echarts'

@@ -30,7 +30,7 @@
 <script>
 import { isMobile } from '@/utils/mobile';
 import geojson from '../../config/config-geojson';
-import StandardTab from '@/components/Tabs/StandardTab';
+import StandardTab from '@/config/components/Tabs/StandardTab';
 
 export default {
     components: {

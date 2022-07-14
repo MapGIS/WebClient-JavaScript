@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import CardGroup from "@/components/CardGroup";
+import CardGroup from "@/config/components/CardGroup";
 
 export default {
   name: "gallery",
