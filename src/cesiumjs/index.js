@@ -454,13 +454,3 @@ export {
     OGCWMTSInfo,
     OGCWMSInfo
 };
-
-import {
-    SymbolManager3D,
-    PlotCanvas3D
-} from "./Plot/index"
-
-export {
-    SymbolManager3D,
-    PlotCanvas3D
-}
