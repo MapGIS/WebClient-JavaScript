@@ -13,8 +13,8 @@ export var Util = (Zondy.Util = Zondy.Util || {})
  * @param source - {Object} 源对象，其属性将被设置到目标对象上。
  * @return {Object} 目标对象。
  */
-export var extend = function(destination, source) {
-  destination = destination || {}
+export var extend = function(dest, source) {
+  var destination = dest || {}
   if (source) {
     for (var property in source) {
       var value = source[property]
@@ -89,7 +89,8 @@ export var appendUrl = function(url, paramStr) {
  * @param sources -{Array} 源对象数据，每个对象都会给目的对象设置对应的属性值
  * @private
  */
-export var extendFromArray = function(dest, sources) {
+export var extendFromArray = function(des, sources) {
+  var dest = des;
   for (const src of sources) {
     for (const k in src) {
       dest[k] = src[k]
@@ -226,7 +227,8 @@ export function splitWords(str) {
 
 // @function setOptions(obj: Object, options: Object): Object
 // Merges the given properties to the `options` of the `obj` object, returning the resulting options. See `Class options`. Has an `L.setOptions` shortcut.
-export function setOptions(obj, options) {
+export function setOptions(o, options) {
+  var obj = o;
   if (!obj.hasOwnProperty('options')) {
     obj.options = obj.options ? create(obj.options) : {}
   }
