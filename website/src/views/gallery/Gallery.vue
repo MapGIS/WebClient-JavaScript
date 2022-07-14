@@ -84,8 +84,8 @@ import { isMobile } from "@/utils/mobile";
 
 import { Header, SidebarGallery, MainFooter } from "@/views/layout/components";
 
-import GalleryCard from "@/components/Gallery/GalleryCard";
-import IconFont from "@/components/IconFont/iconfront";
+import GalleryCard from "@/config/components/Gallery/GalleryCard";
+import IconFont from "@/config/components/IconFont/iconfront";
 
 import GalleryAnchor from './GalleryAnchor';
 

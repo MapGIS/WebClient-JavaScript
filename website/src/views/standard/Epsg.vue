@@ -36,9 +36,9 @@
 <script>
 // import treeTable from '@/components/TreeTable'
 import { isMobile } from "@/utils/mobile";
-import OgcTable from "@/components/Table/OgcTable";
+import OgcTable from "@/config/components/Table/OgcTable";
 import epsg from "@/config/config-epsg";
-import StandardTab from '@/components/Tabs/StandardTab';
+import StandardTab from '@/config/components/Tabs/StandardTab';
 
 export default {
   components: {
