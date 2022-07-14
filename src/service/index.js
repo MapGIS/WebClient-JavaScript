@@ -35,12 +35,6 @@ import ElasticSearch from './datastore/elasticsearch';
 import PostGIS from './datastore/postgis';
 import CloudDisk from './clouddisk';
 import ArcGis from './ArcGis';
-import {SymbolManager} from "./PlotBase/index"
-import { PlotLayer2D } from './2DPlot/index';
-import { PlotLayer2DGroup } from './2DPlot/PlotLayer2DGroup'
-import {PlotLayer3D,PlotLayer3DGroup} from "./3DPlot/index"
-import { TimeLine, DrawTool, LinkTool } from './PlotBase/index';
-import PlotRegister from './PlotRegister/PlotRegister';
 
 export {
     Util,
@@ -63,16 +57,7 @@ export {
     ElasticSearch,
     PostGIS,
     CloudDisk,
-    ArcGis,
-    SymbolManager,
-    PlotLayer2D,
-    PlotLayer2DGroup,
-    PlotLayer3D,
-    PlotLayer3DGroup,
-    DrawTool,
-    TimeLine,
-    PlotRegister,
-    LinkTool
+    ArcGis
 };
 //-------命名空间 Zondy 结束-----
 
@@ -102,12 +87,7 @@ const All = {
     ElasticSearch,
     PostGIS,
     CloudDisk,
-    ArcGis,
-    SymbolManager,
-    PlotLayer3D,
-    PlotLayer3DGroup: PlotLayer3DGroup,
-    DrawTool,
-    LinkTool
+    ArcGis
     //-------命名空间 Zondy 结束-----
 };
 
