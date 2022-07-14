@@ -99,8 +99,7 @@ var TDTLayer = function (option) {
 
 };
 
-TDTLayer.prototype.initialize = function (options) {
-    options = options || {};
+TDTLayer.prototype.initialize = function () {
     if (this.options.baseURL) {
         var str = this.options.baseURL.split("gov.cn/")[1];
         if (this.options.baseURL.indexOf("?") > 0) {
