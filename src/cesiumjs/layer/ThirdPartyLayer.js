@@ -140,7 +140,7 @@ export default class ThirdPartyLayer extends BaseLayer {
      * let tilelayer = thirdLayer.appendBaiduMap({ptype:'sate'});
      */
     appendBaiduMap(optionsParam) {
-        const baiduProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduMapProvider(optionsParam));
+        const baiduProvider = this.viewer.imageryLayers.addImageryProvider(new Cesium.BaiduMapImagerProvider(optionsParam));
         return baiduProvider;
     }
 
