@@ -12,7 +12,7 @@ import Symbol from './Symbol';
  * @param {Object} [styleOrigin.name] 三维符号样式起源-名称，表示引用样式的名称
  * @param {Object} [styleOrigin.styleName] 三维符号样式起源-样式名称，表示默认的内置的MapGIS的样式
  * @param {Object} [styleOrigin.styleUrl] 三维符号样式起源-样式地址，表示样式Url路径
- * @param {Array<>} [symbolLayers] 三维符号图层集合，用来可视化要素和制图综合
+ * @param {Array} [symbolLayers] 三维符号图层集合，用来可视化要素和制图综合
  */
 export default class Symbol3D extends Symbol {
     constructor(option) {
