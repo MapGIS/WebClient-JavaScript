@@ -58,7 +58,6 @@
                 inputCSS(httpUrl + '/cdn/cesium/Widgets/widgets.css');
                 inputCSS(httpUrl + '/cdn/cesium/MapGIS/css/mapgis.css');
                 inputScript(httpUrl + '/cdn/cesium/Cesium.js');
-                inputScript(httpUrl + '/cdn/zondyclient/webclient-es6-service.js');
             }
         }
         
