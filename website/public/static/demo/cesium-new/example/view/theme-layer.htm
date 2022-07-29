@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>洪水淹没分析</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <script>
+        //定义三维视图的主要类
+        var viewer;
+        //定义专题图类
+        var themeLayer;
+
+        //加载三维视图
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            viewer = new Cesium.Viewer('GlobeView', {
+                infoBox: false,
+                selectionIndicator: false,
+                shouldAnimate: true
+            });
+
+            if (viewer) {
+                //显示鼠标位置控件
+                viewer.showPosition("coordinateDiv");
+
+                //加载天地图
+                var tdt = new Cesium.TiandituImageryProvider({
+                    url: 'http://t1.tianditu.com/DataServer',
+                    tileType: 'vec',
+                    token: '2ddaabf906d4b5418aed0078e1657029'
+                });
+
+                viewer.imageryLayers.addImageryProvider(tdt);
+
+                //初始化专题图类
+                themeLayer = new Cesium.ThemeManager(viewer, {
+                    successCallback: successCallback,
+                    errorCallback: errorCallback,
+                    attributeName: ['GDP_2007', 'GDP_2008'],
+                    attributeColor: [new Cesium.Color(234 / 255, 175 / 255, 200 / 255), new Cesium.Color(56 / 255, 239 / 255 , 125 / 255)],
+                    width: 50000
+                });
+                function successCallback(result) {
+                    console.log('查询成功');
+                    console.log('result',result);
+                }
+                function errorCallback(result) {
+                    console.log('查询失败',error);
+                }
+            }
+        }
+
+        function query() {
+            //加载矢量地图
+            var url = 'http://192.168.21.191:6163/igs/rest/mrfs/layer';
+            var layers = 'gdbp://MapGISLocal/专题图数据/sfcls/省级行政区x';
+            viewer.scene.layers.appendVectorLayer(url, {
+                loadAll: true,
+                layers: layers,
+                getDocLayerIndexes: function (indexs) {
+                    var layerIndex = indexs[0];
+                    var layer = viewer.scene.layers.getLayer(layerIndex);
+                }
+            });
+
+            var queryUrl ="http://192.168.21.191:6163/igs/rest/mrfs/layer/query?page=0&pageCount=9999&f=json&structs={'IncludeAttribute':true,'IncludeGeometry':true,'IncludeWebGraphic':false}&rule={'CompareRectOnly':false,'EnableDisplayCondition':false,'Intersect':true,'MustInside':false}&rtnLabel=true&fields=面积,周长,省名,GDP_2007,GDP_2008&coordPrecision=2&guid=__readonly_user__&cursorType=forward&gdbp=gdbp://MapGISLocal/专题图数据/sfcls/省级行政区x";
+            //查询结果
+            themeLayer.query(queryUrl);
+        }
+
+        function addByQuery() {
+            removeLayer();
+            // 设置用于展示的属性名
+            themeLayer.attributeName = ['GDP_2007', 'GDP_2008'];
+            themeLayer.attributeColor = [new Cesium.Color(234 / 255, 175 / 255, 200 / 255), new Cesium.Color(56 / 255, 239 / 255, 125 / 255)];
+            themeLayer.width = 50000;
+            //水平柱状图
+            themeLayer.addByQueryResult('HorizontalColumn');
+        }
+
+        var geojson;
+        function loadGeojson() {
+            var geojsonUrl = './static/data/geojson/省级行政区.geojson';
+            var geojsonResource = Cesium.Resource.createIfNeeded(geojsonUrl);
+            var promise = geojsonResource.fetchJson();
+            promise.then(function (json) {
+                geojson = json;
+                addByGeojson();
+            });
+        }
+
+        function addByGeojson() {
+            removeLayer();
+            themeLayer.addGeoGeometry = false;
+            themeLayer.attributeName = ['GDP_2007', 'GDP_2008'];
+            themeLayer.attributeColor = [new Cesium.Color(234 / 255, 175 / 255, 200 / 255), new Cesium.Color(56 / 255, 239 / 255, 125 / 255)];
+            //垂直柱状图
+            themeLayer.addByGeoJson(geojson, 'VerticalColumn');
+        }
+
+        function removeLayer() {
+            themeLayer.remove();
+        }
+
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="GlobeView">
+        <div class="message" style="left: 10px;width: 200px">
+            <div style="text-align: center;">
+                <button style="margin-left:auto; margin-right:auto" onclick="query()">查询</button>
+                <button style="margin-left:auto; margin-right:auto" onclick="addByQuery()">通过查询结果添加专题图</button>
+                <button style="margin-left:auto; margin-right:auto" onclick="loadGeojson()">通过geojson数据添加专题图</button>
+                <button style="margin-left:auto; margin-right:auto" onclick="removeLayer()">移除专题图</button>
+            </div>
+        </div>
+    </div>
+    <div id="coordinateDiv" class="coordinateClass"> </div>
+</body>
+
+</html>

@@ -99,7 +99,7 @@ import {isMobile} from "@/utils/mobile";
 import VueMarkdown from "vue-markdown";
 import Prism from "prismjs";
 import axios from 'axios';
-import IconFont from "@/components/IconFont/iconfront";
+import IconFont from "@/config/components/IconFont/iconfront";
 
 import "prismjs/themes/prism-coy.css";  // theme
 import 'prismjs/components/prism-javascript';  // language

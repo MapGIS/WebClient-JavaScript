@@ -94,9 +94,9 @@
             {
                 "title": "开发API",
                 "icon": "iconsanfangAPI",
-                "links": [["Cesium-API", "MapboxGL-API", "UI-API"]],
+                "links": [["Cesium-API", "MapboxGL-API", "UI-API", "PLOT-API"]],
                 "hightlights": [[true, false, true]],
-                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892", "http://120.78.82.242:8893"]]
+                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892", "http://120.78.82.242:8893", "http://192.168.82.89:8093"]]
             }
         ]
     },
@@ -137,12 +137,13 @@
             {
                 "title": "常见问题",
                 "icon": "iconchangjianwenti",
-                "hightlights": [[false, true]],
-                "links": [["OGC-WMTS", "三维模型"]],
+                "hightlights": [[false, true, true]],
+                "links": [["OGC-WMTS", "三维模型", "瓦片错级"]],
                 "routes": [
                     [
                         "/helper/cesium/ogc/wmts/WMTS",
-                        "/helper/cesium/model/gltf"
+                        "/helper/cesium/model/gltf",
+                        "/helper/cesium/tile/offset"
                     ]
                 ],
                 "type":"helper"
@@ -153,7 +154,7 @@
                 "hightlights": [[false, false, false, false, false, false, false, false, false, false, false, false, false, false]],
                 "links": [
                     [
-                        "图层M3D",
+                        "M3D协议",
                         "互联网地图",
                         "OGC服务",
                         "MapGIS地图服务",
@@ -185,6 +186,27 @@
                         "/gallery/cesium#clientView_Echarts",
                         "/gallery/cesium#clientView_MapV",
                         "/gallery/cesium#clientAnalysis"
+                    ]
+                ]
+            },
+            {
+                "title": "开发示例-新",
+                "icon": "iconzaixianshili",
+                "hightlights": [[true, true, true, true]],
+                "links": [
+                    [
+                        "M3D协议-2.0",
+                        "工具",
+                        "数据加载",
+                        "分析"
+                    ]
+                ],
+                "routes": [
+                    [
+                        "/gallery/cesium-new#m3d",
+                        "/gallery/cesium-new#tool",
+                        "/gallery/cesium-new#data",
+                        "/gallery/cesium-new#analysis"
                     ]
                 ]
             },

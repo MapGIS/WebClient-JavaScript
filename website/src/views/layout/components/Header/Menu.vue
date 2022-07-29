@@ -40,7 +40,7 @@
 
 <script>
 import { isMobile } from '@/utils/mobile';
-import IconFont from '@/components/IconFont/iconfront';
+import IconFont from '@/config/components/IconFont/iconfront';
 
 export default {
     components: {

@@ -1,12 +1,6 @@
-﻿import {
-    Zondy
-} from '../../common/Base';
-import {
-    GeometryAnalysisBase
-} from "./GeometryAnalysisBase";
-import {
-    IgsServiceBase
-} from "../../baseserver/IServiceBase";
+﻿import { Zondy } from '../../common/Base';
+import { GeometryAnalysisBase } from './GeometryAnalysisBase';
+import { IgsServiceBase } from '../../baseserver/IServiceBase';
 
 /**
  * 对矩形范围坐标点进行投影转换
@@ -18,7 +12,9 @@ import {
  * @param {String} [option.gdbsvrName = "MapGISLocal"] 数据源名称
  * @param {String} [option.gdbName = null] 数据库名称
  * @param {Number} [option.srefID = 0] 源投影参考系ID
+ * @param {Number} [option.srefName = null] 源投影参考系名
  * @param {Number} [option.desfID = 0] 目的投影参考系ID
+ * @param {Number} [option.desfName = null] 目的投影参考系名
  * @param {String} [option.userName = null] 地理数据源/地理数据库账户名
  * @param {String} [option.password = null] 地理数据源/地理数据库密码
  * @example
@@ -30,10 +26,10 @@ import {
                     gdbsvrName: "MapGISLocal",
                     //数据库名称
                     gdbName: "OpenLayerVecterMap",
-                    //源投影参考系ID
-                    srefID: 10,
-                    //目的投影参考系ID
-                    desfID: 601,
+                    //源投影参考系名
+                    srefName: "地理坐标系(北京)_度",
+                    //目的投影参考系名
+                    desfName: "地理坐标系(西安)_度",
                     //服务器地址
                     ip: "develop.smaryun.com",
                     //服务器端口
@@ -57,7 +53,7 @@ class ProjectRang extends GeometryAnalysisBase {
          * @description 数据源名称
          * @default MapGISLocal
          */
-        this.gdbsvrName = options.gdbsvrName !== undefined ? options.gdbsvrName : "MapGISLocal";
+        this.gdbsvrName = options.gdbsvrName !== undefined ? options.gdbsvrName : 'MapGISLocal';
 
         /**
          * @private
@@ -79,12 +75,30 @@ class ProjectRang extends GeometryAnalysisBase {
 
         /**
          * @private
+         * @member Zondy.Service.ProjectRang.prototype.srefName
+         * @type {Number}
+         * @description 源投影参考系名
+         * @default null
+         */
+        this.srefName = options.srefName !== undefined ? options.srefName : null;
+
+        /**
+         * @private
          * @member Zondy.Service.ProjectRang.prototype.desfID
          * @type {Number}
          * @description 目的投影参考系ID
          * @default 0
          */
         this.desfID = options.desfID !== undefined ? options.desfID : 0;
+
+        /**
+         * @private
+         * @member Zondy.Service.ProjectRang.prototype.desfName
+         * @type {Number}
+         * @description 目的投影参考系名
+         * @default null
+         */
+        this.desfName = options.desfName !== undefined ? options.desfName : null;
 
         /**
          * @private
@@ -113,14 +127,20 @@ class ProjectRang extends GeometryAnalysisBase {
      * @param {callback} onError 执行失败后的回调函数
      */
     execute(rectangle, onSuccess, onError) {
-        var rang = "";
+        var rang = '';
         if (rectangle) {
-            rang = rectangle.xmin + "$" + rectangle.ymin + "$" + rectangle.xmax + "$" + rectangle.ymax;
+            rang = rectangle.xmin + '$' + rectangle.ymin + '$' + rectangle.xmax + '$' + rectangle.ymax;
         }
-        if (this.userName === null || this.password === null) {
-            this.partUrl = "geomservice/" + this.gdbsvrName + "/" + this.gdbName + "/" + this.srefID + "/" + this.desfID + "?f=json&rang=" + rang;
-        } else {
-            this.partUrl = "geomservice/" + this.gdbsvrName + "/" + this.gdbName + "/" + this.srefID + "/" + this.desfID + "?f=json&rang=" + rang + "&userName=" + this.userName + "&password=" + this.password;
+        this.partUrl = `geomservice/${this.gdbsvrName}/${this.gdbName}`;
+        if (this.desfName && this.srefName) {
+            this.partUrl += `?f=json&rang=${rang}`;
+            this.partUrl += `&srefName=${this.srefName}&desfName=${this.desfName}`;
+        } else if (this.desfID && this.srefID) {
+            this.partUrl += `/${this.srefID}/${this.desfID}`;
+            this.partUrl += `?f=json&rang=${rang}`;
+        }
+        if (this.userName && this.password) {
+            this.partUrl += `&userName=${this.userName}&password=${this.password}`;
         }
         var url = this.getFullUrl();
         var me = this;
@@ -133,9 +153,6 @@ class ProjectRang extends GeometryAnalysisBase {
         });
         service.processAsync();
     }
-
 }
-export {
-    ProjectRang
-};
+export { ProjectRang };
 Zondy.Service.ProjectRang = ProjectRang;

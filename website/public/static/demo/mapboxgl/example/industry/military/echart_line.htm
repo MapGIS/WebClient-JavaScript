@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+    <title>公交路线</title>
+    <script include='jquery' src='./static/libs/include-lib-local.js'></script>
+    <script include='language,echarts' src='./static/libs/include-mapboxgl-local.js'></script>
+    <link href='./static/demo/mapboxgl/example/style.css' rel='stylesheet' type='text/css' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='map'>
+        <div id='mouse-position'>
+        </div>
+    </div>
+    <script>
+        //一定要去mapbox注册一个key,这个key会失效的
+        mapboxgl.accessToken =
+            'pk.eyJ1IjoicGFybmRlZWRsaXQiLCJhIjoiY2o1MjBtYTRuMDhpaTMzbXhpdjd3YzhjdCJ9.sCoubaHF9-nhGTA-sgz0sA';
+        var map = new mapboxgl.Map({
+            container: 'map', // 绑定div
+            style: {
+                version: 8,
+                sources: {
+                    "background": {
+                        "type": "raster",
+                        'tiles': [
+                            "http://localhost:8089/igs/rest/services/制图_5_3857/TileServer/tileImage/{z}/{y}/{x}?f=image"
+                        ],
+                        'tileSize': 256
+                    },
+                },
+                layers: [
+                    {
+                        "id": "background",
+                        "type": "raster",
+                        "source": "background",
+                        "minzoom": 0,
+                        "maxzoom": 22
+                    },
+                ]
+            }, // 使用MapBox官方的样式
+            center: [117.35, 38.9],
+            zoom: 11
+        });
+        map.addControl(new MapboxLanguage(), 'top-right'); //中文支持
+        //注册鼠标移动事件
+        map.on('mousemove', function (e) {
+            //经纬度坐标转web墨卡托
+            const earthRad = 6378137.0;
+            const x = e.lngLat.lng * Math.PI / 180 * earthRad;
+            const a = e.lngLat.lat * Math.PI / 180;
+            const y = earthRad / 2 * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+            document.getElementById('mouse-position').innerHTML = 'X轴：' + x.toFixed(2) + '，Y轴：' + y.toFixed(2);
+        });
+        updateView();
+
+        function updateView() {
+            $.get('../../static/data/echartsgl/heibe/tracks-fake.json', function (data) {
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
+                var hStep = 300 / (data.features.length - 1);
+                busLines = [].concat.apply([], data.features.map(function (busLine, idx) {
+                    return {
+                        coords: busLine.geometry.coordinates,
+                        lineStyle: {
+                            normal: {
+                                color: echarts.color.modifyHSL('#5A94DF', Math.round(hStep * idx))
+                            }
+                        }
+                    };
+                }));
+                var option = {
+                    mapboxgl: {
+                        roam: true
+                    },
+                    series: [{
+                        type: 'lines',
+                        coordinateSystem: 'mapboxgl',
+                        polyline: true,
+                        data: busLines,
+                        silent: true,
+                        lineStyle: {
+                            normal: {
+                                // color: '#c23531',
+                                // color: 'rgb(200, 35, 45)',
+                                opacity: 0.2,
+                                width: 1
+                            }
+                        },
+                        progressiveThreshold: 500,
+                        progressive: 200
+                    }, {
+                        type: 'lines',
+                        coordinateSystem: 'mapboxgl',
+                        polyline: true,
+                        data: busLines,
+                        lineStyle: {
+                            normal: {
+                                width: 1
+                            }
+                        },
+                        effect: {
+                            constantSpeed: 20,
+                            show: true,
+                            trailLength: 0.5,
+                            symbolSize: 6
+                        },
+                        zlevel: 1
+                    }]
+                };
+                layer = new mapboxgl.zondy.EchartsLayer(map, option).addTo(map);
+            });
+
+        }
+    </script>
+
+
+</body>
+
+</html>

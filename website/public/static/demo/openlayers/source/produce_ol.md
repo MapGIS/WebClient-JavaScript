@@ -241,16 +241,16 @@ MapGIS Client for JavaScript（OpenLayers5）对接云GIS产品，提供地图�
 
 
 
--  OpenLayers：专为WebGIS 客户端开发提供的JavaScript 类库包，目前主流地图可视化引擎之一（https://openlayers.org/）
+-  OpenLayers：专为WebGIS 客户端开发提供的JavaScript 类库包，目前主流地图可视化引擎之一(https://openlayers.org/)
 
 
-- ECharts：基于 JavaScript 的开源可视化图表库（https://echarts.apache.org/zh/index.html）
+- ECharts：基于 JavaScript 的开源可视化图表库(https://echarts.apache.org/zh/index.html)
 
-- MapV：地理信息可视化开源库（https://mapv.baidu.com/）
+- MapV：地理信息可视化开源库(https://mapv.baidu.com/)
 
-- Turf：客户端空间分析开源库（https://turfjs.org/）
+- Turf：客户端空间分析开源库(https://turfjs.org/)
 
-- D3：基于Web标准的JavaScript图形可视化库（https://d3js.org/）
+- D3：基于Web标准的JavaScript图形可视化库(https://d3js.org/)
 
 
 

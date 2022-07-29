@@ -1,9 +1,9 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version": "10.5.10",
+    "version": "15.6.1",
     "description": "中地数码基于ES6语法针对igserver的服务封装",
-    "main": "dist-libs/webclient-es6-service.min.js",
-    "module1": "index.js",
+    "main1": "dist-libs/webclient-es6-service.min.js",
+    "module": "index.js",
     "scripts": {
         "build": "npm run build-debug && npm run build-release",
         "build-debug": "webpack --config webpack/service-debug-config.js",
@@ -13,10 +13,14 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@turf/turf": "^6.5.0",
+        "axios": "^0.26.0",
+        "core-js": "^3.21.1",
         "fast-xml-parser": "^3.17.6",
         "fetch-ie8": "^1.5.0",
+        "proj4": "^2.7.5",
         "promise-polyfill": "^8.2.1",
-        "qs": "^6.9.4"
+        "qs": "^6.9.4",
+        "svg-pathdata": "^6.0.0"
     },
     "devDependencies": {
         "happypack": "^5.0.0",

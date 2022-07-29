@@ -84,7 +84,7 @@
 
 <script>
 import {download} from './DownloadConfig';
-import TotalTab from '@/components/Tabs/TotalTab';
+import TotalTab from '@/config/components/Tabs/TotalTab';
 import {isMobile} from '@/utils/mobile';
 
 export default {

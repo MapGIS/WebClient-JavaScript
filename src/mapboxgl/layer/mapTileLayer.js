@@ -3,10 +3,7 @@
 //那么在0级的时候就有4张瓦片，不能一一对应
 import {Zondy} from './mapboxBase';
 //import {Zondy} from '../../service/common/Base';
-import {
-    newGuid,
-    extend
-} from '../../service/common/Util';
+import { newGuid, extend } from '../util/Util';
 
 /**
  * @author 基础平台/产品2部 龚跃健

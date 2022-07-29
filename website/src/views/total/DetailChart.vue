@@ -44,7 +44,7 @@
 <script>
 import { isMobile } from '@/utils/mobile';
 import { initCube, initTree, initBar } from './config/ConfigEchart';
-import PluginTab from '@/components/Tabs/PluginTab';
+import PluginTab from '@/config/components/Tabs/PluginTab';
 
 import ECharts from 'vue-echarts';
 import 'echarts/theme/dark';

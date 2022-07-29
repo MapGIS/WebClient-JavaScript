@@ -1,7 +1,7 @@
 import { extend } from '../../common/Util';
 import { mapgis } from '../common/base';
 import { VectorStyle } from './VectorStyle';
-import { Symbol } from './Symbol';
+import { Graphic } from './Graphic';
 import { Shadow } from './Shadow';
 
 /**
@@ -36,8 +36,8 @@ export default class FillStyle extends VectorStyle {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.shadowStyle = shadow || new Shadow();
-        this.symbolStyle = symbol || new Symbol();
-        this.outlineSymbolStyle = outlineSymbolStyle || new Symbol();
+        this.symbolStyle = symbol || new Graphic();
+        this.outlineSymbolStyle = outlineSymbolStyle || new Graphic();
         extend(this, options);
     }
 

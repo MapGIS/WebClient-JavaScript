@@ -1,9 +1,6 @@
 import {Zondy} from './mapboxBase';
 //import {Zondy} from '../../service/common/Base';
-import {
-    newGuid,
-    extend
-} from '../../service/common/Util';
+import { newGuid, extend } from '../util/Util';
 
 /**
  * @author 基础平台/产品2部 龚跃健
@@ -102,8 +99,7 @@ var TDTLayer = function (option) {
 
 };
 
-TDTLayer.prototype.initialize = function (options) {
-    options = options || {};
+TDTLayer.prototype.initialize = function () {
     if (this.options.baseURL) {
         var str = this.options.baseURL.split("gov.cn/")[1];
         if (this.options.baseURL.indexOf("?") > 0) {
@@ -172,7 +168,7 @@ TDTLayer.prototype.addToMap = function (map) {
 };
 
 TDTLayer.prototype._initLayerUrl = function () {
-    this._crs = this.options.crs || map.crs.epsgCode;
+    this._crs = this.options.crs || this.map.crs.epsgCode;
     this.options.tilematrixSet = this._crs === "EPSG:4326" ? "c" : "w";
     let params = [];
     if (this.options.layerType.indexOf("igs") > 0) {

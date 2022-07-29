@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import IconFont from "@/components/IconFont/iconfront";
+import IconFont from "@/config/components/IconFont/iconfront";
 export default {
   name: "card-view",
   components: {

@@ -32,7 +32,9 @@ export class TileInfo {
         this.serverName = serverName;
     }
 
-    async getZoomOffset(type, ip, port, serverName) {
+    async getZoomOffset(type, ip, port, serverName, options) {
+        options = options || {};
+        let { mapmode = "mapboxgl", tileschame = "EPSG:3587", tilesize = 256 } = options;
         let zoomoffset = 0;
         ip = ip || this.ip;
         port = port || this.port;
@@ -74,7 +76,7 @@ export class TileInfo {
                     const { TileInfo2 } = json;
                     const { tileInfo } = TileInfo2;
                     zoomoffset = util.getZoomOffsetByTileInfo(tileInfo);
-                } catch (error) {}
+                } catch (error) { }
             } else {
                 let res = await fetch(capability);
                 let text = await res.text();
@@ -82,10 +84,20 @@ export class TileInfo {
                 let json = xml.convertToJson(obj, {});
                 let tms = json.Capabilities.Contents.TileMatrixSet;
                 let TileMatrixSet = tms[tms.length - 1];
-                let scale = TileMatrixSet.TileMatrix[0].ScaleDenominator;
-                let tileInfo = { lods: [{ resolution: scale, level: 0 }] };
+                let tmsName = TileMatrixSet['ows:Identifier'];
+                let tmx = TileMatrixSet.TileMatrix;
+                let tmxobj = tmx && tmx.length > 0 ? tmx[0] : tmx;
+                let tmxname = tmxobj['ows:Identifier'];
+                let exp = new RegExp(/EPSG:[0-9]*/);
+                let schame = exp.exec(tmxname);
+                tileschame = schame && schame.length > 0 ? schame[0] : tileschame;
+                let tmxlevels = tmxname.split(`${tmsName}:`)
+                let tmxlevel = tmxlevels && tmxlevels.length > 1 ? parseInt(tmxlevels[1]) : 0;
+                let scale = tmxobj.ScaleDenominator;
+                let tileInfo = { lods: [{ resolution: scale, level: tmxlevel }] };
                 let util = new TileScale();
-                zoomoffset = util.getZoomOffsetByTileInfo(tileInfo);
+                let isCesium = mapmode == "cesium";
+                zoomoffset = util.getZoomOffsetByTileInfo(tileInfo, isCesium, tilesize, tileschame);
             }
         }
 

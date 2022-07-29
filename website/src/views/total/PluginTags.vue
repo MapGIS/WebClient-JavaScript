@@ -29,8 +29,8 @@
 <script>
 import { isMobile } from '@/utils/mobile';
 import { Tags } from './PluginConfig';
-import PluginCard from '@/components/Card/PluginCard';
-import PluginTab from '@/components/Tabs/PluginTab';
+import PluginCard from '@/config/components/Card/PluginCard';
+import PluginTab from '@/config/components/Tabs/PluginTab';
 
 export default {
     components: { PluginCard, PluginTab },

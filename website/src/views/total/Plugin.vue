@@ -26,9 +26,9 @@
 
 <script>
 import { isMobile } from '@/utils/mobile';
-import PluginTable from '../../components/Table/Plugin';
+import PluginTable from '@/config/components/Table/Plugin';
 import { Leaflet, MapboxGL, OpenLayers, Cesium } from './PluginConfig';
-import PluginTab from '@/components/Tabs/PluginTab';
+import PluginTab from '@/config/components/Tabs/PluginTab';
 
 export default {
     components: {
