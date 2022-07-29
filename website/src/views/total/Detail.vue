@@ -16,8 +16,8 @@
 <script>
 import { isMobile } from '@/utils/mobile';
 import { IGServer, ClientView, ClientAnalysis, ClientTheme, VectorTile, ElasticSearch, Spark } from './DetailConfig';
-import TotalTab from '@/components/Tabs/TotalTab';
-import Kind from '../../components/Table/Kind';
+import TotalTab from '@/config/components/Tabs/TotalTab';
+import Kind from '@/config/components/Table/Kind';
 
 export default {
     components: {

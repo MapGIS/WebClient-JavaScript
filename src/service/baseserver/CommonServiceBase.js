@@ -218,7 +218,7 @@ class CommonServiceBase {
     serviceProcessFailed(result) {
         result = transformResult(result);
         var error = result;
-        this.events.triggerEvent('processFailed', { error: error });
+        this.events.triggerEvent('processFailed', { result: error });
     }
 
     _commit(options) {
@@ -298,9 +298,9 @@ class CommonServiceBase {
                         }
                     );
                 } else {
-                    return new Promise(                        
+                    return new Promise(
                         (resolve) => {
-                            // console.log('【服务】【基础服务】【抽象类Fetch异常信息：4xx/5xx-resoleve】');        
+                            // console.log('【服务】【基础服务】【抽象类Fetch异常信息：4xx/5xx-resoleve】');
                             check().then(function (text) {
                                 // console.log('【服务】【基础服务】【抽象类Fetch异常信息：4xx/5xx】', text);
                                 if (!text) return;

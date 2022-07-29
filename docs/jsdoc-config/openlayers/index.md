@@ -14,7 +14,7 @@
 1. 兼容性 - 兼容老的ie6789等疑难浏览器问题.
 
 
-*   官网(website)：[http://client.snanyun.com:8899/ui/index.html](http://client.snanyun.com:8899/ui/index.html)
+*   官网(website)：[http://develop.smaryun.com/#/index](http://develop.smaryun.com/#/index)
 
 *   源码(source code)：[https://github.com/ParnDeedlit/WebClient-openlayers](https://github.com/ParnDeedlit/WebClient-openlayers)
 

@@ -34,7 +34,7 @@
 
 <script>
 import { Header, MainFooter } from '../layout/components';
-import PluginTab from '@/components/Tabs/PluginTab';
+import PluginTab from '@/config/components/Tabs/PluginTab';
 import { isMobile } from '@/utils/mobile';
 export default {
     name: 'Page404',

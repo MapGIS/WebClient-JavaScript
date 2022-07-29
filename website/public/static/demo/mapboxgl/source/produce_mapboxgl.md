@@ -244,19 +244,19 @@ MapGIS Client for JavaScript（MapboxGL）对接云GIS产品，提供地图显�
 
 
 
-- MapboxGL：使用WebGL技术独立渲染的开源JavaScript库，作为前端渲染矢量瓦片交互地图的工具（https://docs.mapbox.com/mapbox-gl-js/api/）
+- MapboxGL：使用WebGL技术独立渲染的开源JavaScript库，作为前端渲染矢量瓦片交互地图的工具(https://docs.mapbox.com/mapbox-gl-js/api/)
 
-- ECharts：基于 JavaScript 的开源可视化图表库（https://echarts.apache.org/zh/index.html）
+- ECharts：基于 JavaScript 的开源可视化图表库(https://echarts.apache.org/zh/index.html)
 
-- MapV：地理信息可视化开源库（https://mapv.baidu.com/）
+- MapV：地理信息可视化开源库(https://mapv.baidu.com/)
 
-- Turf：客户端空间分析开源库（https://turfjs.org/）
+- Turf：客户端空间分析开源库(https://turfjs.org/)
 
-- D3：基于Web标准的JavaScript图形可视化库（https://d3js.org/）
+- D3：基于Web标准的JavaScript图形可视化库(https://d3js.org/)
 
-- ElasticSearch：分布式搜索与分析引擎（https://www.elastic.co/cn/）
+- ElasticSearch：分布式搜索与分析引擎(https://www.elastic.co/cn/)
 
-- PostGIS：是PostgreSQL的一个扩展，遵循OpenGIS的规范，提供空间信息服务功能-空间对象、空间索引、空间操作函数和空间操作符（http://postgis.net/）
+- PostGIS：是PostgreSQL的一个扩展，遵循OpenGIS的规范，提供空间信息服务功能-空间对象、空间索引、空间操作函数和空间操作符(http://postgis.net/)
 
 
 

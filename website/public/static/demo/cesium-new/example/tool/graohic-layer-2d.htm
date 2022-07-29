@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>标绘工具（二维）</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <style>
+        .mapgis-3d-button{
+            padding: 10px;
+            border-radius: 4px;
+            background: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+      'use strict';
+      //定义三维视图的主要类
+      var viewer;
+      // 设置太阳时间
+      //UTC
+      var utc = Cesium.JulianDate.fromDate(new Date('2021/05/04 12:00:00'));
+      //北京时间=UTC+8=GMT+8
+      viewer.clockViewModel.currentTime = Cesium.JulianDate.addHours(utc, 8, new Cesium.JulianDate());
+
+      //标绘图层对象
+      var graphicsLayer;
+      //绘制参数
+      var drawOptions;
+      //绘制类型，默认为绘制点
+      var drawType = 'point';
+
+      //地图初始化函数
+      function init() {
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer('mapgis-3d-viewer', {});
+        viewer.showPosition();
+
+        //加载楼房数据
+        var url = 'http://192.168.88.204:8089/M3D/1.0/ks_buildings_result/ks_buildings_result.mcj';
+        var options = {
+          debugWireframe: false,
+          debugShowBoundingVolume: false,
+          maximumScreenSpaceError: 4
+        };
+        viewer.scene.layers.appendM3DLayer(url, options);
+
+        //初始化编辑结束函数
+        function finishEdit(result) {
+          console.log('finishEdit:', result);
+        }
+        //初始化绘制结束函数
+        function getGraphic(result) {
+          console.log('绘制结束:', result);
+        }
+        //初始化标绘图层
+        graphicsLayer = new Cesium.GraphicsLayer(viewer, { finishEdit: finishEdit, getGraphic: getGraphic });
+      }
+
+      //选择绘制类型
+      function selectDrawType() {
+        drawType = $('select  option:selected').val();
+      }
+
+      //开始绘制
+      function startDraw() {
+        //停止上一次绘制
+        graphicsLayer.stopDrawing();
+        switch (drawType){
+          //绘制点
+          case 'point':
+            graphicsLayer.startDrawing({
+              type: 'point',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.RED,
+                //点半径
+                pixelSize: 20
+              }
+            });
+            break;
+          //绘制点
+          case 'label':
+            graphicsLayer.startDrawing({
+              type: 'label',
+              style: {
+                //cesium颜色或css颜色
+                fillColor: 'rgb(56,93,166)',
+                text: '中地数码',
+                //加粗 字体大小32px 字体微软雅黑
+                font: 'bolder 32px MicroSoft YaHei'
+              },
+            });
+            break;
+          //绘制广告牌
+          case 'billboard':
+            graphicsLayer.startDrawing({
+              type: 'billboard',
+              style: {
+                image: 'http://develop.smaryun.com/static/assets/home/cesium.png',
+              },
+            });
+            break;
+          //绘制线
+          case 'polyline':
+            graphicsLayer.startDrawing({
+              type: 'polyline',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.RED,
+                //线宽
+                width: 3,
+              },
+            });
+            break;
+          //绘制多边形
+          case 'polygon':
+            graphicsLayer.startDrawing({
+              type: 'polygon',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.RED
+              }
+            });
+            break;
+          //绘制圆
+          case 'circle':
+            graphicsLayer.startDrawing({
+              type: 'circle',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.RED
+              }
+            });
+            break;
+          //绘制矩形
+          case 'rectangle':
+            graphicsLayer.startDrawing({
+              type: 'rectangle',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.RED
+              }
+            });
+            break;
+          //绘制正方形
+          case 'square':
+            graphicsLayer.startDrawing({
+              type: 'square',
+              style: {
+                //cesium颜色或css颜色
+                color: Cesium.Color.RED
+              }
+            });
+            break;
+        }
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer">
+</div>
+<select class="mapgis-3d-button" onchange="selectDrawType()">
+    <option value ="point">绘制点</option>
+    <option value ="label">绘制文本</option>
+    <option value="billboard">绘制广告牌</option>
+    <option value="polyline">绘制线</option>
+    <option value="polygon">绘制多边形</option>
+    <option value="circle">绘制圆</option>
+    <option value="rectangle">绘制矩形</option>
+    <option value="square">绘制正方形</option>
+</select>
+<div onclick="startDraw()" style="left: 130px" class="mapgis-3d-button">开始绘制</div>
+</body>
+
+</html>

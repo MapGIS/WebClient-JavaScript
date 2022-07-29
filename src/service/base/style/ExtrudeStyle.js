@@ -1,18 +1,18 @@
 import { extend } from '../../common/Util';
 import { mapgis } from '../common/base';
-import { VectorStyle } from './VectorStyle';
 import { Symbol } from './Symbol';
+import { Graphic } from './Graphic';
 
 /**
  * 拉伸体样式
- * @class mapgis.style.ExtrudeStyle
+ * @class mapgis.symbols.ExtrudeStyle
  * @classdesc 拉伸体样式
  * @param {String} [color = #FFFFFF] 拉伸体外边线颜色，16进制颜色或rgb值或rgba值，默认#FFFFFF，白色
  * @param {Object} [shadowStyle = undefined] 阴影样式，默认undefined
  * @param {Object} [symbolStyle = undefined] 填充图案样式，默认undefined
  * @param {Object} [outlineSymbolStyle = undefined] 拉伸体外边线填充图案样式，默认undefined
  */
-export default class ExtrudeStyle extends VectorStyle {
+export default class ExtrudeStyle extends Symbol {
     constructor(option) {
         super();
         var options = option ? option : {};
@@ -23,7 +23,7 @@ export default class ExtrudeStyle extends VectorStyle {
 
         this.color = color;
         this.opacity = opacity;
-        this.symbolStyle = symbol || new Symbol();
+        this.symbolStyle = symbol || new Graphic();
 
         this.castShadows = castShadows;
         this.edges = edges;
@@ -67,4 +67,4 @@ export default class ExtrudeStyle extends VectorStyle {
 }
 
 export { ExtrudeStyle };
-mapgis.style.ExtrudeStyle = ExtrudeStyle;
+mapgis.symbols.ExtrudeStyle = ExtrudeStyle;

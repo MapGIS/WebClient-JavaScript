@@ -96,7 +96,7 @@
 
 <script>
 import { isMobile } from '@/utils/mobile';
-import TotalTab from '@/components/Tabs/TotalTab';
+import TotalTab from '@/config/components/Tabs/TotalTab';
 
 export default {
     components: { TotalTab },

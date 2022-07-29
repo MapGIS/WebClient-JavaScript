@@ -270,15 +270,15 @@
 </a>
 </div>
 
--  Cesium：用于显示三维地球和地图的开源JavaScript库，基于WebGL的地图引擎（https://cesium.com/platform/cesiumjs/）
+-  Cesium：用于显示三维地球和地图的开源JavaScript库，基于WebGL的地图引擎(https://cesium.com/platform/cesiumjs/)
 
-- ECharts：基于 JavaScript 的开源可视化图表库（https://echarts.apache.org/zh/index.html）
+- ECharts：基于 JavaScript 的开源可视化图表库(https://echarts.apache.org/zh/index.html)
 
-- MapV：地理信息可视化开源库（https://mapv.baidu.com/）
+- MapV：地理信息可视化开源库(https://mapv.baidu.com/)
 
-- Turf：客户端空间分析开源库（https://turfjs.org/）
+- Turf：客户端空间分析开源库(https://turfjs.org/)
 
-- D3：基于Web标准的JavaScript图形可视化库（https://d3js.org/）
+- D3：基于Web标准的JavaScript图形可视化库(https://d3js.org/)
 
 
 

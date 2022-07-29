@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>动画漫游</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <script>
+        'use strict';
+        //定义三维视图的主要类
+        var viewer;
+        // 设置太阳时间
+        var utc = Cesium.JulianDate.fromDate(new Date('2021/05/04 12:00:00')); //UTC
+        viewer.clockViewModel.currentTime = Cesium.JulianDate.addHours(utc, 8, new Cesium.JulianDate()); //北京时间=UTC+8=GMT+8
+
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            viewer = new Cesium.Viewer('mapgis-3d-viewer', {});
+            viewer.showPosition();
+
+            var tdt = new Cesium.TiandituImageryProvider({
+                url: 'http://t0.tianditu.com/DataServer',
+                tileType: 'img',
+                token: '2ddaabf906d4b5418aed0078e1657029'
+            });
+            viewer.imageryLayers.addImageryProvider(tdt);
+
+
+
+            
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(115.56, 30.38, 1000),
+                duration: 2,
+                orientation: {
+                    heading: Cesium.Math.toRadians(0),  //绕垂直于地心的轴旋转 ,相当于头部左右转
+                    pitch: Cesium.Math.toRadians(-15),  //绕经度线旋转， 相当于头部上下
+                    roll: Cesium.Math.toRadians(0) //绕纬度线旋转 ，面对的一面瞬时针转
+                }
+            });
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapgis-3d-viewer">
+    </div>
+</body>
+
+</html>

@@ -66,7 +66,7 @@ import imgestimate from './bug-img/estimate.png';
 import imgapplyBug from './bug-img/applyBug.png';
 import imgassignees from './bug-img/assignees.png';
 import { isMobile } from '@/utils/mobile';
-import PluginTab from '@/components/Tabs/PluginTab';
+import PluginTab from '@/config/components/Tabs/PluginTab';
 
 export default {
     components: { PluginTab },

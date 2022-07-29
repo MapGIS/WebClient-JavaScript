@@ -140,7 +140,7 @@ import 'codemirror/theme/solarized.css';
 
 // import { getHtml, getMarkdown } from "@/api/demo";
 import axios from 'axios';
-import IconFont from '@/components/IconFont/iconfront';
+import IconFont from '@/config/components/IconFont/iconfront';
 import ShowGallery from './ShowGallery';
 
 export default {

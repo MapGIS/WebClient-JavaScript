@@ -1,4 +1,4 @@
-import {newGuid} from '../../service/common/Util';
+import { newGuid } from '../../service/common/Util';
 import { L } from '../core/Base.js';
 
 /**
@@ -39,7 +39,7 @@ var MapLayer = L.TileLayer.extend({
         imageFormat: null,
         imageHeight: 512,
         imageWidth: 512,
-        guid:null,
+        guid: null,
         imageTransparent: null,
         filters: null,
         styles: null,
@@ -69,6 +69,10 @@ var MapLayer = L.TileLayer.extend({
      */
     initialize: function (url, options) {
         this.url = encodeURI(url + '/image');
+        var imageHeight = options.imageHeight || 512;
+        var imageWidth = options.imageWidth || 512;
+        options.tileSize = window.L.point(imageWidth, imageHeight);
+        // console.log('maplayer_initialize', options);
         L.TileLayer.prototype.initialize.apply(this, arguments);
         L.setOptions(this, options);
         L.stamp(this);
@@ -93,6 +97,7 @@ var MapLayer = L.TileLayer.extend({
         var layerUrl = vm.url + '?';
         layerUrl += encodeURI(vm._initAllRequestParams().join('&'));
         this._layerUrl = layerUrl;
+        // console.log('maplayer__initLayerUrl', layerUrl);
     },
 
     _initAllRequestParams: function () {
@@ -100,12 +105,13 @@ var MapLayer = L.TileLayer.extend({
             options = vm.options || {},
             params = [];
 
-        var imageHeight = this.options.imageHeight;
-        var imageWidth = this.options.imageWidth;
+        // console.log('maplayer_initAllRequestParams', options);
+        var imageHeight = options.imageHeight || 512;
+        var imageWidth = options.imageWidth || 512;
         params.push('size=' + imageWidth + ',' + imageHeight);
 
         var guid = options.guid || newGuid();
-        params.push("clientId=" + guid);
+        params.push('clientId=' + guid);
 
         if (options.imageFormat) {
             params.push('format=' + options.imageFormat);

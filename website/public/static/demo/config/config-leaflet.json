@@ -779,6 +779,22 @@
                     "update": "最后更新时间：2019-11-07"
                 }
             ]
+        },
+        {
+            "name": "时态数据",
+            "iconfont": "iconruno24",
+            "folder": "realtime",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "多目标跟踪",
+                    "file": "multi-target",
+                    "diffcult": "5",
+                    "detail": "多目标跟踪",
+                    "icon": "multi-target.png",
+                    "update": "2022-04-21"
+                }
+            ]
         }
     ]
 }

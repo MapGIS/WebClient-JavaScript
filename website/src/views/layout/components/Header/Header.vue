@@ -35,7 +35,7 @@ import { isMobile } from '@/utils/mobile';
 import HeaderMenu from './Menu';
 import HeaderSubMenu from './SubMenu';
 import axios from 'axios';
-import IconFont from '@/components/IconFont/iconfront';
+import IconFont from '@/config/components/IconFont/iconfront';
 
 export default {
     components: {

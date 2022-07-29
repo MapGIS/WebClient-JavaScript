@@ -6,16 +6,14 @@
 
 #### MapboxGL 优点
 
-> leaflet是常规的的最适合常规gis开发的地图，因此核心功能就是`传统GIS`功能.
+> MapboxGL是最适合常规gis开发的地图，因此核心功能就是`传统GIS`功能.
 
 1. `高效矢量瓦片`-真正高效实用的矢量瓦片
 1. 顶级可视化-真正`顶级的可视化渲染`，mapboxGL,echartGL，KeplerGl等。
 1. `高清矢量图形`- 真正顶级的高清矢量图形绘制SVG，Canvas.
 1. Top级互联网技术加持 - 国内Baidu，国外Uber，Mapbox等顶级可视化巨头技术加持.
 
-
-
-*   官网(website)：[http://client.snanyun.com:8899/ui/index.html](http://client.snanyun.com:8899/ui/index.html)
+*   官网(website)：[http://develop.smaryun.com/#/index](http://develop.smaryun.com/#/index)
 
 *   源码(source code)：[https://github.com/ParnDeedlit/WebClient-MapboxGL](https://github.com/ParnDeedlit/WebClient-mapboxgl)
 

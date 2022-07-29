@@ -333,19 +333,19 @@
 </div>
 
 
--  Vue：是一套用于构建用户界面的渐进式JavaScript框架，高效开发（https://cn.vuejs.org/）
+-  Vue：是一套用于构建用户界面的渐进式JavaScript框架，高效开发(https://cn.vuejs.org/)
 
-- MapboxGL：使用WebGL技术独立渲染的开源JavaScript库，作为前端渲染矢量瓦片交互地图的工具（https://docs.mapbox.com/mapbox-gl-js/api/）
+- MapboxGL：使用WebGL技术独立渲染的开源JavaScript库，作为前端渲染矢量瓦片交互地图的工具(https://docs.mapbox.com/mapbox-gl-js/api/)
 
--  Cesium：用于显示三维地球和地图的开源JavaScript库，基于WebGL的地图引擎（https://cesium.com/platform/cesiumjs/）
+-  Cesium：用于显示三维地球和地图的开源JavaScript库，基于WebGL的地图引擎(https://cesium.com/platform/cesiumjs/)
 
-- ECharts：基于 JavaScript 的开源可视化图表库（https://echarts.apache.org/zh/index.html）
+- ECharts：基于 JavaScript 的开源可视化图表库(https://echarts.apache.org/zh/index.html)
 
-- MapV：地理信息可视化开源库（https://mapv.baidu.com/）
+- MapV：地理信息可视化开源库(https://mapv.baidu.com/)
 
-- Turf：客户端空间分析开源库（https://turfjs.org/）
+- Turf：客户端空间分析开源库(https://turfjs.org/)
 
-- D3：基于Web标准的JavaScript图形可视化库（https://d3js.org/）
+- D3：基于Web标准的JavaScript图形可视化库(https://d3js.org/)
 
 
 

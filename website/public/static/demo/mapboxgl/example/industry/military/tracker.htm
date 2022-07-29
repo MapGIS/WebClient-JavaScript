@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>轨迹显示</title>
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script include="threebox" src="./static/libs/include-mapboxgl-local.js"></script>
+    <style type="text/css">
+        #map {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dropdown {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            min-width: 95px;
+        }
+    </style>
+    <script>
+        var map;
+        var carmodel;
+        var timestamp = 0,
+            timeline;
+        /** 地图初始化
+         */
+        function init() {
+            //实例化Map对象加载地图
+            map = new mapboxgl.Map({
+                //地图容器div的id
+                container: 'map',
+                center: [4.686205805789757, 36.12743569751477], // [117.35, 38.9],
+                zoom: 11,
+                crs: 'EPSG:3857',
+                //设置地图样式信息
+                style: 'http://localhost:8088/static/data/mapbox/5-origin.json'
+            });
+            //注册鼠标移动事件
+            map.on('mousemove', function (e) {
+                //经纬度坐标转web墨卡托
+                const earthRad = 6378137.0;
+                const x = ((e.lngLat.lng * Math.PI) / 180) * earthRad;
+                const a = (e.lngLat.lat * Math.PI) / 180;
+                const y = (earthRad / 2) * Math.log((1.0 + Math.sin(a)) / (1.0 - Math.sin(a)));
+                document.getElementById('mouse-position').innerHTML = 'X轴：' + x.toFixed(2) + '，Y轴：' + y.toFixed(2);
+            });
+            map.on('load', () => {
+                initData(map);
+            });
+        }
+
+        function initData(map) {
+            map.addLayer({
+                id: "custom_model_car",
+                type: "custom",
+                onAdd: function (map, gl) {
+                    CarMode(map, gl);
+                },
+                render: function (gl, matrix) {
+                    threebox.update(Date.now(), "mbx");
+                }
+            });
+        }
+        function CarMode(map, gl) {
+            window.threebox = new Threebox(map, gl);
+            threebox.setupDefaultLights();
+
+            var loader = new THREE.GLTFLoader();
+
+            loader.load('http://localhost:8088/static/data/model/cesium/GroundVehicle/GroundVehicle.glb', (
+                function (gltf) {
+                    carmodel = gltf;
+                    // rotate object so it's sitting on its base
+                    carmodel.scene.rotation.x = -Math.PI * 1.5
+                    carmodel.scene.scale.set(10, 10, 10);
+                    $.get('http://localhost:8088/static/data/military/车辆实时.json', function (line) {
+                        timeline = line.features[0].geometry.coordinates;
+                        timeline[0].push(5);
+                        console.log(timeline[0]);
+                        threebox.addAtCoordinate(carmodel.scene, timeline[0]);
+                        playAnimate();
+                    });
+
+                    //threebox.addAtCoordinate(carmodel.scene, origin);
+                }).bind(this));
+        }
+
+        var intersect = 0,
+            intermax, intersects = [];
+
+        function playAnimate() {
+            if (intersect == 0) {
+                if (timestamp >= timeline.length - 1) timestamp = 0;
+                intersects = calculatePositon(timeline[timestamp], timeline[timestamp + 1], 0.0001);
+                intermax = intersects.length;
+                intersect++;
+                timestamp++;
+            } else {
+                if (intersect >= intermax - 1) {
+                    intersect = 0;
+                    intermax = 0;
+                } else {
+                    intersects[intersect].push(5);
+                    var position = intersects[intersect];
+                    var rotate = calculateDirection(intersects[intersect], intersects[intersect + 1]);
+                    carmodel.scene.rotation.y = -rotate * Math.PI / 180;
+                    threebox.moveToCoordinate(carmodel.scene, position);
+                    map.setCenter({
+                        lng: position[0],
+                        lat: position[1]
+                    });
+                    intersect++;
+                }
+            }
+
+            requestAnimationFrame(playAnimate);
+        }
+
+        function calculatePositon(dot1, dot2, len) {
+            var points = [];
+
+            var x, y;
+            var EPS = len;
+            var scale = 1;
+            dot1[0] *= scale;
+            dot1[1] *= scale;
+            len *= scale;
+            var k = (dot1[0] - dot2[0]) / (dot1[1] - dot2[1]);
+            var y1, y2, y3;
+
+            var dis = Math.sqrt(
+                (dot1[0] - dot2[0]) * (dot1[0] - dot2[0]) +
+                (dot1[1] - dot2[1]) * (dot1[1] - dot2[1])
+            );
+
+            points.push(dot1);
+            for (var i = len; i < dis; i += len) {
+                y1 = dot1[1] - Math.sqrt((i * i) / (k * k + 1));
+                y2 = dot1[1] + Math.sqrt((i * i) / (k * k + 1));
+                y3 = dot1[1];
+                y = dot1[1] > dot2[1] ? y1 : y2;
+                x = dot1[0] - k * (y3 - y);
+                points.push([x / scale, y / scale]);
+            }
+            points.push(dot2);
+
+            return points;
+        }
+
+        function calculateDirection(p1, p2) {
+            var dx, dy, da;
+            var m_dDirection = 0;
+
+            dx = p2[0] - p1[0];
+            dy = p2[1] - p1[1];
+
+            if (dx == 0) {
+                if (dy > 0) m_dDirection = 0;
+                else m_dDirection = 180;
+            } else {
+                if (dx > 0) {
+                    if (dy == 0) {
+                        m_dDirection = 90;
+                    } else {
+                        if (dy > 0) {
+                            da = Math.abs(dx / dy);
+                            m_dDirection = (Math.atan(da) * 180) / Math.PI;
+                        } else {
+                            if (dy < 0) {
+                                da = Math.abs(dx / dy);
+                                m_dDirection = (Math.atan(da) * 180) / Math.PI;
+                                m_dDirection = 180 - m_dDirection;
+                            }
+                        }
+                    }
+                } else {
+                    if (dy == 0) {
+                        m_dDirection = 270;
+                    } else {
+                        if (dy >= 0) {
+                            da = Math.abs(dx / dy);
+                            m_dDirection = (Math.atan(da) * 180) / Math.PI;
+                            m_dDirection = 360 - m_dDirection;
+                        } else {
+                            da = Math.abs(dx / dy);
+                            m_dDirection = (Math.atan(da) * 180) / Math.PI;
+                            m_dDirection = 180 + m_dDirection;
+                        }
+                    }
+                }
+            }
+            return m_dDirection;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="map">
+        <div id="mouse-position"></div>
+    </div>
+</body>
+
+</html>
