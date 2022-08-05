@@ -97,9 +97,9 @@
             {
                 "title": "开发API",
                 "icon": "iconsanfangAPI",
-                "links": [["Cesium-API", "MapboxGL-API", "UI-API", "PLOT-API"]],
+                "links": [["Cesium-API", "MapboxGL-API", "UI-API"]],
                 "hightlights": [[true, false, true]],
-                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892", "http://120.78.82.242:8893", "http://192.168.82.89:8093"]]
+                "routes": [["http://120.78.82.242:8891", "http://120.78.82.242:8892", "http://120.78.82.242:8893"]]
             }
         ]
     },
