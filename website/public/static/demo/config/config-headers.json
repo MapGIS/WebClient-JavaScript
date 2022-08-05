@@ -531,5 +531,53 @@
                 ]
             }
         ]
+    },
+    {
+        "title": "MapGISPlot",
+        "icon": "iconmap2",
+        "menus": [
+            {
+                "title": "产品",
+                "icon": "iconchanpinjieshao"
+            },
+            {
+                "title": "开发示例",
+                "icon": "iconzaixianshili",
+                "links": [
+                    [
+                        "标绘-二维",
+                        "态势推演-二维",
+                        "标绘-三维",
+                        "态势推演-三维",
+                        "标绘-二三维联动",
+                        "态势推演-二三维联动"
+                    ]
+                ],
+                "hightlights": [
+                    [false]
+                ],
+                "routes": [
+                    [
+                        "/storybook/index.html?path=/story/二维-图层-标绘-二维标绘--二维标绘",
+                        "/storybook/index.html?path=/story/二维-图层-标绘-态势推演--态势推演",
+                        "/storybook/index.html?path=/story/三维-图层-标绘-三维标绘--三维标绘",
+                        "/storybook/index.html?path=/story/三维-图层-标绘-态势推演--态势推演",
+                        "/storybook/index.html?path=/story/三维-场景子组件-二三维联动-标绘--标绘",
+                        "/storybook/index.html?path=/story/三维-场景子组件-二三维联动-态势推演--态势推演"
+                    ]
+                ]
+            },
+            {
+                "title": "开发API",
+                "icon": "iconsanfangAPI",
+                "links": [["PLOT-API"]],
+                "hightlights": [[false]],
+                "routes": [
+                    [
+                        "http://192.168.82.89:8093"
+                    ]
+                ]
+            }
+        ]
     }
 ]
