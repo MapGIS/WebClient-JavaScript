@@ -322,6 +322,14 @@
                     "update": "最后更新时间:2022-03-14"
                 },
                 {
+                    "name": "模型爆炸(单图层)",
+                    "file": "model-explosion",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "model-explosion.png",
+                    "update": "最后更新时间:2022-08-10"
+                },
+                {
                     "name": "模型编辑",
                     "file": "tool-edit",
                     "diffcult": "1",
