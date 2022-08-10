@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>模型爆炸(单图层)</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-new-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <style>
+        .mapgis-3d-button{
+            padding: 10px;
+            border-radius: 4px;
+            background: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+      'use strict';
+      //定义三维视图的主要类
+      var viewer, version, url, layerList = [], valueGroups, modelExplosion;
+
+      //地图初始化函数
+      function init() {
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer('mapgis-3d-viewer', {
+          infoBox: false,
+          selectionIndicator: false,
+          shouldAnimate: true
+        });
+        viewer.showPosition();
+        var scene = viewer.scene;
+        //开启抗锯齿
+        viewer.scene.fxaa = true;
+        viewer.scene.postProcessStages.fxaa.enabled = true;
+        //初始化模型爆炸工具
+        modelExplosion = new Cesium.ModelExplosion(viewer);
+        //默认加载1.0数据
+        url = "http://192.168.182.13:6163/igs/rest/g3d/GMWDP_三维地层模型服务图层-体要素_c37541ac2953425e82333ac6b885a272";
+        viewer.scene.layers.appendSceneLayer(url, {
+          duration: 1,
+          debugShowBoundingVolume: false,
+          maximumScreenSpaceError: 0,
+          loaded: function (layer) {
+            layerList = [];
+            layerList.push(layer);
+          }
+        });
+        version = "1";
+      }
+
+      function selectData() {
+        viewer.scene.layers.removeAllLayers();
+        version = $('select  option:selected').val();
+        if(version === "1"){
+          url = "http://192.168.182.13:6163/igs/rest/g3d/GMWDP_三维地层模型服务图层-体要素_c37541ac2953425e82333ac6b885a272";
+        }else {
+          url = "http://192.168.21.191:6163/igs/rest/g3d/江语城地质体";
+        }
+        viewer.scene.layers.appendSceneLayer(url, {
+          duration: 1,
+          debugShowBoundingVolume: false,
+          maximumScreenSpaceError: 0,
+          loaded: function (layer) {
+            layerList = [];
+            layerList.push(layer);
+          }
+        });
+      }
+      
+      function explosionUniqueSingle() {
+        if(version === "1") {
+          valueGroups = [];
+          var index = 1;
+          for (var i = 0;i < 4000; i += 300) {
+            for (var j = i; j < i + 300; j++) {
+              valueGroups.push({
+                value: j,
+                distance: 10000 * index
+              });
+            }
+            index++;
+          }
+
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //单向爆炸方向，可设置任意方向
+            moveDirection: new Cesium.Cartesian3(0, 0, 1),
+            //过滤类型，unique：单值，range：分段
+            type: "unique",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: true
+          });
+        }else {
+          valueGroups = [];
+          var index = 1;
+          for (var i = 0;i < 15; i += 3) {
+            for (var j = i; j < i + 3; j++) {
+              valueGroups.push({
+                value: j,
+                distance: 200 * index
+              });
+            }
+            index++;
+          }
+
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //单向爆炸方向，可设置任意方向
+            moveDirection: new Cesium.Cartesian3(0, 0, 1),
+            //过滤类型，unique：单值，range：分段
+            type: "unique",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: true
+          });
+        }
+      }
+      
+      function explosionUniqueMulti() {
+        if(version === "1") {
+          valueGroups = [];
+          var index = 1;
+          for (var i = 0;i < 4000; i += 300) {
+            for (var j = i; j < i + 300; j++) {
+              if(j % 3 === 0){
+                valueGroups.push({
+                  value: j,
+                  direction: new Cesium.Cartesian3(10000 * index, 0, 0)
+                });
+              }else if(index % 3 === 1) {
+                valueGroups.push({
+                  value: j,
+                  direction: new Cesium.Cartesian3(0, 10000 * index, 0)
+                });
+              }else {
+                valueGroups.push({
+                  value: j,
+                  direction: new Cesium.Cartesian3(0 , 0, 10000 * index)
+                });
+              }
+            }
+            index++;
+          }
+
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //过滤类型，unique：单值，range：分段
+            type: "unique",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: false
+          });
+        }else {
+          valueGroups = [];
+          var index = 1;
+          for (var i = 0;i < 15; i += 3) {
+            for (var j = i; j < i + 3; j++) {
+              if(j % 3 === 0){
+                valueGroups.push({
+                  value: j,
+                  direction: new Cesium.Cartesian3(200 * index, 0, 0)
+                });
+              }else if(index % 3 === 1) {
+                valueGroups.push({
+                  value: j,
+                  direction: new Cesium.Cartesian3(0, 200 * index, 0)
+                });
+              }else {
+                valueGroups.push({
+                  value: j,
+                  direction: new Cesium.Cartesian3(0 , 0, 200 * index)
+                });
+              }
+            }
+            index++;
+          }
+
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //过滤类型，unique：单值，range：分段
+            type: "unique",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: false
+          });
+        }
+      }
+
+      function explosionRangeSingle() {
+        if(version === "1") {
+          valueGroups = [
+            {
+              start: 0,
+              end: 600,
+              distance: 30000
+            },
+            {
+              start: 601,
+              end: 1000,
+              distance: 60000
+            },
+            {
+              start: 1001,
+              end: 1500,
+              distance: 90000
+            },
+            {
+              start: 1501,
+              end: 2000,
+              distance: 120000
+            },
+            {
+              start: 2001,
+              end: 2500,
+              distance: 180000
+            },
+            {
+              start: 2500,
+              end: 4000,
+              distance: 21000
+            }
+          ]
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //单向爆炸方向，可设置任意方向
+            moveDirection: new Cesium.Cartesian3(0, 0, 1),
+            //过滤类型，unique：单值，range：分段
+            type: "range",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: true
+          });
+        }else {
+          valueGroups = [
+            {
+              start: 0,
+              end: 1,
+              distance: 200
+            },
+            {
+              start: 2,
+              end: 3,
+              distance: 400
+            },
+            {
+              start: 4,
+              end: 6,
+              distance: 600
+            },
+            {
+              start: 7,
+              end: 10,
+              distance: 800
+            },
+            {
+              start: 11,
+              end: 13,
+              distance: 1000
+            },
+            {
+              start: 14,
+              end: 20,
+              distance: 1200
+            }
+          ]
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //单向爆炸方向，可设置任意方向
+            moveDirection: new Cesium.Cartesian3(0, 0, 1),
+            //过滤类型，unique：单值，range：分段
+            type: "range",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: true
+          });
+        }
+      }
+      
+      function explosionRangeMulti() {
+        if(version === "1") {
+          valueGroups = [
+            {
+              start: 0,
+              end: 600,
+              direction: new Cesium.Cartesian3(0, 10000, 30000)
+            },
+            {
+              start: 601,
+              end: 1000,
+              direction: new Cesium.Cartesian3(60000, 0, 30000)
+            },
+            {
+              start: 1001,
+              end: 1500,
+              direction: new Cesium.Cartesian3(20000, 40000, 10000)
+            },
+            {
+              start: 1501,
+              end: 2000,
+              direction: new Cesium.Cartesian3(0, 0, 120000)
+            },
+            {
+              start: 2001,
+              end: 2500,
+              direction: new Cesium.Cartesian3(100000, 0, 0)
+            },
+            {
+              start: 2500,
+              end: 4000,
+              direction: new Cesium.Cartesian3(0, 130000, 0)
+            }
+          ]
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //过滤类型，unique：单值，range：分段
+            type: "range",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: false
+          });
+        }else {
+          valueGroups = [
+            {
+              start: 0,
+              end: 1,
+              direction: new Cesium.Cartesian3(2000, 200, 1000)
+            },
+            {
+              start: 2,
+              end: 3,
+              direction: new Cesium.Cartesian3(1000, 1200, 1100)
+            },
+            {
+              start: 4,
+              end: 6,
+              direction: new Cesium.Cartesian3(0, 2200, 0)
+            },
+            {
+              start: 7,
+              end: 10,
+              direction: new Cesium.Cartesian3(1000, 100, 0)
+            },
+            {
+              start: 11,
+              end: 13,
+              direction: new Cesium.Cartesian3(0, 1000, 900)
+            },
+            {
+              start: 14,
+              end: 20,
+              direction: new Cesium.Cartesian3(90, 20, 0)
+            }
+          ]
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //过滤类型，unique：单值，range：分段
+            type: "range",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'oid',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: false
+          });
+        }
+      }
+
+      function explosionContainSingle() {
+        if(version === "2") {
+          valueGroups = [];
+          valueGroups.push({
+            value : "砾砂",
+            distance : 100
+          });
+          valueGroups.push({
+            value : "下推层",
+            distance : 300
+          });
+
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //单向爆炸方向，可设置任意方向
+            moveDirection: new Cesium.Cartesian3(0, 0, 1),
+            //过滤类型，unique：单值，range：分段，contain：包含
+            type: "contain",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'LAYERNAME',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: true
+          });
+        }
+      }
+      
+      function explosionContainMulti() {
+        if(version === "2") {
+          valueGroups = [
+            {
+              value : "砾砂",
+              direction: new Cesium.Cartesian3(0, 400, 0)
+            },
+            {
+              value : "下推层",
+              direction: new Cesium.Cartesian3(400, 0, 0)
+            }
+          ]
+          modelExplosion.explosionByField(layerList, {
+            //过滤数据
+            valueGroups: valueGroups,
+            //过滤类型，unique：单值，range：分段，contain：包含
+            type: "contain",
+            //过滤字段，1.0数据可不填，默认为oid
+            field: 'LAYERNAME',
+            //爆炸方向，true：单方向，false：多方向
+            singleDirection: false
+          });
+        }
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer">
+</div>
+<select class="mapgis-3d-button" onchange="selectData()">
+    <option value ="1">1.0数据</option>
+    <option value ="2">2.0数据</option>
+</select>
+<div onclick="explosionUniqueSingle()" style="left: 130px" class="mapgis-3d-button">单值过滤-单方向</div>
+<div onclick="explosionUniqueMulti()" style="left: 300px" class="mapgis-3d-button">单值过滤-多方向</div>
+<div onclick="explosionRangeSingle()" style="left: 470px" class="mapgis-3d-button">分段过滤-单方向</div>
+<div onclick="explosionRangeMulti()" style="left: 640px" class="mapgis-3d-button">分段过滤-多方向</div>
+<div onclick="explosionContainSingle()" style="left: 810px" class="mapgis-3d-button">属性过滤-单方向</div>
+<div onclick="explosionContainMulti()" style="left: 980px" class="mapgis-3d-button">属性过滤-多方向</div>
+</body>
+
+</html>
