@@ -330,6 +330,14 @@
                     "update": "最后更新时间:2022-08-10"
                 },
                 {
+                    "name": "模型变换",
+                    "file": "model-transform",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "model-transform.png",
+                    "update": "最后更新时间:2022-08-10"
+                },
+                {
                     "name": "模型编辑",
                     "file": "tool-edit",
                     "diffcult": "1",

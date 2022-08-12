@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>模型变换</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-new-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <style>
+        .mapgis-3d-button{
+            padding: 10px;
+            border-radius: 4px;
+            background: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+
+        .mapgis-3d-table{
+            position: absolute;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            top: 60px;
+            left: 10px;
+        }
+    </style>
+    <script>
+      'use strict';
+      //定义三维视图的主要类
+      var viewer, url, modelTransformTool, layerIndex;
+
+      //地图初始化函数
+      function init() {
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer('mapgis-3d-viewer', {
+          infoBox: false,
+          selectionIndicator: false,
+          shouldAnimate: true
+        });
+        viewer.showPosition();
+        //开启抗锯齿
+        viewer.scene.fxaa = true;
+        viewer.scene.postProcessStages.fxaa.enabled = true;
+
+        viewer.scene.layers.removeAllLayers();
+        url = "http://192.168.21.191:6163/igs/rest/g3d/大楼";
+        var options = {
+          loadAll: !true,
+          getDocLayerIndexes: function (indexs) {
+            layerIndex = indexs[0];
+            //获取数据
+            var layer = viewer.scene.layers.getLayer(layerIndex);
+            modelTransformTool = new Cesium.ModelTransformTool(layer);
+            //初始化图形化编辑工具
+            modelTransformTool.initModelEditor(viewer);
+          }
+        };
+        viewer.scene.layers.appendSceneLayer(url, options);
+      }
+
+      function selectData() {
+        viewer.scene.layers.removeAllLayers();
+        url = $('select  option:selected').val();
+        var options = {
+          loadAll: !true,
+          getDocLayerIndexes: function (indexs) {
+            layerIndex = indexs[0];
+            if(modelTransformTool){
+              modelTransformTool.destroy();
+            }
+            //获取数据
+            var layer = viewer.scene.layers.getLayer(layerIndex);
+            modelTransformTool = new Cesium.ModelTransformTool(layer);
+            //初始化图形化编辑工具
+            modelTransformTool.initModelEditor(viewer);
+          }
+        };
+        viewer.scene.layers.appendSceneLayer(url, options);
+      }
+      
+      function setTranslate() {
+        modelTransformTool.setTranslation(document.getElementById('longitude').value, document.getElementById('latitude').value, document.getElementById('height').value);
+      }
+
+      function rotate() {
+        modelTransformTool.setRotation(document.getElementById('degree').value);
+      }
+      
+      function scale() {
+        modelTransformTool.setScala(document.getElementById('xScale').value, document.getElementById('yScale').value, document.getElementById('zScale').value);
+      }
+      
+      function activeRotationEditor() {
+        modelTransformTool.activeRotationEditor();
+      }
+      
+      function activeTranslationEditor() {
+        modelTransformTool.activeTranslationEditor();
+      }
+      
+      function activeScaleEditorSingle() {
+        modelTransformTool.activeScaleEditor({
+          singleScale: true
+        });
+      }
+      
+      function activeScaleEditorMulti() {
+        modelTransformTool.activeScaleEditor({
+          singleScale: false
+        });
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer">
+</div>
+<table class="mapgis-3d-table">
+    <tbody>
+    <tr>
+        <td>平移位置-经度:</td>
+        <td>
+            <input id="longitude" type="number" min="-180" max="180" value="121.1300"/>
+        </td>
+    </tr>
+    <tr>
+        <td>平移位置-纬度:</td>
+        <td>
+            <input id="latitude" type="number" min="-90" max="90" value="28.8472"/>
+        </td>
+    </tr>
+    <tr>
+        <td>平移位置-高度:</td>
+        <td>
+            <input id="height" type="number" value="0"/>
+        </td>
+    </tr>
+    <tr>
+        <td>旋转角度:</td>
+        <td>
+            <input id="degree" type="number" value="30"/>
+        </td>
+    </tr>
+    <tr>
+        <td>缩放 - X轴:</td>
+        <td>
+            <input id="xScale" type="number" value="2"/>
+        </td>
+    </tr>
+    <tr>
+        <td>缩放 - Y轴:</td>
+        <td>
+            <input id="yScale" type="number" value="2"/>
+        </td>
+    </tr>
+    <tr>
+        <td>缩放 - Z轴:</td>
+        <td>
+            <input id="zScale" type="number" value="2"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<select class="mapgis-3d-button" onchange="selectData()">
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/大楼">大楼</option>
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/school">学校模型</option>
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/ZondyModels">中地大楼</option>
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/DaYanTa-M3D">大雁塔</option>
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/白模">建筑白膜</option>
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/钻孔分层点_Sur_000_Ent">钻孔数据</option>
+    <option value ="http://192.168.21.191:6163/igs/rest/g3d/江语城地质体">江语城地质体</option>
+</select>
+<div onclick="setTranslate()" style="left: 160px" class="mapgis-3d-button">平移</div>
+<div onclick="rotate()" style="left: 230px" class="mapgis-3d-button">旋转</div>
+<div onclick="scale()" style="left: 300px" class="mapgis-3d-button">缩放</div>
+<div onclick="activeRotationEditor()" style="left: 300px" class="mapgis-3d-button">激活图形化旋转工具</div>
+<div onclick="activeTranslationEditor()" style="left: 500px" class="mapgis-3d-button">激活图形化平移工具</div>
+<div onclick="activeScaleEditorSingle()" style="left: 700px" class="mapgis-3d-button">激活图形化缩放工具(单轴缩放)</div>
+<div onclick="activeScaleEditorMulti()" style="left: 975px" class="mapgis-3d-button">激活图形化缩放工具(三轴缩放)</div>
+</body>
+
+</html>
