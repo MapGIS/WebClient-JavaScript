@@ -12,6 +12,15 @@ export default class AdvancedAnalysisManager {
     constructor(option) {
         this._viewer = Cesium.defaultValue(option.viewer, undefined);
         this._scene = this._viewer.scene;
+        // 记录设置之前的配置
+        this._oldSetting = {
+            skyAtmosphere: {
+                hueShift: this._scene.skyAtmosphere.hueShift,
+                saturationShift: this._scene.skyAtmosphere.saturationShift,
+                brightnessShift: this._scene.skyAtmosphere.brightnessShift
+            },
+            fog: { density: this._scene.fog.density, minimumBrightness: this._scene.fog.minimumBrightness }
+        };
     }
 
     /**
@@ -432,6 +441,12 @@ export default class AdvancedAnalysisManager {
      */
     removeStage(stage) {
         this.viewer.scene.postProcessStages.remove(stage);
+        // 重置配置
+        this.scene.skyAtmosphere.hueShift = this._oldSetting.skyAtmosphere.hueShift;
+        this.scene.skyAtmosphere.saturationShift = this._oldSetting.skyAtmosphere.saturationShift;
+        this.scene.skyAtmosphere.brightnessShift = this._oldSetting.skyAtmosphere.brightnessShift;
+        this.scene.fog.density = this._oldSetting.fog.density;
+        this.scene.fog.minimumBrightness = this._oldSetting.fog.minimumBrightness;
     }
 
     /**
