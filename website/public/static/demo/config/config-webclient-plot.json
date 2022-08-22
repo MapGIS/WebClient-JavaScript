@@ -1,0 +1,31 @@
+{
+    "name": "webclient-plot",
+    "title": "MapGIS WebClient-Plot",
+    "mapmode": "webclient-plot",
+    "childs": [
+        {
+            "name": "二维标绘",
+            "iconfont": "iconlayer",
+            "folder": "Plot2D",
+            "leaffolder": true,
+            "childs": [
+            ]
+        },
+        {
+            "name": "三维标绘",
+            "iconfont": "iconterrain",
+            "folder": "Plot3D",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "标绘",
+                    "file": "plot",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        }
+    ]
+}

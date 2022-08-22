@@ -548,7 +548,7 @@
                 "icon": "iconchanpinjieshao"
             },
             {
-                "title": "开发示例",
+                "title": "开发示例 - vue",
                 "icon": "iconzaixianshili",
                 "links": [
                     [
@@ -571,6 +571,23 @@
                         "/storybook/index.html?path=/story/三维-图层-标绘-态势推演--态势推演",
                         "/storybook/index.html?path=/story/三维-场景子组件-二三维联动-标绘--标绘",
                         "/storybook/index.html?path=/story/三维-场景子组件-二三维联动-态势推演--态势推演"
+                    ]
+                ]
+            },
+            {
+                "title": "开发示例-javascript",
+                "icon": "iconzaixianshili",
+                "links": [
+                    [
+                        "三维标绘"
+                    ]
+                ],
+                "hightlights": [
+                    [false]
+                ],
+                "routes": [
+                    [
+                        "/gallery/webclient-plot#Plot3D"
                     ]
                 ]
             },
