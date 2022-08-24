@@ -384,6 +384,14 @@
                     "detail": "",
                     "icon": "theme-layer.png",
                     "update": "最后更新时间:2022-04-13"
+                },
+                {
+                    "name": "动态注记",
+                    "file": "theme-layer-label",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "theme-layer-label.png",
+                    "update": "最后更新时间:2022-08-23"
                 }
             ]
         }

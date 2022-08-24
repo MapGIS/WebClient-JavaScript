@@ -9,6 +9,14 @@
             "folder": "Plot2D",
             "leaffolder": true,
             "childs": [
+                {
+                    "name": "二维态势推演",
+                    "file": "plot-animation-2d",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "plot-animation-2d.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
             ]
         },
         {
@@ -23,6 +31,14 @@
                     "diffcult": "2",
                     "detail": "",
                     "icon": "plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "三维态势推演",
+                    "file": "plot-animation-3d",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "plot-animation-3d.png",
                     "update": "最后更新时间:2022-03-14"
                 }
             ]

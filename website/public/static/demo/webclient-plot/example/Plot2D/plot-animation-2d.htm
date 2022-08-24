@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>二维态势推演</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script
+      include="geohash,geojson,turf"
+      src="./static/libs/include-mapboxgl-local.js"
+    ></script>
+    <link
+      href="./static/demo/mapboxgl/example/style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!--引入行业标绘脚本库-->
+    <script src="./static/libs/cdn/webclient-plot/webclient-plot.min.js"></script>
+    <style>
+      #mapgis-2d-viewer {
+        position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 100%;
+      }
+    </style>
+    <script>
+      "use strict";
+      //定义三维视图的主要类
+      var viewer, symbolManager, drawTool, layer, currentPlot, timeline;
+      var Zondy = window.Zondy;
+      var Plot = Zondy.Plot;
+      var PlotUtilBase = Plot.PlotUtilBase;
+      var PlotLayer2D = Plot.PlotLayer2D;
+      var PlotLayer2DGroup = Plot.PlotLayer2DGroup;
+      var SymbolManager = Plot.SymbolManager;
+      var TimeLine = Plot.TimeLine;
+      var DrawTool = Plot.DrawTool;
+      var PlotRegister = Plot.PlotRegister;
+      var Point = PlotUtilBase.Point;
+      var FabricLayer = Plot.FabricLayer;
+
+      //地图初始化函数
+      function init() {
+        var plotLayer3DGroup;
+
+        var { protocol, ip, port } = window.webclient;
+
+        var tiandituKey = "f5347cab4b28410a6e8ba5143e3d5a35";
+        var map = new mapboxgl.Map({
+          container: "mapgis-2d-viewer",
+          crs: "EPSG:4326", //经纬度一定要设置crs参数
+          maxBounds: [
+            [-180, -90],
+            [180, 90],
+          ],
+          style: {
+            version: 8,
+            sources: {
+              "tianditu-4326-vector": {
+                //来源类型为栅格瓦片
+                type: "raster",
+                tiles: [
+                  //来源请求地址，请求天地图提供的全球矢量地图WMTS服务
+                  "http://t" +
+                    Math.round(Math.random() * 7) +
+                    ".tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                    "&TILECOL=" +
+                    "{x}" +
+                    "&TILEROW=" +
+                    "{y}" +
+                    "&TILEMATRIX=" +
+                    "{z}" +
+                    "&tk=" +
+                    tiandituKey,
+                ],
+                //栅格瓦片的分辨率
+                tileSize: 256,
+              },
+              "tianditu-4326-symbol": {
+                //来源类型为栅格瓦片
+                type: "raster",
+                tiles: [
+                  //来源请求地址，请求天地图提供的全球矢量中文注记WMTS服务
+                  "http://t" +
+                    Math.round(Math.random() * 7) +
+                    ".tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles" +
+                    "&TILECOL=" +
+                    "{x}" +
+                    "&TILEROW=" +
+                    "{y}" +
+                    "&TILEMATRIX=" +
+                    "{z}" +
+                    "&tk=" +
+                    tiandituKey,
+                ],
+                //栅格瓦片的分辨率
+                tileSize: 256,
+              },
+            },
+            layers: [
+              {
+                id: "tianditu-4326-vector",
+                type: "raster",
+                source: "tianditu-4326-vector",
+                minzoom: 0,
+                maxzoom: 22,
+              },
+              {
+                id: "tianditu-4326-symbol",
+                type: "raster",
+                source: "tianditu-4326-symbol",
+                minzoom: 0,
+                maxzoom: 22,
+              },
+            ],
+          },
+          zoom: 8,
+          pitch: 45,
+          center: [116.35, 39.9],
+        });
+
+        //初始化符号管理器
+        symbolManager = new SymbolManager(
+          `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/symbols.json`,
+          {
+            fontURL: `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/`,
+            baseUrl: `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/assets/`,
+          }
+        );
+        // 创建二维图层
+        var canvas = new FabricLayer(map, PlotLayer2DGroup);
+        var fabricCanvas = canvas.getFabricCanvas();
+        // 创建图层组
+        layer = new PlotLayer2D();
+        //设置图层不可编辑
+        layer.editable = false;
+
+        // 将二维图层添加到图层组内
+        fabricCanvas.addLayer(layer);
+        //获取符号资源目录
+        symbolManager.getSymbols().then(function (symbols) {
+          $.getJSON(
+            `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/test.json`,
+            (res) => {
+              layer.fromJSON(res);
+            }
+          );
+          // 创建时间轴
+          $.getJSON(
+            `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/animation.json`,
+            (t) => {
+              timeline = new TimeLine(fabricCanvas, {});
+              timeline.fromJSON(t);
+            }
+          );
+        });
+
+        var btns = document.querySelectorAll(".switchLayerButton");
+        var invert = false;
+        btns[0].onclick = () => {
+          // 动画测试
+          if (timeline) {
+            timeline.play();
+          }
+        };
+
+        btns[1].onclick = function () {
+          timeline.pause();
+        };
+
+        btns[2].onclick = function () {
+          timeline.restore();
+        };
+
+        btns[3].onclick = function () {
+          timeline.setSpeed(5);
+        };
+
+        btns[4].onclick = function () {
+          timeline.setSpeed(0.5);
+        };
+
+        btns[5].onclick = function () {
+          timeline.setSpeed(1);
+        };
+        btns[6].onclick = function () {
+          timeline.seek(0);
+          console.log("跳转到0");
+        };
+        btns[7].onclick = function () {
+          timeline.seek(116000);
+          console.log("跳转到5000");
+        };
+        btns[8].onclick = function () {
+          invert = !invert;
+          timeline.reversed(invert);
+        };
+        btns[9].onclick = function () {
+          const t = timeline.toJSON();
+          console.log("动画保存", t);
+        };
+        btns[10].onclick = function () {
+          const s = timeline.getAnimationById(
+            "72982105-54b9-44cf-b81f-442976505757"
+          );
+          const v = s[0].getStyleJSON();
+        };
+
+        btns[11].onclick = function () {
+          const s = timeline.addAnimationObject({
+            animationType: "scale-animation",
+            loop: 500,
+            duration: 3000,
+            timelineOffset: 0,
+            featureIds: "44689d9e-de87-4902-8f9f-ba7f80c4f497",
+          });
+          console.log("添加动画", s);
+        };
+        btns[12].onclick = function () {
+          const s = timeline.getAnimationById(
+            "93152ceb-5f36-4572-bec9-2a82adc2639f"
+          );
+          console.log("删除动画 ", s);
+          timeline.removeAnimation(s[0]);
+        };
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-2d-viewer">
+      <div id="content" style="position: relative">
+        <div class="switchLayer">
+          <button class="switchLayerButton">播放</button>
+          <button class="switchLayerButton">暂停</button>
+          <button class="switchLayerButton">重置</button>
+          <button class="switchLayerButton">5倍速</button>
+          <button class="switchLayerButton">0.5倍速</button>
+          <button class="switchLayerButton">1倍速</button>
+          <button class="switchLayerButton">跳转0ms</button>
+          <button class="switchLayerButton">跳转5000ms</button>
+          <button class="switchLayerButton">反转</button>
+          <button class="switchLayerButton">保存动画</button>
+          <button class="switchLayerButton">获取对象</button>
+          <button class="switchLayerButton">添加动画</button>
+          <button class="switchLayerButton">删除动画</button>
+          <button class="switchLayerButton">保存要素json</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

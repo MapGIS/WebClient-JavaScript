@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>二维态势推演</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-new-local.js"></script>
+    <!--引入行业标绘脚本库-->
+    <script src="./static/libs/cdn/webclient-plot/webclient-plot.min.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <style>
+      .mapgis-3d-symbol-container {
+        padding: 10px;
+        border-radius: 4px;
+        background: white;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        cursor: pointer;
+        width: 400px;
+        height: 400px;
+      }
+
+      .mapgis-3d-symbol-icon {
+        margin-left: 4px;
+        margin-top: 4px;
+        width: 30px;
+        height: 30px;
+      }
+
+      .mapgis-3d-plot-size {
+        position: absolute;
+        background: white;
+        top: 10px;
+        left: 440px;
+        padding: 3px;
+      }
+
+      .mapgis-3d-plot-style {
+        padding: 10px;
+        border-radius: 4px;
+        background: white;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        width: 400px;
+        height: 400px;
+      }
+    </style>
+    <script>
+      "use strict";
+      //定义三维视图的主要类
+      var viewer, symbolManager, drawTool, layer, currentPlot, timeline;
+      var Zondy = window.Zondy;
+      var Plot = Zondy.Plot;
+      var PlotUtilBase = Plot.PlotUtilBase;
+      var PlotLayer3D = Plot.PlotLayer3D;
+      var PlotLayer3DGroup = Plot.PlotLayer3DGroup;
+      var SymbolManager = Plot.SymbolManager;
+      var TimeLine = Plot.TimeLine;
+      var DrawTool = Plot.DrawTool;
+      var PlotRegister = Plot.PlotRegister;
+      var Point = PlotUtilBase.Point;
+
+      //地图初始化函数
+      function init() {
+        var plotLayer3DGroup;
+
+        var { protocol, ip, port } = window.webclient;
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer("mapgis-3d-viewer", {
+          infoBox: false,
+          selectionIndicator: false,
+          shouldAnimate: true,
+        });
+        viewer.showPosition();
+        var scene = viewer.scene;
+        //初始化符号管理器
+        symbolManager = new SymbolManager(
+          `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/symbols.json`,
+          {
+            fontURL: `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/`,
+            baseUrl: `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/assets/`,
+          }
+        );
+        //初始化图层需要Cesium对象以及Cesium的viewer对象
+        layer = new window.Zondy.Plot.PlotLayer3D(Cesium, viewer, {
+          pickPlot: function (plot) {},
+        });
+        //设置图层不可编辑
+        layer.editable = false;
+        // 创建图层组
+        plotLayer3DGroup = new PlotLayer3DGroup(viewer);
+        // 将三维图层添加到图层组内
+        plotLayer3DGroup.addLayer(layer);
+        //绘制工具与图层绑定
+        drawTool = new DrawTool(layer, {});
+        //获取符号资源目录
+        symbolManager.getSymbols().then(function (symbols) {
+          $.getJSON(
+            `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/test.json`,
+            (res) => {
+              layer.fromJSON(res);
+            }
+          );
+          // 创建时间轴
+          $.getJSON(
+            `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/animation.json`,
+            (t) => {
+              timeline = new TimeLine(plotLayer3DGroup, {});
+              timeline.fromJSON(t);
+            }
+          );
+        });
+
+        var btns = document.querySelectorAll(".switchLayerButton");
+        var invert = false;
+        btns[0].onclick = () => {
+          // 动画测试
+          if (timeline) {
+            timeline.play();
+          }
+        };
+
+        btns[1].onclick = function () {
+          timeline.pause();
+        };
+
+        btns[2].onclick = function () {
+          timeline.restore();
+        };
+
+        btns[3].onclick = function () {
+          timeline.setSpeed(5);
+        };
+
+        btns[4].onclick = function () {
+          timeline.setSpeed(0.5);
+        };
+
+        btns[5].onclick = function () {
+          timeline.setSpeed(1);
+        };
+        btns[6].onclick = function () {
+          timeline.seek(0);
+          console.log("跳转到0");
+        };
+        btns[7].onclick = function () {
+          timeline.seek(116000);
+          console.log("跳转到5000");
+        };
+        btns[8].onclick = function () {
+          invert = !invert;
+          timeline.reversed(invert);
+        };
+        btns[9].onclick = function () {
+          const t = timeline.toJSON();
+          console.log("动画保存", t);
+        };
+        btns[10].onclick = function () {
+          const s = timeline.getAnimationById(
+            "72982105-54b9-44cf-b81f-442976505757"
+          );
+          const v = s[0].getStyleJSON();
+        };
+
+        btns[11].onclick = function () {
+          const s = timeline.addAnimationObject({
+            animationType: "scale-animation",
+            loop: 500,
+            duration: 3000,
+            timelineOffset: 0,
+            featureIds: "44689d9e-de87-4902-8f9f-ba7f80c4f497",
+          });
+          console.log("添加动画", s);
+        };
+        btns[12].onclick = function () {
+          const s = timeline.getAnimationById(
+            "93152ceb-5f36-4572-bec9-2a82adc2639f"
+          );
+          console.log("删除动画 ", s);
+          timeline.removeAnimation(s[0]);
+        };
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="mapgis-3d-viewer">
+      <div id="content" style="position: relative">
+        <div class="switchLayer">
+          <button class="switchLayerButton">播放</button>
+          <button class="switchLayerButton">暂停</button>
+          <button class="switchLayerButton">重置</button>
+          <button class="switchLayerButton">5倍速</button>
+          <button class="switchLayerButton">0.5倍速</button>
+          <button class="switchLayerButton">1倍速</button>
+          <button class="switchLayerButton">跳转0ms</button>
+          <button class="switchLayerButton">跳转5000ms</button>
+          <button class="switchLayerButton">反转</button>
+          <button class="switchLayerButton">保存动画</button>
+          <button class="switchLayerButton">获取对象</button>
+          <button class="switchLayerButton">添加动画</button>
+          <button class="switchLayerButton">删除动画</button>
+          <button class="switchLayerButton">保存要素json</button>
+        </div>
+        <div id="symbol-table"></div>
+      </div>
+    </div>
+  </body>
+</html>

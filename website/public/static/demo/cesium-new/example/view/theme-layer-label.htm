@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>动态注记</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script src="./static/libs/include-cesium-new-local.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+    <style>
+      #toolbar {
+        font-size: 15px;
+        font-family: Avenir, Helvetica, Arial, sans-serif;
+        padding: 4px;
+        border-radius: 4px;
+        z-index: 999;
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      #toolbar input {
+        vertical-align: middle;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+
+      #toolbar .header {
+        font-weight: bold;
+      }
+    </style>
+    <script>
+      var viewer;
+      //加载三维视图
+      function init() {
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer("GlobeView", {
+          infoBox: false,
+          selectionIndicator: false,
+          shouldAnimate: true,
+          // timeline: true
+        });
+
+        if (Cesium.FeatureDetection.supportsImageRenderingPixelated()) {
+          //判断是否支持图像渲染像素化处理
+          viewer.resolutionScale = window.devicePixelRatio;
+        }
+
+        //开启抗锯齿
+        viewer.scene.fxaa = true;
+        viewer.scene.postProcessStages.fxaa.enabled = true;
+
+        initAll();
+      }
+
+      var url;
+      var gdbp;
+      var field;
+      var renderer, uniqueRenderer;
+      var layerIndex;
+      var layer;
+      var vLayers;
+      var pointLayerIndex = -2;
+      var lineLayerIndex = -2;
+      var areaLayerIndex = -2;
+      var currentRenderType = ["point", "line", "area"];
+
+      var pointLabelSymbol,
+        lineLabelSymbol,
+        areaLabelSymbol,
+        pointLabelsOption,
+        lineLabelsOption,
+        areaLabelsOption;
+
+      //加载三维地形地图文档（服务地址，配置参数）
+      var { protocol, ip, port } = window.webclient;
+
+      var dataGeojson = {
+        point: `${protocol}://${ip}:${port}/static/data/geojson/metroStation.json`,
+        line: `${protocol}://${ip}:${port}/static/data/geojson/metro.json`,
+        area: `${protocol}://${ip}:${port}/static/data/geojson/populationSizeGeoJson_2017.json`,
+      };
+
+      var tempData = dataGeojson;
+
+      renderer = {
+        type: "simple",
+        symbol: {
+          type: "polygon-3d",
+          symbolLayers: {
+            type: "fill",
+            material: { color: new Cesium.Color(0.0, 0.0, 1.0, 1.0) },
+            outline: {
+              color: new Cesium.Color(1.0, 0.0, 0.0, 1.0),
+              width: 1.0,
+            },
+            size: 20.0,
+          },
+        },
+        label: "标签",
+      };
+
+      uniqueRenderer = {
+        type: "unique-value",
+        field: "name",
+        defaultSymbol: {
+          type: "polygon-3d",
+          symbolLayers: {
+            type: "fill",
+            material: {
+              color: new Cesium.Color(
+                window.Math.random(),
+                window.Math.random(),
+                window.Math.random(),
+                1.0
+              ),
+            },
+            outline: {
+              color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+              width: 1.0,
+            },
+          },
+        },
+        defaultLabel: "标签",
+        uniqueValueInfos: [
+          {
+            value: "新洲区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "新洲区",
+          },
+          {
+            value: "黄陂区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "黄陂区",
+          },
+          {
+            value: "洪山区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "洪山区",
+          },
+          {
+            value: "东西湖区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "东西湖区",
+          },
+          {
+            value: "蔡甸区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "蔡甸区",
+          },
+          {
+            value: "江夏区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "江夏区",
+          },
+          {
+            value: "青山区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "青山区",
+          },
+          {
+            value: "汉阳区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "汉阳区",
+          },
+          {
+            value: "武昌区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "武昌区",
+          },
+          {
+            value: "硚口区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "硚口区",
+          },
+          {
+            value: "江岸区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "江岸区",
+          },
+          {
+            value: "汉南区",
+            symbol: {
+              type: "polygon-3d",
+              symbolLayers: {
+                type: "fill",
+                material: {
+                  color: new Cesium.Color(
+                    window.Math.random(),
+                    window.Math.random(),
+                    window.Math.random(),
+                    1.0
+                  ),
+                },
+                outline: {
+                  color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+                  width: 1.0,
+                },
+              },
+            },
+            label: "汉南区",
+          },
+        ],
+      };
+
+      function removeLayers() {
+        viewer.scene.layers.removeAllFeatureLayers();
+        viewer.scene.layers.removeAllGeojsonLayers();
+      }
+
+      function removeLayerByType(type) {
+        var i;
+        if (type === "point") {
+          i = pointLayerIndex;
+        } else if (type === "line") {
+          i = lineLayerIndex;
+        } else {
+          i = areaLayerIndex;
+        }
+        viewer.scene.layers.removeFeatureLayerByID(i, true);
+        viewer.scene.layers.removeGeojsonLayerByID(i, true);
+      }
+
+      function addLayer(type, url, _renderer, labelsOption) {
+        var options = {
+          autoReset: true,
+          loadAll: true,
+          tileFeaturesCount: 400,
+          // clampToGround: true,
+          getDocLayerIndexes: function (indexs) {
+            layerIndex = indexs[0];
+            if (type === "point") {
+              pointLayerIndex = indexs[0];
+            } else if (type === "line") {
+              lineLayerIndex = indexs[0];
+            } else {
+              areaLayerIndex = indexs[0];
+            }
+            layer = viewer.scene.layers.getLayer(layerIndex);
+          },
+          loaded: function (layerInfo) {
+            console.log("沙盒回调loaded获取到的layerInfo", layerInfo);
+          },
+          renderer: _renderer || renderer,
+          // 开启动态注记
+          isDrawLabels: true,
+          labelsOption: labelsOption,
+        };
+        options.url = url;
+        viewer.scene.layers.appendGeojsonLayer(url, options);
+      }
+
+      // 注记符号提供基础的样式参数
+      // 点注记符号样式（和线、区符号样式一致）
+      pointLabelSymbol = {
+        // 填充颜色 rgba or 16进制颜色
+        color: "rgba(255,255,255,1)",
+        // 描边颜色
+        haloColor: "rgba(0,0,0,1)",
+        // 描边宽度
+        haloSize: 1,
+        // 行高
+        lineHeight: 1.1,
+        // 行宽
+        lineWidth: 80,
+        // 最大行数
+        lineMaxNum: 3,
+        // 换行
+        textWraps: true,
+        // x方向偏移
+        xoffset: 0,
+        // y方向偏移
+        yoffset: 0,
+        // 字体样式 参考css
+        font: {
+          size: 15,
+          family: "simHei",
+          weight: "normal",
+          style: "normal",
+        },
+        // 是否开启填充背景
+        showBackground: true,
+        // 背景填充色
+        backgroundColor: "rgba(42,42,42,0.8)",
+        // 背景边距
+        backgroundPadding: 5,
+      };
+
+      // 线注记符号
+      lineLabelSymbol = {
+        color: "rgba(255,255,255,1)",
+        haloColor: "rgba(0,0,0,1)",
+        haloSize: 1,
+        lineHeight: 1.1,
+        lineWidth: 80,
+        lineMaxNum: 3,
+        textWraps: true,
+        xoffset: 0,
+        yoffset: 0,
+        font: {
+          size: 22,
+          family: "simHei",
+          weight: "normal",
+          style: "normal",
+        },
+        showBackground: true,
+        backgroundColor: "#183f7d",
+        backgroundPadding: 5,
+      };
+
+      //区注记符号
+      areaLabelSymbol = {
+        color: "rgba(255,255,255,1)",
+        haloColor: "rgba(0,0,0,1)",
+        haloSize: 1,
+        lineHeight: 1.1,
+        lineWidth: 150,
+        lineMaxNum: 3,
+        textWraps: true,
+        xoffset: 0,
+        yoffset: 0,
+        font: {
+          size: 30,
+          family: "simHei",
+          weight: "normal",
+          style: "normal",
+        },
+        showBackground: false,
+        backgroundColor: "rgba(42,42,42,0.8)",
+        backgroundPadding: 5,
+      };
+
+      pointLabelsOption = {
+        // 点注记符号
+        symbol: pointLabelSymbol,
+        // 渲染方式 1.canvas 2.label
+        renderMode: "canvas",
+        // 可见范围，单位为米
+        maxScale: 500,
+        minScale: 600000,
+        // 注记高度
+        labelHeight: 0,
+        // 布局位置 可选 1.above-left 2.above-center 3.above-right 4.center-left 5.center-center 6.center-right 7.below-left 8.below-center 9.below-right
+        labelPlacement: "above-center",
+        // 要素字段
+        currentAttributeName: "n",
+      };
+
+      lineLabelsOption = {
+        // 线注记符号
+        symbol: lineLabelSymbol,
+        // 渲染方式 1.canvas 2.label
+        renderMode: "canvas",
+        // 可见范围，单位为米
+        maxScale: 500,
+        minScale: 600000,
+        // 注记高度
+        labelHeight: 0,
+        // 布局位置 可选 1.'on-line' 压线 2.'above-line' 线上 3.'under-line' 线下
+        labelPlacement: "above-line",
+        // 要素字段
+        currentAttributeName: "ln",
+        //- 线注记重复参数
+        // 开启注记重复
+        repeatLabel: true,
+        // 重复步长,单位米
+        repeatLabelDistance: 8000,
+        // 步长分段开始比例
+        repeatStartRate: 0.4,
+        // 步长分段结束比例
+        repeatEndRate: 0.7,
+        // 文字分布 1.'auto-spread' 字母集中，汉字分散 2.'centralization-spread'集中 3.'decentralize-spread' 分散
+        lineLabelSpread: "auto-spread",
+        // 文字与线关系 仅集中注记时生效  1.'start' 线头 2.'middle' 线中点 3.'end' 线尾
+        labelPositionAlong: "middle",
+      };
+
+      areaLabelsOption = {
+        // 区注记符号
+        symbol: areaLabelSymbol,
+        // 渲染方式 1.canvas 2.label
+        renderMode: "canvas",
+        // 可见范围，单位为米
+        maxScale: 500,
+        minScale: 600000,
+        // 注记高度
+        labelHeight: 300,
+        // 布局位置 可选 1.'parallel' 平行 2.'outside' 区外 3.'bottom' 底部 4.'skeleton' 骨架线
+        labelPlacement: "skeleton",
+        // 注记要素字段
+        currentAttributeName: "name",
+        // 骨架线注记开始比例
+        skeletonLineStartRate: 0.3,
+        // 骨架线注记结束比例
+        skeletonLineEndRate: 0.7,
+      };
+
+      function addTypeFeatureLayer(type) {
+        if (type === "point") {
+          addLayer("point", tempData.point, null, pointLabelsOption);
+          console.log("pointLabelsOption: ", pointLabelsOption);
+        } else if (type === "line") {
+          addLayer("line", tempData.line, null, lineLabelsOption);
+        } else {
+          addLayer("area", tempData.area, uniqueRenderer, areaLabelsOption);
+        }
+      }
+
+      function initLayer(type) {
+        removeLayerByType(type);
+        addTypeFeatureLayer(type);
+      }
+
+      function initAll() {
+        removeLayers();
+        currentRenderType.forEach(function (t) {
+          addTypeFeatureLayer(t);
+        });
+      }
+
+      function selectLayer(target) {
+        switch (target) {
+          case "全图层": {
+            currentRenderType = ["point", "line", "area"];
+            break;
+          }
+          case "点要素图层": {
+            currentRenderType = ["point"];
+            break;
+          }
+          case "线要素图层": {
+            currentRenderType = ["line"];
+            break;
+          }
+          case "面要素图层": {
+            currentRenderType = ["area"];
+            break;
+          }
+          default: {
+            currentRenderType = ["point", "line", "area"];
+          }
+        }
+        initAll();
+      }
+
+      function renderMode(target) {
+        pointLabelsOption.renderMode = target;
+        lineLabelsOption.renderMode = target;
+        areaLabelsOption.renderMode = target;
+        initAll();
+      }
+
+      function pointLabelPlacement(text) {
+        pointLabelsOption.labelPlacement = text;
+        initLayer("point");
+      }
+
+      function lineLabelPlacement(text) {
+        lineLabelsOption.labelPlacement = text;
+        initLayer("line");
+      }
+
+      function areaLabelPlacement(text) {
+        areaLabelsOption.labelPlacement = text;
+        initLayer("area");
+      }
+
+      function  pointCurrentAttributeName(n){
+        pointLabelsOption.currentAttributeName=n
+        initAll()
+      }
+
+      function  lineCurrentAttributeName(n){
+        lineLabelsOption.currentAttributeName=n
+        initAll()
+      }
+
+      function  areaCurrentAttributeName(n){
+        areaLabelsOption.currentAttributeName=n
+        initAll()
+      }
+
+      function lineLabelSpread(n){
+        lineLabelsOption.lineLabelSpread = n;
+        initLayer('line');
+      }
+
+      function labelPositionAlong(n){
+        lineLabelsOption.labelPositionAlong = n;
+        initLayer('line');
+      }
+      
+      function repeatLabel(n){
+        lineLabelsOption.repeatLabel = !!n;
+         initLayer('line');
+      }
+
+      function repeatLabelDistance(n){
+        lineLabelsOption.repeatLabelDistance = parseInt(n);
+         initLayer('line');
+      }
+
+    </script>
+  </head>
+
+  <body onload="init()">
+    <div id="GlobeView">
+      <div id="toolbar">
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <td>选取图层</td>
+                <td>
+                  <select onchange="selectLayer(this.value)">
+                    <option value="全图层">全图层</option>
+                    <option value="点要素图层">点要素图层</option>
+                    <option value="线要素图层">线要素图层</option>
+                    <option value="面要素图层">面要素图层</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>注记渲染方式</td>
+                <td>
+                  <select onchange="renderMode(this.value)">
+                    <option value="canvas">canvas</option>
+                    <option value="label">label</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>点注记位置</td>
+                <td>
+                  <select onchange="pointLabelPlacement(this.value)">
+                    <option value="above-center">上</option>
+                    <option value="below-center">下</option>
+                    <option value="center-left">左</option>
+                    <option value="center-right">右</option>
+                    <option value="center-center">中心</option>
+                    <option value="above-left">左上</option>
+                    <option value="below-left">左下</option>
+                    <option value="above-right">右上</option>
+                    <option value="below-right">右下</option>
+                  </select>
+                </td>
+
+                <td>点注记字段</td>
+                <td>
+                  <select onchange="pointCurrentAttributeName(this.value)">
+                    <option value="n">n</option>
+                    <option value="kn">kn</option>
+                    <option value="sp">sp</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>线注记位置</td>
+                <td>
+                  <select onchange="lineLabelPlacement(this.value)">
+                    <option value="above-line">线上</option>
+                    <option value="on-line">压盖</option>
+                    <option value="below-line">线下</option>
+                  </select>
+                </td>
+                <td>线注记字段</td>
+                <td>
+                  <select onchange="lineCurrentAttributeName(this.value)">
+                    <option value="ln">ln</option>
+                    <option value="kn">kn</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>线注记分布</td>
+                <td>
+                  <select onchange="lineLabelSpread(this.value)">
+                    <option value="auto-spread">自动</option>
+                    <option value="centralization-spread">集中</option>
+                    <option value="decentralize-spread">分散</option>
+                  </select>
+                </td>
+                <td>注记与线关系</td>
+                <td>
+                  <select onchange="labelPositionAlong(this.value)">
+                    <option value="middle">线中部</option>
+                    <option value="start">线头</option>
+                    <option value="end">线尾</option>
+                  </select>
+                </td>
+                <td>是否重复</td>
+                <td>
+                  <select onchange="repeatLabel(this.value)">
+                    <option value="yes">是</option>
+                    <option value="">否</option>
+                  </select>
+                </td>
+                <td>重复步长</td>
+                <td>
+                  <select onchange="repeatLabelDistance(this.value)">
+                    <option value="8000">8000米分段</option>
+                    <option value="6000">6000米分段</option>
+                    <option value="4000">4000米分段</option>
+                    <option value="2000">2000米分段</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>面注记位置</td>
+                <td>
+                  <select onchange="areaLabelPlacement(this.value)">
+                    <option value="skeleton">骨架线</option>
+                    <option value="parallel">平行</option>
+                    <option value="outside">区外</option>
+                    <option value="bottom">底部</option>
+                  </select>
+                </td>
+                <td>面注记字段</td>
+                <td>
+                  <select onchange="areaCurrentAttributeName(this.value)">
+                    <option value="name">name</option>
+                    <option value="adcode">adcode</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
