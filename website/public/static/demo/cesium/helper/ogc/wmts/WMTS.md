@@ -11,9 +11,9 @@
 
 ```js
 var tianditu = new Cesium.WebMapTileServiceImageryProvider({
-    url: 'http://t0.tianditu.com/DataServer?T=vec_w&L={TileMatrix}&Y={TileRow}&X={TileCol}&tk=9c157e9585486c02edf817d2ecbc7752',
+    url: 'http://develop.smaryun.com:6163/igs/rest/ogc/beijing/WMTSServer/1.0.0/beijing/default/EPSG:4326_北京市_arcgis_GB/{TileMatrix}/{TileRow}/{TileCol}.png',
     maximumLevel: 19,
-    credit: new Cesium.Credit('3857')
+    credit: new Cesium.Credit('4326')
 });
 webGlobe.viewer.imageryLayers.addImageryProvider(tianditu);
 ```
@@ -82,7 +82,93 @@ var lnglat = new Cesium.WebMapTileServiceImageryProvider({
 结果如下：
 ![kvp](./static/demo/cesium/helper/ogc/wmts/wmts-kvp.png)
 
-## 3. WMTS 元数据信息不可信！！
+## 3. MapGIS WMTS调用
+
+### 3.1 v1 版本<=10.5.4（Java / NET版本）
+1. restful
+    1. 规则
+    ``` js 
+    @GetMapping("/WMTSServer/1.0.0/{layer}/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}.{format}")
+    ```
+    2. 示例
+    ``` js 
+    >>> http://develop.smaryun.com:6163/igs/rest/ogc/beijing/WMTSServer/1.0.0/beijing/default/EPSG:4326_北京市_arcgis_GB/{z}/{y}/{x}.png
+    ```
+2. kvp
+    1. 规则
+    ``` js
+    ResponseEntity<?> getWMTSServerKvpByServerName(
+        @PathVariable("serverName") String serverName,
+        @RequestParam(value = "service", required = false) String service,
+        @RequestParam(value = "version", required = false) String version,
+        @RequestParam(value = "request", required = false, defaultValue = "") String request,
+        @RequestParam(value = "layer", required = false) String layer,
+        @RequestParam(value = "style", required = false) String style,
+        @RequestParam(value = "format", required = false) String format,
+        @RequestParam(value = "tileMatrixSet", required = false) String tileMatrixSet,
+        @RequestParam(value = "tileMatrix", required = false) String tileMatrix,
+        @RequestParam(value = "tileRow", required = false) String tileRow,
+        @RequestParam(value = "tileCol", required = false) String tileCol,
+        @RequestParam(value = "J", required = false) String j,
+        @RequestParam(value = "I", required = false) String i,
+        @RequestParam(value = "infoFormat", required = false) String infoFormat)
+    ```
+    2. 示例
+    ``` js
+    `${protocol}://${ip}:${port}/igs/rest/ogc/beijing/WMTSServer?` +
+        'service=WMTS' +
+        '&request=GetTile' +
+        '&version=1.0.0' +
+        '&style=default' +
+        '&tilematrixSet=EPSG:4326_北京市_arcgis_GB' +
+        '&format=image/png' +
+        '&layer=beijing' +
+        '&tilematrix={z}' +
+        '&tilerow={y}' +
+        '&tilecol={x}'
+    ```
+### 3.2 v2 版本>=10.5.6 (仅Java版本)
+1. restful
+    1. 规则
+    ``` js 
+    @GetMapping("/1.0.0/{layer}/default/{tileMatrixSet}/{tileMatrix}/{tileRow}/{tileCol}.{format}")
+    ```
+    2. 示例
+    ``` js 
+    >>> http://192.168.21.191:8089/igs/rest/services/OGC_4326_CHINA/WMTSServer/1.0.0/OGC_4326_CHINA/default/EPSG:4326_OGC_4326_CHINA_028mm_GB/{z}/{y}/{x}.png
+    ```
+2. kvp
+    1. 规则
+    ``` js
+    ResponseEntity<?> getTileByKvp(@PathVariable("serviceName") String serviceName,
+        @RequestParam(value = "service", required = false) String service,
+        @RequestParam(value = "version", required = false) String version,
+        @RequestParam(value = "request", required = false) String request,
+        @RequestParam(value = "layer", required = false) String layer,
+        @RequestParam(value = "style", required = false) String style,
+        @RequestParam(value = "format", required = false) String format,
+        @RequestParam(value = "tileMatrixSet", required = false) String tileMatrixSet,
+        @RequestParam(value = "tileMatrix", required = false) String tileMatrix,
+        @RequestParam(value = "tileRow", required = false) String tileRow,
+        @RequestParam(value = "tileCol", required = false) String tileCol)
+    ```
+    2. 示例
+    ``` js
+    `http://192.168.21.191:8089/igs/rest/ogc/WMTSServer?` +
+        'service=WMTS' +
+        '&request=GetTile' +
+        '&version=1.0.0' +
+        '&style=default' +
+        '&tilematrixSet=EPSG:4326_北京市_arcgis_GB' +
+        '&format=image/png' +
+        '&layer=OGC_4326_CHINA' +
+        '&tilematrix={z}' +
+        '&tilerow={y}' +
+        '&tilecol={x}'
+    ```
+
+
+## 4. WMTS 元数据信息不可信！！
 
 与其说 WMTS 元数据信息不可信，本质上是说实际线下实操人员的操作不可信。以上面为例
 
@@ -91,7 +177,7 @@ var lnglat = new Cesium.WebMapTileServiceImageryProvider({
 > 但是元数据信息描述里面的矩阵集居然有 2 类，其中一类是全球墨卡托， Orz....
 > ![错误描述](./static/demo/cesium/helper/ogc/wmts/error-info.png)
 
-### 3.1 出现过该场景的情况
+### 4.1 出现过该场景的情况
 
 > 从下面数据情况几乎可以得出结论，无法避免不同平台不同版本带来的差异， `强烈推荐`使用`KVP`的方式`手动匹配`来统一处理，而不是自动解析 WMTS.xml 的元数据信息
 
