@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>行业标绘</title>
+    <!--引入第三方的jquery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <script src="./static/libs/include-cesium-new-local.js"></script>
+    <!--引入行业标绘脚本库-->
+    <script src="./static/libs/cdn/webclient-plot/webclient-plot.min.js"></script>
+    <!--当前示例页面样式表引用-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <style>
+        .mapgis-3d-symbol-container{
+            padding: 10px;
+            border-radius: 4px;
+            background: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            width: 400px;
+            height: 400px;
+        }
+
+        .mapgis-3d-symbol-icon{
+            margin-left: 4px;
+            margin-top: 4px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .mapgis-3d-plot-size {
+            position: absolute;
+            background: white;
+            top: 10px;
+            left: 440px;
+            padding: 3px;
+        }
+
+        .mapgis-3d-plot-style{
+            padding: 10px;
+            border-radius: 4px;
+            background: white;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+    <script>
+      'use strict';
+      //定义三维视图的主要类
+      var viewer, symbolManager, drawTool, layer, currentPlot, lastId;
+
+      //地图初始化函数
+      function init() {
+        var {
+          protocol,
+          ip,
+          port
+        } = window.webclient;
+        //构造三维视图类（视图容器div的id，三维视图设置参数）
+        viewer = new Cesium.Viewer('mapgis-3d-viewer', {
+          infoBox: false,
+          selectionIndicator: false,
+          shouldAnimate: true
+        });
+        viewer.showPosition();
+        var scene = viewer.scene;
+        //初始化符号管理器
+        symbolManager = new window.Zondy.Plot.SymbolManager(`${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/symbols.json`,{
+          fontURL: `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/`,
+          baseUrl: `${protocol}://${ip}:${port}/static/libs/cdn/webclient-plot/assets/`
+        });
+        //初始化图层需要Cesium对象以及Cesium的viewer对象
+        layer = new window.Zondy.Plot.PlotLayer3D(Cesium, viewer, {
+          pickPlot: function (plot) {
+            console.log("plot",plot)
+            currentPlot = plot;
+            currentPlot.setStyle("isOpenWall", true);
+            var json = plot.getStyle();
+            console.log("json",json)
+            var {dimModHeight = 0} = json;
+            document.getElementById("dimModHeight").value = dimModHeight;
+          }
+        });
+        //设置图层可编辑
+        layer.editable = true;
+        //绘制工具与图层绑定
+        drawTool = new window.Zondy.Plot.DrawTool(layer, {});
+        //获取符号资源目录
+        symbolManager.getSymbols().then(function(symbols) {
+          //获取玩资源目录后，初始化UI或者做其他事情
+          console.log("---symbols",symbols)
+        });
+      }
+
+      function selectSymbol(id) {
+        //UI操作，可忽略改代码
+        if(lastId) {
+          var lastDiv = document.getElementById(lastId);
+          lastDiv.setAttribute("style", "");
+        }
+        //根据符号ID获取符号对象
+        var symbol = symbolManager.getLeafByID(id);
+        //UI操作，可忽略改代码
+        var imgDiv = document.getElementById(id);
+        imgDiv.setAttribute("style", "border:1px solid red");
+        //结束上次绘制
+        drawTool.stopDraw();
+        //绘制新的标绘图元
+        drawTool.drawPlot(symbol);
+        //UI操作，可忽略改代码
+        lastId = id;
+      }
+
+      function setPlotSize() {
+        layer.setPlotSize(0.5);
+      }
+
+      function setHeight() {
+        var height = document.getElementById("dimModHeight").value;
+        if(currentPlot) {
+          currentPlot.setStyle("dimModHeight", Number(height));
+          currentPlot.setStyle("isOpenWall", true);
+        }
+      }
+    </script>
+</head>
+
+<body onload="init()">
+<div id="mapgis-3d-viewer">
+</div>
+<div class="mapgis-3d-symbol-container">
+    <div>基础符号</div>
+    <img id="1" onclick="selectSymbol(1)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/三角形.svg" title="三角形">
+    <img id="2" onclick="selectSymbol(2)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/任意区.svg" title="任意区">
+    <img id="3" onclick="selectSymbol(3)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/医院.svg" title="医院">
+    <img id="4" onclick="selectSymbol(4)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/工具线.svg" title="工具线">
+    <img id="5" onclick="selectSymbol(5)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/折线.svg" title="折线">
+    <img id="6" onclick="selectSymbol(6)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/文本-中.svg" title="文本-中">
+    <img id="7" onclick="selectSymbol(7)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/文本-小.svg" title="文本-小">
+    <img id="8" onclick="selectSymbol(8)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/文本-小.svg" title="文本-特大">
+    <img id="9" onclick="selectSymbol(9)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/基础符号/文本.svg" title="文本">
+    <div>常规点</div>
+    <img id="10" onclick="selectSymbol(10)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/100T.svg" title="100T">
+    <img id="11" onclick="selectSymbol(11)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/181师.svg" title="181师">
+    <img id="12" onclick="selectSymbol(12)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/6T.svg" title="6T">
+    <img id="13" onclick="selectSymbol(13)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/中原野战军.svg" title="中原野战军">
+    <img id="14" onclick="selectSymbol(14)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/华东野战军.svg" title="华东野战军">
+    <img id="15" onclick="selectSymbol(15)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/华野9纵.svg" title="华野9纵">
+    <img id="16" onclick="selectSymbol(16)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/坦克旅.svg" title="坦克旅">
+    <img id="17" onclick="selectSymbol(17)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/山东兵团.svg" title="山东兵团">
+    <img id="18" onclick="selectSymbol(18)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/徐州剿总.svg" title="徐州剿总">
+    <img id="19" onclick="selectSymbol(19)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/指挥室.svg" title="指挥室">
+    <img id="20" onclick="selectSymbol(20)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/江淮2旅.svg" title="江淮2旅">
+    <img id="21" onclick="selectSymbol(21)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第100军.svg" title="第100军">
+    <img id="23" onclick="selectSymbol(23)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第13兵团.svg" title="第13兵团">
+    <img id="24" onclick="selectSymbol(24)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第3绥区.svg" title="第3绥区">
+    <img id="25" onclick="selectSymbol(25)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第56军.svg" title="第56军">
+    <img id="27" onclick="selectSymbol(27)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第63军.svg" title="第63军">
+    <img id="28" onclick="selectSymbol(28)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第7兵团.svg" title="第7兵团">
+    <img id="29" onclick="selectSymbol(29)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第8军 - 底座.svg" title="第8军 - 底座">
+    <img id="30" onclick="selectSymbol(30)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/第8军.svg" title="第8军">
+    <img id="31" onclick="selectSymbol(31)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/苏北兵团.svg" title="苏北兵团">
+    <img id="32" onclick="selectSymbol(32)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/鲁中南纵.svg" title="鲁中南纵">
+    <img id="33" onclick="selectSymbol(33)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规点/鲁保1旅.svg" title="鲁保1旅">
+    <div>常规线</div>
+    <img id="34" onclick="selectSymbol(34)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/0202.svg" title="0202">
+    <img id="35" onclick="selectSymbol(35)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/坦克进攻-1.svg" title="坦克进攻-1">
+    <img id="36" onclick="selectSymbol(36)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/坦克进攻.svg" title="坦克进攻">
+    <img id="37" onclick="selectSymbol(37)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/堑壕-延伸.svg" title="堑壕-延伸">
+    <img id="38" onclick="selectSymbol(38)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/堑壕.svg" title="堑壕">
+    <img id="39" onclick="selectSymbol(39)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/撤离线.svg" title="撤离线">
+    <img id="40" onclick="selectSymbol(40)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/新修规则线填充.svg" title="新修规则线填充">
+    <img id="41" onclick="selectSymbol(41)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/路径箭头.svg" title="路径箭头">
+    <img id="42" onclick="selectSymbol(42)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/进攻.svg" title="进攻">
+    <img id="43" onclick="selectSymbol(43)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规线/防守.svg" title="防守">
+    <div>常规面</div>
+    <img id="44" onclick="selectSymbol(44)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规面/新修规则面.svg" title="新修规则面">
+    <img id="45" onclick="selectSymbol(45)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/常规面/贴地区.svg" title="贴地区">
+    <div>算法符号</div>
+    <img id="46" onclick="selectSymbol(46)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/分队-刀尾.svg" title="分队-刀尾">
+    <img id="47" onclick="selectSymbol(47)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/分队-燕尾.svg" title="分队-燕尾">
+    <img id="48" onclick="selectSymbol(48)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/分队-齐尾.svg" title="分队-齐尾">
+    <img id="49" onclick="selectSymbol(49)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/双箭.svg" title="双箭">
+    <img id="50" onclick="selectSymbol(50)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/多箭.svg" title="多箭">
+    <img id="51" onclick="selectSymbol(51)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/扇形.svg" title="扇形">
+    <img id="52" onclick="selectSymbol(52)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/阵列.svg" title="阵列">
+    <img id="53" onclick="selectSymbol(53)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/集结地.svg" title="集结地">
+    <img id="54" onclick="selectSymbol(54)" class="mapgis-3d-symbol-icon" src="static/libs/cdn/webclient-plot/assets/icon/常用符号库/算法符号/高跑群.svg" title="高炮群">
+</div>
+<button onclick="setPlotSize()" class="mapgis-3d-plot-size">设置图元大小</button>
+<div class="mapgis-3d-plot-style">
+    <div>
+        <span>图元高度</span>
+        <input type="Number" id="dimModHeight" value="0" oninput="setHeight()">
+    </div>
+    <div id="plotStyle"></div>
+</div>
+</body>
+
+</html>

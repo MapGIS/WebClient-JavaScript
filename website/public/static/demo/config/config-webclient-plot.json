@@ -1,0 +1,55 @@
+{
+    "name": "webclient-plot",
+    "title": "MapGIS WebClient-Plot",
+    "mapmode": "webclient-plot",
+    "childs": [
+        {
+            "name": "二维标绘",
+            "iconfont": "iconlayer",
+            "folder": "Plot2D",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "二维态势推演",
+                    "file": "plot-animation-2d",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "plot-animation-2d.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        },
+        {
+            "name": "三维标绘",
+            "iconfont": "iconterrain",
+            "folder": "Plot3D",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "标绘",
+                    "file": "plot",
+                    "diffcult": "1",
+                    "detail": "",
+                    "icon": "plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+				{
+                    "name": "标绘 - 带地形",
+                    "file": "plot-terrain",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "plot.png",
+                    "update": "最后更新时间:2022-03-14"
+                },
+                {
+                    "name": "三维态势推演",
+                    "file": "plot-animation-3d",
+                    "diffcult": "3",
+                    "detail": "",
+                    "icon": "plot-animation-3d.png",
+                    "update": "最后更新时间:2022-03-14"
+                }
+            ]
+        }
+    ]
+}
