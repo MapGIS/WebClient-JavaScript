@@ -164,6 +164,22 @@
             ]
         },
         {
+            "name": "数据加载",
+            "iconfont": "iconlayer",
+            "folder": "data",
+            "leaffolder": true,
+            "childs": [
+                {
+                    "name": "M3D本地缓存",
+                    "file": "data-indexedDB",
+                    "diffcult": "2",
+                    "detail": "",
+                    "icon": "data-indexedDB.png",
+                    "update": "最后更新时间:2022-09-01"
+                }
+            ]
+        },
+        {
             "name": "分析",
             "iconfont": "icon_analysis",
             "folder": "analysis",

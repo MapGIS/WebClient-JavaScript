@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>M3D本地缓存</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <script src="./static/libs/include-cesium-new-local.js"></script>
+        <!--当前示例页面样式表引用-->
+        <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+        <style>
+            .mapgis-3d-button {
+                padding: 10px;
+                border-radius: 4px;
+                background: white;
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                cursor: pointer;
+            }
+        </style>
+        <script>
+            'use strict';
+            //定义三维视图的主要类
+            var viewer, version, url;
+
+            //地图初始化函数
+            function init() {
+                //构造三维视图类（视图容器div的id，三维视图设置参数）
+                viewer = new Cesium.Viewer('mapgis-3d-viewer', {
+                    infoBox: false,
+                    selectionIndicator: false,
+                    shouldAnimate: true
+                });
+                viewer.showPosition();
+                var scene = viewer.scene;
+                //开启抗锯齿
+                viewer.scene.fxaa = true;
+                viewer.scene.postProcessStages.fxaa.enabled = true;
+
+                //默认加载g3d数据
+                url = 'http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels';
+                viewer.scene.layers.appendSceneLayer(url, {
+                    duration: 1,
+                    maximumScreenSpaceError: 0,
+                    useIDB: true
+                });
+                version = '1';
+            }
+
+            // 选择加载的数据类型
+            function selectData() {
+                viewer.scene.layers.removeAllLayers();
+                version = $('select  option:selected').val();
+                switch (version) {
+                    case '1':
+                        removeAllLayers();
+                        url = 'http://develop.smaryun.com:6163/igs/rest/g3d/ZondyModels';
+                        viewer.scene.layers.appendSceneLayer(url, {
+                            duration: 1,
+                            maximumScreenSpaceError: 0,
+                            useIDB: true
+                        });
+                        break;
+                    case '2':
+                        removeAllLayers();
+                        url = 'http://192.168.21.191:8089/igs/rest/services/分层分户/SceneServer';
+                        viewer.scene.layers.appendSceneLayer(url, {
+                            duration: 1,
+                            debugShowBoundingVolume: false,
+                            maximumScreenSpaceError: 0,
+                            useIDB: true
+                            // maxCacheLevel: 5 //前端最大缓存级别
+                        });
+                        break;
+                    case '3':
+                        removeAllLayers();
+                        url = 'http://192.168.199.71:8089/igs/rest/services/高级住所模型/M3dServer';
+                        viewer.scene.layers.appendM3DLayer(url, {
+                            maximumScreenSpaceError: 0,
+                            useIDB: true
+                            // maxCacheLevel: 5 //前端最大缓存级别
+                        });
+                        break;
+                    case '4':
+                        removeAllLayers();
+                        url = 'http://192.168.88.204:8089/M3D/2.0/M3DAttributeTest_BIN/zondy.mcj';
+                        viewer.scene.layers.appendM3DLayer(url, {
+                            maximumScreenSpaceError: 8,
+                            useIDB: true
+                        });
+                        break;
+                }
+            }
+
+            // 移除所有图层
+            function removeAllLayers() {
+                viewer.scene.layers.removeAllM3DLayers(true);
+                viewer.scene.layers.removeAllSceneLayers(true);
+            }
+        </script>
+    </head>
+
+    <body onload="init()">
+        <div id="mapgis-3d-viewer"></div>
+        <select class="mapgis-3d-button" onchange="selectData()">
+            <option value="1">G3D数据</option>
+            <option value="2">SceneServer</option>
+            <option value="3">M3dServer</option>
+            <option value="4">mcj数据</option>
+        </select>
+        <div onclick="removeAllLayers()" style="top: 60px" class="mapgis-3d-button">移除所有图层</div>
+    </body>
+</html>
