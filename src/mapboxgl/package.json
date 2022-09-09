@@ -18,8 +18,8 @@
     "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
     "license": "Apache-2.0",
     "dependencies": {
-        "@mapgis/mapbox-gl": "^1.9.9",
-        "@mapgis/webclient-es6-service": "^10.5.7",
+        "@mapgis/mapbox-gl": "^16.0.0",
+        "@mapgis/webclient-es6-service": "^16.0.0",
         "core-js": "^3.21.1",
         "echarts": "^4.8.0",
         "mapv": "^2.0.56"
