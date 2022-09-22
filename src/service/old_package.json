@@ -1,6 +1,6 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version": "16.0.1",
+    "version":"16.0.0",
     "description": "mapgis ES6 format for igserver",
     "main1": "dist-libs/webclient-es6-service.min.js",
     "module": "index.js",
@@ -23,6 +23,13 @@
         "svg-pathdata": "^6.0.0"
     },
     "devDependencies": {
+        "babel-core": "^6.26.3",
+        "babel-eslint": "^10.1.0",
+        "babel-loader": "^7.1.2",    
+        "babel-plugin-transform-class-properties": "^6.11.5",
+        "babel-plugin-transform-decorators-legacy": "^1.3.4",
+        "babel-plugin-transform-runtime": "^6.15.0",
+        "babel-preset-es2015": "^6.24.1",
         "happypack": "^5.0.0",
         "webpack": "4.19.1",
         "webpack-cleanup-plugin": "0.4.2",
