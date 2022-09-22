@@ -1,7 +1,7 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version":"16.0.0",
-    "description": "中地数码基于ES6语法针对igserver的服务封�?,
+    "version": "16.0.1",
+    "description": "中地数码基于ES6语法针对igserver的服务封装",
     "main1": "dist-libs/webclient-es6-service.min.js",
     "module": "index.js",
     "scripts": {

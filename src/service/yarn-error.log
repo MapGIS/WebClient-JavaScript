@@ -1,0 +1,63 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js build
+
+PATH: 
+  E:\GIS\OSM\osm2pgsql;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;D:\develop\git\Git\cmd;C:\Users\Administrator\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\ProgramData\chocolatey\bin;E:\GIS\OSM\osmosis\bin;E:\GIS\PostGreSQL\bin;C:\Users\Administrator\AppData\Roaming\npm;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Users\Administrator\AppData\Local\Yarn\bin
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  14.20.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  SyntaxError: D:\code\web\package\webclient-javascript\src\service\package.json: Unexpected token 
+   in JSON at position 119
+      at JSON.parse (<anonymous>)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (C:\Program Files (x86)\Yarn\lib\cli.js:310:30)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:321:13
+
+npm manifest: 
+  {
+      "name": "@mapgis/webclient-es6-service",
+      "version":"16.0.0",
+      "description": "中地数码基于ES6语法针对igserver的服务封�?,
+      "main1": "dist-libs/webclient-es6-service.min.js",
+      "module": "index.js",
+      "scripts": {
+          "build": "npm run build-debug && npm run build-release",
+          "build-debug": "webpack --config webpack/service-debug-config.js",
+          "build-release": "webpack --config webpack/service-release-config.js"
+      },
+      "author": "Wuhan Zondy Cyber Science&Technology Co.Ltd.",
+      "license": "Apache-2.0",
+      "dependencies": {
+          "@turf/turf": "^6.5.0",
+          "axios": "^0.26.0",
+          "core-js": "^3.21.1",
+          "fast-xml-parser": "^3.17.6",
+          "fetch-ie8": "^1.5.0",
+          "proj4": "^2.7.5",
+          "promise-polyfill": "^8.2.1",
+          "qs": "^6.9.4",
+          "svg-pathdata": "^6.0.0"
+      },
+      "devDependencies": {
+          "happypack": "^5.0.0",
+          "webpack": "4.19.1",
+          "webpack-cleanup-plugin": "0.4.2",
+          "webpack-cli": "2.1.5",
+          "webpack-parallel-uglify-plugin": "0.4.2"
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
