@@ -94,9 +94,12 @@
         if (inArray(includes, 'elasticsearch')) {
             inputScript(httpUrl + '/cdn/elasticsearch/14.1.0/elasticsearch.min.js');
         }
-        if (!inArray(excludes, 'plugin')) {
-            inputScript(httpUrl + '/cdn/zondyclient/webclient-cesium-plugin.min.js');
+        if (inArray(includes, 'vectortile')) {
+            inputScript(httpUrl + '/cdn/cesium-plugins/cesium-plugin-vectortile.min.js');
         }
+        /* if (!inArray(excludes, 'plugin')) {
+            inputScript(httpUrl + '/cdn/zondyclient/webclient-cesium-plugin.min.js');
+        } */
         if (inArray(includes, 'vue')) {
             inputCSS(httpUrl + '/cdn/zondyclient/vue/webclient-vue-cesium.css');
             inputScript(httpUrl + '/cdn/vue/2.6/vue.js');

@@ -49,7 +49,7 @@ export default function VectorTileProvider(Cesium, options) {
     this._cacheSize = 1024;
   }
 
-  Cesium.defineProperties(MVTProvider.prototype, {
+  Object.defineProperties(MVTProvider.prototype, {
     proxy: {
       get: function () {
         return undefined;

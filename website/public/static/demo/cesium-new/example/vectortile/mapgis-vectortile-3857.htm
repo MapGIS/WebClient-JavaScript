@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>地层分析</title>
+    <!--引用第三方的jQuery脚本库-->
+    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+    <!--引用Cesium脚本库文件-->
+    <script include="vectortile" src="./static/libs/include-cesium-new-local.js"></script>
+    <!--引用示例页面样式表-->
+    <link rel="stylesheet" href="./static/demo/cesium-new/example/style.css" />
+    <script>
+        //定义三维场景控件对象
+        var viewer;
+
+        //地图初始化函数
+        function init() {
+            //构造三维视图类（视图容器div的id，三维视图设置参数）
+            viewer = new Cesium.Viewer('mapgis-3d-viewer', {});
+            viewer.showPosition();
+
+            viewer.imageryLayers.removeAll();
+            viewer.scene.globe.baseColor = new Cesium.Color(255 / 255, 255 / 255, 255 / 255, 1.0);
+
+            var blueImage = new Cesium.UrlTemplateImageryProvider({
+                url: 'https://map.geoq.cn/arcgis/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}',
+                tilingScheme: new Cesium.WebMercatorTilingScheme(),
+                maximumLevel: 12
+            });
+            // viewer.imageryLayers.addImageryProvider(blueImage);
+            loopMvt();
+        }
+
+        function loopMvt(index) {
+            var { protocol, ip, port } = window.webclient;
+            //构造矢量瓦片图层对象
+            vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+                //视图
+                viewer,
+                {
+                    //样式json文件路径
+                    styleUrl: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/蓝色-墨卡托.json`,
+                    //第三方需要的token
+                    token: '',
+                    //是否可见
+                    show: true,
+                    callback: handleLayerAdd
+                }
+            );
+
+            window.setTimeout(() => {
+                //构造矢量瓦片图层对象
+                chinaLayer = new CesiumZondy.Overlayer.VectorTileLayer(
+                    //视图
+                    viewer,
+                    {
+                        //样式json文件路径
+                        styleUrl: `${protocol}://${ip}:${port}/igs/rest/mrms/vtiles/styles/中国行政区.json`,
+                        //第三方需要的token
+                        token: '',
+                        //是否可见
+                        show: true
+                    }
+                );
+                console.warn('chinaLayer', chinaLayer);
+            }, 2000);
+        }
+
+        function handleLayerAdd(payload) {
+            const { imageryLayer } = payload;
+            window.setTimeout(() => {
+                imageryLayer.alpha = 0.5;
+            }, 5000);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="mapgis-3d-viewer"></div>
+</body>
+
+</html>
