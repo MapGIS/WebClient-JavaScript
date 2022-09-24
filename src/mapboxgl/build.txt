@@ -1,13 +1,13 @@
 yarn run v1.22.4
 $ npm run build-debug && npm run build-release
 
-> @mapgis/webclient-es6-mapboxgl@16.1.8 build-debug D:\code\web\package\webclient-javascript\src\mapboxgl
+> @mapgis/webclient-es6-mapboxgl@16.1.9 build-debug D:\code\web\package\webclient-javascript\src\mapboxgl
 > webpack --config webpack/mapbox-es6-debug-config.js
 
 Hash: 94f9f911678c86b60ed8
 Version: webpack 4.19.1
-Time: 6956ms
-Built at: 2022/09/24 14:37:29
+Time: 6582ms
+Built at: 2022/09/24 20:27:23
                     Asset      Size  Chunks             Chunk Names
 webclient-es6-mapboxgl.js  4.66 MiB    main  [emitted]  main
 [./MapExtend.js] 5.13 KiB {main} [built]
@@ -30,13 +30,13 @@ webclient-es6-mapboxgl.js  4.66 MiB    main  [emitted]  main
 WARNING in ./index.js 12:0-14:2
 "export 'FabricLayer' was not found in './overlay/index.js'
 
-> @mapgis/webclient-es6-mapboxgl@16.1.8 build-release D:\code\web\package\webclient-javascript\src\mapboxgl
+> @mapgis/webclient-es6-mapboxgl@16.1.9 build-release D:\code\web\package\webclient-javascript\src\mapboxgl
 > webpack --config webpack/mapbox-es6-release-config.js
 
 Hash: 5be37e9e01311ea54f9d
 Version: webpack 4.19.1
-Time: 24645ms
-Built at: 2022/09/24 14:37:56
+Time: 24594ms
+Built at: 2022/09/24 20:27:50
                         Asset     Size  Chunks                    Chunk Names
 webclient-es6-mapboxgl.min.js  1.4 MiB       0  [emitted]  [big]  main
  [0] external "mapboxgl" 42 bytes {0} [built]
@@ -81,4 +81,4 @@ Entrypoints:
 WARNING in webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
-Done in 40.28s.
+Done in 40.24s.
