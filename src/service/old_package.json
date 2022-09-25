@@ -1,6 +1,6 @@
 {
     "name": "@mapgis/webclient-es6-service",
-    "version":"16.1.9",
+    "version":"16.1.10",
     "description": "mapgis ES6 format for igserver",
     "main1": "dist-libs/webclient-es6-service.min.js",
     "module": "index.js",

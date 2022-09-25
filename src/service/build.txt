@@ -1,15 +1,15 @@
 yarn run v1.22.4
 $ npm run build-debug && npm run build-release
 
-> @mapgis/webclient-es6-service@16.1.10 build-debug D:\code\web\package\webclient-javascript\src\service
+> @mapgis/webclient-es6-service@16.1.11 build-debug D:\code\web\package\webclient-javascript\src\service
 > webpack --config webpack/service-debug-config.js
 
 Happy[js]: Version: 5.0.1. Threads: 4 (shared pool)
 Happy[js]: All set; signaling webpack to proceed.
 Hash: 50b1659383fa40e9be7b
 Version: webpack 4.19.1
-Time: 8722ms
-Built at: 2022/09/24 20:25:43
+Time: 6825ms
+Built at: 2022/09/25 11:32:50
                    Asset      Size  Chunks             Chunk Names
 webclient-es6-service.js  8.79 MiB    main  [emitted]  main
 [./ArcGis/index.js] 2.75 KiB {main} [built]
@@ -29,15 +29,15 @@ webclient-es6-service.js  8.79 MiB    main  [emitted]  main
 [./index.js] 3.96 KiB {main} [built]
     + 573 hidden modules
 
-> @mapgis/webclient-es6-service@16.1.10 build-release D:\code\web\package\webclient-javascript\src\service
+> @mapgis/webclient-es6-service@16.1.11 build-release D:\code\web\package\webclient-javascript\src\service
 > webpack --config webpack/service-release-config.js
 
 Happy[js]: Version: 5.0.1. Threads: 4 (shared pool)
 Happy[js]: All set; signaling webpack to proceed.
 Hash: 18d670aa7b35ce20e8d9
 Version: webpack 4.19.1
-Time: 21183ms
-Built at: 2022/09/24 20:26:07
+Time: 21010ms
+Built at: 2022/09/25 11:33:14
                        Asset      Size  Chunks             Chunk Names
 webclient-es6-service.min.js  1.32 MiB       0  [emitted]  main
   [4] ./common/index.js 7.65 KiB {0} [built]
@@ -56,4 +56,4 @@ webclient-es6-service.min.js  1.32 MiB       0  [emitted]  main
 [429] ./datastore/postgis/index.js 1.55 KiB {0} [built]
 [435] ./clouddisk/index.js 788 bytes {0} [built]
     + 440 hidden modules
-Done in 36.79s.
+Done in 32.88s.
