@@ -123,7 +123,6 @@
             inputScript(httpUrl + '/cdn/deckgl/deckgl.js');
         }
         if (!inArray(excludes, 'plugin')) {
-            inputCSS(httpUrl + '/cdn/zondyclient/webclient-mapboxgl-plugin.css');
             inputScript(httpUrl + '/cdn/zondyclient/webclient-mapboxgl-plugin.min.js');
             // inputScript(httpUrl + "/cdn/zondyclient/webclient-mapboxgl-framework.js");
         }
