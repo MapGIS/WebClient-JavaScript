@@ -194,11 +194,12 @@ export default class LabelLayer extends BaseLayer {
                 outlineWidth: 1,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER, // 垂直方向以底部来计算标签的位置
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER, // 原点在下方
+                // x,y方向偏移 相对于屏幕
+                pixelOffset: new Cesium.Cartesian2(0.0, -iconHeight / 4),
                 // 随远近缩放
-                pixelOffset: new Cesium.Cartesian2(0.0, -iconHeight / 4), // x,y方向偏移 相对于屏幕
-                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
+                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(nearDist, 3.0, farDist, 0.5),
                 // 随远近隐藏
-                translucencyByDistance: new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0)
+                translucencyByDistance: new Cesium.NearFarScalar(nearDist, 1.0, farDist, 0.0)
             },
             description: attribute
         });
