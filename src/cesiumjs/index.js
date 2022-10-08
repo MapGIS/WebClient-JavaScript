@@ -10,9 +10,7 @@ export * from './provider';
 
 export * from './render';
 
-import {
-    ServiceBase
-} from '../service/ServiceBase';
+import { ServiceBase } from '../service/ServiceBase';
 
 import {
     AnyLine,
@@ -117,24 +115,11 @@ import {
     SlopLineParam
 } from '../service/Igserver/extend';
 
-import {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-} from '../service/baseserver';
+import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat } from '../service/baseserver';
 
-import {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer
-} from '../service/Igserver/MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer } from '../service/Igserver/MRCS';
+
+import { G3DLayerType, M3DTileDataInfo, G3DMapDoc, G3DService } from '../service/Igserver/G3D';
 
 import {
     EditDocFeature,
@@ -229,17 +214,9 @@ import {
     ThemesInfo
 } from '../service/Igserver/theme';
 
-import {
-    WMSCapabilities,
-    WMTSCapabilities,
-    OGCWMTSInfo,
-    OGCWMSInfo
-} from '../service/OGC';
+import { WMSCapabilities, WMTSCapabilities, OGCWMTSInfo, OGCWMSInfo } from '../service/OGC';
 
-export {
-    ServiceBase
-};
-
+export { ServiceBase };
 
 export {
     AnyLine,
@@ -332,33 +309,10 @@ export {
     merge,
     mixin
 };
-export {
-    ContourNoteParam,
-    ContourParam,
-    ContourZValue,
-    ContourRegionInfo,
-    MeshingParam,
-    NetAnalyse,
-    NetAnalysisExtent,
-    SlopLineParam
-};
-export {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-};
-export {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer
-};
+export { ContourNoteParam, ContourParam, ContourZValue, ContourRegionInfo, MeshingParam, NetAnalyse, NetAnalysisExtent, SlopLineParam };
+export { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat };
+export { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer };
+export { G3DLayerType, M3DTileDataInfo, G3DMapDoc, G3DService };
 export {
     EditDocFeature,
     EditLayerFeature,
@@ -409,14 +363,7 @@ export {
     Smooth,
     TopAnalysis
 };
-export {
-    GetDocImageService,
-    GetLayerImageService,
-    GetMapImageService,
-    GetMapInfoService,
-    GetTileImageService,
-    MapServiceBase
-};
+export { GetDocImageService, GetLayerImageService, GetMapImageService, GetMapInfoService, GetTileImageService, MapServiceBase };
 export {
     CAllOtherDataItemInfoSource,
     CAnnInfo,
@@ -448,9 +395,4 @@ export {
     ThemesInfo
 };
 
-export {
-    WMSCapabilities,
-    WMTSCapabilities,
-    OGCWMTSInfo,
-    OGCWMSInfo
-};
+export { WMSCapabilities, WMTSCapabilities, OGCWMTSInfo, OGCWMSInfo };

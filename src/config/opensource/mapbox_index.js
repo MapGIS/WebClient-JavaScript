@@ -115,6 +115,8 @@ import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServi
 
 import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer } from '../../service/Igserver/MRCS';
 
+import { G3DLayerType, M3DTileDataInfo, G3DMapDoc, G3DService } from '../../service/Igserver/G3D';
+
 import {
     EditDocFeature,
     EditLayerFeature,
@@ -307,6 +309,7 @@ export {
 export { ContourNoteParam, ContourParam, ContourZValue, ContourRegionInfo, MeshingParam, NetAnalyse, NetAnalysisExtent, SlopLineParam };
 export { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat };
 export { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer };
+export { G3DLayerType, M3DTileDataInfo, G3DMapDoc, G3DService };
 export {
     EditDocFeature,
     EditLayerFeature,

@@ -198,7 +198,7 @@ import * as _ol_tilegrid_WMTS from 'ol/tilegrid/WMTS';
 import * as _ol_xml from 'ol/xml';
 import * as ol_has from 'ol/has';
 
-let ol = window['ol'] = {};
+let ol = (window['ol'] = {});
 ol.color = {};
 ol.colorlike = {};
 ol.control = {};
@@ -391,7 +391,6 @@ ol.geom.Polygon.circular = _ol_geom_Polygon.circular;
 ol.geom.Polygon.fromCircle = _ol_geom_Polygon.fromCircle;
 ol.geom.Polygon.fromExtent = _ol_geom_Polygon.fromExtent;
 
-
 //重写ol.geom.Polygon
 /**
  * Set the coordinates of the polygon.
@@ -407,8 +406,7 @@ ol.geom.Polygon.prototype.setCoordinates = function (coordinates, opt_layout) {
         if (!this.flatCoordinates) {
             this.flatCoordinates = [];
         }
-        var ends = deflateCoordinatesArray(
-            this.flatCoordinates, 0, coordinates, this.stride, this.ends_);
+        var ends = deflateCoordinatesArray(this.flatCoordinates, 0, coordinates, this.stride, this.ends_);
         this.flatCoordinates.length = ends.length === 0 ? 0 : ends[ends.length - 1];
         this.changed();
     }
@@ -551,7 +549,6 @@ ol.tilegrid.createXYZ = _ol_tilegrid.createXYZ;
 ol.xml.getAllTextContent = _ol_xml.getAllTextContent;
 ol.xml.parse = _ol_xml.parse;
 
-
 import {
     ZDTileDebug,
     MapDocTileSource,
@@ -629,22 +626,9 @@ import {
     goog
 } from '../../openlayers/extend';
 
-export {
-    Drag,
-    MilStd,
-    MilStdDrawTool,
-    MilStdModifyTool,
-    MilStdDragPan,
-    EnumMilstdType,
-    MilstdParams,
-    PolygonJSON,
-    ZDOverviewMap,
-    goog
-};
+export { Drag, MilStd, MilStdDrawTool, MilStdModifyTool, MilStdDragPan, EnumMilstdType, MilstdParams, PolygonJSON, ZDOverviewMap, goog };
 
-import {
-    ServiceBase
-} from '../../service/ServiceBase';
+import { ServiceBase } from '../../service/ServiceBase';
 
 import {
     AnyLine,
@@ -750,24 +734,11 @@ import {
     SlopLineParam
 } from '../../service/Igserver/extend';
 
-import {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-} from '../../service/baseserver';
+import { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat } from '../../service/baseserver';
 
-import {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer
-} from '../../service/Igserver/MRCS';
+import { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer } from '../../service/Igserver/MRCS';
+
+import { G3DLayerType, M3DTileDataInfo, G3DMapDoc, G3DService } from '../../service/Igserver/G3D';
 
 import {
     EditDocFeature,
@@ -832,7 +803,6 @@ import {
     MapServiceBase
 } from '../../service/Igserver/MRMS';
 
-
 import {
     CAllOtherDataItemInfoSource,
     CAnnInfo,
@@ -863,11 +833,9 @@ import {
     ThemeOper,
     ThemesInfo
 } from '../../service/Igserver/theme';
-import { CoordinateElpTrans } from "../../service/Igserver/MRGS/CoordinateElpTrans";
+import { CoordinateElpTrans } from '../../service/Igserver/MRGS/CoordinateElpTrans';
 
-export {
-    ServiceBase
-};
+export { ServiceBase };
 
 export {
     AnyLine,
@@ -961,33 +929,10 @@ export {
     mixin,
     createCanvasContext2D
 };
-export {
-    ContourNoteParam,
-    ContourParam,
-    ContourZValue,
-    ContourRegionInfo,
-    MeshingParam,
-    NetAnalyse,
-    NetAnalysisExtent,
-    SlopLineParam
-};
-export {
-    CommonServiceBase,
-    Events,
-    CORS,
-    RequestTimeout,
-    FetchRequest,
-    IgsServiceBase,
-    JSONFormat
-};
-export {
-    ColorInfo,
-    GDBInfo,
-    MapDoc,
-    CatalogService,
-    TileLayer,
-    VectorLayer
-};
+export { ContourNoteParam, ContourParam, ContourZValue, ContourRegionInfo, MeshingParam, NetAnalyse, NetAnalysisExtent, SlopLineParam };
+export { CommonServiceBase, Events, CORS, RequestTimeout, FetchRequest, IgsServiceBase, JSONFormat };
+export { ColorInfo, GDBInfo, MapDoc, CatalogService, TileLayer, VectorLayer };
+export { G3DLayerType, M3DTileDataInfo, G3DMapDoc, G3DService };
 export {
     EditDocFeature,
     EditLayerFeature,
@@ -1040,14 +985,7 @@ export {
     TopAnalysis,
     CoordinateElpTrans
 };
-export {
-    GetDocImageService,
-    GetLayerImageService,
-    GetMapImageService,
-    GetMapInfoService,
-    GetTileImageService,
-    MapServiceBase
-};
+export { GetDocImageService, GetLayerImageService, GetMapImageService, GetMapInfoService, GetTileImageService, MapServiceBase };
 export {
     CAllOtherDataItemInfoSource,
     CAnnInfo,
@@ -1080,38 +1018,38 @@ export {
 };
 
 import {
-	GeoFeatureThemeLayer,
-	ThemeLayer,
-	RangeThemeLayer,
-	UniqueThemeLayer,
-	GraphThemeLayer,
-	graphThemeLayer,
-	RandomThemeLayer,
-	SimpleThemeLayer,
-	RankSymbolThemeLayer,
-	ThemeStyle
+    GeoFeatureThemeLayer,
+    ThemeLayer,
+    RangeThemeLayer,
+    UniqueThemeLayer,
+    GraphThemeLayer,
+    graphThemeLayer,
+    RandomThemeLayer,
+    SimpleThemeLayer,
+    RankSymbolThemeLayer,
+    ThemeStyle
 } from '../../openlayers/theme';
 export {
-	GeoFeatureThemeLayer,
-	ThemeLayer,
-	RangeThemeLayer,
-	UniqueThemeLayer,
-	GraphThemeLayer,
-	graphThemeLayer,
-	RandomThemeLayer,
-	SimpleThemeLayer,
-	RankSymbolThemeLayer,
-	ThemeStyle
+    GeoFeatureThemeLayer,
+    ThemeLayer,
+    RangeThemeLayer,
+    UniqueThemeLayer,
+    GraphThemeLayer,
+    graphThemeLayer,
+    RandomThemeLayer,
+    SimpleThemeLayer,
+    RankSymbolThemeLayer,
+    ThemeStyle
 };
 
 import {
     /* MapvLayer, */
     MapvSource
-} from '../../openlayers/overlay/index'
+} from '../../openlayers/overlay/index';
 
 export {
     /*  MapvLayer, */
     MapvSource
-}
+};
 ol.source.Mapv = MapvSource;
 // ol.zondy.MapvLayer = MapvLayer;
