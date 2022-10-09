@@ -1,234 +1,208 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>填挖方计算</title>
+        <!--引入第三方的jquery脚本库-->
+        <script include="jquery" src="./static/libs/include-lib-local.js"></script>
+        <!--引用Cesium脚本库文件-->
+        <script include="cesium-1.59" src="./static/libs/include-cesium-local.js"></script>
+        <!--当前示例页面样式表引用-->
+        <link rel="stylesheet" href="./static/demo/cesium/style.css" />
+        <script>
+            var webGlobe, viewer;
+            //定义三维瓦片类
+            var terrainLayer;
+            //定义交互式绘制矩形控件类
+            var drawElement;
+            //定义填挖方计算类
+            var cutFill;
+            //地图初始化函数
+            function init() {
+                //构造三维视图类（视图容器div的id，三维视图设置参数）
+                webGlobe = new Cesium.WebSceneControl('GlobeView', {
+                    terrainExaggeration: 1
+                });
+                //获取三维场景的视图对象
+                viewer = webGlobe.viewer;
 
-<head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <title>填挖方计算</title>
-    <!--引入第三方的jquery脚本库-->
-    <script include="jquery" src="./static/libs/include-lib-local.js"></script>
-    <!--引用Cesium脚本库文件-->
-    <script include="cesium-1.59" src="./static/libs/include-cesium-local.js"></script>
-    <!--当前示例页面样式表引用-->
-    <link rel="stylesheet" href="./static/demo/cesium/style.css" />
-    <script>
-        var webGlobe, viewer;
-        //定义三维瓦片类
-        var terrainLayer;
-        //定义交互式绘制矩形控件类
-        var drawElement;
-        //定义填挖方计算类
-        var cutFill;
-        //地图初始化函数
-        function init() {
-            //构造三维视图类（视图容器div的id，三维视图设置参数）
-            webGlobe = new Cesium.WebSceneControl('GlobeView', {
-                terrainExaggeration: 1,
-            });
-            //获取三维场景的视图对象
-            viewer = webGlobe.viewer;
+                //构造第三方图层对象
+                var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载天地图
+                var tdtLayer = thirdPartyLayer.appendTDTuMap({
+                    //天地图经纬度数据
+                    url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
+                    //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
+                    token: '9c157e9585486c02edf817d2ecbc7752',
+                    //地图类型 'vec'矢量 'img'影像 'ter'地形
+                    ptype: 'img'
+                });
 
-            //构造第三方图层对象
-            var thirdPartyLayer = new CesiumZondy.Layer.ThirdPartyLayer({
-                viewer: webGlobe.viewer
-            });
-            //加载天地图
-            var tdtLayer = thirdPartyLayer.appendTDTuMap({
-                //天地图经纬度数据
-                url: 'http://t0.tianditu.com/DataServer?T=vec_c&X={x}&Y={y}&L={l}',
-                //开发token （请到天地图官网申请自己的开发token，自带token仅做功能验证随时可能失效）
-                token: "9c157e9585486c02edf817d2ecbc7752",
-                //地图类型 'vec'矢量 'img'影像 'ter'地形
-                ptype: "img"
-            });
-
-            //构造地形图层管理类
-            var terrain = new CesiumZondy.Layer.TerrainLayer({
-                viewer: webGlobe.viewer
-            });
-            //加载三维地形地图文档（服务地址，配置参数）
-            var {
-                protocol,
-                ip,
-                port
-            } = window.webclient;
-            terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
-            //初始化视图功能管理类
-            var sceneManager = new CesiumZondy.Manager.SceneManager({
-                viewer: webGlobe.viewer
-            });
-            //视点跳转
-            sceneManager.flyToEx(120.9819, 23.5307, {
-                height: 9161,
-                heading: 30,
-                pitch: -10,
-                roll: 0
-            });
-            //初始化交互式绘制控件
-            drawElement = new Cesium.DrawElement(webGlobe.viewer);
-            //激活交互式绘制工具
-            drawElement.startDrawingPolygon({
-                //绘制完成回调函数
-                callback: function(positions) {
-                    console.log(positions);
-                    viewer.scene.globe.depthTestAgainstTerrain = true;
-                    //移除视图中所有的实体对象
-                    viewer.entities.removeAll();
-                    //添加填挖方分析显示实体
-                    //构造闭合区点数组
-                    positions[positions.length - 1] = positions[0];
-                    var transform = transformEdit();
-                    var array = new Array();
-                    for (let i = 0; i < positions.length; i++) {
-                        let point = positions[i];
-                        let resPoint = new Cesium.Cartesian3;
-                        let invserTran = new Cesium.Matrix4;
-                        Cesium.Matrix4.inverse(transform, invserTran);
-                        Cesium.Matrix4.multiplyByPoint(invserTran, point, resPoint);
-                        array.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
-                    }
-                    var newArray = new Array();
-                    for (var arraylength = 0; arraylength < array.length; arraylength++) {
-                        array[arraylength].z = Number(document.getElementById("z").value);
-                        let point = array[arraylength];
-                        let resPoint = new Cesium.Cartesian3;
-                        let invserTran = new Cesium.Matrix4;
-                        Cesium.Matrix4.multiplyByPoint(transform, point, resPoint);
-                        newArray.push(new Cesium.Cartesian3(resPoint.x, resPoint.y, resPoint.z));
-                    }
-                    //在视图中添加围栏实体
-                    viewer.entities.add({
-                        //实体名称
-                        name: '围栏',
-                        //示例类型
-                        wall: {
-                            //实体点数组
-                            positions: newArray,
-                            //实体材质
-                            material: new Cesium.Color(0.2, 0.5, 0.4, 0.7),
-                            //实体轮廓
-                            outline: true
+                //构造地形图层管理类
+                var terrain = new CesiumZondy.Layer.TerrainLayer({
+                    viewer: webGlobe.viewer
+                });
+                //加载三维地形地图文档（服务地址，配置参数）
+                var { protocol, ip, port } = window.webclient;
+                terrainlayer = terrain.append(`${protocol}://${ip}:${port}/igs/rest/g3d/terrain`, {});
+                //初始化视图功能管理类
+                var sceneManager = new CesiumZondy.Manager.SceneManager({
+                    viewer: webGlobe.viewer
+                });
+                //视点跳转
+                sceneManager.flyToEx(120.9819, 23.5307, {
+                    height: 9161,
+                    heading: 30,
+                    pitch: -10,
+                    roll: 0
+                });
+                //初始化交互式绘制控件
+                drawElement = new Cesium.DrawElement(webGlobe.viewer);
+                //激活交互式绘制工具
+                drawElement.startDrawingPolygon({
+                    //绘制完成回调函数
+                    callback: function (positions) {
+                        viewer.scene.globe.depthTestAgainstTerrain = true;
+                        //移除视图中所有的实体对象
+                        viewer.entities.removeAll();
+                        //添加填挖方分析显示实体
+                        var array = new Array();
+                        for (let i = 0; i < positions.length; i++) {
+                            let point = positions[i];
+                            var jwd = _cartesianToDegrees(point);
+                            var cartesian3 = Cesium.Cartesian3.fromDegrees(jwd.lon, jwd.lat, Number(document.getElementById('z').value));
+                            array.push(new Cesium.Cartesian3(point.x, point.y, cartesian3.z));
                         }
-                    });
-                    //初始化高级分析功能管理类
-                    var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
-                        viewer: viewer
-                    });
-                    //创建填挖方实例
-                    cutFill = advancedAnalysisManager.createCutFill(0.0, {
-                        //设置x方向采样点个数
-                        xPaneNum: document.getElementById("x").value <= 0 ? 16 : document.getElementById("x").value,
-                        //设置y方向采样点个数参数
-                        yPaneNum: document.getElementById("y").value <= 0 ? 16 : document.getElementById("y").value,
-                        //设置填挖规整高度
-                        height: document.getElementById("z").value <= 0 ? 2000 : document.getElementById("z").value,
-                        //返回结果的回调函数
-                        callback: function(result) {
-                            document.getElementById("height").value = result.minHeight.toFixed(2) + '~' + result.maxHeight.toFixed(2);
-                            document.getElementById("surfaceArea").value = result.surfaceArea;
-                            document.getElementById("cutVolume").value = result.cutVolume;
-                            document.getElementById("fillVolume").value = result.fillVolume;
-                        }
-                    });
-                    //开始执行填挖方分析
-                    advancedAnalysisManager.startCutFill(cutFill, positions);
-                }
-            });
-        }
+                        //在视图中添加围栏实体
+                        viewer.entities.add({
+                            //实体名称
+                            name: '围栏',
+                            //示例类型
+                            wall: {
+                                //实体点数组
+                                positions: array,
+                                //实体材质
+                                material: new Cesium.Color(0.2, 0.5, 0.4, 0.7),
+                                //实体轮廓
+                                outline: true
+                            }
+                        });
+                        //初始化高级分析功能管理类
+                        var advancedAnalysisManager = new CesiumZondy.Manager.AdvancedAnalysisManager({
+                            viewer: viewer
+                        });
+                        //创建填挖方实例
+                        cutFill = advancedAnalysisManager.createCutFill(0.0, {
+                            //设置x方向采样点个数
+                            xPaneNum: document.getElementById('x').value <= 0 ? 16 : document.getElementById('x').value,
+                            //设置y方向采样点个数参数
+                            yPaneNum: document.getElementById('y').value <= 0 ? 16 : document.getElementById('y').value,
+                            //设置填挖规整高度
+                            height: document.getElementById('z').value <= 0 ? 2000 : document.getElementById('z').value,
+                            //返回结果的回调函数
+                            callback: function (result) {
+                                document.getElementById('height').value = result.minHeight.toFixed(2) + '~' + result.maxHeight.toFixed(2);
+                                document.getElementById('surfaceArea').value = result.surfaceArea;
+                                document.getElementById('cutVolume').value = result.cutVolume;
+                                document.getElementById('fillVolume').value = result.fillVolume;
+                            }
+                        });
+                        //开始执行填挖方分析
+                        advancedAnalysisManager.startCutFill(cutFill, positions);
+                    }
+                });
+            }
 
-        function transformEdit() {
-            // 经纬度定位
-            var lo = 120.9819;
-            var la = 23.5307;
-            // 修改模型高度
-            var height = 50.0;
-            // 定位方法
-            var hpr = new Cesium.Matrix3();
-            // new Cesium.HeadingPitchRoll(heading, pitch, roll)
-            // heading围绕负z轴的旋转。pitch是围绕负y轴的旋转。Roll是围绕正x轴的旋转
-            var hprObj = new Cesium.HeadingPitchRoll(Cesium.Math.PI, Cesium.Math.PI, Cesium.Math.PI);
-            hpr = Cesium.Matrix3.fromHeadingPitchRoll(hprObj, hpr);
-            // 2、平移
-            // 2.3储存平移的结果
-            var modelMatrix = Cesium.Matrix4.multiplyByTranslation(
-                // 2.1从以度为单位的经度和纬度值返回Cartesian3位置
-                // 2.2计算4x4变换矩阵
-                Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(lo, la, height)), new Cesium.Cartesian3(), new Cesium.Matrix4()
-            );
-            /// 3、应用旋转
-            // Cesium.Matrix4.multiplyByMatrix3 （矩阵，旋转，结果）
-            Cesium.Matrix4.multiplyByMatrix3(modelMatrix, hpr, modelMatrix);
-            return modelMatrix;
-        }
-        /*移除填挖方计算*/
-        function stopCutFillM() {
-            //移除视图中所有的实体对象
-            viewer.entities.removeAll();
-            //停止交互式绘制工具
-            drawElement.stopDrawing();
-        }
-    </script>
-</head>
+            /**
+             * @description 世界坐标转经纬度坐标
+             * @param cartesian - {Object} 世界坐标
+             * @return {Object} 经纬度坐标
+             */
+            function _cartesianToDegrees(cartesian) {
+                const { ellipsoid } = this.viewer.scene.globe;
+                // 将笛卡尔坐标转换为地理坐标
+                const cartographic = ellipsoid.cartesianToCartographic(cartesian);
+                // 将弧度转为度的十进制度表示
+                const longitude = this.Cesium.Math.toDegrees(cartographic.longitude); // 转换后的经度
+                const latitude = this.Cesium.Math.toDegrees(cartographic.latitude); // 转换后的纬度
+                const coor = {
+                    lon: longitude,
+                    lat: latitude,
+                    height: cartographic.height
+                };
+                return coor;
+            }
+            /*移除填挖方计算*/
+            function stopCutFillM() {
+                //移除视图中所有的实体对象
+                viewer.entities.removeAll();
+                //停止交互式绘制工具
+                drawElement.stopDrawing();
+            }
+        </script>
+    </head>
 
-<body onload="init()">
-    <div id="GlobeView">
-        <div class="message" style="left: 10px;">
-            <p>参数</p>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>x方向采样点个数</td>
-                        <td>
-                            <input type="text" id="x" value="16">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>y方向采样点个数</td>
-                        <td>
-                            <input type="text" id="y" value="16">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>填挖规整高度</td>
-                        <td>
-                            <input type="text" id="z" value="2000">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <body onload="init()">
+        <div id="GlobeView">
+            <div class="message" style="left: 10px">
+                <p>参数</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>x方向采样点个数</td>
+                            <td>
+                                <input type="text" id="x" value="16" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>y方向采样点个数</td>
+                            <td>
+                                <input type="text" id="y" value="16" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>填挖规整高度</td>
+                            <td>
+                                <input type="text" id="z" value="2000" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="message" style="left: unset; right: 10px">
+                <p>填挖结果</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>高程范围：</td>
+                            <td>
+                                <input type="text" id="height" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>表面积：</td>
+                            <td>
+                                <input type="text" id="surfaceArea" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>挖体积：</td>
+                            <td>
+                                <input type="text" id="cutVolume" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>填体积：</td>
+                            <td>
+                                <input type="text" id="fillVolume" value="0" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="message" style="left:unset;right: 10px;">
-            <p>填挖结果</p>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>高程范围：</td>
-                        <td>
-                            <input type="text" id="height" value="0">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>表面积：</td>
-                        <td>
-                            <input type="text" id="surfaceArea" value="0">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>挖体积：</td>
-                        <td>
-                            <input type="text" id="cutVolume" value="0">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>填体积：</td>
-                        <td>
-                            <input type="text" id="fillVolume" value="0">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</body>
-
+    </body>
 </html>
