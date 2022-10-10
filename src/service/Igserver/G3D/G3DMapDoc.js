@@ -278,9 +278,9 @@ class G3DMapDoc extends G3DService {
      mapdoc.GetDocInfo(function(res){
                 console.log('GetDocInfo');
                 console.log(res)
-            },false,false,function (error) {
+            },function (error) {
                 console.log(error)
-            },false);
+            });
      */
     GetDocInfo(onSuccess, onError) {
         var me = this;
@@ -320,9 +320,9 @@ class G3DMapDoc extends G3DService {
      mapdoc.GetLayerInfo(function(res){
                 console.log('GetLayerInfo');
                 console.log(res)
-            },false,false,function (error) {
+            },function (error) {
                 console.log(error)
-            },false);
+            });
      */
     GetLayerInfo(onSuccess, onError) {
         var me = this;
@@ -381,9 +381,9 @@ class G3DMapDoc extends G3DService {
      mapdoc.GetFeature(function(res){
                 console.log('GetFeature');
                 console.log(res)
-            },false,false,function (error) {
+            },function (error) {
                 console.log(error)
-            },false);
+            });
      */
     GetFeature(onSuccess, onError) {
         var me = this;
@@ -479,9 +479,9 @@ class G3DMapDoc extends G3DService {
      mapdoc.SetSystemLibraryByDoc(function(res){
                 console.log('SetSystemLibraryByDoc');
                 console.log(res)
-            },false,false,function (error) {
+            },function (error) {
                 console.log(error)
-            },false);
+            });
      */
     SetSystemLibraryByDoc(onSuccess, onError) {
         var me = this;
