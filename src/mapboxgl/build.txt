@@ -1,10 +1,10 @@
 yarn run v1.22.4
 $ npm run build-debug && npm run build-release
 
-> @mapgis/webclient-es6-mapboxgl@16.0.6 build-debug
+> @mapgis/webclient-es6-mapboxgl@16.0.4 build-debug
 > webpack --config webpack/mapbox-es6-debug-config.js
 
-asset [1m[32mwebclient-es6-mapboxgl.js[39m[22m 2.57 MiB [1m[32m[emitted][39m[22m (name: main)
+asset [1m[32mwebclient-es6-mapboxgl.js[39m[22m 2.57 MiB [1m[33m[compared for emit][39m[22m (name: main)
 runtime modules 937 bytes 4 modules
 modules by path [1m./theme/[39m[22m 935 KiB 74 modules
 modules by path [1m./layer/*.js[39m[22m 50 KiB
@@ -24,12 +24,12 @@ modules by path [1m./core/*.js[39m[22m 5.8 KiB
 [1m[33mWARNING[39m[22m in [1m./index.js[39m[22m [1m[32m11:0-12:20[39m[22m
 [1mexport 'FabricLayer' (reexported as 'FabricLayer') was [1m[31mnot found[39m[22m[1m in './overlay/index.js' (possible exports: [1m[32mDeckglLayer, EchartsLayer, MapvLayer[39m[22m[1m)[39m[22m
 
-webpack 5.74.0 compiled with [1m[33m1 warning[39m[22m in 10008 ms
+webpack 5.74.0 compiled with [1m[33m1 warning[39m[22m in 16566 ms
 
-> @mapgis/webclient-es6-mapboxgl@16.0.6 build-release
+> @mapgis/webclient-es6-mapboxgl@16.0.4 build-release
 > webpack --config webpack/mapbox-es6-release-config.js
 
-asset [1m[33mwebclient-es6-mapboxgl.min.js[39m[22m [1m[33m1.63 MiB[39m[22m [1m[32m[emitted][39m[22m [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 1 related asset
+asset [1m[33mwebclient-es6-mapboxgl.min.js[39m[22m [1m[33m1.63 MiB[39m[22m [1m[33m[compared for emit][39m[22m [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 1 related asset
 orphan modules 1.05 MiB [1m[33m[orphan][39m[22m 96 modules
 runtime modules 663 bytes 3 modules
 built modules 2.37 MiB [1m[33m[built][39m[22m
@@ -54,5 +54,5 @@ Entrypoints:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
 
-webpack 5.74.0 compiled with [1m[33m4 warnings[39m[22m in 27533 ms
-Done in 44.64s.
+webpack 5.74.0 compiled with [1m[33m4 warnings[39m[22m in 27115 ms
+Done in 58.38s.
