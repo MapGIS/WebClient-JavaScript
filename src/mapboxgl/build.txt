@@ -1,45 +1,10 @@
 yarn run v1.22.4
 $ npm run build-debug && npm run build-release
 
-> @mapgis/webclient-es6-mapboxgl@16.0.3 build-debug
+> @mapgis/webclient-es6-mapboxgl@16.0.4 build-debug
 > webpack --config webpack/mapbox-es6-debug-config.js
 
-Installing 'webpack-cli' (running 'yarn add -D webpack-cli')...
-[1/4] Resolving packages...
-[2/4] Fetching packages...
-[3/4] Linking dependencies...
-[4/4] Building fresh packages...
-success Saved lockfile.
-success Saved 25 new dependencies.
-info Direct dependencies
-└─ webpack-cli@4.10.0
-info All dependencies
-├─ @discoveryjs/json-ext@0.5.7
-├─ @webpack-cli/configtest@1.2.0
-├─ @webpack-cli/info@1.5.0
-├─ @webpack-cli/serve@1.7.0
-├─ clone-deep@4.0.1
-├─ colorette@2.0.19
-├─ cross-spawn@7.0.3
-├─ envinfo@7.8.1
-├─ fastest-levenshtein@1.0.16
-├─ import-local@3.1.0
-├─ interpret@2.2.0
-├─ is-plain-object@2.0.4
-├─ isexe@2.0.0
-├─ isobject@3.0.1
-├─ path-key@3.1.1
-├─ rechoir@0.7.1
-├─ resolve-cwd@3.0.0
-├─ resolve-from@5.0.0
-├─ shallow-clone@3.0.1
-├─ shebang-command@2.0.0
-├─ shebang-regex@3.0.0
-├─ webpack-cli@4.10.0
-├─ webpack-merge@5.8.0
-├─ which@2.0.2
-└─ wildcard@2.0.0
-asset [1m[32mwebclient-es6-mapboxgl.js[39m[22m 2.57 MiB [1m[32m[emitted][39m[22m (name: main)
+asset [1m[32mwebclient-es6-mapboxgl.js[39m[22m 2.57 MiB [1m[33m[compared for emit][39m[22m (name: main)
 runtime modules 937 bytes 4 modules
 modules by path [1m./theme/[39m[22m 935 KiB 74 modules
 modules by path [1m./layer/*.js[39m[22m 50 KiB
@@ -59,12 +24,12 @@ modules by path [1m./core/*.js[39m[22m 5.8 KiB
 [1m[33mWARNING[39m[22m in [1m./index.js[39m[22m [1m[32m11:0-12:20[39m[22m
 [1mexport 'FabricLayer' (reexported as 'FabricLayer') was [1m[31mnot found[39m[22m[1m in './overlay/index.js' (possible exports: [1m[32mDeckglLayer, EchartsLayer, MapvLayer[39m[22m[1m)[39m[22m
 
-webpack 5.74.0 compiled with [1m[33m1 warning[39m[22m in 9840 ms
+webpack 5.74.0 compiled with [1m[33m1 warning[39m[22m in 13864 ms
 
-> @mapgis/webclient-es6-mapboxgl@16.0.3 build-release
+> @mapgis/webclient-es6-mapboxgl@16.0.4 build-release
 > webpack --config webpack/mapbox-es6-release-config.js
 
-asset [1m[33mwebclient-es6-mapboxgl.min.js[39m[22m [1m[33m1.63 MiB[39m[22m [1m[32m[emitted][39m[22m [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 1 related asset
+asset [1m[33mwebclient-es6-mapboxgl.min.js[39m[22m [1m[33m1.63 MiB[39m[22m [1m[33m[compared for emit][39m[22m [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 1 related asset
 orphan modules 1.05 MiB [1m[33m[orphan][39m[22m 96 modules
 runtime modules 663 bytes 3 modules
 built modules 2.37 MiB [1m[33m[built][39m[22m
@@ -89,5 +54,5 @@ Entrypoints:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
 
-webpack 5.74.0 compiled with [1m[33m4 warnings[39m[22m in 27793 ms
-Done in 77.30s.
+webpack 5.74.0 compiled with [1m[33m4 warnings[39m[22m in 28133 ms
+Done in 58.29s.
