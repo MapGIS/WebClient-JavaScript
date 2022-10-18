@@ -1,84 +1,93 @@
 yarn run v1.22.4
 $ npm run build-debug && npm run build-release
 
-> @mapgis/webclient-es6-mapboxgl@16.1.11 build-debug D:\code\web\package\webclient-javascript\src\mapboxgl
+> @mapgis/webclient-es6-mapboxgl@16.0.3 build-debug
 > webpack --config webpack/mapbox-es6-debug-config.js
 
-Hash: 94f9f911678c86b60ed8
-Version: webpack 4.19.1
-Time: 6722ms
-Built at: 2022/10/07 16:40:21
-                    Asset      Size  Chunks             Chunk Names
-webclient-es6-mapboxgl.js  4.66 MiB    main  [emitted]  main
-[./MapExtend.js] 5.13 KiB {main} [built]
-[./index.js] 1.08 KiB {main} [built]
-[./layer/ArcGISLayer.js] 4.22 KiB {main} [built]
-[./layer/TDTLayer.js] 9.72 KiB {main} [built]
-[./layer/index.js] 550 bytes {main} [built]
-[./layer/mapDocLayer.js] 9.61 KiB {main} [built]
-[./layer/mapTileLayer.js] 5.98 KiB {main} [built]
-[./layer/mapVectorLayer.js] 6.33 KiB {main} [built]
-[./layer/mapWmsLayer.js] 7.12 KiB {main} [built]
-[./layer/mapWmtsLayer.js] 6.53 KiB {main} [built]
-[./layer/mapboxBase.js] 427 bytes {main} [built]
-[./overlay/DeckglLayer.js] 26.8 KiB {main} [built]
-[./overlay/EchartsLayer.js] 11.1 KiB {main} [built]
-[./overlay/index.js] 365 bytes {main} [built]
-[./theme/index.js] 1.11 KiB {main} [built]
-    + 537 hidden modules
+Installing 'webpack-cli' (running 'yarn add -D webpack-cli')...
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 25 new dependencies.
+info Direct dependencies
+└─ webpack-cli@4.10.0
+info All dependencies
+├─ @discoveryjs/json-ext@0.5.7
+├─ @webpack-cli/configtest@1.2.0
+├─ @webpack-cli/info@1.5.0
+├─ @webpack-cli/serve@1.7.0
+├─ clone-deep@4.0.1
+├─ colorette@2.0.19
+├─ cross-spawn@7.0.3
+├─ envinfo@7.8.1
+├─ fastest-levenshtein@1.0.16
+├─ import-local@3.1.0
+├─ interpret@2.2.0
+├─ is-plain-object@2.0.4
+├─ isexe@2.0.0
+├─ isobject@3.0.1
+├─ path-key@3.1.1
+├─ rechoir@0.7.1
+├─ resolve-cwd@3.0.0
+├─ resolve-from@5.0.0
+├─ shallow-clone@3.0.1
+├─ shebang-command@2.0.0
+├─ shebang-regex@3.0.0
+├─ webpack-cli@4.10.0
+├─ webpack-merge@5.8.0
+├─ which@2.0.2
+└─ wildcard@2.0.0
+asset [1m[32mwebclient-es6-mapboxgl.js[39m[22m 2.57 MiB [1m[32m[emitted][39m[22m (name: main)
+runtime modules 937 bytes 4 modules
+modules by path [1m./theme/[39m[22m 935 KiB 74 modules
+modules by path [1m./layer/*.js[39m[22m 50 KiB
+  [1m./layer/index.js[39m[22m 550 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  + 8 modules
+modules by path [1m./overlay/[39m[22m 65.6 KiB
+  modules by path [1m./overlay/*.js[39m[22m 50.2 KiB 4 modules
+  + 2 modules
+modules by path [1m./*.js[39m[22m 6.18 KiB
+  [1m./index.js[39m[22m 1.08 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1m./MapExtend.js[39m[22m 5.1 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+modules by path [1m./core/*.js[39m[22m 5.8 KiB
+  [1m./core/Base.js[39m[22m 418 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1m./core/Util.js[39m[22m 5.39 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
++ 5 modules
 
-WARNING in ./index.js 12:0-14:2
-"export 'FabricLayer' was not found in './overlay/index.js'
+[1m[33mWARNING[39m[22m in [1m./index.js[39m[22m [1m[32m11:0-12:20[39m[22m
+[1mexport 'FabricLayer' (reexported as 'FabricLayer') was [1m[31mnot found[39m[22m[1m in './overlay/index.js' (possible exports: [1m[32mDeckglLayer, EchartsLayer, MapvLayer[39m[22m[1m)[39m[22m
 
-> @mapgis/webclient-es6-mapboxgl@16.1.11 build-release D:\code\web\package\webclient-javascript\src\mapboxgl
+webpack 5.74.0 compiled with [1m[33m1 warning[39m[22m in 9840 ms
+
+> @mapgis/webclient-es6-mapboxgl@16.0.3 build-release
 > webpack --config webpack/mapbox-es6-release-config.js
 
-Hash: 5be37e9e01311ea54f9d
-Version: webpack 4.19.1
-Time: 24232ms
-Built at: 2022/10/07 16:40:48
-                        Asset     Size  Chunks                    Chunk Names
-webclient-es6-mapboxgl.min.js  1.4 MiB       0  [emitted]  [big]  main
- [0] external "mapboxgl" 42 bytes {0} [built]
- [4] external "function(){try{return echarts}catch(e){return {}}}()" 42 bytes {0} [built]
-[10] (webpack)/buildin/global.js 489 bytes {0} [built]
-[12] external "function(){try{return mapv}catch(e){return {}}}()" 42 bytes {0} [built]
-[35] (webpack)/buildin/module.js 497 bytes {0} [built]
-[66] ./util.inspect (ignored) 15 bytes {0} [built]
-[68] ./index.js + 483 modules 2.42 MiB {0} [built]
-     | ./index.js 1.08 KiB [built]
-     | ./MapExtend.js 5.13 KiB [built]
-     | ./layer/index.js 550 bytes [built]
-     | ./theme/index.js 1.11 KiB [built]
-     | ./overlay/index.js 365 bytes [built]
-     | ./layer/mapboxBase.js 427 bytes [built]
-     | ./layer/mapDocLayer.js 9.61 KiB [built]
-     | ./layer/mapTileLayer.js 5.98 KiB [built]
-     | ./layer/mapWmsLayer.js 7.12 KiB [built]
-     | ./layer/mapWmtsLayer.js 6.53 KiB [built]
-     | ./layer/mapVectorLayer.js 6.33 KiB [built]
-     | ./layer/ArcGISLayer.js 4.22 KiB [built]
-     | ./layer/TDTLayer.js 9.72 KiB [built]
-     | ./theme/ThemeLayer.js 21.9 KiB [built]
-     | ./theme/GeoFeatureThemeLayer.js 15.1 KiB [built]
-     |     + 469 hidden modules
-    + 62 hidden modules
+asset [1m[33mwebclient-es6-mapboxgl.min.js[39m[22m [1m[33m1.63 MiB[39m[22m [1m[32m[emitted][39m[22m [1m[32m[minimized][39m[22m [1m[33m[big][39m[22m (name: main) 1 related asset
+orphan modules 1.05 MiB [1m[33m[orphan][39m[22m 96 modules
+runtime modules 663 bytes 3 modules
+built modules 2.37 MiB [1m[33m[built][39m[22m
+  [1m./index.js + 96 modules[39m[22m 1.05 MiB [1m[31m[not cacheable][39m[22m [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1m./node_modules/@mapgis/webclient-es6-service/dist-libs/webclient-es6-service.min.js[39m[22m 1.32 MiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
 
-WARNING in ./index.js 12:0-14:2
-"export 'FabricLayer' was not found in './overlay/index.js'
+[1m[33mWARNING[39m[22m in [1m./index.js[39m[22m [1m[32m11:0-12:20[39m[22m
+[1mexport 'FabricLayer' (reexported as 'FabricLayer') was [1m[31mnot found[39m[22m[1m in './overlay/index.js' (possible exports: [1m[32mDeckglLayer, EchartsLayer, MapvLayer[39m[22m[1m)[39m[22m
 
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+[1m[33mWARNING[39m[22m in [1masset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  webclient-es6-mapboxgl.min.js (1.4 MiB)
+  webclient-es6-mapboxgl.min.js (1.63 MiB)[39m[22m
 
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+[1m[33mWARNING[39m[22m in [1mentrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (1.4 MiB)
+  main (1.63 MiB)
       webclient-es6-mapboxgl.min.js
+[39m[22m
 
-
-WARNING in webpack performance recommendations: 
+[1m[33mWARNING[39m[22m in [1mwebpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
-Done in 43.00s.
+For more info visit https://webpack.js.org/guides/code-splitting/[39m[22m
+
+webpack 5.74.0 compiled with [1m[33m4 warnings[39m[22m in 27793 ms
+Done in 77.30s.
