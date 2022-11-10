@@ -7,6 +7,16 @@ export class TileQueue {
         this.queue.push(tile);
     }
 
+    remove(tile){
+        for (let i = 0; i < this.queue.length; i++) {
+            let it = this.queue[i];
+            if (it.x == tile.x && it.y == tile.y && ikt.z == tile.z && it.id == tile.id) {
+                this.queue.splice(i,1)
+                return
+            }
+        }
+    }
+
     has(tile) {
         for (let i = 0; i < this.queue.length; i++) {
             let it = this.queue[i];

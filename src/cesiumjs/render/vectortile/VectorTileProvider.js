@@ -51,7 +51,6 @@ export default function VectorTileProvider(Cesium, options) {
         this._tileQueue = new Cesium.TileReplacementQueue();
         this._tileSends = new TileQueue();
         this._cacheSize = 1024;
-
         this._maximumLevel = options.maximumLevel || 20;
         this._minimumLevel = options.minimumLevel || 0;
     }
@@ -162,6 +161,7 @@ export default function VectorTileProvider(Cesium, options) {
         }
 
         if (item === tileReplacementQueue.tail) {
+            k;
             tileReplacementQueue.tail = previous;
         } else {
             next.replacementPrevious = previous;
@@ -173,15 +173,13 @@ export default function VectorTileProvider(Cesium, options) {
         --tileReplacementQueue.count;
     }
 
-    function trimTiles(tileQueue, maximumTiles) {
+    function trimTiles(tileQueue, tileSends, maximumTiles) {
         var tileToTrim = tileQueue.tail;
         while (tileQueue.count > maximumTiles && Cesium.defined(tileToTrim)) {
             var previous = tileToTrim.replacementPrevious;
-
             remove(tileQueue, tileToTrim);
             //delete tileToTrim; 严格模式下不能删除
             tileToTrim = null;
-
             tileToTrim = previous;
         }
     }
@@ -190,80 +188,82 @@ export default function VectorTileProvider(Cesium, options) {
         if (this._tilingScheme._rectangleSouthwestInMeters == undefined) {
             level = level + 1;
         }
-
-        let self = this;
         var isSend = this._tileSends.has({ x: x, y: y, z: level, id: this.options.threadId });
-        this._tileSends.push({ x: x, y: y, z: level, id: this.options.threadId });
-        var cacheTile;
-
         if (isSend) {
-            cacheTile = findTileInQueue(x, y, level, this._tileQueue);
+            var cacheTile = findTileInQueue(x, y, level, this._tileQueue);
             if (cacheTile != undefined) {
                 return cacheTile;
+            } else {
+                this._tileSends.remove(x, y, level);
             }
         } else {
-            var url = this._url;
-            url = url.replace('{x}', x).replace('{y}', y).replace('{z}', level).replace('{k}', this._key);
-            if (this._maximumLevel && level > this._maximumLevel) {
-                return null;
-            }
-
-            var tilerequest = (function (x, y, z) {
-                var resource = Cesium.Resource.createIfNeeded(url);
-                if (z < 12) {
-                    /* var canvas = document.createElement('canvas');
-          return canvas; */
-                }
-                return resource
-                    .fetchArrayBuffer()
-                    .then(function (arrayBuffer) {
-                        var canvas = document.createElement('canvas');
-                        canvas.width = 512;
-                        canvas.height = 512;
-
-                        canvas.xMvt = x;
-                        canvas.yMvt = y;
-                        canvas.zMvt = z;
-                        self._tileQueue.markTileRendered(canvas);
-
-                        var vectorContext = canvas.getContext('2d');
-
-                        var features = self._mvtParser.readFeatures(arrayBuffer);
-
-                        var styleFun = self._styleFun;
-
-                        var extent = [0, 0, 4096, 4096];
-
-                        var _replayGroup = new ReplayGroup(0, extent, 8, true, 512); //100->512 流畅了很多
-                        //var _webglReplayGroup = new webGlReplayGroup(0, extent, 16);
-
-                        for (var i = 0; i < features.length; i++) {
-                            var feature = features[i];
-                            var styles = styleFun(features[i], self._resolutions[level]);
-                            for (var j = 0; j < styles.length; j++) {
-                                renderFeature(_replayGroup, feature, styles[j], 16);
-                            }
-                        }
-                        _replayGroup.finish();
-                        _replayGroup.replay(vectorContext, self._transform, 0, {}, self._replays);
-                        //_replayGroup.replay(vectorContext, self._transform, 0, {}, self._pixelRatio, self._replays, true);
-
-                        if (self._tileQueue.count > self._cacheSize) {
-                            trimTiles(self._tileQueue, self._cacheSize / 2);
-                        }
-
-                        //delete _replayGroup; 严格模式下不能删除
-                        _replayGroup = null;
-
-                        return canvas;
-                    })
-                    .otherwise(function (error) {
-                        return null;
-                    });
-            })(x, y, level);
+            this._tileSends.push({ x: x, y: y, z: level, id: this.options.threadId });
+            this.drawTile(x, y, level);
         }
     };
 
+    MVTProvider.prototype.drawTile = function (x, y, level) {
+        let self = this;
+        var url = this._url;
+        url = url.replace('{x}', x).replace('{y}', y).replace('{z}', level).replace('{k}', this._key);
+        if (this._maximumLevel && level > this._maximumLevel) {
+            return null;
+        }
+        var tilerequest = (function (x, y, z) {
+            var resource = Cesium.Resource.createIfNeeded(url);
+            if (z < 12) {
+                /* var canvas = document.createElement('canvas');
+        return canvas; */
+            }
+            return resource
+                .fetchArrayBuffer()
+                .then(function (arrayBuffer) {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = 512;
+                    canvas.height = 512;
+
+                    canvas.xMvt = x;
+                    canvas.yMvt = y;
+                    canvas.zMvt = z;
+                    self._tileQueue.markTileRendered(canvas);
+
+                    var vectorContext = canvas.getContext('2d');
+
+                    var features = self._mvtParser.readFeatures(arrayBuffer);
+
+                    var styleFun = self._styleFun;
+
+                    var extent = [0, 0, 4096, 4096];
+
+                    var _replayGroup = new ReplayGroup(0, extent, 8, true, 512); //100->512 流畅了很多
+                    //var _webglReplayGroup = new webGlReplayGroup(0, extent, 16);
+
+                    for (var i = 0; i < features.length; i++) {
+                        var feature = features[i];
+                        var styles = styleFun(features[i], self._resolutions[level]);
+                        for (var j = 0; j < styles.length; j++) {
+                            renderFeature(_replayGroup, feature, styles[j], 16);
+                        }
+                    }
+                    _replayGroup.finish();
+                    _replayGroup.replay(vectorContext, self._transform, 0, {}, self._replays);
+                    //_replayGroup.replay(vectorContext, self._transform, 0, {}, self._pixelRatio, self._replays, true);
+
+                    if (self._tileQueue.count > self._cacheSize) {
+                        trimTiles(self._tileQueue, self._tileSends, self._cacheSize / 2);
+                    }
+
+                    //delete _replayGroup; 严格模式下不能删除
+                    _replayGroup = null;
+
+                    return canvas;
+                })
+                .otherwise(function (error) {
+                    this._tileSends.remove(x, y, level);
+                    return null;
+                });
+        })(x, y, level);
+    };
     MVTProvider.prototype.pickFeatures = function (x, y, level, longitude, latitude) {
         return undefined;
     };
