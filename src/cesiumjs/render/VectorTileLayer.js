@@ -21,7 +21,9 @@ import axios from 'axios';
  * @param {Cesium.TilingScheme} [option.tilingScheme] 矢量瓦片瓦片切分规则：经纬度还是墨卡托
  * @param {String} [option.token] 第三方需要的token，比如mapbox
  * @param {String} [option.show=true] 是否可见
-  * @param {String} [option.callback] 加载矢量瓦片成功回调，返回Provider
+ * @param {Number} [option.maximumLevel=20] 最大级别
+ * @param {Number} [option.minimumLevel=0] 最小级别
+ * @param {String} [option.callback] 加载矢量瓦片成功回调，返回Provider
  * @example 
  * vectortileLayer = new CesiumZondy.Overlayer.VectorTileLayer(
         webGlobe.viewer,
@@ -53,6 +55,8 @@ export class VectorTileLayer {
         this.styleUrl = options.styleUrl;
         this.tilingScheme = options.tilingScheme;
         this.provider = null;
+        this.maximumLevel = options.maximumLevel || 20;
+        this.minimumLevel = options.minimumLevel || 0;
 
         this.initDevicePixelRatio();
         //this.bindEvent();
@@ -166,7 +170,9 @@ export class VectorTileLayer {
                 opacity: this.opacity,
                 threadId: this.threadId,
                 show: this.show,
-                tilingScheme: this.tilingScheme
+                tilingScheme: this.tilingScheme,
+                maximumLevel: this.maximumLevel,
+                minimumLevel: this.minimumLevel
             });
             this.provider = this.viewer.imageryLayers.addImageryProvider(vectortile);
             this.provider.show = this.show;
