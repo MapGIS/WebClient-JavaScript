@@ -24,7 +24,10 @@ function calculatePositionSamples(positions, startTime, multiplier) {
         if (positions.constructor === Array) {
             const property = new Cesium.SampledPositionProperty();
             for (let since = 0; since < positions.length; since += 1) {
-                property.addSample(Cesium.JulianDate.addSeconds(startTime, multiplier * since, new Cesium.JulianDate()), Cesium.Cartesian3.fromDegrees(positions[since][0], positions[since][1]));
+                property.addSample(
+                    Cesium.JulianDate.addSeconds(startTime, multiplier * since, new Cesium.JulianDate()),
+                    Cesium.Cartesian3.fromDegrees(positions[since][0], positions[since][1])
+                );
             }
             return property;
         }
@@ -560,7 +563,7 @@ export default class AnalysisManager {
      * @param {Number} [options.scaleHeight=2.5] 高度缩放比
      * @param {Number} [options.scaleWidth=2.5] 宽度缩放比
      * @param {Boolean} [options.interaction] 交互
-     * 
+     *
      * @returns {Object} 返回对象
      */
     createDynamicCutting(tilesets, planes, options) {
@@ -593,7 +596,7 @@ export default class AnalysisManager {
             for (let i = 0; i < planes.length; i += 1) {
                 const normal = planes[i].normal._cartesian3;
                 const planeEntity = this.viewer.entities.add({
-                    position: Cesium.CommonFunction.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3),
+                    position: Cesium.CommonFunction.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3()),
                     plane: {
                         dimensions: new Cesium.Cartesian2(radius * scaleWidth, radius * scaleHeight),
                         material
@@ -767,40 +770,44 @@ export default class AnalysisManager {
         }
 
         function evaluateColorCallBack(feature, result) {
-            const title = feature.getProperty('name');
-            const layerNow = feature.tileset;
-            const values = title.split('_');
-            const vlueNumber = parseInt(values[2], 10);
-            let { color } = feature;
-            colorUse = layerNow.color;
-            if (style === 'EdgeHighlight' || style === 'Edge') {
-                if (!Cesium.defined(layerNow._edgeDetectionfeatureList)) {
-                    layerNow._edgeDetectionfeatureList = [];
-                }
-                if (title !== undefined && title !== null && idList.indexOf(vlueNumber) > -1) {
-                    if (layerNow._edgeDetectionfeatureList.indexOf(feature) < 0) {
-                        layerNow._edgeDetectionfeatureList.push(feature);
+            if (feature && feature.hasProperty('name')) {
+                const title = feature.getProperty('name');
+                const layerNow = feature.tileset;
+                const values = title.split('_');
+                const vlueNumber = parseInt(values[2], 10);
+                let { color } = feature;
+                colorUse = layerNow.color;
+                if (style === 'EdgeHighlight' || style === 'Edge') {
+                    if (!Cesium.defined(layerNow._edgeDetectionfeatureList)) {
+                        layerNow._edgeDetectionfeatureList = [];
                     }
-                    that._edgeDetectionStageCD.selected = layerNow._edgeDetectionfeatureList;
+                    if (title !== undefined && title !== null && idList.indexOf(vlueNumber) > -1) {
+                        if (layerNow._edgeDetectionfeatureList.indexOf(feature) < 0) {
+                            layerNow._edgeDetectionfeatureList.push(feature);
+                        }
+                        that._edgeDetectionStageCD.selected = layerNow._edgeDetectionfeatureList;
+                    }
+                    if (style === 'Edge') {
+                        return color;
+                    }
                 }
-                if (style === 'Edge') {
-                    return color;
-                }
-            }
-            if (applyForLayer) {
-                color = colorUse;
-            } else if (!layerNow.negate) {
-                if (title !== undefined && title !== null && idList.indexOf(vlueNumber) > -1) {
+                if (applyForLayer) {
                     color = colorUse;
-                } else {
+                } else if (!layerNow.negate) {
+                    if (title !== undefined && title !== null && idList.indexOf(vlueNumber) > -1) {
+                        color = colorUse;
+                    } else {
+                        color = negateColor;
+                    }
+                } else if (title !== undefined && title !== null && idList.indexOf(vlueNumber) > -1) {
                     color = negateColor;
+                } else {
+                    color = colorUse;
                 }
-            } else if (title !== undefined && title !== null && idList.indexOf(vlueNumber) > -1) {
-                color = negateColor;
+                return Cesium.Color.clone(color, result);
             } else {
-                color = colorUse;
+                return colorUse;
             }
-            return Cesium.Color.clone(color, result);
         }
         for (let i = 0; i < layerList.length; i += 1) {
             const layer = layerList[i];

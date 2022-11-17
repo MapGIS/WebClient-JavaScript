@@ -204,7 +204,9 @@ export default function VectorTileProvider(Cesium, options) {
         } else {
             var url = this._url;
             url = url.replace('{x}', x).replace('{y}', y).replace('{z}', level).replace('{k}', this._key);
-            //console.log("not find in cache");
+            if (this._maximumLevel && level > this._maximumLevel) {
+                return null;
+            }
 
             var tilerequest = (function (x, y, z) {
                 var resource = Cesium.Resource.createIfNeeded(url);
