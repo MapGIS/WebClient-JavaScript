@@ -15,7 +15,7 @@ var idIndex = 0;
  * @param {Boolean} [mapVOptions.cesium.postRender=false] 是否实时渲染
  * @param {Boolean} [mapVOptionscesium.cesium.postRenderFrame=30] 每间隔多少帧渲染一次
  * @param container - {Element} 外部传入的div;外接的方式使用mapv
- * @example
+ * @example 
  *  // 构建对应的dataset
     var dataSet = new mapv.DataSet(data);
 
@@ -90,7 +90,7 @@ export default class MapvLayer {
     }
 
     initDevicePixelRatio() {
-        this.devicePixelRatio = window.devicePixelRatio || 1;
+        this.devicePixelRatio = 1;
     }
 
     addInnerContainer() {
@@ -140,7 +140,7 @@ export default class MapvLayer {
             this.scene.camera.moveStart.removeEventListener(this.postStartEvent, this);
             this.scene.camera.moveEnd.removeEventListener(this.postEndEvent, this);
         } else {
-            let handler = this.handler;
+            let handler = this.handler;    
             if (handler) {
                 handler.removeInputAction(this.innerMoveEnd, Cesium.ScreenSpaceEventType.WHEEL);
                 handler.removeInputAction(this.innerMoveStart, Cesium.ScreenSpaceEventType.LEFT_DOWN);

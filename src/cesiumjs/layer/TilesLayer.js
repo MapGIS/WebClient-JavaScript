@@ -41,23 +41,24 @@ export default class TilesLayer extends BaseLayer {
      *   maxLevel:10,
      *   proxy:'/Handler.ashx'//不存在跨域可不设置
      *  };
-     * let mapGisTile = webGlobe.append3DDocTile('http://54.222.218.173:6163/igs/rest/g3d/lcmap/',0,0,otherOptions);
+     * let mapGisTile = tileLayer.append3DDocTileLayer('http://54.222.218.173:6163/igs/rest/g3d/lcmap/',0,0,otherOptions);
      */
     append3DDocTileLayer(url, sceneIndex, layerIndex, optionsParam) {
         let proxy;
-        if (optionsParam.proxy) {
+        if (optionsParam && optionsParam.proxy) {
             proxy = new Cesium.DefaultProxy(optionsParam.proxy);
         }
         const options = Cesium.defaultValue(optionsParam, {});
         const dataUrl = `${url}/GetCovering?sceneIndex=${sceneIndex.toString()}&layerIndex=${layerIndex.toString()}&level={level}&row={row}&col={col}&xDensity=43&yDensity=43`;
         const mapGisDocTile = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.MapGISDocMapProvider({
+            new Cesium.MapGISMapServerImageryProvider({
                 url: dataUrl,
                 rectangle: options.tileRange,
                 colNum: options.colNum,
                 rowNum: options.rowNum,
                 maximumLevel: options.maxLevel,
-                proxy
+                proxy,
+                is3d: true
             })
         );
         return mapGisDocTile;
@@ -71,7 +72,8 @@ export default class TilesLayer extends BaseLayer {
      * @param {Rectangle} [optionsParam.tileRange=Rectangle.fromDegrees(-180,-90,180,90)] 默认范围为全球范围
      * @param {Number} [optionsParam.colNum=2] 瓦片初始级的列数 默认为2
      * @param {Number} [optionsParam.rowNum=1] 瓦片初始级的列数 默认为1
-     * @param {Number} [optionsParam.maxLevel=19] 瓦片最大显示级数 默认为19
+     * @param {Number} [options.minimumLevel=0] 瓦片最小级别
+     * @param {Number} [options.maximumLevel=19] 瓦片最大级别
      * @param {String} [optionsParam.proxy] 转发代理
      * @param {Array}  [options.gdbps] gdbps地址数组
      * @param {String} [options.layers] layers参数，用于过滤图层
@@ -89,7 +91,7 @@ export default class TilesLayer extends BaseLayer {
      *       maxLevel:10,
      *       proxy:'/Handler.ashx'//不存在跨域可不设置
      *     };
-     * let mapGisTile = append2DDocTile('http://localhost:6163/igs/rest/mrms/docs/二维矢量',otherOptions);
+     * let mapGisTile = tileLayer.append2DDocTile('http://localhost:6163/igs/rest/mrms/docs/二维矢量',otherOptions);
      */
     append2DDocTile(url, optionsParam) {
         // 中地新版正常二维瓦片
@@ -101,7 +103,7 @@ export default class TilesLayer extends BaseLayer {
         }
 
         options.url = url;
-        const mapGis2DDocTile = this.viewer.imageryLayers.addImageryProvider(new Cesium.MapGIS2DDocMapProvider(options));
+        const mapGis2DDocTile = this.viewer.imageryLayers.addImageryProvider(new Cesium.MapGISMapServerImageryProvider(options));
         return mapGis2DDocTile;
     }
 
@@ -141,9 +143,10 @@ export default class TilesLayer extends BaseLayer {
         if (optionsParam.proxy) {
             proxy = new Cesium.DefaultProxy(optionsParam.proxy);
         }
+        const headers = Cesium.defaultValue({ Accept: 'image/gif,image/webp,image/png,image/*,*/*;q=0.8' }, undefined);
         const options = Cesium.defaultValue(optionsParam, {});
         const mapGisTile = this.viewer.imageryLayers.addImageryProvider(
-            new Cesium.MapGISMapProvider({
+            new Cesium.MapGISTileServerImageProvider({
                 url: _url,
                 tilingScheme: options.tilingScheme,
                 rectangle: options.tileRange,
@@ -153,7 +156,8 @@ export default class TilesLayer extends BaseLayer {
                 tileWidth: options.tileWidth,
                 tileHeight: options.tileHeight,
                 proxy,
-                mapStyle: options.mapStyle
+                mapStyle: options.mapStyle,
+                headers
             })
         );
         return mapGisTile;
@@ -165,16 +169,51 @@ export default class TilesLayer extends BaseLayer {
      * @param  {String} url 地址
      * @param  {Object} optionsParam 参数
      * @returns {Object} 自定义瓦片服务对象
+     *
+     * @example
+     * var options = {};
+     * var maximumLevel = Cesium.defaultValue(options.maximumLevel, 16);
+     * var type = Cesium.defaultValue(options.type, 'vec');
+     * //var baseUrl = 'http://{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}';
+     * var baseUrl = 'http://{s}.is.autonavi.com/appmaptile?&size=1&scale=1&x={x}&y={y}&z={z}';
+     * //https://wprd04.is.autonavi.com/appmaptile?x=6738&y=3101&z=13&lang=zh_cn&size=1&scl=2&style=8&ltype=11
+     * var url = baseUrl;
+     * var gaodeLayer;
+     * switch (type) {
+     *    case 'img':
+     *    {
+     *         url = 'https://{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}';
+     *    }
+     *    break;
+     *    case 'road':
+     *    {
+     *         url += '&scl=2&style=8&ltype=11';
+     *    }
+     *    break;
+     *    default:
+     *    {
+     *        url += '&style=7';
+     *    }
+     *    break;
+     *    }
+     * // var gaodeProvider = new Cesium.UrlTemplateImageryProvider();
+     * // gaodeLayer = this.viewer.imageryLayers.addImageryProvider(gaodeProvider);
+     *
+     * var gaodeProvider = tileLayer.appendTileMapServiceImage('https://{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}', {
+     *     credit: new Cesium.Credit('高德地图服务'),
+     *     subdomains: ['webst01', 'webst02', 'webst03', 'webst04'],
+     *     tilingScheme: new Cesium.WebMercatorTilingScheme(),
+     *     maximumLevel: maximumLevel
+     * });
      */
     appendTileMapServiceImage(url, optionsParam) {
         const para = {
-            url,
-            maximumLevel: 8
+            url
         };
         if (Cesium.defined(optionsParam)) {
-            Object.extend(para, optionsParam);
+            Object.extend(optionsParam, para);
         }
-        const imageryProvider = new Cesium.UrlTemplateImageryProvider(para);
+        const imageryProvider = new Cesium.UrlTemplateImageryProvider(optionsParam);
 
         const tileMapService = this.viewer.imageryLayers.addImageryProvider(imageryProvider);
         return tileMapService;

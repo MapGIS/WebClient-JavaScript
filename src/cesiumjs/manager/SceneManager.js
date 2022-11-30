@@ -157,18 +157,18 @@ export default class SceneManager {
                 level = `当前地图级别:${viewLevel}`;
             }
             const iHtml = longlatHeight + strHpr + selectTileInfo + level;
-            document.getElementById(elementId).innerHTML = iHtml;
+            document.getElementById(elementIdValue).innerHTML = iHtml;
         }
 
         if (elementId === undefined || elementId === null) {
             const elementPt = document.createElement('div');
-            elementPt.className = 'coordinateClass';
-            elementPt.id = 'coordinateDiv';
+            elementPt.className = 'mapgis-web-scene-coordinateClass';
+            elementPt.id = 'mapgis-web-scene-coordinateDiv';
             const element = document.createElement('label');
-            element.id = 'coordinate_location';
-            elementIdValue = 'coordinate_location';
+            element.id = 'mapgis-web-scene-coordinate_location';
+            elementIdValue = 'mapgis-web-scene-coordinate_location';
             const style1 = document.createElement('style');
-            style1.innerHTML = '.coordinate_location {color: #F0EFEF; line-height: 30px; margin-left: 30%;bottom:0px;font-size: 80%;font:"雅黑";}';
+            style1.innerHTML = '.mapgis-web-scene-coordinate_location {color: #F0EFEF; line-height: 30px; margin-left: 30%;bottom:0px;font-size: 80%;font:"雅黑";}';
             element.style = style1;
             elementPt.appendChild(element);
             this.viewer._element.appendChild(elementPt);
@@ -401,13 +401,15 @@ export default class SceneManager {
      *         positiveY : 'Assets/Textures/SkyBox2/left.jpg',
      *         negativeY : 'Assets/Textures/SkyBox2/right.jpg',
      *         positiveZ : 'Assets/Textures/SkyBox2/top.jpg',
-     *         negativeZ : 'Assets/Textures/SkyBox2/bottom.jpg'
+     *         negativeZ : 'Assets/Textures/SkyBox2/down.jpg'
      *     }
      * });
      */
     changeSkyBox(skybox) {
         if (Cesium.defined(skybox)) {
             this.scene.skyBox = skybox;
+            this.scene.skyAtmosphere.show = false;
+
             const frameState = this.scene._frameState;
             this.scene.skyBox.update(frameState);
         }
@@ -417,7 +419,7 @@ export default class SceneManager {
      * 根据ID飞行到特定要素位置
      * @function module:客户端视图管理.SceneManager.prototype.flyToFeatureById
      * @param {Array<layer>} layerList 图层列表
-     * @param {Array<id>} id ID列表
+     * @param {Number} id ID列表
      * @param {Object} [options] 其他参数
      * @param {Color} [options.colorHighlight] 跳转后指定ID对应的特定要素的高亮颜色
      * @param {Number} [options.heading] 相机参数heading
@@ -470,7 +472,7 @@ export default class SceneManager {
 
         for (let i = 0; i < layerList.length; i += 1) {
             const tileset = layerList[i];
-            tileset.styleEngine.justSelect(true);
+            // tileset.styleEngine.justSelect(true);
             tileset.style = new Cesium.Cesium3DTileStyle();
             tileset.style.color = {
                 evaluateColor: evaluateColorCallBack

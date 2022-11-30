@@ -30,7 +30,7 @@ export default class LayerManager extends BaseLayer {
      * @param {Function} [optionsParam.loaded = function] 回调函数
      * @param {DefaultProxy} [optionsParam.proxy = defaultProxy] 代理
      * @example
-     * let layerManager = new LayerManager(view);
+     * let layerManager = new Cesium.Layer.LayerManager({viewer:viewer});
      * function callBackfunction(layer){
      * console.log(layer)
      * }

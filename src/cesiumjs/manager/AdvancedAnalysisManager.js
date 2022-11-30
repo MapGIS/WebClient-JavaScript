@@ -55,7 +55,7 @@ export default class AdvancedAnalysisManager {
      */
     createAnimation(options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        const animation = new Cesium.AnimationAnalyse(this.viewer, {
+        const animation = new Cesium.AnimationTool(this.viewer, {
             exHeight: Cesium.defaultValue(optionsParam.exHeight, 0.8),
             isLoop: Cesium.defaultValue(optionsParam.isLoop, false),
             modelUrl: optionsParam.modelUrl,
@@ -80,7 +80,7 @@ export default class AdvancedAnalysisManager {
     createCutFill(dataType, options) {
         const optionsParam = Cesium.defaultValue(options, {});
         const { viewer } = this;
-        const cutFill = new Cesium.CutFillAnalyzeC(viewer, {
+        const cutFill = new Cesium.CutFillAnalysis(viewer, {
             callBack: optionsParam.callback
         });
         cutFill.xPaneNum = optionsParam.xPaneNum;
@@ -136,9 +136,188 @@ export default class AdvancedAnalysisManager {
      */
     createDynamicPolyline(posStart, posEnds, options) {
         const optionsParam = Cesium.defaultValue(options, {});
+
+        function DynamicPolyline(viewer, center, cities, options) {
+            this._viewer = viewer;
+            this._center = center;
+            this._cities = cities;
+            this._isAdd = options.isAdd || false;
+            this._color = options.color || Cesium.Color.ORANGE;
+            this._duration = options.duration || 3000;
+        }
+
+        Object.defineProperties(DynamicPolyline.prototype, {
+            color: {
+                get: function () {
+                    return this._color;
+                },
+                set: function (value) {
+                    this._color = value;
+                }
+            },
+            duration: {
+                get: function () {
+                    return this._color;
+                },
+                set: function (value) {
+                    this._color = value;
+                }
+            }
+        });
+
+        DynamicPolyline.prototype.setVisible = function (value) {
+            var material = null;
+            switch (value) {
+                case 'position':
+                    this._viewer.camera.setView({
+                        destination: Cesium.Cartesian3.fromDegrees(
+                            this._center.lon,
+                            this._center.lat,
+                            300000
+                        )
+                    });
+                    break;
+                case 'add':
+                    if (!this._isAdd) {
+                        if (material !== null) {
+                        } else {
+                            var options = {
+                                direction: 1.0,
+                                color: new Cesium.Color(0.0,0.0,0.0),
+                                duration: this._duration
+                            };
+                            material = new Cesium.PolylineTrailLinkMaterialProperty(
+                                options
+                            );
+                        }
+                        for (var j = 0; j < this._cities.length; j++) {
+                            var points = parabolaEquation({
+                                pt1: this._center,
+                                pt2: this._cities[j],
+                                height: 50000,
+                                num: 100
+                            });
+                            var pointArr = [];
+                            for (var i = 0; i < points.length; i++) {
+                                pointArr.push(
+                                    points[i][0],
+                                    points[i][1],
+                                    points[i][2]
+                                );
+                            }
+                            this._viewer.entities.add({
+                                name: 'PolylineTrailLink' + j,
+                                polyline: {
+                                    positions: Cesium.Cartesian3.fromDegreesArrayHeights(
+                                        pointArr
+                                    ),
+                                    width: 2,
+                                    material: material
+                                }
+                            });
+                        }
+
+                        this._viewer.entities.add({
+                            position: Cesium.Cartesian3.fromDegrees(
+                                this._center.lon,
+                                this._center.lat,
+                                1
+                            ),
+                            point: {
+                                pixelSize: 6,
+                                color: Cesium.Color.BLUE
+                            }
+                        });
+                        for (var i = 0; i < this._cities.length; i++) {
+                            this._viewer.entities.add({
+                                position: Cesium.Cartesian3.fromDegrees(
+                                    this._cities[i].lon,
+                                    this._cities[i].lat,
+                                    1
+                                ),
+                                point: {
+                                    pixelSize: 6,
+                                    color: Cesium.Color.RED
+                                }
+                            });
+                        }
+
+                        this._isAdd = true;
+                    }
+                    break;
+                case 'del':
+                    if (this._isAdd) {
+                        this._viewer.entities.removeAll();
+                        this._isAdd = false;
+                    }
+                    break;
+            }
+            this._viewer.scene.requestRender();
+        };
+
+        DynamicPolyline.prototype.destroy = function () {
+            this._viewer.entities.removeAll();
+        };
+
+        function parabolaEquation(options, resultOut) {
+            //方程 y=-(4h/L^2)*x^2+h h:顶点高度 L：横纵间距较大者
+            var height =
+                options.height && options.height > 5000 ? options.height : 5000;
+            var largerLength =
+                Math.abs(options.pt1.lon - options.pt2.lon) >
+                Math.abs(options.pt1.lat - options.pt2.lat)
+                    ? Math.abs(options.pt1.lon - options.pt2.lon)
+                    : Math.abs(options.pt1.lat - options.pt2.lat);
+            var num = options.num && options.num > 50 ? options.num : 50;
+            var result = [];
+            var dlt = largerLength / num;
+            if (
+                Math.abs(options.pt1.lon - options.pt2.lon) >
+                Math.abs(options.pt1.lat - options.pt2.lat)
+            ) {
+                //以lon为基准
+                var delLat = (options.pt2.lat - options.pt1.lat) / num;
+                if (options.pt1.lon - options.pt2.lon > 0) {
+                    dlt = -dlt;
+                }
+                for (var i = 0; i < num; i++) {
+                    var tempH =
+                        height -
+                        (Math.pow(-0.5 * largerLength + Math.abs(dlt) * i, 2) *
+                            4 *
+                            height) /
+                        Math.pow(largerLength, 2);
+                    var lon = options.pt1.lon + dlt * i;
+                    var lat = options.pt1.lat + delLat * i;
+                    result.push([lon, lat, tempH]);
+                }
+            } else {
+                //以lat为基准
+                var delLon = (options.pt2.lon - options.pt1.lon) / num;
+                if (options.pt1.lat - options.pt2.lat > 0) {
+                    dlt = -dlt;
+                }
+                for (var i = 0; i < num; i++) {
+                    var tempH =
+                        height -
+                        (Math.pow(-0.5 * largerLength + Math.abs(dlt) * i, 2) *
+                            4 *
+                            height) /
+                        Math.pow(largerLength, 2);
+                    var lon = options.pt1.lon + delLon * i;
+                    var lat = options.pt1.lat + dlt * i;
+                    result.push([lon, lat, tempH]);
+                }
+            }
+            if (resultOut !== undefined) {
+                resultOut = result;
+            }
+            return result;
+        }
+
         let dynamicPolyline;
         if (posStart !== undefined && posEnds !== undefined) {
-            dynamicPolyline = new Cesium.DynamicPolyline(this.viewer, posStart, posEnds, {
+            dynamicPolyline = new DynamicPolyline(this.viewer, posStart, posEnds, {
                 isAdd: Cesium.defaultValue(optionsParam.isAdd, false),
                 color: Cesium.defaultValue(optionsParam.color, Cesium.Color.ORANGE),
                 duration: 3000
@@ -151,6 +330,25 @@ export default class AdvancedAnalysisManager {
     }
 
     /**
+     *
+     *     defineProperties(DynamicPolyline.prototype, {
+        color: {
+            get: function () {
+                return this._color;
+            },
+            set: function (value) {
+                this._color = value;
+            }
+        },
+        duration: {
+            get: function () {
+                return this._color;
+            },
+            set: function (value) {
+                this._color = value;
+            }
+        }
+    });
      * 模型压平
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createModelFlatten
      * @param {Object} tileset 图层信息
@@ -164,10 +362,9 @@ export default class AdvancedAnalysisManager {
     createModelFlatten(tileset, options) {
         const optionsParam = Cesium.defaultValue(options, {});
         const tilesetObject = tileset;
-        tilesetObject.u_isFlatten = Cesium.defaultValue(optionsParam.isFlatten, true);
-        tilesetObject.u_height = Cesium.defaultValue(optionsParam.height, 0.0);
-        tilesetObject.u_arrayLength = Cesium.defaultValue(optionsParam.arrayLength, 0.0);
-        tilesetObject.u_positionArray = Cesium.defaultValue(optionsParam.array, []);
+        tilesetObject.isFlatten = Cesium.defaultValue(optionsParam.isFlatten, true);
+        tilesetObject.height = Cesium.defaultValue(optionsParam.height, 0.0);
+        tilesetObject.positionArray = Cesium.defaultValue(optionsParam.array, []);
         this.scene.requestRender();
         return tilesetObject;
     }
@@ -207,7 +404,7 @@ export default class AdvancedAnalysisManager {
                 break;
         }
         const scenePro = new Cesium.SceneProjector(proType);
-        const manager = this.scene.VisualAnalysisManager;
+        const manager = this.scene.visualAnalysisManager;
         manager.add(scenePro);
         return scenePro;
     }
@@ -247,7 +444,7 @@ export default class AdvancedAnalysisManager {
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.removeSceneProjector
      */
     removeSceneProjector() {
-        const manager = this.scene.VisualAnalysisManager;
+        const manager = this.scene.visualAnalysisManager;
         manager.removeAll();
     }
 
@@ -257,7 +454,7 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} skyLineAn 返回天际线实例
      */
     createSkyLine() {
-        const manager = this.scene.VisualAnalysisManager;
+        const manager = this.scene.visualAnalysisManager;
         const skyLineAn = new Cesium.SkyLineAnalysis({
             scene: this.scene,
             analysisEndCallBack() {}
@@ -272,7 +469,7 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} viewshedAnalysis 返回可视域实例
      */
     createViewshedAnalysis() {
-        const manager = this.scene.VisualAnalysisManager;
+        const manager = this.scene.visualAnalysisManager;
         const viewshedAnalysis = new Cesium.ViewshedAnalysis();
         manager.add(viewshedAnalysis);
         return viewshedAnalysis;
@@ -284,8 +481,8 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} visibilityAnalysis 返回通视实例
      */
     createVisibilityAnalysis() {
-        const manager = this.scene.VisualAnalysisManager;
-        const visibilityAnalysis = new Cesium.VisiblityAnalysis();
+        const manager = this.scene.visualAnalysisManager;
+        const visibilityAnalysis = new Cesium.VisiblityAnalysis({scene: this.scene});
         manager.add(visibilityAnalysis);
         return visibilityAnalysis;
     }
@@ -305,11 +502,10 @@ export default class AdvancedAnalysisManager {
      * 添加：globe.addSceneEffect(heightLimited)
      * 移除：globe.removeSceneEffect(heightLimited)
      */
-    createHeightLimited(height, transform, posArray, options) {
+    createHeightLimited(height, posArray, options) {
         const optionsParam = Cesium.defaultValue(options, {});
         const heightLimited = new Cesium.HeightLimited(this.viewer, {
             height: Cesium.defaultValue(height, 0),
-            transform,
             posArray,
             limitedColor: Cesium.defaultValue(optionsParam.limitedColor, new Cesium.Color(1, 0, 0, 0.5)),
             blendTransparency: Cesium.defaultValue(optionsParam.blendTransparency, 0.8)
@@ -324,13 +520,16 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} aspect 返回坡向分析实例
      */
     createAspectAnalysis(color) {
-        const manager = this.scene.VisualAnalysisManager;
-        const aspect = new Cesium.AspectAnalysis(this.viewer, {
-            colors: color
+        for (var i = 0;i < color.length;i++) {
+            if(color instanceof Cesium.Color) {
+                // eslint-disable-next-line no-param-reassign
+                color[i] = color[i].toCssColorString();
+            }
+        }
+        let terrainAnalyse = new Cesium.TerrainAnalyse(this.viewer, {
+            aspectRampColor: color
         });
-        manager.add(aspect);
-        aspect.start();
-        return aspect;
+        return terrainAnalyse;
     }
 
     /**
@@ -340,13 +539,16 @@ export default class AdvancedAnalysisManager {
      * @returns {Object} slope 返回坡度分析实例
      */
     createSlopeAnalysis(color) {
-        const manager = this.scene.VisualAnalysisManager;
-        const slope = new Cesium.SlopeAnalysis(this.viewer, {
+        for (var i = 0;i < color.length;i++) {
+            if(color instanceof Cesium.Color) {
+                // eslint-disable-next-line no-param-reassign
+                color[i] = color[i].toCssColorString();
+            }
+        }
+        const terrainAnalyse = new Cesium.TerrainAnalyse(this.viewer, {
             colors: color
         });
-        manager.add(slope);
-        slope.start();
-        return slope;
+        return terrainAnalyse;
     }
 
     /**
@@ -380,19 +582,19 @@ export default class AdvancedAnalysisManager {
      * @param {Number} [options.brightnessShift] 亮度
      * @param {Number} [options.density] 密度
      * @param {Number} [options.minimumBrightness] 最小亮度
-     * @returns {Object} rain 返回下雨特效实例
+     * @returns {Object} weather 返回天气特效实例
      */
     createRain(options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        const collection = this.viewer.scene.postProcessStages;
-        const rain = Cesium.PostProcessStageLibrary.createRainStage(optionsParam);
-        collection.add(rain);
+        const weather = new Cesium.WeatherEffect(this.viewer);
+        weather.addRain();
+        
         this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(optionsParam.hueShift, -0.8);
         this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(optionsParam.saturationShift, -0.7);
         this.scene.skyAtmosphere.brightnessShift = Cesium.defaultValue(optionsParam.brightnessShift, -0.33);
         this.scene.fog.density = Cesium.defaultValue(optionsParam.density, 0.001);
         this.scene.fog.minimumBrightness = Cesium.defaultValue(optionsParam.minimumBrightness, 0.8);
-        return rain;
+        return weather;
     }
 
     /**
@@ -404,19 +606,18 @@ export default class AdvancedAnalysisManager {
      * @param {Number} [options.brightnessShift] 亮度
      * @param {Number} [options.density] 密度
      * @param {Number} [options.minimumBrightness] 最小亮度
-     * @returns {Object} snow 返回下雪特效实例
+     * @returns {Object} weather 返回天气特效实例
      */
     createSnow(options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        const collection = this.viewer.scene.postProcessStages;
-        const snow = Cesium.PostProcessStageLibrary.createSnowStage();
-        collection.add(snow);
+        const weather = new Cesium.WeatherEffect(this.viewer);
+        weather.addSnow();
         this.scene.skyAtmosphere.hueShift = Cesium.defaultValue(optionsParam.hueShift, -0.8);
         this.scene.skyAtmosphere.saturationShift = Cesium.defaultValue(optionsParam.saturationShift, -0.7);
         this.scene.skyAtmosphere.brightnessShift = Cesium.defaultValue(optionsParam.brightnessShift, -0.33);
         this.scene.fog.density = Cesium.defaultValue(optionsParam.density, 0.001);
         this.scene.fog.minimumBrightness = Cesium.defaultValue(optionsParam.minimumBrightness, 0.8);
-        return snow;
+        return weather;
     }
 
     /**
@@ -424,14 +625,13 @@ export default class AdvancedAnalysisManager {
      * @function module:客户端可视化分析.AdvancedAnalysisManager.prototype.createFog
      * @param {Object} options 雾特效参数
      * @param {Number} [options.alpha] 雾特效透明度
-     * @returns {Object} fog 返回雾特效实例
+     * @returns {Object} weather 返回雾特效实例
      */
     createFog(options) {
         const optionsParam = Cesium.defaultValue(options, {});
-        const collection = this.viewer.scene.postProcessStages;
-        const fog = Cesium.PostProcessStageLibrary.createFogStage(Cesium.defaultValue(optionsParam.alpha, 0.1));
-        collection.add(fog);
-        return fog;
+        const weather = new Cesium.WeatherEffect(this.viewer);
+        weather.addFog(optionsParam);
+        return weather;
     }
 
     /**

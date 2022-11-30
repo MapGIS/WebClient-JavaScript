@@ -24,10 +24,7 @@ function calculatePositionSamples(positions, startTime, multiplier) {
         if (positions.constructor === Array) {
             const property = new Cesium.SampledPositionProperty();
             for (let since = 0; since < positions.length; since += 1) {
-                property.addSample(
-                    Cesium.JulianDate.addSeconds(startTime, multiplier * since, new Cesium.JulianDate()),
-                    Cesium.Cartesian3.fromDegrees(positions[since][0], positions[since][1])
-                );
+                property.addSample(Cesium.JulianDate.addSeconds(startTime, multiplier * since, new Cesium.JulianDate()), Cesium.Cartesian3.fromDegrees(positions[since][0], positions[since][1]));
             }
             return property;
         }
@@ -460,7 +457,7 @@ export default class AnalysisManager {
         const height = Cesium.defaultValue(options.height, 0.0);
         const { transform } = tileset._root;
         const rotation = new Cesium.Matrix3();
-        Cesium.Matrix4.getRotation(transform, rotation);
+        Cesium.Matrix4.getMatrix3(transform, rotation);
         const scale = new Cesium.Cartesian3();
         Cesium.Matrix4.getScale(transform, scale);
         const center = new Cesium.Cartesian3();
@@ -563,7 +560,7 @@ export default class AnalysisManager {
      * @param {Number} [options.scaleHeight=2.5] 高度缩放比
      * @param {Number} [options.scaleWidth=2.5] 宽度缩放比
      * @param {Boolean} [options.interaction] 交互
-     *
+     * 
      * @returns {Object} 返回对象
      */
     createDynamicCutting(tilesets, planes, options) {
@@ -596,7 +593,7 @@ export default class AnalysisManager {
             for (let i = 0; i < planes.length; i += 1) {
                 const normal = planes[i].normal._cartesian3;
                 const planeEntity = this.viewer.entities.add({
-                    position: Cesium.CommonFunction.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3()),
+                    position: Cesium.AlgorithmLib.getPointOntoPlane(center, normal, tileset.boundingSphere.center, new Cesium.Cartesian3),
                     plane: {
                         dimensions: new Cesium.Cartesian2(radius * scaleWidth, radius * scaleHeight),
                         material

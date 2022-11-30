@@ -159,7 +159,7 @@ export default class LabelLayer extends BaseLayer {
      * @example
      * //更多参数设置可以使用appendLabelIconComm方法
      * let labelLayer = new LabelLayer({viewer:viewer});
-     * let labelIcon = labelLayer.appendLabelIcon('注记文本',110,33,0,'14pt 楷体','/car.png',64,64,10000000,1,bottom,'这是属性信息查询时可以看到');
+     * let labelIcon = labelLayer.appendLabelIcon('注记文本',110,33,0,'14pt 楷体',Color.RED,'/car.png',64,64,10000000,1,bottom,'这是属性信息查询时可以看到');
      */
     appendLabelIcon(text, lon, lat, height, font, fillColor, iconUrl, iconWidth, iconHeight, farDist, nearDist, txtPosParam, attribute) {
         let txtPos = Cesium.VerticalOrigin.BOTTOM;
@@ -194,12 +194,11 @@ export default class LabelLayer extends BaseLayer {
                 outlineWidth: 1,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER, // 垂直方向以底部来计算标签的位置
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER, // 原点在下方
-                // x,y方向偏移 相对于屏幕
-                pixelOffset: new Cesium.Cartesian2(0.0, -iconHeight / 4),
                 // 随远近缩放
-                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(nearDist, 3.0, farDist, 0.5),
+                pixelOffset: new Cesium.Cartesian2(0.0, -iconHeight / 4), // x,y方向偏移 相对于屏幕
+                pixelOffsetScaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.5),
                 // 随远近隐藏
-                translucencyByDistance: new Cesium.NearFarScalar(nearDist, 1.0, farDist, 0.0)
+                translucencyByDistance: new Cesium.NearFarScalar(1.5e5, 1.0, 1.5e7, 0.0)
             },
             description: attribute
         });

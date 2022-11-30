@@ -1,6 +1,6 @@
 import { CesiumZondy } from '../../core/Base'; 
 
-import Cesium from '../../../../node_modules/cesium/Source/Cesium';
+//import Cesium from '../../../../node_modules/cesium/Source/Cesium';
 import clone from '../../../../node_modules/cesium/Source/Core/clone';
 import defaultValue from '../../../../node_modules/cesium/Source/Core/defaultValue';
 import defined from '../../../../node_modules/cesium/Source/Core/defined';

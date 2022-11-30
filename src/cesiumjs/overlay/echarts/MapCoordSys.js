@@ -1,4 +1,4 @@
-import Cesium from '../../../../node_modules/cesium/Source/Cesium';
+//import Cesium from '../../../../node_modules/cesium/Source/Cesium';
 import echarts from 'echarts';
 
 /**

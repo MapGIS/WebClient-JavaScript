@@ -3,7 +3,7 @@ import {
     DataSet
 } from "mapv";
 
-import Cesium from '../../../../node_modules/cesium/Source/Cesium';
+//import Cesium from '../../../../node_modules/cesium/Source/Cesium';
 
 var BaseLayer = baiduMapLayer ? baiduMapLayer.__proto__ : Function;
 

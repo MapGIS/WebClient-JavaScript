@@ -42,20 +42,29 @@ export default class TerrainLayer extends BaseLayer {
         if (Cesium.defined(proxy)) {
             _proxy = new Cesium.DefaultProxy(proxy);
         }
-        let requestVertexNormals = Cesium.defaultValue(options.requestVertexNormals, false);
-        const dataUrl = `${baseUrl}/GetTerrain?sceneIndex=${sceneIndex}&layerIndex=${layerIndex}&Level={z}&Row={x}&Col={y}&xdensity=65&ydensity=65&webGL=true&hasNormals=${requestVertexNormals}`;
-        const terrainProvider = new Cesium.MapGISTerrainProvider({
+        var requestVertexNormals = Cesium.defaultValue(options.requestVertexNormals, false);
+        var dataUrl =
+            '' +
+            baseUrl +
+            '/GetTerrain?sceneIndex=' +
+            sceneIndex +
+            '&layerIndex=' +
+            layerIndex +
+            '&Level={z}&Row={x}&Col={y}&xdensity=65&ydensity=65&webGL=true&hasNormals=' +
+            requestVertexNormals;
+        var terrainLayer = new Cesium.MapGISTerrainProvider({
             url: dataUrl,
             range: options.range,
             proxy: _proxy,
             scale: options.scale,
             requestVertexNormals: requestVertexNormals,
-            terrainColorTblInfo:options.terrainColorTblInfo,
-            range3D: options.range3D
+            terrainColorTblInfo: options.terrainColorTblInfo,
+            range3D: options.range3D,
+            waterHeight: options.waterHeight
         });
+        this.viewer.scene.terrainProvider = terrainLayer;
 
-        this.viewer.terrainProvider = terrainProvider;
-        return terrainProvider;
+        return terrainLayer;
     }
 
     /**
@@ -70,8 +79,8 @@ export default class TerrainLayer extends BaseLayer {
      * @param {Boolean} [optionsParam.requestVertexNormals = false] 是否请求法向
      * @returns 地形层对象
      * @example
-     * let terrain = new TerrainLayer(viewer:viewer);
-     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain'{
+     * let terrain = new TerrainLayer({viewer:viewer});
+     * let terrainProivder = terrain.append('http://develop.smaryun.com:6163/igs/rest/g3d/terrain', {
      * requestVertexNormals:false,
      * loaded:callBackfunction,
      * getDocLayers:function (docLayers){}
@@ -113,7 +122,7 @@ export default class TerrainLayer extends BaseLayer {
             if (info !== undefined && info.sceneInfos.length > 0) {
                 const { layers } = info.sceneInfos[0];
                 layers.forEach((layer) => {
-                    const { layerType, layerRenderIndex, range, range3D , terrainLayer } = layer;
+                    const { layerType, layerRenderIndex, range, range3D, terrainLayer } = layer;
                     const { terrainColorTblInfo, elevationScale } = terrainLayer;
                     const type = parseInt(layerType, 10);
                     if (type === LayerType.TERRAINLAYER) {
@@ -137,7 +146,7 @@ export default class TerrainLayer extends BaseLayer {
                     }
                 });
             }
-            if(Cesium.defined(docReadyPromise)) {
+            if (Cesium.defined(docReadyPromise)) {
                 docReadyPromise.then(_callBack2(docLayers));
             }
         };
@@ -189,7 +198,7 @@ export default class TerrainLayer extends BaseLayer {
         });
         this.viewer.terrainProvider = terrainProviderMeshes;
     }
-     /**
+    /**
      * 删除地形图层
      * @function module:客户端数据服务.TerrainLayer.prototype.deleteTerrain
      * @example
@@ -198,7 +207,7 @@ export default class TerrainLayer extends BaseLayer {
      * terrain.deleteTerrain();
      */
     deleteTerrain() {
-        if(Cesium.defined(this.viewer.terrainProvider)){
+        if (Cesium.defined(this.viewer.terrainProvider)) {
             this.viewer.terrainProvider = null;
         }
         this.viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider();
