@@ -15,6 +15,7 @@ import { IgsServiceBase } from '../../baseserver/IServiceBase';
  * @param {Object} [option.resultCallBack =null] 返回结果回调
  * @param {Zondy.Object.QueryByLayerParameter} [option.queryParam = null] 查询参数信息
  * @param {String} [option.requestType = GET] 请求方式{string} GET|POST
+ * @param {Object} [options.withCredentials = undefined] 添加用户凭证
  */
 class QueryServiceBase extends ServiceBase {
     constructor(option) {
@@ -44,6 +45,8 @@ class QueryServiceBase extends ServiceBase {
          * @description  请求方式 GET|POST
          */
         this.requestType = options.requestType !== undefined ? options.requestType : 'GET';
+        // 添加证书参数
+        this.withCredentials = options.withCredentials
     }
 
     /**
@@ -89,12 +92,15 @@ class QueryServiceBase extends ServiceBase {
             }
         });
         if (way === 'GET') {
-            service.processAsync();
+            service.processAsync({
+                withCredentials: this.withCredentials
+            });
         } else {
             service.processAsync({
                 method: 'POST',
                 data: JSON.stringify(dataObject),
-                headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                withCredentials: this.withCredentials
             });
         }
     }
