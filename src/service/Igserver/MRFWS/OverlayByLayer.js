@@ -1,9 +1,5 @@
-﻿import {
-    Zondy
-} from '../../common/Base';
-import {
-    OverlayBase
-} from "./OverlayBase";
+﻿import { Zondy } from '../../common/Base';
+import { OverlayBase } from './OverlayBase';
 
 /**
  * 图层叠加
@@ -13,6 +9,7 @@ import {
  * @extends Zondy.Service.OverlayBase
  * @param {Object} option 属性键值对
  * @param {String} [option.srcInfo2 = null] 设置叠加图层URL
+ * @param {Boolean} [option.calcRealAreaAndPerimeter = true] 是否计算真实的面积和周长，如果设置为true，则面积和周长返回结果为平方米
  * @example
  //缓存结果图层的基地址
  var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
@@ -61,15 +58,22 @@ class OverlayByLayer extends OverlayBase {
 
         /**
          * @private
+         * @member Zondy.Service.OverlayByLayer.prototype.calcRealAreaAndPerimeter
+         * @type {Boolean}
+         * @description 是否计算真实的面积和周长，如果设置为true，则面积和周长返回结果为平方米
+         * @default true
+         */
+        this.calcRealAreaAndPerimeter = options.calcRealAreaAndPerimeter !== undefined ? options.calcRealAreaAndPerimeter : true;
+
+        /**
+         * @private
          * @member Zondy.Service.OverlayByLayer.prototype.flowID
          * @type {String}
          * @description 工作流ID
          * @default "600227"
          */
-        this.flowID = "600227";
+        this.flowID = '600227';
     }
 }
-export {
-    OverlayByLayer
-};
+export { OverlayByLayer };
 Zondy.Service.OverlayByLayer = OverlayByLayer;

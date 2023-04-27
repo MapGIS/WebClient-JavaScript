@@ -1,9 +1,5 @@
-﻿import {
-    Zondy
-} from '../../common/Base';
-import {
-    ClassBufferBase
-} from "./ClassBufferBase";
+﻿import { Zondy } from '../../common/Base';
+import { ClassBufferBase } from './ClassBufferBase';
 
 /**
  * @author 基础平台/产品2部 龚跃健
@@ -17,6 +13,7 @@ import {
  * @param {Boolean} [option.isByAtt = true] 是否根据属性字段设置缓冲区半径
  * @param {String} [option.fldName = null] 属性字段名称,当isByAtt为true时使用
  * @param {Number} [option.dynPrjRad = 0] 动态投影半径,使用前必须设置父类Zondy.Service.ClassBufferBase公共属性 isDynPrj 为”true”
+ * @param {Boolean} [option.calcRealAreaAndPerimeter = true] 是否计算真实的面积和周长，如果设置为true，则面积和周长返回结果为平方米
  * @example
  //缓存结果图层的基地址
  var resultBaseUrl = "gdbp://MapGisLocal/OpenLayerVecterMap/sfcls/";
@@ -108,15 +105,22 @@ class ClassBufferBySingleRing extends ClassBufferBase {
 
         /**
          * @private
+         * @member Zondy.Service.ClassBufferBySingleRing.prototype.calcRealAreaAndPerimeter
+         * @type {Boolean}
+         * @description 是否计算真实的面积和周长，如果设置为true，则面积和周长返回结果为平方米
+         * @default true
+         */
+        this.calcRealAreaAndPerimeter = options.calcRealAreaAndPerimeter !== undefined ? options.calcRealAreaAndPerimeter : true;
+
+        /**
+         * @private
          * @member Zondy.Service.ClassBufferBySingleRing.prototype.flowID
          * @type {String}
          * @description 矢量图层单圈缓冲区分析的工作流ID
          * @default "600231"
          */
-        this.flowID = "600231";
+        this.flowID = '600231';
     }
 }
-export {
-    ClassBufferBySingleRing
-};
+export { ClassBufferBySingleRing };
 Zondy.Service.ClassBufferBySingleRing = ClassBufferBySingleRing;
