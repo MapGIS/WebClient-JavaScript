@@ -75,7 +75,7 @@
         "source-map-loader": "^0.2.3",
         "url-loader": "^0.5.9",
         "watchify": "^4.0.0",
-        "webpack": "4.19.1",
+        "webpack": "5.94.0",
         "webpack-cleanup-plugin": "0.4.2",
         "webpack-cli": "2.1.5",
         "webpack-parallel-uglify-plugin": "0.4.2"
